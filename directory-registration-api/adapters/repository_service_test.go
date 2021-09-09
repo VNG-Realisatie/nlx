@@ -64,12 +64,12 @@ func TestRegisterService(t *testing.T) {
 			models := tt.createRegistrations(t)
 
 			inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
-				Name:             "inway-for-service",
-				OrganizationName: "organization-d",
-				Address:          "my-org.com",
-				NlxVersion:       domain.NlxVersionUnknown,
-				CreatedAt:        now,
-				UpdatedAt:        now,
+				Name:         "inway-for-service",
+				Organization: createNewOrganization(t, "organization-d"),
+				Address:      "my-org.com",
+				NlxVersion:   domain.NlxVersionUnknown,
+				CreatedAt:    now,
+				UpdatedAt:    now,
 			})
 			require.NoError(t, err)
 

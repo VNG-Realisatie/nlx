@@ -70,7 +70,7 @@ func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, org
 func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *domain.Inway) {
 	require.NotNil(t, iw)
 
-	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.OrganizationName())
+	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.Organization().Name())
 	require.NoError(t, err)
 
 	assert.Equal(t, iw, inwayFromRepo)

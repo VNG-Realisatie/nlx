@@ -105,8 +105,10 @@ func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 		UpdatedAt        time.Time `db:"inway_updated_at"`
 	}
 
+	organization := model.Organization()
+
 	_, err := r.registerInwayStmt.Exec(&registerParams{
-		OrganizationName: model.OrganizationName(),
+		OrganizationName: organization.Name(),
 		Name:             model.Name(),
 		Address:          model.Address(),
 		NlxVersion:       model.NlxVersion(),
@@ -146,13 +148,18 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*domain.
 		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
 	}
 
+	organizationModel, err := domain.NewOrganization(result.OrganizationName)
+	if err != nil {
+		return nil, fmt.Errorf("invalid organization model in database: %v", err)
+	}
+
 	model, err := domain.NewInway(&domain.NewInwayArgs{
-		Name:             result.Name,
-		OrganizationName: result.OrganizationName,
-		Address:          result.Address,
-		NlxVersion:       result.NlxVersion,
-		CreatedAt:        result.CreatedAt,
-		UpdatedAt:        result.UpdatedAt,
+		Name:         result.Name,
+		Organization: organizationModel,
+		Address:      result.Address,
+		NlxVersion:   result.NlxVersion,
+		CreatedAt:    result.CreatedAt,
+		UpdatedAt:    result.UpdatedAt,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("invalid inway model in database: %v", err)

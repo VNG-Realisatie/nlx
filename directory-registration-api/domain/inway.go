@@ -14,21 +14,21 @@ import (
 )
 
 type Inway struct {
-	name             string
-	organizationName string
-	address          string
-	nlxVersion       string
-	createdAt        time.Time
-	updatedAt        time.Time
+	name         string
+	organization *Organization
+	address      string
+	nlxVersion   string
+	createdAt    time.Time
+	updatedAt    time.Time
 }
 
 type NewInwayArgs struct {
-	Name             string
-	OrganizationName string
-	Address          string
-	NlxVersion       string
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
+	Name         string
+	Organization *Organization
+	Address      string
+	NlxVersion   string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 const NlxVersionUnknown = "unknown"
@@ -39,7 +39,7 @@ func NewInway(args *NewInwayArgs) (*Inway, error) {
 	err := validation.ValidateStruct(
 		args,
 		validation.Field(&args.Name, validation.When(len(args.Name) > 0, validation.Match(nameRegex))),
-		validation.Field(&args.OrganizationName, validation.Required, validation.Match(organizationNameRegex)),
+		validation.Field(&args.Organization, validation.NotNil),
 		validation.Field(&args.Address, validation.Required,
 			validation.When(strings.Contains(args.Address, ":"), is.DialString),
 			validation.When(!strings.Contains(args.Address, ":"), is.DNSName),
@@ -54,12 +54,12 @@ func NewInway(args *NewInwayArgs) (*Inway, error) {
 	}
 
 	return &Inway{
-		name:             args.Name,
-		organizationName: args.OrganizationName,
-		address:          args.Address,
-		nlxVersion:       args.NlxVersion,
-		createdAt:        args.CreatedAt,
-		updatedAt:        args.UpdatedAt,
+		name:         args.Name,
+		organization: args.Organization,
+		address:      args.Address,
+		nlxVersion:   args.NlxVersion,
+		createdAt:    args.CreatedAt,
+		updatedAt:    args.UpdatedAt,
 	}, nil
 }
 
@@ -67,8 +67,8 @@ func (i *Inway) Name() string {
 	return i.name
 }
 
-func (i *Inway) OrganizationName() string {
-	return i.organizationName
+func (i *Inway) Organization() *Organization {
+	return i.organization
 }
 
 func (i *Inway) Address() string {
@@ -90,6 +90,6 @@ func (i *Inway) UpdatedAt() time.Time {
 func (i *Inway) ToString() string {
 	return fmt.Sprintf(
 		"name: %s, organization: %s, address: %s, nlx version: %s, created at: %s, updated at: %s",
-		i.Name(), i.OrganizationName(), i.Address(), i.NlxVersion(), i.CreatedAt(), i.UpdatedAt(),
+		i.Name(), i.organization.Name(), i.Address(), i.NlxVersion(), i.CreatedAt(), i.UpdatedAt(),
 	)
 }

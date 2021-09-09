@@ -41,12 +41,12 @@ func TestSetOrganizationInway(t *testing.T) {
 		"inway_address_not_found": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
-					Name:             "inway-for-service",
-					OrganizationName: "TestSetOrganizationInwayinwayaddressnotfound",
-					Address:          "my-org-e.com",
-					NlxVersion:       domain.NlxVersionUnknown,
-					CreatedAt:        now,
-					UpdatedAt:        now,
+					Name:         "inway-for-service",
+					Organization: createNewOrganization(t, "TestSetOrganizationInwayinwayaddressnotfound"),
+					Address:      "my-org-e.com",
+					NlxVersion:   domain.NlxVersionUnknown,
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				}
 			},
 			input: inputParams{
@@ -58,12 +58,12 @@ func TestSetOrganizationInway(t *testing.T) {
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
-					Name:             "inway-for-service",
-					OrganizationName: "TestSetOrganizationInwayhappyflow",
-					Address:          "my-org-e.com",
-					NlxVersion:       domain.NlxVersionUnknown,
-					CreatedAt:        now,
-					UpdatedAt:        now,
+					Name:         "inway-for-service",
+					Organization: createNewOrganization(t, "TestSetOrganizationInwayhappyflow"),
+					Address:      "my-org-e.com",
+					NlxVersion:   domain.NlxVersionUnknown,
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				}
 			},
 			input: inputParams{
@@ -123,12 +123,12 @@ func TestClearOrganizationInway(t *testing.T) {
 		"organization_not_found": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
-					Name:             "inway-for-service",
-					OrganizationName: "my-organization",
-					Address:          "my-org-g.com",
-					NlxVersion:       domain.NlxVersionUnknown,
-					CreatedAt:        now,
-					UpdatedAt:        now,
+					Name:         "inway-for-service",
+					Organization: createNewOrganization(t, "my-organization-name"),
+					Address:      "my-org-g.com",
+					NlxVersion:   domain.NlxVersionUnknown,
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				}
 			},
 			input: inputParams{
@@ -139,12 +139,12 @@ func TestClearOrganizationInway(t *testing.T) {
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
-					Name:             "inway-for-service",
-					OrganizationName: "my-organization",
-					Address:          "my-org-h.com",
-					NlxVersion:       domain.NlxVersionUnknown,
-					CreatedAt:        now,
-					UpdatedAt:        now,
+					Name:         "inway-for-service",
+					Organization: createNewOrganization(t, "my-organization"),
+					Address:      "my-org-h.com",
+					NlxVersion:   domain.NlxVersionUnknown,
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				}
 			},
 			input: inputParams{
@@ -171,7 +171,7 @@ func TestClearOrganizationInway(t *testing.T) {
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), inwayModel.OrganizationName(), inwayModel.Address())
+			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().Name(), inwayModel.Address())
 			require.Equal(t, nil, err)
 
 			log.Println(tt.input.organizationName)
@@ -209,12 +209,12 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 		"organization_not_found": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
-					Name:             "inway-for-service",
-					OrganizationName: "my-organization",
-					Address:          "my-org-i.com",
-					NlxVersion:       domain.NlxVersionUnknown,
-					CreatedAt:        now,
-					UpdatedAt:        now,
+					Name:         "inway-for-service",
+					Organization: createNewOrganization(t, "my-organization-name"),
+					Address:      "my-org-i.com",
+					NlxVersion:   domain.NlxVersionUnknown,
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				}
 			},
 			input: inputParams{
@@ -226,12 +226,12 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
-					Name:             "inway-for-service",
-					OrganizationName: "my-organization",
-					Address:          "my-org-i.com",
-					NlxVersion:       domain.NlxVersionUnknown,
-					CreatedAt:        now,
-					UpdatedAt:        now,
+					Name:         "inway-for-service",
+					Organization: createNewOrganization(t, "my-organization"),
+					Address:      "my-org-i.com",
+					NlxVersion:   domain.NlxVersionUnknown,
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				}
 			},
 			input: inputParams{
@@ -259,7 +259,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), inwayModel.OrganizationName(), inwayModel.Address())
+			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().Name(), inwayModel.Address())
 			require.Equal(t, nil, err)
 
 			address, err := repo.GetOrganizationInwayAddress(context.Background(), tt.input.organizationName)

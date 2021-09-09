@@ -43,14 +43,10 @@ const (
 	OpenAPI3 SpecificationType = "OpenAPI3"
 )
 
-var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
-var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
-
 func NewService(args *NewServiceArgs) (*Service, error) {
 	err := validation.ValidateStruct(
 		args,
-		validation.Field(&args.Name, validation.Required, validation.Match(serviceNameRegex)),
-		validation.Field(&args.OrganizationName, validation.Required, validation.Match(organizationNameRegex)),
+		validation.Field(&args.Name, validation.Required, validation.Match(regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`))),
 	)
 	if err != nil {
 		return nil, err
