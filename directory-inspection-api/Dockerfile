@@ -1,5 +1,5 @@
 # Use go 1.x based on alpine image.
-FROM golang:1.17.0-alpine AS build
+FROM golang:1.17.1-alpine AS build
 
 ENV GO111MODULE on
 ARG GIT_TAG_NAME=undefined
