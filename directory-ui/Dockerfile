@@ -31,12 +31,8 @@ RUN jq -ncM --arg tag $GIT_TAG_NAME --arg commit $GIT_COMMIT_HASH  '{tag: $tag, 
 FROM nginx:alpine
 
 # Add non-privileged user
+# Note: `USER appuser` is not present in Dockerfile, because nginx.conf includes `user appuser;`
 RUN adduser -D -u 1001 appuser
-
-# Set ownership nginx.pid and cache folder in order to run nginx as non-root user
-RUN touch /var/run/nginx.pid && \
-    chown -R appuser /var/run/nginx.pid && \
-    chown -R appuser /var/cache/nginx
 
 # Copy nginx configuration
 COPY docker/nginx.conf /etc/nginx/nginx.conf
@@ -44,5 +40,3 @@ COPY docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/directory-ui/build /usr/share/nginx/html
 COPY --from=version /version.json /usr/share/nginx/html
-
-USER appuser
