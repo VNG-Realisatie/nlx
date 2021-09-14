@@ -101,7 +101,7 @@ func main() {
 	defer cancel()
 
 	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT)
+	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 
 	go func() {
 		<-termChan
