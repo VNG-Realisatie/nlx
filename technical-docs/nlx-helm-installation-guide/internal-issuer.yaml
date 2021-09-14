@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: internal
+  namespace: nlx
+spec:
+  ca:
+    secretName: internal-ca

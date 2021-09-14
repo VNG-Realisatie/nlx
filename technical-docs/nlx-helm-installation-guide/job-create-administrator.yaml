@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "management-api-create-user"
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: management-api-create-user
+           # Version should be updated to the most recent version upon deployment, this is just an example.
+            # We use git tags to release a new version so you can get the most recent version by looking at the latest tag https://gitlab.com/commonground/nlx/n
+          image: nlxio/management-api:v0.109.2
+          imagePullPolicy: Always
+          command: ["/bin/sh"]
+          args:
+            - "-xc"
+            - |
+                nlx-management-api create-user --email admin@example.com --password password --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "admin user was already created"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+          env:
+            - name: POSTGRES_HOST
+              value: postgresql
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DATABASE
+              value: nlx_management
+            - name: PGSSLMODE
+              value: disable
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: <postgres_password>
+            - name: PGCONNECT_TIMEOUT
+              value: "10"
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'

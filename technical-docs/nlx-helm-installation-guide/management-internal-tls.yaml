@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: management-internal-tls
+  namespace: nlx
+spec:
+  commonName: management-nlx-management-api
+  dnsNames:
+    - management-nlx-management-api
+  issuerRef:
+    name: internal
+  duration: 8760h  # 1 year
+  renewBefore: 720h  # 30 days
+  secretName: management-internal-tls
+  privateKey:
+    size: 4096
+    

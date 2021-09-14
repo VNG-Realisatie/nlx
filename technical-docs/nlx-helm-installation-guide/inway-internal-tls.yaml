@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: inway-internal-tls
+  namespace: nlx
+spec:
+  commonName: inway-nlx-inway
+  dnsNames:
+    - inway-nlx-inway
+  issuerRef:
+    name: internal
+  duration: 8760h  # 1 year
+  renewBefore: 720h  # 30 days
+  secretName: inway-internal-tls
+  privateKey:
+    size: 4096
