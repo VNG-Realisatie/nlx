@@ -65,12 +65,12 @@ func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certific
 		return nil
 	}
 
-	o.ShutDown()
+	o.Shutdown()
 
 	return errors.Wrap(err, "error listening on server")
 }
 
-func (o *Outway) ShutDown() {
+func (o *Outway) Shutdown() {
 	o.logger.Debug("shutting down")
 
 	o.monitorService.SetNotReady()

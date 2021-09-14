@@ -176,7 +176,7 @@ func main() {
 
 	<-ctx.Done()
 
-	ow.ShutDown()
+	ow.Shutdown()
 	conn.Close()
 	logDB.Close()
 }
