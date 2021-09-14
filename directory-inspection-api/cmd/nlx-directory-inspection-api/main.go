@@ -6,8 +6,10 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -20,7 +22,6 @@ import (
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -42,13 +43,12 @@ var options struct {
 	logoptions.LogOptions
 }
 
-func main() {
-	// Parse options
+func parseArgs() error {
 	args, err := flags.Parse(&options)
 	if err != nil {
 		if et, ok := err.(*flags.Error); ok {
 			if et.Type == flags.ErrHelp {
-				return
+				return err
 			}
 		}
 
@@ -59,25 +59,41 @@ func main() {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
 
-	// Setup new zap logger
+	return nil
+}
+
+func main() {
+	err := parseArgs()
+	if err != nil {
+		return
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	termChan := make(chan os.Signal, 1)
+	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+
+	defer func() {
+		<-termChan
+		cancel()
+	}()
+
 	config := options.LogOptions.ZapConfig()
 
 	logger, err := config.Build()
 	if err != nil {
+		// nolint:gocritic // exitAfterDefer: we know that defers aren't called after Fatalf
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
-	mainProcess := process.NewProcess(logger)
-
-	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, mainProcess, logger)
+	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, logger)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
-
-	logger.Info(fmt.Sprintf("created the directory database: %v", directoryDatabase))
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.DirectoryKeyFile); errValidate != nil {
 		logger.Warn("invalid directory key permissions", zap.Error(errValidate), zap.String("file-path", options.DirectoryKeyFile))
@@ -96,22 +112,33 @@ func main() {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 
-	const (
-		MaxIdleConnections = 2
-		FiveMinutes        = 5 * time.Minute
-	)
-
-	db.SetConnMaxLifetime(FiveMinutes)
-	db.SetMaxIdleConns(MaxIdleConnections)
-	db.MapperFunc(xstrings.ToSnakeCase)
-
-	mainProcess.CloseGracefully(db.Close)
+	setDBOptions(db)
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	httpServer := http.NewServer(db, certificate, logger)
 
-	runServer(mainProcess, logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, httpServer)
+	server, err := NewServer(logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, httpServer)
+	if err != nil {
+		logger.Fatal("could not start server", zap.Error(err))
+	}
+
+	<-ctx.Done()
+	shutdown(logger, server, directoryDatabase, db)
+}
+
+func shutdown(logger *zap.Logger, server *Server, directoryDB database.DirectoryDatabase, db *sqlx.DB) {
+	err := server.Shutdown()
+	if err != nil {
+		logger.Error("could not shutdown server", zap.Error(err))
+	}
+
+	err = directoryDB.Shutdown()
+	if err != nil {
+		logger.Error("could not shutdown directory database", zap.Error(err))
+	}
+
+	db.Close()
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
@@ -123,4 +150,15 @@ func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
 	tlsInfo := peerContext.AuthInfo.(credentials.TLSInfo)
 
 	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
+}
+
+func setDBOptions(db *sqlx.DB) {
+	const (
+		MaxIdleConnections = 2
+		FiveMinutes        = 5 * time.Minute
+	)
+
+	db.SetConnMaxLifetime(FiveMinutes)
+	db.SetMaxIdleConns(MaxIdleConnections)
+	db.MapperFunc(xstrings.ToSnakeCase)
 }

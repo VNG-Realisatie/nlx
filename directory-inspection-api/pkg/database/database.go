@@ -16,4 +16,6 @@ type DirectoryDatabase interface {
 	ListOrganizations(ctx context.Context) ([]*Organization, error)
 	GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error)
 	ListVersionStatistics(ctx context.Context) ([]*VersionStatistics, error)
+
+	Shutdown() error
 }

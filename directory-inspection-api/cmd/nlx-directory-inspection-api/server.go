@@ -4,13 +4,14 @@
 package main
 
 import (
-	"fmt"
+	"crypto/tls"
 	"net/http"
 	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/cloudflare/cfssl/log"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -25,11 +26,15 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	directory_http "go.nlx.io/nlx/directory-inspection-api/http"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
+
+type Server struct {
+	httpServer  *http.Server
+	httpsServer *http.Server
+}
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer
 // and all other connections to otherHandler.
@@ -47,22 +52,21 @@ func newGRPCSplitterHandlerFunc(
 	})
 }
 
-// runServer is a blocking function which sets up the grpc and http/json server and runs them on a single address/port.
-func runServer(
-	p *process.Process,
-	log *zap.Logger,
+func NewServer(
+	logger *zap.Logger,
 	address,
 	addressPlain string,
 	certificate *common_tls.CertificateBundle,
 	inspectionService inspectionapi.DirectoryInspectionServer,
-	httpServer *directory_http.Server,
-) {
+	httpServer *directory_http.Server) (*Server, error) {
+	server := &Server{}
+
 	// setup zap connection for global grpc logging
-	grpc_zap.ReplaceGrpcLogger(log)
+	grpc_zap.ReplaceGrpcLogger(logger)
 
 	recoveryOptions := []grpc_recovery.Option{
 		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
-			log.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
+			logger.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
 			return status.Errorf(codes.Internal, "%s", p)
 		}),
 	}
@@ -71,12 +75,12 @@ func runServer(
 	opts := []grpc.ServerOption{
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(),
-			grpc_zap.StreamServerInterceptor(log),
+			grpc_zap.StreamServerInterceptor(logger),
 			grpc_recovery.StreamServerInterceptor(recoveryOptions...),
 		),
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(),
-			grpc_zap.UnaryServerInterceptor(log),
+			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_recovery.UnaryServerInterceptor(recoveryOptions...),
 		),
 	}
@@ -88,6 +92,46 @@ func runServer(
 	tlsConfig := certificate.TLSConfig()
 	tlsConfig.InsecureSkipVerify = true //nolint:gosec // local connection; hostname won't match
 
+	gatewayDialOptions, gatewayMux := setupGateway(tlsConfig)
+
+	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
+		context.Background(),
+		gatewayMux,
+		address,
+		gatewayDialOptions,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	httpServer.Mount("/", gatewayMux)
+
+	// Start HTTPS server
+	// let server handle connections on the TLS Listener
+	tlsConfig = certificate.TLSConfig(certificate.WithTLSClientAuth())
+	tlsConfig.NextProtos = []string{"h2"}
+
+	server.httpsServer = &http.Server{
+		Addr:      address,
+		TLSConfig: tlsConfig,
+		Handler:   newGRPCSplitterHandlerFunc(grpcServer, httpServer),
+	}
+
+	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
+	server.httpServer = &http.Server{
+		Addr: addressPlain,
+		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			logger.Info("Incoming request", zap.Int("proto", r.ProtoMajor), zap.String("path", r.URL.Path))
+			httpServer.ServeHTTP(w, r)
+		}),
+	}
+
+	startHTTPServers(server.httpsServer, server.httpServer)
+
+	return server, err
+}
+
+func setupGateway(tlsConfig *tls.Config) ([]grpc.DialOption, *runtime.ServeMux) {
 	// setup client credentials for grpc gateway
 	gatewayDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(
@@ -116,32 +160,12 @@ func runServer(
 		}),
 	)
 
-	err := inspectionapi.RegisterDirectoryInspectionHandlerFromEndpoint(
-		context.Background(),
-		gatewayMux,
-		address,
-		gatewayDialOptions,
-	)
-	if err != nil {
-		fmt.Printf("serve: %v\n", err)
-		return
-	}
+	return gatewayDialOptions, gatewayMux
+}
 
-	httpServer.Mount("/", gatewayMux)
-
-	// Start HTTPS server
-	// let server handle connections on the TLS Listener
-	tlsConfig = certificate.TLSConfig(certificate.WithTLSClientAuth())
-	tlsConfig.NextProtos = []string{"h2"}
-
-	HTTPSHandler := &http.Server{
-		Addr:      address,
-		TLSConfig: tlsConfig,
-		Handler:   newGRPCSplitterHandlerFunc(grpcServer, httpServer),
-	}
-
+func startHTTPServers(httpsServer, httpServer *http.Server) {
 	go func() {
-		err = HTTPSHandler.ListenAndServeTLS("", "") // Key and Cert is empty because we provided them in TLSConfig
+		err := httpsServer.ListenAndServeTLS("", "") // Key and Cert is empty because we provided them in TLSConfig
 		if err != nil {
 			if err != http.ErrServerClosed {
 				log.Error("ListenAndServe for HTTPS failed", zap.Error(err))
@@ -149,40 +173,58 @@ func runServer(
 		}
 	}()
 
-	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
-	HTTPHandler := &http.Server{
-		Addr: addressPlain,
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Printf("proto:%d path:%s\n", r.ProtoMajor, r.URL.Path)
-			httpServer.ServeHTTP(w, r)
-		}),
-	}
-
 	go func() {
-		if err := HTTPHandler.ListenAndServe(); err != nil {
+		if err := httpServer.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
 				log.Error("ListenAndServe plain HTTP failed", zap.Error(err))
 			}
 		}
 	}()
+}
 
+func closeHTTPServer(s *http.Server) error {
+	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	err := s.Shutdown(localCtx)
+	if err != http.ErrServerClosed {
+		return err
+	}
+
+	return nil
+}
+
+const amountOfHTTPServers = 2
+
+func (s *Server) Shutdown() error {
 	wg := sync.WaitGroup{}
-	wg.Add(2)
+	wg.Add(amountOfHTTPServers)
 
-	p.CloseGracefully(func() error {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-		err := HTTPSHandler.Shutdown(localCtx)
-		wg.Done()
-		return err
-	})
-	p.CloseGracefully(func() error {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-		err := HTTPHandler.Shutdown(localCtx)
-		wg.Done()
-		return err
-	})
+	errChan := make(chan error)
+
+	go func() {
+		defer wg.Done()
+
+		err := closeHTTPServer(s.httpServer)
+		if err != nil {
+			errChan <- err
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+
+		err := closeHTTPServer(s.httpsServer)
+		if err != nil {
+			errChan <- err
+		}
+	}()
 
 	wg.Wait()
+
+	if len(errChan) > 0 {
+		return <-errChan
+	}
+
+	return nil
 }
