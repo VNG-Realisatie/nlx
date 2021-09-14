@@ -4,8 +4,11 @@
 package main
 
 import (
+	"context"
 	"log"
-	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/cloudflare/cfssl/cli"
 	"github.com/cloudflare/cfssl/cli/sign"
@@ -15,7 +18,6 @@ import (
 
 	"go.nlx.io/nlx/ca-certportal/server"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 )
 
 var options struct {
@@ -45,6 +47,17 @@ func main() {
 		log.Fatal("CA host option is empty")
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	termChan := make(chan os.Signal, 1)
+	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+
+	defer func() {
+		<-termChan
+		cancel()
+	}()
+
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
 
@@ -53,10 +66,7 @@ func main() {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 
-	process.NewProcess(logger)
-
-	// Create new certportal and provide it with a hardcoded service.
-	cp := server.NewCertPortal(logger, func() (signer.Signer, error) {
+	certSigner := func() (signer.Signer, error) {
 		signer, signErr := sign.SignerFromConfig(cli.Config{
 			Remote: options.CAHost,
 		})
@@ -66,10 +76,19 @@ func main() {
 		}
 
 		return signer, nil
-	})
-	// Listen on the address provided in the options
-	err = http.ListenAndServe(options.ListenAddress, cp.GetRouter())
-	if err != nil {
-		logger.Fatal("failed to listen and serve", zap.Error(err))
 	}
+
+	cp := server.NewCertPortal(logger, certSigner, options.ListenAddress)
+
+	go func() {
+		err = cp.Run()
+		if err != nil {
+			logger.Fatal("error running cert portal", zap.Error(err))
+		}
+	}()
+
+	<-ctx.Done()
+
+	err = cp.Shutdown()
+	logger.Error("shutdown cert portal", zap.Error(err))
 }

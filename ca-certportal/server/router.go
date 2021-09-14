@@ -4,10 +4,12 @@
 package server
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/cloudflare/cfssl/info"
 	"github.com/go-chi/chi"
@@ -18,8 +20,10 @@ import (
 )
 
 type CertPortal struct {
-	logger *zap.Logger
-	router chi.Router
+	logger        *zap.Logger
+	router        chi.Router
+	listenAddress string
+	httpServer    *http.Server
 }
 
 func setSecurityHeadersHandler(next http.Handler) http.Handler {
@@ -37,10 +41,12 @@ func setSecurityHeadersHandler(next http.Handler) http.Handler {
 	})
 }
 
-func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc) *CertPortal {
+func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc, listenAddress string) *CertPortal {
 	i := &CertPortal{
-		logger: l,
+		logger:        l,
+		listenAddress: listenAddress,
 	}
+
 	r := chi.NewRouter()
 	r.Use(setSecurityHeadersHandler)
 	r.Route("/api", func(r chi.Router) {
@@ -59,7 +65,32 @@ func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc) *Cer
 
 	i.router = r
 
+	i.httpServer = &http.Server{
+		Addr:    listenAddress,
+		Handler: r,
+	}
+
 	return i
+}
+
+func (c *CertPortal) Run() error {
+	err := c.httpServer.ListenAndServe()
+	if err != http.ErrServerClosed {
+		return err
+	}
+
+	return nil
+}
+
+const shutdownTimeout = time.Minute
+
+func (c *CertPortal) Shutdown() error {
+	c.logger.Debug("shutting down")
+
+	localCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	defer cancel()
+
+	return c.httpServer.Shutdown(localCtx)
 }
 
 func (c *CertPortal) GetRouter() chi.Router {

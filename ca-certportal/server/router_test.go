@@ -182,7 +182,7 @@ func TestRoute_Root(t *testing.T) {
 func TestRoutes_WithInvalidSigner(t *testing.T) {
 	certPortal := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return nil, fmt.Errorf("unable to create certificate signer")
-	})
+	}, "")
 	assert.NotNil(t, certPortal)
 
 	srv := httptest.NewServer(certPortal.GetRouter())
@@ -221,7 +221,7 @@ func newService(t *testing.T) (*server.CertPortal, serviceMocks) {
 
 	service := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return mocks.s, nil
-	})
+	}, "")
 
 	return service, mocks
 }
