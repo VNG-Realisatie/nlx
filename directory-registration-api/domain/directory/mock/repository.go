@@ -6,10 +6,10 @@ package directory_mock
 
 import (
 	context "context"
-	service "go.nlx.io/nlx/directory-registration-api/domain"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	domain "go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 // MockRepository is a mock of Repository interface.
@@ -50,10 +50,10 @@ func (mr *MockRepositoryMockRecorder) ClearOrganizationInway(ctx, organizationNa
 }
 
 // GetInway mocks base method.
-func (m *MockRepository) GetInway(name, organization string) (*service.Inway, error) {
+func (m *MockRepository) GetInway(name, organization string) (*domain.Inway, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetInway", name, organization)
-	ret0, _ := ret[0].(*service.Inway)
+	ret0, _ := ret[0].(*domain.Inway)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -80,10 +80,10 @@ func (mr *MockRepositoryMockRecorder) GetOrganizationInwayAddress(ctx, organizat
 }
 
 // GetService mocks base method.
-func (m *MockRepository) GetService(id uint) (*service.Service, error) {
+func (m *MockRepository) GetService(id uint) (*domain.Service, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetService", id)
-	ret0, _ := ret[0].(*service.Service)
+	ret0, _ := ret[0].(*domain.Service)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -95,7 +95,7 @@ func (mr *MockRepositoryMockRecorder) GetService(id interface{}) *gomock.Call {
 }
 
 // RegisterInway mocks base method.
-func (m *MockRepository) RegisterInway(arg0 *service.Inway) error {
+func (m *MockRepository) RegisterInway(arg0 *domain.Inway) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterInway", arg0)
 	ret0, _ := ret[0].(error)
@@ -109,7 +109,7 @@ func (mr *MockRepositoryMockRecorder) RegisterInway(arg0 interface{}) *gomock.Ca
 }
 
 // RegisterService mocks base method.
-func (m *MockRepository) RegisterService(arg0 *service.Service) error {
+func (m *MockRepository) RegisterService(arg0 *domain.Service) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterService", arg0)
 	ret0, _ := ret[0].(error)
