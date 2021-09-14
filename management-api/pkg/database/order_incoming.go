@@ -102,56 +102,46 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 
 	dbWithTx := &PostgresConfigDatabase{DB: tx}
 
+	organizations := getUniqueOrganizations(orders)
+
+	err := dbWithTx.DB.
+		Debug().
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Delete(&IncomingOrder{}, "delegator IN ?", organizations).
+		Error
+	if err != nil {
+		return err
+	}
+
 	for _, order := range orders {
-		existingOrder, err := db.GetIncomingOrderByReference(ctx, order.Reference)
-		if errors.Is(err, ErrNotFound) {
-			if createOrderErr := dbWithTx.DB.
-				WithContext(ctx).
-				Omit(clause.Associations).
-				Create(order).
-				Error; createOrderErr != nil {
-				return createOrderErr
-			}
-
-			orderServices := []IncomingOrderService{}
-
-			for _, service := range order.Services {
-				orderServices = append(orderServices, IncomingOrderService{
-					IncomingOrderID: order.ID,
-					Organization:    service.Organization,
-					Service:         service.Service,
-				})
-			}
-
-			if createServicesErr := dbWithTx.DB.
-				WithContext(ctx).
-				Model(IncomingOrderService{}).
-				Create(orderServices).Error; createServicesErr != nil {
-				return createServicesErr
-			}
-
-			continue
-		} else if err != nil {
-			return fmt.Errorf("failed to get order by reference: %w", err)
-		}
-
-		order.ID = existingOrder.ID
-
-		// if nothing changed skip it
-		if isOrderEqual(existingOrder, order) {
-			continue
-		}
-
-		existingOrder.ValidUntil = order.ValidUntil
-		existingOrder.Description = order.Description
-		existingOrder.RevokedAt = order.RevokedAt
-
-		if err := dbWithTx.DB.
+		if createOrderErr := dbWithTx.DB.
 			WithContext(ctx).
 			Omit(clause.Associations).
-			Save(existingOrder).
-			Error; err != nil {
-			return err
+			Create(order).
+			Error; createOrderErr != nil {
+			return createOrderErr
+		}
+
+		if len(order.Services) == 0 {
+			continue
+		}
+
+		orderServices := []IncomingOrderService{}
+
+		for _, service := range order.Services {
+			orderServices = append(orderServices, IncomingOrderService{
+				IncomingOrderID: order.ID,
+				Organization:    service.Organization,
+				Service:         service.Service,
+			})
+		}
+
+		if createServicesErr := dbWithTx.DB.
+			WithContext(ctx).
+			Model(IncomingOrderService{}).
+			Create(orderServices).Error; createServicesErr != nil {
+			return createServicesErr
 		}
 	}
 
@@ -190,8 +180,19 @@ func (db *PostgresConfigDatabase) RevokeIncomingOrderByReference(ctx context.Con
 		Save(incomingOrder).Error
 }
 
-func isOrderEqual(a, b *IncomingOrder) bool {
-	return a.ValidUntil.Equal(b.ValidUntil) &&
-		a.Description == b.Description &&
-		a.RevokedAt == b.RevokedAt
+func getUniqueOrganizations(orders []*IncomingOrder) []string {
+	uniqueOrgs := make(map[string]interface{})
+	for _, order := range orders {
+		uniqueOrgs[order.Delegator] = nil
+	}
+
+	var i int
+
+	stringOrgs := make([]string, len(uniqueOrgs))
+	for org := range uniqueOrgs {
+		stringOrgs[i] = org
+		i++
+	}
+
+	return stringOrgs
 }

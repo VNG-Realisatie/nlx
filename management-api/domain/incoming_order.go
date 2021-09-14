@@ -69,7 +69,7 @@ func NewIncomingOrder(reference, description, delegator string, revokedAt *time.
 		return nil, fmt.Errorf("valid from: %s", err)
 	}
 
-	err = validation.Validate(services, validation.Required.Error("at least one is required"), validation.Each(validation.By(func(value interface{}) error {
+	err = validation.Validate(services, validation.Each(validation.By(func(value interface{}) error {
 		orderService, ok := value.(IncomingOrderService)
 		if !ok {
 			return errors.New("expecting an order-service")

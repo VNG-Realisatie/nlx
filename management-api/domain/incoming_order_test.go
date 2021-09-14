@@ -83,7 +83,7 @@ func Test_NewIncomingOrder(t *testing.T) {
 				validUntil:  validUntil,
 				services:    []domain.IncomingOrderService{},
 			},
-			expectedErr: errors.New("services: at least one is required"),
+			expectedErr: nil,
 		},
 		"valid_from_is_after_valid_until": {
 			order: orderParams{
