@@ -6,15 +6,16 @@ package main
 import (
 	"context"
 	"log"
-
-	_ "github.com/lib/pq"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/jessevdk/go-flags"
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -34,15 +35,24 @@ var options struct {
 func main() {
 	parseOptions()
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	termChan := make(chan os.Signal, 1)
+	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+
+	defer func() {
+		<-termChan
+		cancel()
+	}()
+
 	logger := initLogger()
-	proc := process.NewProcess(logger)
 
 	db, err := monitor.InitDatabase(options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
 
-	proc.CloseGracefully(db.Close)
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.MonitorKeyFile); errValidate != nil {
@@ -56,10 +66,23 @@ func main() {
 
 	logger.Debug("starting health checker", zap.Int("ttlOfflineService", options.TTLOfflineService))
 
-	err = monitor.RunHealthChecker(proc, logger, db, options.PostgresDSN, certificate, options.TTLOfflineService)
-	if err != nil && err != context.DeadlineExceeded {
-		logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
+	healthChecker := monitor.NewHealthChecker(logger, certificate)
+
+	go func() {
+		err = healthChecker.Run(logger, db, options.PostgresDSN, certificate, options.TTLOfflineService)
+		if err != nil && err != context.DeadlineExceeded {
+			logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
+		}
+	}()
+
+	<-ctx.Done()
+
+	err = healthChecker.Shutdown()
+	if err != nil {
+		logger.Error("could not shutdown health checker", zap.Error(err))
 	}
+
+	db.Close()
 }
 
 func parseOptions() {

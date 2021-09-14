@@ -15,7 +15,6 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-monitor/health"
 )
@@ -23,7 +22,7 @@ import (
 const monitorHTTPTimeout = 30 * time.Second
 
 // HealthChecker checks the inways of a StoredService and modifies it's health state directly in the StoredService struct.
-type healthChecker struct {
+type HealthChecker struct {
 	logger     *zap.Logger
 	httpClient *http.Client
 
@@ -34,6 +33,10 @@ type healthChecker struct {
 	stmtUpdateHealth          *sqlx.Stmt
 	stmtCleanUpAvailabilities *sqlx.Stmt
 	stmtUpdateInwayVersion    *sqlx.Stmt
+
+	listener                     *pq.Listener
+	shutdownNotificationListener chan struct{}
+	shutdown                     chan struct{}
 }
 
 type availability struct {
@@ -49,8 +52,6 @@ type databaseAction struct {
 	Availability *availability `json:"availability"`
 }
 
-var RunningHealthChecker *healthChecker
-
 const (
 	dbNotificationChannel = "availabilities"
 	cleanupInterval       = 90 * time.Second
@@ -61,16 +62,8 @@ const (
 	postgresListenerReconnectTimeoutMax = 1 * time.Minute
 )
 
-// RunHealthChecker starts a healthchecker process
-func RunHealthChecker(
-	proc *process.Process,
-	logger *zap.Logger,
-	db *sqlx.DB,
-	postgresDNS string,
-	certificate *common_tls.CertificateBundle,
-	ttlOfflineService int,
-) error {
-	h := &healthChecker{
+func NewHealthChecker(logger *zap.Logger, certificate *common_tls.CertificateBundle) *HealthChecker {
+	return &HealthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
 		httpClient: &http.Client{
@@ -80,7 +73,15 @@ func RunHealthChecker(
 			Timeout: monitorHTTPTimeout,
 		},
 	}
+}
 
+func (h *HealthChecker) Run(
+	logger *zap.Logger,
+	db *sqlx.DB,
+	postgresDNS string,
+	certificate *common_tls.CertificateBundle,
+	ttlOfflineService int,
+) error {
 	var err error
 	h.stmtSelectAvailabilities, err = db.Preparex(`
 		SELECT
@@ -138,10 +139,10 @@ func RunHealthChecker(
 		return errors.Wrap(err, "failed to prepare stmtCleanUpAvailabilities")
 	}
 
-	return h.run(proc, postgresDNS)
+	return h.run(postgresDNS)
 }
 
-func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
+func (h *HealthChecker) run(postgressDNS string) error {
 	listenerErrorCallback := func(ev pq.ListenerEventType, err error) {
 		if err != nil {
 			h.logger.Error("error listening for db events", zap.Error(err))
@@ -154,18 +155,12 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 		panic(err)
 	}
 
-	proc.CloseGracefully(listener.Close)
+	h.listener = listener
 
-	RunningHealthChecker = h
+	shutdownNotificationListener := make(chan struct{})
+	h.shutdownNotificationListener = shutdownNotificationListener
 
-	shutDownNotificationListener := make(chan struct{})
-
-	proc.CloseGracefully(func() error {
-		close(shutDownNotificationListener)
-		return nil
-	})
-
-	go h.waitForNotification(listener, shutDownNotificationListener)
+	go h.waitForNotification(listener, shutdownNotificationListener)
 
 	newAvailabilities := []*availability{}
 
@@ -180,21 +175,26 @@ func (h *healthChecker) run(proc *process.Process, postgressDNS string) error {
 	}
 	h.availabilitiesLock.Unlock()
 
-	shutDown := make(chan struct{})
+	shutdown := make(chan struct{})
+	h.shutdown = shutdown
 
-	proc.CloseGracefully(func() error {
-		close(shutDown)
-		return nil
-	})
-
-	go h.runCleanUpServices(shutDown)
-	h.runHealthChecker(shutDown)
+	go h.runCleanUpServices(shutdown)
+	h.runHealthChecker(shutdown)
 
 	return nil
 }
 
-func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
+func (h *HealthChecker) Shutdown() error {
+	h.listener.Close()
+	close(h.shutdownNotificationListener)
+	close(h.shutdown)
+
+	return nil
+}
+
+func (h *HealthChecker) runCleanUpServices(shutdown chan struct{}) {
 	h.logger.Debug("initial cleaning up stale services")
+
 	servicesRemoved, err := h.cleanUpServices()
 	if err != nil {
 		h.logger.Error("error cleaning up offline services", zap.Error(err))
@@ -206,6 +206,7 @@ func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
 		select {
 		case <-time.After(1 * time.Minute):
 			h.logger.Debug("cleaning up offline services")
+
 			servicesRemoved, err := h.cleanUpServices()
 			if err != nil {
 				h.logger.Error("error cleaning up offline services", zap.Error(err))
@@ -213,13 +214,13 @@ func (h *healthChecker) runCleanUpServices(shutDown chan struct{}) {
 			}
 
 			h.logger.Debug("cleanup complete", zap.Int64("services removed", servicesRemoved))
-		case <-shutDown:
+		case <-shutdown:
 			return
 		}
 	}
 }
 
-func (h *healthChecker) cleanUpServices() (int64, error) {
+func (h *HealthChecker) cleanUpServices() (int64, error) {
 	res, err := h.stmtCleanUpAvailabilities.Exec()
 	if err != nil {
 		return 0, err
@@ -228,7 +229,7 @@ func (h *healthChecker) cleanUpServices() (int64, error) {
 	return res.RowsAffected()
 }
 
-func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
+func (h *HealthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 	for {
 		select {
 		case n := <-l.Notify:
@@ -248,7 +249,7 @@ func (h *healthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 	}
 }
 
-func (h *healthChecker) onDatabaseNotification(payload string) {
+func (h *HealthChecker) onDatabaseNotification(payload string) {
 	dbAction := &databaseAction{}
 
 	err := json.Unmarshal([]byte(payload), dbAction)
@@ -269,19 +270,19 @@ func (h *healthChecker) onDatabaseNotification(payload string) {
 	}
 }
 
-func (h *healthChecker) addAvailability(a *availability) {
+func (h *HealthChecker) addAvailability(a *availability) {
 	h.availabilitiesLock.Lock()
 	h.availabilities[a.ID] = a
 	h.availabilitiesLock.Unlock()
 }
 
-func (h *healthChecker) removeAvailability(id uint64) {
+func (h *HealthChecker) removeAvailability(id uint64) {
 	h.availabilitiesLock.Lock()
 	delete(h.availabilities, id)
 	h.availabilitiesLock.Unlock()
 }
 
-func (h *healthChecker) runHealthChecker(shutDown chan struct{}) {
+func (h *HealthChecker) runHealthChecker(shutdown chan struct{}) {
 	for {
 		select {
 		case <-time.After(healthCheckInterval):
@@ -290,13 +291,13 @@ func (h *healthChecker) runHealthChecker(shutDown chan struct{}) {
 				go h.checkInwayStatus(*av)
 			}
 			h.availabilitiesLock.RUnlock()
-		case <-shutDown:
+		case <-shutdown:
 			return
 		}
 	}
 }
 
-func (h *healthChecker) checkInwayStatus(av availability) {
+func (h *HealthChecker) checkInwayStatus(av availability) {
 	logger := h.logger.With(zap.String("canonical-service-name", av.OrganizationName+`.`+av.ServiceName), zap.String("inway-address", av.Address))
 
 	resp, err := h.httpClient.Get(`https://` + av.Address + "/.nlx/health/" + av.ServiceName)
@@ -328,7 +329,7 @@ func (h *healthChecker) checkInwayStatus(av availability) {
 	h.updateAvailabilityHealth(av, status.Healthy)
 }
 
-func (h *healthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
+func (h *HealthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
 	res, err := h.stmtUpdateHealth.Exec(av.ID, newHealth)
 	if err != nil {
 		h.logger.Error("failed to update health in db", zap.Error(err))
