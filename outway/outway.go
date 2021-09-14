@@ -33,35 +33,21 @@ import (
 type loggerHTTPHandler func(logger *zap.Logger, w http.ResponseWriter, r *http.Request)
 
 type Outway struct {
-	ctx context.Context
-
-	wg               *sync.WaitGroup
-	organizationName string // the organization running this outway
-
-	orgCert *common_tls.CertificateBundle
-
-	logger *zap.Logger
-
-	txlogger transactionlog.TransactionLogger
-
+	ctx                       context.Context
+	wg                        *sync.WaitGroup
+	organizationName          string // the organization running this outway
+	orgCert                   *common_tls.CertificateBundle
+	logger                    *zap.Logger
+	txlogger                  transactionlog.TransactionLogger
 	directoryInspectionClient inspectionapi.DirectoryInspectionClient
-
-	// headersStripList *http.Header
-	httpServer     *http.Server
-	monitorService *monitoring.Service
-
-	requestHTTPHandler loggerHTTPHandler
-
-	forwardingHTTPProxy *httputil.ReverseProxy
-
-	servicesLock sync.RWMutex
-	// services mapped by <organizationName>.<serviceName>
-	// httpService
-	servicesHTTP map[string]HTTPService
-	// directory listing copy
-	servicesDirectory map[string]*inspectionapi.ListServicesResponse_Service
-
-	plugins []plugins.Plugin
+	httpServer                *http.Server
+	monitorService            *monitoring.Service
+	requestHTTPHandler        loggerHTTPHandler
+	forwardingHTTPProxy       *httputil.ReverseProxy
+	servicesLock              sync.RWMutex
+	servicesHTTP              map[string]HTTPService
+	servicesDirectory         map[string]*inspectionapi.ListServicesResponse_Service
+	plugins                   []plugins.Plugin
 }
 
 func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) error {
