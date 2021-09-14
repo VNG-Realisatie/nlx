@@ -29,7 +29,7 @@ go run ./management-api create-user --email admin@nlx.local --password developme
 TXLOG_A=1 TXLOG_B=1 modd
 
 function finish {
-  docker compose -f docker-compose.dev.yml down --remove-orphans
+  docker-compose -f docker-compose.dev.yml down --remove-orphans
 }
 
 trap finish EXIT
