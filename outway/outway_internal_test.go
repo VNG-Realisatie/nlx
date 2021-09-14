@@ -16,7 +16,6 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi/mock"
@@ -30,7 +29,6 @@ func TestUpdateServiceList(t *testing.T) {
 	client := mock.NewMockDirectoryInspectionClient(ctrl)
 
 	logger := zaptest.NewLogger(t)
-	mainProcess := process.NewProcess(logger)
 
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
@@ -39,10 +37,10 @@ func TestUpdateServiceList(t *testing.T) {
 	)
 
 	o := &Outway{
+		ctx:                       context.Background(),
 		directoryInspectionClient: client,
 		logger:                    logger,
 		orgCert:                   cert,
-		process:                   mainProcess,
 		servicesHTTP:              make(map[string]HTTPService),
 		servicesDirectory:         make(map[string]*inspectionapi.ListServicesResponse_Service),
 	}

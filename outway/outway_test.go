@@ -4,6 +4,7 @@
 package outway
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -16,7 +17,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	mock "go.nlx.io/nlx/outway/mock"
@@ -90,10 +90,9 @@ func TestNewOutwayExeception(t *testing.T) {
 	}
 
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	// Test exceptions during outway creation
 	for _, test := range tests {
-		_, err := NewOutway(logger, nil, nil, testProcess, test.monitoringServiceAddress, test.cert, "", test.authServiceURL, test.authCAPath, false)
+		_, err := NewOutway(context.Background(), logger, nil, nil, test.monitoringServiceAddress, test.cert, "", test.authServiceURL, test.authCAPath, false)
 		assert.EqualError(t, err, test.expectedErrorMessage)
 	}
 }

@@ -27,7 +27,6 @@ const (
 	ExpectConinueTimeout = 1 * time.Second
 )
 
-// RunServer is a blocking function that listens on provided tcp address to handle requests.
 func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certificate) error {
 	o.httpServer = &http.Server{
 		Addr:    listenAddress,
@@ -60,23 +59,18 @@ func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certific
 		}
 	}()
 
-	o.process.CloseGracefully(func() error {
-		o.shutDown()
-		return nil
-	})
-
 	err := <-errorChannel
 
 	if err == http.ErrServerClosed {
 		return nil
 	}
 
-	o.shutDown()
+	o.ShutDown()
 
 	return errors.Wrap(err, "error listening on server")
 }
 
-func (o *Outway) shutDown() {
+func (o *Outway) ShutDown() {
 	o.logger.Debug("shutting down")
 
 	o.monitorService.SetNotReady()

@@ -23,7 +23,6 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -33,8 +32,9 @@ import (
 
 type loggerHTTPHandler func(logger *zap.Logger, w http.ResponseWriter, r *http.Request)
 
-// Outway handles requests from inside the organization
 type Outway struct {
+	ctx context.Context
+
 	wg               *sync.WaitGroup
 	organizationName string // the organization running this outway
 
@@ -45,7 +45,6 @@ type Outway struct {
 	txlogger transactionlog.TransactionLogger
 
 	directoryInspectionClient inspectionapi.DirectoryInspectionClient
-	process                   *process.Process
 
 	// headersStripList *http.Header
 	httpServer     *http.Server
@@ -104,7 +103,7 @@ func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string)
 	return nil
 }
 
-func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) {
+func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) error {
 	directoryDialCredentials := credentials.NewTLS(o.orgCert.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
@@ -126,15 +125,23 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) {
 		"directory inspection client setup complete",
 		zap.String("directory-inspection-address", directoryInspectionAddress))
 
+	// update service for the first time
+	err = o.updateServiceList()
+	if err != nil {
+		o.logger.Error("failed to update the service list from directory on startup.", zap.Error(err))
+		return err
+	}
+
 	go o.keepServiceListUpToDate()
+
+	return nil
 }
 
-// NewOutway creates a new Outway and sets it up to handle requests.
 func NewOutway(
+	ctx context.Context,
 	logger *zap.Logger,
 	logdb *sqlx.DB,
 	managementClient api.ManagementClient,
-	mainProcess *process.Process,
 	monitoringAddress string,
 	orgCert *common_tls.CertificateBundle,
 	directoryInspectionAddress,
@@ -149,17 +156,13 @@ func NewOutway(
 
 	organizationName := cert.Subject.Organization[0]
 
-	if mainProcess == nil {
-		return nil, errors.New("process argument is nil. needed enable to close gracefully")
-	}
-
 	o := &Outway{
+		ctx:              ctx,
 		wg:               &sync.WaitGroup{},
 		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
 		organizationName: organizationName,
 
 		orgCert: orgCert,
-		process: mainProcess,
 
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
@@ -201,7 +204,10 @@ func NewOutway(
 		plugins.NewStripHeadersPlugin(o.organizationName),
 	}
 
-	o.startDirectoryInspector(directoryInspectionAddress)
+	err = o.startDirectoryInspector(directoryInspectionAddress)
+	if err != nil {
+		return nil, err
+	}
 
 	return o, nil
 }
@@ -224,15 +230,6 @@ func (o *Outway) keepServiceListUpToDate() {
 	o.wg.Add(1)
 	defer o.wg.Done()
 
-	// update service for the first time
-	err := o.updateServiceList()
-	if err != nil {
-		o.logger.Error("failed to update the service list from directory on startup.", zap.Error(err))
-		o.process.ExitGracefully()
-
-		return
-	}
-
 	// update service list every x seconds
 	expBackOff := &backoff.Backoff{
 		Min:    100 * time.Millisecond,
@@ -246,7 +243,7 @@ func (o *Outway) keepServiceListUpToDate() {
 
 	for {
 		select {
-		case <-o.process.ShutdownRequested:
+		case <-o.ctx.Done():
 			return
 		case <-time.After(interval):
 			err := o.updateServiceList()

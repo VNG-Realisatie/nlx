@@ -7,6 +7,9 @@ import (
 	"context"
 	"crypto/tls"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -19,7 +22,6 @@ import (
 	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/api"
@@ -69,6 +71,17 @@ func main() {
 		log.Fatalf("unexpected arguments: %v", args)
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	termChan := make(chan os.Signal, 1)
+	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT)
+
+	defer func() {
+		<-termChan
+		cancel()
+	}()
+
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
 	logger, err := config.Build()
@@ -89,8 +102,6 @@ func main() {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
-	mainProcess := process.NewProcess(logger)
-
 	var logDB *sqlx.DB
 	if !options.DisableLogdb {
 		logDB, err = sqlx.Open("postgres", options.PostgresDSN)
@@ -104,7 +115,6 @@ func main() {
 		logDB.MapperFunc(xstrings.ToSnakeCase)
 
 		common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
-		mainProcess.CloseGracefully(logDB.Close)
 	}
 
 	var serverCertificate *tls.Certificate
@@ -141,12 +151,11 @@ func main() {
 
 	client := api.NewManagementClient(conn)
 
-	// Create new outway and provide it with a hardcoded service.
 	ow, err := outway.NewOutway(
+		ctx,
 		logger,
 		logDB,
 		client,
-		mainProcess,
 		options.MonitoringAddress,
 		orgCert,
 		options.DirectoryInspectionAddress,
@@ -155,11 +164,19 @@ func main() {
 		options.UseAsHTTPProxy)
 
 	if err != nil {
-		logger.Fatal("failed to setup outway", zap.Error(err))
+		logger.Fatal("failed to start outway", zap.Error(err))
 	}
 
-	err = ow.RunServer(options.ListenAddress, serverCertificate)
-	if err != nil {
-		logger.Fatal("error running outway", zap.Error(err))
-	}
+	go func() {
+		err = ow.RunServer(options.ListenAddress, serverCertificate)
+		if err != nil {
+			logger.Fatal("error running outway", zap.Error(err))
+		}
+	}()
+
+	<-ctx.Done()
+
+	ow.ShutDown()
+	conn.Close()
+	logDB.Close()
 }

@@ -4,6 +4,7 @@
 package outway
 
 import (
+	"context"
 	"crypto/tls"
 	"errors"
 	"fmt"
@@ -20,7 +21,6 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/monitoring"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -482,13 +482,11 @@ func TestRunServer(t *testing.T) {
 	monitorService, err := monitoring.NewMonitoringService("localhost:8081", logger)
 	assert.Nil(t, err)
 
-	testProcess := process.NewProcess(logger)
-
 	for _, test := range tests {
 		o := &Outway{
+			ctx:            context.Background(),
 			logger:         logger,
 			monitorService: monitorService,
-			process:        testProcess,
 		}
 
 		err = o.RunServer(test.listenAddress, test.certificate)
