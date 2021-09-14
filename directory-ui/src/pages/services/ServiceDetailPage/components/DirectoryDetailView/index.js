@@ -3,7 +3,6 @@
 //
 import React from 'react'
 import { shape, string, number } from 'prop-types'
-import { observer } from 'mobx-react'
 import { withDrawerStack } from '@commonground/design-system'
 import { SectionGroup } from '../../../../../components/DetailView'
 import CostsSection from '../../../../../components/CostsSection'
@@ -41,4 +40,4 @@ DirectoryDetailView.propTypes = {
   }),
 }
 
-export default observer(withDrawerStack(DirectoryDetailView))
+export default withDrawerStack(DirectoryDetailView)

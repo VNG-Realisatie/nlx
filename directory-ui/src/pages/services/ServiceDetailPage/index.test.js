@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { observable } from 'mobx'
 import { Route, StaticRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import ServiceDetailPage from './index'
@@ -14,14 +13,14 @@ jest.mock('./components/DirectoryDetailView', () => () => (
 let service
 
 beforeEach(() => {
-  service = observable({
+  service = {
     id: 'Test Organization/Test Service',
     organization: 'Test Organization',
     name: 'Test Service',
     status: 'degraded',
     apiType: 'API',
     fetch: jest.fn(),
-  })
+  }
 })
 
 test('display directory service details', () => {

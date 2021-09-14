@@ -2,9 +2,8 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { configure } from 'mobx'
 import { renderWithProviders } from '../../../test-utils'
-import { SERVICE_STATE_DEGRADED } from '../../../components/StateIndicator'
+import { SERVICE_STATE_DEGRADED } from '../../StateIndicator'
 import DirectoryServiceRow from './index'
 
 const serviceData = {
@@ -26,7 +25,6 @@ const renderComponent = ({ service }) => {
 }
 
 test('display service information', () => {
-  configure({ safeDescriptors: false })
   const service = serviceData
   const { container } = renderComponent({ service })
 
