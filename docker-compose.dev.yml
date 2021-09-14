@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./scripts/postgres-setup.sh:/docker-entrypoint-initdb.d/postgres-setup.sh
-    restart: always
+    restart: on-failure
 
   dex:
     image: dexidp/dex:v2.30.0
@@ -21,7 +21,7 @@ services:
       - 127.0.0.1:5556:5556
     volumes:
       - ./dex.dev.yaml:/config.yaml
-    restart: always
+    restart: on-failure
 
 volumes:
   postgres-data:

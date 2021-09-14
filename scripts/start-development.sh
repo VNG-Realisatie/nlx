@@ -2,7 +2,7 @@
 # Run this script from the root folder of the git repository with the following command: ./scripts/start-development.sh
 
 # Start docker-compose
-docker-compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.dev.yml up -d --remove-orphans
 
 # Wait for postgres to accept connections
 until docker-compose -f docker-compose.dev.yml exec postgres pg_isready
@@ -27,3 +27,9 @@ go run ./management-api create-user --email admin@nlx.local --password developme
 
 # start services
 TXLOG_A=1 TXLOG_B=1 modd
+
+function finish {
+  docker compose -f docker-compose.dev.yml down --remove-orphans
+}
+
+trap finish EXIT
