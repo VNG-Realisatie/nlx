@@ -53,7 +53,7 @@ func main() {
 	termChan := make(chan os.Signal, 1)
 	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 
-	defer func() {
+	go func() {
 		<-termChan
 		cancel()
 	}()
@@ -63,6 +63,7 @@ func main() {
 
 	logger, err := config.Build()
 	if err != nil {
+		//nolint:gocritic // we know that defer will not run after Fatalf
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 
@@ -90,5 +91,7 @@ func main() {
 	<-ctx.Done()
 
 	err = cp.Shutdown()
-	logger.Error("shutdown cert portal", zap.Error(err))
+	if err != nil {
+		logger.Error("shutdown cert portal", zap.Error(err))
+	}
 }

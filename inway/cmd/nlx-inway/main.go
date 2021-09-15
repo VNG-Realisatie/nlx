@@ -130,19 +130,19 @@ func main() {
 		logger.Fatal("cannot setup inway", zap.Error(err))
 	}
 
-	defer func() {
-		<-ctx.Done()
-
-		errShutdown := iw.Shutdown()
-		if errShutdown != nil {
-			logger.Error("failed to shutdown", zap.Error(err))
+	go func() {
+		// Listen on the address provided in the options
+		err = iw.Run(ctx, options.ListenAddress)
+		if err != nil {
+			logger.Fatal("failed to run server", zap.Error(err))
 		}
 	}()
 
-	// Listen on the address provided in the options
-	err = iw.Run(ctx, options.ListenAddress)
+	<-ctx.Done()
+
+	err = iw.Shutdown()
 	if err != nil {
-		logger.Fatal("failed to run server", zap.Error(err))
+		logger.Error("failed to shutdown", zap.Error(err))
 	}
 }
 

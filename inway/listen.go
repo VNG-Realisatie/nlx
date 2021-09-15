@@ -40,7 +40,9 @@ func (i *Inway) Run(ctx context.Context, address string) error {
 
 	go func() {
 		if err := i.monitoringService.Start(); err != nil {
-			errorChannel <- errors.Wrap(err, "error listening on monitoring service")
+			if err != http.ErrServerClosed {
+				errorChannel <- errors.Wrap(err, "error listening on monitoring service")
+			}
 		}
 	}()
 
@@ -62,7 +64,9 @@ func (i *Inway) Run(ctx context.Context, address string) error {
 		}
 
 		if err := i.managementProxy.Serve(l); err != nil {
-			errorChannel <- errors.Wrap(err, "management proxy")
+			if err != http.ErrServerClosed {
+				errorChannel <- errors.Wrap(err, "management proxy")
+			}
 		}
 	}()
 
@@ -76,7 +80,7 @@ func (i *Inway) Shutdown() error {
 	defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
 
 	err := i.serverTLS.Shutdown(localCtx)
-	if err != nil {
+	if err != http.ErrServerClosed {
 		return err
 	}
 

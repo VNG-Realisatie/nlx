@@ -41,7 +41,7 @@ func main() {
 	termChan := make(chan os.Signal, 1)
 	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 
-	defer func() {
+	go func() {
 		<-termChan
 		cancel()
 	}()
@@ -82,7 +82,10 @@ func main() {
 		logger.Error("could not shutdown health checker", zap.Error(err))
 	}
 
-	db.Close()
+	err = db.Close()
+	if err != nil {
+		logger.Error("could not shutdown db", zap.Error(err))
+	}
 }
 
 func parseOptions() {

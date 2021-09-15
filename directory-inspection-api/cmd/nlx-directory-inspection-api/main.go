@@ -74,7 +74,7 @@ func main() {
 	termChan := make(chan os.Signal, 1)
 	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 
-	defer func() {
+	go func() {
 		<-termChan
 		cancel()
 	}()
@@ -138,7 +138,10 @@ func shutdown(logger *zap.Logger, server *Server, directoryDB database.Directory
 		logger.Error("could not shutdown directory database", zap.Error(err))
 	}
 
-	db.Close()
+	err = db.Close()
+	if err != nil {
+		logger.Error("could not shutdown db", zap.Error(err))
+	}
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {

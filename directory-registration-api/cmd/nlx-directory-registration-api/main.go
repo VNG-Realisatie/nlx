@@ -158,7 +158,11 @@ func main() {
 	<-ctx.Done()
 
 	grpcServer.GracefulStop()
-	db.Close()
+
+	err = db.Close()
+	if err != nil {
+		logger.Error("could not shutdown db", zap.Error(err))
+	}
 }
 
 func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
