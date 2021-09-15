@@ -16,7 +16,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
@@ -76,10 +75,9 @@ func TestManagementService_GetSettings(t *testing.T) {
 			defer ctrl.Finish()
 
 			l := zap.NewNop()
-			p := process.NewProcess(l)
 			d := mock_directory.NewMockClient(ctrl)
 
-			h := server.NewManagementService(l, p, d, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl), management.NewClient)
+			h := server.NewManagementService(l, d, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl), management.NewClient)
 			got, err := h.GetSettings(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
@@ -304,9 +302,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			defer ctrl.Finish()
 
 			l := zap.NewNop()
-			p := process.NewProcess(l)
 
-			h := server.NewManagementService(l, p, tt.directoryClient(ctrl), nil, tt.db(ctrl), nil, tt.auditLog(ctrl), management.NewClient)
+			h := server.NewManagementService(l, tt.directoryClient(ctrl), nil, tt.db(ctrl), nil, tt.auditLog(ctrl), management.NewClient)
 			got, err := h.UpdateSettings(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

@@ -14,7 +14,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -26,7 +25,6 @@ import (
 
 func TestGetService(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
 	mockCtrl := gomock.NewController(t)
@@ -35,7 +33,6 @@ func TestGetService(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,

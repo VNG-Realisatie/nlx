@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -120,7 +119,6 @@ var tests = []struct {
 
 func TestNewAPI(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 
 	// Test exceptions during management-api creation
 	for _, test := range tests {
@@ -139,7 +137,6 @@ func TestNewAPI(t *testing.T) {
 				test.db,
 				nil,
 				logger,
-				testProcess,
 				cert,
 				orgCert,
 				test.directoryInspectionAddress,

@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/metadata"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -81,14 +80,12 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 	}
 
 	logger := zaptest.Logger(t)
-	proc := process.NewProcess(logger)
 
 	bundle, err := newCertificateBundle()
 	assert.NoError(t, err)
 
 	s := server.NewManagementService(
 		logger,
-		proc,
 		mocks.dc,
 		bundle,
 		mocks.db,

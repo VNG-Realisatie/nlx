@@ -18,7 +18,6 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
@@ -31,7 +30,6 @@ import (
 
 func newManagementService(t *testing.T) (s *server.ManagementService, auditLogger *mock_auditlog.MockLogger) {
 	logger := zaptest.Logger(t)
-	proc := process.NewProcess(logger)
 
 	ctrl := gomock.NewController(t)
 
@@ -52,7 +50,6 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 
 	s = server.NewManagementService(
 		logger,
-		proc,
 		mock_directory.NewMockClient(ctrl),
 		bundle,
 		mock_database.NewMockConfigDatabase(ctrl),

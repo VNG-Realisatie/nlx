@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -24,7 +23,6 @@ import (
 
 func TestGetStatisticsOfServices(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
 	mockCtrl := gomock.NewController(t)
@@ -37,7 +35,6 @@ func TestGetStatisticsOfServices(t *testing.T) {
 
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,

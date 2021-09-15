@@ -5,16 +5,12 @@ package api
 
 import (
 	"context"
-	"log"
 	"net"
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
-	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -40,7 +36,7 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 
 	listen, err := net.Listen("tcp", configAddress)
 	if err != nil {
-		log.Fatal("failed to create listener", zap.Error(err))
+		return err
 	}
 
 	g.Go(func() error {
@@ -76,35 +72,57 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 	r.Mount("/api/v1/environment", environmentRoutes(a))
 	a.authenticator.MountRoutes(r)
 
-	server := &http.Server{
+	a.httpServer = &http.Server{
 		Addr:    address,
 		Handler: r,
 	}
 
-	// ErrServerClosed is more info message than error
-	g.Go(server.ListenAndServe)
+	g.Go(func() error {
+		err = a.httpServer.ListenAndServe()
+		if err != http.ErrServerClosed {
+			return err
+		}
 
-	shutDownComplete := make(chan struct{})
-
-	a.process.CloseGracefully(func() error {
-		localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-		sherr := server.Shutdown(localCtx)
-		close(shutDownComplete)
-		return sherr
+		return nil
 	})
 
-	// Listener will return immediately on Shutdown call.
-	// So we need to wait until all open connections will be closed gracefully
-	<-shutDownComplete
+	return g.Wait()
+}
 
-	err = g.Wait()
+func (a *API) Shutdown(ctx context.Context) error {
+	g, _ := errgroup.WithContext(context.Background())
 
-	if err != http.ErrServerClosed {
-		return errors.Wrap(err, "failed to run http server")
+	g.Go(func() error {
+		shutdownGrpcServer(ctx, a.grpcServer)
+		return nil
+	})
+
+	g.Go(func() error {
+		err := a.httpServer.Shutdown(ctx)
+		if err != http.ErrServerClosed {
+			return err
+		}
+
+		return nil
+	})
+
+	return g.Wait()
+}
+
+func shutdownGrpcServer(ctx context.Context, s *grpc.Server) {
+	stopped := make(chan struct{})
+
+	go func() {
+		s.GracefulStop()
+		close(stopped)
+	}()
+
+	select {
+	case <-ctx.Done():
+		s.Stop()
+	case <-stopped:
+		return
 	}
-
-	return nil
 }
 
 type healthResponse struct {

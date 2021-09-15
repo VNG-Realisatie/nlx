@@ -17,7 +17,6 @@ import (
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -89,7 +88,6 @@ func TestCreateInway(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			logger := zaptest.Logger(t)
-			testProcess := process.NewProcess(logger)
 
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
@@ -101,7 +99,6 @@ func TestCreateInway(t *testing.T) {
 			}
 			service := server.NewManagementService(
 				logger,
-				testProcess,
 				mock_directory.NewMockClient(mockCtrl),
 				nil,
 				mockDatabase,
@@ -123,7 +120,6 @@ func TestCreateInway(t *testing.T) {
 
 func TestGetInway(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
 	mockCtrl := gomock.NewController(t)
@@ -132,7 +128,6 @@ func TestGetInway(t *testing.T) {
 	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,
@@ -175,7 +170,6 @@ func TestGetInway(t *testing.T) {
 
 func TestUpdateInway(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
 	mockInway := &database.Inway{
@@ -192,7 +186,6 @@ func TestUpdateInway(t *testing.T) {
 
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,
@@ -220,7 +213,6 @@ func TestUpdateInway(t *testing.T) {
 
 func TestDeleteInway(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
 	mockCtrl := gomock.NewController(t)
@@ -231,7 +223,6 @@ func TestDeleteInway(t *testing.T) {
 
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,
@@ -252,7 +243,6 @@ func TestDeleteInway(t *testing.T) {
 
 func TestListInways(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 	ctx := context.Background()
 
 	mockCtrl := gomock.NewController(t)
@@ -285,7 +275,6 @@ func TestListInways(t *testing.T) {
 
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,

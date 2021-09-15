@@ -23,7 +23,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -42,9 +41,9 @@ type API struct {
 	environment     *environment.Environment
 	cert            *common_tls.CertificateBundle
 	orgCert         *common_tls.CertificateBundle
-	process         *process.Process
 	mux             *runtime.ServeMux
 	grpcServer      *grpc.Server
+	httpServer      *http.Server
 	authenticator   Authenticator
 	directoryClient directory.Client
 	configDatabase  database.ConfigDatabase
@@ -57,13 +56,9 @@ type Authenticator interface {
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, mainProcess *process.Process, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
+func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
 	if db == nil {
 		return nil, errors.New("database is not configured")
-	}
-
-	if mainProcess == nil {
-		return nil, errors.New("process argument is nil. needed to close gracefully")
 	}
 
 	if len(orgCert.Certificate().Subject.Organization) != 1 {
@@ -89,7 +84,6 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 
 	managementService := server.NewManagementService(
 		logger,
-		mainProcess,
 		directoryClient,
 		orgCert,
 		db,
@@ -137,7 +131,6 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 		cert:            cert,
 		orgCert:         orgCert,
 		grpcServer:      grpcServer,
-		process:         mainProcess,
 		mux:             mux,
 		authenticator:   authenticator,
 		directoryClient: directoryClient,

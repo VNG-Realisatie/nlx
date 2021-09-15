@@ -12,7 +12,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -24,7 +23,6 @@ import (
 
 func TestCreateService(t *testing.T) {
 	logger := zap.NewNop()
-	testProcess := process.NewProcess(logger)
 
 	databaseService := &database.Service{
 		Name:        "my-service",
@@ -47,7 +45,6 @@ func TestCreateService(t *testing.T) {
 
 	service := server.NewManagementService(
 		logger,
-		testProcess,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		mockDatabase,

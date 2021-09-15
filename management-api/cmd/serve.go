@@ -4,8 +4,13 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -14,7 +19,6 @@ import (
 
 	"go.nlx.io/nlx/common/cmd"
 	"go.nlx.io/nlx/common/logoptions"
-	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
@@ -128,9 +132,18 @@ var serveCommand = &cobra.Command{
 			}
 		}
 
-		logger.Info("starting management api", zap.String("listen-address", serveOpts.ListenAddress))
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 
-		mainProcess := process.NewProcess(logger)
+		termChan := make(chan os.Signal, 1)
+		signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+
+		go func() {
+			<-termChan
+			cancel()
+		}()
+
+		logger.Info("starting management api", zap.String("listen-address", serveOpts.ListenAddress))
 
 		var txlogDB txlogdb.TxlogDatabase
 
@@ -180,7 +193,6 @@ var serveCommand = &cobra.Command{
 			db,
 			txlogDB,
 			logger,
-			mainProcess,
 			cert,
 			orgCert,
 			serveOpts.DirectoryInspectionAddress,
@@ -196,6 +208,16 @@ var serveCommand = &cobra.Command{
 		err = a.ListenAndServe(serveOpts.ListenAddress, serveOpts.ConfigListenAddress)
 		if err != nil {
 			logger.Fatal("failed to listen and serve", zap.Error(err))
+		}
+
+		<-ctx.Done()
+
+		gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+
+		err = a.Shutdown(gracefulCtx)
+		if err != nil {
+			logger.Fatal("failed to shutdown API", zap.Error(err))
 		}
 	},
 }

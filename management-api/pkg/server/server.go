@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 
-	"go.nlx.io/nlx/common/process"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -28,7 +27,6 @@ type ManagementService struct {
 	external.UnimplementedDelegationServiceServer
 
 	logger                     *zap.Logger
-	mainProcess                *process.Process
 	directoryClient            directory.Client
 	orgCert                    *tls.CertificateBundle
 	configDatabase             database.ConfigDatabase
@@ -37,11 +35,10 @@ type ManagementService struct {
 	createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
 }
 
-func NewManagementService(logger *zap.Logger, mainProcess *process.Process, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
+func NewManagementService(logger *zap.Logger, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
 	return &ManagementService{
 		logger:                     logger,
 		orgCert:                    orgCert,
-		mainProcess:                mainProcess,
 		directoryClient:            directoryClient,
 		configDatabase:             configDatabase,
 		txlogDatabase:              txlogDatabase,
