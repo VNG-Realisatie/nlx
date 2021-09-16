@@ -1,3 +1,22 @@
+# [0.114.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.113.0...v0.114.0) (2021-09-16)
+
+
+### Bug Fixes
+
+* **helm:** oidc sessionSignKey not required with enableBasicAuth ([0d174d5](https://gitlab.com/commonground/nlx/nlx/commit/0d174d5b359f98b00f6e2c1de98777f887c99615))
+* **management:** properly synchronize incoming orders ([fb8dd6c](https://gitlab.com/commonground/nlx/nlx/commit/fb8dd6c5383d250ad7d0ab2ae27675573712e3d7))
+* **management:** use error.is instead of == when checking errors ([450071a](https://gitlab.com/commonground/nlx/nlx/commit/450071a9560bae078f9c3ec61f3f33d618e1b909))
+
+
+### Features
+
+* **management:** add tests for service deletion endpoint ([ef0c465](https://gitlab.com/commonground/nlx/nlx/commit/ef0c465e8f808e9f04c66789059fa4ee74ee5ad6))
+* **management:** delete service with active requests and/or orders ([c988c9f](https://gitlab.com/commonground/nlx/nlx/commit/c988c9ff829ffe37411edce0ef68b2aeaafedc86))
+* **management:** remove outgoing access request when a service is removed ([f82f546](https://gitlab.com/commonground/nlx/nlx/commit/f82f546472a397468f242ec762458a53981009dd))
+* **management:** remove outgoing access request when a service is removed ([3bce171](https://gitlab.com/commonground/nlx/nlx/commit/3bce171f105cfa62fc15902f55944a1f5ba955b7))
+* **management:** remove service, access requests and order service entries from db ([01fb250](https://gitlab.com/commonground/nlx/nlx/commit/01fb250507e0ead7c74e7088ce5c5aee3b4c09f3))
+* **management:** scheduler removes outgoing accessrequests when a service is deleted ([d7d25c4](https://gitlab.com/commonground/nlx/nlx/commit/d7d25c443877a90640e0d30e02b4121b269b5761))
+
 # [0.113.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.112.0...v0.113.0) (2021-09-07)
 
 
