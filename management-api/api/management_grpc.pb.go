@@ -30,7 +30,7 @@ type ManagementClient interface {
 	GetStatisticsOfServices(ctx context.Context, in *GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*GetStatisticsOfServicesResponse, error)
 	ListInways(ctx context.Context, in *ListInwaysRequest, opts ...grpc.CallOption) (*ListInwaysResponse, error)
 	GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*Inway, error)
-	CreateInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error)
+	RegisterInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error)
 	UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*Inway, error)
 	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListIncomingAccessRequest(ctx context.Context, in *ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
@@ -157,9 +157,9 @@ func (c *managementClient) GetInway(ctx context.Context, in *GetInwayRequest, op
 	return out, nil
 }
 
-func (c *managementClient) CreateInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error) {
+func (c *managementClient) RegisterInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error) {
 	out := new(Inway)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/RegisterInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -334,7 +334,7 @@ type ManagementServer interface {
 	GetStatisticsOfServices(context.Context, *GetStatisticsOfServicesRequest) (*GetStatisticsOfServicesResponse, error)
 	ListInways(context.Context, *ListInwaysRequest) (*ListInwaysResponse, error)
 	GetInway(context.Context, *GetInwayRequest) (*Inway, error)
-	CreateInway(context.Context, *Inway) (*Inway, error)
+	RegisterInway(context.Context, *Inway) (*Inway, error)
 	UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error)
 	DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error)
 	ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error)
@@ -392,8 +392,8 @@ func (UnimplementedManagementServer) ListInways(context.Context, *ListInwaysRequ
 func (UnimplementedManagementServer) GetInway(context.Context, *GetInwayRequest) (*Inway, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInway not implemented")
 }
-func (UnimplementedManagementServer) CreateInway(context.Context, *Inway) (*Inway, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateInway not implemented")
+func (UnimplementedManagementServer) RegisterInway(context.Context, *Inway) (*Inway, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
 func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateInway not implemented")
@@ -657,20 +657,20 @@ func _Management_GetInway_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_CreateInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Management_RegisterInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Inway)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).CreateInway(ctx, in)
+		return srv.(ManagementServer).RegisterInway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/CreateInway",
+		FullMethod: "/nlx.management.Management/RegisterInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).CreateInway(ctx, req.(*Inway))
+		return srv.(ManagementServer).RegisterInway(ctx, req.(*Inway))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1033,8 +1033,8 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Management_GetInway_Handler,
 		},
 		{
-			MethodName: "CreateInway",
-			Handler:    _Management_CreateInway_Handler,
+			MethodName: "RegisterInway",
+			Handler:    _Management_RegisterInway_Handler,
 		},
 		{
 			MethodName: "UpdateInway",

@@ -80,7 +80,7 @@ func TestSetOrganizationInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name())
+			repo, close := newRepo(t, t.Name(), false)
 			defer close()
 
 			inwayArgs := tt.setup(t)
@@ -160,7 +160,7 @@ func TestClearOrganizationInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name())
+			repo, close := newRepo(t, t.Name(), false)
 			defer close()
 
 			inwayArgs := tt.setup(t)
@@ -248,7 +248,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name())
+			repo, close := newRepo(t, t.Name(), false)
 			defer close()
 
 			inwayArgs := tt.setup(t)

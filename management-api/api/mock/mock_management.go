@@ -77,26 +77,6 @@ func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).CreateAccessRequest), varargs...)
 }
 
-// CreateInway mocks base method.
-func (m *MockManagementClient) CreateInway(ctx context.Context, in *api.Inway, opts ...grpc.CallOption) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "CreateInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateInway indicates an expected call of CreateInway.
-func (mr *MockManagementClientMockRecorder) CreateInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementClient)(nil).CreateInway), varargs...)
-}
-
 // CreateOutgoingOrder mocks base method.
 func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
@@ -437,6 +417,26 @@ func (mr *MockManagementClientMockRecorder) ListServices(ctx, in interface{}, op
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementClient)(nil).ListServices), varargs...)
 }
 
+// RegisterInway mocks base method.
+func (m *MockManagementClient) RegisterInway(ctx context.Context, in *api.Inway, opts ...grpc.CallOption) (*api.Inway, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RegisterInway", varargs...)
+	ret0, _ := ret[0].(*api.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterInway indicates an expected call of RegisterInway.
+func (mr *MockManagementClientMockRecorder) RegisterInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockManagementClient)(nil).RegisterInway), varargs...)
+}
+
 // RejectIncomingAccessRequest mocks base method.
 func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
@@ -668,21 +668,6 @@ func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *a
 func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).CreateAccessRequest), arg0, arg1)
-}
-
-// CreateInway mocks base method.
-func (m *MockManagementServer) CreateInway(arg0 context.Context, arg1 *api.Inway) (*api.Inway, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateInway indicates an expected call of CreateInway.
-func (mr *MockManagementServerMockRecorder) CreateInway(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockManagementServer)(nil).CreateInway), arg0, arg1)
 }
 
 // CreateOutgoingOrder mocks base method.
@@ -938,6 +923,21 @@ func (m *MockManagementServer) ListServices(arg0 context.Context, arg1 *api.List
 func (mr *MockManagementServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockManagementServer)(nil).ListServices), arg0, arg1)
+}
+
+// RegisterInway mocks base method.
+func (m *MockManagementServer) RegisterInway(arg0 context.Context, arg1 *api.Inway) (*api.Inway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterInway", arg0, arg1)
+	ret0, _ := ret[0].(*api.Inway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterInway indicates an expected call of RegisterInway.
+func (mr *MockManagementServerMockRecorder) RegisterInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockManagementServer)(nil).RegisterInway), arg0, arg1)
 }
 
 // RejectIncomingAccessRequest mocks base method.

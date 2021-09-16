@@ -19,11 +19,11 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-// CreateInway creates a new inway
-func (s *ManagementService) CreateInway(ctx context.Context, inway *api.Inway) (*api.Inway, error) {
+// RegisterInway creates a new inway
+func (s *ManagementService) RegisterInway(ctx context.Context, inway *api.Inway) (*api.Inway, error) {
 	logger := s.logger.With(zap.String("name", inway.Name))
 
-	logger.Info("rpc request CreateInway")
+	logger.Info("rpc request RegisterInway")
 
 	p, ok := peer.FromContext(ctx)
 	if !ok {
@@ -52,7 +52,7 @@ func (s *ManagementService) CreateInway(ctx context.Context, inway *api.Inway) (
 		IPAddress:   inway.IpAddress,
 	}
 
-	if err := s.configDatabase.CreateInway(ctx, model); err != nil {
+	if err := s.configDatabase.RegisterInway(ctx, model); err != nil {
 		logger.Error("error creating inway in DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
 	}

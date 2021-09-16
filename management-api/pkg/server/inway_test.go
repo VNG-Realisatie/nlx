@@ -83,7 +83,7 @@ var createInwayTests = []struct {
 	},
 }
 
-func TestCreateInway(t *testing.T) {
+func TestRegisterInway(t *testing.T) {
 	for _, tt := range createInwayTests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -95,7 +95,7 @@ func TestCreateInway(t *testing.T) {
 			ctx := peer.NewContext(context.Background(), tt.args.peer)
 			mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 			if tt.want != nil {
-				mockDatabase.EXPECT().CreateInway(ctx, tt.args.database)
+				mockDatabase.EXPECT().RegisterInway(ctx, tt.args.database)
 			}
 			service := server.NewManagementService(
 				logger,
@@ -107,7 +107,7 @@ func TestCreateInway(t *testing.T) {
 				management.NewClient,
 			)
 
-			response, err := service.CreateInway(ctx, tt.args.request)
+			response, err := service.RegisterInway(ctx, tt.args.request)
 			if tt.want != nil {
 				assert.NoError(t, err, "could not create inway")
 				assert.Equal(t, tt.want, response)

@@ -20,7 +20,6 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryRegistrationClient interface {
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
-	SetOrganizationInway(ctx context.Context, in *SetOrganizationInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -41,15 +40,6 @@ func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *Reg
 	return out, nil
 }
 
-func (c *directoryRegistrationClient) SetOrganizationInway(ctx context.Context, in *SetOrganizationInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/SetOrganizationInway", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/ClearOrganizationInway", in, out, opts...)
@@ -64,7 +54,6 @@ func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context
 // for forward compatibility
 type DirectoryRegistrationServer interface {
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
-	SetOrganizationInway(context.Context, *SetOrganizationInwayRequest) (*emptypb.Empty, error)
 	ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedDirectoryRegistrationServer()
 }
@@ -75,9 +64,6 @@ type UnimplementedDirectoryRegistrationServer struct {
 
 func (UnimplementedDirectoryRegistrationServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
-}
-func (UnimplementedDirectoryRegistrationServer) SetOrganizationInway(context.Context, *SetOrganizationInwayRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetOrganizationInway not implemented")
 }
 func (UnimplementedDirectoryRegistrationServer) ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearOrganizationInway not implemented")
@@ -113,24 +99,6 @@ func _DirectoryRegistration_RegisterInway_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DirectoryRegistration_SetOrganizationInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetOrganizationInwayRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DirectoryRegistrationServer).SetOrganizationInway(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/registrationapi.DirectoryRegistration/SetOrganizationInway",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryRegistrationServer).SetOrganizationInway(ctx, req.(*SetOrganizationInwayRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _DirectoryRegistration_ClearOrganizationInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -159,10 +127,6 @@ var DirectoryRegistration_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterInway",
 			Handler:    _DirectoryRegistration_RegisterInway_Handler,
-		},
-		{
-			MethodName: "SetOrganizationInway",
-			Handler:    _DirectoryRegistration_SetOrganizationInway_Handler,
 		},
 		{
 			MethodName: "ClearOrganizationInway",
