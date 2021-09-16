@@ -1,0 +1,21 @@
+@startuml
+title: Set organization inway
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+actor User as user
+participant "Management UI" as managementUI
+participant "Management API" as managementAPI
+database "Management database" as managementDatabase
+
+
+user -> managementUI : Set organization inway
+managementUI -> managementAPI  :Set organization inway
+managementAPI -> managementDatabase : Set organization inway
+managementDatabase -> managementAPI : organization inway set
+managementAPI -> managementUI -- : organization inway set
+managementUI -> user -- : show organization inway set confirmation
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+title: Register inway
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "Organization"
+participant "Inway" as inway
+participant "Management API" as managementAPI
+database "Management database" as managementDatabase
+end box
+
+box "Directory"
+participant "Directory registration API" as directoryRegistrationAPI
+participant "Directory database" as directoryDatabase
+end box
+
+
+inway -> managementAPI: Get services the inway should offer
+managementAPI -> managementDatabase: Get services offered by inway
+managementDatabase -> managementAPI: return services
+managementAPI -> inway: return services
+inway -> managementAPI: Get organization inway
+managementAPI -> managementDatabase: Get organization inway
+managementDatabase -> managementAPI: return organization inway
+managementAPI -> inway: return organization inway
+
+inway -> directoryRegistrationAPI: Register services and organization inway flag
+directoryRegistrationAPI -> directoryDatabase: Register inway
+directoryRegistrationAPI -> directoryDatabase: Set availabilities
+alt inway is organization inway
+directoryRegistrationAPI -> directoryDatabase: Set organization inway
+end
+directoryRegistrationAPI -> inway: registration complete
+
+@enduml
