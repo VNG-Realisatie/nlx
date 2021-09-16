@@ -20,7 +20,7 @@ spec:
                   return_code=$?
 
                 if [ $return_code -eq 128 ]; then
-                  echo "admin user was already created"
+                  echo "failed to create user, a user with this email address already exists"
                 elif [ ! $return_code -eq 0 ]; then
                   exit 1
                 fi
