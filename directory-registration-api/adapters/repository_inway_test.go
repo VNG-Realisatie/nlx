@@ -184,7 +184,7 @@ func TestRegisterInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name())
+			repo, close := newRepo(t, t.Name(), false)
 			defer close()
 
 			registrations := tt.registrations

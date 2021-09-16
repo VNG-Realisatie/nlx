@@ -15,6 +15,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway/plugins"
@@ -31,7 +32,7 @@ func (i *Inway) startConfigurationPolling(ctx context.Context) error {
 		i.logger.Warn("failed to get inway hostname", zap.Error(err))
 	}
 
-	_, err = i.managementClient.CreateInway(ctx, &api.Inway{
+	_, err = i.managementClient.RegisterInway(ctx, &api.Inway{
 		Name:        i.name,
 		Version:     version.BuildVersion,
 		Hostname:    hostname,
@@ -40,6 +41,14 @@ func (i *Inway) startConfigurationPolling(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	settings, err := i.managementClient.GetSettings(ctx, &emptypb.Empty{})
+	if err != nil {
+		return fmt.Errorf("error fetching settings: %s", err)
+	}
+
+	i.isOrganizationInway = settings.OrganizationInway == i.name
+	i.logger.Debug("fetched settings from management client", zap.Any("organization inway", settings.OrganizationInway), zap.Bool("i.isOrganizationInway", i.isOrganizationInway))
 
 	services, err := i.getServicesFromManagementAPI()
 	if err != nil && err != errManagementAPIUnavailable {
@@ -121,6 +130,15 @@ func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.D
 			return defaultInterval
 		}
 	}
+
+	settings, err := i.managementClient.GetSettings(context.Background(), &emptypb.Empty{})
+	if err != nil {
+		i.logger.Error("error fetching settings from managementClient", zap.Error(err))
+		return defaultInterval
+	}
+
+	i.isOrganizationInway = settings.OrganizationInway == i.name
+	i.logger.Debug("fetched settings from management client", zap.Any("organization inway", settings.OrganizationInway), zap.Bool("i.isOrganizationInway", i.isOrganizationInway))
 
 	i.logger.Info("retrieved config successfully")
 	expBackOff.Reset()

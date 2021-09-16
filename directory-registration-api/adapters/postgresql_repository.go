@@ -15,6 +15,7 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-registration-api/domain"
 )
@@ -26,6 +27,7 @@ var (
 )
 
 type PostgreSQLRepository struct {
+	logger                             *zap.Logger
 	db                                 *sqlx.DB
 	registerInwayStmt                  *sqlx.NamedStmt
 	getInwayStmt                       *sqlx.NamedStmt
@@ -37,7 +39,12 @@ type PostgreSQLRepository struct {
 	selectOrganizationInwayAddressStmt *sqlx.NamedStmt
 }
 
-func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
+//nolint gocyclo: all checks in this function are necessary
+func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
+	if logger == nil {
+		panic("missing logger")
+	}
+
 	if db == nil {
 		panic("missing db")
 	}
@@ -83,6 +90,7 @@ func NewPostgreSQLRepository(db *sqlx.DB) (*PostgreSQLRepository, error) {
 	}
 
 	return &PostgreSQLRepository{
+		logger:                             logger.Named("postgres repository"),
 		db:                                 db,
 		registerInwayStmt:                  registerInwayStmt,
 		getInwayStmt:                       getInwayStmt,
@@ -330,25 +338,45 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 	return address.String, nil
 }
 
+// ClearIfSetAsOrganizationInway clears the inway for the given organization.
+// This method should be called if IsOrganizationInway is false in the request, to ensure the directory has this correctly set as well
+func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context, organizationName, selfAddress string) error {
+	organizationSelfAddress, err := r.GetOrganizationInwayAddress(ctx, organizationName)
+	if err != nil {
+		if errors.Is(err, ErrOrganizationNotFound) {
+			return nil
+		}
+
+		return err
+	}
+
+	if selfAddress == organizationSelfAddress {
+		r.logger.Warn("unexpected state: inway was incorrectly set as organization inway ", zap.String("inway self address", selfAddress), zap.String("organization inway self address", organizationSelfAddress))
+		return r.ClearOrganizationInway(ctx, organizationName)
+	}
+
+	return nil
+}
+
 func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
-			insert into directory.organizations 
+			insert into directory.organizations
 			            (name)
 			     values (:organization_name)
-			on conflict 
+			on conflict
 			    		on constraint organizations_uq_name
-			  			do update 
+			  			do update
 			      			set name = excluded.name -- no-op update to return id
 						returning id
-		) 
-		insert into directory.inways 
+		)
+		insert into directory.inways
 		    		(name, organization_id, address, version, created_at, updated_at)
 			 select :inway_name, organization.id, :inway_address, nullif(:inway_version, ''), :inway_created_at, :inway_updated_at
 			   from organization
-	   	on conflict (name, organization_id) do update set 
+	   	on conflict (name, organization_id) do update set
 	      			              name = 	excluded.name,
-	      			              address = excluded.address, 
+	      			              address = excluded.address,
 								  version = excluded.version,
 								  updated_at = excluded.updated_at;
 	`
@@ -358,11 +386,11 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 
 func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
-		select directory.inways.name as name, address, version as nlx_version, created_at, updated_at, directory.organizations.name as organization_name 
+		select directory.inways.name as name, address, version as nlx_version, created_at, updated_at, directory.organizations.name as organization_name
 		from directory.inways
-		join directory.organizations 
+		join directory.organizations
 		    on directory.inways.organization_id = directory.organizations.id
-		where 
+		where
 		      directory.organizations.name = :organization_name
 		  and directory.inways.name = :name;
 	`
@@ -379,11 +407,11 @@ func prepareRegisterServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 		    select directory.inways.id from directory.inways, organization where organization_id = organization.id
 		),
 		service as (
-			insert into directory.services 
+			insert into directory.services
 			    		(organization_id, name, internal, documentation_url, api_specification_type, public_support_contact, tech_support_contact, request_costs, monthly_costs, one_time_costs)
 				 select organization.id, :name, :internal, nullif(:documentation_url, ''), nullif(:api_specification_type, ''), nullif(:public_support_contact, ''), nullif(:tech_support_contact, ''), :request_costs, :monthly_costs, :one_time_costs
 				   from organization
-			on conflict on constraint services_uq_name 
+			on conflict on constraint services_uq_name
 		  do update set internal = excluded.internal,
 		  				documentation_url = excluded.documentation_url,
 	 					api_specification_type = excluded.api_specification_type,
@@ -395,15 +423,15 @@ func prepareRegisterServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 		      returning id
 		),
 		availabilities as (
-					insert into directory.availabilities 
+					insert into directory.availabilities
 								(inway_id, service_id, last_announced)
 						 select inway.id, service.id, now()
 						   from inway, service
 					on conflict on constraint availabilities_uq_inway_service
 				  do update set last_announced = now(),
-								active = true		    
+								active = true
 		) select id from service;
-		
+
 	`
 
 	return db.PrepareNamed(query)
@@ -413,9 +441,9 @@ func prepareGetServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		select directory.services.id as id, directory.services.name as name, documentation_url, api_specification_type, internal, tech_support_contact, public_support_contact, directory.organizations.name as organization_name, one_time_costs, monthly_costs, request_costs
 		from directory.services
-		join directory.organizations 
+		join directory.organizations
 		    on directory.services.organization_id = directory.organizations.id
-		where 
+		where
 		      directory.services.id = :id;
 	`
 

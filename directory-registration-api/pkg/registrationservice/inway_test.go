@@ -49,6 +49,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					EXPECT().
 					RegisterInway(gomock.Any()).
 					AnyTimes()
+
+				mocks.r.EXPECT().
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
@@ -68,6 +72,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					RegisterInway(gomock.Any()).
 					Return(nil).
 					AnyTimes()
+
+				mocks.r.EXPECT().
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
@@ -82,6 +90,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					EXPECT().
 					RegisterInway(gomock.Any()).
 					AnyTimes()
+
+				mocks.r.EXPECT().
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",
@@ -89,7 +101,40 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 			wantResponse: &registrationapi.RegisterInwayResponse{},
 			wantErr:      nil,
 		},
-		"happy_flow": {
+		"happy_flow_is_org_inway": {
+			setup: func(mocks serviceMocks) {
+				mocks.r.
+					EXPECT().
+					RegisterInway(gomock.Any()).
+					Return(nil).
+					AnyTimes()
+
+				mocks.r.
+					EXPECT().
+					RegisterService(gomock.Any()).
+					Return(nil)
+
+				mocks.r.
+					EXPECT().
+					SetOrganizationInway(gomock.Any(), gomock.Any(), gomock.Any()).
+					Return(nil)
+			},
+			request: &registrationapi.RegisterInwayRequest{
+				InwayAddress:        "localhost",
+				IsOrganizationInway: true,
+				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
+					{
+						Name:         testServiceName,
+						MonthlyCosts: int32(500),
+						RequestCosts: int32(100),
+						OneTimeCosts: int32(50),
+					},
+				},
+			},
+			wantResponse: &registrationapi.RegisterInwayResponse{},
+			wantErr:      nil,
+		},
+		"happy_flow_not_org_inway": {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
@@ -100,6 +145,10 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				mocks.r.
 					EXPECT().
 					RegisterService(gomock.Any()).Return(nil)
+
+				mocks.r.EXPECT().
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
 				InwayAddress: "localhost",

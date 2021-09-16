@@ -489,7 +489,7 @@
         ]
       },
       "post": {
-        "operationId": "Management_CreateInway",
+        "operationId": "Management_RegisterInway",
         "responses": {
           "200": {
             "description": "A successful response.",

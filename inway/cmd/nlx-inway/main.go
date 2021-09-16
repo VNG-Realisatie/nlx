@@ -70,8 +70,8 @@ func main() {
 		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
 	}
 
-	cert, mErr := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
-	if mErr != nil {
+	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+	if err != nil {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
