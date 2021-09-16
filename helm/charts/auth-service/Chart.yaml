@@ -2,5 +2,5 @@ apiVersion: v2
 name: auth-service
 description: The auth-service can be used to authorize requests made to an outway
 type: application
-version: 0.114.0
-appVersion: 0.114.0
+version: 0.114.1
+appVersion: 0.114.1
