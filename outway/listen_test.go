@@ -452,6 +452,8 @@ func TestFailingTransport(t *testing.T) {
 }
 
 func TestRunServer(t *testing.T) {
+	t.Parallel()
+
 	logger := zap.NewNop()
 
 	certificate, _ := tls.LoadX509KeyPair(
@@ -459,37 +461,45 @@ func TestRunServer(t *testing.T) {
 		filepath.Join("..", "testing", "pki", "org-nlx-test-key.pem"),
 	)
 
-	tests := []struct {
-		description   string
+	tests := map[string]struct {
 		listenAddress string
 		certificate   *tls.Certificate
 		errorMessage  string
 	}{
-		{
-			"invalid listen address",
+		"invalid listen address": {
 			"invalid",
 			nil,
 			"error listening on server: listen tcp: address invalid: missing port in address",
 		},
-		{
-			"invalid listen address with TLS",
+		"invalid listen address with TLS": {
 			"invalid",
 			&certificate,
 			"error listening on server: listen tcp: address invalid: missing port in address",
 		},
 	}
 
-	monitorService, err := monitoring.NewMonitoringService("localhost:8081", logger)
-	assert.Nil(t, err)
+	port := 8081
 
-	for _, test := range tests {
-		o := &Outway{
-			ctx:            context.Background(),
-			logger:         logger,
-			monitorService: monitorService,
-		}
+	for name, tt := range tests {
+		tt := tt
 
-		err = o.RunServer(test.listenAddress, test.certificate)
-		assert.EqualError(t, err, test.errorMessage)
+		t.Run(name, func(t *testing.T) {
+			monitorService, err := monitoring.NewMonitoringService(fmt.Sprintf("localhost:%d", port), logger)
+			assert.Nil(t, err)
+
+			o := &Outway{
+				ctx:            context.Background(),
+				logger:         logger,
+				monitorService: monitorService,
+			}
+
+			err = o.RunServer(tt.listenAddress, tt.certificate)
+			assert.EqualError(t, err, tt.errorMessage)
+
+			err = monitorService.Stop()
+			assert.NoError(t, err)
+		})
+
+		port++
 	}
 }
