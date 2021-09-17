@@ -60,7 +60,7 @@ func main() {
 	termChan := make(chan os.Signal, 1)
 	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 
-	defer func() {
+	go func() {
 		<-termChan
 		cancel()
 	}()
@@ -139,6 +139,8 @@ func main() {
 	}()
 
 	<-ctx.Done()
+
+	logger.Info("starting graceful shutdown")
 
 	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()

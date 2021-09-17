@@ -77,6 +77,8 @@ func main() {
 
 	<-ctx.Done()
 
+	logger.Info("starting graceful shutdown")
+
 	err = healthChecker.Shutdown()
 	if err != nil {
 		logger.Error("could not shutdown health checker", zap.Error(err))

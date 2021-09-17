@@ -204,13 +204,17 @@ var serveCommand = &cobra.Command{
 			logger.Fatal("cannot setup management api", zap.Error(err))
 		}
 
-		// Listen on the address provided in the serveOpts
-		err = a.ListenAndServe(serveOpts.ListenAddress, serveOpts.ConfigListenAddress)
-		if err != nil {
-			logger.Fatal("failed to listen and serve", zap.Error(err))
-		}
+		go func() {
+			// Listen on the address provided in the serveOpts
+			err = a.ListenAndServe(serveOpts.ListenAddress, serveOpts.ConfigListenAddress)
+			if err != nil {
+				logger.Fatal("failed to listen and serve", zap.Error(err))
+			}
+		}()
 
 		<-ctx.Done()
+
+		logger.Info("starting graceful shutdown")
 
 		gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()

@@ -91,6 +91,8 @@ func main() {
 
 	<-ctx.Done()
 
+	logger.Info("starting graceful shutdown")
+
 	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
