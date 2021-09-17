@@ -10,7 +10,13 @@ import StateIndicator from '../../../../../components/StateIndicator'
 import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {
-  const { serviceName, organizationName, state, apiSpecificationType } = service
+  const {
+    serviceName,
+    organizationName,
+    state,
+    apiSpecificationType,
+    serialNumber,
+  } = service
   const { t } = useTranslation()
 
   return (
@@ -20,6 +26,7 @@ const DrawerHeader = ({ service }) => {
       <Summary>
         <StateIndicator state={state} showText />
         {apiSpecificationType && <span>{apiSpecificationType}</span>}
+        <span>{t('Serial Number serialNumber', { serialNumber })}</span>
       </Summary>
     </header>
   )
@@ -31,6 +38,7 @@ DrawerHeader.propTypes = {
     organizationName: string.isRequired,
     state: string.isRequired,
     apiSpecificationType: string,
+    serialNumber: string.isRequired,
   }),
 }
 

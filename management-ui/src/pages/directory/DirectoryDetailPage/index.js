@@ -70,6 +70,7 @@ DirectoryDetailPage.propTypes = {
     fetch: func.isRequired,
     requestAccess: func.isRequired,
     retryRequestAccess: func.isRequired,
+    serialNumber: string.isRequired,
   }),
   parentUrl: string,
 }

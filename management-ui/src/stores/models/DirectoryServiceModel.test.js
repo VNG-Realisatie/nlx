@@ -18,6 +18,7 @@ test('initializing the model', () => {
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
+      serialNumber: '',
     },
   })
 

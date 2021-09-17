@@ -24,6 +24,7 @@ class DirectoryServiceModel {
   oneTimeCosts = 0
   monthlyCosts = 0
   requestCosts = 0
+  serialNumber = ''
 
   constructor({
     directoryServicesStore,
@@ -77,6 +78,10 @@ class DirectoryServiceModel {
 
     if (serviceData.requestCosts) {
       this.requestCosts = serviceData.requestCosts / 100
+    }
+
+    if (serviceData.serialNumber) {
+      this.serialNumber = serviceData.serialNumber
     }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
