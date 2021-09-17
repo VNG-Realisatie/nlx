@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/jessevdk/go-flags"
@@ -148,7 +149,7 @@ func main() {
 	}
 
 	go func() {
-		if err := grpcServer.Serve(listen); err != nil {
+		if err = grpcServer.Serve(listen); err != nil {
 			if err != http.ErrServerClosed {
 				log.Fatal("error serving", zap.Error(err))
 			}
@@ -157,11 +158,30 @@ func main() {
 
 	<-ctx.Done()
 
-	grpcServer.GracefulStop()
+	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	shutdownGrpcServer(gracefulCtx, grpcServer)
 
 	err = db.Close()
 	if err != nil {
 		logger.Error("could not shutdown db", zap.Error(err))
+	}
+}
+
+func shutdownGrpcServer(ctx context.Context, s *grpc.Server) {
+	stopped := make(chan struct{})
+
+	go func() {
+		s.GracefulStop()
+		close(stopped)
+	}()
+
+	select {
+	case <-ctx.Done():
+		s.Stop()
+	case <-stopped:
+		return
 	}
 }
 

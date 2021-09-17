@@ -65,20 +65,15 @@ func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certific
 		return nil
 	}
 
-	o.Shutdown()
-
 	return errors.Wrap(err, "error listening on server")
 }
 
-func (o *Outway) Shutdown() {
+func (o *Outway) Shutdown(ctx context.Context) {
 	o.logger.Debug("shutting down")
 
 	o.monitorService.SetNotReady()
 
-	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
-
-	err := o.httpServer.Shutdown(localCtx)
+	err := o.httpServer.Shutdown(ctx)
 	if err != nil {
 		o.logger.Error("error shutting down server", zap.Error(err))
 	}

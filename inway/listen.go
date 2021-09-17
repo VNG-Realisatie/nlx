@@ -7,7 +7,6 @@ import (
 	"context"
 	"net"
 	"net/http"
-	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -73,13 +72,10 @@ func (i *Inway) Run(ctx context.Context, address string) error {
 	return <-errorChannel
 }
 
-func (i *Inway) Shutdown() error {
+func (i *Inway) Shutdown(ctx context.Context) error {
 	i.monitoringService.SetNotReady()
 
-	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel() // do not remove. Otherwise it could cause implicit goroutine leak
-
-	err := i.serverTLS.Shutdown(localCtx)
+	err := i.serverTLS.Shutdown(ctx)
 	if err != http.ErrServerClosed {
 		return err
 	}

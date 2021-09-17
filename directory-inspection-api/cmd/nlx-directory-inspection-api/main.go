@@ -124,11 +124,15 @@ func main() {
 	}
 
 	<-ctx.Done()
-	shutdown(logger, server, directoryDatabase, db)
+
+	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	shutdown(gracefulCtx, logger, server, directoryDatabase, db)
 }
 
-func shutdown(logger *zap.Logger, server *Server, directoryDB database.DirectoryDatabase, db *sqlx.DB) {
-	err := server.Shutdown()
+func shutdown(ctx context.Context, logger *zap.Logger, server *Server, directoryDB database.DirectoryDatabase, db *sqlx.DB) {
+	err := server.Shutdown(ctx)
 	if err != nil {
 		logger.Error("could not shutdown server", zap.Error(err))
 	}

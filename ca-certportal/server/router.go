@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/cloudflare/cfssl/info"
 	"github.com/go-chi/chi"
@@ -82,15 +81,10 @@ func (c *CertPortal) Run() error {
 	return nil
 }
 
-const shutdownTimeout = time.Minute
-
-func (c *CertPortal) Shutdown() error {
+func (c *CertPortal) Shutdown(ctx context.Context) error {
 	c.logger.Debug("shutting down")
 
-	localCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
-	defer cancel()
-
-	return c.httpServer.Shutdown(localCtx)
+	return c.httpServer.Shutdown(ctx)
 }
 
 func (c *CertPortal) GetRouter() chi.Router {

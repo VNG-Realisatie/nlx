@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/cloudflare/cfssl/cli"
 	"github.com/cloudflare/cfssl/cli/sign"
@@ -90,7 +91,10 @@ func main() {
 
 	<-ctx.Done()
 
-	err = cp.Shutdown()
+	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	err = cp.Shutdown(gracefulCtx)
 	if err != nil {
 		logger.Error("shutdown cert portal", zap.Error(err))
 	}

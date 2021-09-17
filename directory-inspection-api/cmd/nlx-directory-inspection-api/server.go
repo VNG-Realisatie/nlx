@@ -9,7 +9,6 @@ import (
 	"runtime/debug"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/cloudflare/cfssl/log"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -182,11 +181,8 @@ func startHTTPServers(httpsServer, httpServer *http.Server) {
 	}()
 }
 
-func closeHTTPServer(s *http.Server) error {
-	localCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
-
-	err := s.Shutdown(localCtx)
+func closeHTTPServer(ctx context.Context, s *http.Server) error {
+	err := s.Shutdown(ctx)
 	if err != http.ErrServerClosed {
 		return err
 	}
@@ -196,7 +192,7 @@ func closeHTTPServer(s *http.Server) error {
 
 const amountOfHTTPServers = 2
 
-func (s *Server) Shutdown() error {
+func (s *Server) Shutdown(ctx context.Context) error {
 	wg := sync.WaitGroup{}
 	wg.Add(amountOfHTTPServers)
 
@@ -205,7 +201,7 @@ func (s *Server) Shutdown() error {
 	go func() {
 		defer wg.Done()
 
-		err := closeHTTPServer(s.httpServer)
+		err := closeHTTPServer(ctx, s.httpServer)
 		if err != nil {
 			errChan <- err
 		}
@@ -214,7 +210,7 @@ func (s *Server) Shutdown() error {
 	go func() {
 		defer wg.Done()
 
-		err := closeHTTPServer(s.httpsServer)
+		err := closeHTTPServer(ctx, s.httpsServer)
 		if err != nil {
 			errChan <- err
 		}

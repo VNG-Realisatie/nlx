@@ -140,7 +140,10 @@ func main() {
 
 	<-ctx.Done()
 
-	err = iw.Shutdown()
+	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	err = iw.Shutdown(gracefulCtx)
 	if err != nil {
 		logger.Error("failed to shutdown", zap.Error(err))
 	}

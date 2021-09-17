@@ -176,7 +176,10 @@ func main() {
 
 	<-ctx.Done()
 
-	ow.Shutdown()
+	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	ow.Shutdown(gracefulCtx)
 	conn.Close()
 	logDB.Close()
 }
