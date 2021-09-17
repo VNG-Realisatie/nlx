@@ -38,6 +38,9 @@ func TestRequestCertificate(t *testing.T) {
 				m.signer.EXPECT().Sign(signer.SignRequest{
 					Request: string(getCsrWithoutSAN()),
 					Hosts:   []string{"hostname.test.local"},
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
 				}).Return([]byte("test_cert"), nil)
 			},
 			wantResult: []byte("test_cert"),
@@ -47,6 +50,9 @@ func TestRequestCertificate(t *testing.T) {
 			setup: func(m certportalMocks) {
 				m.signer.EXPECT().Sign(signer.SignRequest{
 					Request: string(getCsr()),
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
 				}).Return(nil, fmt.Errorf("arbitrary error"))
 			},
 			wantErr: certportal.ErrFailedToSignCSR,
@@ -56,6 +62,9 @@ func TestRequestCertificate(t *testing.T) {
 			setup: func(m certportalMocks) {
 				m.signer.EXPECT().Sign(signer.SignRequest{
 					Request: string(getCsr()),
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
 				}).Return([]byte("test_cert"), nil)
 			},
 			wantResult: []byte("test_cert"),
@@ -74,6 +83,8 @@ func TestRequestCertificate(t *testing.T) {
 
 			actual, err := certportal.RequestCertificate(tt.csr, func() (signer.Signer, error) {
 				return mocks.signer, nil
+			}, func() (string, error) {
+				return "serial number", nil
 			})
 
 			assert.Equal(t, tt.wantErr, err)

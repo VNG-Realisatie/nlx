@@ -14,6 +14,7 @@ import (
 	"github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
+	certportal "go.nlx.io/nlx/ca-certportal"
 	"go.nlx.io/nlx/ca-certportal/server"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
@@ -69,7 +70,8 @@ func main() {
 		return signer, nil
 	}
 
-	cp := server.NewCertPortal(logger, certSigner, options.ListenAddress)
+	serialNumberGenerator := certportal.GenerateDemoSerialNumber
+	cp := server.NewCertPortal(logger, certSigner, serialNumberGenerator, options.ListenAddress)
 
 	go func() {
 		err = cp.Run()

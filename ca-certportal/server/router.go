@@ -40,7 +40,7 @@ func setSecurityHeadersHandler(next http.Handler) http.Handler {
 	})
 }
 
-func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc, listenAddress string) *CertPortal {
+func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc, serialNumberGenerator certportal.SerialNumberGeneratorFunc, listenAddress string) *CertPortal {
 	i := &CertPortal{
 		logger:        l,
 		listenAddress: listenAddress,
@@ -49,7 +49,7 @@ func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc, list
 	r := chi.NewRouter()
 	r.Use(setSecurityHeadersHandler)
 	r.Route("/api", func(r chi.Router) {
-		r.Post("/request_certificate", requestCertificateHandler(i.logger, createSigner))
+		r.Post("/request_certificate", requestCertificateHandler(i.logger, createSigner, serialNumberGenerator))
 	})
 
 	r.Get("/root.crt", rootCertHandler(i.logger, createSigner))
@@ -73,6 +73,8 @@ func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc, list
 }
 
 func (c *CertPortal) Run() error {
+	c.logger.Info("starting certportal")
+
 	err := c.httpServer.ListenAndServe()
 	if err != http.ErrServerClosed {
 		return err
@@ -91,7 +93,7 @@ func (c *CertPortal) GetRouter() chi.Router {
 	return c.router
 }
 
-func requestCertificateHandler(logger *zap.Logger, createSigner certportal.CreateSignerFunc) func(http.ResponseWriter, *http.Request) {
+func requestCertificateHandler(logger *zap.Logger, createSigner certportal.CreateSignerFunc, serialNumberGenerator certportal.SerialNumberGeneratorFunc) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := &certificateRequest{}
 		if err := render.DecodeJSON(r.Body, data); err != nil {
@@ -99,7 +101,7 @@ func requestCertificateHandler(logger *zap.Logger, createSigner certportal.Creat
 			return
 		}
 
-		certificate, err := certportal.RequestCertificate(data.Csr, createSigner)
+		certificate, err := certportal.RequestCertificate(data.Csr, createSigner, serialNumberGenerator)
 		if err != nil {
 			switch err {
 			case certportal.ErrFailedToSignCSR:

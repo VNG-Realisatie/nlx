@@ -51,6 +51,9 @@ func TestRoute_RequestCertificate(t *testing.T) {
 				mocks.s.EXPECT().Sign(signer.SignRequest{
 					Request: csrWithoutSAN,
 					Hosts:   []string{"hostname.test.local"},
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
 				}).Return([]byte("test_cert"), nil)
 			},
 			http.StatusCreated,
@@ -85,6 +88,9 @@ func TestRoute_RequestCertificate(t *testing.T) {
 			func(mocks serviceMocks) {
 				mocks.s.EXPECT().Sign(signer.SignRequest{
 					Request: string(csrData),
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
 				}).Return(nil, fmt.Errorf("error signing request"))
 			},
 			http.StatusInternalServerError,
@@ -101,6 +107,9 @@ func TestRoute_RequestCertificate(t *testing.T) {
 			func(mocks serviceMocks) {
 				mocks.s.EXPECT().Sign(signer.SignRequest{
 					Request: string(csrData),
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
 				}).Return([]byte("test_cert"), nil)
 			},
 			http.StatusCreated,
@@ -180,9 +189,13 @@ func TestRoute_Root(t *testing.T) {
 }
 
 func TestRoutes_WithInvalidSigner(t *testing.T) {
+	serialNumberGenerator := func() (string, error) {
+		return "", nil
+	}
+
 	certPortal := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return nil, fmt.Errorf("unable to create certificate signer")
-	}, "")
+	}, serialNumberGenerator, "")
 	assert.NotNil(t, certPortal)
 
 	srv := httptest.NewServer(certPortal.GetRouter())
@@ -219,9 +232,13 @@ func newService(t *testing.T) (*server.CertPortal, serviceMocks) {
 		s: mock.NewMockSigner(ctrl),
 	}
 
+	serialNumberGenerator := func() (string, error) {
+		return "serial number", nil
+	}
+
 	service := server.NewCertPortal(zap.NewNop(), func() (signer.Signer, error) {
 		return mocks.s, nil
-	}, "")
+	}, serialNumberGenerator, "")
 
 	return service, mocks
 }

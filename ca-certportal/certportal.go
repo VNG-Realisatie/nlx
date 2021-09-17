@@ -14,15 +14,18 @@ import (
 
 type CreateSignerFunc func() (signer.Signer, error)
 
+type SerialNumberGeneratorFunc func() (string, error)
+
 var (
-	ErrFailedToParseCSR     = errors.New("failed to parse csr")
-	ErrFailedToCreateSigner = errors.New("unable to create signer")
-	ErrFailedToSignCSR      = errors.New("failed to sign csr")
+	ErrFailedToParseCSR             = errors.New("failed to parse csr")
+	ErrFailedToCreateSigner         = errors.New("unable to create signer")
+	ErrFailedToSignCSR              = errors.New("failed to sign csr")
+	ErrFailedToGenerateSerialNumber = errors.New("failed to generate serialnumber")
 )
 
 type Certificate []byte
 
-func RequestCertificate(certificateSigningRequest string, createSigner CreateSignerFunc) (Certificate, error) {
+func RequestCertificate(certificateSigningRequest string, createSigner CreateSignerFunc, serialNumberGenerator SerialNumberGeneratorFunc) (Certificate, error) {
 	csr, err := parseCertificateSigningRequest(certificateSigningRequest)
 	if err != nil {
 		return nil, ErrFailedToParseCSR
@@ -34,6 +37,15 @@ func RequestCertificate(certificateSigningRequest string, createSigner CreateSig
 
 	if !hasSAN(csr) {
 		signReq.Hosts = []string{csr.Subject.CommonName}
+	}
+
+	serialNumber, err := serialNumberGenerator()
+	if err != nil {
+		return nil, ErrFailedToGenerateSerialNumber
+	}
+
+	signReq.Subject = &signer.Subject{
+		SerialNumber: serialNumber,
 	}
 
 	s, err := createSigner()
