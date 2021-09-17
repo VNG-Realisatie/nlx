@@ -8,10 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
-	"os/signal"
 	"strconv"
-	"syscall"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -25,6 +22,7 @@ import (
 	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
@@ -54,19 +52,10 @@ var options struct {
 func main() {
 	parseOptions()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
-
-	go func() {
-		<-termChan
-		cancel()
-	}()
+	p := process.NewProcess()
 
 	logger := setupLogger()
-	txlogger := setupTransactionLogger(ctx, logger, options.DisableLogdb)
+	txlogger, logDB := setupTransactionLogger(logger, options.DisableLogdb)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgKeyFile))
@@ -112,7 +101,7 @@ func main() {
 	managementProxy.RegisterService(external_api.GetDelegationServiceDesc())
 
 	params := &inway.Params{
-		Context:                      ctx,
+		Context:                      context.Background(),
 		Logger:                       logger,
 		Txlogger:                     txlogger,
 		ManagementClient:             api.NewManagementClient(conn),
@@ -131,41 +120,46 @@ func main() {
 	}
 
 	go func() {
-		// Listen on the address provided in the options
-		err = iw.Run(ctx, options.ListenAddress)
+		err = iw.Run(context.Background(), options.ListenAddress)
 		if err != nil {
 			logger.Fatal("failed to run server", zap.Error(err))
 		}
 	}()
 
-	<-ctx.Done()
+	p.Wait()
 
+	shutdown(logger, iw, logDB)
+}
+
+func shutdown(logger *zap.Logger, iw *inway.Inway, logDB *sqlx.DB) {
 	logger.Info("starting graceful shutdown")
 
 	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	err = iw.Shutdown(gracefulCtx)
+	err := iw.Shutdown(gracefulCtx)
 	if err != nil {
 		logger.Error("failed to shutdown", zap.Error(err))
 	}
+
+	if logDB != nil {
+		err = logDB.Close()
+		if err != nil {
+			logger.Error("failed to close logDB", zap.Error(err))
+		}
+	}
 }
 
-func setupTransactionLogger(ctx context.Context, logger *zap.Logger, disabled bool) transactionlog.TransactionLogger {
+func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.TransactionLogger, *sqlx.DB) {
 	if disabled {
 		logger.Info("logging to transaction-log disabled")
-		return transactionlog.NewDiscardTransactionLogger()
+		return transactionlog.NewDiscardTransactionLogger(), nil
 	}
 
 	logDB, err := setupDatabase(logger)
 	if err != nil {
 		logger.Fatal("failed to setup database", zap.Error(err))
 	}
-
-	go func() {
-		<-ctx.Done()
-		logDB.Close()
-	}()
 
 	postgresTxLogger, err := transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
 	if err != nil {
@@ -174,7 +168,7 @@ func setupTransactionLogger(ctx context.Context, logger *zap.Logger, disabled bo
 
 	logger.Info("transaction logger created")
 
-	return postgresTxLogger
+	return postgresTxLogger, logDB
 }
 
 func defaultManagementAddress(address string) (string, error) {

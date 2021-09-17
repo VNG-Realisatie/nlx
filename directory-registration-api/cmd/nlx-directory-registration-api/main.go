@@ -9,9 +9,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -25,6 +22,7 @@ import (
 	common_db "go.nlx.io/nlx/common/db"
 	nlxhttp "go.nlx.io/nlx/common/http"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -98,16 +96,7 @@ func main() {
 		return
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
-
-	go func() {
-		<-termChan
-		cancel()
-	}()
+	p := process.NewProcess()
 
 	logger := newZapLogger()
 
@@ -156,7 +145,7 @@ func main() {
 		}
 	}()
 
-	<-ctx.Done()
+	p.Wait()
 
 	logger.Info("starting graceful shutdown")
 

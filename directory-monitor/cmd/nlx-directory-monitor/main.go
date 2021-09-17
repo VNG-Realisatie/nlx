@@ -6,9 +6,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/jessevdk/go-flags"
 	_ "github.com/lib/pq"
@@ -16,6 +13,7 @@ import (
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -35,16 +33,7 @@ var options struct {
 func main() {
 	parseOptions()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
-
-	go func() {
-		<-termChan
-		cancel()
-	}()
+	p := process.NewProcess()
 
 	logger := initLogger()
 
@@ -75,7 +64,7 @@ func main() {
 		}
 	}()
 
-	<-ctx.Done()
+	p.Wait()
 
 	logger.Info("starting graceful shutdown")
 

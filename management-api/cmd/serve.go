@@ -7,9 +7,6 @@ import (
 	"context"
 	"errors"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -19,6 +16,7 @@ import (
 
 	"go.nlx.io/nlx/common/cmd"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/management-api/pkg/api"
@@ -132,16 +130,7 @@ var serveCommand = &cobra.Command{
 			}
 		}
 
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		termChan := make(chan os.Signal, 1)
-		signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
-
-		go func() {
-			<-termChan
-			cancel()
-		}()
+		p := process.NewProcess()
 
 		logger.Info("starting management api", zap.String("listen-address", serveOpts.ListenAddress))
 
@@ -212,7 +201,7 @@ var serveCommand = &cobra.Command{
 			}
 		}()
 
-		<-ctx.Done()
+		p.Wait()
 
 		logger.Info("starting graceful shutdown")
 

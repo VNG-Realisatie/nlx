@@ -6,9 +6,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/cloudflare/cfssl/cli"
@@ -19,6 +16,7 @@ import (
 
 	"go.nlx.io/nlx/ca-certportal/server"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 )
 
 var options struct {
@@ -48,16 +46,7 @@ func main() {
 		log.Fatal("CA host option is empty")
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
-
-	go func() {
-		<-termChan
-		cancel()
-	}()
+	p := process.NewProcess()
 
 	// Setup new zap logger
 	config := options.LogOptions.ZapConfig()
@@ -89,7 +78,7 @@ func main() {
 		}
 	}()
 
-	<-ctx.Done()
+	p.Wait()
 
 	logger.Info("starting graceful shutdown")
 

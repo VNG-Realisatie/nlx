@@ -7,9 +7,6 @@ import (
 	"context"
 	"errors"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -22,6 +19,7 @@ import (
 
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -68,16 +66,7 @@ func main() {
 		return
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	termChan := make(chan os.Signal, 1)
-	signal.Notify(termChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
-
-	go func() {
-		<-termChan
-		cancel()
-	}()
+	p := process.NewProcess()
 
 	config := options.LogOptions.ZapConfig()
 
@@ -123,7 +112,7 @@ func main() {
 		logger.Fatal("could not start server", zap.Error(err))
 	}
 
-	<-ctx.Done()
+	p.Wait()
 
 	logger.Info("starting graceful shutdown")
 
