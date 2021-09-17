@@ -8,7 +8,7 @@ import StateIndicator from '../../../../../components/StateIndicator'
 import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {
-  const { name, organization, status, apiType } = service
+  const { name, organization, status, apiType, serialNumber } = service
 
   return (
     <header data-testid="directory-detail-header">
@@ -17,6 +17,7 @@ const DrawerHeader = ({ service }) => {
       <Summary>
         <StateIndicator state={status} showText />
         {apiType && <span>{apiType}</span>}
+        <span>Serienummer {serialNumber}</span>
       </Summary>
     </header>
   )

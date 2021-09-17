@@ -2,8 +2,8 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string, number } from 'prop-types'
-import { useParams, useHistory } from 'react-router-dom'
+import { number, shape, string } from 'prop-types'
+import { useHistory, useParams } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
@@ -55,6 +55,7 @@ ServiceDetailPage.propTypes = {
     name: string.isRequired,
     organization: string.isRequired,
     status: string.isRequired,
+    serialNumber: string.isRequired,
     oneTimeCosts: number,
     monthlyCosts: number,
     requestCosts: number,

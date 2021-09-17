@@ -34,6 +34,7 @@ export const mapListServicesAPIResponse = (response) =>
         name: service.service_name,
         status: reduceInwayStatesToStatus(service.inways),
         apiType: service.api_specification_type,
+        serialNumber: service.serial_number || '',
         contactEmailAddress: service.public_support_contact,
         documentationUrl: service.documentation_url,
         oneTimeCosts: (service.one_time_costs || 0) / 100,

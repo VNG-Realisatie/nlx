@@ -11,6 +11,7 @@ const service = {
   name: 'service',
   organization: 'organisation',
   status: SERVICE_STATE_UP,
+  serialNumber: '00000000000000000000',
 }
 
 const closeHandler = jest.fn()
@@ -36,4 +37,14 @@ test('apiSpecificationType is not required', () => {
   )
 
   expect(queryByText('OpenAPI')).toBeNull()
+})
+
+test('the serial number', () => {
+  const { queryByText } = renderWithProviders(
+    <Drawer noMask closeHandler={closeHandler}>
+      <DrawerHeader service={service} />
+    </Drawer>,
+  )
+
+  expect(queryByText('Serienummer 00000000000000000000')).toBeInTheDocument()
 })
