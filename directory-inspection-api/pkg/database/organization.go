@@ -16,11 +16,9 @@ type Organization struct {
 	Name string
 }
 
-// ErrNoOrganization is returned when no organization is found
 var ErrNoOrganization = errors.New("no organization found")
 
-// ListOrganizations returns a list of all organizations
-func (db PostgreSQLDirectoryDatabase) ListOrganizations(ctx context.Context) ([]*Organization, error) {
+func (db PostgreSQLDirectoryDatabase) ListOrganizations(_ context.Context) ([]*Organization, error) {
 	var result []*Organization
 
 	rows, err := db.selectOrganizationsStatement.Queryx()
