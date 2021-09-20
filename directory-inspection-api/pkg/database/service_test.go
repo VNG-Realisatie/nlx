@@ -61,12 +61,12 @@ func TestListServices(t *testing.T) {
 					AuthorizationSettings: nil,
 					Inways: []*database.Inway{
 						{
-							Address: "https://fixture-address.com",
+							Address: "https://fixture-inway-address.com",
 							State:   database.InwayUP,
 						},
 					},
 					InwayAddresses: []string{
-						"https://fixture-address.com",
+						"https://fixture-inway-address.com",
 					},
 					HealthyStates: []bool{
 						true,
