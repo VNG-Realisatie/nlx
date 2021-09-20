@@ -9,7 +9,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/huandu/xstrings"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -79,7 +78,12 @@ func main() {
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
-	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(options.PostgresDSN, logger)
+	db, err := database.NewPostgreSQLConnection(options.PostgresDSN)
+	if err != nil {
+		logger.Fatal("can not create db connection:", zap.Error(err))
+	}
+
+	directoryDatabase, err := database.NewPostgreSQLDirectoryDatabase(db)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
@@ -94,14 +98,6 @@ func main() {
 	}
 
 	directoryService := inspectionservice.New(logger, directoryDatabase, getOrganisationNameFromRequest)
-
-	// NOTE: remove creation of DB later on, once the statsservice also uses the directoryDatabase
-	db, err := sqlx.Open("postgres", options.PostgresDSN)
-	if err != nil {
-		logger.Fatal("could not open connection to postgres", zap.Error(err))
-	}
-
-	setDBOptions(db)
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
@@ -148,15 +144,4 @@ func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
 	tlsInfo := peerContext.AuthInfo.(credentials.TLSInfo)
 
 	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
-}
-
-func setDBOptions(db *sqlx.DB) {
-	const (
-		MaxIdleConnections = 2
-		FiveMinutes        = 5 * time.Minute
-	)
-
-	db.SetConnMaxLifetime(FiveMinutes)
-	db.SetMaxIdleConns(MaxIdleConnections)
-	db.MapperFunc(xstrings.ToSnakeCase)
 }

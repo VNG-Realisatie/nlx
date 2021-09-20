@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/go-errors/errors"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres" // postgres driver
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq" // postgres driver
 	"go.uber.org/zap"
-
-	common_db "go.nlx.io/nlx/common/db"
-	"go.nlx.io/nlx/directory-db/dbversion"
 )
 
 // PostgreSQLDirectoryDatabase is the PostgreSQL implementation of the DirectoryDatabase
@@ -29,22 +29,10 @@ type PostgreSQLDirectoryDatabase struct {
 }
 
 // NewPostgreSQLDirectoryDatabase constructs a new PostgreSQLDirectoryDatabase
-func NewPostgreSQLDirectoryDatabase(dsn string, logger *zap.Logger) (DirectoryDatabase, error) {
-	db, err := sqlx.Open("postgres", dsn)
-	if err != nil {
-		return nil, errors.Errorf("could not open connection to postgres: %s", err)
+func NewPostgreSQLDirectoryDatabase(db *sqlx.DB) (DirectoryDatabase, error) {
+	if db == nil {
+		panic("missing db")
 	}
-
-	const (
-		FiveMinutes        = 5 * time.Minute
-		MaxIdleConnections = 2
-	)
-
-	db.SetConnMaxLifetime(FiveMinutes)
-	db.SetMaxIdleConns(MaxIdleConnections)
-	db.MapperFunc(xstrings.ToSnakeCase)
-
-	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	selectServicesStatement, err := prepareSelectServicesStatement(db)
 	if err != nil {
@@ -72,7 +60,6 @@ func NewPostgreSQLDirectoryDatabase(dsn string, logger *zap.Logger) (DirectoryDa
 	}
 
 	return &PostgreSQLDirectoryDatabase{
-		logger:                                  logger,
 		db:                                      db,
 		selectServicesStatement:                 selectServicesStatement,
 		registerOutwayStatement:                 registerOutwayStatement,
@@ -171,4 +158,36 @@ func prepareSelectVersionStatisticsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 	}
 
 	return selectVersionStatisticsStatement, nil
+}
+
+func NewPostgreSQLConnection(dsn string) (*sqlx.DB, error) {
+	db, err := sqlx.Open("postgres", dsn)
+	if err != nil {
+		return nil, fmt.Errorf("could not open connection to postgres: %s", err)
+	}
+
+	const (
+		FiveMinutes        = 5 * time.Minute
+		MaxIdleConnections = 2
+	)
+
+	db.SetConnMaxLifetime(FiveMinutes)
+	db.SetMaxIdleConns(MaxIdleConnections)
+	db.MapperFunc(xstrings.ToSnakeCase)
+
+	return db, nil
+}
+
+func PostgreSQLPerformMigrations(dsn string) error {
+	migrator, err := migrate.New("file://../../../directory-db/migrations", dsn)
+	if err != nil {
+		return fmt.Errorf("setup migrator: %v", err)
+	}
+
+	err = migrator.Up()
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return fmt.Errorf("running migrations: %v", err)
+	}
+
+	return nil
 }
