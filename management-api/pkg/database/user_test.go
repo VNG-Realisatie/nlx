@@ -29,11 +29,13 @@ func TestVerifyCredentials(t *testing.T) {
 	}
 
 	testCases := map[string]struct {
+		loadFixtures  bool
 		args          args
 		expected      bool
 		expectedError error
 	}{
 		"with_invalid_username_password": {
+			loadFixtures: true,
 			args: args{
 				email:    "invalid@credentials.com",
 				password: "bar",
@@ -42,6 +44,7 @@ func TestVerifyCredentials(t *testing.T) {
 			expectedError: gorm.ErrRecordNotFound,
 		},
 		"happy_flow": {
+			loadFixtures: true,
 			args: args{
 				email:    "fixture@example.com",
 				password: "password",
@@ -57,7 +60,7 @@ func TestVerifyCredentials(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			configDb, close := newConfigDatabase(t, t.Name())
+			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
 			actual, err := configDb.VerifyUserCredentials(context.Background(), tt.args.email, tt.args.password)
@@ -83,11 +86,13 @@ func TestCreateUser(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		args        args
-		expected    *database.User
-		expectedErr error
+		loadFixtures bool
+		args         args
+		expected     *database.User
+		expectedErr  error
 	}{
 		"with_existing_email_address": {
+			loadFixtures: true,
 			args: args{
 				email:    "fixture@example.com",
 				password: "foobar",
@@ -98,6 +103,7 @@ func TestCreateUser(t *testing.T) {
 			expectedErr: database.ErrUserAlreadyExists,
 		},
 		"happy_flow_without_a_password": {
+			loadFixtures: true,
 			args: args{
 				email: "john.doe@example.com",
 				roleNames: []string{
@@ -115,6 +121,7 @@ func TestCreateUser(t *testing.T) {
 			expectedErr: nil,
 		},
 		"happy_flow": {
+			loadFixtures: true,
 			args: args{
 				email:    "jane.doe@example.com",
 				password: "foobar",
@@ -140,7 +147,7 @@ func TestCreateUser(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			configDb, close := newConfigDatabase(t, t.Name())
+			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
 			actual, err := configDb.CreateUser(context.Background(), tt.args.email, tt.args.password, tt.args.roleNames)

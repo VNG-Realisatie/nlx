@@ -22,17 +22,20 @@ func TestPutOrganizationInway(t *testing.T) {
 	setup(t)
 
 	tests := map[string]struct {
-		inwayID     *uint
-		expected    *database.Settings
-		expectedErr error
+		loadFixtures bool
+		inwayID      *uint
+		expected     *database.Settings
+		expectedErr  error
 	}{
 		"non_existing_inway": {
-			inwayID:     newUint(9999999),
-			expected:    nil,
-			expectedErr: database.ErrInwayNotFound,
+			loadFixtures: true,
+			inwayID:      newUint(9999999),
+			expected:     nil,
+			expectedErr:  database.ErrInwayNotFound,
 		},
 		"happy_flow": {
-			inwayID: newUint(1),
+			loadFixtures: true,
+			inwayID:      newUint(1),
 			expected: &database.Settings{
 				InwayID: newUint(1),
 			},
@@ -46,7 +49,7 @@ func TestPutOrganizationInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			configDb, close := newConfigDatabase(t, t.Name())
+			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
 			actual, err := configDb.PutOrganizationInway(context.Background(), tt.inwayID)

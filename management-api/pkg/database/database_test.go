@@ -6,7 +6,6 @@
 package database_test
 
 import (
-	"database/sql"
 	"net/url"
 	"os"
 	"sync"
@@ -38,23 +37,10 @@ func setupPostgreSQL(t *testing.T) {
 	err := database.PostgresPerformMigrations(dsnForMigrations)
 	require.NoError(t, err)
 
-	db, err := sql.Open("postgres", dsn)
-	require.NoError(t, err)
-
-	fixtures, err := testfixtures.New(
-		testfixtures.Database(db),
-		testfixtures.Dialect("postgres"),
-		testfixtures.Directory("testdata/fixtures/postgres"),
-		testfixtures.DangerousSkipTestDatabaseCheck(),
-	)
-
-	err = fixtures.Load()
-	require.NoError(t, err)
-
 	txdb.Register("txdb", "postgres", dsn)
 }
 
-func newPostgresConfigDatabase(t *testing.T, id string) (database.ConfigDatabase, func() error) {
+func newPostgresConfigDatabase(t *testing.T, id string, loadFixtures bool) (database.ConfigDatabase, func() error) {
 	gormDB, err := gorm.Open(
 		postgres.New(postgres.Config{
 			DriverName: "txdb",
@@ -67,13 +53,25 @@ func newPostgresConfigDatabase(t *testing.T, id string) (database.ConfigDatabase
 	db, err := gormDB.DB()
 	require.NoError(t, err)
 
+	if loadFixtures {
+		fixtures, err := testfixtures.New(
+			testfixtures.Database(db),
+			testfixtures.Dialect("postgres"),
+			testfixtures.Directory("testdata/fixtures/postgres"),
+			testfixtures.DangerousSkipTestDatabaseCheck(),
+		)
+
+		err = fixtures.Load()
+		require.NoError(t, err)
+	}
+
 	return &database.PostgresConfigDatabase{
 		DB: gormDB,
 	}, db.Close
 }
 
-func newConfigDatabase(t *testing.T, id string) (database.ConfigDatabase, func() error) {
-	return newPostgresConfigDatabase(t, id)
+func newConfigDatabase(t *testing.T, id string, loadFixtures bool) (database.ConfigDatabase, func() error) {
+	return newPostgresConfigDatabase(t, id, loadFixtures)
 }
 
 func addQueryParamToAddress(address, key, value string) string {
