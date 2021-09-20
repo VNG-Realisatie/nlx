@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "18.13.2",
+    "@commonground/design-system": "18.13.3",
     "@fontsource/source-sans-pro": "4.5.0",
     "formik": "2.2.9",
     "mobx": "6.3.2",
