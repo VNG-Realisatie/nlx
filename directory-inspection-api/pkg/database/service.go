@@ -11,22 +11,21 @@ import (
 )
 
 type Service struct {
-	Name                  string
-	Organization          string
-	EndpointURL           string
-	DocumentationURL      string
-	APISpecificationURL   string
-	APISpecificationType  string
-	Internal              bool
-	TechSupportContact    string
-	PublicSupportContact  string
-	OneTimeCosts          int
-	MonthlyCosts          int
-	RequestCosts          int
-	AuthorizationSettings *ServiceAuthorizationSettings
-	Inways                []*Inway
-	InwayAddresses        []string
-	HealthyStates         []bool
+	Name                 string
+	Organization         string
+	EndpointURL          string
+	DocumentationURL     string
+	APISpecificationURL  string
+	APISpecificationType string
+	Internal             bool
+	TechSupportContact   string
+	PublicSupportContact string
+	OneTimeCosts         int
+	MonthlyCosts         int
+	RequestCosts         int
+	Inways               []*Inway
+	InwayAddresses       []string
+	HealthyStates        []bool
 }
 
 type Inway struct {
@@ -41,12 +40,7 @@ const (
 	InwayUP   InwayState = "UP"
 )
 
-type ServiceAuthorizationSettings struct {
-	Mode string
-}
-
-// ListServices returns a list of services
-func (db PostgreSQLDirectoryDatabase) ListServices(ctx context.Context, organizationName string) ([]*Service, error) {
+func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizationName string) ([]*Service, error) {
 	var result []*Service
 
 	rows, err := db.selectServicesStatement.Queryx(organizationName)
