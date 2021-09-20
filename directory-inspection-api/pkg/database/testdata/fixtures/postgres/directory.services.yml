@@ -1,0 +1,11 @@
+- id: 1
+  organization_id: 1
+  name: fixture-service-name
+  documentation_url: https://fixture-documentation-url.com
+  api_specification_type: OpenAPI3
+  internal: false
+  tech_support_contact: fixture@tech-support-contact.com
+  public_support_contact: fixture@public-support-contact.com
+  one_time_costs: 1
+  monthly_costs: 2
+  request_costs: 3

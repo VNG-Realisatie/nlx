@@ -26,10 +26,12 @@ func TestRegisterOutwayVersion(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		args    args
-		wantErr error
+		loadFixtures bool
+		args         args
+		wantErr      error
 	}{
 		"happy_flow": {
+			loadFixtures: false,
 			args: args{
 				version: nlxversion.Version{
 					Version: "1.0.0",
@@ -45,7 +47,7 @@ func TestRegisterOutwayVersion(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			db, close := newDirectoryDatabase(t, t.Name())
+			db, close := newDirectoryDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
 			err := db.RegisterOutwayVersion(context.Background(), tt.args.version)

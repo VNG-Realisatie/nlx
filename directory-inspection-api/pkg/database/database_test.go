@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-txdb"
+	"github.com/go-testfixtures/testfixtures/v3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
@@ -40,9 +41,21 @@ func setupPostgreSQL(t *testing.T) {
 	sqlx.BindDriver("txdb", sqlx.DOLLAR)
 }
 
-func newPostgresDirectoryDatabase(t *testing.T, id string) (database.DirectoryDatabase, func() error) {
+func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
 	db, err := sqlx.Open("txdb", id)
 	require.NoError(t, err)
+
+	if loadFixtures {
+		fixtures, err := testfixtures.New(
+			testfixtures.Database(db.DB),
+			testfixtures.Dialect("postgres"),
+			testfixtures.Directory("testdata/fixtures/postgres"),
+			testfixtures.DangerousSkipTestDatabaseCheck(),
+		)
+
+		err = fixtures.Load()
+		require.NoError(t, err)
+	}
 
 	db.MapperFunc(xstrings.ToSnakeCase)
 
@@ -52,6 +65,6 @@ func newPostgresDirectoryDatabase(t *testing.T, id string) (database.DirectoryDa
 	return repo, db.Close
 }
 
-func newDirectoryDatabase(t *testing.T, id string) (database.DirectoryDatabase, func() error) {
-	return newPostgresDirectoryDatabase(t, id)
+func newDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
+	return newPostgresDirectoryDatabase(t, id, loadFixtures)
 }

@@ -6,6 +6,7 @@ package database
 import (
 	"context"
 	"fmt"
+
 	"go.nlx.io/nlx/common/nlxversion"
 )
 
