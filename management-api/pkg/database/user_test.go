@@ -35,7 +35,7 @@ func TestVerifyCredentials(t *testing.T) {
 		expectedError error
 	}{
 		"with_invalid_username_password": {
-			loadFixtures: true,
+			loadFixtures: false,
 			args: args{
 				email:    "invalid@credentials.com",
 				password: "bar",

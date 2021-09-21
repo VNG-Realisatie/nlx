@@ -105,7 +105,6 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 	organizations := getUniqueOrganizations(orders)
 
 	err := dbWithTx.DB.
-		Debug().
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Delete(&IncomingOrder{}, "delegator IN ?", organizations).
