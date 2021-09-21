@@ -160,6 +160,14 @@ nlx-directory:
             - directory.nlx.io
   service:
     type: LoadBalancer
+    inspection:
+      annotations:
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      loadBalancerIP: 20.86.243.85
+    registration:
+      annotations:
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      loadBalancerIP: 20.86.244.209
 
 nlx-docs:
   replicaCount: 3

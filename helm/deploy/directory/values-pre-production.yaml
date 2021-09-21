@@ -16,5 +16,9 @@ nlx-directory:
   service:
     inspection:
       annotations:
-        loadbalancer.openstack.org/keep-floatingip: "true"
-      loadBalancerIP: 141.105.122.118
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      loadBalancerIP: 20.86.244.123
+    registration:
+      annotations:
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      loadBalancerIP: 20.86.243.126

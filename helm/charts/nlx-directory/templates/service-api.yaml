@@ -50,6 +50,9 @@ metadata:
   annotations: {{ .Values.service.registration.annotations | toJson }}
 spec:
   type: {{ .Values.service.type }}
+  {{if .Values.service.registration.loadBalancerIP}}
+  loadBalancerIP: {{ .Values.service.registration.loadBalancerIP }}
+  {{end}}
   selector:
     {{- include "nlx-directory.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: api
