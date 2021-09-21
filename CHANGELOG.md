@@ -1,3 +1,20 @@
+# [0.115.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.114.1...v0.115.0) (2021-09-21)
+
+
+### Bug Fixes
+
+* add listen to `syscall.SIGQUIT` to enable graceful shutdown ([61bf651](https://gitlab.com/commonground/nlx/nlx/commit/61bf65158f514354fedb26db61d65875526d64fb)), closes [#1349](https://gitlab.com/commonground/nlx/nlx/issues/1349)
+* **inway:** add missing signal to enable graceful shutdown ([37b4ad1](https://gitlab.com/commonground/nlx/nlx/commit/37b4ad1dec14a487a2a210d036973e93ba10093e)), closes [#1349](https://gitlab.com/commonground/nlx/nlx/issues/1349)
+* wait for sigterm in go routine instead of defer ([da88f78](https://gitlab.com/commonground/nlx/nlx/commit/da88f78e40183194aa50b1bbdfd0875741597bd8))
+
+
+### Features
+
+* **ca-certportal:** add subject serialnumber when generating a certificate ([ddaafc2](https://gitlab.com/commonground/nlx/nlx/commit/ddaafc25f58ee10bc2c6da3b6154442d47010ccd)), closes [#1364](https://gitlab.com/commonground/nlx/nlx/issues/1364)
+* **directory:** display the organization serial number when present ([e8f975a](https://gitlab.com/commonground/nlx/nlx/commit/e8f975a484acca9773120533f900cfc4386379e5)), closes [#1356](https://gitlab.com/commonground/nlx/nlx/issues/1356)
+* **helm:** improve error message when creating a user which already exists ([96a0931](https://gitlab.com/commonground/nlx/nlx/commit/96a0931e8eace43614e8e8867fa3610142867d3e))
+* **management:** display the organization serial number when present ([88513d4](https://gitlab.com/commonground/nlx/nlx/commit/88513d434a32d38f5012bdbaf90661c523e76902)), closes [#1366](https://gitlab.com/commonground/nlx/nlx/issues/1366)
+
 ## [0.114.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.114.0...v0.114.1) (2021-09-16)
 
 # [0.114.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.113.0...v0.114.0) (2021-09-16)
