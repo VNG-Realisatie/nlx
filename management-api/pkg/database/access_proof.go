@@ -52,7 +52,7 @@ func (db *PostgresConfigDatabase) GetLatestAccessProofForService(ctx context.Con
 		Order("created_at DESC").
 		First(accessProof).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, err
+			return nil, ErrNotFound
 		}
 
 		return nil, err
