@@ -257,6 +257,7 @@ ca:
       subject:
         organizations:
           - RvRD
+        serialNumber: "12345678901234567891"
       commonName: rvrd-nlx-inway
       dnsNames:
         - rvrd-nlx-inway

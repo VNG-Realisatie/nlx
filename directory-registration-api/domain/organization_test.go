@@ -14,7 +14,8 @@ import (
 //nolint:funlen // this is a test
 func Test_NewOrganization(t *testing.T) {
 	type organizationParams struct {
-		name string
+		name         string
+		serialNumber string
 	}
 
 	tests := map[string]struct {
@@ -23,19 +24,50 @@ func Test_NewOrganization(t *testing.T) {
 	}{
 		"invalid_name": {
 			organization: organizationParams{
-				name: "#*%",
+				name:         "#*%",
+				serialNumber: testOrganizationSerialNumber,
 			},
-			expectedErr: "organization name: must be in a valid format",
+			expectedErr: "error validating organization name: must be in a valid format",
 		},
 		"empty_name": {
 			organization: organizationParams{
-				name: "",
+				name:         "",
+				serialNumber: testOrganizationSerialNumber,
 			},
-			expectedErr: "organization name: cannot be blank",
+			expectedErr: "error validating organization name: cannot be blank",
+		},
+		"short_serial_number": {
+			organization: organizationParams{
+				name:         "name",
+				serialNumber: "0123456789",
+			},
+			expectedErr: "error validating organization serial number: must be in a valid format",
+		},
+		"long_serial_number": {
+			organization: organizationParams{
+				name:         "name",
+				serialNumber: "012345678901234567890123456789",
+			},
+			expectedErr: "error validating organization serial number: must be in a valid format",
+		},
+		"invalid_serial_number": {
+			organization: organizationParams{
+				name:         "name",
+				serialNumber: "0123456789abc456789",
+			},
+			expectedErr: "error validating organization serial number: must be in a valid format",
+		},
+		"empty_serial_number": {
+			organization: organizationParams{
+				name:         "name",
+				serialNumber: "",
+			},
+			expectedErr: "error validating organization serial number: cannot be blank",
 		},
 		"happy_flow": {
 			organization: organizationParams{
-				name: "name",
+				name:         "name",
+				serialNumber: testOrganizationSerialNumber,
 			},
 			expectedErr: "",
 		},
@@ -47,6 +79,7 @@ func Test_NewOrganization(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			result, err := domain.NewOrganization(
 				tt.organization.name,
+				tt.organization.serialNumber,
 			)
 
 			if tt.expectedErr != "" {

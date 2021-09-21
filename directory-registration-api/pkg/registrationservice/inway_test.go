@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"go.nlx.io/nlx/common/tls"
 	directory_mock "go.nlx.io/nlx/directory-registration-api/domain/directory/mock"
 	"go.nlx.io/nlx/directory-registration-api/pkg/registrationservice"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -189,11 +190,14 @@ type serviceMocks struct {
 }
 
 const testOrganizationName = "Test Organization Name"
+const testOrganizationSerialNumber = "01234567890123456789"
 
-func testGetOrganizationNameFromRequest(context.Context) (string, error) {
-	return testOrganizationName, nil
+func testGetOrganizationInformationFromRequest(context.Context) (*tls.OrganizationInformation, error) {
+	return &tls.OrganizationInformation{
+		Name:         testOrganizationName,
+		SerialNumber: testOrganizationSerialNumber,
+	}, nil
 }
-
 func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService, serviceMocks) {
 	ctrl := gomock.NewController(t)
 
@@ -210,7 +214,7 @@ func newService(t *testing.T) (*registrationservice.DirectoryRegistrationService
 		zap.NewNop(),
 		mocks.r,
 		nil,
-		testGetOrganizationNameFromRequest,
+		testGetOrganizationInformationFromRequest,
 	)
 
 	return service, mocks

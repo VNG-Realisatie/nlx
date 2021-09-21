@@ -106,6 +106,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	type registerParams struct {
 		OrganizationName string    `db:"organization_name"`
+		SerialNumber     string    `db:"serial_number"`
 		Name             string    `db:"inway_name"`
 		Address          string    `db:"inway_address"`
 		NlxVersion       string    `db:"inway_version"`
@@ -117,6 +118,7 @@ func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 
 	_, err := r.registerInwayStmt.Exec(&registerParams{
 		OrganizationName: organization.Name(),
+		SerialNumber:     organization.SerialNumber(),
 		Name:             model.Name(),
 		Address:          model.Address(),
 		NlxVersion:       model.NlxVersion(),
@@ -131,32 +133,34 @@ func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	return err
 }
 
-func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*domain.Inway, error) {
+// @TODO: Remove name, only use serial number
+func (r *PostgreSQLRepository) GetInway(name, serialNumber string) (*domain.Inway, error) {
 	type params struct {
-		Name             string `db:"name"`
-		OrganizationName string `db:"organization_name"`
+		Name         string `db:"name"`
+		SerialNumber string `db:"serial_number"`
 	}
 
 	type dbInway struct {
-		Name             string    `db:"name"`
-		Address          string    `db:"address"`
-		NlxVersion       string    `db:"nlx_version"`
-		OrganizationName string    `db:"organization_name"`
-		CreatedAt        time.Time `db:"created_at"`
-		UpdatedAt        time.Time `db:"updated_at"`
+		Name                     string    `db:"name"`
+		Address                  string    `db:"address"`
+		NlxVersion               string    `db:"nlx_version"`
+		OrganizationName         string    `db:"organization_name"`
+		OrganizationSerialNumber string    `db:"serial_number"`
+		CreatedAt                time.Time `db:"created_at"`
+		UpdatedAt                time.Time `db:"updated_at"`
 	}
 
 	result := dbInway{}
 
 	err := r.getInwayStmt.Get(&result, &params{
-		Name:             name,
-		OrganizationName: organizationName,
+		Name:         name,
+		SerialNumber: serialNumber,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get inway (name: %s, organization: %s): %s", name, organizationName, err)
+		return nil, fmt.Errorf("failed to get inway (name: %s, serialNumber: %s): %s", name, serialNumber, err)
 	}
 
-	organizationModel, err := domain.NewOrganization(result.OrganizationName)
+	organizationModel, err := domain.NewOrganization(result.OrganizationName, result.OrganizationSerialNumber)
 	if err != nil {
 		return nil, fmt.Errorf("invalid organization model in database: %v", err)
 	}
@@ -179,7 +183,7 @@ func (r *PostgreSQLRepository) GetInway(name, organizationName string) (*domain.
 func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 	type registerParams struct {
 		Name                 string `db:"name"`
-		OrganizationName     string `db:"organization_name"`
+		SerialNumber         string `db:"serial_number"`
 		DocumentationURL     string `db:"documentation_url"`
 		APISpecificationType string `db:"api_specification_type"`
 		PublicSupportContact string `db:"public_support_contact"`
@@ -200,7 +204,7 @@ func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 		&result,
 		&registerParams{
 			Name:                 model.Name(),
-			OrganizationName:     model.OrganizationName(),
+			SerialNumber:         model.SerialNumber(),
 			Internal:             model.Internal(),
 			DocumentationURL:     model.DocumentationURL(),
 			APISpecificationType: string(model.APISpecificationType()),
@@ -228,7 +232,7 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 	type dbService struct {
 		ID                   uint   `db:"id"`
 		Name                 string `db:"name"`
-		OrganizationName     string `db:"organization_name"`
+		SerialNumber         string `db:"serial_number"`
 		DocumentationURL     string `db:"documentation_url"`
 		APISpecificationType string `db:"api_specification_type"`
 		PublicSupportContact string `db:"public_support_contact"`
@@ -249,7 +253,7 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 	model, err := domain.NewService(
 		&domain.NewServiceArgs{
 			Name:                 result.Name,
-			OrganizationName:     result.OrganizationName,
+			SerialNumber:         result.SerialNumber,
 			Internal:             result.Internal,
 			DocumentationURL:     result.DocumentationURL,
 			APISpecificationType: domain.SpecificationType(result.APISpecificationType),
@@ -269,15 +273,15 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 	return model, nil
 }
 
-func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
+func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error {
 	arg := map[string]interface{}{
-		"inway_address":     inwayAddress,
-		"organization_name": organizationName,
+		"inway_address": inwayAddress,
+		"serial_number": organizationSerialNumber,
 	}
 
 	var ioID struct {
-		InwayID        int
-		OrganizationID int
+		InwayID        int `db:"inway_id"`
+		OrganizationID int `db:"organization_id"`
 	}
 
 	err := r.selectInwayByAddressStmt.GetContext(ctx, &ioID, arg)
@@ -289,7 +293,12 @@ func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organiz
 		return err
 	}
 
-	_, err = r.setOrganizationInwayStmt.ExecContext(ctx, ioID)
+	setOrgInwayArgs := map[string]interface{}{
+		"inway_id":      ioID.InwayID,
+		"serial_number": organizationSerialNumber,
+	}
+
+	_, err = r.setOrganizationInwayStmt.ExecContext(ctx, setOrgInwayArgs)
 	if err != nil {
 		return err
 	}
@@ -297,17 +306,17 @@ func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organiz
 	return nil
 }
 
-func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organizationName string) error {
+func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, serialNumber string) error {
 	arg := map[string]interface{}{
-		"name": organizationName,
+		"serial_number": serialNumber,
 	}
 
-	row, err := r.clearOrganizationInwayStmt.ExecContext(ctx, arg)
+	res, err := r.clearOrganizationInwayStmt.ExecContext(ctx, arg)
 	if err != nil {
 		return err
 	}
 
-	n, err := row.RowsAffected()
+	n, err := res.RowsAffected()
 	if err != nil {
 		return err
 	}
@@ -319,11 +328,11 @@ func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organ
 	return nil
 }
 
-func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error) {
+func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, serialNumber string) (string, error) {
 	var address sql.NullString
 
 	arg := map[string]interface{}{
-		"organization_name": organizationName,
+		"serial_number": serialNumber,
 	}
 
 	err := r.selectOrganizationInwayAddressStmt.GetContext(ctx, &address, arg)
@@ -340,8 +349,8 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 
 // ClearIfSetAsOrganizationInway clears the inway for the given organization.
 // This method should be called if IsOrganizationInway is false in the request, to ensure the directory has this correctly set as well
-func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context, organizationName, selfAddress string) error {
-	organizationSelfAddress, err := r.GetOrganizationInwayAddress(ctx, organizationName)
+func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context, serialNumber, selfAddress string) error {
+	organizationSelfAddress, err := r.GetOrganizationInwayAddress(ctx, serialNumber)
 	if err != nil {
 		if errors.Is(err, ErrOrganizationNotFound) {
 			return nil
@@ -352,7 +361,7 @@ func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context
 
 	if selfAddress == organizationSelfAddress {
 		r.logger.Warn("unexpected state: inway was incorrectly set as organization inway ", zap.String("inway self address", selfAddress), zap.String("organization inway self address", organizationSelfAddress))
-		return r.ClearOrganizationInway(ctx, organizationName)
+		return r.ClearOrganizationInway(ctx, serialNumber)
 	}
 
 	return nil
@@ -362,12 +371,13 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
 			insert into directory.organizations
-			            (name)
-			     values (:organization_name)
+			            (serial_number, name)
+			     values (:serial_number, :organization_name)
 			on conflict
-			    		on constraint organizations_uq_name
+			    		on constraint organizations_uq_serial_number
 			  			do update
-			      			set name = excluded.name -- no-op update to return id
+			      			set serial_number = excluded.serial_number, -- no-op update to return id
+			      			    name 		  = excluded.name
 						returning id
 		)
 		insert into directory.inways
@@ -386,12 +396,12 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 
 func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
-		select directory.inways.name as name, address, version as nlx_version, created_at, updated_at, directory.organizations.name as organization_name
+		select directory.inways.name as name, address, version as nlx_version, created_at, updated_at, directory.organizations.serial_number, directory.organizations.name as organization_name
 		from directory.inways
 		join directory.organizations
 		    on directory.inways.organization_id = directory.organizations.id
 		where
-		      directory.organizations.name = :organization_name
+		      directory.organizations.serial_number = :serial_number
 		  and directory.inways.name = :name;
 	`
 
@@ -401,7 +411,7 @@ func prepareGetInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 func prepareRegisterServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
-		    select id from directory.organizations where directory.organizations.name = :organization_name
+		    select id from directory.organizations where directory.organizations.serial_number = :serial_number
 		),
 	    inway as (
 		    select directory.inways.id from directory.inways, organization where organization_id = organization.id
@@ -439,7 +449,7 @@ func prepareRegisterServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 
 func prepareGetServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
-		select directory.services.id as id, directory.services.name as name, documentation_url, api_specification_type, internal, tech_support_contact, public_support_contact, directory.organizations.name as organization_name, one_time_costs, monthly_costs, request_costs
+		select directory.services.id as id, directory.services.name as name, documentation_url, api_specification_type, internal, tech_support_contact, public_support_contact, directory.organizations.serial_number as serial_number, one_time_costs, monthly_costs, request_costs
 		from directory.services
 		join directory.organizations
 		    on directory.services.organization_id = directory.organizations.id
@@ -456,7 +466,7 @@ func prepareSelectInwayByAddressStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) 
 		FROM directory.inways i
 		INNER JOIN directory.organizations o ON o.id = i.organization_id
 		WHERE i.address = :inway_address
-		AND o.name = :organization_name
+		AND o.serial_number = :serial_number
 	`
 
 	return db.PrepareNamed(query)
@@ -466,7 +476,7 @@ func prepareSetOrganizationInwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) 
 	query := `
 		UPDATE directory.organizations
 		SET inway_id = :inway_id
-		WHERE id = :organization_id
+		WHERE serial_number = :serial_number
 	`
 
 	return db.PrepareNamed(query)
@@ -476,7 +486,7 @@ func prepareClearOrganizationInwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error
 	query := `
 		UPDATE directory.organizations
 		SET inway_id = null
-		WHERE name = :name
+		WHERE serial_number = :serial_number
 	`
 
 	return db.PrepareNamed(query)
@@ -487,7 +497,7 @@ func prepareSelectOrganizationInwayAddressStatement(db *sqlx.DB) (*sqlx.NamedStm
 		SELECT i.address
 		FROM directory.organizations o
 		LEFT JOIN directory.inways i ON o.inway_id = i.id
-		WHERE o.name = :organization_name
+		WHERE o.serial_number = :serial_number
 	`
 
 	return db.PrepareNamed(query)

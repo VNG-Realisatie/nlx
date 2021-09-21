@@ -7,9 +7,10 @@
 package adapters_test
 
 import (
-	"go.nlx.io/nlx/directory-registration-api/domain"
 	"testing"
 	"time"
+
+	"go.nlx.io/nlx/directory-registration-api/domain"
 
 	"github.com/stretchr/testify/require"
 )
@@ -28,7 +29,7 @@ func TestRegisterService(t *testing.T) {
 				s, err := domain.NewService(
 					&domain.NewServiceArgs{
 						Name:                 "my-service",
-						OrganizationName:     "organization-d",
+						SerialNumber:         testOrganizationSerialNumber,
 						Internal:             true,
 						DocumentationURL:     "documentation-url",
 						APISpecificationType: domain.OpenAPI3,
@@ -65,7 +66,7 @@ func TestRegisterService(t *testing.T) {
 
 			inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
 				Name:         "inway-for-service",
-				Organization: createNewOrganization(t, "organization-d"),
+				Organization: createNewOrganization(t, "organization-d", testOrganizationSerialNumber),
 				Address:      "my-org.com",
 				NlxVersion:   domain.NlxVersionUnknown,
 				CreatedAt:    now,

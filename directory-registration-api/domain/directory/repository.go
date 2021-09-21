@@ -11,13 +11,13 @@ import (
 
 type Repository interface {
 	RegisterInway(*domain.Inway) error
-	GetInway(name, organization string) (*domain.Inway, error)
+	GetInway(name, organizationSerialNumber string) (*domain.Inway, error)
 
 	RegisterService(*domain.Service) error
 	GetService(id uint) (*domain.Service, error)
 
-	SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error
-	ClearOrganizationInway(ctx context.Context, organizationName string) error
-	ClearIfSetAsOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error
-	GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error)
+	SetOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error
+	ClearOrganizationInway(ctx context.Context, organizationSerialNumber string) error
+	ClearIfSetAsOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error
+	GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error)
 }

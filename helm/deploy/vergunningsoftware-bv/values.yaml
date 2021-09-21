@@ -177,6 +177,7 @@ ca:
       subject:
         organizations:
           - Vergunningsoftware BV
+        serialNumber: "12345678901234567892"
       commonName: vergunningsoftware-bv-nlx-outway
       dnsNames:
         - vergunningsoftware-bv-nlx-outway

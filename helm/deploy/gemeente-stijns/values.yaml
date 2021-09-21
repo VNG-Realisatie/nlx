@@ -179,6 +179,7 @@ ca:
       subject:
         organizations:
           - Gemeente Stijns
+        serialNumber: "12345678901234567890"
       commonName: gemeente-stijns-nlx-inway
       dnsNames:
         - gemeente-stijns-nlx-inway

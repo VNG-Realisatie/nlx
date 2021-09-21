@@ -18,14 +18,17 @@ import (
 func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "ClearOrganizationInway"))
 
-	organizationName, err := h.getOrganisationNameFromRequest(ctx)
+	organization, err := h.getOrganizationInformationFromRequest(ctx)
 	if err != nil {
-		return nil, status.Error(codes.Unknown, "determine organization name")
+		return nil, status.Error(codes.Unknown, "determine organization")
 	}
 
-	err = h.repository.ClearOrganizationInway(ctx, organizationName)
+	logger.Debug("clearing organization inway", zap.Any("organization", organization))
+
+	err = h.repository.ClearOrganizationInway(ctx, organization.SerialNumber)
 	if err != nil {
 		if errors.Is(err, adapters.ErrOrganizationNotFound) {
+			logger.Info("did not clear organization because the organization could not be found", zap.Any("organization", organization))
 			return &emptypb.Empty{}, nil
 		}
 

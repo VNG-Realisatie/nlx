@@ -12,7 +12,7 @@ import (
 type Service struct {
 	id                   uint
 	name                 string
-	organizationName     string
+	serialNumber         string
 	internal             bool
 	documentationURL     string
 	apiSpecificationType SpecificationType
@@ -25,7 +25,7 @@ type Service struct {
 
 type NewServiceArgs struct {
 	Name                 string
-	OrganizationName     string
+	SerialNumber         string
 	Internal             bool
 	DocumentationURL     string
 	APISpecificationType SpecificationType
@@ -56,7 +56,7 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 
 	return &Service{
 		name:                 args.Name,
-		organizationName:     args.OrganizationName,
+		serialNumber:         args.SerialNumber,
 		documentationURL:     args.DocumentationURL,
 		apiSpecificationType: args.APISpecificationType,
 		publicSupportContact: args.PublicSupportContact,
@@ -80,8 +80,8 @@ func (i *Service) Name() string {
 	return i.name
 }
 
-func (i *Service) OrganizationName() string {
-	return i.organizationName
+func (i *Service) SerialNumber() string {
+	return i.serialNumber
 }
 
 func (i *Service) DocumentationURL() string {

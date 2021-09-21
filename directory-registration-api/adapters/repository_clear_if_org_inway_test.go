@@ -19,7 +19,7 @@ func TestClearIfSetAsOrganizationInway(t *testing.T) {
 	setup(t)
 
 	var (
-		testOrgName         = "fixture-organization-name"
+		testOrgSerialNumber = "01234567890123456789"
 		testInwayAddrNotOrg = "https://fixture-inway-address-two.com"
 		testInwayAddrOrg    = "https://fixture-inway-address-one.com"
 	)
@@ -47,10 +47,10 @@ func TestClearIfSetAsOrganizationInway(t *testing.T) {
 			repo, close := newRepo(t, t.Name(), true)
 			defer close()
 
-			err := repo.ClearIfSetAsOrganizationInway(context.Background(), testOrgName, tt.inwayAddress)
+			err := repo.ClearIfSetAsOrganizationInway(context.Background(), testOrgSerialNumber, tt.inwayAddress)
 			require.NoError(t, err)
 
-			orgInwayAddress, err := repo.GetOrganizationInwayAddress(context.Background(), testOrgName)
+			orgInwayAddress, err := repo.GetOrganizationInwayAddress(context.Background(), testOrgSerialNumber)
 			require.NoError(t, err)
 			require.Equal(t, tt.expectedOrgInway, orgInwayAddress)
 		})

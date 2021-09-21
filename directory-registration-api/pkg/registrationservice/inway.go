@@ -25,9 +25,9 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 
 	resp := &registrationapi.RegisterInwayResponse{}
 
-	organizationName, err := h.getOrganisationNameFromRequest(ctx)
+	organizationInformation, err := h.getOrganizationInformationFromRequest(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get organization name from request: %v", err)
+		return nil, fmt.Errorf("failed to get organization information from request: %v", err)
 	}
 
 	nlxVersion := nlxversion.NewFromGRPCContext(ctx).Version
@@ -35,7 +35,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	// Created at and Updated at time are the same times when registering new inway
 	now := time.Now()
 
-	organizationModel, err := domain.NewOrganization(organizationName)
+	organizationModel, err := domain.NewOrganization(organizationInformation.Name, organizationInformation.SerialNumber)
 	if err != nil {
 		msg := fmt.Sprintf("validation failed: %s", err.Error())
 		return nil, status.New(codes.InvalidArgument, msg).Err()
@@ -64,7 +64,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 
 	if inwayModel.IsOrganizationInway() {
 		h.logger.Debug("is organization inway")
-		err = h.repository.SetOrganizationInway(ctx, organizationName, inwayModel.Address())
+		err = h.repository.SetOrganizationInway(ctx, organizationInformation.SerialNumber, inwayModel.Address())
 
 		if err != nil {
 			h.logger.Error("set organization inway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
@@ -72,7 +72,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		}
 	} else {
 		h.logger.Debug("is not organization inway")
-		err = h.repository.ClearIfSetAsOrganizationInway(ctx, organizationName, inwayModel.Address())
+		err = h.repository.ClearIfSetAsOrganizationInway(ctx, organizationInformation.Name, inwayModel.Address())
 
 		if err != nil {
 			h.logger.Error("failed to execute ClearIfSetAsOrganizationInway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
@@ -98,7 +98,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		serviceModel, err := domain.NewService(
 			&domain.NewServiceArgs{
 				Name:                 s.Name,
-				OrganizationName:     organizationName,
+				SerialNumber:         organizationInformation.SerialNumber,
 				Internal:             s.Internal,
 				DocumentationURL:     s.DocumentationUrl,
 				APISpecificationType: serviceSpecificationType,

@@ -36,61 +36,61 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // ClearIfSetAsOrganizationInway mocks base method.
-func (m *MockRepository) ClearIfSetAsOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
+func (m *MockRepository) ClearIfSetAsOrganizationInway(ctx context.Context, serialNumber, inwayAddress string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ClearIfSetAsOrganizationInway", ctx, organizationName, inwayAddress)
+	ret := m.ctrl.Call(m, "ClearIfSetAsOrganizationInway", ctx, serialNumber, inwayAddress)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ClearIfSetAsOrganizationInway indicates an expected call of ClearIfSetAsOrganizationInway.
-func (mr *MockRepositoryMockRecorder) ClearIfSetAsOrganizationInway(ctx, organizationName, inwayAddress interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) ClearIfSetAsOrganizationInway(ctx, serialNumber, inwayAddress interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearIfSetAsOrganizationInway", reflect.TypeOf((*MockRepository)(nil).ClearIfSetAsOrganizationInway), ctx, organizationName, inwayAddress)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearIfSetAsOrganizationInway", reflect.TypeOf((*MockRepository)(nil).ClearIfSetAsOrganizationInway), ctx, serialNumber, inwayAddress)
 }
 
 // ClearOrganizationInway mocks base method.
-func (m *MockRepository) ClearOrganizationInway(ctx context.Context, organizationName string) error {
+func (m *MockRepository) ClearOrganizationInway(ctx context.Context, serialNumber string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ClearOrganizationInway", ctx, organizationName)
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", ctx, serialNumber)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ClearOrganizationInway indicates an expected call of ClearOrganizationInway.
-func (mr *MockRepositoryMockRecorder) ClearOrganizationInway(ctx, organizationName interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) ClearOrganizationInway(ctx, serialNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockRepository)(nil).ClearOrganizationInway), ctx, organizationName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockRepository)(nil).ClearOrganizationInway), ctx, serialNumber)
 }
 
 // GetInway mocks base method.
-func (m *MockRepository) GetInway(name, organization string) (*domain.Inway, error) {
+func (m *MockRepository) GetInway(name, serialNumber string) (*domain.Inway, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInway", name, organization)
+	ret := m.ctrl.Call(m, "GetInway", name, serialNumber)
 	ret0, _ := ret[0].(*domain.Inway)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetInway indicates an expected call of GetInway.
-func (mr *MockRepositoryMockRecorder) GetInway(name, organization interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) GetInway(name, serialNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockRepository)(nil).GetInway), name, organization)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockRepository)(nil).GetInway), name, serialNumber)
 }
 
 // GetOrganizationInwayAddress mocks base method.
-func (m *MockRepository) GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error) {
+func (m *MockRepository) GetOrganizationInwayAddress(ctx context.Context, serialNumber string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrganizationInwayAddress", ctx, organizationName)
+	ret := m.ctrl.Call(m, "GetOrganizationInwayAddress", ctx, serialNumber)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrganizationInwayAddress indicates an expected call of GetOrganizationInwayAddress.
-func (mr *MockRepositoryMockRecorder) GetOrganizationInwayAddress(ctx, organizationName interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) GetOrganizationInwayAddress(ctx, serialNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockRepository)(nil).GetOrganizationInwayAddress), ctx, organizationName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockRepository)(nil).GetOrganizationInwayAddress), ctx, serialNumber)
 }
 
 // GetService mocks base method.
@@ -137,15 +137,15 @@ func (mr *MockRepositoryMockRecorder) RegisterService(arg0 interface{}) *gomock.
 }
 
 // SetOrganizationInway mocks base method.
-func (m *MockRepository) SetOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
+func (m *MockRepository) SetOrganizationInway(ctx context.Context, serialNumber, inwayAddress string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetOrganizationInway", ctx, organizationName, inwayAddress)
+	ret := m.ctrl.Call(m, "SetOrganizationInway", ctx, serialNumber, inwayAddress)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetOrganizationInway indicates an expected call of SetOrganizationInway.
-func (mr *MockRepositoryMockRecorder) SetOrganizationInway(ctx, organizationName, inwayAddress interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) SetOrganizationInway(ctx, serialNumber, inwayAddress interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationInway", reflect.TypeOf((*MockRepository)(nil).SetOrganizationInway), ctx, organizationName, inwayAddress)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationInway", reflect.TypeOf((*MockRepository)(nil).SetOrganizationInway), ctx, serialNumber, inwayAddress)
 }

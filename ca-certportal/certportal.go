@@ -20,7 +20,7 @@ var (
 	ErrFailedToParseCSR             = errors.New("failed to parse csr")
 	ErrFailedToCreateSigner         = errors.New("unable to create signer")
 	ErrFailedToSignCSR              = errors.New("failed to sign csr")
-	ErrFailedToGenerateSerialNumber = errors.New("failed to generate serialnumber")
+	ErrFailedToGenerateSerialNumber = errors.New("failed to generate serial number")
 )
 
 type Certificate []byte

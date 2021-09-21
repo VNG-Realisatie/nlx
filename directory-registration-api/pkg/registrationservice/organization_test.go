@@ -27,7 +27,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
+					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
 					Return(errors.New("arbitrary error"))
 			},
 			expectedResponse: nil,
@@ -37,7 +37,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
+					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
 					Return(adapters.ErrOrganizationNotFound)
 			},
 			expectedResponse: &emptypb.Empty{},
@@ -47,7 +47,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.r.
 					EXPECT().
-					ClearOrganizationInway(gomock.Any(), "Test Organization Name").
+					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
 					Return(nil)
 			},
 			expectedResponse: &emptypb.Empty{},

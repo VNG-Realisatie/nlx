@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -17,7 +16,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/peer"
 
 	common_db "go.nlx.io/nlx/common/db"
 	nlxhttp "go.nlx.io/nlx/common/http"
@@ -126,7 +124,7 @@ func main() {
 		logger,
 		inwayRepository,
 		httpClient,
-		getOrganisationNameFromRequest,
+		common_tls.GetOrganizationInfoFromRequest,
 	)
 
 	grpcServer := newGRPCServer(certificate, logger)
@@ -174,18 +172,4 @@ func shutdownGrpcServer(ctx context.Context, s *grpc.Server) {
 	case <-stopped:
 		return
 	}
-}
-
-func getOrganisationNameFromRequest(ctx context.Context) (string, error) {
-	orgPeer, ok := peer.FromContext(ctx)
-	if !ok {
-		return "", errors.New("failed to obtain peer from context")
-	}
-
-	tlsInfo := orgPeer.AuthInfo.(credentials.TLSInfo)
-	if len(tlsInfo.State.VerifiedChains) == 0 {
-		return "", errors.New("no valid TLS certificate chain found")
-	}
-
-	return tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0], nil
 }

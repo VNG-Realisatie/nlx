@@ -24,7 +24,7 @@ func Test_NewInway(t *testing.T) {
 		"invalid_name": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "#*%",
-				Organization: createNewOrganization(t, "my-organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
@@ -35,7 +35,7 @@ func Test_NewInway(t *testing.T) {
 		"without_address": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
@@ -46,7 +46,7 @@ func Test_NewInway(t *testing.T) {
 		"invalid_address": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "foo::bar",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
@@ -57,7 +57,7 @@ func Test_NewInway(t *testing.T) {
 		"invalid_version": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "address",
 				NlxVersion:   "invalid",
 				CreatedAt:    now,
@@ -79,7 +79,7 @@ func Test_NewInway(t *testing.T) {
 		"empty_name": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
@@ -90,7 +90,7 @@ func Test_NewInway(t *testing.T) {
 		"created_at_in_future": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now.Add(1 * time.Hour),
@@ -101,7 +101,7 @@ func Test_NewInway(t *testing.T) {
 		"updated_at_in_future": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
@@ -112,7 +112,7 @@ func Test_NewInway(t *testing.T) {
 		"happy_flow": {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
-				Organization: createNewOrganization(t, "organization-name"),
+				Organization: createNewOrganization(t),
 				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
@@ -144,8 +144,12 @@ func Test_NewInway(t *testing.T) {
 	}
 }
 
-func createNewOrganization(t *testing.T, name string) *domain.Organization {
-	model, err := domain.NewOrganization(name)
+const testOrganizationName = "my-organization-name"
+
+const testOrganizationSerialNumber = "01234567890123456789"
+
+func createNewOrganization(t *testing.T) *domain.Organization {
+	model, err := domain.NewOrganization(testOrganizationName, testOrganizationSerialNumber)
 	require.NoError(t, err)
 
 	return model

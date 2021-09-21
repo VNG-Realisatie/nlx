@@ -3,6 +3,7 @@
 package tls
 
 import (
+	"context"
 	"crypto"
 	"crypto/sha256"
 	"crypto/tls"
@@ -15,6 +16,8 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/peer"
 )
 
 const (
@@ -218,4 +221,26 @@ func newIntermediatePool(cert *tls.Certificate) *x509.CertPool {
 	}
 
 	return p
+}
+
+type OrganizationInformation struct {
+	Name         string
+	SerialNumber string
+}
+
+func GetOrganizationInfoFromRequest(ctx context.Context) (*OrganizationInformation, error) {
+	orgPeer, ok := peer.FromContext(ctx)
+	if !ok {
+		return nil, errors.New("failed to obtain peer from context")
+	}
+
+	tlsInfo := orgPeer.AuthInfo.(credentials.TLSInfo)
+	if len(tlsInfo.State.VerifiedChains) == 0 {
+		return nil, errors.New("no valid TLS certificate chain found")
+	}
+
+	return &OrganizationInformation{
+		Name:         tlsInfo.State.VerifiedChains[0][0].Subject.Organization[0],
+		SerialNumber: tlsInfo.State.VerifiedChains[0][0].Subject.SerialNumber,
+	}, nil
 }

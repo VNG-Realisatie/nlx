@@ -60,6 +60,7 @@ func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*adapt
 		)
 		require.NoError(t, err)
 		err = fixtures.Load()
+		require.NoError(t, err)
 	}
 
 	db.MapperFunc(xstrings.ToSnakeCase)
@@ -74,8 +75,9 @@ func newRepo(t *testing.T, id string, loadFixtures bool) (directory.Repository, 
 	return newPostgreSQLRepository(t, id, loadFixtures)
 }
 
-func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, organizationName, inwayAddress string) {
-	result, err := repo.GetOrganizationInwayAddress(context.Background(), organizationName)
+func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, serialNumber, inwayAddress string) {
+	t.Logf("serial number in assertOrganizationInwayAddress: %s", serialNumber)
+	result, err := repo.GetOrganizationInwayAddress(context.Background(), serialNumber)
 	require.NoError(t, err)
 
 	assert.Equal(t, inwayAddress, result)
@@ -84,7 +86,7 @@ func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, org
 func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *domain.Inway) {
 	require.NotNil(t, iw)
 
-	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.Organization().Name())
+	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.Organization().SerialNumber())
 	require.NoError(t, err)
 
 	assert.Equal(t, iw, inwayFromRepo)

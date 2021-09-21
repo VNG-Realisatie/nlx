@@ -1,6 +1,8 @@
 - id: 1
   name: fixture-organization-name
+  serial_number: "01234567890123456789"
   inway_id: 1
 
 - id: 2
   name: fixture-second-organization-name
+  serial_number: "01234567890123456780"

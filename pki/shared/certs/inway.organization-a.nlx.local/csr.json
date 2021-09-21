@@ -8,9 +8,10 @@
     "inway.organization-a.nlx.local",
     "inway.organization-a.nlx.minikube"
   ],
+  "serialnumber":"12345678901234567890",
   "names": [
     {
-      "O": "Organization-A",
+      "O": "Organization-AA",
       "C": "NL"
     }
   ]

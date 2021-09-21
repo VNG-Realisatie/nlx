@@ -8,14 +8,13 @@ package adapters_test
 
 import (
 	"context"
-	"go.nlx.io/nlx/directory-registration-api/domain"
-	"log"
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
+        "github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
+        "go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 func TestSetOrganizationInway(t *testing.T) {
@@ -29,8 +28,8 @@ func TestSetOrganizationInway(t *testing.T) {
 	}
 
 	type inputParams struct {
-		organizationName string
-		inwayAddress     string
+		organizationSerialNumber string
+		inwayAddress             string
 	}
 
 	tests := map[string]struct {
@@ -42,7 +41,7 @@ func TestSetOrganizationInway(t *testing.T) {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
 					Name:         "inway-for-service",
-					Organization: createNewOrganization(t, "TestSetOrganizationInwayinwayaddressnotfound"),
+					Organization: createNewOrganization(t, "TestSetOrganizationInwayinwayaddressnotfound", testOrganizationSerialNumber),
 					Address:      "my-org-e.com",
 					NlxVersion:   domain.NlxVersionUnknown,
 					CreatedAt:    now,
@@ -50,8 +49,8 @@ func TestSetOrganizationInway(t *testing.T) {
 				}
 			},
 			input: inputParams{
-				organizationName: "TestSetOrganizationInwayinwayaddressnotfound",
-				inwayAddress:     "does-not-exist.com",
+				organizationSerialNumber: testOrganizationSerialNumber,
+				inwayAddress:             "does-not-exist.com",
 			},
 			expectedErr: adapters.ErrNoInwayWithAddress,
 		},
@@ -59,7 +58,7 @@ func TestSetOrganizationInway(t *testing.T) {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
 					Name:         "inway-for-service",
-					Organization: createNewOrganization(t, "TestSetOrganizationInwayhappyflow"),
+					Organization: createNewOrganization(t, "TestSetOrganizationInwayhappyflow", testOrganizationSerialNumber),
 					Address:      "my-org-e.com",
 					NlxVersion:   domain.NlxVersionUnknown,
 					CreatedAt:    now,
@@ -67,8 +66,8 @@ func TestSetOrganizationInway(t *testing.T) {
 				}
 			},
 			input: inputParams{
-				organizationName: "TestSetOrganizationInwayhappyflow",
-				inwayAddress:     "my-org-e.com",
+				organizationSerialNumber: testOrganizationSerialNumber,
+				inwayAddress:             "my-org-e.com",
 			},
 			expectedErr: nil,
 		},
@@ -91,11 +90,11 @@ func TestSetOrganizationInway(t *testing.T) {
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), tt.input.organizationName, tt.input.inwayAddress)
+			err = repo.SetOrganizationInway(context.Background(), tt.input.organizationSerialNumber, tt.input.inwayAddress)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {
-				assertOrganizationInwayAddress(t, repo, tt.input.organizationName, tt.input.inwayAddress)
+				assertOrganizationInwayAddress(t, repo, tt.input.organizationSerialNumber, tt.input.inwayAddress)
 			}
 		})
 	}
@@ -112,7 +111,7 @@ func TestClearOrganizationInway(t *testing.T) {
 	}
 
 	type inputParams struct {
-		organizationName string
+		organizationSerialNumber string
 	}
 
 	tests := map[string]struct {
@@ -124,7 +123,7 @@ func TestClearOrganizationInway(t *testing.T) {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
 					Name:         "inway-for-service",
-					Organization: createNewOrganization(t, "my-organization-name"),
+					Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
 					Address:      "my-org-g.com",
 					NlxVersion:   domain.NlxVersionUnknown,
 					CreatedAt:    now,
@@ -132,7 +131,7 @@ func TestClearOrganizationInway(t *testing.T) {
 				}
 			},
 			input: inputParams{
-				organizationName: "organization-does-not-exist",
+				organizationSerialNumber: "12345678900987654321",
 			},
 			expectedErr: adapters.ErrOrganizationNotFound,
 		},
@@ -140,7 +139,7 @@ func TestClearOrganizationInway(t *testing.T) {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
 					Name:         "inway-for-service",
-					Organization: createNewOrganization(t, "my-organization"),
+					Organization: createNewOrganization(t, "my-organization", testOrganizationSerialNumber),
 					Address:      "my-org-h.com",
 					NlxVersion:   domain.NlxVersionUnknown,
 					CreatedAt:    now,
@@ -148,7 +147,7 @@ func TestClearOrganizationInway(t *testing.T) {
 				}
 			},
 			input: inputParams{
-				organizationName: "my-organization",
+				organizationSerialNumber: testOrganizationSerialNumber,
 			},
 			expectedErr: nil,
 		},
@@ -171,16 +170,16 @@ func TestClearOrganizationInway(t *testing.T) {
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().Name(), inwayModel.Address())
-			require.Equal(t, nil, err)
+			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().SerialNumber(), inwayModel.Address())
+			require.NoError(t, err)
 
-			log.Println(tt.input.organizationName)
+			t.Logf("tt.input.organizationSerialNumber = %s", tt.input.organizationSerialNumber)
 
-			err = repo.ClearOrganizationInway(context.Background(), tt.input.organizationName)
+			err = repo.ClearOrganizationInway(context.Background(), tt.input.organizationSerialNumber)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {
-				assertOrganizationInwayAddress(t, repo, tt.input.organizationName, "")
+				assertOrganizationInwayAddress(t, repo, tt.input.organizationSerialNumber, "")
 			}
 		})
 	}
@@ -197,7 +196,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 	}
 
 	type inputParams struct {
-		organizationName string
+		organizationSerialNumber string
 	}
 
 	tests := map[string]struct {
@@ -210,7 +209,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
 					Name:         "inway-for-service",
-					Organization: createNewOrganization(t, "my-organization-name"),
+					Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
 					Address:      "my-org-i.com",
 					NlxVersion:   domain.NlxVersionUnknown,
 					CreatedAt:    now,
@@ -218,7 +217,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 				}
 			},
 			input: inputParams{
-				organizationName: "organization-does-not-exist",
+				organizationSerialNumber: "010203040506070809",
 			},
 			expectedAddress: "",
 			expectedErr:     adapters.ErrOrganizationNotFound,
@@ -227,7 +226,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
 				return &domain.NewInwayArgs{
 					Name:         "inway-for-service",
-					Organization: createNewOrganization(t, "my-organization"),
+					Organization: createNewOrganization(t, "my-organization", testOrganizationSerialNumber),
 					Address:      "my-org-i.com",
 					NlxVersion:   domain.NlxVersionUnknown,
 					CreatedAt:    now,
@@ -235,7 +234,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 				}
 			},
 			input: inputParams{
-				organizationName: "my-organization",
+				organizationSerialNumber: testOrganizationSerialNumber,
 			},
 			expectedAddress: "my-org-i.com",
 			expectedErr:     nil,
@@ -259,10 +258,10 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			err = repo.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().Name(), inwayModel.Address())
+			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().SerialNumber(), inwayModel.Address())
 			require.Equal(t, nil, err)
 
-			address, err := repo.GetOrganizationInwayAddress(context.Background(), tt.input.organizationName)
+			address, err := repo.GetOrganizationInwayAddress(context.Background(), tt.input.organizationSerialNumber)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {
