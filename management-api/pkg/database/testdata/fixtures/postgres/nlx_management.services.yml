@@ -1,0 +1,13 @@
+- id: 1
+  name: fixture-service-name
+  endpoint_url: http://fixture-api:8000
+  api_specification_url: http://fixture-api:8000/schema?format=openapi-json
+  documentation_url: https://fixture-documentation-url.com
+  internal: false
+  tech_support_contact: fixture@tech-support-contact.com
+  public_support_contact: fixture@public-support-contact.com
+  one_time_costs: 1
+  monthly_costs: 2
+  request_costs: 3
+  created_at: 2021-01-02 01:02:03.000000+00
+  updated_at: 2021-01-02 01:02:03.000000+00
