@@ -41,7 +41,6 @@ type ConfigDatabase interface {
 	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 
 	ListAllIncomingAccessRequests(ctx context.Context) ([]*IncomingAccessRequest, error)
-	ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*IncomingAccessRequest, error)
 	GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error)
 	GetIncomingAccessRequestCountByService(ctx context.Context) (map[string]int, error)
 	GetIncomingAccessRequest(ctx context.Context, id uint) (*IncomingAccessRequest, error)

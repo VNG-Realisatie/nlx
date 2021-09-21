@@ -51,20 +51,6 @@ func (db *PostgresConfigDatabase) ListAllIncomingAccessRequests(ctx context.Cont
 	return accessRequests, nil
 }
 
-func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*IncomingAccessRequest, error) {
-	accessRequests := []*IncomingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Service").
-		Joins("JOIN nlx_management.services s ON s.service_id = access_requests_incoming.service_id AND organization_name = ? AND s.name = ?", organizationName, serviceName).
-		Find(&accessRequests).Error; err != nil {
-		return nil, err
-	}
-
-	return accessRequests, nil
-}
-
 func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error) {
 	accessRequest := &IncomingAccessRequest{}
 

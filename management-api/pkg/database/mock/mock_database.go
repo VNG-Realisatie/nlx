@@ -496,21 +496,6 @@ func (mr *MockConfigDatabaseMockRecorder) ListAuditLogRecords(ctx interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogRecords", reflect.TypeOf((*MockConfigDatabase)(nil).ListAuditLogRecords), ctx)
 }
 
-// ListIncomingAccessRequests mocks base method.
-func (m *MockConfigDatabase) ListIncomingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*database.IncomingAccessRequest, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListIncomingAccessRequests", ctx, organizationName, serviceName)
-	ret0, _ := ret[0].([]*database.IncomingAccessRequest)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListIncomingAccessRequests indicates an expected call of ListIncomingAccessRequests.
-func (mr *MockConfigDatabaseMockRecorder) ListIncomingAccessRequests(ctx, organizationName, serviceName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListIncomingAccessRequests), ctx, organizationName, serviceName)
-}
-
 // ListIncomingOrders mocks base method.
 func (m *MockConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error) {
 	m.ctrl.T.Helper()
