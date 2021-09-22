@@ -98,6 +98,20 @@ func (mr *MockConfigDatabaseMockRecorder) CreateIncomingAccessRequest(ctx, acces
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateIncomingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).CreateIncomingAccessRequest), ctx, accessRequest)
 }
 
+// CreateInway mocks base method.
+func (m *MockConfigDatabase) CreateInway(ctx context.Context, inway *database.Inway) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateInway", ctx, inway)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateInway indicates an expected call of CreateInway.
+func (mr *MockConfigDatabaseMockRecorder) CreateInway(ctx, inway interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInway", reflect.TypeOf((*MockConfigDatabase)(nil).CreateInway), ctx, inway)
+}
+
 // CreateOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *database.OutgoingAccessRequest) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -600,20 +614,6 @@ func (m *MockConfigDatabase) PutOrganizationInway(ctx context.Context, inwayID *
 func (mr *MockConfigDatabaseMockRecorder) PutOrganizationInway(ctx, inwayID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutOrganizationInway", reflect.TypeOf((*MockConfigDatabase)(nil).PutOrganizationInway), ctx, inwayID)
-}
-
-// RegisterInway mocks base method.
-func (m *MockConfigDatabase) RegisterInway(ctx context.Context, inway *database.Inway) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterInway", ctx, inway)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RegisterInway indicates an expected call of RegisterInway.
-func (mr *MockConfigDatabaseMockRecorder) RegisterInway(ctx, inway interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockConfigDatabase)(nil).RegisterInway), ctx, inway)
 }
 
 // RevokeAccessGrant mocks base method.

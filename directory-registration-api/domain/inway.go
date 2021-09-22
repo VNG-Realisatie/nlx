@@ -14,23 +14,21 @@ import (
 )
 
 type Inway struct {
-	name                string
-	organization        *Organization
-	isOrganizationInway bool
-	address             string
-	nlxVersion          string
-	createdAt           time.Time
-	updatedAt           time.Time
+	name         string
+	organization *Organization
+	address      string
+	nlxVersion   string
+	createdAt    time.Time
+	updatedAt    time.Time
 }
 
 type NewInwayArgs struct {
-	Name                string
-	Organization        *Organization
-	IsOrganizationInway bool
-	Address             string
-	NlxVersion          string
-	CreatedAt           time.Time
-	UpdatedAt           time.Time
+	Name         string
+	Organization *Organization
+	Address      string
+	NlxVersion   string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 const NlxVersionUnknown = "unknown"
@@ -56,13 +54,12 @@ func NewInway(args *NewInwayArgs) (*Inway, error) {
 	}
 
 	return &Inway{
-		name:                args.Name,
-		organization:        args.Organization,
-		address:             args.Address,
-		nlxVersion:          args.NlxVersion,
-		createdAt:           args.CreatedAt,
-		updatedAt:           args.UpdatedAt,
-		isOrganizationInway: args.IsOrganizationInway,
+		name:         args.Name,
+		organization: args.Organization,
+		address:      args.Address,
+		nlxVersion:   args.NlxVersion,
+		createdAt:    args.CreatedAt,
+		updatedAt:    args.UpdatedAt,
 	}, nil
 }
 
@@ -72,10 +69,6 @@ func (i *Inway) Name() string {
 
 func (i *Inway) Organization() *Organization {
 	return i.organization
-}
-
-func (i *Inway) IsOrganizationInway() bool {
-	return i.isOrganizationInway
 }
 
 func (i *Inway) Address() string {

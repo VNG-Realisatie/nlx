@@ -35,20 +35,6 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
-// ClearIfSetAsOrganizationInway mocks base method.
-func (m *MockRepository) ClearIfSetAsOrganizationInway(ctx context.Context, organizationName, inwayAddress string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ClearIfSetAsOrganizationInway", ctx, organizationName, inwayAddress)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ClearIfSetAsOrganizationInway indicates an expected call of ClearIfSetAsOrganizationInway.
-func (mr *MockRepositoryMockRecorder) ClearIfSetAsOrganizationInway(ctx, organizationName, inwayAddress interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearIfSetAsOrganizationInway", reflect.TypeOf((*MockRepository)(nil).ClearIfSetAsOrganizationInway), ctx, organizationName, inwayAddress)
-}
-
 // ClearOrganizationInway mocks base method.
 func (m *MockRepository) ClearOrganizationInway(ctx context.Context, organizationName string) error {
 	m.ctrl.T.Helper()

@@ -93,7 +93,7 @@ var createInwayCommand = &cobra.Command{
 			}
 
 			ctx := context.Background()
-			_, err = getManagementClient().RegisterInway(ctx, inway)
+			_, err = getManagementClient().CreateInway(ctx, inway)
 			if err != nil {
 				panic(err)
 			}

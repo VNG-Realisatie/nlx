@@ -43,7 +43,7 @@ service Management {
   rpc GetInway (GetInwayRequest) returns (Inway) {
     option (google.api.http) = {get: "/api/v1/inways/{name}"};
   }
-  rpc RegisterInway (Inway) returns (Inway) {
+  rpc CreateInway (Inway) returns (Inway) {
     option (google.api.http) = {post: "/api/v1/inways" body: "*"};
   }
   rpc UpdateInway (UpdateInwayRequest) returns (Inway) {

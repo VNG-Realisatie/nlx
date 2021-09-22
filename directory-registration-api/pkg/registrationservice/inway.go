@@ -42,13 +42,12 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	}
 
 	inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
-		Name:                req.InwayName,
-		Organization:        organizationModel,
-		IsOrganizationInway: req.IsOrganizationInway,
-		Address:             req.InwayAddress,
-		NlxVersion:          nlxVersion,
-		CreatedAt:           now,
-		UpdatedAt:           now,
+		Name:         req.InwayName,
+		Organization: organizationModel,
+		Address:      req.InwayAddress,
+		NlxVersion:   nlxVersion,
+		CreatedAt:    now,
+		UpdatedAt:    now,
 	},
 	)
 	if err != nil {
@@ -60,24 +59,6 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	if err != nil {
 		h.logger.Error("register inway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
 		return nil, status.New(codes.Internal, "failed to register inway").Err()
-	}
-
-	if inwayModel.IsOrganizationInway() {
-		h.logger.Debug("is organization inway")
-		err = h.repository.SetOrganizationInway(ctx, organizationName, inwayModel.Address())
-
-		if err != nil {
-			h.logger.Error("set organization inway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
-			return nil, status.New(codes.Internal, "failed to set organization inway").Err()
-		}
-	} else {
-		h.logger.Debug("is not organization inway")
-		err = h.repository.ClearIfSetAsOrganizationInway(ctx, organizationName, inwayModel.Address())
-
-		if err != nil {
-			h.logger.Error("failed to execute ClearIfSetAsOrganizationInway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
-			return nil, status.New(codes.Internal, "failed to update organization inway settings").Err()
-		}
 	}
 
 	if len(req.Services) > maxServiceCount {

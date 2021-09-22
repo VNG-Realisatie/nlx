@@ -116,7 +116,7 @@ func main() {
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	inwayRepository, err := adapters.New(logger, db)
+	inwayRepository, err := adapters.NewPostgreSQLRepository(db)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}

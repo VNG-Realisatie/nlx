@@ -39,7 +39,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 		"cannot_register_to_management_api": {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
-				managementClient.EXPECT().RegisterInway(gomock.Any(), &api.Inway{
+				managementClient.EXPECT().CreateInway(gomock.Any(), &api.Inway{
 					Name:        "mock-inway",
 					Version:     "unknown",
 					Hostname:    hostname,
@@ -54,14 +54,12 @@ func TestStartConfigurationPolling(t *testing.T) {
 		"happy_flow": {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
-				managementClient.EXPECT().RegisterInway(gomock.Any(), &api.Inway{
+				managementClient.EXPECT().CreateInway(gomock.Any(), &api.Inway{
 					Name:        "mock-inway",
 					Version:     "unknown",
 					Hostname:    hostname,
 					SelfAddress: "localhost:1812",
 				}).Return(nil, nil)
-
-				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(&api.Settings{OrganizationInway: "mock-inway"}, nil)
 
 				managementClient.EXPECT().ListServices(gomock.Any(), &api.ListServicesRequest{
 					InwayName: "mock-inway",

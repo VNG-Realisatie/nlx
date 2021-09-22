@@ -26,7 +26,7 @@ type ConfigDatabase interface {
 
 	ListInways(ctx context.Context) ([]*Inway, error)
 	GetInway(ctx context.Context, name string) (*Inway, error)
-	RegisterInway(ctx context.Context, inway *Inway) error
+	CreateInway(ctx context.Context, inway *Inway) error
 	UpdateInway(ctx context.Context, inway *Inway) error
 	DeleteInway(ctx context.Context, name string) error
 

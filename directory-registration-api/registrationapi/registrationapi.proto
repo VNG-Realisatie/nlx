@@ -8,6 +8,7 @@ option go_package = ".;registrationapi";
 
 service DirectoryRegistration {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+	rpc SetOrganizationInway (SetOrganizationInwayRequest) returns (google.protobuf.Empty);
 	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
 }
 
@@ -28,9 +29,12 @@ message RegisterInwayRequest {
 	string inway_address = 1;
 	repeated RegisterService services = 2;
 	string inway_name = 3;
-	bool is_organization_inway = 4;
 }
 
 message RegisterInwayResponse {
 	string error = 1;
+}
+
+message SetOrganizationInwayRequest {
+	string address = 1;
 }

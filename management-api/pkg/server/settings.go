@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -53,6 +54,16 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 
 			logger.Error("could not get the inway from the database", zap.Error(err))
 
+			return nil, status.Error(codes.Internal, "database error")
+		}
+
+		setOrganizationInwayRequest := &registrationapi.SetOrganizationInwayRequest{
+			Address: inway.SelfAddress,
+		}
+
+		_, err = s.directoryClient.SetOrganizationInway(ctx, setOrganizationInwayRequest)
+		if err != nil {
+			logger.Error("could not update the organization inway in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "database error")
 		}
 

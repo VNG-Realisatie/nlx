@@ -28,7 +28,7 @@ func (i *Inway) TableName() string {
 	return "nlx_management.inways"
 }
 
-func (db *PostgresConfigDatabase) RegisterInway(ctx context.Context, inway *Inway) error {
+func (db *PostgresConfigDatabase) CreateInway(ctx context.Context, inway *Inway) error {
 	return db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).

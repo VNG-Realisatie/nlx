@@ -8,13 +8,10 @@ package adapters_test
 
 import (
 	"context"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 	"os"
 	"sync"
 	"testing"
-
-	"github.com/go-testfixtures/testfixtures/v3"
-	"go.nlx.io/nlx/directory-registration-api/domain"
-	"go.uber.org/zap"
 
 	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -47,31 +44,20 @@ func setupPostgreSQLRepository(t *testing.T) {
 	sqlx.BindDriver("txdb", sqlx.DOLLAR)
 }
 
-func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*adapters.PostgreSQLRepository, func() error) {
+func newPostgreSQLRepository(t *testing.T, id string) (*adapters.PostgreSQLRepository, func() error) {
 	db, err := sqlx.Open("txdb", id)
 	require.NoError(t, err)
 
-	if loadFixtures {
-		fixtures, err := testfixtures.New(
-			testfixtures.Database(db.DB),
-			testfixtures.Dialect("postgres"),
-			testfixtures.Directory("testdata/fixtures/postgres"),
-			testfixtures.DangerousSkipTestDatabaseCheck(),
-		)
-		require.NoError(t, err)
-		err = fixtures.Load()
-	}
-
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	repo, err := adapters.New(zap.NewNop(), db)
+	repo, err := adapters.NewPostgreSQLRepository(db)
 	require.NoError(t, err)
 
 	return repo, db.Close
 }
 
-func newRepo(t *testing.T, id string, loadFixtures bool) (directory.Repository, func() error) {
-	return newPostgreSQLRepository(t, id, loadFixtures)
+func newRepo(t *testing.T, id string) (directory.Repository, func() error) {
+	return newPostgreSQLRepository(t, id)
 }
 
 func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, organizationName, inwayAddress string) {

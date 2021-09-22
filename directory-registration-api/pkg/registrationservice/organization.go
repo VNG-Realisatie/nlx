@@ -13,7 +13,34 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 )
+
+func (h *DirectoryRegistrationService) SetOrganizationInway(ctx context.Context, req *registrationapi.SetOrganizationInwayRequest) (*emptypb.Empty, error) {
+	logger := h.logger.With(zap.String("handler", "SetOrganizationInway"))
+
+	organizationName, err := h.getOrganisationNameFromRequest(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, "determine organization name")
+	}
+
+	if req.Address == "" {
+		return nil, status.New(codes.InvalidArgument, "address is empty").Err()
+	}
+
+	err = h.repository.SetOrganizationInway(ctx, organizationName, req.Address)
+	if err != nil {
+		if errors.Is(err, adapters.ErrNoInwayWithAddress) {
+			return nil, status.New(codes.NotFound, "inway with address not found").Err()
+		}
+
+		logger.Error("failed to set inway for organiation", zap.Error(err))
+
+		return nil, status.New(codes.Internal, "database error").Err()
+	}
+
+	return &emptypb.Empty{}, nil
+}
 
 func (h *DirectoryRegistrationService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	logger := h.logger.With(zap.String("handler", "ClearOrganizationInway"))

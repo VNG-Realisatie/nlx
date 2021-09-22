@@ -46,7 +46,6 @@ type Inway struct {
 	organizationName            string
 	address                     string
 	listenManagementAddress     string
-	isOrganizationInway         bool
 	orgCertBundle               *common_tls.CertificateBundle
 	logger                      *zap.Logger
 	serverTLS                   *http.Server
@@ -221,16 +220,14 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 				})
 			}
 
-			registerInwayRequest := &registrationapi.RegisterInwayRequest{
-				InwayName:           i.name,
-				InwayAddress:        i.address,
-				IsOrganizationInway: i.isOrganizationInway,
-				Services:            protoServiceDetails,
-			}
-			nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")
-			i.logger.Debug("registering inway", zap.Any("RegisterInwayRequest", registerInwayRequest), zap.Any("nlxVersion", nlxVersion))
-
-			resp, err := i.directoryRegistrationClient.RegisterInway(nlxVersion, registerInwayRequest)
+			resp, err := i.directoryRegistrationClient.RegisterInway(
+				nlxversion.NewGRPCContext(ctx, "inway"),
+				&registrationapi.RegisterInwayRequest{
+					InwayName:    i.name,
+					InwayAddress: i.address,
+					Services:     protoServiceDetails,
+				},
+			)
 			if err != nil {
 				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
 					i.logger.Info("waiting for directory...", zap.Error(err))
