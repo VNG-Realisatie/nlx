@@ -71,7 +71,6 @@ func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Contex
 			[]string{
 				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestReceived),
-				string(OutgoingAccessRequestReceived),
 			},
 		).
 		Count(&count).
