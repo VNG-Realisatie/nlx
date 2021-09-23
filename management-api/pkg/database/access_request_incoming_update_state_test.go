@@ -64,13 +64,13 @@ func TestUpdateIncomingAccessRequestState(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				asserIncomingAccessRequestState(t, configDb, tt.args.accessRequestID, tt.args.state)
+				assertIncomingAccessRequestState(t, configDb, tt.args.accessRequestID, tt.args.state)
 			}
 		})
 	}
 }
 
-func asserIncomingAccessRequestState(t *testing.T, repo database.ConfigDatabase, accessRequestID uint, state database.IncomingAccessRequestState) {
+func assertIncomingAccessRequestState(t *testing.T, repo database.ConfigDatabase, accessRequestID uint, state database.IncomingAccessRequestState) {
 	accessRequest, err := repo.GetIncomingAccessRequest(context.Background(), accessRequestID)
 	require.NoError(t, err)
 
