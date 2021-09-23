@@ -173,20 +173,6 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 		Save(outgoingAccessRequest).Error
 }
 
-func (db *PostgresConfigDatabase) ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*OutgoingAccessRequest, error) {
-	requests := []*OutgoingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Where("organization_name = ? AND service_name = ?", organizationName, serviceName).
-		Find(&requests).
-		Error; err != nil {
-		return nil, err
-	}
-
-	return requests, nil
-}
-
 func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) error {
 	return db.DB.
 		WithContext(ctx).
