@@ -21,7 +21,7 @@ Below are the most common strategies to deploy NLX to a production like environm
    We use these ourselves to deploy the demo, pre-prod and prod environment and are confident that it will cover most demands of most users.  
    The [charts are located in the NLX repository](https://gitlab.com/commonground/nlx/nlx/-/tree/master/helm).
 1. **Docker containers**  
-   When you deploy every component in a separate container, we feel you we be able to size these according to your needs.
+   When you deploy every component in a separate container, we feel you will be able to size these according to your needs.
    The [Docker images are available from Docker Hub](https://hub.docker.com/u/nlxio).
 1. **Native packages**
    We have created [native packages for Debian and Red Hat distro's](https://gitlab.com/commonground/nlx/packaging).
