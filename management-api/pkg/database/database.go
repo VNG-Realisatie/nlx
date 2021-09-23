@@ -30,8 +30,6 @@ type ConfigDatabase interface {
 	UpdateInway(ctx context.Context, inway *Inway) error
 	DeleteInway(ctx context.Context, name string) error
 
-	ListAllOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error)
-	ListOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) ([]*OutgoingAccessRequest, error)
 	GetOutgoingAccessRequest(ctx context.Context, id uint) (*OutgoingAccessRequest, error)
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*OutgoingAccessRequest, error)
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)

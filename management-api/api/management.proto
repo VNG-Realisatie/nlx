@@ -61,9 +61,6 @@ service Management {
   rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"};
   }
-  rpc ListOutgoingAccessRequests (ListOutgoingAccessRequestsRequest) returns (ListOutgoingAccessRequestsResponse) {
-    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}"};
-  }
   rpc CreateAccessRequest (CreateAccessRequestRequest) returns (OutgoingAccessRequest) {
     option (google.api.http) = {post: "/api/v1/access-requests" body: "*"};
   }

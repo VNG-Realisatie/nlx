@@ -36,7 +36,6 @@ type ManagementClient interface {
 	ListIncomingAccessRequest(ctx context.Context, in *ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListOutgoingAccessRequests(ctx context.Context, in *ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*ListOutgoingAccessRequestsResponse, error)
 	CreateAccessRequest(ctx context.Context, in *CreateAccessRequestRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error)
 	SendAccessRequest(ctx context.Context, in *SendAccessRequestRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error)
 	GetSettings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Settings, error)
@@ -212,15 +211,6 @@ func (c *managementClient) RejectIncomingAccessRequest(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *managementClient) ListOutgoingAccessRequests(ctx context.Context, in *ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*ListOutgoingAccessRequestsResponse, error) {
-	out := new(ListOutgoingAccessRequestsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutgoingAccessRequests", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *managementClient) CreateAccessRequest(ctx context.Context, in *CreateAccessRequestRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error) {
 	out := new(OutgoingAccessRequest)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateAccessRequest", in, out, opts...)
@@ -350,7 +340,6 @@ type ManagementServer interface {
 	ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error)
-	ListOutgoingAccessRequests(context.Context, *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error)
 	CreateAccessRequest(context.Context, *CreateAccessRequestRequest) (*OutgoingAccessRequest, error)
 	SendAccessRequest(context.Context, *SendAccessRequestRequest) (*OutgoingAccessRequest, error)
 	GetSettings(context.Context, *emptypb.Empty) (*Settings, error)
@@ -420,9 +409,6 @@ func (UnimplementedManagementServer) ApproveIncomingAccessRequest(context.Contex
 }
 func (UnimplementedManagementServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RejectIncomingAccessRequest not implemented")
-}
-func (UnimplementedManagementServer) ListOutgoingAccessRequests(context.Context, *ListOutgoingAccessRequestsRequest) (*ListOutgoingAccessRequestsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingAccessRequests not implemented")
 }
 func (UnimplementedManagementServer) CreateAccessRequest(context.Context, *CreateAccessRequestRequest) (*OutgoingAccessRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccessRequest not implemented")
@@ -779,24 +765,6 @@ func _Management_RejectIncomingAccessRequest_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListOutgoingAccessRequestsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServer).ListOutgoingAccessRequests(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListOutgoingAccessRequests",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListOutgoingAccessRequests(ctx, req.(*ListOutgoingAccessRequestsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Management_CreateAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateAccessRequestRequest)
 	if err := dec(in); err != nil {
@@ -1087,10 +1055,6 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RejectIncomingAccessRequest",
 			Handler:    _Management_RejectIncomingAccessRequest_Handler,
-		},
-		{
-			MethodName: "ListOutgoingAccessRequests",
-			Handler:    _Management_ListOutgoingAccessRequests_Handler,
 		},
 		{
 			MethodName: "CreateAccessRequest",

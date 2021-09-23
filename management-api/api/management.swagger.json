@@ -228,42 +228,6 @@
         ]
       }
     },
-    "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}": {
-      "get": {
-        "operationId": "Management_ListOutgoingAccessRequests",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListOutgoingAccessRequestsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "organizationName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
     "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send": {
       "post": {
         "operationId": "Management_SendAccessRequest",
@@ -1598,17 +1562,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/managementInway"
-          }
-        }
-      }
-    },
-    "managementListOutgoingAccessRequestsResponse": {
-      "type": "object",
-      "properties": {
-        "accessRequests": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOutgoingAccessRequest"
           }
         }
       }

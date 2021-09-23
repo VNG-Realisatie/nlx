@@ -185,27 +185,6 @@ func (s *ManagementService) getIncomingAccessRequest(ctx context.Context, access
 	return accessRequest, nil
 }
 
-func (s *ManagementService) ListOutgoingAccessRequests(ctx context.Context, req *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
-	requests, err := s.configDatabase.ListOutgoingAccessRequests(ctx, req.OrganizationName, req.ServiceName)
-	if err != nil {
-		return nil, err
-	}
-
-	response := &api.ListOutgoingAccessRequestsResponse{}
-	response.AccessRequests = make([]*api.OutgoingAccessRequest, len(requests))
-
-	for i, request := range requests {
-		ra, err := convertOutgoingAccessRequest(request)
-		if err != nil {
-			return nil, err
-		}
-
-		response.AccessRequests[i] = ra
-	}
-
-	return response, nil
-}
-
 func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
 	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
 	if err != nil {

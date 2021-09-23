@@ -397,26 +397,6 @@ func (mr *MockManagementClientMockRecorder) ListInways(ctx, in interface{}, opts
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementClient)(nil).ListInways), varargs...)
 }
 
-// ListOutgoingAccessRequests mocks base method.
-func (m *MockManagementClient) ListOutgoingAccessRequests(ctx context.Context, in *api.ListOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*api.ListOutgoingAccessRequestsResponse, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", varargs...)
-	ret0, _ := ret[0].(*api.ListOutgoingAccessRequestsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests.
-func (mr *MockManagementClientMockRecorder) ListOutgoingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockManagementClient)(nil).ListOutgoingAccessRequests), varargs...)
-}
-
 // ListOutgoingOrders mocks base method.
 func (m *MockManagementClient) ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListOutgoingOrdersResponse, error) {
 	m.ctrl.T.Helper()
@@ -928,21 +908,6 @@ func (m *MockManagementServer) ListInways(arg0 context.Context, arg1 *api.ListIn
 func (mr *MockManagementServerMockRecorder) ListInways(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockManagementServer)(nil).ListInways), arg0, arg1)
-}
-
-// ListOutgoingAccessRequests mocks base method.
-func (m *MockManagementServer) ListOutgoingAccessRequests(arg0 context.Context, arg1 *api.ListOutgoingAccessRequestsRequest) (*api.ListOutgoingAccessRequestsResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListOutgoingAccessRequests", arg0, arg1)
-	ret0, _ := ret[0].(*api.ListOutgoingAccessRequestsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListOutgoingAccessRequests indicates an expected call of ListOutgoingAccessRequests.
-func (mr *MockManagementServerMockRecorder) ListOutgoingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingAccessRequests", reflect.TypeOf((*MockManagementServer)(nil).ListOutgoingAccessRequests), arg0, arg1)
 }
 
 // ListOutgoingOrders mocks base method.

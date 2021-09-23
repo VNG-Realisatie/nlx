@@ -16,7 +16,6 @@ import (
 func init() {
 	rootCmd.AddCommand(accessRequestCommand)
 	accessRequestCommand.AddCommand(listAccessRequestCommand)
-	accessRequestCommand.AddCommand(listOutgoingAccessRequestCommand)
 	accessRequestCommand.AddCommand(createAccessRequestCommand)
 	accessRequestCommand.AddCommand(approveAccessRequestCommand)
 
@@ -130,29 +129,6 @@ var listAccessRequestCommand = &cobra.Command{
 		response, err := getManagementClient().ListIncomingAccessRequest(context.Background(), &api.ListIncomingAccessRequestsRequests{
 			ServiceName: listAccessRequestsOptions.serviceName,
 		})
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for _, accessRequest := range response.AccessRequests {
-			printAccessRequest(accessRequestDetails{
-				ID:               accessRequest.Id,
-				State:            accessRequest.State,
-				OrganizationName: accessRequest.OrganizationName,
-				ServiceName:      accessRequest.ServiceName,
-				CreatedAt:        accessRequest.CreatedAt,
-				UpdatedAt:        accessRequest.UpdatedAt,
-			})
-		}
-	},
-}
-
-//nolint:dupl // incoming/outgoing requests aren't duplicates
-var listOutgoingAccessRequestCommand = &cobra.Command{
-	Use:   "list-outgoing",
-	Short: "List outgoing access requests",
-	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getManagementClient().ListOutgoingAccessRequests(context.Background(), &api.ListOutgoingAccessRequestsRequest{})
 		if err != nil {
 			log.Fatal(err)
 		}
