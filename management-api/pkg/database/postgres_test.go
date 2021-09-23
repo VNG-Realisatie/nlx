@@ -29,7 +29,11 @@ func newFixtureCertificateBundle() (*common_tls.CertificateBundle, error) {
 }
 
 func getFixtureTime(t *testing.T) time.Time {
-	fixtureTime, err := time.Parse(time.RFC3339, "2021-01-02T01:02:03Z")
+	return getCustomFixtureTime(t, "2021-01-02T01:02:03Z")
+}
+
+func getCustomFixtureTime(t *testing.T, input string) time.Time {
+	fixtureTime, err := time.Parse(time.RFC3339, input)
 	require.NoError(t, err)
 
 	return fixtureTime
