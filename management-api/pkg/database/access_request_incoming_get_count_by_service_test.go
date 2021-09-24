@@ -28,7 +28,9 @@ func TestGetIncomingAccessRequestCountByService(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			want: map[string]int{
-				"fixture-service-name": 1,
+				"fixture-service-name":       1,
+				"fixture-service-name-two":   0,
+				"fixture-service-name-three": 0,
 			},
 			wantErr: nil,
 		},
