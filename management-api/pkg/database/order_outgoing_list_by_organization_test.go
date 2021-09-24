@@ -18,7 +18,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func TestListOutgoingOrders(t *testing.T) {
+func TestListOutgoingOrdersByOrganization(t *testing.T) {
 	t.Parallel()
 
 	setup(t)
@@ -31,49 +31,41 @@ func TestListOutgoingOrders(t *testing.T) {
 	fixturePublicKeyPEM, err := fixtureCertBundle.PublicKeyPEM()
 	require.NoError(t, err)
 
+	type args struct {
+		organizationName string
+	}
+
 	tests := map[string]struct {
 		loadFixtures bool
+		args         args
 		want         []*database.OutgoingOrder
 		wantErr      error
 	}{
+		"happy_flow_when_no_orders": {
+			loadFixtures: false,
+			args: args{
+				organizationName: "arbitrary",
+			},
+			want:    []*database.OutgoingOrder{},
+			wantErr: nil,
+		},
 		"happy_flow": {
 			loadFixtures: true,
+			args: args{
+				organizationName: "fixture-delegatee-three",
+			},
 			want: []*database.OutgoingOrder{
 				{
-					ID:           1,
-					Reference:    "fixture-reference",
+					ID:           4,
+					Reference:    "fixture-reference-four",
 					Description:  "fixture-description",
-					Delegatee:    "fixture-delegatee",
+					Delegatee:    "fixture-delegatee-three",
 					PublicKeyPEM: fixturePublicKeyPEM,
 					RevokedAt:    sql.NullTime{},
 					ValidFrom:    fixtureTime,
 					ValidUntil:   fixtureTime,
 					CreatedAt:    fixtureTime,
-					Services: []database.OutgoingOrderService{
-						{
-							OutgoingOrderID: 1,
-							Service:         "fixture-service",
-							Organization:    "fixture-organization",
-						},
-					},
-				},
-				{
-					ID:           2,
-					Reference:    "fixture-reference-two",
-					Description:  "fixture-description",
-					Delegatee:    "fixture-delegatee-two",
-					PublicKeyPEM: fixturePublicKeyPEM,
-					RevokedAt:    sql.NullTime{},
-					ValidFrom:    fixtureTime,
-					ValidUntil:   fixtureTime,
-					CreatedAt:    fixtureTime,
-					Services: []database.OutgoingOrderService{
-						{
-							OutgoingOrderID: 2,
-							Service:         "fixture-service-two",
-							Organization:    "fixture-organization-two",
-						},
-					},
+					Services:     []database.OutgoingOrderService{},
 				},
 				{
 					ID:           3,
@@ -90,18 +82,6 @@ func TestListOutgoingOrders(t *testing.T) {
 					CreatedAt:  fixtureTime,
 					Services:   []database.OutgoingOrderService{},
 				},
-				{
-					ID:           4,
-					Reference:    "fixture-reference-four",
-					Description:  "fixture-description",
-					Delegatee:    "fixture-delegatee-three",
-					PublicKeyPEM: fixturePublicKeyPEM,
-					RevokedAt:    sql.NullTime{},
-					ValidFrom:    fixtureTime,
-					ValidUntil:   fixtureTime,
-					CreatedAt:    fixtureTime,
-					Services:     []database.OutgoingOrderService{},
-				},
 			},
 			wantErr: nil,
 		},
@@ -116,7 +96,7 @@ func TestListOutgoingOrders(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.ListOutgoingOrders(context.Background())
+			got, err := configDb.ListOutgoingOrdersByOrganization(context.Background(), tt.args.organizationName)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
