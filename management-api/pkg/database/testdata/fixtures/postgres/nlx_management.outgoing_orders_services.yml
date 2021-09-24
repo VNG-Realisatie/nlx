@@ -1,3 +1,7 @@
 - outgoing_order_id: 1
   service: fixture-service
   organization: fixture-organization
+
+- outgoing_order_id: 2
+  service: fixture-service-two
+  organization: fixture-organization-two
