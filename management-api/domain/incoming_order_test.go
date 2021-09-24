@@ -14,100 +14,90 @@ import (
 func Test_NewIncomingOrder(t *testing.T) {
 	t.Parallel()
 
-	type orderParams struct {
-		reference   string
-		description string
-		delegator   string
-		revokedAt   *time.Time
-		validFrom   time.Time
-		validUntil  time.Time
-		services    []domain.IncomingOrderService
-	}
-
 	validFrom := time.Now().Add(-24 * time.Hour)
 	validUntil := time.Now().Add(24 * time.Hour)
 
 	tests := map[string]struct {
-		order       orderParams
+		order       *domain.NewIncomingOrderArgs
 		expectedErr error
 	}{
 		"empty_reference": {
-			order: orderParams{
-				reference:   "",
-				description: "my-description",
-				delegator:   "my-delegator",
-				revokedAt:   nil,
-				validFrom:   validFrom,
-				validUntil:  validUntil,
-				services: []domain.IncomingOrderService{
+			order: &domain.NewIncomingOrderArgs{
+				Reference:   "",
+				Description: "my-description",
+				Delegator:   "my-delegator",
+				RevokedAt:   nil,
+				ValidFrom:   validFrom,
+				ValidUntil:  validUntil,
+				Services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("reference: cannot be blank"),
 		},
 		"empty_description": {
-			order: orderParams{
-				reference:   "my-reference",
-				description: "",
-				delegator:   "my-delegator",
-				revokedAt:   nil,
-				validFrom:   validFrom,
-				validUntil:  validUntil,
-				services: []domain.IncomingOrderService{
+			order: &domain.NewIncomingOrderArgs{
+				Reference:   "my-reference",
+				Description: "",
+				Delegator:   "my-delegator",
+				RevokedAt:   nil,
+				ValidFrom:   validFrom,
+				ValidUntil:  validUntil,
+				Services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("description: cannot be blank"),
 		},
 		"empty_delegator": {
-			order: orderParams{
-				reference:   "my-reference",
-				description: "my-description",
-				delegator:   "",
-				revokedAt:   nil,
-				validFrom:   validFrom,
-				validUntil:  validUntil,
-				services: []domain.IncomingOrderService{
+			order: &domain.NewIncomingOrderArgs{
+				Reference:   "my-reference",
+				Description: "my-description",
+				Delegator:   "",
+				RevokedAt:   nil,
+				ValidFrom:   validFrom,
+				ValidUntil:  validUntil,
+				Services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("delegator: cannot be blank"),
 		},
 		"empty_services": {
-			order: orderParams{
-				reference:   "my-reference",
-				description: "my-description",
-				delegator:   "my-delegator",
-				revokedAt:   nil,
-				validFrom:   validFrom,
-				validUntil:  validUntil,
-				services:    []domain.IncomingOrderService{},
+			order: &domain.NewIncomingOrderArgs{
+				Reference:   "my-reference",
+				Description: "my-description",
+				Delegator:   "my-delegator",
+				RevokedAt:   nil,
+				ValidFrom:   validFrom,
+				ValidUntil:  validUntil,
+				Services:    []domain.IncomingOrderService{},
 			},
 			expectedErr: nil,
 		},
 		"valid_from_is_after_valid_until": {
-			order: orderParams{
-				reference:   "my-reference",
-				description: "my-description",
-				delegator:   "my-delegator",
-				revokedAt:   nil,
-				validFrom:   time.Now(),
-				validUntil:  time.Now().Add(-1 * time.Hour),
-				services: []domain.IncomingOrderService{
+			order: &domain.NewIncomingOrderArgs{
+				Reference:   "my-reference",
+				Description: "my-description",
+				Delegator:   "my-delegator",
+				RevokedAt:   nil,
+				ValidFrom:   time.Now(),
+				ValidUntil:  time.Now().Add(-1 * time.Hour),
+				Services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("valid from: order can not expire before the start date"),
 		},
 		"happy_flow": {
-			order: orderParams{
-				reference:   "my-reference",
-				description: "my-description",
-				delegator:   "my-delegator",
-				revokedAt:   nil,
-				validFrom:   validFrom,
-				validUntil:  validUntil,
-				services: []domain.IncomingOrderService{
+			order: &domain.NewIncomingOrderArgs{
+				Reference:   "my-reference",
+				Description: "my-description",
+				Delegator:   "my-delegator",
+				RevokedAt:   nil,
+				ValidFrom:   validFrom,
+				ValidUntil:  validUntil,
+				Services: []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("my-service", "my-organization"),
 				},
 			},
@@ -118,25 +108,17 @@ func Test_NewIncomingOrder(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := domain.NewIncomingOrder(
-				tt.order.reference,
-				tt.order.description,
-				tt.order.delegator,
-				tt.order.revokedAt,
-				tt.order.validFrom,
-				tt.order.validUntil,
-				tt.order.services,
-			)
+			result, err := domain.NewIncomingOrder(tt.order)
 
 			require.Equal(t, tt.expectedErr, err)
 			if tt.expectedErr == nil {
-				require.Equal(t, tt.order.reference, result.Reference())
-				require.Equal(t, tt.order.description, result.Description())
-				require.Equal(t, tt.order.delegator, result.Delegator())
-				require.Equal(t, tt.order.revokedAt, result.RevokedAt())
-				require.Equal(t, tt.order.validFrom, result.ValidFrom())
-				require.Equal(t, tt.order.validUntil, result.ValidUntil())
-				require.Equal(t, tt.order.services, result.Services())
+				require.Equal(t, tt.order.Reference, result.Reference())
+				require.Equal(t, tt.order.Description, result.Description())
+				require.Equal(t, tt.order.Delegator, result.Delegator())
+				require.Equal(t, tt.order.RevokedAt, result.RevokedAt())
+				require.Equal(t, tt.order.ValidFrom, result.ValidFrom())
+				require.Equal(t, tt.order.ValidUntil, result.ValidUntil())
+				require.Equal(t, tt.order.Services, result.Services())
 			}
 		})
 	}

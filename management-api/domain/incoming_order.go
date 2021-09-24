@@ -39,6 +39,16 @@ type IncomingOrder struct {
 	services    []IncomingOrderService
 }
 
+type NewIncomingOrderArgs struct {
+	Reference   string
+	Description string
+	Delegator   string
+	RevokedAt   *time.Time
+	ValidFrom   time.Time
+	ValidUntil  time.Time
+	Services    []IncomingOrderService
+}
+
 const (
 	descriptionMinLength = 1
 	descriptionMaxLength = 100
@@ -48,28 +58,28 @@ const (
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
 var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
-func NewIncomingOrder(reference, description, delegator string, revokedAt *time.Time, validFrom, validUntil time.Time, services []IncomingOrderService) (*IncomingOrder, error) {
-	err := validation.Validate(reference, validation.Required)
+func NewIncomingOrder(args *NewIncomingOrderArgs) (*IncomingOrder, error) {
+	err := validation.Validate(args.Reference, validation.Required)
 	if err != nil {
 		return nil, fmt.Errorf("reference: %s", err)
 	}
 
-	err = validation.Validate(description, validation.Required, validation.Length(descriptionMinLength, descriptionMaxLength))
+	err = validation.Validate(args.Description, validation.Required, validation.Length(descriptionMinLength, descriptionMaxLength))
 	if err != nil {
 		return nil, fmt.Errorf("description: %s", err)
 	}
 
-	err = validation.Validate(delegator, validation.Required, validation.Match(organizationNameRegex))
+	err = validation.Validate(args.Delegator, validation.Required, validation.Match(organizationNameRegex))
 	if err != nil {
 		return nil, fmt.Errorf("delegator: %s", err)
 	}
 
-	err = validation.Validate(validUntil, validation.Required, validation.Min(validFrom).Error("order can not expire before the start date"))
+	err = validation.Validate(args.ValidUntil, validation.Required, validation.Min(args.ValidFrom).Error("order can not expire before the start date"))
 	if err != nil {
 		return nil, fmt.Errorf("valid from: %s", err)
 	}
 
-	err = validation.Validate(services, validation.Each(validation.By(func(value interface{}) error {
+	err = validation.Validate(args.Services, validation.Each(validation.By(func(value interface{}) error {
 		orderService, ok := value.(IncomingOrderService)
 		if !ok {
 			return errors.New("expecting an order-service")
@@ -92,13 +102,13 @@ func NewIncomingOrder(reference, description, delegator string, revokedAt *time.
 	}
 
 	return &IncomingOrder{
-		reference:   reference,
-		description: description,
-		delegator:   delegator,
-		revokedAt:   revokedAt,
-		validFrom:   validFrom,
-		validUntil:  validUntil,
-		services:    services,
+		reference:   args.Reference,
+		description: args.Description,
+		delegator:   args.Delegator,
+		revokedAt:   args.RevokedAt,
+		validFrom:   args.ValidFrom,
+		validUntil:  args.ValidUntil,
+		services:    args.Services,
 	}, nil
 }
 

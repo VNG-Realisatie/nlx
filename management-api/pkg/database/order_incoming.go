@@ -67,7 +67,15 @@ func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*do
 			revokedAt = &order.RevokedAt.Time
 		}
 
-		incomingOrder, err := domain.NewIncomingOrder(order.Reference, order.Description, order.Delegator, revokedAt, order.ValidFrom, order.ValidUntil, services)
+		incomingOrder, err := domain.NewIncomingOrder(&domain.NewIncomingOrderArgs{
+			Reference:   order.Reference,
+			Description: order.Description,
+			Delegator:   order.Delegator,
+			RevokedAt:   revokedAt,
+			ValidFrom:   order.ValidFrom,
+			ValidUntil:  order.ValidUntil,
+			Services:    services,
+		})
 		if err != nil {
 			return nil, fmt.Errorf("error converting incoming order: %w", err)
 		}

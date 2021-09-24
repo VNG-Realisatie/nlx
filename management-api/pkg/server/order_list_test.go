@@ -127,13 +127,15 @@ func TestListIncomingOrders(t *testing.T) {
 					domain.NewIncomingOrderService("service-a", "organization-a"),
 				}
 				model, _ := domain.NewIncomingOrder(
-					"reference",
-					"description",
-					"nlx-test",
-					nil,
-					validFrom,
-					validUntil,
-					services,
+					&domain.NewIncomingOrderArgs{
+						Reference:   "reference",
+						Description: "description",
+						Delegator:   "nlx-test",
+						RevokedAt:   nil,
+						ValidFrom:   validFrom,
+						ValidUntil:  validUntil,
+						Services:    services,
+					},
 				)
 
 				mocks.db.
@@ -168,13 +170,15 @@ func TestListIncomingOrders(t *testing.T) {
 					domain.NewIncomingOrderService("service-a", "organization-a"),
 				}
 				model, _ := domain.NewIncomingOrder(
-					"reference",
-					"description",
-					"nlx-test",
-					&revokedAt,
-					validFrom,
-					validUntil,
-					services,
+					&domain.NewIncomingOrderArgs{
+						Reference:   "reference",
+						Description: "description",
+						Delegator:   "nlx-test",
+						RevokedAt:   &revokedAt,
+						ValidFrom:   validFrom,
+						ValidUntil:  validUntil,
+						Services:    services,
+					},
 				)
 
 				mocks.db.
