@@ -70,6 +70,15 @@ func TestSynchronizeOrders(t *testing.T) {
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
+					Reference:   "fixture-reference-three",
+					Description: "fixture-description",
+					Delegator:   "fixture-delegator-three",
+					RevokedAt:   &fixtureTime,
+					ValidFrom:   fixtureTime,
+					ValidUntil:  fixtureTime,
+					Services:    []domain.IncomingOrderService{},
+				}),
+				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference",
 					Description: "new-description",
 					Delegator:   "fixture-delegator",
@@ -139,6 +148,15 @@ func TestSynchronizeOrders(t *testing.T) {
 					Services: []domain.IncomingOrderService{
 						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
 					},
+				}),
+				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
+					Reference:   "fixture-reference-three",
+					Description: "fixture-description",
+					Delegator:   "fixture-delegator-three",
+					RevokedAt:   &fixtureTime,
+					ValidFrom:   fixtureTime,
+					ValidUntil:  fixtureTime,
+					Services:    []domain.IncomingOrderService{},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "reference-one",

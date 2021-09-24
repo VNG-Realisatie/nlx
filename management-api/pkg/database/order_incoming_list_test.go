@@ -8,11 +8,10 @@ package database_test
 
 import (
 	"context"
-	"testing"
-
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
+	"testing"
 
 	"go.nlx.io/nlx/management-api/domain"
 )
@@ -53,6 +52,15 @@ func TestListIncomingOrders(t *testing.T) {
 					Services: []domain.IncomingOrderService{
 						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
 					},
+				}),
+				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
+					Reference:   "fixture-reference-three",
+					Description: "fixture-description",
+					Delegator:   "fixture-delegator-three",
+					RevokedAt:   &fixtureTime,
+					ValidFrom:   fixtureTime,
+					ValidUntil:  fixtureTime,
+					Services:    []domain.IncomingOrderService{},
 				}),
 			},
 			wantErr: nil,
