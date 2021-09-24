@@ -30,6 +30,8 @@ type Service struct {
 	UpdatedAt              time.Time
 }
 
+var ErrNoIDSpecified = errors.New("unable to update service without a primary key")
+
 func (s *Service) TableName() string {
 	return "nlx_management.services"
 }
@@ -72,7 +74,7 @@ func (db *PostgresConfigDatabase) CreateService(ctx context.Context, service *Se
 
 func (db *PostgresConfigDatabase) UpdateService(ctx context.Context, service *Service) error {
 	if service.ID == 0 {
-		return errors.New("unable to update service without a primary key")
+		return ErrNoIDSpecified
 	}
 
 	return db.DB.
