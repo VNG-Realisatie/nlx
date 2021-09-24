@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -48,11 +49,13 @@ func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order
 
 	dbWithTx := &PostgresConfigDatabase{DB: tx}
 
+	duplicateDelegateWithReferenceSQLError := "duplicate key value violates unique constraint \"idx_outgoing_orders_delegatee_reference\""
+
 	if err := dbWithTx.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Create(order).Error; err != nil {
-		if err.Error() == "ERROR: duplicate key value violates unique constraint \"idx_outgoing_orders_reference\" (SQLSTATE 23505)" {
+		if strings.Contains(err.Error(), duplicateDelegateWithReferenceSQLError) {
 			return ErrDuplicateOutgoingOrder
 		}
 

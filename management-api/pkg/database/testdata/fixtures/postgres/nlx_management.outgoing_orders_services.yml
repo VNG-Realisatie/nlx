@@ -1,0 +1,3 @@
+- outgoing_order_id: 1
+  service: fixture-service
+  organization: fixture-organization
