@@ -94,7 +94,7 @@ func (db *PostgresConfigDatabase) UpdateService(ctx context.Context, service *Se
 		Save(service).Error
 }
 
-func (db *PostgresConfigDatabase) SetServiceInways(ctx context.Context, serviceID uint, inwayNames []string) error {
+func (db *PostgresConfigDatabase) setServiceInways(ctx context.Context, serviceID uint, inwayNames []string) error {
 	service := &Service{}
 	if err := db.DB.
 		WithContext(ctx).
@@ -179,7 +179,7 @@ func (db *PostgresConfigDatabase) CreateServiceWithInways(ctx context.Context, s
 		return err
 	}
 
-	if err := dbWithTx.SetServiceInways(ctx, service.ID, inwayNames); err != nil {
+	if err := dbWithTx.setServiceInways(ctx, service.ID, inwayNames); err != nil {
 		return err
 	}
 
@@ -196,7 +196,7 @@ func (db *PostgresConfigDatabase) UpdateServiceWithInways(ctx context.Context, s
 		return err
 	}
 
-	if err := dbWithTx.SetServiceInways(ctx, service.ID, inwayNames); err != nil {
+	if err := dbWithTx.setServiceInways(ctx, service.ID, inwayNames); err != nil {
 		return err
 	}
 
