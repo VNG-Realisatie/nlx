@@ -271,21 +271,6 @@ func (mr *MockConfigDatabaseMockRecorder) GetIncomingAccessRequestCountByService
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIncomingAccessRequestCountByService", reflect.TypeOf((*MockConfigDatabase)(nil).GetIncomingAccessRequestCountByService), ctx)
 }
 
-// GetIncomingOrderByReference mocks base method.
-func (m *MockConfigDatabase) GetIncomingOrderByReference(ctx context.Context, reference string) (*database.IncomingOrder, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetIncomingOrderByReference", ctx, reference)
-	ret0, _ := ret[0].(*database.IncomingOrder)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetIncomingOrderByReference indicates an expected call of GetIncomingOrderByReference.
-func (mr *MockConfigDatabaseMockRecorder) GetIncomingOrderByReference(ctx, reference interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIncomingOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).GetIncomingOrderByReference), ctx, reference)
-}
-
 // GetInway mocks base method.
 func (m *MockConfigDatabase) GetInway(ctx context.Context, name string) (*database.Inway, error) {
 	m.ctrl.T.Helper()

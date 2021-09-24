@@ -68,7 +68,6 @@ type ConfigDatabase interface {
 	RevokeOutgoingOrderByReference(ctx context.Context, delegatee, reference string, revokedAt time.Time) error
 	RevokeIncomingOrderByReference(ctx context.Context, delegator, reference string, revokedAt time.Time) error
 
-	GetIncomingOrderByReference(ctx context.Context, reference string) (*IncomingOrder, error)
 	ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error)
 	SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error
 }
