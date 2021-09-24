@@ -42,25 +42,6 @@ func (db *PostgresConfigDatabase) CreateAccessProof(ctx context.Context, accessR
 	return accessProof, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestAccessProofForService(ctx context.Context, organizationName, serviceName string) (*AccessProof, error) {
-	accessProof := &AccessProof{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("OutgoingAccessRequest").
-		Joins("JOIN nlx_management.access_requests_outgoing r ON r.organization_name = ? AND r.service_name = ?", organizationName, serviceName).
-		Order("created_at DESC").
-		First(accessProof).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
-		}
-
-		return nil, err
-	}
-
-	return accessProof, nil
-}
-
 func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error) {
 	accessProof := &AccessProof{}
 
