@@ -6,11 +6,9 @@ package database
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"go.nlx.io/nlx/management-api/domain"
@@ -135,38 +133,6 @@ func (db *PostgresConfigDatabase) SynchronizeOrders(ctx context.Context, orders 
 	}
 
 	return tx.Commit().Error
-}
-
-// nolint dupl: function is not duplicated, difference between incoming and outgoing orders
-func (db *PostgresConfigDatabase) RevokeIncomingOrderByReference(ctx context.Context, delegator, reference string, revokedAt time.Time) error {
-	incomingOrder := &IncomingOrder{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Where("delegator = ? AND reference = ?", delegator, reference).
-		First(incomingOrder).
-		Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return ErrNotFound
-		}
-
-		return err
-	}
-
-	if incomingOrder.RevokedAt.Valid {
-		return nil
-	}
-
-	incomingOrder.RevokedAt = sql.NullTime{
-		Time:  revokedAt,
-		Valid: true,
-	}
-
-	return db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Select("revoked_at").
-		Save(incomingOrder).Error
 }
 
 func getUniqueOrganizations(orders []*IncomingOrder) []string {

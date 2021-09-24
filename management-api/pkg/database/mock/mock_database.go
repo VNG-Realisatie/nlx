@@ -571,20 +571,6 @@ func (mr *MockConfigDatabaseMockRecorder) RevokeAccessProof(ctx, id, revokedAt i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAccessProof", reflect.TypeOf((*MockConfigDatabase)(nil).RevokeAccessProof), ctx, id, revokedAt)
 }
 
-// RevokeIncomingOrderByReference mocks base method.
-func (m *MockConfigDatabase) RevokeIncomingOrderByReference(ctx context.Context, delegator, reference string, revokedAt time.Time) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RevokeIncomingOrderByReference", ctx, delegator, reference, revokedAt)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RevokeIncomingOrderByReference indicates an expected call of RevokeIncomingOrderByReference.
-func (mr *MockConfigDatabaseMockRecorder) RevokeIncomingOrderByReference(ctx, delegator, reference, revokedAt interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeIncomingOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).RevokeIncomingOrderByReference), ctx, delegator, reference, revokedAt)
-}
-
 // RevokeOutgoingOrderByReference mocks base method.
 func (m *MockConfigDatabase) RevokeOutgoingOrderByReference(ctx context.Context, delegatee, reference string, revokedAt time.Time) error {
 	m.ctrl.T.Helper()
