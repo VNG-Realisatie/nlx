@@ -1,0 +1,6 @@
+apiVersion: v2
+name: video-player-ui
+description: A Helm chart for the Video Player UI
+type: application
+version: 0.115.0
+appVersion: 0.115.0

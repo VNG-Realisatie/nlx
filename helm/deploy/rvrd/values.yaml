@@ -134,6 +134,14 @@ managementAPI:
     documentationUrl: https://nlx.io
     inways:
       - rvrd-nlx-inway
+  serviceVideoStream:
+    name: voorbeeld-video-stream
+    endpointURL: https://commondatastorage.googleapis.com/
+    apiSpecificationURL:
+    publicSupportContact: support@nlx.io
+    documentationUrl: https://gist.githubusercontent.com/manico/f2e6dd3371f17737331d559219b354ab/raw/6e94be4814499c428d66bac9f0c401fe2c4c35c3/videos.txt
+    inways:
+      - rvrd-nlx-inway
   postgresql:
     hostname: rvrd-postgresql
     port: 5432

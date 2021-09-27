@@ -135,3 +135,17 @@ parkeerrechten-viewer:
       - secretName: gemeentestijns-parkeerrechten-viewer-ingress-tls
         hosts:
           - parkeerrechten-viewer.demo.gemeentestijns.nl
+
+video-player-ui:
+  organizationName: Gemeente Stijns
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - video-player-ui.demo.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-video-player-ui-ingress-tls
+        hosts:
+          - video-player-ui.demo.gemeentestijns.nl

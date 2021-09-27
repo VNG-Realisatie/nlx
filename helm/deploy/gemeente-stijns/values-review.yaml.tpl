@@ -28,3 +28,11 @@ dex:
   ingress:
     hosts:
       - dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
+video-player-ui:
+  organizationName: "Gemeente Stijns"
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  ingress:
+    enabled: true
+    hosts:
+      - nlx-video-player-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}

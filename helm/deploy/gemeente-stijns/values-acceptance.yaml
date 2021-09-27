@@ -89,3 +89,17 @@ dex:
       - secretName: gemeentestijns-dex-ingress-tls
         hosts:
           - dex.acc.gemeentestijns.nl
+
+video-player-ui:
+  organizationName: Gemeente Stijns
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - video-player-ui.acc.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-video-player-ui-ingress-tls
+        hosts:
+          - video-player-ui.acc.gemeentestijns.nl
