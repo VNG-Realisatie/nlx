@@ -37,6 +37,54 @@ func TestSynchronizeOrders(t *testing.T) {
 		want         []*domain.IncomingOrder
 		wantErr      error
 	}{
+		"happy_flow_update_existing_without_services": {
+			loadFixtures: true,
+			args: args{
+				incomingOrders: []*database.IncomingOrder{
+					{
+						Reference:   "fixture-reference",
+						Description: "new-description",
+						Delegator:   "fixture-delegator",
+						RevokedAt:   sql.NullTime{},
+						ValidFrom:   fixtureTime,
+						ValidUntil:  fixtureTime,
+						Services:    []database.IncomingOrderService{},
+					},
+				},
+			},
+			want: []*domain.IncomingOrder{
+				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
+					Reference:   "fixture-reference-two",
+					Description: "fixture-description",
+					Delegator:   "fixture-delegator-two",
+					RevokedAt:   nil,
+					ValidFrom:   fixtureTime,
+					ValidUntil:  fixtureTime,
+					Services: []domain.IncomingOrderService{
+						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
+					},
+				}),
+				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
+					Reference:   "fixture-reference-three",
+					Description: "fixture-description",
+					Delegator:   "fixture-delegator-three",
+					RevokedAt:   &fixtureTime,
+					ValidFrom:   fixtureTime,
+					ValidUntil:  fixtureTime,
+					Services:    []domain.IncomingOrderService{},
+				}),
+				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
+					Reference:   "fixture-reference",
+					Description: "new-description",
+					Delegator:   "fixture-delegator",
+					RevokedAt:   nil,
+					ValidFrom:   fixtureTime,
+					ValidUntil:  fixtureTime,
+					Services:    []domain.IncomingOrderService{},
+				}),
+			},
+			wantErr: nil,
+		},
 		"happy_flow_update_existing": {
 			loadFixtures: true,
 			args: args{
