@@ -7,25 +7,6 @@ title: IP-addresses
 
 The central NLX components (directory) are located at the following IP addresses:
 
-> The following information is valid until September 21
-
-### Demo
-
-- directory-registration-api (`141.105.122.137:443`)
-- directory-inspection-api (`141.105.122.73:443`)
-
-### Pre-production
-
-- directory-registration-api (`141.105.122.115:443`)
-- directory-inspection-api (`141.105.122.118:443`)
-
-### Production
-
-- directory-registration-api (`141.105.122.89:443`)
-- directory-inspection-api (`141.105.122.76:443`)
-
-> The following information is valid from September 22
-
 ### Demo
 
 - directory-registration-api (`20.86.244.209:443`)
@@ -45,5 +26,6 @@ The central NLX components (directory) are located at the following IP addresses
 
 You need to open the following ports in your firewall for your NLX components:
 
-- inway (`443`)
-- management-api (`8443`)
+- inway (`8443`)
+- management-api (`8444`)
+(unless you defined other ports)
