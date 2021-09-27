@@ -126,7 +126,7 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userNa
 				Service:      service,
 			},
 		},
-		ActionType: database.IncomingAccesRequestAccept,
+		ActionType: database.IncomingAccessRequestAccept,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -144,7 +144,7 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userNa
 				Service:      service,
 			},
 		},
-		ActionType: database.IncomingAccesRequestReject,
+		ActionType: database.IncomingAccessRequestReject,
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)

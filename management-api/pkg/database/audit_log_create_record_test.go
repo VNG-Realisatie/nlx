@@ -41,7 +41,7 @@ func TestCreateAuditLogRecord(t *testing.T) {
 			args: args{
 				auditLog: &database.AuditLog{
 					UserName:   "test-username",
-					ActionType: database.IncomingAccesRequestAccept,
+					ActionType: database.IncomingAccessRequestAccept,
 					UserAgent:  "test-user-agent",
 					Delegatee:  "fixture-organization-name",
 					Data:       sql.NullString{},
@@ -59,7 +59,7 @@ func TestCreateAuditLogRecord(t *testing.T) {
 			want: &database.AuditLog{
 				ID:         fixturesStartID,
 				UserName:   "test-username",
-				ActionType: database.IncomingAccesRequestAccept,
+				ActionType: database.IncomingAccessRequestAccept,
 				UserAgent:  "test-user-agent",
 				Delegatee:  "fixture-organization-name",
 				Data:       sql.NullString{},
