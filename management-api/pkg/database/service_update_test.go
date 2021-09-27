@@ -46,6 +46,51 @@ func TestUpdateService(t *testing.T) {
 			want:    nil,
 			wantErr: database.ErrNoIDSpecified,
 		},
+		"happy_flow_discard_new_service_name": {
+			loadFixtures: true,
+			args: args{
+				service: &database.Service{
+					ID:                   1,
+					Name:                 "new-service-name",
+					EndpointURL:          "http://api:8000",
+					DocumentationURL:     "https://documentation-url.com",
+					APISpecificationURL:  "http://api:8000/schema?format=openapi-json",
+					Internal:             true,
+					TechSupportContact:   "test@tech-support-contact.com",
+					PublicSupportContact: "test@public-support-contact.com",
+					OneTimeCosts:         1,
+					MonthlyCosts:         2,
+					RequestCosts:         3,
+				},
+			},
+			want: &database.Service{
+				ID:                   1,
+				Name:                 "fixture-service-name",
+				EndpointURL:          "http://api:8000",
+				DocumentationURL:     "https://documentation-url.com",
+				APISpecificationURL:  "http://api:8000/schema?format=openapi-json",
+				Internal:             true,
+				TechSupportContact:   "test@tech-support-contact.com",
+				PublicSupportContact: "test@public-support-contact.com",
+				Inways: []*database.Inway{
+					{
+						ID:          1,
+						Name:        "fixture-inway",
+						Version:     "unknown",
+						Hostname:    "fixture-server",
+						IPAddress:   "127.0.0.1",
+						SelfAddress: "fixture.local",
+						CreatedAt:   fixtureTime,
+						UpdatedAt:   fixtureTime,
+					},
+				},
+				OneTimeCosts: 1,
+				MonthlyCosts: 2,
+				RequestCosts: 3,
+				CreatedAt:    fixtureTime,
+			},
+			wantErr: nil,
+		},
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
@@ -105,7 +150,7 @@ func TestUpdateService(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				assertServiceUpdate(t, configDb, tt.args.service.Name, tt.want)
+				assertServiceUpdate(t, configDb, tt.want.Name, tt.want)
 			}
 		})
 	}
