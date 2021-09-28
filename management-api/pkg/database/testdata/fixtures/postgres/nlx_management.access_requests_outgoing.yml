@@ -47,8 +47,8 @@
   updated_at: 2021-01-03 01:02:03.000000+00
 
 - id: 3
-  organization_name: fixture-organization-name
-  service_name: fixture-service-name
+  organization_name: fixture-organization-name-two
+  service_name: fixture-service-name-two
   state: approved
   public_key_fingerprint: 60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=
   reference_id: 1
@@ -71,7 +71,7 @@
   updated_at: 2021-01-02 01:03:03.000000+00
 
 - id: 4
-  organization_name: fixture-organization-name
+  organization_name: fixture-organization-name-two
   service_name: fixture-service-name
   state: approved
   public_key_fingerprint: 60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=
