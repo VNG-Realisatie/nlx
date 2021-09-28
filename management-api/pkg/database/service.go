@@ -31,6 +31,7 @@ type Service struct {
 }
 
 var ErrNoIDSpecified = errors.New("unable to update service without a primary key")
+var ErrServiceAlreadyExists = errors.New("unable to create service with same name as existing service")
 
 func (s *Service) TableName() string {
 	return "nlx_management.services"
@@ -66,10 +67,20 @@ func (db *PostgresConfigDatabase) GetService(ctx context.Context, name string) (
 }
 
 func (db *PostgresConfigDatabase) CreateService(ctx context.Context, service *Service) error {
-	return db.DB.
+	err := db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Create(service).Error
+
+	if err == nil {
+		return nil
+	}
+
+	if err.Error() == `pq: duplicate key value violates unique constraint "services_pkey"` {
+		return ErrServiceAlreadyExists
+	}
+
+	return err
 }
 
 func (db *PostgresConfigDatabase) UpdateService(ctx context.Context, service *Service) error {

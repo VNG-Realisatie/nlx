@@ -36,6 +36,28 @@ func TestCreateService(t *testing.T) {
 		args         args
 		wantErr      error
 	}{
+		"when_service_already_exist": {
+			loadFixtures: true,
+			args: args{
+				service: &database.Service{
+					ID:                   1,
+					Name:                 "service-name",
+					EndpointURL:          "http://api:8000",
+					DocumentationURL:     "https://documentation-url.com",
+					APISpecificationURL:  "http://api:8000/schema?format=openapi-json",
+					Internal:             false,
+					TechSupportContact:   "test@tech-support-contact.com",
+					PublicSupportContact: "test@public-support-contact.com",
+					Inways:               []*database.Inway{},
+					OneTimeCosts:         1,
+					MonthlyCosts:         2,
+					RequestCosts:         3,
+					CreatedAt:            now,
+					UpdatedAt:            now,
+				},
+			},
+			wantErr: database.ErrServiceAlreadyExists,
+		},
 		"happy_flow": {
 			loadFixtures: false,
 			args: args{
