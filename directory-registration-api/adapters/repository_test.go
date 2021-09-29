@@ -8,6 +8,7 @@ package adapters_test
 
 import (
 	"context"
+	"net/url"
 	"os"
 	"sync"
 	"testing"
@@ -28,6 +29,7 @@ import (
 )
 
 var setupOnce sync.Once
+var fixtureMutex sync.Mutex
 
 func setup(t *testing.T) {
 	setupOnce.Do(func() {
@@ -36,10 +38,13 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQLRepository(t *testing.T) {
-	dsn := os.Getenv("POSTGRES_DSN")
+	dsn := os.Getenv("POSTGRES_DSN_REGISTRATION")
 
-	err := adapters.PostgreSQLPerformMigrations(dsn)
-	require.NoError(t, err)
+	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "registration_migrations")
+	err := adapters.PostgreSQLPerformMigrations(dsnForMigrations)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	txdb.Register("txdb", "postgres", dsn)
 
@@ -59,7 +64,13 @@ func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*adapt
 			testfixtures.DangerousSkipTestDatabaseCheck(),
 		)
 		require.NoError(t, err)
+
+		fixtureMutex.Lock()
+
 		err = fixtures.Load()
+
+		fixtureMutex.Unlock()
+
 		require.NoError(t, err)
 	}
 
@@ -100,4 +111,12 @@ func assertServiceInRepository(t *testing.T, repo directory.Repository, s *domai
 
 	assert.EqualValues(t, s, model)
 
+}
+
+func addQueryParamToAddress(address, key, value string) string {
+	u, _ := url.Parse(address)
+	q, _ := url.ParseQuery(u.RawQuery)
+	q.Add(key, value)
+	u.RawQuery = q.Encode()
+	return u.String()
 }

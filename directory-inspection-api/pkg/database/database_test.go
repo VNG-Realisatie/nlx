@@ -6,6 +6,7 @@
 package database_test
 
 import (
+	"net/url"
 	"os"
 	"sync"
 	"testing"
@@ -22,6 +23,7 @@ import (
 )
 
 var setupOnce sync.Once
+var fixtureMutex sync.Mutex
 
 func setup(t *testing.T) {
 	setupOnce.Do(func() {
@@ -30,10 +32,13 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQL(t *testing.T) {
-	dsn := os.Getenv("POSTGRES_DSN")
+	dsn := os.Getenv("POSTGRES_DSN_INSPECTION")
 
-	err := database.PostgreSQLPerformMigrations(dsn)
-	require.NoError(t, err)
+	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "inspection_migrations")
+	err := database.PostgreSQLPerformMigrations(dsnForMigrations)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	txdb.Register("txdb", "postgres", dsn)
 
@@ -53,7 +58,12 @@ func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (d
 			testfixtures.DangerousSkipTestDatabaseCheck(),
 		)
 
+		fixtureMutex.Lock()
+
 		err = fixtures.Load()
+
+		fixtureMutex.Unlock()
+
 		require.NoError(t, err)
 	}
 
@@ -67,4 +77,12 @@ func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (d
 
 func newDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
 	return newPostgresDirectoryDatabase(t, id, loadFixtures)
+}
+
+func addQueryParamToAddress(address, key, value string) string {
+	u, _ := url.Parse(address)
+	q, _ := url.ParseQuery(u.RawQuery)
+	q.Add(key, value)
+	u.RawQuery = q.Encode()
+	return u.String()
 }

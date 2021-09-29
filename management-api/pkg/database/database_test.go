@@ -22,6 +22,7 @@ import (
 )
 
 var setupOnce sync.Once
+var fixtureMutex sync.Mutex
 
 func setup(t *testing.T) {
 	setupOnce.Do(func() {
@@ -30,12 +31,14 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQL(t *testing.T) {
-	dsn := os.Getenv("POSTGRES_DSN")
+	dsn := os.Getenv("POSTGRES_DSN_MANAGEMENT")
 
 	// Necessary to prevent migration version collision with directory database migrations
 	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "management_migrations")
 	err := database.PostgresPerformMigrations(dsnForMigrations)
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	txdb.Register("txdb", "postgres", dsn)
 }
@@ -61,7 +64,12 @@ func newPostgresConfigDatabase(t *testing.T, id string, loadFixtures bool) (data
 			testfixtures.DangerousSkipTestDatabaseCheck(),
 		)
 
+		fixtureMutex.Lock()
+
 		err = fixtures.Load()
+
+		fixtureMutex.Unlock()
+
 		require.NoError(t, err)
 	}
 
