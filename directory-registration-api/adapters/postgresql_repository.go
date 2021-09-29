@@ -133,7 +133,6 @@ func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	return err
 }
 
-// @TODO: Remove name, only use serial number
 func (r *PostgreSQLRepository) GetInway(name, serialNumber string) (*domain.Inway, error) {
 	type params struct {
 		Name         string `db:"name"`
