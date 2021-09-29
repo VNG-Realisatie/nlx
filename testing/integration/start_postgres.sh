@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#shellcheck disable=SC2034 disable=SC1091
 
 set -u
 set -e

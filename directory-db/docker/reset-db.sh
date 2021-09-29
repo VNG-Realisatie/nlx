@@ -52,12 +52,12 @@ EOF
 
 echo "Creating database structure from migrations and adding testdata"
 dbVersion=0
-for _unused in $(find /db-migrations -name "*.up.sql" -print0 | sort -z | xargs -r0 echo); do
+for _ in $(find /db-migrations -name "*.up.sql" -print0 | sort -z | xargs -r0 echo); do
 	migrate --path /db-migrations/ --database "postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}" up 1
-	let dbVersion=dbVersion+1
-	dbVersionZerofill=$(printf "%03d" ${dbVersion})
+	(( dbVersion=dbVersion+1 ))
+	dbVersionZerofill=$(printf "%03d" "${dbVersion}")
 	# Add test data
 	for dataFile in $(find /db-testdata -name "${dbVersionZerofill}_*.sql" -print0 | sort -z | xargs -r0 echo); do
-		psql --echo-errors --variable "ON_ERROR_STOP=1" ${PGDATABASE} < ${dataFile} | awk "\$0=\"[${dataFile/.sql/}] \"\$0"
+		psql --echo-errors --variable "ON_ERROR_STOP=1" "${PGDATABASE}" < "${dataFile}" | awk "\$0=\"[${dataFile/.sql/}] \"\$0"
 	done
 done

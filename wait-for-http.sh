@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 (( c=1 ))
 
-until /usr/bin/curl -o /dev/null --fail -s $1; do
+until /usr/bin/curl -o /dev/null --fail -s "$1"; do
   >&2 echo "$1 unavailable - sleeping"
   sleep 2
   ((c++)) && ((c==100)) && exit 1

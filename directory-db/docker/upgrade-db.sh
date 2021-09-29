@@ -1,4 +1,5 @@
 #!/bin/bash
+#shellcheck disable=SC2001
 #
 # Migrate the database for the directory to its latest state.
 #
@@ -49,7 +50,7 @@ EOF
 
 # 2. Perform the actual migrations with the 'templated out' SQL.
 # escape slashes in case we're dealing with unix sockets
-host=$(echo $PGHOST | sed "s:/:%2F:g")
+host=$(echo "$PGHOST" | sed "s:/:%2F:g")
 /usr/local/bin/migrate \
     --database "postgres://${PGUSER}:${PGPASSWORD}@:${PGPORT}/${PGDATABASE}?host=${host}" \
     --lock-timeout 600 \

@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 
 set -e # exit on error
 
@@ -10,8 +10,8 @@ if [ -z "${cadomain}" ]; then
 	exit 1;
 fi;
 
-echo '{"hosts": ["'${cadomain}'"], "key": {"algo": "rsa", "size": 4096}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' | 
-	cfssl genkey -initca /dev/stdin | 
+echo '{"hosts": ["'"${cadomain}"'"], "key": {"algo": "rsa", "size": 4096}, "names": [{"O": "Common Ground NLX CA", "OU": "NLX"}]}' |
+	cfssl genkey -initca /dev/stdin |
 	cfssljson -bare ca
 
 cfssl serve --address 0.0.0.0 \
