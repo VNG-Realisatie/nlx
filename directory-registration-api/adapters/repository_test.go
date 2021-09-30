@@ -8,13 +8,13 @@ package adapters_test
 
 import (
 	"context"
-	"net/url"
 	"os"
 	"sync"
 	"testing"
 
 	"github.com/go-testfixtures/testfixtures/v3"
 	"go.nlx.io/nlx/directory-registration-api/domain"
+	"go.nlx.io/nlx/testing/testingutils"
 	"go.uber.org/zap"
 
 	"github.com/DATA-DOG/go-txdb"
@@ -38,10 +38,14 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQLRepository(t *testing.T) {
-	dsn := os.Getenv("POSTGRES_DSN_REGISTRATION")
+	dsnBase := os.Getenv("POSTGRES_DSN")
+	dsn, err := testingutils.CreateTestDatabase(dsnBase, "test_directory_registration")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "registration_migrations")
-	err := adapters.PostgreSQLPerformMigrations(dsnForMigrations)
+	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", "registration_migrations")
+	err = adapters.PostgreSQLPerformMigrations(dsnForMigrations)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,12 +115,4 @@ func assertServiceInRepository(t *testing.T, repo directory.Repository, s *domai
 
 	assert.EqualValues(t, s, model)
 
-}
-
-func addQueryParamToAddress(address, key, value string) string {
-	u, _ := url.Parse(address)
-	q, _ := url.ParseQuery(u.RawQuery)
-	q.Add(key, value)
-	u.RawQuery = q.Encode()
-	return u.String()
 }

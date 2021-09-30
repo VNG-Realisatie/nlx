@@ -6,7 +6,6 @@
 package database_test
 
 import (
-	"net/url"
 	"os"
 	"sync"
 	"testing"
@@ -15,6 +14,7 @@ import (
 	"github.com/go-testfixtures/testfixtures/v3"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
+	"go.nlx.io/nlx/testing/testingutils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -31,11 +31,15 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQL(t *testing.T) {
-	dsn := os.Getenv("POSTGRES_DSN_MANAGEMENT")
+	dsnBase := os.Getenv("POSTGRES_DSN")
+	dsn, err := testingutils.CreateTestDatabase(dsnBase, "test_management_api")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Necessary to prevent migration version collision with directory database migrations
-	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "management_migrations")
-	err := database.PostgresPerformMigrations(dsnForMigrations)
+	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", "management_migrations")
+	err = database.PostgresPerformMigrations(dsnForMigrations)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,12 +84,4 @@ func newPostgresConfigDatabase(t *testing.T, id string, loadFixtures bool) (data
 
 func newConfigDatabase(t *testing.T, id string, loadFixtures bool) (database.ConfigDatabase, func() error) {
 	return newPostgresConfigDatabase(t, id, loadFixtures)
-}
-
-func addQueryParamToAddress(address, key, value string) string {
-	u, _ := url.Parse(address)
-	q, _ := url.ParseQuery(u.RawQuery)
-	q.Add(key, value)
-	u.RawQuery = q.Encode()
-	return u.String()
 }

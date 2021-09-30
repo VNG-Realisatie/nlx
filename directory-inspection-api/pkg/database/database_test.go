@@ -6,7 +6,6 @@
 package database_test
 
 import (
-	"net/url"
 	"os"
 	"sync"
 	"testing"
@@ -18,6 +17,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
+	"go.nlx.io/nlx/testing/testingutils"
 
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 )
@@ -32,10 +32,14 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQL(t *testing.T) {
-	dsn := os.Getenv("POSTGRES_DSN_INSPECTION")
+	dsnBase := os.Getenv("POSTGRES_DSN")
+	dsn, err := testingutils.CreateTestDatabase(dsnBase, "test_direction_inspection")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	dsnForMigrations := addQueryParamToAddress(dsn, "x-migrations-table", "inspection_migrations")
-	err := database.PostgreSQLPerformMigrations(dsnForMigrations)
+	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", "inspection_migrations")
+	err = database.PostgreSQLPerformMigrations(dsnForMigrations)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,12 +81,4 @@ func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (d
 
 func newDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
 	return newPostgresDirectoryDatabase(t, id, loadFixtures)
-}
-
-func addQueryParamToAddress(address, key, value string) string {
-	u, _ := url.Parse(address)
-	q, _ := url.ParseQuery(u.RawQuery)
-	q.Add(key, value)
-	u.RawQuery = q.Encode()
-	return u.String()
 }

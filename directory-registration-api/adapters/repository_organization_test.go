@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-        "github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
-        "go.nlx.io/nlx/directory-registration-api/domain"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 func TestSetOrganizationInway(t *testing.T) {
