@@ -8,36 +8,28 @@ import (
 	_ "github.com/lib/pq" // postgres driver
 )
 
-var createIfNotExistsBase = `
-DO
-$do$
-BEGIN
-   IF EXISTS (SELECT FROM pg_database WHERE datname = '%s') THEN
-      RAISE NOTICE 'Database already exists';
-   ELSE
-      CREATE EXTENSION IF NOT EXISTS dblink;
-      PERFORM dblink_exec('dbname=' || current_database()
-                        , 'CREATE DATABASE %s');
-   END IF;
-END
-$do$;`
-
 func CreateTestDatabase(dsn, databaseName string) (testDBDsn string, err error) {
 	dbCreator, err := sqlx.Open("postgres", dsn)
 	if err != nil {
-		return "", fmt.Errorf("could not open connection to postgres in CreateTestDatabase for creating the testing database: %s", err)
+		return "", fmt.Errorf("could not open connection to postgres in CreateTestDatabase: %s", err)
 	}
 
-	// Create new database with given name if it does not exists
-	_, err = dbCreator.Exec(fmt.Sprintf(createIfNotExistsBase, databaseName, databaseName))
+	// We drop the database with the given name if it exists, to ensure we are using a clean database:
+	// f.e. when database migrations have been edited during development, this is applied on the new database
+	_, err = dbCreator.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s;", databaseName))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("could not drop database '%s': %s", databaseName, err)
+	}
+
+	_, err = dbCreator.Exec(fmt.Sprintf("CREATE DATABASE %s;", databaseName))
+	if err != nil {
+		return "", fmt.Errorf("could not create database '%s': %s", databaseName, err)
 	}
 
 	// Parse DNS, edit the path to the new database
 	u, err := url.Parse(dsn)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("could not parse dsn '%s': %s", dsn, err)
 	}
 
 	// The u.Path needs to have a `/` prefix
