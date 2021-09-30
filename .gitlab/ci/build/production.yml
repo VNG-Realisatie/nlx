@@ -31,7 +31,7 @@ Build production:
 Trigger packaging build:
   stage: Build
   variables:
-    PROJECT_ID: 23827875  # commonground/nlx/packaging
+    PROJECT_ID: 23827875 # commonground/nlx/packaging
   script:
     - scripts/trigger-external-pipeline.sh "${PROJECT_ID}" "${CI_COMMIT_TAG:1}" "VERSION" "${CI_JOB_TOKEN}"
   rules:

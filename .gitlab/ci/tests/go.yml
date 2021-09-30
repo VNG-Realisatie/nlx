@@ -1,0 +1,90 @@
+services:
+  - postgres:12.8-alpine
+
+variables:
+  POSTGRES_DB: nlx
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: ""
+  POSTGRES_HOST_AUTH_METHOD: trust
+
+Go tests (unit & integration):
+  stage: Tests
+  image: golang:1.17.1
+  variables:
+    POSTGRES_DSN: "postgres://postgres@postgres:5432/nlx?sslmode=disable"
+  before_script:
+    - mkdir -p tmp-coverage-reports/
+  script:
+    - ./pki/fix-permissions.sh
+    - /usr/local/go/bin/go mod download
+    - /usr/local/go/bin/go test ./... --tags=integration -coverprofile tmp-coverage-reports/coverage.out.tmp
+    - cat tmp-coverage-reports/coverage.out.tmp | grep -v '.pb.go\|.pb.gw.go' > tmp-coverage-reports/coverage.out
+    - rm tmp-coverage-reports/coverage.out.tmp
+    - /usr/local/go/bin/go tool cover -html=tmp-coverage-reports/coverage.out -o tmp-coverage-reports/coverage.html
+    - /usr/local/go/bin/go tool cover -func=tmp-coverage-reports/coverage.out
+  coverage: /total:\t+\(statements\)\t+([\d\.]+?%)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - tmp-coverage-reports/coverage.html
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+Go linter:
+  stage: Tests
+  image: golangci/golangci-lint:v1.42.1-alpine
+  before_script:
+    - export PATH=$PATH:/usr/local/go/bin
+    - apk --no-cache add jq
+  script:
+    - golangci-lint version
+    # Command based on https://docs.gitlab.com/ee/development/go_guide/index.html#automatic-linting
+    # Write the code coverage report to gl-code-quality-report.json
+    # and print linting issues to stdout in the format: path/to/file:line description
+    # remove `--issues-exit-code 0` or set to non-zero to fail the job if linting issues are detected
+    - golangci-lint run --timeout=5m --new-from-rev $(git rev-parse origin/master) --out-format code-climate | tee gl-code-quality-report.json | jq -r '.[] | "\(.location.path):\(.location.lines.begin) \(.description)"'
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+    paths:
+      - gl-code-quality-report.json
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+Go go.mod tidy test:
+  stage: Tests
+  image: golang:1.17.1
+  script:
+    - cp go.mod go.mod.orig
+    - /usr/local/go/bin/go mod download
+    - /usr/local/go/bin/go mod tidy
+    - diff go.mod.orig go.mod
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+Shell lint:
+  extends: .base
+  stage: Tests
+  image: alpine
+  before_script:
+    - scversion="stable"
+    - wget -qO- "https://github.com/koalaman/shellcheck/releases/download/${scversion?}/shellcheck-${scversion?}.linux.x86_64.tar.xz" | tar -xJv
+    - cp "shellcheck-${scversion}/shellcheck" /usr/bin/
+    - shellcheck --version
+  script:
+    - find **/*.sh | grep -v 'node_modules' | xargs shellcheck
+  rules:
+    - if: '$CI_COMMIT_BRANCH' # do not run for tags
+  tags:
+    - docker
+    - linux
+

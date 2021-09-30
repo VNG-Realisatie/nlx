@@ -34,7 +34,7 @@ container_scanning:
     GIT_STRATEGY: clone
     CLAIR_DB_IMAGE_TAG: "latest"
     CLAIR_DB_IMAGE: "$SECURE_ANALYZERS_PREFIX/clair-vulnerabilities-db:$CLAIR_DB_IMAGE_TAG"
-    CS_PROJECT: 'klar'
+    CS_PROJECT: "klar"
   before_script:
     - yum install -y jq
     - export IMAGE_REGISTRY=$CI_REGISTRY_IMAGE

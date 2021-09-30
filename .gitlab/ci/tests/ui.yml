@@ -1,0 +1,57 @@
+Directory-ui linter and tests:
+  extends: .node-base
+  stage: Tests
+  script:
+    - cd directory-ui/
+    - install_npm_dependencies
+    - start_section lint "Running linter"
+    - npm run lint
+    - stop_section lint
+    - start_section test "Running tests"
+    - npm test -- --coverage
+    - stop_section test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - directory-ui/coverage
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+Management-ui linter and tests:
+  extends: .node-base
+  stage: Tests
+  script:
+    - >
+      if grep -rin "\.only" management-ui/src/ management-ui-e2e-tests/cypress/integration/; then
+        echo "Found `.only` in management-ui, please remove to run all tests"
+        exit 1
+      fi
+    - cd management-ui/
+    - install_npm_dependencies
+    - start_section i18n "Checking translations"
+    - cp public/i18n/en/common.json public/i18n/en/common.json.orig
+    - cp public/i18n/nl/common.json public/i18n/nl/common.json.orig
+    - npm run validate-translations
+    - diff -u public/i18n/en/common.json.orig public/i18n/en/common.json
+    - diff -u public/i18n/nl/common.json.orig public/i18n/nl/common.json
+    - stop_section i18n
+    - start_section lint "Running linter"
+    - npm run lint
+    - stop_section lint
+    - start_section test "Running tests"
+    - npm test -- --coverage --watchAll=false --runInBand
+    - stop_section test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    expire_in: 1 month
+    paths:
+      - management-ui/coverage
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux

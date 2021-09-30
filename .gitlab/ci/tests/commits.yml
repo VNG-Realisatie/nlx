@@ -1,0 +1,14 @@
+Lint commit messages:
+  extends: .node-base
+  stage: Tests
+  script:
+    - apk --no-cache add git
+    - install_npm_dependencies
+    - start_section lint "Linting commit messages"
+    - npx commitlint --from $(git rev-parse origin/master)
+    - stop_section lint
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
