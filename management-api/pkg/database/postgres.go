@@ -6,6 +6,7 @@ package database
 import (
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -15,7 +16,11 @@ import (
 	"go.nlx.io/nlx/management-api/migrations"
 )
 
+const driverName = "embed"
+
 var ErrNotFound = errors.New("database: value not found")
+
+var registerDriverOnce sync.Once
 
 type PostgresConfigDatabase struct {
 	*gorm.DB
@@ -33,9 +38,9 @@ func NewPostgresConfigDatabase(connectionString string) (ConfigDatabase, error) 
 }
 
 func setupMigrator(dsn string) (*migrate.Migrate, error) {
-	const driverName = "embed"
-
-	migrations.RegisterDriver(driverName)
+	registerDriverOnce.Do(func() {
+		migrations.RegisterDriver(driverName)
+	})
 
 	return migrate.New(fmt.Sprintf("%s://", driverName), dsn)
 }

@@ -6,6 +6,7 @@
 package database_test
 
 import (
+	"fmt"
 	"os"
 	"sync"
 	"testing"
@@ -23,7 +24,8 @@ import (
 )
 
 var setupOnce sync.Once
-var fixtureMutex sync.Mutex
+
+const fixtureSuffix = "_fixtures"
 
 func setup(t *testing.T) {
 	setupOnce.Do(func() {
@@ -32,29 +34,35 @@ func setup(t *testing.T) {
 }
 
 func setupPostgreSQL(t *testing.T) {
+	setupDatabase(t, false) // Without fixtures
+	setupDatabase(t, true)  // With fixtures
+}
+
+func setupDatabase(t *testing.T, loadFixtures bool) {
+	dbName := getDBName(loadFixtures)
+
 	dsnBase := os.Getenv("POSTGRES_DSN")
-	dsn, err := testingutils.CreateTestDatabase(dsnBase, "test_direction_inspection")
+	dsn, err := testingutils.CreateTestDatabase(dsnBase, dbName)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", "inspection_migrations")
+	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", dbName)
 	err = database.PostgreSQLPerformMigrations(dsnForMigrations)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	txdb.Register("txdb", "postgres", dsn)
+	dbDriver := getDriverName(loadFixtures)
+	txdb.Register(dbDriver, "postgres", dsn)
 
 	// This is necessary because the default BindVars for txdb isn't correct
-	sqlx.BindDriver("txdb", sqlx.DOLLAR)
-}
-
-func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
-	db, err := sqlx.Open("txdb", id)
-	require.NoError(t, err)
+	sqlx.BindDriver(dbDriver, sqlx.DOLLAR)
 
 	if loadFixtures {
+		db, err := sqlx.Open("postgres", dsn)
+		require.NoError(t, err)
+
 		fixtures, err := testfixtures.New(
 			testfixtures.Database(db.DB),
 			testfixtures.Dialect("postgres"),
@@ -62,14 +70,15 @@ func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (d
 			testfixtures.DangerousSkipTestDatabaseCheck(),
 		)
 
-		fixtureMutex.Lock()
-
 		err = fixtures.Load()
-
-		fixtureMutex.Unlock()
-
 		require.NoError(t, err)
 	}
+}
+
+func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
+
+	db, err := sqlx.Open(getDriverName(loadFixtures), id)
+	require.NoError(t, err)
 
 	db.MapperFunc(xstrings.ToSnakeCase)
 
@@ -81,4 +90,22 @@ func newPostgresDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (d
 
 func newDirectoryDatabase(t *testing.T, id string, loadFixtures bool) (database.DirectoryDatabase, func() error) {
 	return newPostgresDirectoryDatabase(t, id, loadFixtures)
+}
+
+func getDriverName(loadFixtures bool) string {
+	var suffix string
+	if loadFixtures {
+		suffix = fixtureSuffix
+	}
+
+	return fmt.Sprintf("txdb%s", suffix)
+}
+
+func getDBName(loadFixtures bool) string {
+	var suffix string
+	if loadFixtures {
+		suffix = fixtureSuffix
+	}
+
+	return fmt.Sprintf("test_direction_inspection%s", suffix)
 }

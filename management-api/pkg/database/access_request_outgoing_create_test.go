@@ -69,7 +69,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 				},
 			},
 			want: &database.OutgoingAccessRequest{
-				ID:                   fixturesStartID,
+				ID:                   nonFixturesStartID,
 				OrganizationName:     "my-org",
 				ServiceName:          "my-service",
 				PublicKeyPEM:         fixturePublicKeyPEM,

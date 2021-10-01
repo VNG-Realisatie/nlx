@@ -16,6 +16,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 )
 
+const nonFixturesStartID = 1
 const fixturesStartID = 10001
 
 func newFixtureCertificateBundle() (*common_tls.CertificateBundle, error) {
