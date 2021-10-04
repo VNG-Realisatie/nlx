@@ -62,6 +62,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			loadFixtures: true,
 			args: args{
 				outgoingOrder: &database.OutgoingOrder{
+					ID:          fixturesStartID,
 					Reference:   "reference-one",
 					Description: "description",
 					Delegatee:   "delegatee",
@@ -71,7 +72,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					CreatedAt:   now,
 					Services: []database.OutgoingOrderService{
 						{
-							OutgoingOrderID: fixturesStartID + 1,
+							OutgoingOrderID: fixturesStartID,
 							Service:         "fixture-service",
 							Organization:    "fixture-organization",
 						},

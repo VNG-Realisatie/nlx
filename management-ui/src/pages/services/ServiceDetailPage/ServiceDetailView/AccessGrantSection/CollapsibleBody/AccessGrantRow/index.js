@@ -20,7 +20,7 @@ const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
         {t(
           'Access will be revoked for the serviceName service from organizationName',
           {
-            organizationName: accessGrant.organizationName,
+            organizationName: accessGrant.organization.name,
             serviceName: accessGrant.serviceName,
           },
         )}
@@ -38,7 +38,7 @@ const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
 
   return (
     <Table.Tr data-testid="service-accessgrants" key={accessGrant.id}>
-      <Table.Td>{accessGrant.organizationName}</Table.Td>
+      <Table.Td>{accessGrant.organization.name}</Table.Td>
       <TdActions>
         <Button
           size="small"

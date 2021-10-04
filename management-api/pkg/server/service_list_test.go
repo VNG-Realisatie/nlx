@@ -78,9 +78,11 @@ func TestListServices(t *testing.T) {
 						ID:                      1,
 						IncomingAccessRequestID: 1,
 						IncomingAccessRequest: &database.IncomingAccessRequest{
-							ID:               1,
-							OrganizationName: "mock-organization-name",
-							ServiceID:        1,
+							ID: 1,
+							Organization: database.IncomingAccessRequestOrganization{
+								Name: "mock-organization-name",
+							},
+							ServiceID: 1,
 							Service: &database.Service{
 								ID:   1,
 								Name: "my-service",

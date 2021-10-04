@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    AccessGrantOrganization,
+    AccessGrantOrganizationFromJSON,
+    AccessGrantOrganizationFromJSONTyped,
+    AccessGrantOrganizationToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -27,10 +34,10 @@ export interface ManagementAccessGrant {
     id?: string;
     /**
      * 
-     * @type {string}
+     * @type {AccessGrantOrganization}
      * @memberof ManagementAccessGrant
      */
-    organizationName?: string;
+    organization?: AccessGrantOrganization;
     /**
      * 
      * @type {string}
@@ -74,7 +81,7 @@ export function ManagementAccessGrantFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
+        'organization': !exists(json, 'organization') ? undefined : AccessGrantOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
@@ -93,7 +100,7 @@ export function ManagementAccessGrantToJSON(value?: ManagementAccessGrant | null
     return {
         
         'id': value.id,
-        'organizationName': value.organizationName,
+        'organization': AccessGrantOrganizationToJSON(value.organization),
         'serviceName': value.serviceName,
         'publicKeyFingerprint': value.publicKeyFingerprint,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

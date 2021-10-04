@@ -30,7 +30,6 @@ export enum AuditLogRecordActionType {
     SERVICEUPDATE = 'serviceUpdate',
     SERVICEDELETE = 'serviceDelete',
     ORGANIZATIONSETTINGSUPDATE = 'organizationSettingsUpdate',
-    ORGANIZATIONINSIGHTCONFIGURATIONUPDATE = 'organizationInsightConfigurationUpdate',
     ORDERCREATE = 'orderCreate',
     ORDEROUTGOINGREVOKE = 'orderOutgoingRevoke',
     ORDERINCOMINGREVOKE = 'orderIncomingRevoke'

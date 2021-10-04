@@ -60,9 +60,6 @@ import {
     ManagementListInwaysResponse,
     ManagementListInwaysResponseFromJSON,
     ManagementListInwaysResponseToJSON,
-    ManagementListOutgoingAccessRequestsResponse,
-    ManagementListOutgoingAccessRequestsResponseFromJSON,
-    ManagementListOutgoingAccessRequestsResponseToJSON,
     ManagementListOutgoingOrdersResponse,
     ManagementListOutgoingOrdersResponseFromJSON,
     ManagementListOutgoingOrdersResponseToJSON,
@@ -104,10 +101,6 @@ export interface ManagementCreateAccessRequestOperationRequest {
     body: ManagementCreateAccessRequestRequest;
 }
 
-export interface ManagementCreateInwayRequest {
-    body: ManagementInway;
-}
-
 export interface ManagementCreateOutgoingOrderOperationRequest {
     body: ManagementCreateOutgoingOrderRequest;
 }
@@ -140,13 +133,12 @@ export interface ManagementListIncomingAccessRequestRequest {
     serviceName: string;
 }
 
-export interface ManagementListOutgoingAccessRequestsRequest {
-    organizationName: string;
-    serviceName: string;
-}
-
 export interface ManagementListServicesRequest {
     inwayName?: string;
+}
+
+export interface ManagementRegisterInwayRequest {
+    body: ManagementInway;
 }
 
 export interface ManagementRejectIncomingAccessRequestRequest {
@@ -255,37 +247,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementCreateAccessRequest(requestParameters: ManagementCreateAccessRequestOperationRequest): Promise<ManagementOutgoingAccessRequest> {
         const response = await this.managementCreateAccessRequestRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementCreateInwayRaw(requestParameters: ManagementCreateInwayRequest): Promise<runtime.ApiResponse<ManagementInway>> {
-        if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateInway.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/v1/inways`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ManagementInwayToJSON(requestParameters.body),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInwayFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementCreateInway(requestParameters: ManagementCreateInwayRequest): Promise<ManagementInway> {
-        const response = await this.managementCreateInwayRaw(requestParameters);
         return await response.value();
     }
 
@@ -689,38 +650,6 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListOutgoingAccessRequestsRaw(requestParameters: ManagementListOutgoingAccessRequestsRequest): Promise<runtime.ApiResponse<ManagementListOutgoingAccessRequestsResponse>> {
-        if (requestParameters.organizationName === null || requestParameters.organizationName === undefined) {
-            throw new runtime.RequiredError('organizationName','Required parameter requestParameters.organizationName was null or undefined when calling managementListOutgoingAccessRequests.');
-        }
-
-        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementListOutgoingAccessRequests.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}`.replace(`{${"organizationName"}}`, encodeURIComponent(String(requestParameters.organizationName))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListOutgoingAccessRequestsResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementListOutgoingAccessRequests(requestParameters: ManagementListOutgoingAccessRequestsRequest): Promise<ManagementListOutgoingAccessRequestsResponse> {
-        const response = await this.managementListOutgoingAccessRequestsRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     */
     async managementListOutgoingOrdersRaw(): Promise<runtime.ApiResponse<ManagementListOutgoingOrdersResponse>> {
         const queryParameters: runtime.HTTPQuery = {};
 
@@ -768,6 +697,37 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementListServices(requestParameters: ManagementListServicesRequest): Promise<ManagementListServicesResponse> {
         const response = await this.managementListServicesRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementRegisterInwayRaw(requestParameters: ManagementRegisterInwayRequest): Promise<runtime.ApiResponse<ManagementInway>> {
+        if (requestParameters.body === null || requestParameters.body === undefined) {
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementRegisterInway.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v1/inways`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ManagementInwayToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInwayFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementRegisterInway(requestParameters: ManagementRegisterInwayRequest): Promise<ManagementInway> {
+        const response = await this.managementRegisterInwayRaw(requestParameters);
         return await response.value();
     }
 

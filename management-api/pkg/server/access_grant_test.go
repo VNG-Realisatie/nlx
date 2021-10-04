@@ -59,8 +59,11 @@ func TestListAccessGrantsForService(t *testing.T) {
 			&api.ListAccessGrantsForServiceResponse{
 				AccessGrants: []*api.AccessGrant{
 					{
-						Id:                   1,
-						OrganizationName:     "test-organization",
+						Id: 1,
+						Organization: &api.AccessGrant_Organization{
+							Name:         "test-organization",
+							SerialNumber: "00000000000000000001",
+						},
 						ServiceName:          "test-service",
 						PublicKeyFingerprint: "test-finger-print",
 						CreatedAt:            createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
@@ -155,8 +158,8 @@ func TestRevokeAccessGrant(t *testing.T) {
 		expectedErr      error
 	}{
 		{
-			"happy_flow",
-			func(ctx context.Context, mocks serviceMocks) {
+			name: "happy_flow",
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
 					AccessGrantRevoke(
@@ -173,23 +176,25 @@ func TestRevokeAccessGrant(t *testing.T) {
 					Return(&database.AccessGrant{
 						CreatedAt: createdAt,
 						IncomingAccessRequest: &database.IncomingAccessRequest{
-							Service: &database.Service{},
+							Service:      &database.Service{},
+							Organization: database.IncomingAccessRequestOrganization{},
 						},
 					}, nil)
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
 				"username":               "Jane Doe",
 				"grpcgateway-user-agent": "nlxctl",
 			})),
-			&api.RevokeAccessGrantRequest{
+			req: &api.RevokeAccessGrantRequest{
 				AccessGrantID:    42,
 				OrganizationName: "test-organization",
 				ServiceName:      "test-service",
 			},
-			&api.AccessGrant{
-				CreatedAt: createTimestamp(createdAt),
+			expectedResponse: &api.AccessGrant{
+				Organization: &api.AccessGrant_Organization{},
+				CreatedAt:    createTimestamp(createdAt),
 			},
-			nil,
+			expectedErr: nil,
 		},
 	}
 
@@ -213,9 +218,12 @@ func createDummyAccessGrant(createdAt time.Time) *database.AccessGrant {
 		ID:                      1,
 		IncomingAccessRequestID: 1,
 		IncomingAccessRequest: &database.IncomingAccessRequest{
-			ID:                   1,
-			ServiceID:            1,
-			OrganizationName:     "test-organization",
+			ID:        1,
+			ServiceID: 1,
+			Organization: database.IncomingAccessRequestOrganization{
+				Name:         "test-organization",
+				SerialNumber: "00000000000000000001",
+			},
 			State:                database.IncomingAccessRequestReceived,
 			PublicKeyFingerprint: "test-finger-print",
 			Service: &database.Service{

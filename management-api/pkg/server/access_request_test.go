@@ -348,7 +348,9 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
-				OrganizationName: "test-organization",
+				Organization: database.IncomingAccessRequestOrganization{
+					Name: "test-organization",
+				},
 				Service: &database.Service{
 					Name: "test-service",
 				},
@@ -374,7 +376,9 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
-				OrganizationName: "test-organization",
+				Organization: database.IncomingAccessRequestOrganization{
+					Name: "test-organization",
+				},
 				Service: &database.Service{
 					Name: "test-service",
 				},
@@ -459,7 +463,9 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
-				OrganizationName: "test-organization",
+				Organization: database.IncomingAccessRequestOrganization{
+					Name: "test-organization",
+				},
 				Service: &database.Service{
 					Name: "other-service",
 				},
@@ -485,7 +491,9 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 				AccessRequestID: 1,
 			},
 			&database.IncomingAccessRequest{
-				OrganizationName: "test-organization",
+				Organization: database.IncomingAccessRequestOrganization{
+					Name: "test-organization",
+				},
 				Service: &database.Service{
 					Name: "other-service",
 				},

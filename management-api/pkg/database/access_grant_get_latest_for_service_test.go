@@ -89,7 +89,10 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 						CreatedAt:              fixtureTime,
 						UpdatedAt:              fixtureTime,
 					},
-					OrganizationName:     "fixture-organization-name",
+					Organization: database.IncomingAccessRequestOrganization{
+						Name:         "fixture-organization-name",
+						SerialNumber: "00000000000000000001",
+					},
 					State:                database.IncomingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,

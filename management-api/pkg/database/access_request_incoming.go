@@ -21,10 +21,15 @@ const (
 	IncomingAccessRequestRevoked  IncomingAccessRequestState = "revoked"
 )
 
+type IncomingAccessRequestOrganization struct {
+	Name         string
+	SerialNumber string
+}
+
 type IncomingAccessRequest struct {
 	ID                   uint
 	ServiceID            uint
-	OrganizationName     string
+	Organization         IncomingAccessRequestOrganization `gorm:"embedded;embeddedPrefix:organization_"`
 	State                IncomingAccessRequestState
 	AccessGrants         []AccessGrant
 	PublicKeyPEM         string

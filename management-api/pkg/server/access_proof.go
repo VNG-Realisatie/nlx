@@ -54,7 +54,7 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 	return &api.AccessProof{
 		Id:               uint64(grant.ID),
 		AccessRequestId:  uint64(grant.IncomingAccessRequest.ID),
-		OrganizationName: grant.IncomingAccessRequest.OrganizationName,
+		OrganizationName: grant.IncomingAccessRequest.Organization.Name,
 		ServiceName:      grant.IncomingAccessRequest.Service.Name,
 		CreatedAt:        createdAt,
 		RevokedAt:        revokedAt,

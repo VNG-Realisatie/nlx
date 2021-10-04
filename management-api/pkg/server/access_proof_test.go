@@ -116,9 +116,11 @@ func TestGetAccessProof(t *testing.T) {
 						ID:                      1,
 						IncomingAccessRequestID: 1,
 						IncomingAccessRequest: &database.IncomingAccessRequest{
-							ID:               1,
-							OrganizationName: "organization-a",
-							ServiceID:        1,
+							ID: 1,
+							Organization: database.IncomingAccessRequestOrganization{
+								Name: "organization-a",
+							},
+							ServiceID: 1,
 							Service: &database.Service{
 								Name: "service",
 							},

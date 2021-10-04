@@ -44,8 +44,11 @@ func TestCreateIncomingAccessRequest(t *testing.T) {
 			loadFixtures: true,
 			args: args{
 				accessRequest: &database.IncomingAccessRequest{
-					ServiceID:            1,
-					OrganizationName:     "fixture-organization-name",
+					ServiceID: 1,
+					Organization: database.IncomingAccessRequestOrganization{
+						Name:         "organization-name",
+						SerialNumber: "00000000000000000001",
+					},
 					State:                database.IncomingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
@@ -54,10 +57,13 @@ func TestCreateIncomingAccessRequest(t *testing.T) {
 				},
 			},
 			want: &database.IncomingAccessRequest{
-				ID:                   fixturesStartID,
-				ServiceID:            1,
-				Service:              nil,
-				OrganizationName:     "fixture-organization-name",
+				ID:        fixturesStartID,
+				ServiceID: 1,
+				Service:   nil,
+				Organization: database.IncomingAccessRequestOrganization{
+					Name:         "organization-name",
+					SerialNumber: "00000000000000000001",
+				},
 				State:                database.IncomingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,

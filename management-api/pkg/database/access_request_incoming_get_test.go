@@ -54,10 +54,13 @@ func TestGetIncomingAccessRequest(t *testing.T) {
 				id: 1,
 			},
 			want: &database.IncomingAccessRequest{
-				ID:                   1,
-				ServiceID:            1,
-				Service:              nil,
-				OrganizationName:     "fixture-organization-name",
+				ID:        1,
+				ServiceID: 1,
+				Service:   nil,
+				Organization: database.IncomingAccessRequestOrganization{
+					Name:         "fixture-organization-name",
+					SerialNumber: "00000000000000000001",
+				},
 				State:                database.IncomingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,

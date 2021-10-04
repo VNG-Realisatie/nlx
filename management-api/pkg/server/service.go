@@ -252,7 +252,7 @@ func (s *ManagementService) GetStatisticsOfServices(ctx context.Context, request
 
 func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.ListServicesResponse_Service_AuthorizationSettings_Authorization {
 	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
-		OrganizationName: accessGrant.IncomingAccessRequest.OrganizationName,
+		OrganizationName: accessGrant.IncomingAccessRequest.Organization.Name,
 		PublicKeyHash:    accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
 		PublicKeyPEM:     accessGrant.IncomingAccessRequest.PublicKeyPEM,
 	}

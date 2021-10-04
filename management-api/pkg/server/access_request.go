@@ -113,7 +113,7 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.username, userInfo.userAgent, accessRequest.OrganizationName, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -152,7 +152,7 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.username, userInfo.userAgent, accessRequest.OrganizationName, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -325,8 +325,10 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	}
 
 	request := &database.IncomingAccessRequest{
-		ServiceID:            service.ID,
-		OrganizationName:     md.OrganizationName,
+		ServiceID: service.ID,
+		Organization: database.IncomingAccessRequestOrganization{
+			Name: md.OrganizationName,
+		},
 		PublicKeyPEM:         md.PublicKeyPEM,
 		PublicKeyFingerprint: md.PublicKeyFingerprint,
 		State:                database.IncomingAccessRequestReceived,
@@ -390,7 +392,7 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 
 	return &api.IncomingAccessRequest{
 		Id:               uint64(accessRequest.ID),
-		OrganizationName: accessRequest.OrganizationName,
+		OrganizationName: accessRequest.Organization.Name,
 		ServiceName:      accessRequest.Service.Name,
 		State:            incomingAccessRequestStateToProto(accessRequest.State),
 		CreatedAt:        createdAt,

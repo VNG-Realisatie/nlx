@@ -975,6 +975,17 @@
     }
   },
   "definitions": {
+    "AccessGrantOrganization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "serialNumber": {
+          "type": "string"
+        }
+      }
+    },
     "AuditLogRecordActionType": {
       "type": "string",
       "enum": [
@@ -1013,8 +1024,8 @@
           "type": "string",
           "format": "uint64"
         },
-        "organizationName": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/AccessGrantOrganization"
         },
         "serviceName": {
           "type": "string"

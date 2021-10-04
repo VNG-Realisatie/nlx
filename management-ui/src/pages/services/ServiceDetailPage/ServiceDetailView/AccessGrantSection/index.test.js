@@ -39,7 +39,10 @@ test('polling with access grant section collapsed', async () => {
         {
           id: '1',
           serviceName: 'service-a',
-          organizationName: 'organization-a',
+          organization: {
+            name: 'organization-a',
+            serviceName: '00000000000000000001',
+          },
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -79,7 +82,10 @@ test('polling with access grant section expanded', async () => {
         {
           id: '1',
           serviceName: 'service-a',
-          organizationName: 'organization-a',
+          organization: {
+            name: 'organization-a',
+            serviceName: '00000000000000000001',
+          },
           createdAt: new Date(),
           updatedAt: new Date(),
         },

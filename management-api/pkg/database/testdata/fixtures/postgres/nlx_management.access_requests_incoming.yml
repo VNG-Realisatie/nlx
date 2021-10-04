@@ -1,5 +1,6 @@
 - id: 1
   organization_name: fixture-organization-name
+  organization_serial_number: "00000000000000000001"
   service_id: 1
   public_key_pem: |+
     -----BEGIN PUBLIC KEY-----
@@ -23,6 +24,7 @@
 
 - id: 2
   organization_name: fixture-organization-name-two
+  organization_serial_number: "00000000000000000002"
   service_id: 1
   public_key_pem: |+
     -----BEGIN PUBLIC KEY-----
@@ -46,6 +48,7 @@
 
 - id: 3
   organization_name: fixture-organization-name-three
+  organization_serial_number: "00000000000000000003"
   service_id: 2
   public_key_pem: |+
     -----BEGIN PUBLIC KEY-----

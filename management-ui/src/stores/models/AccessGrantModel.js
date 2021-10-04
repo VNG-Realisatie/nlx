@@ -5,7 +5,11 @@ import { flow, makeAutoObservable } from 'mobx'
 
 class AccessGrantModel {
   id = ''
-  organizationName = ''
+  organization = {
+    name: '',
+    serialNumber: '',
+  }
+
   serviceName = ''
   publicKeyFingerprint = ''
   createdAt = null
@@ -27,8 +31,9 @@ class AccessGrantModel {
       this.id = accessProofData.id
     }
 
-    if (accessProofData.organizationName) {
-      this.organizationName = accessProofData.organizationName
+    if (accessProofData.organization) {
+      this.organization.name = accessProofData.organization.name
+      this.organization.serialNumber = accessProofData.organization.serialNumber
     }
 
     if (accessProofData.serviceName) {

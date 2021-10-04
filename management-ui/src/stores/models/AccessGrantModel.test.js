@@ -10,7 +10,10 @@ beforeEach(() => {
   accessGrantStore = {}
   accessGrantData = {
     id: 'abcd',
-    organizationName: 'Organization',
+    organization: {
+      name: 'Organization',
+      serialName: '00000000000000000001',
+    },
     serviceName: 'Service',
     publicKeyFingerprint: 'f1ng3r',
     createdAt: '2020-10-01',
@@ -25,7 +28,8 @@ test('should properly construct object', () => {
   })
 
   expect(accessProof.id).toBe(accessGrantData.id)
-  expect(accessProof.organizationName).toBe(accessGrantData.organizationName)
+  expect(accessProof.organization.name).toBe(accessGrantData.organization.name)
+  expect(accessProof.organization.serialNumber).toBe(accessGrantData.organization.serialNumber)
   expect(accessProof.serviceName).toBe(accessGrantData.serviceName)
   expect(accessProof.publicKeyFingerprint).toBe(
     accessGrantData.publicKeyFingerprint,

@@ -383,8 +383,13 @@ message RevokeAccessGrantRequest {
 }
 
 message AccessGrant {
+  message Organization {
+    string name = 1;
+    string serialNumber = 2;
+  }
+
   uint64 id = 1;
-  string organizationName = 2;
+  Organization organization = 2;
   string serviceName = 3;
   string publicKeyFingerprint = 4;
   google.protobuf.Timestamp createdAt = 5;
