@@ -246,7 +246,7 @@ func (o *Outway) keepServiceListUpToDate() {
 }
 
 func serviceKey(s *inspectionapi.ListServicesResponse_Service) string {
-	return s.OrganizationName + "." + s.ServiceName
+	return s.OrganizationName + "." + s.Name
 }
 
 func (o *Outway) createService(
@@ -281,7 +281,7 @@ func (o *Outway) createService(
 			o.logger.Info(
 				"inway might not be healthy / reachable by directory / behind firewall",
 				zap.String("service-organization-name", serviceToImplement.OrganizationName),
-				zap.String("service-name", serviceToImplement.ServiceName),
+				zap.String("service-name", serviceToImplement.Name),
 				zap.String("inway address", inwayAddress),
 			)
 
@@ -296,7 +296,7 @@ func (o *Outway) createService(
 		o.logger,
 		o.orgCert,
 		serviceToImplement.OrganizationName,
-		serviceToImplement.ServiceName,
+		serviceToImplement.Name,
 		InwayAddresses,
 		HealthyStates,
 	)
@@ -305,7 +305,7 @@ func (o *Outway) createService(
 			o.logger.Debug(
 				"service exists but there are no inwayaddresses available",
 				zap.String("service-organization-name", serviceToImplement.OrganizationName),
-				zap.String("service-name", serviceToImplement.ServiceName))
+				zap.String("service-name", serviceToImplement.Name))
 
 			return
 		}
@@ -313,7 +313,7 @@ func (o *Outway) createService(
 		o.logger.Error(
 			"failed to create new service",
 			zap.String("service-organization-name", serviceToImplement.OrganizationName),
-			zap.String("service-name", serviceToImplement.ServiceName),
+			zap.String("service-name", serviceToImplement.Name),
 			zap.Error(err))
 
 		return
@@ -323,7 +323,7 @@ func (o *Outway) createService(
 
 	o.logger.Debug(
 		"implemented service",
-		zap.String("service-name", serviceToImplement.ServiceName),
+		zap.String("service-name", serviceToImplement.Name),
 		zap.String("service-organization-name", serviceToImplement.OrganizationName),
 	)
 
@@ -354,13 +354,13 @@ func (o *Outway) updateServiceList() error {
 	for _, serviceToImplement := range resp.Services {
 		o.logger.Debug(
 			"directory listed service",
-			zap.String("service-name", serviceToImplement.ServiceName),
+			zap.String("service-name", serviceToImplement.Name),
 			zap.String("service-organization-name", serviceToImplement.OrganizationName))
 
 		if len(serviceToImplement.InwayAddresses) == 0 {
 			o.logger.Debug(
 				"directory listed service missing inway addresses for:",
-				zap.String("service-name", serviceToImplement.ServiceName),
+				zap.String("service-name", serviceToImplement.Name),
 				zap.String("service-organization-name", serviceToImplement.OrganizationName),
 			)
 

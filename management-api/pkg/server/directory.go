@@ -108,7 +108,7 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	}
 
 	for _, s := range resp.Services {
-		if s.OrganizationName == organizationName && s.ServiceName == serviceName {
+		if s.OrganizationName == organizationName && s.Name == serviceName {
 			return s, nil
 		}
 	}
@@ -178,7 +178,7 @@ func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api
 	serviceState := DetermineDirectoryServiceState(s.Inways)
 
 	return &api.DirectoryService{
-		ServiceName:          s.ServiceName,
+		ServiceName:          s.Name,
 		OrganizationName:     s.OrganizationName,
 		ApiSpecificationType: s.ApiSpecificationType,
 		DocumentationURL:     s.DocumentationUrl,

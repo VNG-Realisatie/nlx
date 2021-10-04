@@ -11,21 +11,22 @@ import (
 )
 
 type Service struct {
-	Name                 string
-	Organization         string
-	EndpointURL          string
-	DocumentationURL     string
-	APISpecificationURL  string
-	APISpecificationType string
-	Internal             bool
-	TechSupportContact   string
-	PublicSupportContact string
-	OneTimeCosts         int
-	MonthlyCosts         int
-	RequestCosts         int
-	Inways               []*Inway
-	InwayAddresses       []string
-	HealthyStates        []bool
+	Name                     string
+	OrganizationSerialNumber string
+	OrganizationName         string
+	EndpointURL              string
+	DocumentationURL         string
+	APISpecificationURL      string
+	APISpecificationType     string
+	Internal                 bool
+	TechSupportContact       string
+	PublicSupportContact     string
+	OneTimeCosts             int
+	MonthlyCosts             int
+	RequestCosts             int
+	Inways                   []*Inway
+	InwayAddresses           []string
+	HealthyStates            []bool
 }
 
 type Inway struct {
@@ -56,7 +57,8 @@ func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizati
 		)
 
 		err = rows.Scan(
-			&respService.Organization,
+			&respService.OrganizationSerialNumber,
+			&respService.OrganizationName,
 			&respService.Name,
 			&respService.Internal,
 			&respService.OneTimeCosts,

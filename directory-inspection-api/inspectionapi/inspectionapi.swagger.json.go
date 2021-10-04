@@ -131,17 +131,14 @@ const (
     "ListServicesResponseService": {
       "type": "object",
       "properties": {
+        "name": {
+          "type": "string"
+        },
+        "organization_serial_number": {
+          "type": "string"
+        },
         "organization_name": {
           "type": "string"
-        },
-        "service_name": {
-          "type": "string"
-        },
-        "inway_addresses": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         },
         "documentation_url": {
           "type": "string"
@@ -154,12 +151,6 @@ const (
         },
         "public_support_contact": {
           "type": "string"
-        },
-        "healthy_states": {
-          "type": "array",
-          "items": {
-            "type": "boolean"
-          }
         },
         "inways": {
           "type": "array",
@@ -178,6 +169,19 @@ const (
         "request_costs": {
           "type": "integer",
           "format": "int32"
+        },
+        "healthy_states": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "title": "TODO: these are duplicates they are also inlcuded in the inway object. We will remove these fields"
+        },
+        "inway_addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

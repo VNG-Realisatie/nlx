@@ -76,6 +76,7 @@ func (db *PostgreSQLDirectoryDatabase) Shutdown() error {
 func prepareSelectServicesStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 	selectServicesStatement, err := db.Preparex(`
 		SELECT
+			o.serial_number as serial_number,
 			o.name AS organization_name,
 			s.name AS service_name,
 			s.internal as service_internal,
