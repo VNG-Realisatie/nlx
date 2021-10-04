@@ -1,3 +1,6 @@
+# All of the SAST jobs will run at 4AM each day, in a scheduled pipeline.
+# To see all scheduled pipelines, see: https://gitlab.com/commonground/nlx/nlx/-/pipeline_schedules
+
 # Workaround for https://gitlab.com/gitlab-org/gitlab/-/issues/213769
 # Opt-out of non-DinD solution based on https://gitlab.com/gitlab-org/gitlab/-/issues/37278
 variables:
