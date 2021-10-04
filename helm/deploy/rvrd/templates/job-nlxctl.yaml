@@ -36,6 +36,10 @@ spec:
                 if ! nlxctl service list | grep -q $SERVICE_NAME_VIDEO_STREAM; then
                     nlxctl service create --config /tmp/service-video-stream.json
                 fi
+                echo "${SERVICE_WEBSOCKETS_JSON}" > /tmp/service-websockets.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME_WEBSOCKETS; then
+                    nlxctl service create --config /tmp/service-websockets.json
+                fi
                 nlxctl service list
           env:
             - name: SERVICE_NAME_KENTEKENS
@@ -50,6 +54,10 @@ spec:
               value: {{ .Values.managementAPI.serviceVideoStream.name | quote }}
             - name: SERVICE_VIDEO_STREAM_JSON
               value: {{ .Values.managementAPI.serviceVideoStream | toJson | quote }}
+            - name: SERVICE_NAME_WEBSOCKETS
+              value: {{ .Values.managementAPI.serviceWebsockets.name | quote }}
+            - name: SERVICE_WEBSOCKETS_JSON
+              value: {{ .Values.managementAPI.serviceWebsockets | toJson | quote }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ .Values.managementAPI.address | quote }}
           volumeMounts:

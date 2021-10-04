@@ -36,3 +36,21 @@ video-player-ui:
     enabled: true
     hosts:
       - nlx-video-player-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
+nginx-websockets-proxy:
+  organizationName: "Gemeente Stijns"
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-websockets
+  ingress:
+    enabled: true
+    hosts:
+        # abbreviated name, because https://gitlab.com/commonground/nlx/nlx/-/blob/master/technical-docs/notes.md#1215-rename-current-organizations
+      - nlx-nginx-ws-p-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
+websockets-chat-ui:
+  organizationName: "Gemeente Stijns"
+  websocketsProxyBaseUrl: wss://nlx-nginx-ws-p-gemeente-stijns-{{DOMAIN_SUFFIX}}
+  ingress:
+    enabled: true
+    hosts:
+        # abbreviated name, because https://gitlab.com/commonground/nlx/nlx/-/blob/master/technical-docs/notes.md#1215-rename-current-organizations
+      - nlx-ws-chat-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}

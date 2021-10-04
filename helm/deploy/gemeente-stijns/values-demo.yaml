@@ -149,3 +149,30 @@ video-player-ui:
       - secretName: gemeentestijns-video-player-ui-ingress-tls
         hosts:
           - video-player-ui.demo.gemeentestijns.nl
+
+nginx-websockets-proxy:
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-websockets
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - nginx-websockets-proxy.demo.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-nginx-websockets-proxy-ingress-tls
+        hosts:
+          - nginx-websockets-proxy.demo.gemeentestijns.nl
+
+websockets-chat-ui:
+  organizationName: Gemeente Stijns
+  websocketsProxyBaseUrl: wss://nginx-websockets-proxy.demo.gemeentestijns.nl
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - websockets-chat-ui.demo.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-websockets-chat-ui-ingress-tls
+        hosts:
+          - websockets-chat-ui.demo.gemeentestijns.nl

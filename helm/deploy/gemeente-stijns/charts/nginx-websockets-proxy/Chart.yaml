@@ -1,0 +1,6 @@
+apiVersion: v2
+name: nginx-websockets-proxy
+description: A Helm chart for the Web Sockets Proxy to be consumbed by the Chat UI
+type: application
+version: 0.115.0
+appVersion: 0.115.0
