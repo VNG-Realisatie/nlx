@@ -20,6 +20,9 @@ This project uses the **OneFlow branching model** and workflow. When you've fork
 #### 2.1.2. Add docs and tests
 If you are adding code, make sure you've added and updated the relevant documentation and tests before you submit your Merge Request. Make sure to write unit tests that show the behaviour of the newly added or changed code.
 
+#### 2.1.3 Signing your commits
+It is highly encouraged to sign your commits with your GPG key that is also added to your GitLab account. To configure Git on your device to sign commits, you can follow the [GitLab documentation](https://docs.gitlab.com/ee/user/project/repository/gpg_signed_commits/) about GPG signed commits.
+
 ### 2.2. Commit messages
 
 #### 2.2.1. Explain your contributions
