@@ -12,10 +12,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Organization struct {
-	Name string
-}
-
 var ErrNoOrganization = errors.New("no organization found")
 
 func (db PostgreSQLDirectoryDatabase) ListOrganizations(_ context.Context) ([]*Organization, error) {

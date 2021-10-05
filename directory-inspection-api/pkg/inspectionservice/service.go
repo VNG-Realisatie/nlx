@@ -59,18 +59,28 @@ func (h *InspectionService) ListServices(ctx context.Context, _ *emptypb.Empty) 
 
 func convertFromDatabaseService(model *database.Service) *inspectionapi.ListServicesResponse_Service {
 	service := &inspectionapi.ListServicesResponse_Service{
-		Name:                     model.Name,
-		OrganizationSerialNumber: model.OrganizationSerialNumber,
-		OrganizationName:         model.OrganizationName,
-		Internal:                 model.Internal,
-		InwayAddresses:           model.InwayAddresses,
-		ApiSpecificationType:     model.APISpecificationType,
-		HealthyStates:            model.HealthyStates,
-		DocumentationUrl:         model.DocumentationURL,
-		PublicSupportContact:     model.PublicSupportContact,
-		MonthlyCosts:             int32(model.MonthlyCosts),
-		OneTimeCosts:             int32(model.OneTimeCosts),
-		RequestCosts:             int32(model.RequestCosts),
+		Name:                 model.Name,
+		Internal:             model.Internal,
+		InwayAddresses:       model.InwayAddresses,
+		ApiSpecificationType: model.APISpecificationType,
+		HealthyStates:        model.HealthyStates,
+		DocumentationUrl:     model.DocumentationURL,
+		PublicSupportContact: model.PublicSupportContact,
+	}
+
+	if model.Organization != nil {
+		service.Organization = &inspectionapi.Organization{
+			SerialNumber: model.Organization.SerialNumber,
+			Name:         model.Organization.Name,
+		}
+	}
+
+	if model.Costs != nil {
+		service.Costs = &inspectionapi.Costs{
+			OneTime: int32(model.Costs.OneTime),
+			Monthly: int32(model.Costs.Monthly),
+			Request: int32(model.Costs.Request),
+		}
 	}
 
 	for _, inway := range model.Inways {

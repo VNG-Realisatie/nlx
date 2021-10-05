@@ -47,8 +47,10 @@ func TestListServices(t *testing.T) {
 			want: []*database.Service{
 				{
 					Name:                     "fixture-service-name",
-					OrganizationName:         "fixture-organization-name",
-					OrganizationSerialNumber: "01234567890123456789",
+					Organization: &database.Organization{
+						Name:         "fixture-organization-name",
+						SerialNumber: "01234567890123456789",
+					},
 					EndpointURL:              "",
 					DocumentationURL:         "https://fixture-documentation-url.com",
 					APISpecificationURL:      "",
@@ -56,9 +58,11 @@ func TestListServices(t *testing.T) {
 					Internal:                 false,
 					TechSupportContact:       "",
 					PublicSupportContact:     "fixture@public-support-contact.com",
-					OneTimeCosts:             1,
-					MonthlyCosts:             2,
-					RequestCosts:             3,
+					Costs: &database.ServiceCosts{
+						OneTime: 1,
+						Monthly: 2,
+						Request: 3,
+					},
 					Inways: []*database.Inway{
 						{
 							Address: "https://fixture-inway-address.com",

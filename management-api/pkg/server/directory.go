@@ -101,6 +101,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	return directoryService, nil
 }
 
+// @TODO: organizationName to serialNumber
 func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationName, serviceName string) (*inspectionapi.ListServicesResponse_Service, error) {
 	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
 	if err != nil {
@@ -108,7 +109,7 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	}
 
 	for _, s := range resp.Services {
-		if s.OrganizationName == organizationName && s.Name == serviceName {
+		if s.Organization.Name == organizationName && s.Name == serviceName {
 			return s, nil
 		}
 	}
@@ -177,17 +178,27 @@ func DetermineDirectoryServiceState(inways []*inspectionapi.Inway) api.Directory
 func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api.DirectoryService {
 	serviceState := DetermineDirectoryServiceState(s.Inways)
 
-	return &api.DirectoryService{
+	service := &api.DirectoryService{
 		ServiceName:          s.Name,
-		OrganizationName:     s.OrganizationName,
 		ApiSpecificationType: s.ApiSpecificationType,
 		DocumentationURL:     s.DocumentationUrl,
 		PublicSupportContact: s.PublicSupportContact,
 		State:                serviceState,
-		OneTimeCosts:         s.OneTimeCosts,
-		MonthlyCosts:         s.MonthlyCosts,
-		RequestCosts:         s.RequestCosts,
 	}
+
+	// @TODO: use Serial Number and org object in api.DirectoryService
+	if s.Organization != nil {
+		service.OrganizationName = s.Organization.Name
+	}
+
+	// @TODO: Use costs object in api.DirectoryService
+	if s.Costs != nil {
+		service.OneTimeCosts = s.Costs.OneTime
+		service.MonthlyCosts = s.Costs.Monthly
+		service.RequestCosts = s.Costs.Request
+	}
+
+	return service
 }
 
 func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {

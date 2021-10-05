@@ -96,10 +96,10 @@ func TestOutwayListen(t *testing.T) {
 	for i := 0; i < 11; i++ {
 		outway.servicesHTTP["mockorg.mockservice"+strconv.Itoa(i)] = mockService
 		inwayMessage := inspectionapi.ListServicesResponse_Service{
-			Name:             "mockservice" + strconv.Itoa(i),
-			OrganizationName: "mockorg",
-			InwayAddresses:   []string{"mock-service-a-1:123"},
-			HealthyStates:    []bool{true},
+			Name:           "mockservice" + strconv.Itoa(i),
+			Organization:   &inspectionapi.Organization{Name: "mockorg"},
+			InwayAddresses: []string{"mock-service-a-1:123"},
+			HealthyStates:  []bool{true},
 		}
 		outway.servicesDirectory["mockorg.mockservice"+strconv.Itoa(i)] = &inwayMessage
 	}
@@ -107,10 +107,10 @@ func TestOutwayListen(t *testing.T) {
 	// Setup a Failing mock service.
 	outway.servicesHTTP["mockorg.mockservicefail"] = mockFailService
 	inwayMessage := inspectionapi.ListServicesResponse_Service{
-		Name:             "mockservicefail",
-		OrganizationName: "mockorg",
-		InwayAddresses:   []string{"mock-service-fail-1:123"},
-		HealthyStates:    []bool{true},
+		Name:           "mockservicefail",
+		Organization:   &inspectionapi.Organization{Name: "mockorg"},
+		InwayAddresses: []string{"mock-service-fail-1:123"},
+		HealthyStates:  []bool{true},
 	}
 	outway.servicesDirectory["mockorg.mockservicefail"] = &inwayMessage
 
@@ -420,10 +420,10 @@ func TestFailingTransport(t *testing.T) {
 	}
 
 	inwayMessage := inspectionapi.ListServicesResponse_Service{
-		Name:             "mockservice",
-		OrganizationName: "mockorg",
-		InwayAddresses:   []string{"mock-service-:123"},
-		HealthyStates:    []bool{true},
+		Name:           "mockservice",
+		Organization:   &inspectionapi.Organization{Name: "mockorg"},
+		InwayAddresses: []string{"mock-service-:123"},
+		HealthyStates:  []bool{true},
 	}
 
 	// Setup mock httpservice

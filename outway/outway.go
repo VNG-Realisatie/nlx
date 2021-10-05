@@ -246,7 +246,7 @@ func (o *Outway) keepServiceListUpToDate() {
 }
 
 func serviceKey(s *inspectionapi.ListServicesResponse_Service) string {
-	return s.OrganizationName + "." + s.Name
+	return s.Organization.Name + "." + s.Name
 }
 
 func (o *Outway) createService(
@@ -280,7 +280,7 @@ func (o *Outway) createService(
 		if !healthy && !moreEndpoints {
 			o.logger.Info(
 				"inway might not be healthy / reachable by directory / behind firewall",
-				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+				zap.String("service-organization-name", serviceToImplement.Organization.Name),
 				zap.String("service-name", serviceToImplement.Name),
 				zap.String("inway address", inwayAddress),
 			)
@@ -295,7 +295,7 @@ func (o *Outway) createService(
 	rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
 		o.logger,
 		o.orgCert,
-		serviceToImplement.OrganizationName,
+		serviceToImplement.Organization.Name,
 		serviceToImplement.Name,
 		InwayAddresses,
 		HealthyStates,
@@ -304,7 +304,7 @@ func (o *Outway) createService(
 		if err == errNoInwaysAvailable {
 			o.logger.Debug(
 				"service exists but there are no inwayaddresses available",
-				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+				zap.String("service-organization-name", serviceToImplement.Organization.Name),
 				zap.String("service-name", serviceToImplement.Name))
 
 			return
@@ -312,7 +312,7 @@ func (o *Outway) createService(
 
 		o.logger.Error(
 			"failed to create new service",
-			zap.String("service-organization-name", serviceToImplement.OrganizationName),
+			zap.String("service-organization-name", serviceToImplement.Organization.Name),
 			zap.String("service-name", serviceToImplement.Name),
 			zap.Error(err))
 
@@ -324,7 +324,7 @@ func (o *Outway) createService(
 	o.logger.Debug(
 		"implemented service",
 		zap.String("service-name", serviceToImplement.Name),
-		zap.String("service-organization-name", serviceToImplement.OrganizationName),
+		zap.String("service-organization-name", serviceToImplement.Organization.Name),
 	)
 
 	o.servicesLock.Lock()
@@ -355,13 +355,13 @@ func (o *Outway) updateServiceList() error {
 		o.logger.Debug(
 			"directory listed service",
 			zap.String("service-name", serviceToImplement.Name),
-			zap.String("service-organization-name", serviceToImplement.OrganizationName))
+			zap.String("service-organization-name", serviceToImplement.Organization.Name))
 
 		if len(serviceToImplement.InwayAddresses) == 0 {
 			o.logger.Debug(
 				"directory listed service missing inway addresses for:",
 				zap.String("service-name", serviceToImplement.Name),
-				zap.String("service-organization-name", serviceToImplement.OrganizationName),
+				zap.String("service-organization-name", serviceToImplement.Organization.Name),
 			)
 
 			continue

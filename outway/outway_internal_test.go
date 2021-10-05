@@ -70,20 +70,20 @@ func TestUpdateServiceList(t *testing.T) {
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
 				{
-					Name:             "mock-service-a",
-					OrganizationName: "mock-org-a",
-					InwayAddresses:   mockServiceAInwayAddresses,
-					HealthyStates:    healthyStatesA,
+					Name:           "mock-service-a",
+					Organization:   &inspectionapi.Organization{Name: "mock-org-a"},
+					InwayAddresses: mockServiceAInwayAddresses,
+					HealthyStates:  healthyStatesA,
 				},
 				{
-					Name:             "mock-service-b",
-					OrganizationName: "mock-org-b",
-					InwayAddresses:   mockServiceBInwayAddresses,
-					HealthyStates:    healthyStatesB,
+					Name:           "mock-service-b",
+					Organization:   &inspectionapi.Organization{Name: "mock-org-b"},
+					InwayAddresses: mockServiceBInwayAddresses,
+					HealthyStates:  healthyStatesB,
 				},
 				{
-					Name:             "mock-service-c",
-					OrganizationName: "mock-org-c",
+					Name:         "mock-service-c",
+					Organization: &inspectionapi.Organization{Name: "mock-org-c"},
 				},
 			},
 		}, nil)

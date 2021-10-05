@@ -127,13 +127,15 @@ func TestListDirectoryServices(t *testing.T) {
 	clientServices := []*inspectionapi.ListServicesResponse_Service{
 		{
 			Name:                 "test-service-1",
-			OrganizationName:     "test-organization-a",
+			Organization:         &inspectionapi.Organization{Name: "test-organization-a"},
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationUrl:     "https://example.com",
 			PublicSupportContact: "test@example.com",
-			OneTimeCosts:         1,
-			MonthlyCosts:         5,
-			RequestCosts:         250,
+			Costs: &inspectionapi.Costs{
+				OneTime: 1,
+				Monthly: 5,
+				Request: 250,
+			},
 		},
 	}
 
@@ -146,7 +148,7 @@ func TestListDirectoryServices(t *testing.T) {
 	service := clientServices[0]
 
 	db.EXPECT().
-		GetLatestOutgoingAccessRequest(ctx, service.OrganizationName, service.Name).
+		GetLatestOutgoingAccessRequest(ctx, service.Organization.Name, service.Name).
 		Return(&database.OutgoingAccessRequest{
 			ID:                   1,
 			OrganizationName:     "test-organization-a",
@@ -265,8 +267,8 @@ func TestGetOrganizationService(t *testing.T) {
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
-						Name:             "test-service",
-						OrganizationName: "test-organization",
+						Name:         "test-service",
+						Organization: &inspectionapi.Organization{Name: "test-organization"},
 					}},
 				}, nil)
 			},
@@ -306,8 +308,8 @@ func TestGetOrganizationService(t *testing.T) {
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
-						Name:             "test-service",
-						OrganizationName: "test-organization",
+						Name:         "test-service",
+						Organization: &inspectionapi.Organization{Name: "test-organization"},
 					}},
 				}, nil)
 			},
@@ -347,8 +349,8 @@ func TestGetOrganizationService(t *testing.T) {
 			func(directoryClient *mock_directory.MockClient) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
-						Name:             "test-service",
-						OrganizationName: "test-organization",
+						Name:         "test-service",
+						Organization: &inspectionapi.Organization{Name: "test-organization"},
 					}},
 				}, nil)
 			},
@@ -383,8 +385,8 @@ func TestGetOrganizationService(t *testing.T) {
 					ListServices(gomock.Any(), gomock.Any()).
 					Return(&inspectionapi.ListServicesResponse{
 						Services: []*inspectionapi.ListServicesResponse_Service{{
-							Name:             "test-service",
-							OrganizationName: "test-organization",
+							Name:         "test-service",
+							Organization: &inspectionapi.Organization{Name: "test-organization"},
 						}},
 					}, nil)
 			},

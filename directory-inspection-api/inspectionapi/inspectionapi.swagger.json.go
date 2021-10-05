@@ -120,24 +120,10 @@ const (
       ],
       "default": "INWAY"
     },
-    "ListOrganizationsResponseOrganization": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "ListServicesResponseService": {
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
-        },
-        "organization_serial_number": {
-          "type": "string"
-        },
-        "organization_name": {
           "type": "string"
         },
         "documentation_url": {
@@ -158,17 +144,11 @@ const (
             "$ref": "#/definitions/inspectionapiInway"
           }
         },
-        "one_time_costs": {
-          "type": "integer",
-          "format": "int32"
+        "costs": {
+          "$ref": "#/definitions/inspectionapiCosts"
         },
-        "monthly_costs": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "request_costs": {
-          "type": "integer",
-          "format": "int32"
+        "organization": {
+          "$ref": "#/definitions/inspectionapiOrganization"
         },
         "healthy_states": {
           "type": "array",
@@ -182,6 +162,23 @@ const (
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "inspectionapiCosts": {
+      "type": "object",
+      "properties": {
+        "one_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthly": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "request": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -221,8 +218,16 @@ const (
         "organizations": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ListOrganizationsResponseOrganization"
+            "$ref": "#/definitions/inspectionapiListOrganizationsResponseOrganization"
           }
+        }
+      }
+    },
+    "inspectionapiListOrganizationsResponseOrganization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
         }
       }
     },
@@ -234,6 +239,17 @@ const (
           "items": {
             "$ref": "#/definitions/ListServicesResponseService"
           }
+        }
+      }
+    },
+    "inspectionapiOrganization": {
+      "type": "object",
+      "properties": {
+        "serial_number": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },

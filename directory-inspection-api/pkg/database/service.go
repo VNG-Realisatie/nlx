@@ -10,23 +10,34 @@ import (
 	"github.com/lib/pq"
 )
 
+type Organization struct {
+	SerialNumber string
+	Name         string
+}
+
+type ServiceCosts struct {
+	OneTime int
+	Monthly int
+	Request int
+}
+
 type Service struct {
-	Name                     string
-	OrganizationSerialNumber string
-	OrganizationName         string
-	EndpointURL              string
-	DocumentationURL         string
-	APISpecificationURL      string
-	APISpecificationType     string
-	Internal                 bool
-	TechSupportContact       string
-	PublicSupportContact     string
-	OneTimeCosts             int
-	MonthlyCosts             int
-	RequestCosts             int
-	Inways                   []*Inway
-	InwayAddresses           []string
-	HealthyStates            []bool
+	Name                 string
+	EndpointURL          string
+	DocumentationURL     string
+	APISpecificationURL  string
+	APISpecificationType string
+	Internal             bool
+	TechSupportContact   string
+	PublicSupportContact string
+
+	// @TODO: Remove
+	InwayAddresses []string
+	HealthyStates  []bool
+
+	Inways       []*Inway
+	Organization *Organization
+	Costs        *ServiceCosts
 }
 
 type Inway struct {
@@ -51,25 +62,30 @@ func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizati
 
 	for rows.Next() {
 		var (
-			respService     = &Service{}
-			inwayAddresses  = pq.StringArray{}
-			healthyStatuses = pq.BoolArray{}
+			respService      = &Service{}
+			respOrganization = &Organization{}
+			respCosts        = &ServiceCosts{}
+			inwayAddresses   = pq.StringArray{}
+			healthyStatuses  = pq.BoolArray{}
 		)
 
 		err = rows.Scan(
-			&respService.OrganizationSerialNumber,
-			&respService.OrganizationName,
+			&respOrganization.SerialNumber,
+			&respOrganization.Name,
 			&respService.Name,
 			&respService.Internal,
-			&respService.OneTimeCosts,
-			&respService.MonthlyCosts,
-			&respService.RequestCosts,
+			&respCosts.OneTime,
+			&respCosts.Monthly,
+			&respCosts.Request,
 			&inwayAddresses,
 			&respService.DocumentationURL,
 			&respService.APISpecificationType,
 			&respService.PublicSupportContact,
 			&healthyStatuses,
 		)
+
+		respService.Organization = respOrganization
+		respService.Costs = respCosts
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan into struct: %v", err)
