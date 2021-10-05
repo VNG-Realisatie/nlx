@@ -33,7 +33,7 @@ func TestInspectionService_List(t *testing.T) {
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Times(0)
-				db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return(nil, errors.New("arbitrary error"))
+				db.EXPECT().ListServices(gomock.Any(), testOrganizationSerialNumber).Return(nil, errors.New("arbitrary error"))
 
 				return db
 			},
@@ -45,7 +45,7 @@ func TestInspectionService_List(t *testing.T) {
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().RegisterOutwayVersion(gomock.Any(), gomock.Any()).Times(0)
-				db.EXPECT().ListServices(gomock.Any(), testOrganizationName).Return([]*database.Service{
+				db.EXPECT().ListServices(gomock.Any(), testOrganizationSerialNumber).Return([]*database.Service{
 					{
 						Name: "Dummy Service Name",
 						Costs: &database.ServiceCosts{
@@ -79,7 +79,7 @@ func TestInspectionService_List(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
+			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganisationInformationFromRequest)
 			got, err := h.ListServices(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)

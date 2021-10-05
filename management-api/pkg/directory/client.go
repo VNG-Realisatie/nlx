@@ -67,9 +67,9 @@ func NewClient(ctx context.Context, inspectionAddress, registrationAddress strin
 	return c, nil
 }
 
-func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizationName string) (string, error) {
+func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
 	response, err := c.GetOrganizationInway(ctx, &inspectionapi.GetOrganizationInwayRequest{
-		OrganizationName: organizationName,
+		OrganizationSerialNumber: organizationSerialNumber,
 	})
 	if err != nil {
 		return "", err

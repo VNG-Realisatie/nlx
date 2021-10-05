@@ -25,6 +25,7 @@ func (db PostgreSQLDirectoryDatabase) ListOrganizations(_ context.Context) ([]*O
 	for rows.Next() {
 		var organization = &Organization{}
 		err = rows.Scan(
+			&organization.SerialNumber,
 			&organization.Name,
 		)
 
@@ -38,11 +39,11 @@ func (db PostgreSQLDirectoryDatabase) ListOrganizations(_ context.Context) ([]*O
 	return result, nil
 }
 
-func (db PostgreSQLDirectoryDatabase) GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error) {
+func (db PostgreSQLDirectoryDatabase) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
 	var address string
 
 	arg := map[string]interface{}{
-		"organization_name": organizationName, // @TODO serial
+		"organization_serial_number": organizationSerialNumber, // @TODO serial
 	}
 
 	err := db.selectOrganizationInwayAddressStatement.GetContext(ctx, &address, arg)
@@ -59,7 +60,7 @@ func prepareSelectOrganizationInwayAddressStatement(db *sqlx.DB) (*sqlx.NamedStm
 		SELECT i.address
 		FROM directory.inways i
 		INNER JOIN directory.organizations o ON o.inway_id = i.id
-		WHERE o.name = :organization_name
+		WHERE o.serial_number = :organization_serial_number
 	`
 
 	return db.PrepareNamed(s)

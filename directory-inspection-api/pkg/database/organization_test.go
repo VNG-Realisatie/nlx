@@ -35,10 +35,12 @@ func TestListOrganizations(t *testing.T) {
 			loadFixtures: true,
 			want: []*database.Organization{
 				{
-					Name: "fixture-organization-name",
+					SerialNumber: "01234567890123456789",
+					Name:         "fixture-organization-name",
 				},
 				{
-					Name: "fixture-second-organization-name",
+					SerialNumber: "01234567890123456780",
+					Name:         "fixture-second-organization-name",
 				},
 			},
 			wantErr: nil,
@@ -70,7 +72,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 	setup(t)
 
 	type args struct {
-		organizationName string
+		serialNumber string
 	}
 
 	tests := map[string]struct {
@@ -82,7 +84,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 		"when_organization_does_not_exist": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "arbitrary organization name",
+				serialNumber: "arbitrary serial number",
 			},
 			want:    "",
 			wantErr: database.ErrNoOrganization,
@@ -90,7 +92,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-organization-name",
+				serialNumber: "01234567890123456789",
 			},
 			want:    "https://fixture-inway-address.com",
 			wantErr: nil,
@@ -106,7 +108,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			db, close := newDirectoryDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := db.GetOrganizationInwayAddress(context.Background(), tt.args.organizationName)
+			got, err := db.GetOrganizationInwayAddress(context.Background(), tt.args.serialNumber)
 			require.Equal(t, tt.wantErr, err)
 
 			if tt.wantErr == nil {

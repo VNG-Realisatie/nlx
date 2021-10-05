@@ -37,7 +37,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 	}()
 
 	for _, organization := range response.Organizations {
-		go func(org *inspectionapi.ListOrganizationsResponse_Organization) {
+		go func(org *inspectionapi.Organization) {
 			defer wc.Done()
 
 			orders, err := s.fetchOrganizationOrders(ctx, org)
@@ -106,7 +106,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 	return &api.SynchronizeOrdersResponse{Orders: incomingOrders}, nil
 }
 
-func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *inspectionapi.ListOrganizationsResponse_Organization) ([]*api.IncomingOrder, error) {
+func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *inspectionapi.Organization) ([]*api.IncomingOrder, error) {
 	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, organization.Name)
 	if err != nil {
 		return nil, err

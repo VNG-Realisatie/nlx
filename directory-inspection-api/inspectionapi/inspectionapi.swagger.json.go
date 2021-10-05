@@ -218,16 +218,8 @@ const (
         "organizations": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/inspectionapiListOrganizationsResponseOrganization"
+            "$ref": "#/definitions/inspectionapiOrganization"
           }
-        }
-      }
-    },
-    "inspectionapiListOrganizationsResponseOrganization": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
         }
       }
     },

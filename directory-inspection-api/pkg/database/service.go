@@ -52,10 +52,10 @@ const (
 	InwayUP   InwayState = "UP"
 )
 
-func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizationName string) ([]*Service, error) {
+func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizationSerialNumber string) ([]*Service, error) {
 	var result []*Service
 
-	rows, err := db.selectServicesStatement.Queryx(organizationName)
+	rows, err := db.selectServicesStatement.Queryx(organizationSerialNumber)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute stmtSelectServices: %v", err)
 	}

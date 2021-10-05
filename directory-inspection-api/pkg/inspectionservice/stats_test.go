@@ -108,7 +108,7 @@ func TestInspectionService_ListInOutwayStatistics(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
+			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganisationInformationFromRequest)
 			got, err := h.ListInOutwayStatistics(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)

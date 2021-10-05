@@ -21,6 +21,7 @@ func (h *InspectionService) ListOrganizations(ctx context.Context, _ *emptypb.Em
 	h.logger.Info("rpc request ListOrganizations")
 
 	resp := &inspectionapi.ListOrganizationsResponse{}
+
 	organizations, err := h.db.ListOrganizations(ctx)
 	if err != nil {
 		h.logger.Error("failed to select organizations from db", zap.Error(err))
@@ -37,12 +38,12 @@ func (h *InspectionService) ListOrganizations(ctx context.Context, _ *emptypb.Em
 func (h *InspectionService) GetOrganizationInway(ctx context.Context, req *inspectionapi.GetOrganizationInwayRequest) (*inspectionapi.GetOrganizationInwayResponse, error) {
 	h.logger.Info("rpc request GetOrganizationInwayAddress")
 
-	name := req.OrganizationName
-	if name == "" {
-		return nil, status.New(codes.InvalidArgument, "organization name is empty").Err()
+	serialNumber := req.OrganizationSerialNumber
+	if serialNumber == "" {
+		return nil, status.New(codes.InvalidArgument, "organization serial number is empty").Err()
 	}
 
-	address, err := h.db.GetOrganizationInwayAddress(ctx, name)
+	address, err := h.db.GetOrganizationInwayAddress(ctx, serialNumber)
 	if err != nil {
 		if errors.Is(err, database.ErrNoOrganization) {
 			return nil, status.New(codes.NotFound, "organization has no inway").Err()
@@ -60,9 +61,10 @@ func (h *InspectionService) GetOrganizationInway(ctx context.Context, req *inspe
 	return resp, nil
 }
 
-func convertFromDatabaseOrganization(model *database.Organization) *inspectionapi.ListOrganizationsResponse_Organization {
-	organization := &inspectionapi.ListOrganizationsResponse_Organization{
-		Name: model.Name,
+func convertFromDatabaseOrganization(model *database.Organization) *inspectionapi.Organization {
+	organization := &inspectionapi.Organization{
+		SerialNumber: model.SerialNumber,
+		Name:         model.Name,
 	}
 
 	return organization

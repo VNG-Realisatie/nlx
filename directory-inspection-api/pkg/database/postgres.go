@@ -96,7 +96,7 @@ func prepareSelectServicesStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 			internal = false
 			OR (
 				internal = true
-				AND o.name = $1
+				AND o.serial_number = $1
 			)
 		)
 		GROUP BY s.id, o.id
@@ -124,6 +124,7 @@ func prepareRegisterOutwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 func prepareSelectOrganizationsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 	listOrganizationsStatement, err := db.Preparex(`
 		SELECT
+			serial_number,
 			name
 		FROM directory.organizations
 		ORDER BY name

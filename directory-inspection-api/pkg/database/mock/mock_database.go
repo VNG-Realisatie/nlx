@@ -37,18 +37,18 @@ func (m *MockDirectoryDatabase) EXPECT() *MockDirectoryDatabaseMockRecorder {
 }
 
 // GetOrganizationInwayAddress mocks base method.
-func (m *MockDirectoryDatabase) GetOrganizationInwayAddress(ctx context.Context, organizationName string) (string, error) {
+func (m *MockDirectoryDatabase) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOrganizationInwayAddress", ctx, organizationName)
+	ret := m.ctrl.Call(m, "GetOrganizationInwayAddress", ctx, organizationSerialNumber)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetOrganizationInwayAddress indicates an expected call of GetOrganizationInwayAddress.
-func (mr *MockDirectoryDatabaseMockRecorder) GetOrganizationInwayAddress(ctx, organizationName interface{}) *gomock.Call {
+func (mr *MockDirectoryDatabaseMockRecorder) GetOrganizationInwayAddress(ctx, organizationSerialNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockDirectoryDatabase)(nil).GetOrganizationInwayAddress), ctx, organizationName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockDirectoryDatabase)(nil).GetOrganizationInwayAddress), ctx, organizationSerialNumber)
 }
 
 // ListOrganizations mocks base method.

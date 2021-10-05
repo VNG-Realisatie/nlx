@@ -15,16 +15,20 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database/mock"
 	"go.nlx.io/nlx/directory-inspection-api/pkg/inspectionservice"
 )
 
-const testOrganizationName = "Test Organization Name"
+const testOrganizationSerialNumber = "01234567890123456789"
 
-func testGetOrganizationNameFromRequest(ctx context.Context) (string, error) {
-	return testOrganizationName, nil
+func testGetOrganisationInformationFromRequest(ctx context.Context) (*tls.OrganizationInformation, error) {
+	return &tls.OrganizationInformation{
+		SerialNumber: testOrganizationSerialNumber,
+		Name:         "test organization name",
+	}, nil
 }
 
 func TestInspectionService_ListOrganizations(t *testing.T) {
@@ -51,16 +55,18 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().ListOrganizations(gomock.Any()).Return([]*database.Organization{
 					{
-						Name: "Dummy Organization Name",
+						SerialNumber: "01234567890123456789",
+						Name:         "Dummy Organization Name",
 					},
 				}, nil)
 
 				return db
 			},
 			expectedResponse: &inspectionapi.ListOrganizationsResponse{
-				Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+				Organizations: []*inspectionapi.Organization{
 					{
-						Name: "Dummy Organization Name",
+						SerialNumber: "01234567890123456789",
+						Name:         "Dummy Organization Name",
 					},
 				},
 			},
@@ -74,7 +80,7 @@ func TestInspectionService_ListOrganizations(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
+			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganisationInformationFromRequest)
 			got, err := h.ListOrganizations(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
@@ -96,12 +102,12 @@ func TestInspectionService_GetOrganizationInway(t *testing.T) {
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().
-					GetOrganizationInwayAddress(gomock.Any(), testOrganizationName).
+					GetOrganizationInwayAddress(gomock.Any(), testOrganizationSerialNumber).
 					Return("", database.ErrNoOrganization)
 
 				return db
 			},
-			req:              &inspectionapi.GetOrganizationInwayRequest{OrganizationName: testOrganizationName},
+			req:              &inspectionapi.GetOrganizationInwayRequest{OrganizationSerialNumber: testOrganizationSerialNumber},
 			expectedResponse: nil,
 			expectedError:    status.New(codes.NotFound, "organization has no inway").Err(),
 		},
@@ -110,26 +116,26 @@ func TestInspectionService_GetOrganizationInway(t *testing.T) {
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().
-					GetOrganizationInwayAddress(gomock.Any(), testOrganizationName).
+					GetOrganizationInwayAddress(gomock.Any(), testOrganizationSerialNumber).
 					Times(0)
 
 				return db
 			},
-			req:              &inspectionapi.GetOrganizationInwayRequest{OrganizationName: ""},
+			req:              &inspectionapi.GetOrganizationInwayRequest{OrganizationSerialNumber: ""},
 			expectedResponse: nil,
-			expectedError:    status.New(codes.InvalidArgument, "organization name is empty").Err(),
+			expectedError:    status.New(codes.InvalidArgument, "organization serial number is empty").Err(),
 		},
 		{
 			name: "happy_flow",
 			db: func(ctrl *gomock.Controller) database.DirectoryDatabase {
 				db := mock.NewMockDirectoryDatabase(ctrl)
 				db.EXPECT().
-					GetOrganizationInwayAddress(gomock.Any(), testOrganizationName).
+					GetOrganizationInwayAddress(gomock.Any(), testOrganizationSerialNumber).
 					Return("inway.nlx.local", nil)
 
 				return db
 			},
-			req: &inspectionapi.GetOrganizationInwayRequest{OrganizationName: testOrganizationName},
+			req: &inspectionapi.GetOrganizationInwayRequest{OrganizationSerialNumber: testOrganizationSerialNumber},
 			expectedResponse: &inspectionapi.GetOrganizationInwayResponse{
 				Address: "inway.nlx.local",
 			},
@@ -143,7 +149,7 @@ func TestInspectionService_GetOrganizationInway(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganizationNameFromRequest)
+			h := inspectionservice.New(zap.NewNop(), tt.db(ctrl), testGetOrganisationInformationFromRequest)
 			got, err := h.GetOrganizationInway(context.Background(), tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

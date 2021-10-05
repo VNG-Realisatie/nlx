@@ -34,15 +34,15 @@ func (h *InspectionService) ListServices(ctx context.Context, _ *emptypb.Empty) 
 		}
 	}
 
-	organizationName, err := h.getOrganisationNameFromRequest(ctx)
+	organization, err := h.getOrganisationInformationFromRequest(ctx)
 	if err != nil {
-		h.logger.Error("determining organization name from request", zap.Error(err))
-		return nil, status.Error(codes.Unknown, "determine organization name")
+		h.logger.Error("determining organization info from request", zap.Error(err))
+		return nil, status.Error(codes.Unknown, "determine organization info")
 	}
 
-	h.logger.Debug("querying services", zap.String("organizationName", organizationName))
+	h.logger.Debug("querying services", zap.String("organizationSerialNumber", organization.SerialNumber), zap.String("organizationName", organization.Name))
 
-	services, err := h.db.ListServices(ctx, organizationName)
+	services, err := h.db.ListServices(ctx, organization.SerialNumber)
 	if err != nil {
 		h.logger.Error("failed to fetch services from db", zap.Error(err))
 		return nil, status.Error(codes.Internal, "db error")

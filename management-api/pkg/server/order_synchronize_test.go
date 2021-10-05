@@ -44,9 +44,10 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+						Organizations: []*inspectionapi.Organization{
 							{
-								Name: "nlx-test",
+								SerialNumber: "0000000000000000001",
+								Name:         "nlx-test",
 							},
 						},
 					}, nil)
@@ -63,9 +64,10 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+						Organizations: []*inspectionapi.Organization{
 							{
-								Name: "nlx-test",
+								SerialNumber: "0000000000000000001",
+								Name:         "nlx-test",
 							},
 						},
 					}, nil)
@@ -88,9 +90,10 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+						Organizations: []*inspectionapi.Organization{
 							{
-								Name: "nlx-test",
+								SerialNumber: "0000000000000000001",
+								Name:         "nlx-test",
 							},
 						},
 					}, nil)
@@ -166,9 +169,10 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+						Organizations: []*inspectionapi.Organization{
 							{
-								Name: "nlx-test",
+								SerialNumber: "0000000000000000001",
+								Name:         "nlx-test",
 							},
 						},
 					}, nil)
@@ -244,9 +248,10 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.ListOrganizationsResponse_Organization{
+						Organizations: []*inspectionapi.Organization{
 							{
-								Name: "nlx-test",
+								SerialNumber: "0000000000000000001",
+								Name:         "nlx-test",
 							},
 						},
 					}, nil)

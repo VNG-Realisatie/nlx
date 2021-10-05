@@ -97,7 +97,7 @@ func main() {
 		logger.Fatal("loading certificate", zap.Error(err))
 	}
 
-	directoryService := inspectionservice.New(logger, directoryDatabase, getOrganisationNameFromRequest)
+	directoryService := inspectionservice.New(logger, directoryDatabase, common_tls.GetOrganizationInfoFromRequest)
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
