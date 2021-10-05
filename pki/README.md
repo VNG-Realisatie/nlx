@@ -1,6 +1,6 @@
 # Development/testing PKIs
 
-PKI's for use during development. Do not use in production.
+PKIs for use during development. Do not use in production.
 
 
 ## Scripts
