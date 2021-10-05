@@ -13,8 +13,10 @@ cfssl sign -ca ca-root.pem -ca-key ca-root-key.pem -config ca-config.json -profi
 cfssl gencert -ca=ca-intermediate.pem -ca-key=ca-intermediate-key.pem -config=ca-config.json -profile=peer org-nlx-test-csr.json | cfssljson -bare org-nlx-test
 cfssl gencert -ca=ca-intermediate.pem -ca-key=ca-intermediate-key.pem -config=ca-config.json -profile=peer org-nlx-test-b-csr.json | cfssljson -bare org-nlx-test-b
 cfssl gencert -ca=ca-intermediate.pem -ca-key=ca-intermediate-key.pem -config=ca-config.json -profile=peer org-without-name-csr.json | cfssljson -bare org-without-name
+cfssl gencert -ca=ca-intermediate.pem -ca-key=ca-intermediate-key.pem -config=ca-config.json -profile=peer org-without-serial-number-csr.json | cfssljson -bare org-without-serial-number
 
 # Combine certificates
 cat org-nlx-test.pem ca-intermediate.pem > org-nlx-test-chain.pem
 cat org-nlx-test-b.pem ca-intermediate.pem > org-nlx-test-b-chain.pem
 cat org-without-name.pem ca-intermediate.pem > org-without-name-chain.pem
+cat org-without-serial-number.pem ca-intermediate.pem > org-without-serial-number-chain.pem
