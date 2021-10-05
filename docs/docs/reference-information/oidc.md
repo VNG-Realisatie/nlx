@@ -5,7 +5,7 @@ title: OpenID Connect
 
 ## Usage
 
-NLX Management uses the OpenID Connect protocol to authenticate users, which is
+NLX Management uses the OpenID Connect (OIDC) protocol to authenticate users, which is
 configured through a number of environment variables:
 
 * `OIDC_CLIENT_ID`
@@ -13,18 +13,18 @@ configured through a number of environment variables:
 * `OIDC_DISCOVERY_URL`
 * `OIDC_REDIRECT_URL`
 
-When the management API starts, it will fetch the OpenID configuration from
+When the management API starts, it will fetch the OIDC configuration from
 `${OIDC_DISCOVERY_URL}/.well-known/openid-configuration` and use this metadata to
 configure the OIDC client.
 
 ## Configuration hints for providers
 
-There exist a number of applications and cloud providers that offer OpenID Connect.
-Below are configuration hints for providers that have been used successfully with NLX.
+There are multiple applications and cloud providers that offer OIDC.
+Below are configuration hints for OIDC providers that have been used successfully with NLX.
 
 ### Dex
 
-[Dex](https://github.com/dexidp/dex) is a federated OpenID Connect provider. It's the
+[Dex](https://github.com/dexidp/dex) is a federated OIDC provider. It's the
 identity service used in [try-nlx](../try-nlx).
 
 Assuming Dex is deployed on `https://dex.example.com`, the discovery url is:
