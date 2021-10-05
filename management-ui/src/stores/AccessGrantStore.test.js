@@ -76,14 +76,11 @@ test('revoking an access grant', async () => {
   jest.spyOn(accessGrantStore, 'fetchForService').mockResolvedValue()
 
   await accessGrantStore.revokeAccessGrant({
-    organizationName: 'Organization',
     serviceName: 'Service',
     id: 's1',
   })
 
   expect(managementApiClient.managementRevokeAccessGrant).toHaveBeenCalledWith({
-    organizationName: 'Organization',
-    serviceName: 'Service',
     accessGrantID: 's1',
   })
   expect(accessGrantStore.fetchForService).toHaveBeenCalledWith({

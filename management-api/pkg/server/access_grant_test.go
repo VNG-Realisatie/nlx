@@ -160,6 +160,20 @@ func TestRevokeAccessGrant(t *testing.T) {
 		{
 			name: "happy_flow",
 			setup: func(ctx context.Context, mocks serviceMocks) {
+				mocks.db.EXPECT().
+					GetAccessGrant(gomock.Any(), uint(42)).Return(
+					&database.AccessGrant{
+						CreatedAt: createdAt,
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Service: &database.Service{
+								Name: "test-service",
+							},
+							Organization: database.IncomingAccessRequestOrganization{
+								Name: "test-organization",
+							},
+						}}, nil,
+				)
+
 				mocks.al.
 					EXPECT().
 					AccessGrantRevoke(
@@ -186,9 +200,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			req: &api.RevokeAccessGrantRequest{
-				AccessGrantID:    42,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
+				AccessGrantID: 42,
 			},
 			expectedResponse: &api.AccessGrant{
 				Organization: &api.AccessGrant_Organization{},

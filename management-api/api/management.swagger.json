@@ -19,49 +19,6 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke": {
-      "post": {
-        "operationId": "Management_RevokeAccessGrant",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementAccessGrant"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "organizationName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "accessGrantID",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
     "/api/v1/access-grants/services/{serviceName}": {
       "get": {
         "operationId": "Management_ListAccessGrantsForService",
@@ -85,6 +42,37 @@
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
+    "/api/v1/access-grants/{accessGrantID}/revoke": {
+      "post": {
+        "operationId": "Management_RevokeAccessGrant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementAccessGrant"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accessGrantID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [

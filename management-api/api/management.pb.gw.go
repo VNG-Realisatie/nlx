@@ -1007,26 +1007,6 @@ func request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
-	}
-
-	protoReq.ServiceName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
-	}
-
-	val, ok = pathParams["organizationName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
-	}
-
-	protoReq.OrganizationName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
-	}
-
 	val, ok = pathParams["accessGrantID"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessGrantID")
@@ -1052,26 +1032,6 @@ func local_request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["serviceName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
-	}
-
-	protoReq.ServiceName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
-	}
-
-	val, ok = pathParams["organizationName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
-	}
-
-	protoReq.OrganizationName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
-	}
 
 	val, ok = pathParams["accessGrantID"]
 	if !ok {
@@ -2866,7 +2826,7 @@ var (
 
 	pattern_Management_ListAccessGrantsForService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "access-grants", "services", "serviceName"}, ""))
 
-	pattern_Management_RevokeAccessGrant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 1, 0, 4, 1, 5, 7, 2, 8}, []string{"api", "v1", "access-grants", "service", "serviceName", "organizations", "organizationName", "accessGrantID", "revoke"}, ""))
+	pattern_Management_RevokeAccessGrant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "access-grants", "accessGrantID", "revoke"}, ""))
 
 	pattern_Management_ListAuditLogs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "audit-logs"}, ""))
 

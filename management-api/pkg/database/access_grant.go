@@ -42,6 +42,24 @@ func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessR
 	return accessGrant, nil
 }
 
+func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (*AccessGrant, error) {
+	accessGrant := &AccessGrant{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("IncomingAccessRequest").
+		Preload("IncomingAccessRequest.Service").
+		First(accessGrant, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	return accessGrant, nil
+}
+
 //nolint:dupl // looks the same as RevokeAccessProof but is different. RevokeAccessGrant is for access grants RevokeAccessProof is for access proofs.
 func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessGrantID uint, revokedAt time.Time) (*AccessGrant, error) {
 	accessGrant := &AccessGrant{}

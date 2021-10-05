@@ -67,10 +67,8 @@ class AccessGrantStore {
     )
   }
 
-  revokeAccessGrant = async ({ organizationName, serviceName, id }) => {
+  revokeAccessGrant = async ({ id, serviceName }) => {
     await this._managementApiClient.managementRevokeAccessGrant({
-      serviceName,
-      organizationName,
       accessGrantID: id,
     })
     this.fetchForService({ name: serviceName })

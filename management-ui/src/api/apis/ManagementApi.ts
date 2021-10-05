@@ -152,8 +152,6 @@ export interface ManagementRetrieveClaimForOrderRequest {
 }
 
 export interface ManagementRevokeAccessGrantRequest {
-    serviceName: string;
-    organizationName: string;
     accessGrantID: string;
 }
 
@@ -798,14 +796,6 @@ export class ManagementApi extends runtime.BaseAPI {
     /**
      */
     async managementRevokeAccessGrantRaw(requestParameters: ManagementRevokeAccessGrantRequest): Promise<runtime.ApiResponse<ManagementAccessGrant>> {
-        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementRevokeAccessGrant.');
-        }
-
-        if (requestParameters.organizationName === null || requestParameters.organizationName === undefined) {
-            throw new runtime.RequiredError('organizationName','Required parameter requestParameters.organizationName was null or undefined when calling managementRevokeAccessGrant.');
-        }
-
         if (requestParameters.accessGrantID === null || requestParameters.accessGrantID === undefined) {
             throw new runtime.RequiredError('accessGrantID','Required parameter requestParameters.accessGrantID was null or undefined when calling managementRevokeAccessGrant.');
         }
@@ -815,7 +805,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke`.replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"organizationName"}}`, encodeURIComponent(String(requestParameters.organizationName))).replace(`{${"accessGrantID"}}`, encodeURIComponent(String(requestParameters.accessGrantID))),
+            path: `/api/v1/access-grants/{accessGrantID}/revoke`.replace(`{${"accessGrantID"}}`, encodeURIComponent(String(requestParameters.accessGrantID))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

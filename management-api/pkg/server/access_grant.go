@@ -6,6 +6,7 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang/protobuf/ptypes/timestamp"
@@ -55,12 +56,23 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.username, userInfo.userAgent, req.OrganizationName, req.ServiceName)
+	accessGrant, err := s.configDatabase.GetAccessGrant(ctx, uint(req.AccessGrantID))
+	if err != nil {
+		if err == database.ErrNotFound {
+			return nil, status.Error(codes.NotFound, fmt.Sprintf("access grant with id:%d does not exist", req.AccessGrantID))
+		}
+
+		s.logger.Error("cannot get access grant from database", zap.Uint64("access grant id", req.AccessGrantID), zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
+	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.username, userInfo.userAgent, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
-	accessGrant, err := s.configDatabase.RevokeAccessGrant(ctx, uint(req.AccessGrantID), time.Now())
+	accessGrant, err = s.configDatabase.RevokeAccessGrant(ctx, uint(req.AccessGrantID), time.Now())
 	if err != nil {
 		if errors.Is(err, database.ErrAccessGrantAlreadyRevoked) {
 			s.logger.Warn("access grant is already revoked")

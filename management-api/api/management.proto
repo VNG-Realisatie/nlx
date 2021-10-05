@@ -76,7 +76,7 @@ service Management {
     option (google.api.http) = {get: "/api/v1/access-grants/services/{serviceName}"};
   }
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
-    option (google.api.http) = {post: "/api/v1/access-grants/service/{serviceName}/organizations/{organizationName}/{accessGrantID}/revoke"};
+    option (google.api.http) = {post: "/api/v1/access-grants/{accessGrantID}/revoke"};
   }
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
@@ -377,9 +377,7 @@ message ListAccessGrantsForServiceResponse {
 }
 
 message RevokeAccessGrantRequest {
-  string organizationName = 1;
-  string serviceName = 2;
-  uint64 accessGrantID = 3;
+  uint64 accessGrantID = 1;
 }
 
 message AccessGrant {

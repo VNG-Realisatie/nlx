@@ -29,7 +29,9 @@ test('should properly construct object', () => {
 
   expect(accessProof.id).toBe(accessGrantData.id)
   expect(accessProof.organization.name).toBe(accessGrantData.organization.name)
-  expect(accessProof.organization.serialNumber).toBe(accessGrantData.organization.serialNumber)
+  expect(accessProof.organization.serialNumber).toBe(
+    accessGrantData.organization.serialNumber,
+  )
   expect(accessProof.serviceName).toBe(accessGrantData.serviceName)
   expect(accessProof.publicKeyFingerprint).toBe(
     accessGrantData.publicKeyFingerprint,

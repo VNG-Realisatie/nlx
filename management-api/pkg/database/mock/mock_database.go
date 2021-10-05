@@ -212,6 +212,21 @@ func (mr *MockConfigDatabaseMockRecorder) DeleteService(ctx, serviceName, organi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteService", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteService), ctx, serviceName, organizationName)
 }
 
+// GetAccessGrant mocks base method.
+func (m *MockConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (*database.AccessGrant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccessGrant", ctx, id)
+	ret0, _ := ret[0].(*database.AccessGrant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessGrant indicates an expected call of GetAccessGrant.
+func (mr *MockConfigDatabaseMockRecorder) GetAccessGrant(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).GetAccessGrant), ctx, id)
+}
+
 // GetAccessProofForOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*database.AccessProof, error) {
 	m.ctrl.T.Helper()
