@@ -1,0 +1,67 @@
+---
+id: oidc
+title: OpenID Connect
+---
+
+## OpenID Connect usage
+
+NLX Management UI uses the OpenID Connect protocol to authenticate users, which is
+configured through a number of environment variables:
+
+* `OIDC_CLIENT_ID`
+* `OIDC_CLIENT_SECRET`
+* `OIDC_DISCOVERY_URL`
+* `OIDC_REDIRECT_URL`
+
+When the management API starts, it will fetch the OpenID configuration from
+`${OIDC_DISCOVERY_URL}/.well-known/openid-configuration` and use this metadata to
+configure the OIDC client.
+
+## Configuration hints for providers
+
+There exist a number of applications and cloud providers that offer OpenID Connect.
+Below are configuration hints for providers that have been used succesfully with NLX.
+
+### Dex
+
+[Dex](https://github.com/dexidp/dex) is a federated OpenID Connect provider. It's the
+identity service used in [try-nlx](../try-nlx).
+
+Assuming Dex is deployed on `https://dex.example.com`, the discovery url is:
+
+```
+OIDC_DISCOVERY_URL=https://dex.example.com
+```
+
+### Azure Active Directory
+
+Azure Active Directory is a cloud-hosted identity provider from Microsoft, part of Azure
+webservices.
+
+To use AAD as OIDC provider, you must obtain:
+
+* Tenant ID, which is usually a UUID4
+* Application (client) ID
+* Application secret value
+
+And the correct callback URL must be provided:
+`https://nlx-management.example.com/oidc/callback`.
+
+The tenant ID is used in the discovery URL:
+
+```
+OIDC_DISCOVERY_URL=https://login.microsoftonline.com/${tenantId}/v2.0
+```
+
+You can inspect the metadata document in your browser at
+`https://login.microsoftonline.com/${tenantId}/v2.0/.well-known/openid-configuration`
+
+Known issues:
+
+* The `v2.0` is essential, since the URL without the suffix has an invalid `issuer`
+  which doesn't match the tenant-specific URL.
+* Make sure there's no trailing slash - the `issuer` does not have one.
+
+### ...
+
+Feel free to add your experiences/hints as a merge request!

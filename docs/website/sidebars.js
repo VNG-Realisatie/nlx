@@ -32,7 +32,8 @@ module.exports = {
       'reference-information/monitoring',
       'reference-information/outway-as-proxy',
       'reference-information/environment-variables',
-      'reference-information/ip-addresses'
+      'reference-information/ip-addresses',
+      'reference-information/oidc'
     ],
     Support: ['support/common-errors'],
     Compliancy: [
