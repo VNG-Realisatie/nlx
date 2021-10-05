@@ -3,9 +3,9 @@ id: oidc
 title: OpenID Connect
 ---
 
-## OpenID Connect usage
+## Usage
 
-NLX Management UI uses the OpenID Connect protocol to authenticate users, which is
+NLX Management uses the OpenID Connect protocol to authenticate users, which is
 configured through a number of environment variables:
 
 * `OIDC_CLIENT_ID`
@@ -20,7 +20,7 @@ configure the OIDC client.
 ## Configuration hints for providers
 
 There exist a number of applications and cloud providers that offer OpenID Connect.
-Below are configuration hints for providers that have been used succesfully with NLX.
+Below are configuration hints for providers that have been used successfully with NLX.
 
 ### Dex
 
@@ -61,7 +61,3 @@ Known issues:
 * The `v2.0` is essential, since the URL without the suffix has an invalid `issuer`
   which doesn't match the tenant-specific URL.
 * Make sure there's no trailing slash - the `issuer` does not have one.
-
-### ...
-
-Feel free to add your experiences/hints as a merge request!
