@@ -24,6 +24,7 @@ beforeEach(() => {
     fetch: jest.fn(),
     requestAccess: jest.fn(),
     retryRequestAccess: jest.fn(),
+    serialNumber: '',
   })
 })
 
