@@ -22,25 +22,25 @@ func parseURLPath(urlPath string) (*plugins.Destination, error) {
 	pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", nlxPathParts)
 
 	if len(pathParts) != nlxPathParts {
-		return nil, fmt.Errorf("invalid path in url expecting: /organization/service/path")
+		return nil, fmt.Errorf("invalid path in url expecting: /serialNumber/service/path")
 	}
 
 	return &plugins.Destination{
-		Organization: pathParts[0],
-		Service:      pathParts[1],
-		Path:         pathParts[2],
+		OrganizationSerialNumber: pathParts[0],
+		Service:                  pathParts[1],
+		Path:                     pathParts[2],
 	}, nil
 }
 
 func parseLocalNLXURL(destinationURL *url.URL) (*plugins.Destination, error) {
 	hostNameParts := strings.Split(destinationURL.Hostname(), ".")
 	if len(hostNameParts) != nlxHostNameParts {
-		return nil, fmt.Errorf("invalid hostname expecting: service.organization.services.nlx.local")
+		return nil, fmt.Errorf("invalid hostname expecting: service.serialNumber.services.nlx.local")
 	}
 
 	return &plugins.Destination{
-		Service:      hostNameParts[0],
-		Organization: hostNameParts[1],
-		Path:         destinationURL.Path,
+		Service:                  hostNameParts[0],
+		OrganizationSerialNumber: hostNameParts[1],
+		Path:                     destinationURL.Path,
 	}, nil
 }

@@ -4,25 +4,25 @@
 package plugins
 
 type StripHeadersPlugin struct {
-	organizationName string
+	organizationSerialNumber string
 }
 
-func NewStripHeadersPlugin(organizationName string) *StripHeadersPlugin {
+func NewStripHeadersPlugin(organizationSerialNumber string) *StripHeadersPlugin {
 	return &StripHeadersPlugin{
-		organizationName: organizationName,
+		organizationSerialNumber: organizationSerialNumber,
 	}
 }
 
 func (plugin *StripHeadersPlugin) Serve(next ServeFunc) ServeFunc {
 	return func(context *Context) error {
-		if plugin.organizationName != context.Destination.Organization {
+		if plugin.organizationSerialNumber != context.Destination.OrganizationSerialNumber {
 			context.Request.Header.Del("X-NLX-Requester-User")
 			context.Request.Header.Del("X-NLX-Requester-Claims")
 			context.Request.Header.Del("X-NLX-Request-Subject-Identifier")
 			context.Request.Header.Del("X-NLX-Request-Application-Id")
 			context.Request.Header.Del("X-NLX-Request-User-Id")
 			context.Request.Header.Del("X-NLX-Request-Delegator")
-			context.Request.Header.Del("X-NLX-Request-OrderReference")
+			context.Request.Header.Del("X-NLX-Request-Order-Reference")
 		}
 
 		context.Request.Header.Del("Proxy-Authorization")

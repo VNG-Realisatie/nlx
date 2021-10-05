@@ -60,30 +60,54 @@ func TestUpdateServiceList(t *testing.T) {
 	err = o.updateServiceList()
 	assert.EqualError(t, err, "failed to fetch services from directory: mock error")
 
-	mockServiceAInwayAddresses := []string{"mock-service-a-1:123", "mock-service-a-2:123"}
-	mockServiceBInwayAddresses := []string{"mock-service-b-1:123", "mock-service-b-2:123"}
-	healthyStatesA := []bool{true, false}
-	healthyStatesB := []bool{true, true}
+	mockServiceAInways := []*inspectionapi.Inway{
+		{
+			Address: "mock-service-a-1:123",
+			State:   inspectionapi.Inway_UP,
+		},
+		{
+			Address: "mock-service-a-2:123",
+			State:   inspectionapi.Inway_DOWN,
+		},
+	}
+
+	mockServiceBInways := []*inspectionapi.Inway{
+		{
+			Address: "mock-service-b-1:123",
+			State:   inspectionapi.Inway_UP,
+		},
+		{
+			Address: "mock-service-b-2:123",
+			State:   inspectionapi.Inway_UP,
+		},
+	}
 
 	// Make the mock directory client provide a list of services when calling ListServices
 	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{}).Return(
 		&inspectionapi.ListServicesResponse{
 			Services: []*inspectionapi.ListServicesResponse_Service{
 				{
-					Name:           "mock-service-a",
-					Organization:   &inspectionapi.Organization{Name: "mock-org-a"},
-					InwayAddresses: mockServiceAInwayAddresses,
-					HealthyStates:  healthyStatesA,
+					Name: "mock-service-a",
+					Organization: &inspectionapi.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "mock-org-a",
+					},
+					Inways: mockServiceAInways,
 				},
 				{
-					Name:           "mock-service-b",
-					Organization:   &inspectionapi.Organization{Name: "mock-org-b"},
-					InwayAddresses: mockServiceBInwayAddresses,
-					HealthyStates:  healthyStatesB,
+					Name: "mock-service-b",
+					Organization: &inspectionapi.Organization{
+						SerialNumber: "00000000000000000002",
+						Name:         "mock-org-b",
+					},
+					Inways: mockServiceBInways,
 				},
 				{
-					Name:         "mock-service-c",
-					Organization: &inspectionapi.Organization{Name: "mock-org-c"},
+					Name: "mock-service-c",
+					Organization: &inspectionapi.Organization{
+						SerialNumber: "00000000000000000003",
+						Name:         "mock-org-c",
+					},
 				},
 			},
 		}, nil)
@@ -92,33 +116,37 @@ func TestUpdateServiceList(t *testing.T) {
 	err = o.updateServiceList()
 	assert.Nil(t, err)
 
-	mockServiceAFullName := "mock-org-a.mock-service-a"
-	mockServiceBFullName := "mock-org-b.mock-service-b"
+	mockServiceAFullName := "00000000000000000001.mock-service-a"
+	mockServiceBFullName := "00000000000000000002.mock-service-b"
 
 	// mock-service-c should not be included because this service does not have any inwayaddresses
 	assert.Len(t, o.servicesDirectory, 2, fmt.Sprintf("%v", o.servicesDirectory))
 
 	// create the HttpServices
-	o.getService("mock-org-a", "mock-service-a")
-	o.getService("mock-org-b", "mock-service-b")
-	o.getService("mock-org-c", "mock-service-c")
+	o.getService("00000000000000000001", "mock-service-a")
+	o.getService("00000000000000000002", "mock-service-b")
+	o.getService("00000000000000000003", "mock-service-c")
 
 	// mock-service-c should not be included because this service does not have any inwayaddresses
 	t.Log(o.servicesHTTP)
 	assert.Len(t, o.servicesHTTP, 2, fmt.Sprintf("%v", o.servicesHTTP))
 
 	tests := []struct {
-		serviceName    string
-		inwayAddresses []string
+		serviceName string
+		inways      []*inspectionapi.Inway
 	}{
 		{
-			mockServiceAFullName,
+			serviceName: mockServiceAFullName,
 			// only one valid true healthy address
-			[]string{"mock-service-a-1:123"},
+			inways: []*inspectionapi.Inway{
+				{
+					Address: "mock-service-a-1:123",
+				},
+			},
 		},
 		{
 			mockServiceBFullName,
-			mockServiceBInwayAddresses,
+			mockServiceBInways,
 		},
 	}
 
@@ -127,6 +155,14 @@ func TestUpdateServiceList(t *testing.T) {
 		assert.ElementsMatch(
 			t,
 			o.servicesHTTP[test.serviceName].GetInwayAddresses(),
-			test.inwayAddresses)
+			func() []string {
+				var addresses []string
+
+				for _, i := range test.inways {
+					addresses = append(addresses, i.Address)
+				}
+
+				return addresses
+			}())
 	}
 }

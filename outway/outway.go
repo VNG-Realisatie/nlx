@@ -32,10 +32,15 @@ import (
 
 type loggerHTTPHandler func(logger *zap.Logger, w http.ResponseWriter, r *http.Request)
 
+type Organization struct {
+	serialNumber string
+	name         string
+}
+
 type Outway struct {
 	ctx                       context.Context
 	wg                        *sync.WaitGroup
-	organizationName          string // the organization running this outway
+	organization              *Organization // the organization running this outway
 	orgCert                   *common_tls.CertificateBundle
 	logger                    *zap.Logger
 	txlogger                  transactionlog.TransactionLogger
@@ -140,13 +145,20 @@ func NewOutway(
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
+	if len(cert.Subject.SerialNumber) != 1 {
+		return nil, errors.New("cannot obtain organization serial number from self cert")
+	}
+
 	organizationName := cert.Subject.Organization[0]
 
 	o := &Outway{
-		ctx:              ctx,
-		wg:               &sync.WaitGroup{},
-		logger:           logger.With(zap.String("outway-organization-name", organizationName)),
-		organizationName: organizationName,
+		ctx:    ctx,
+		wg:     &sync.WaitGroup{},
+		logger: logger.With(zap.String("outway-organization-name", organizationName)),
+		organization: &Organization{
+			serialNumber: cert.Subject.SerialNumber,
+			name:         organizationName,
+		},
 
 		orgCert: orgCert,
 
@@ -186,8 +198,8 @@ func NewOutway(
 
 	o.plugins = []plugins.Plugin{
 		plugins.NewDelegationPlugin(managementClient),
-		plugins.NewLogRecordPlugin(o.organizationName, o.txlogger),
-		plugins.NewStripHeadersPlugin(o.organizationName),
+		plugins.NewLogRecordPlugin(o.organization.serialNumber, o.txlogger),
+		plugins.NewStripHeadersPlugin(o.organization.serialNumber),
 	}
 
 	err = o.startDirectoryInspector(directoryInspectionAddress)
@@ -246,7 +258,7 @@ func (o *Outway) keepServiceListUpToDate() {
 }
 
 func serviceKey(s *inspectionapi.ListServicesResponse_Service) string {
-	return s.Organization.Name + "." + s.Name
+	return s.Organization.SerialNumber + "." + s.Name
 }
 
 func (o *Outway) createService(
@@ -254,12 +266,14 @@ func (o *Outway) createService(
 ) {
 	// Look for healthy inwayaddresses unless it there is only one
 	// known address.
-	moreEndpoints := len(serviceToImplement.HealthyStates) > 1
+	moreEndpoints := len(serviceToImplement.Inways) > 1
 	InwayAddresses := []string{}
 	HealthyStates := []bool{}
 
-	for i, healthy := range serviceToImplement.HealthyStates {
-		inwayAddress := serviceToImplement.InwayAddresses[i]
+	for _, inway := range serviceToImplement.Inways {
+		inwayAddress := inway.Address
+
+		healthy := inway.State == inspectionapi.Inway_UP
 
 		if healthy {
 			// we want to use only healthy endpoints.
@@ -295,7 +309,7 @@ func (o *Outway) createService(
 	rrlbService, err := NewRoundRobinLoadBalancedHTTPService(
 		o.logger,
 		o.orgCert,
-		serviceToImplement.Organization.Name,
+		serviceToImplement.Organization.SerialNumber,
 		serviceToImplement.Name,
 		InwayAddresses,
 		HealthyStates,
@@ -355,12 +369,14 @@ func (o *Outway) updateServiceList() error {
 		o.logger.Debug(
 			"directory listed service",
 			zap.String("service-name", serviceToImplement.Name),
+			zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
 			zap.String("service-organization-name", serviceToImplement.Organization.Name))
 
-		if len(serviceToImplement.InwayAddresses) == 0 {
+		if len(serviceToImplement.Inways) == 0 {
 			o.logger.Debug(
-				"directory listed service missing inway addresses for:",
+				"directory listed service missing inways for:",
 				zap.String("service-name", serviceToImplement.Name),
+				zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
 				zap.String("service-organization-name", serviceToImplement.Organization.Name),
 			)
 
@@ -373,15 +389,11 @@ func (o *Outway) updateServiceList() error {
 		// if HttpService is used/created before update
 		// httpService on changes.
 		if exists {
-			addressesChange := !reflect.DeepEqual(
-				o.servicesDirectory[serviceKey].InwayAddresses,
-				serviceToImplement.InwayAddresses)
+			inwayFromDirectory := o.servicesDirectory[serviceKey].Inways
 
-			healthyChange := !reflect.DeepEqual(
-				o.servicesDirectory[serviceKey].HealthyStates,
-				serviceToImplement.HealthyStates)
+			changed := !reflect.DeepEqual(inwayFromDirectory, serviceToImplement.Inways)
 
-			if addressesChange || healthyChange {
+			if changed {
 				o.createService(serviceToImplement)
 			}
 		}
@@ -420,8 +432,8 @@ func (o *Outway) cleanUpservices(servicesToKeep map[string]bool) {
 	}
 }
 
-func (o *Outway) getService(organization, service string) HTTPService {
-	serviceKey := organization + "." + service
+func (o *Outway) getService(organizationSerialNumber, service string) HTTPService {
+	serviceKey := organizationSerialNumber + "." + service
 
 	o.servicesLock.RLock()
 	httpService := o.servicesHTTP[serviceKey]

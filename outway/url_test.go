@@ -36,27 +36,27 @@ func TestIsNLXURL(t *testing.T) {
 }
 
 func TestParseURLPath(t *testing.T) {
-	destination, err := parseURLPath("/organization/service/path")
+	destination, err := parseURLPath("/serialNumber/service/path")
 	assert.Nil(t, err)
-	assert.Equal(t, "organization", destination.Organization)
+	assert.Equal(t, "serialNumber", destination.OrganizationSerialNumber)
 	assert.Equal(t, "service", destination.Service)
 	assert.Equal(t, "path", destination.Path)
 
 	_, err = parseURLPath("/organization/service")
-	assert.EqualError(t, err, "invalid path in url expecting: /organization/service/path")
+	assert.EqualError(t, err, "invalid path in url expecting: /serialNumber/service/path")
 }
 
 func TestParseLocalNLXURL(t *testing.T) {
-	destinationURL, err := url.Parse("http://service.organization.service.nlx.local/path")
+	destinationURL, err := url.Parse("http://service.00000000000000000001.service.nlx.local/path")
 	assert.Nil(t, err)
 	destination, err := parseLocalNLXURL(destinationURL)
 	assert.Nil(t, err)
-	assert.Equal(t, "organization", destination.Organization)
+	assert.Equal(t, "00000000000000000001", destination.OrganizationSerialNumber)
 	assert.Equal(t, "service", destination.Service)
 	assert.Equal(t, "/path", destination.Path)
 
-	destinationURL, err = url.Parse("http://service.organization.invalid.service.nlx.local/path")
+	destinationURL, err = url.Parse("http://service.00000000000000000001.invalid.service.nlx.local/path")
 	assert.Nil(t, err)
 	_, err = parseLocalNLXURL(destinationURL)
-	assert.EqualError(t, err, "invalid hostname expecting: service.organization.services.nlx.local")
+	assert.EqualError(t, err, "invalid hostname expecting: service.serialNumber.services.nlx.local")
 }

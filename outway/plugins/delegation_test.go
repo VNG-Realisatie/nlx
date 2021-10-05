@@ -38,7 +38,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
 			},
 		},
 
@@ -47,7 +47,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 		},
 
@@ -56,13 +56,13 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to retrieve claim\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "TestOrg",
+						OrderOrganizationName: "00000000000000000001",
 						OrderReference:        "test-ref-123",
 					}).
 					Return(nil, errors.New("something went wrong"))
@@ -74,13 +74,13 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to parse JWT\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "TestOrg",
+						OrderOrganizationName: "00000000000000000001",
 						OrderReference:        "test-ref-123",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
@@ -92,13 +92,13 @@ func TestDelegationPlugin(t *testing.T) {
 		"missing_claim_results_in_requesting_a_claim": {
 			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "TestOrg",
+						OrderOrganizationName: "00000000000000000001", // @TODO change to serial number
 						OrderReference:        "test-ref-123",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
@@ -112,13 +112,13 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusUnauthorized,
 			wantMessage:        "order is revoked\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "TestOrg",
+						OrderOrganizationName: "00000000000000000001",
 						OrderReference:        "test-ref-123",
 					}).
 					Return(nil, status.Error(codes.Unauthenticated, "order is revoked"))
@@ -128,26 +128,26 @@ func TestDelegationPlugin(t *testing.T) {
 		"invalid_claim_results_in_requesting_a_new_claim": {
 			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "TestOrg",
+						OrderOrganizationName: "00000000000000000001", // @TODO change to serial number
 						OrderReference:        "test-ref-123",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,
 					}, nil)
 
-				plugin.claims.Store("TestOrg/test-ref-123", &claimData{
+				plugin.claims.Store("00000000000000000001/test-ref-123", &claimData{
 					Raw: testToken,
 					JWTClaims: delegation.JWTClaims{
 						StandardClaims: jwt.StandardClaims{
 							ExpiresAt: 1,
 						},
-						Delegatee:      "TestOrg",
+						Delegatee:      "00000000000000000001",
 						OrderReference: "test-ref-123",
 					},
 				})
@@ -157,15 +157,15 @@ func TestDelegationPlugin(t *testing.T) {
 		"required_headers_with_valid_claims_succeeds": {
 			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "TestOrg")
-				r.Header.Add("X-NLX-Request-OrderReference", "test-ref-123")
+				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
-				plugin.claims.Store("TestOrg/test-ref-123", &claimData{
+				plugin.claims.Store("00000000000000000001/test-ref-123", &claimData{
 					Raw: "claim",
 					JWTClaims: delegation.JWTClaims{
 						StandardClaims: jwt.StandardClaims{},
-						Delegatee:      "TestOrg",
+						Delegatee:      "00000000000000000001",
 						OrderReference: "test-ref-123",
 					},
 				})
@@ -204,7 +204,7 @@ func TestDelegationPlugin(t *testing.T) {
 			if tt.wantErr {
 				assert.Equal(t, tt.wantMessage, string(contents))
 			} else {
-				assert.Equal(t, "TestOrg", context.LogData["delegator"])
+				assert.Equal(t, "00000000000000000001", context.LogData["delegator"])
 				assert.Equal(t, "test-ref-123", context.LogData["orderReference"])
 			}
 

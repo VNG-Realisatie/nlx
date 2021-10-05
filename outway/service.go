@@ -30,8 +30,8 @@ type HTTPService interface {
 
 // RoundRobinLoadBalancedHTTPService handles the proxying of a request to the inway
 type RoundRobinLoadBalancedHTTPService struct {
-	organizationName string
-	serviceName      string
+	organizationSerialNumber string
+	serviceName              string
 
 	inwayAddresses  []string
 	healthyStates   []bool
@@ -77,7 +77,7 @@ func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.
 func NewRoundRobinLoadBalancedHTTPService(
 	logger *zap.Logger,
 	cert *common_tls.CertificateBundle,
-	organizationName,
+	organizationSerialNumber,
 	serviceName string,
 	inwayAddresses []string,
 	healthyStates []bool,
@@ -87,12 +87,12 @@ func NewRoundRobinLoadBalancedHTTPService(
 	}
 
 	s := &RoundRobinLoadBalancedHTTPService{
-		organizationName: organizationName,
-		serviceName:      serviceName,
-		count:            0,
-		inwayAddresses:   inwayAddresses,
-		healthyStates:    healthyStates,
-		proxies:          make([]*httputil.ReverseProxy, len(inwayAddresses)),
+		organizationSerialNumber: organizationSerialNumber,
+		serviceName:              serviceName,
+		count:                    0,
+		inwayAddresses:           inwayAddresses,
+		healthyStates:            healthyStates,
+		proxies:                  make([]*httputil.ReverseProxy, len(inwayAddresses)),
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))
 
@@ -118,7 +118,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 
 // FullName returns the name of the service
 func (s *RoundRobinLoadBalancedHTTPService) FullName() string {
-	return s.organizationName + "." + s.serviceName
+	return s.organizationSerialNumber + "." + s.serviceName
 }
 
 // ProxyHTTPRequest process the HTTP request to the proper endpoint.

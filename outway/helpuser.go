@@ -43,14 +43,14 @@ func createList(options []string) string {
 }
 
 // HelpUserOrg suggest organizations for input
-func (o *Outway) helpUserOrg(w http.ResponseWriter, organization string) {
+func (o *Outway) helpUserOrg(w http.ResponseWriter, serialNumber string) {
 	suggestion := make([]string, 0)
 
-	if organization != "" {
+	if serialNumber != "" {
 		for k := range o.servicesDirectory {
-			if strings.HasPrefix(k, organization) {
-				matchorg := strings.Split(k, ".")
-				suggestion = append(suggestion, matchorg[0])
+			if strings.HasPrefix(k, serialNumber) {
+				matchSerialNumber := strings.Split(k, ".")
+				suggestion = append(suggestion, matchSerialNumber[0])
 			}
 		}
 	}
@@ -58,35 +58,35 @@ func (o *Outway) helpUserOrg(w http.ResponseWriter, organization string) {
 	if len(suggestion) == 0 {
 		// list all organizations.
 		for k := range o.servicesDirectory {
-			matchorg := strings.Split(k, ".")
-			suggestion = append(suggestion, matchorg[0])
+			matchSerialNumber := strings.Split(k, ".")
+			suggestion = append(suggestion, matchSerialNumber[0])
 		}
 	}
 
 	msg := createList(suggestion)
 	http.Error(
 		w,
-		"nlx outway: invalid /organization/service/ url: valid organizations : ["+msg+"]",
+		"nlx outway: invalid /serialNumber/service/ url: valid organization serial numbers : ["+msg+"]",
 		http.StatusBadRequest)
 }
 
 func (o *Outway) helpUserService(
-	w http.ResponseWriter, organization, service string) {
+	w http.ResponseWriter, organizationSerialNumber, service string) {
 	// check if organization exists.
 	org := ""
 	services := make([]string, 0)
 
 	for k := range o.servicesDirectory {
-		matchorg := strings.Split(k, ".")
-		if matchorg[0] == organization {
-			org = matchorg[0]
+		matchSerialNumber := strings.Split(k, ".")
+		if matchSerialNumber[0] == organizationSerialNumber {
+			org = matchSerialNumber[0]
 			// store services
-			services = append(services, matchorg[1])
+			services = append(services, matchSerialNumber[1])
 		}
 	}
 	// if no matching organization suggest organizations
 	if org == "" {
-		o.helpUserOrg(w, organization)
+		o.helpUserOrg(w, organizationSerialNumber)
 		return
 	}
 
@@ -112,7 +112,7 @@ func (o *Outway) helpUserService(
 
 	http.Error(
 		w,
-		"nlx outway: invalid organization/service path: valid services : ["+msg+"]",
+		"nlx outway: invalid serialNumber/service path: valid services : ["+msg+"]",
 		http.StatusBadRequest)
 }
 
@@ -141,7 +141,7 @@ func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *plugins.Desti
 	} else {
 		// users gave a 'complete' path, but still failing
 		// do suggestions
-		o.helpUserService(w, dest.Organization, dest.Service)
+		o.helpUserService(w, dest.OrganizationSerialNumber, dest.Service)
 		return
 	}
 

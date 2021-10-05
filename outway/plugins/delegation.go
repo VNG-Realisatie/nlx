@@ -55,15 +55,15 @@ func NewDelegationPlugin(managementClient api.ManagementClient) *DelegationPlugi
 
 func isDelegatedRequest(r *http.Request) bool {
 	return r.Header.Get("X-NLX-Request-Delegator") != "" ||
-		r.Header.Get("X-NLX-Request-OrderReference") != ""
+		r.Header.Get("X-NLX-Request-Order-Reference") != ""
 }
 
-func parseRequestMetadata(r *http.Request) (name, orderReference string, err error) {
-	name = r.Header.Get("X-NLX-Request-Delegator")
-	orderReference = r.Header.Get("X-NLX-Request-OrderReference")
+func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string, err error) {
+	serialNumber = r.Header.Get("X-NLX-Request-Delegator")
+	orderReference = r.Header.Get("X-NLX-Request-Order-Reference")
 
-	if name == "" {
-		return "", "", errors.New("missing organization-name in delegation headers")
+	if serialNumber == "" {
+		return "", "", errors.New("missing organization serial number in delegation headers")
 	}
 
 	if orderReference == "" {
@@ -73,6 +73,7 @@ func parseRequestMetadata(r *http.Request) (name, orderReference string, err err
 	return
 }
 
+// @TODO change to serial number
 func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*delegation.JWTClaims, string, error) {
 	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
 		OrderOrganizationName: name,
@@ -103,12 +104,12 @@ func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*dele
 	return token.Claims.(*delegation.JWTClaims), token.Raw, nil
 }
 
-func (plugin *DelegationPlugin) getOrRequestClaim(name, orderReference string) (*claimData, error) {
-	claimKey := fmt.Sprintf("%s/%s", name, orderReference)
+func (plugin *DelegationPlugin) getOrRequestClaim(serialNumber, orderReference string) (*claimData, error) {
+	claimKey := fmt.Sprintf("%s/%s", serialNumber, orderReference)
 
 	value, ok := plugin.claims.Load(claimKey)
 	if !ok || value.(*claimData).Valid() != nil {
-		claim, raw, err := plugin.requestClaim(name, orderReference)
+		claim, raw, err := plugin.requestClaim(serialNumber, orderReference)
 		if err != nil {
 			return nil, err
 		}
@@ -132,7 +133,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			return next(context)
 		}
 
-		name, orderReference, err := parseRequestMetadata(context.Request)
+		serialNumber, orderReference, err := parseRequestMetadata(context.Request)
 		if err != nil {
 			msg := "failed to parse delegation metadata"
 
@@ -142,17 +143,17 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			return nil
 		}
 
-		context.LogData["delegator"] = name
+		context.LogData["delegator"] = serialNumber
 		context.LogData["orderReference"] = orderReference
 
-		claim, err := plugin.getOrRequestClaim(name, orderReference)
+		claim, err := plugin.getOrRequestClaim(serialNumber, orderReference)
 		if err != nil {
-			msg := fmt.Sprintf("failed to request claim from %s", name)
+			msg := fmt.Sprintf("failed to request claim from %s", serialNumber)
 
 			httpStatus := http.StatusInternalServerError
+
 			if delegationErr, ok := err.(*delegationError); ok {
 				msg = delegationErr.message
-				err = delegationErr.source
 
 				if msg == errMessageOrderRevoked {
 					httpStatus = http.StatusUnauthorized

@@ -42,14 +42,14 @@ func NewLogRecordID() (*LogRecordID, error) {
 }
 
 type LogRecordPlugin struct {
-	organizationName string
-	txLogger         transactionlog.TransactionLogger
+	organizationSerialNumber string
+	txLogger                 transactionlog.TransactionLogger
 }
 
-func NewLogRecordPlugin(organizationName string, txLogger transactionlog.TransactionLogger) *LogRecordPlugin {
+func NewLogRecordPlugin(organizationSerialNumber string, txLogger transactionlog.TransactionLogger) *LogRecordPlugin {
 	return &LogRecordPlugin{
-		organizationName: organizationName,
-		txLogger:         txLogger,
+		organizationSerialNumber: organizationSerialNumber,
+		txLogger:                 txLogger,
 	}
 }
 
@@ -128,8 +128,8 @@ func (plugin *LogRecordPlugin) createLogRecord(context *Context) (*LogRecordID, 
 
 	recordData := createRecordData(context.Request.Header, context.Destination.Path)
 	record := &transactionlog.Record{
-		SrcOrganization:  plugin.organizationName,
-		DestOrganization: context.Destination.Organization,
+		SrcOrganization:  plugin.organizationSerialNumber,              // @TODO change to serial number
+		DestOrganization: context.Destination.OrganizationSerialNumber, // @TODO change to serial number
 		ServiceName:      context.Destination.Service,
 		LogrecordID:      logRecordID.String(),
 		Data:             recordData,

@@ -15,9 +15,9 @@ import (
 )
 
 type authRequest struct {
-	Headers      http.Header `json:"headers"`
-	Organization string      `json:"organization"`
-	Service      string      `json:"service"`
+	Headers                  http.Header `json:"headers"`
+	OrganizationSerialNumber string      `json:"organization_serial_number"`
+	Service                  string      `json:"service"`
 }
 
 type authResponse struct {
@@ -76,9 +76,9 @@ func (plugin *AuthorizationPlugin) authorizeRequest(h http.Header, d *Destinatio
 	}
 
 	authRequest := &authRequest{
-		Headers:      h,
-		Organization: d.Organization,
-		Service:      d.Service,
+		Headers:                  h,
+		OrganizationSerialNumber: d.OrganizationSerialNumber,
+		Service:                  d.Service,
 	}
 
 	body, err := json.Marshal(authRequest)

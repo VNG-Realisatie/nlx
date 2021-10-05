@@ -14,7 +14,7 @@ func TestStripHeadersPlugin(t *testing.T) {
 		"X-NLX-Requester-User",
 		"X-NLX-Requester-Claims",
 		"X-NLX-Request-Delegator",
-		"X-NLX-Request-OrderReference",
+		"X-NLX-Request-Order-Reference",
 		"X-NLX-Request-Subject-Identifier",
 		"X-NLX-Request-Application-Id",
 		"X-NLX-Request-User-Id",
@@ -28,7 +28,7 @@ func TestStripHeadersPlugin(t *testing.T) {
 		"X-NLX-Request-User-Id",
 		"X-NLX-Requester-Claims",
 		"X-NLX-Request-Delegator",
-		"X-NLX-Request-OrderReference",
+		"X-NLX-Request-Order-Reference",
 		"X-NLX-Request-Application-Id",
 		"X-NLX-Request-Subject-Identifier",
 	}
@@ -45,22 +45,22 @@ func TestStripHeadersPlugin(t *testing.T) {
 		disallowedHeaders    []string
 	}{
 		"Different Organization": {
-			receiverOrganization: "differentOrg",
+			receiverOrganization: "00000000000000000002",
 			expectHeaders:        safeHeaders,
 			disallowedHeaders:    unsafeHeaders,
 		},
 		"Same Organization": {
-			receiverOrganization: "org",
+			receiverOrganization: "00000000000000000001",
 			expectHeaders:        append(safeHeaders, unsafeHeaders...),
 			disallowedHeaders:    nil,
 		},
 		"Do not pass Proxy-Authorization": {
-			receiverOrganization: "differentOrg",
+			receiverOrganization: "00000000000000000002",
 			expectHeaders:        nil,
 			disallowedHeaders:    []string{"Proxy-Authorization"},
 		},
 		"Never pass Proxy-Authorization": {
-			receiverOrganization: "org",
+			receiverOrganization: "00000000000000000001",
 			expectHeaders:        nil,
 			disallowedHeaders:    []string{"Proxy-Authorization"},
 		},
@@ -70,7 +70,7 @@ func TestStripHeadersPlugin(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			context := fakeContext(&Destination{
-				Organization: "org",
+				OrganizationSerialNumber: "00000000000000000001",
 			})
 
 			for _, header := range headers {

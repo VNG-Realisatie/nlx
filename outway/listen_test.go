@@ -94,25 +94,39 @@ func TestOutwayListen(t *testing.T) {
 	)
 
 	for i := 0; i < 11; i++ {
-		outway.servicesHTTP["mockorg.mockservice"+strconv.Itoa(i)] = mockService
+		outway.servicesHTTP["00000000000000000001.mockservice"+strconv.Itoa(i)] = mockService
 		inwayMessage := inspectionapi.ListServicesResponse_Service{
-			Name:           "mockservice" + strconv.Itoa(i),
-			Organization:   &inspectionapi.Organization{Name: "mockorg"},
-			InwayAddresses: []string{"mock-service-a-1:123"},
-			HealthyStates:  []bool{true},
+			Name: "mockservice" + strconv.Itoa(i),
+			Organization: &inspectionapi.Organization{
+				SerialNumber: "00000000000000000001",
+				Name:         "test-org",
+			},
+			Inways: []*inspectionapi.Inway{
+				{
+					Address: "mock-service-a-1:123",
+					State:   inspectionapi.Inway_UP,
+				},
+			},
 		}
-		outway.servicesDirectory["mockorg.mockservice"+strconv.Itoa(i)] = &inwayMessage
+		outway.servicesDirectory["00000000000000000001.mockservice"+strconv.Itoa(i)] = &inwayMessage
 	}
 
 	// Setup a Failing mock service.
-	outway.servicesHTTP["mockorg.mockservicefail"] = mockFailService
+	outway.servicesHTTP["00000000000000000001.mockservicefail"] = mockFailService
 	inwayMessage := inspectionapi.ListServicesResponse_Service{
-		Name:           "mockservicefail",
-		Organization:   &inspectionapi.Organization{Name: "mockorg"},
-		InwayAddresses: []string{"mock-service-fail-1:123"},
-		HealthyStates:  []bool{true},
+		Name: "mockservicefail",
+		Organization: &inspectionapi.Organization{
+			SerialNumber: "00000000000000000001",
+			Name:         "test-org",
+		},
+		Inways: []*inspectionapi.Inway{
+			{
+				Address: "mock-service-fail-1:123",
+				State:   inspectionapi.Inway_UP,
+			},
+		},
 	}
-	outway.servicesDirectory["mockorg.mockservicefail"] = &inwayMessage
+	outway.servicesDirectory["00000000000000000001.mockservicefail"] = &inwayMessage
 
 	// Setup mock http server with the outway as http handler
 	mockServer := httptest.NewServer(outway)
@@ -127,17 +141,17 @@ func TestOutwayListen(t *testing.T) {
 		{
 			fmt.Sprintf("%s/invalidpath", mockServer.URL),
 			http.StatusBadRequest,
-			"nlx outway: invalid /organization/service/ url: valid organizations : [mockorg]\n",
+			"nlx outway: invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]\n",
 		}, {
-			fmt.Sprintf("%s/mockorg/nonexistingservice/add/", mockServer.URL),
+			fmt.Sprintf("%s/00000000000000000001/nonexistingservice/add/", mockServer.URL),
 			http.StatusBadRequest,
-			"nlx outway: invalid organization/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]\n",
+			"nlx outway: invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]\n",
 		}, {
-			fmt.Sprintf("%s/mockorg/mockservice0/", mockServer.URL),
+			fmt.Sprintf("%s/00000000000000000001/mockservice0/", mockServer.URL),
 			http.StatusOK,
 			"",
 		}, {
-			fmt.Sprintf("%s/mockorg/mockservicefail/", mockServer.URL),
+			fmt.Sprintf("%s/00000000000000000001/mockservicefail/", mockServer.URL),
 			http.StatusInternalServerError,
 			"",
 		},
@@ -171,7 +185,7 @@ func TestOutwayAsProxy(t *testing.T) {
 		},
 	)
 
-	outway.servicesHTTP["mockorg.mockservice"] = mockService
+	outway.servicesHTTP["00000000000000000001.mockservice"] = mockService
 
 	// Setup mock http server with the outway as http handler
 	mockServer := httptest.NewServer(outway)
@@ -193,16 +207,16 @@ func TestOutwayAsProxy(t *testing.T) {
 	}{
 		{
 			"request using a services.nlx.local URL",
-			"http://mockservice.mockorg.services.nlx.local",
+			"http://mockservice.00000000000000000001.services.nlx.local",
 			http.StatusOK,
 			"",
 			"",
 			outway.handleHTTPRequestAsProxy,
 		}, {
 			"request invalid url",
-			"http://invalid.mockservice.mockorg.services.nlx.local",
+			"http://invalid.mockservice.00000000000000000001.services.nlx.local",
 			http.StatusBadRequest,
-			"nlx outway: no valid url expecting: service.organization.service.nlx.local/apipath\n",
+			"nlx outway: no valid url expecting: service.serialNumber.service.nlx.local/apipath\n",
 			"",
 			outway.handleHTTPRequestAsProxy,
 		}, {
@@ -214,9 +228,9 @@ func TestOutwayAsProxy(t *testing.T) {
 			outway.handleHTTPRequestAsProxy,
 		}, {
 			"outway is running without the use-as-http-proxy flag",
-			"http://mockservice.mockorg.services.nlx.local",
+			"http://mockservice.00000000000000000001.services.nlx.local",
 			http.StatusInternalServerError,
-			"please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.mockorg.services.nlx.local/\n",
+			"please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.00000000000000000001.services.nlx.local/\n",
 			"",
 			outway.handleHTTPRequest,
 		},
@@ -261,7 +275,7 @@ func TestHandleConnectMethodException(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 
-	req := httptest.NewRequest(http.MethodConnect, "http://mockservice.mockorg.services.nlx.local", nil)
+	req := httptest.NewRequest(http.MethodConnect, "http://mockservice.00000000000000000001.services.nlx.local", nil)
 	outway.handleHTTPRequestAsProxy(logger, recorder, req)
 
 	assert.Equal(t, http.StatusNotImplemented, recorder.Code)
@@ -289,7 +303,7 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockService := mock.NewMockHTTPService(ctrl)
-	outway.servicesHTTP["mockorg.mockservice"] = mockService
+	outway.servicesHTTP["00000000000000000001.mockservice"] = mockService
 
 	tests := map[string]struct {
 		authEnabled          bool
@@ -329,8 +343,8 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 
 			outway.plugins = []plugins.Plugin{
 				plugins.NewDelegationPlugin(nil),
-				plugins.NewLogRecordPlugin("TestOrg", tt.txLogger),
-				plugins.NewStripHeadersPlugin("TestOrg"),
+				plugins.NewLogRecordPlugin("00000000000000000001", tt.txLogger),
+				plugins.NewStripHeadersPlugin("00000000000000000001"),
 			}
 
 			if tt.authEnabled {
@@ -341,13 +355,13 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 
 			outway.txlogger = tt.txLogger
 
-			req := httptest.NewRequest("GET", "http://mockservice.mockorg.services.nlx.local", nil)
+			req := httptest.NewRequest("GET", "http://mockservice.00000000000000000001.services.nlx.local", nil)
 			req.Header.Add("X-NLX-Request-Data-Subject", tt.dataSubjectHeader)
 
 			outway.handleOnNLX(outway.logger, &plugins.Destination{
-				Organization: "mockorg",
-				Service:      "mockservice",
-				Path:         "/",
+				OrganizationSerialNumber: "00000000000000000001",
+				Service:                  "mockservice",
+				Path:                     "/",
 			}, recorder, req)
 
 			assert.Equal(t, tt.expectedStatusCode, recorder.Code)
@@ -413,23 +427,30 @@ func TestFailingTransport(t *testing.T) {
 		errorMessage string
 	}{
 		{
-			fmt.Sprintf("%s/mockorg/mockservice/", mockServer.URL),
+			fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL),
 			http.StatusServiceUnavailable,
-			"failed request to https://inway.mockorg/mockservice/ try again later / check firewall? check O1 and M1 at https://docs.nlx.io/support/common-errors/\n",
+			"failed request to https://inway.00000000000000000001/mockservice/ try again later / check firewall? check O1 and M1 at https://docs.nlx.io/support/common-errors/\n",
 		},
 	}
 
 	inwayMessage := inspectionapi.ListServicesResponse_Service{
-		Name:           "mockservice",
-		Organization:   &inspectionapi.Organization{Name: "mockorg"},
-		InwayAddresses: []string{"mock-service-:123"},
-		HealthyStates:  []bool{true},
+		Name: "mockservice",
+		Organization: &inspectionapi.Organization{
+			SerialNumber: "00000000000000000001",
+			Name:         "test-org",
+		},
+		Inways: []*inspectionapi.Inway{
+			{
+				Address: "mock-service-:123",
+				State:   inspectionapi.Inway_UP,
+			},
+		},
 	}
 
 	// Setup mock httpservice
-	outway.servicesDirectory["mockorg.mockservice"] = &inwayMessage
+	outway.servicesDirectory["00000000000000000001.mockservice"] = &inwayMessage
 
-	inwayAddresses := []string{"inway.mockorg"}
+	inwayAddresses := []string{"inway.00000000000000000001"}
 	healthyStates := []bool{true}
 
 	cert, _ := common_tls.NewBundleFromFiles(
@@ -440,12 +461,12 @@ func TestFailingTransport(t *testing.T) {
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), cert,
-		"mockorg", "mockservice",
+		"00000000000000000001", "mockservice",
 		inwayAddresses, healthyStates)
 
 	assert.Nil(t, err)
 
-	outway.servicesHTTP["mockorg.mockservice"] = l
+	outway.servicesHTTP["00000000000000000001.mockservice"] = l
 	// set transports to fail.
 	outway.setFailingTransport()
 	testRequests(t, tests)

@@ -10,9 +10,9 @@ import (
 )
 
 type Destination struct {
-	Organization string
-	Service      string
-	Path         string
+	OrganizationSerialNumber string
+	Service                  string
+	Path                     string
 }
 
 type Context struct {

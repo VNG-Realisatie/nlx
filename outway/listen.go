@@ -119,7 +119,7 @@ func (o *Outway) handleHTTPRequest(logger *zap.Logger, w http.ResponseWriter, r 
 			return
 		}
 
-		msg := "no valid url path expecting: organization/service/apipath"
+		msg := "no valid url path expecting: serialNumber/service/apipath"
 		logger.Error(msg, zap.Error(err))
 
 		o.helpUser(w, msg, nil, r.URL.Path)
@@ -146,7 +146,7 @@ func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWri
 	destination, err := parseLocalNLXURL(r.URL)
 	if err != nil {
 		logger.Error("error parsing desination", zap.Error(err))
-		http.Error(w, "nlx outway: no valid url expecting: service.organization.service.nlx.local/apipath", http.StatusBadRequest)
+		http.Error(w, "nlx outway: no valid url expecting: service.serialNumber.service.nlx.local/apipath", http.StatusBadRequest)
 
 		return
 	}
@@ -163,7 +163,7 @@ func buildChain(serve plugins.ServeFunc, pluginList ...plugins.Plugin) plugins.S
 }
 
 func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destination, w http.ResponseWriter, r *http.Request) {
-	service := o.getService(destination.Organization, destination.Service)
+	service := o.getService(destination.OrganizationSerialNumber, destination.Service)
 	if service == nil {
 		logger.Warn("received request for unknown service")
 
@@ -190,7 +190,7 @@ func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destinatio
 	logger.Info(
 		"forwarding API request",
 		zap.String("service", destination.Service),
-		zap.String("destination-organization", destination.Organization),
+		zap.String("destination-organization-serial-number", destination.OrganizationSerialNumber),
 	)
 
 	if err := chain(ctx); err != nil {

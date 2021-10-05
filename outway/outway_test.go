@@ -25,7 +25,7 @@ import (
 
 type authRequest struct {
 	Headers      http.Header `json:"headers"`
-	Organization string      `json:"organization"`
+	Organization string      `json:"organization"` // @TODO change to serial number
 	Service      string      `json:"service"`
 }
 
@@ -63,6 +63,15 @@ func TestNewOutwayExeception(t *testing.T) {
 			"",
 			"cannot obtain organization name from self cert",
 		},
+		// @TODO enable when test cert with serial number is generated
+		// {
+		// 	"certificate without organization serial number",
+		// 	certOrg,
+		// 	"localhost:8080",
+		// 	"",
+		// 	"",
+		// 	"cannot obtain organization serial number from self cert",
+		// },
 		{
 			"authorization service URL set but no CA for authorization provided",
 			cert,
@@ -101,10 +110,13 @@ func TestAuthListen(t *testing.T) {
 	logger := zap.NewNop()
 	// Createa a outway with a mock service
 	outway := &Outway{
-		organizationName: "org",
-		servicesHTTP:     make(map[string]HTTPService),
-		logger:           logger,
-		txlogger:         transactionlog.NewDiscardTransactionLogger(),
+		organization: &Organization{
+			serialNumber: "00000000000000000001",
+			name:         "org",
+		},
+		servicesHTTP: make(map[string]HTTPService),
+		logger:       logger,
+		txlogger:     transactionlog.NewDiscardTransactionLogger(),
 	}
 
 	outway.requestHTTPHandler = outway.handleHTTPRequest
@@ -140,7 +152,7 @@ func TestAuthListen(t *testing.T) {
 	}))
 	defer mockAuthServer.Close()
 
-	outway.servicesHTTP["mockorg.mockservice"] = mockService
+	outway.servicesHTTP["00000000000000000001.mockservice"] = mockService
 	outway.plugins = append([]plugins.Plugin{
 		plugins.NewAuthorizationPlugin(nil, mockAuthServer.URL, http.Client{}),
 	}, outway.plugins...)
@@ -156,8 +168,8 @@ func TestAuthListen(t *testing.T) {
 		statusCode             int
 		errorMessage           string
 	}{
-		{fmt.Sprintf("%s/mockorg/mockservice/", mockServer.URL), false, http.StatusUnauthorized, "nlx outway: authorization failed. reason: invalid user\n"},
-		{fmt.Sprintf("%s/mockorg/mockservice/", mockServer.URL), true, http.StatusOK, ""},
+		{fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL), false, http.StatusUnauthorized, "nlx outway: authorization failed. reason: invalid user\n"},
+		{fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL), true, http.StatusOK, ""},
 	}
 	client := http.Client{}
 

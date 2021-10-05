@@ -15,12 +15,12 @@ import (
 )
 
 const (
-	mockorg         string = "mockorg"
-	mockservicename string = "mockservicename"
+	mockSerialNumber string = "00000000000000000001"
+	mockservicename  string = "mockservicename"
 )
 
 func TestNewRoundRobinLoadBalancer(t *testing.T) {
-	organizationName := mockorg
+	organizationSerialNumber := mockSerialNumber
 	serviceName := mockservicename
 
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
@@ -34,7 +34,7 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), cert,
-		organizationName, serviceName,
+		organizationSerialNumber, serviceName,
 		inwayAddresses, healthyStates)
 
 	assert.Nil(t, err)

@@ -30,9 +30,9 @@ components:
             items:
               type: string
            description: Contains the HTTP-headers of the request made to the outway 
-        organization:
+        serialNumber:
           type: string
-          description: organization targeted by the request send to the outway 
+          description: organization serial number targeted by the request send to the outway 
         service:
           type: string
           description: service targeted by the request send to the outway
