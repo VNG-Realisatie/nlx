@@ -67,18 +67,18 @@ func (mr *MockDirectoryDatabaseMockRecorder) ListOrganizations(ctx interface{}) 
 }
 
 // ListServices mocks base method.
-func (m *MockDirectoryDatabase) ListServices(ctx context.Context, organizationName string) ([]*database.Service, error) {
+func (m *MockDirectoryDatabase) ListServices(ctx context.Context, organizationSerialNumber string) ([]*database.Service, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListServices", ctx, organizationName)
+	ret := m.ctrl.Call(m, "ListServices", ctx, organizationSerialNumber)
 	ret0, _ := ret[0].([]*database.Service)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListServices indicates an expected call of ListServices.
-func (mr *MockDirectoryDatabaseMockRecorder) ListServices(ctx, organizationName interface{}) *gomock.Call {
+func (mr *MockDirectoryDatabaseMockRecorder) ListServices(ctx, organizationSerialNumber interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryDatabase)(nil).ListServices), ctx, organizationName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryDatabase)(nil).ListServices), ctx, organizationSerialNumber)
 }
 
 // ListVersionStatistics mocks base method.

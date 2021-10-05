@@ -43,7 +43,7 @@ func (db PostgreSQLDirectoryDatabase) GetOrganizationInwayAddress(ctx context.Co
 	var address string
 
 	arg := map[string]interface{}{
-		"organization_serial_number": organizationSerialNumber, // @TODO serial
+		"organization_serial_number": organizationSerialNumber,
 	}
 
 	err := db.selectOrganizationInwayAddressStatement.GetContext(ctx, &address, arg)

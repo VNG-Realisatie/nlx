@@ -149,19 +149,6 @@ const (
         },
         "organization": {
           "$ref": "#/definitions/inspectionapiOrganization"
-        },
-        "healthy_states": {
-          "type": "array",
-          "items": {
-            "type": "boolean"
-          },
-          "title": "TODO: these are duplicates they are also inlcuded in the inway object. We will remove these fields"
-        },
-        "inway_addresses": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },

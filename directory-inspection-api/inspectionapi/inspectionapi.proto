@@ -56,10 +56,6 @@ message ListServicesResponse {
 		repeated Inway inways = 6;
         Costs costs = 7;
         Organization organization = 8;
-
-		// TODO: these are duplicates they are also inlcuded in the inway object. We will remove these fields
-		repeated bool healthy_states = 98;
-		repeated string inway_addresses = 99;
 	}
 
 	repeated Service services = 1;

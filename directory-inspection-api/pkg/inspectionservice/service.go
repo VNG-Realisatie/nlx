@@ -61,9 +61,7 @@ func convertFromDatabaseService(model *database.Service) *inspectionapi.ListServ
 	service := &inspectionapi.ListServicesResponse_Service{
 		Name:                 model.Name,
 		Internal:             model.Internal,
-		InwayAddresses:       model.InwayAddresses,
 		ApiSpecificationType: model.APISpecificationType,
-		HealthyStates:        model.HealthyStates,
 		DocumentationUrl:     model.DocumentationURL,
 		PublicSupportContact: model.PublicSupportContact,
 	}

@@ -31,10 +31,6 @@ type Service struct {
 	TechSupportContact   string
 	PublicSupportContact string
 
-	// @TODO: Remove
-	InwayAddresses []string
-	HealthyStates  []bool
-
 	Inways       []*Inway
 	Organization *Organization
 	Costs        *ServiceCosts
@@ -93,9 +89,6 @@ func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizati
 
 		if len(inwayAddresses) != len(healthyStatuses) {
 			db.logger.Error("length of the inwayadresses does not match healthchecks")
-		} else {
-			respService.InwayAddresses = inwayAddresses
-			respService.HealthyStates = healthyStatuses
 		}
 
 		var inway *Inway

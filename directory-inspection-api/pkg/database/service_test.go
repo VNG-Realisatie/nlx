@@ -22,7 +22,7 @@ func TestListServices(t *testing.T) {
 	setup(t)
 
 	type args struct {
-		organizationName string
+		organizationSerialNumber string
 	}
 
 	tests := map[string]struct {
@@ -34,7 +34,7 @@ func TestListServices(t *testing.T) {
 		"when_organization_not_found": {
 			loadFixtures: false,
 			args: args{
-				organizationName: "arbritrary organization name",
+				organizationSerialNumber: "99999999999999999999",
 			},
 			want:    nil,
 			wantErr: nil,
@@ -42,22 +42,22 @@ func TestListServices(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-name",
+				organizationSerialNumber: "01234567890123456789",
 			},
 			want: []*database.Service{
 				{
-					Name:                     "fixture-service-name",
+					Name: "fixture-service-name",
 					Organization: &database.Organization{
 						Name:         "fixture-organization-name",
 						SerialNumber: "01234567890123456789",
 					},
-					EndpointURL:              "",
-					DocumentationURL:         "https://fixture-documentation-url.com",
-					APISpecificationURL:      "",
-					APISpecificationType:     "OpenAPI3",
-					Internal:                 false,
-					TechSupportContact:       "",
-					PublicSupportContact:     "fixture@public-support-contact.com",
+					EndpointURL:          "",
+					DocumentationURL:     "https://fixture-documentation-url.com",
+					APISpecificationURL:  "",
+					APISpecificationType: "OpenAPI3",
+					Internal:             false,
+					TechSupportContact:   "",
+					PublicSupportContact: "fixture@public-support-contact.com",
 					Costs: &database.ServiceCosts{
 						OneTime: 1,
 						Monthly: 2,
@@ -68,12 +68,6 @@ func TestListServices(t *testing.T) {
 							Address: "https://fixture-inway-address.com",
 							State:   database.InwayUP,
 						},
-					},
-					InwayAddresses: []string{
-						"https://fixture-inway-address.com",
-					},
-					HealthyStates: []bool{
-						true,
 					},
 				},
 			},
@@ -90,7 +84,7 @@ func TestListServices(t *testing.T) {
 			db, close := newDirectoryDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := db.ListServices(context.Background(), tt.args.organizationName)
+			got, err := db.ListServices(context.Background(), tt.args.organizationSerialNumber)
 			require.Equal(t, tt.wantErr, err)
 
 			if tt.wantErr == nil {
