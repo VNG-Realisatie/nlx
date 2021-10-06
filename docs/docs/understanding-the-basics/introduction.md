@@ -30,8 +30,8 @@ provide API's to other consuming organizations.
 NLX is developed mainly by VNG Realisatie, but anyone can contribute on Gitlab.
 To start using NLX, it is not necessary to contribute to NLX development, since
 NLX can be installed 'as is'. A good way to start is by reading the
-documentation and having your system engineers or suppliers follow the
-[Try NLX guide](../try-nlx/setup-your-environment) to learn the concepts
+documentation and having your system engineers or suppliers follow one off the
+Try NLX guides to learn the concepts
 of NLX and set up the first test implementation. Some knowledge of IT, the
 internet, API's and security is required. The NLX team is available through
 Gitlab for support to developers.

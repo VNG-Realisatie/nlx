@@ -24,8 +24,7 @@ Below are configuration hints for OIDC providers that have been used successfull
 
 ### Dex
 
-[Dex](https://github.com/dexidp/dex) is a federated OIDC provider. It's the
-identity service used in [try-nlx](../try-nlx/introduction).
+[Dex](https://github.com/dexidp/dex) is a federated OIDC provider.
 
 Assuming Dex is deployed on `https://dex.example.com`, the discovery url is:
 

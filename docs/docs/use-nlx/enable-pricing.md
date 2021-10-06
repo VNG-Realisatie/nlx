@@ -5,7 +5,7 @@ title: Enable transparent pricing (experimental)
 
 ## Before you start
 
-- Make sure you read our [try NLX](../try-nlx/introduction) guide
+- Make sure you read our one of our Try NLX guides
 - Make sure that you have NLX management running
 - Make sure that you have an inway and you are offering a service
 
