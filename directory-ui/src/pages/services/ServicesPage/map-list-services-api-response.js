@@ -27,18 +27,20 @@ export const reduceInwayStatesToStatus = (inways = []) => {
   return status
 }
 
-export const mapListServicesAPIResponse = (response) =>
-  response?.services
-    ? response.services.map((service) => ({
-        organization: service.organization_name,
-        name: service.service_name,
-        status: reduceInwayStatesToStatus(service.inways),
-        apiType: service.api_specification_type,
-        serialNumber: service.serial_number || '',
-        contactEmailAddress: service.public_support_contact,
-        documentationUrl: service.documentation_url,
-        oneTimeCosts: (service.one_time_costs || 0) / 100,
-        monthlyCosts: (service.monthly_costs || 0) / 100,
-        requestCosts: (service.request_costs || 0) / 100,
-      }))
-    : []
+export const mapListServicesAPIResponse = (response) => {
+  if (response.services) {
+    return response.services.map((service) => ({
+      organization: service.organization.name,
+      serialNumber: service.organization.serial_number || '',
+      name: service.name,
+      status: reduceInwayStatesToStatus(service.inways),
+      apiType: service.api_specification_type,
+      contactEmailAddress: service.public_support_contact,
+      documentationUrl: service.documentation_url,
+      oneTimeCosts: (service.costs?.one_time || 0) / 100,
+      monthlyCosts: (service.costs?.monthly || 0) / 100,
+      requestCosts: (service.costs?.request || 0) / 100,
+    }))
+  }
+  return []
+}

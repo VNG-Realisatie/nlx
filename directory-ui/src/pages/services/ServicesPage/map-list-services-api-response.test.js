@@ -78,13 +78,15 @@ describe('mapping the API response', () => {
       services: [
         {
           /* eslint-disable camelcase */
-          organization_name: 'foo',
-          service_name: 'bar',
+          organization: {
+            name: 'foo',
+            serial_number: '00000000000000000000',
+          },
+          name: 'bar',
           inway_addresses: ['https://www.duck.com'],
           documentation_url: 'https://www.duck.com',
           api_specification_type: 'openapi',
           public_support_contact: 'foo@bar.baz',
-          serial_number: '00000000000000000000',
           /* eslint-enable camelcase */
         },
       ],

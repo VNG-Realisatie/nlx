@@ -16,7 +16,7 @@ import Footer from '../../../components/Footer'
 import DirectoryTable from '../../../components/DirectoryTable'
 import Filters from '../../../components/Filters'
 import DirectoryDetailPage from '../ServiceDetailPage'
-import { mapListServicesAPIResponse } from './map-list-services-api-response'
+import getServices from './get-services'
 
 const ServicesPage = ({ location, history }) => {
   const urlParams = new URLSearchParams(location.search)
@@ -49,26 +49,21 @@ const ServicesPage = ({ location, history }) => {
   }
 
   useEffect(() => {
-    const getServices = async () => {
+    const loadServices = async () => {
       try {
-        const response = await fetch(`/api/directory/list-services`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        const services = await response.json()
-        const renamedServices = mapListServicesAPIResponse(services)
+        const services = await getServices()
+        console.warn(services)
         setState({
           ...state,
           loading: false,
           error: false,
-          services: renamedServices,
+          services: services,
         })
       } catch (e) {
         setState({ ...state, loading: false, error: true })
       }
     }
-    getServices()
+    loadServices()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
