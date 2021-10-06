@@ -25,7 +25,7 @@ import (
 
 var (
 	pkiDir           = filepath.Join("..", "..", "testing", "pki")
-	testPublicKeyDER = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4Kad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1TIvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBfmcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP54wIDAQAB"
+	testPublicKeyDER = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxahK/ruBG74MZ2/Z71llWS1OMJy6xs9qpQY7YC7C+u59JoqNdoWToV6EZRfPYzh61BWsyKlqvkl11HhD6HVkWmdidYJtmoJqmFeWm02a6RkP4XbBiOCm9xxX/xlZRWubTCswaLkfmlI2IYxgpLIPQuvO2nbor8YG4dS7u7u7yrtl1dOBD1utlMCzX5j8vG+BaHUqE1kBWIE5kg9ogeVfwa/w30EPcD+5gdknn5uGoTFP/xi6WiZ+6MJli1CPjrHX0N73ZMSdgHK+4jk8KdrzFou5sNtCl+CTdzhDhwYJxJv/McsgqPfXsOdk0T3QUcCqWsawJ8VblJYYwyj1WW7lbJSygJjvOTG+C2+vbht3mKvimKpx/+8S/Zg+g7nen//SvFQhe2wI7Eaottgk/abU6i3ntvSty4EyxFPnchKa7EXeFAsp4stO0Q5iTE4rEdDotwaWrmcN54UQr2ZOVPJ/BGGG6SxeciX9jB9I1FHBngMyiXVDgMlgGa9Ke3y1V+Yaqh3LOp6JXnjXp50Ke0ncCMa7tBd6GGJqV4hl3daYj7yyBWzB3E2d/u+gJx1e9mxqgA0V7nidh2CRelHtczhCO5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ=="
 )
 
 func setup(t *testing.T, clientCert *tls.CertificateBundle) (*grpcproxy.Proxy, *testServer, test.TestServiceClient) {
@@ -127,7 +127,7 @@ func TestMetadata(t *testing.T) {
 	assert.Equal(t, []string{"for=bufconn,host=inway.test"}, md.Get("forwarded"))
 	assert.Equal(t, []string{"nlx-test"}, md.Get("nlx-organization"))
 	assert.Equal(t, []string{testPublicKeyDER}, md.Get("nlx-public-key-der"))
-	assert.Equal(t, []string{"60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4="}, md.Get("nlx-public-key-fingerprint"))
+	assert.Equal(t, []string{"g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc="}, md.Get("nlx-public-key-fingerprint"))
 	assert.Equal(t, []string{"foo"}, md.Get("some-key"))
 	assert.Equal(t, []string{"bar", "foobar"}, md.Get("some-other-key"))
 }

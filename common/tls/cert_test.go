@@ -123,7 +123,7 @@ func TestBundle(t *testing.T) {
 	)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4=", c.PublicKeyFingerprint())
+	assert.Equal(t, "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=", c.PublicKeyFingerprint())
 	assert.Equal(t, uint16(tls.VersionTLS13), c.TLSConfig().MinVersion)
 }
 
@@ -179,16 +179,21 @@ func TestVerifyPrivateKeyPermissions(t *testing.T) {
 func TestPemPublicKeyFingerprint(t *testing.T) {
 	// copied from `/management-api/pkg/server/claim_test.go`
 	testPublicKeyPEM := `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e
-5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63
-pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4K
-ad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1T
-IvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBf
-mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
-4wIDAQAB
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxahK/ruBG74MZ2/Z71ll
+WS1OMJy6xs9qpQY7YC7C+u59JoqNdoWToV6EZRfPYzh61BWsyKlqvkl11HhD6HVk
+WmdidYJtmoJqmFeWm02a6RkP4XbBiOCm9xxX/xlZRWubTCswaLkfmlI2IYxgpLIP
+QuvO2nbor8YG4dS7u7u7yrtl1dOBD1utlMCzX5j8vG+BaHUqE1kBWIE5kg9ogeVf
+wa/w30EPcD+5gdknn5uGoTFP/xi6WiZ+6MJli1CPjrHX0N73ZMSdgHK+4jk8Kdrz
+Fou5sNtCl+CTdzhDhwYJxJv/McsgqPfXsOdk0T3QUcCqWsawJ8VblJYYwyj1WW7l
+bJSygJjvOTG+C2+vbht3mKvimKpx/+8S/Zg+g7nen//SvFQhe2wI7Eaottgk/abU
+6i3ntvSty4EyxFPnchKa7EXeFAsp4stO0Q5iTE4rEdDotwaWrmcN54UQr2ZOVPJ/
+BGGG6SxeciX9jB9I1FHBngMyiXVDgMlgGa9Ke3y1V+Yaqh3LOp6JXnjXp50Ke0nc
+CMa7tBd6GGJqV4hl3daYj7yyBWzB3E2d/u+gJx1e9mxqgA0V7nidh2CRelHtczhC
+O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
+P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
 -----END PUBLIC KEY-----
 `
-	expectedPublicKeyFingerprint := "60igp6kiaIF14bQCdNiPPhiP3XJ95qLFhAFI1emJcm4="
+	expectedPublicKeyFingerprint := "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc="
 
 	fingerprint, err := common_tls.PemPublicKeyFingerprint([]byte(testPublicKeyPEM))
 	assert.NoError(t, err)

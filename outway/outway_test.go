@@ -47,6 +47,12 @@ func TestNewOutwayExeception(t *testing.T) {
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
+	certWithoutSerialNumber, _ := common_tls.NewBundleFromFiles(
+		filepath.Join(pkiDir, "org-without-serial-number-chain.pem"),
+		filepath.Join(pkiDir, "org-without-serial-number-key.pem"),
+		filepath.Join(pkiDir, "ca-root.pem"),
+	)
+
 	tests := []struct {
 		description              string
 		cert                     *common_tls.CertificateBundle
@@ -63,15 +69,14 @@ func TestNewOutwayExeception(t *testing.T) {
 			"",
 			"cannot obtain organization name from self cert",
 		},
-		// @TODO enable when test cert with serial number is generated
-		// {
-		// 	"certificate without organization serial number",
-		// 	certOrg,
-		// 	"localhost:8080",
-		// 	"",
-		// 	"",
-		// 	"cannot obtain organization serial number from self cert",
-		// },
+		{
+			"certificate without organization serial number",
+			certWithoutSerialNumber,
+			"localhost:8080",
+			"",
+			"",
+			"validation error for subject serial number from cert: serial number is empty",
+		},
 		{
 			"authorization service URL set but no CA for authorization provided",
 			cert,
