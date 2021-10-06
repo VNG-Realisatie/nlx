@@ -23,7 +23,7 @@ import (
 func TestRetrieveClaim(t *testing.T) {
 	tests := map[string]struct {
 		request *api.RetrieveClaimForOrderRequest
-		setup   func(*server.ManagementService, serviceMocks) context.Context
+		setup   func(*testing.T, *server.ManagementService, serviceMocks) context.Context
 		want    func(*testing.T, *common_tls.CertificateBundle, *external.RequestClaimResponse)
 		wantErr error
 	}{
@@ -31,7 +31,7 @@ func TestRetrieveClaim(t *testing.T) {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference: "",
 			},
-			setup: func(*server.ManagementService, serviceMocks) context.Context {
+			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
 			wantErr: status.Error(codes.InvalidArgument, "an order reference must be provided"),
@@ -41,7 +41,7 @@ func TestRetrieveClaim(t *testing.T) {
 				OrderReference:                "arbitrary-order-reference",
 				OrderOrganizationSerialNumber: "",
 			},
-			setup: func(*server.ManagementService, serviceMocks) context.Context {
+			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
 			wantErr: status.Error(codes.InvalidArgument, "an organization serial number of the order must be provided"),
@@ -51,12 +51,12 @@ func TestRetrieveClaim(t *testing.T) {
 				OrderReference:                "order-reference-a",
 				OrderOrganizationSerialNumber: "organization-a", // @TODO serial number
 			},
-			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
+			setup: func(t *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), gomock.Any()).
 					Return("", errors.New("arbitrary error"))
 
-				return setProxyMetadata(context.Background())
+				return setProxyMetadata(t, context.Background())
 			},
 			wantErr: status.Error(codes.Internal, "unable to retrieve claim"),
 		},
@@ -66,7 +66,7 @@ func TestRetrieveClaim(t *testing.T) {
 				OrderReference:                "order-reference-a",
 				OrderOrganizationSerialNumber: "organization-a",
 			},
-			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
+			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), gomock.Any()).
 					Return("inway-address", nil)
@@ -89,7 +89,7 @@ func TestRetrieveClaim(t *testing.T) {
 				OrderReference:                "order-reference-a",
 				OrderOrganizationSerialNumber: "organization-a",
 			},
-			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
+			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), gomock.Any()).
 					Return("inway-address", nil)
@@ -113,7 +113,7 @@ func TestRetrieveClaim(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
-			ctx := tt.setup(service, mocks)
+			ctx := tt.setup(t, service, mocks)
 
 			_, err := service.RetrieveClaimForOrder(ctx, tt.request)
 			assert.Error(t, err)
@@ -124,7 +124,7 @@ func TestRetrieveClaim(t *testing.T) {
 
 func TestRetrieveClaimHappyFlow(t *testing.T) {
 	service, _, mocks := newService(t)
-	ctx := setProxyMetadata(context.Background())
+	ctx := setProxyMetadata(t, context.Background())
 
 	mocks.dc.EXPECT().
 		GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").

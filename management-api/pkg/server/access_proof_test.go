@@ -10,11 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -25,24 +26,22 @@ import (
 //nolint:funlen // its a unittest
 func TestGetAccessProof(t *testing.T) {
 	now := time.Now()
-	ts, _ := ptypes.TimestampProto(now)
+	ts := timestamppb.New(now)
 
 	tests := map[string]struct {
+		setup   func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context
 		want    *api.AccessProof
 		wantErr error
-		setup   func(*mock_database.MockConfigDatabase) context.Context
 	}{
-		"errors_when_peer_context_is_missing": {
-			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
+		"when_the_peer_context_is_missing": {
+			setup: func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context {
 				return context.Background()
 			},
+			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
 		},
-
-		"returns_error_when_get_latest_access_grant_for_service_errors": {
-			wantErr: status.Error(codes.Internal, "database error"),
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
-				ctx := setProxyMetadata(context.Background())
+		"when_getting_the_latest_access_grant_for_the_service_errors": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
 				db.
 					EXPECT().
@@ -50,36 +49,35 @@ func TestGetAccessProof(t *testing.T) {
 					Return(&database.Service{Name: "service"}, nil)
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, "organization-a", "service").
+					GetLatestAccessGrantForService(ctx, "nlx-test", "service").
 					Return(nil, errors.New("error"))
 
 				return ctx
 			},
+			wantErr: status.Error(codes.Internal, "database error"),
 		},
+		"when_access_grant_could_not_be_found": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
-		"returns_not_found_when_access_grant_could_not_be_found": {
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{Name: "service"}, nil)
+
+				db.
+					EXPECT().
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.Organization[0], "service").
+					Return(nil, database.ErrNotFound)
+
+				return ctx
+			},
 			wantErr: status.Error(codes.NotFound, "access proof not found"),
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
-				ctx := setProxyMetadata(context.Background())
-
-				db.
-					EXPECT().
-					GetService(ctx, "service").
-					Return(&database.Service{Name: "service"}, nil)
-
-				db.
-					EXPECT().
-					GetLatestAccessGrantForService(ctx, "organization-a", "service").
-					Return(nil, database.ErrNotFound)
-
-				return ctx
-			},
 		},
-
-		"returns_not_found_when_service_no_long_exists": {
+		"when_the_service_no_long_exists": {
 			wantErr: server.ErrServiceDoesNotExist,
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
-				ctx := setProxyMetadata(context.Background())
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
 				db.
 					EXPECT().
@@ -89,18 +87,9 @@ func TestGetAccessProof(t *testing.T) {
 				return ctx
 			},
 		},
-
-		"returns_access_proof_for_successful_request": {
-			want: &api.AccessProof{
-				Id:               1,
-				CreatedAt:        ts,
-				RevokedAt:        ts,
-				AccessRequestId:  1,
-				OrganizationName: "organization-a",
-				ServiceName:      "service",
-			},
-			setup: func(db *mock_database.MockConfigDatabase) context.Context {
-				ctx := setProxyMetadata(context.Background())
+		"happy_flow": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
 				db.
 					EXPECT().
@@ -109,7 +98,7 @@ func TestGetAccessProof(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, "organization-a", "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.Organization[0], "service").
 					Return(&database.AccessGrant{
 						CreatedAt:               now,
 						RevokedAt:               sql.NullTime{Time: now},
@@ -118,7 +107,7 @@ func TestGetAccessProof(t *testing.T) {
 						IncomingAccessRequest: &database.IncomingAccessRequest{
 							ID: 1,
 							Organization: database.IncomingAccessRequestOrganization{
-								Name: "organization-a",
+								Name: certBundle.Certificate().Subject.Organization[0],
 							},
 							ServiceID: 1,
 							Service: &database.Service{
@@ -129,6 +118,14 @@ func TestGetAccessProof(t *testing.T) {
 
 				return ctx
 			},
+			want: &api.AccessProof{
+				Id:               1,
+				CreatedAt:        ts,
+				RevokedAt:        ts,
+				AccessRequestId:  1,
+				OrganizationName: "nlx-test",
+				ServiceName:      "service",
+			},
 		},
 	}
 
@@ -136,15 +133,15 @@ func TestGetAccessProof(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
-			ctx := tt.setup(mocks.db)
+			service, certBundle, mocks := newService(t)
+			ctx := tt.setup(t, mocks.db, certBundle)
 
-			response, err := service.GetAccessProof(ctx, &external.GetAccessProofRequest{
+			actual, err := service.GetAccessProof(ctx, &external.GetAccessProofRequest{
 				ServiceName: "service",
 			})
 
 			assert.Equal(t, tt.wantErr, err)
-			assert.Equal(t, tt.want, response)
+			assert.Equal(t, tt.want, actual)
 		})
 	}
 }

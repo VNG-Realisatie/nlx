@@ -24,9 +24,10 @@ import (
 )
 
 type proxyMetadata struct {
-	OrganizationName     string
-	PublicKeyFingerprint string
-	PublicKeyPEM         string
+	OrganizationName         string
+	OrganizationSerialNumber string
+	PublicKeyFingerprint     string
+	PublicKeyPEM             string
 }
 
 func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
@@ -271,18 +272,23 @@ func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetad
 		return nil, status.Error(codes.Internal, "missing metadata from the management proxy")
 	}
 
-	organizationName := md.Get("nlx-organization")
-	if len(organizationName) != 1 {
+	organizationName := md.Get("nlx-organization-name")
+	if len(organizationName) != 1 && organizationName[0] == "" {
 		return nil, status.Error(codes.Internal, "invalid metadata: organization name missing")
 	}
 
+	organizationSerialNumber := md.Get("nlx-organization-serial-number")
+	if len(organizationSerialNumber) != 1 && organizationSerialNumber[0] == "" {
+		return nil, status.Error(codes.Internal, "invalid metadata: organization serial number missing")
+	}
+
 	publicKeyFingerprint := md.Get("nlx-public-key-fingerprint")
-	if len(publicKeyFingerprint) != 1 {
+	if len(publicKeyFingerprint) != 1 && publicKeyFingerprint[0] == "" {
 		return nil, status.Error(codes.Internal, "invalid metadata: public key fingerprint missing")
 	}
 
 	publicKeyString := md.Get("nlx-public-key-der")
-	if len(publicKeyString) != 1 {
+	if len(publicKeyString) != 1 && publicKeyString[0] == "" {
 		return nil, status.Error(codes.Internal, "invalid metadata: public key missing")
 	}
 
@@ -300,9 +306,10 @@ func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetad
 	}
 
 	return &proxyMetadata{
-		OrganizationName:     organizationName[0],
-		PublicKeyPEM:         string(publicKeyPEM),
-		PublicKeyFingerprint: publicKeyFingerprint[0],
+		OrganizationName:         organizationName[0],
+		OrganizationSerialNumber: organizationSerialNumber[0],
+		PublicKeyPEM:             string(publicKeyPEM),
+		PublicKeyFingerprint:     publicKeyFingerprint[0],
 	}, nil
 }
 
@@ -327,7 +334,8 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	request := &database.IncomingAccessRequest{
 		ServiceID: service.ID,
 		Organization: database.IncomingAccessRequestOrganization{
-			Name: md.OrganizationName,
+			Name:         md.OrganizationName,
+			SerialNumber: md.OrganizationSerialNumber,
 		},
 		PublicKeyPEM:         md.PublicKeyPEM,
 		PublicKeyFingerprint: md.PublicKeyFingerprint,

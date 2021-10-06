@@ -5,12 +5,16 @@ package server_test
 
 import (
 	"context"
+	"crypto/x509"
+	"encoding/base64"
+	"fmt"
 	"path/filepath"
 	"testing"
 
 	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/metadata"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -22,40 +26,50 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-var (
-	testPublicKeyPEM = `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxahK/ruBG74MZ2/Z71ll
-WS1OMJy6xs9qpQY7YC7C+u59JoqNdoWToV6EZRfPYzh61BWsyKlqvkl11HhD6HVk
-WmdidYJtmoJqmFeWm02a6RkP4XbBiOCm9xxX/xlZRWubTCswaLkfmlI2IYxgpLIP
-QuvO2nbor8YG4dS7u7u7yrtl1dOBD1utlMCzX5j8vG+BaHUqE1kBWIE5kg9ogeVf
-wa/w30EPcD+5gdknn5uGoTFP/xi6WiZ+6MJli1CPjrHX0N73ZMSdgHK+4jk8Kdrz
-Fou5sNtCl+CTdzhDhwYJxJv/McsgqPfXsOdk0T3QUcCqWsawJ8VblJYYwyj1WW7l
-bJSygJjvOTG+C2+vbht3mKvimKpx/+8S/Zg+g7nen//SvFQhe2wI7Eaottgk/abU
-6i3ntvSty4EyxFPnchKa7EXeFAsp4stO0Q5iTE4rEdDotwaWrmcN54UQr2ZOVPJ/
-BGGG6SxeciX9jB9I1FHBngMyiXVDgMlgGa9Ke3y1V+Yaqh3LOp6JXnjXp50Ke0nc
-CMa7tBd6GGJqV4hl3daYj7yyBWzB3E2d/u+gJx1e9mxqgA0V7nidh2CRelHtczhC
-O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
-P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
------END PUBLIC KEY-----
-`
-	testPublicKeyFingerprint = "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc="
+type CertificateBundleOrganizationName string
+
+const (
+	OrgNLXTest             CertificateBundleOrganizationName = "org-nlx-test"
+	OrgNLXTestB            CertificateBundleOrganizationName = "org-nlx-test-b"
+	OrgWithoutName         CertificateBundleOrganizationName = "org-without-name"
+	OrgWithoutSerialNumber CertificateBundleOrganizationName = "org-without-serial-number"
 )
 
-func newCertificateBundle() (*common_tls.CertificateBundle, error) {
+func getCertificateBundle(name CertificateBundleOrganizationName) (*common_tls.CertificateBundle, error) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
 	return common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+		filepath.Join(pkiDir, fmt.Sprintf("%s-chain.pem", name)),
+		filepath.Join(pkiDir, fmt.Sprintf("%s-key.pem", name)),
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 }
 
-func setProxyMetadata(ctx context.Context) context.Context {
+func newCertificateBundle() (*common_tls.CertificateBundle, error) {
+	return getCertificateBundle(OrgNLXTest)
+}
+
+func setProxyMetadata(t *testing.T, ctx context.Context) context.Context {
+	orgCert, err := newCertificateBundle()
+	require.NoError(t, err)
+
+	return setProxyMetadataWithCertBundle(t, ctx, orgCert)
+}
+
+func setProxyMetadataWithCertBundle(t *testing.T, ctx context.Context, certBundle *common_tls.CertificateBundle) context.Context {
+	publicKeyDER, err := x509.MarshalPKIXPublicKey(certBundle.PublicKey())
+	require.NoError(t, err)
+
+	organizationName := certBundle.Certificate().Subject.Organization[0]
+	organizationSerialNumber := certBundle.Certificate().Subject.SerialNumber
+	publicKeyDEREncoded := base64.StdEncoding.EncodeToString(publicKeyDER)
+	publicKeyFingerprint := common_tls.X509PublicKeyFingerprint(certBundle.Certificate())
+
 	md := metadata.Pairs(
-		"nlx-organization", "organization-a",
-		"nlx-public-key-der", "ZHVtbXktcHVibGljLWtleQo=",
-		"nlx-public-key-fingerprint", testPublicKeyFingerprint,
+		"nlx-organization-name", organizationName,
+		"nlx-organization-serial-number", organizationSerialNumber,
+		"nlx-public-key-der", publicKeyDEREncoded,
+		"nlx-public-key-fingerprint", publicKeyFingerprint,
 	)
 
 	return metadata.NewIncomingContext(ctx, md)

@@ -130,11 +130,12 @@ func (p *Proxy) streamInterceptor(srv interface{}, serverStream grpc.ServerStrea
 	}
 
 	streamInfo := &streamInfo{
-		fullMethod:           info.FullMethod,
-		peerAddr:             pr.Addr.String(),
-		organizationName:     peerCert.Subject.Organization[0],
-		publicKeyDER:         base64.StdEncoding.EncodeToString(publicKeyDER),
-		publicKeyFingerprint: tls.X509PublicKeyFingerprint(peerCert),
+		fullMethod:               info.FullMethod,
+		peerAddr:                 pr.Addr.String(),
+		organizationName:         peerCert.Subject.Organization[0],
+		organizationSerialNumber: peerCert.Subject.SerialNumber,
+		publicKeyDER:             base64.StdEncoding.EncodeToString(publicKeyDER),
+		publicKeyFingerprint:     tls.X509PublicKeyFingerprint(peerCert),
 	}
 
 	w := &wrappedServerStream{serverStream, setStreamInfo(ctx, streamInfo)}
@@ -167,7 +168,8 @@ func (p *Proxy) serviceHandler(srv interface{}, serverStream grpc.ServerStream) 
 
 	clientMD := md.Copy()
 	clientMD.Set("forwarded", forwarded)
-	clientMD.Set("nlx-organization", info.organizationName)
+	clientMD.Set("nlx-organization-name", info.organizationName)
+	clientMD.Set("nlx-organization-serial-number", info.organizationSerialNumber)
 	clientMD.Set("nlx-public-key-der", info.publicKeyDER)
 	clientMD.Set("nlx-public-key-fingerprint", info.publicKeyFingerprint)
 

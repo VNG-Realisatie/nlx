@@ -6,11 +6,12 @@ package grpcproxy
 import "context"
 
 type streamInfo struct {
-	fullMethod           string
-	organizationName     string
-	publicKeyDER         string
-	publicKeyFingerprint string
-	peerAddr             string
+	fullMethod               string
+	organizationName         string
+	organizationSerialNumber string
+	publicKeyDER             string
+	publicKeyFingerprint     string
+	peerAddr                 string
 }
 
 type ctxKey int

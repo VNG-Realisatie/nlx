@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -26,6 +27,13 @@ import (
 func TestCreateOutgoingOrder(t *testing.T) {
 	validFrom := time.Now().UTC()
 	validUntil := time.Now().Add(1 * time.Hour).UTC()
+
+	certBundle, err := getCertificateBundle(OrgNLXTest)
+	require.NoError(t, err)
+
+	testPublicKeyPEM, err := certBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
 	validCreateOutgoingOrderRequest := func() api.CreateOutgoingOrderRequest {
 		return api.CreateOutgoingOrderRequest{
 			Reference:    "a-reference",

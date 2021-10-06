@@ -13,10 +13,12 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/domain"
@@ -239,23 +241,35 @@ func TestListOrders(t *testing.T) {
 	revokedAt := time.Now()
 
 	tests := map[string]struct {
-		setup        func(serviceMocks)
-		wantResponse *external.ListOrdersResponse
-		wantErr      error
+		setup   func(*testing.T, serviceMocks, *common_tls.CertificateBundle) context.Context
+		want    *external.ListOrdersResponse
+		wantErr error
 	}{
 		"when_retrieval_of_orders_from_database_fails": {
-			setup: func(mocks serviceMocks) {
-				mocks.db.EXPECT().
-					ListOutgoingOrdersByOrganization(gomock.Any(), "organization-a").
+			setup: func(_ *testing.T, mocks serviceMocks, certBundle *common_tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+
+				mocks.db.
+					EXPECT().
+					ListOutgoingOrdersByOrganization(ctx, certBundle.Certificate().Subject.Organization[0]).
 					Return(nil, errors.New("arbitrary error"))
+
+				return ctx
 			},
 			wantErr: status.Error(codes.Internal, "failed to retrieve external orders"),
 		},
 		"happy_flow": {
-			setup: func(mocks serviceMocks) {
+			setup: func(t *testing.T, mocks serviceMocks, certBundle *common_tls.CertificateBundle) context.Context {
+				requesterCertBundle, err := getCertificateBundle(OrgNLXTestB)
+				require.NoError(t, err)
+
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)
+
+				requesterOrganizationName := requesterCertBundle.Certificate().Subject.Organization[0]
+
 				mocks.db.
 					EXPECT().
-					ListOutgoingOrdersByOrganization(gomock.Any(), "organization-a").
+					ListOutgoingOrdersByOrganization(ctx, requesterOrganizationName).
 					Return([]*database.OutgoingOrder{
 						{
 							Reference:   "reference",
@@ -272,8 +286,10 @@ func TestListOrders(t *testing.T) {
 							},
 						},
 					}, nil)
+
+				return ctx
 			},
-			wantResponse: &external.ListOrdersResponse{
+			want: &external.ListOrdersResponse{
 				Orders: []*api.IncomingOrder{
 					{
 						Reference:   "reference",
@@ -292,10 +308,17 @@ func TestListOrders(t *testing.T) {
 			},
 		},
 		"happy_flow_revoked": {
-			setup: func(mocks serviceMocks) {
+			setup: func(t *testing.T, mocks serviceMocks, certBundle *common_tls.CertificateBundle) context.Context {
+				requesterCertBundle, err := getCertificateBundle(OrgNLXTestB)
+				require.NoError(t, err)
+
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)
+
+				requesterOrganizationName := requesterCertBundle.Certificate().Subject.Organization[0]
+
 				mocks.db.
 					EXPECT().
-					ListOutgoingOrdersByOrganization(gomock.Any(), "organization-a").
+					ListOutgoingOrdersByOrganization(ctx, requesterOrganizationName).
 					Return([]*database.OutgoingOrder{
 						{
 							Reference:   "reference",
@@ -315,8 +338,10 @@ func TestListOrders(t *testing.T) {
 							},
 						},
 					}, nil)
+
+				return ctx
 			},
-			wantResponse: &external.ListOrdersResponse{
+			want: &external.ListOrdersResponse{
 				Orders: []*api.IncomingOrder{
 					{
 						Reference:   "reference",
@@ -341,17 +366,15 @@ func TestListOrders(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
-			ctx := setProxyMetadata(context.Background())
+			t.Parallel()
 
-			if tt.setup != nil {
-				tt.setup(mocks)
-			}
+			service, certBundle, mocks := newService(t)
+			ctx := tt.setup(t, mocks, certBundle)
 
 			response, err := service.ListOrders(ctx, &emptypb.Empty{})
 
 			if tt.wantErr == nil {
-				assert.Equal(t, tt.wantResponse, response)
+				assert.Equal(t, tt.want, response)
 			} else {
 				assert.Error(t, err)
 				assert.ErrorIs(t, err, tt.wantErr)

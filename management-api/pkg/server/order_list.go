@@ -79,12 +79,12 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 }
 
 func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*external.ListOrdersResponse, error) {
-	metadata, err := s.parseProxyMetadata(ctx)
+	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to parse proxy metadata")
 	}
 
-	orders, err := s.configDatabase.ListOutgoingOrdersByOrganization(ctx, metadata.OrganizationName)
+	orders, err := s.configDatabase.ListOutgoingOrdersByOrganization(ctx, md.OrganizationName)
 	if err != nil {
 		s.logger.Error("error getting issued orders from database", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "failed to retrieve external orders")
