@@ -62,8 +62,8 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "00000000000000000001",
-						OrderReference:        "test-ref-123",
+						OrderOrganizationSerialNumber: "00000000000000000001",
+						OrderReference:                "test-ref-123",
 					}).
 					Return(nil, errors.New("something went wrong"))
 			},
@@ -80,8 +80,8 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "00000000000000000001",
-						OrderReference:        "test-ref-123",
+						OrderOrganizationSerialNumber: "00000000000000000001",
+						OrderReference:                "test-ref-123",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: "invalid_jwt",
@@ -98,8 +98,8 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "00000000000000000001", // @TODO change to serial number
-						OrderReference:        "test-ref-123",
+						OrderOrganizationSerialNumber: "00000000000000000001",
+						OrderReference:                "test-ref-123",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,
@@ -118,8 +118,8 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "00000000000000000001",
-						OrderReference:        "test-ref-123",
+						OrderOrganizationSerialNumber: "00000000000000000001",
+						OrderReference:                "test-ref-123",
 					}).
 					Return(nil, status.Error(codes.Unauthenticated, "order is revoked"))
 			},
@@ -134,8 +134,8 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationName: "00000000000000000001", // @TODO change to serial number
-						OrderReference:        "test-ref-123",
+						OrderOrganizationSerialNumber: "00000000000000000001",
+						OrderReference:                "test-ref-123",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,

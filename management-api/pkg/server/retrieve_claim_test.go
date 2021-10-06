@@ -38,18 +38,18 @@ func TestRetrieveClaim(t *testing.T) {
 		},
 		"when_providing_an_empty_order_organization_name": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:        "arbitrary-order-reference",
-				OrderOrganizationName: "",
+				OrderReference:                "arbitrary-order-reference",
+				OrderOrganizationSerialNumber: "",
 			},
 			setup: func(*server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an organization name of the order must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "an organization serial number of the order must be provided"),
 		},
 		"when_getting_the_organization_inway_proxy_address_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:        "order-reference-a",
-				OrderOrganizationName: "organization-a",
+				OrderReference:                "order-reference-a",
+				OrderOrganizationSerialNumber: "organization-a",
 			},
 			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -63,8 +63,8 @@ func TestRetrieveClaim(t *testing.T) {
 		// nolint dupl: linter is unable to detect difference in error message
 		"when_creating_the_management_client_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:        "order-reference-a",
-				OrderOrganizationName: "organization-a",
+				OrderReference:                "order-reference-a",
+				OrderOrganizationSerialNumber: "organization-a",
 			},
 			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -86,8 +86,8 @@ func TestRetrieveClaim(t *testing.T) {
 		// nolint dupl: linter is unable to detect difference in error message
 		"when_order_is_revoked": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:        "order-reference-a",
-				OrderOrganizationName: "organization-a",
+				OrderReference:                "order-reference-a",
+				OrderOrganizationSerialNumber: "organization-a",
 			},
 			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -141,8 +141,8 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 		}, nil)
 
 	response, err := service.RetrieveClaimForOrder(ctx, &api.RetrieveClaimForOrderRequest{
-		OrderReference:        "order-reference-a",
-		OrderOrganizationName: "organization-a",
+		OrderReference:                "order-reference-a",
+		OrderOrganizationSerialNumber: "organization-a",
 	})
 
 	assert.NoError(t, err)

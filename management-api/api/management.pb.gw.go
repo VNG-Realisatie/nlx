@@ -1313,14 +1313,14 @@ func request_Directory_GetOrganizationService_0(ctx context.Context, marshaler r
 		_   = err
 	)
 
-	val, ok = pathParams["organizationName"]
+	val, ok = pathParams["organizationSerialNumber"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
 	}
 
-	protoReq.OrganizationName, err = runtime.String(val)
+	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
 	}
 
 	val, ok = pathParams["serviceName"]
@@ -1349,14 +1349,14 @@ func local_request_Directory_GetOrganizationService_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["organizationName"]
+	val, ok = pathParams["organizationSerialNumber"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
 	}
 
-	protoReq.OrganizationName, err = runtime.String(val)
+	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
 	}
 
 	val, ok = pathParams["serviceName"]
@@ -1385,14 +1385,14 @@ func request_Directory_RequestAccessToService_0(ctx context.Context, marshaler r
 		_   = err
 	)
 
-	val, ok = pathParams["organizationName"]
+	val, ok = pathParams["organizationSerialNumber"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
 	}
 
-	protoReq.OrganizationName, err = runtime.String(val)
+	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
 	}
 
 	val, ok = pathParams["serviceName"]
@@ -1421,14 +1421,14 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["organizationName"]
+	val, ok = pathParams["organizationSerialNumber"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
 	}
 
-	protoReq.OrganizationName, err = runtime.String(val)
+	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
 	}
 
 	val, ok = pathParams["serviceName"]
@@ -3045,9 +3045,9 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 var (
 	pattern_Directory_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "directory", "services"}, ""))
 
-	pattern_Directory_GetOrganizationService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "directory", "organizations", "organizationName", "services", "serviceName"}, ""))
+	pattern_Directory_GetOrganizationService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "directory", "organizations", "organizationSerialNumber", "services", "serviceName"}, ""))
 
-	pattern_Directory_RequestAccessToService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "directory", "organizations", "organizationName", "services", "serviceName", "access-requests"}, ""))
+	pattern_Directory_RequestAccessToService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "directory", "organizations", "organizationSerialNumber", "services", "serviceName", "access-requests"}, ""))
 )
 
 var (

@@ -33,7 +33,7 @@ const (
 
 type OutgoingAccessRequest struct {
 	ID                   uint
-	OrganizationName     string
+	OrganizationName     string // @TODO: OrganizationSerialNumber
 	ServiceName          string
 	ReferenceID          uint
 	State                OutgoingAccessRequestState

@@ -31,7 +31,7 @@ type Client interface {
 	inspectionapi.DirectoryInspectionClient
 	registrationapi.DirectoryRegistrationClient
 
-	GetOrganizationInwayProxyAddress(ctx context.Context, organizationName string) (string, error)
+	GetOrganizationInwayProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error)
 }
 
 type client struct {

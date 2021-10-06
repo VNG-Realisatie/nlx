@@ -73,11 +73,10 @@ func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string,
 	return
 }
 
-// @TODO change to serial number
-func (plugin *DelegationPlugin) requestClaim(name, orderReference string) (*delegation.JWTClaims, string, error) {
+func (plugin *DelegationPlugin) requestClaim(serialNumber, orderReference string) (*delegation.JWTClaims, string, error) {
 	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
-		OrderOrganizationName: name,
-		OrderReference:        orderReference,
+		OrderOrganizationSerialNumber: serialNumber,
+		OrderReference:                orderReference,
 	})
 	if err != nil {
 		st, ok := status.FromError(err)

@@ -406,10 +406,10 @@ service Directory {
     option (google.api.http) = {get: "/api/v1/directory/services"};
   }
   rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
-    option (google.api.http) = {get: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"};
   }
   rpc RequestAccessToService (RequestAccessToServiceRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests"};
+    option (google.api.http) = {post: "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"};
   }
 }
 
@@ -418,7 +418,7 @@ message DirectoryListServicesResponse {
 }
 
 message GetOrganizationServiceRequest {
-  string organizationName = 1;
+  string organizationSerialNumber = 1;
   string serviceName = 2;
 }
 
@@ -427,6 +427,11 @@ message DirectoryAccessRequest {
   AccessRequestState state = 2;
   google.protobuf.Timestamp createdAt = 3;
   google.protobuf.Timestamp updatedAt = 4;
+}
+
+message Organization {
+  string serialNumber = 1;
+  string name = 2;
 }
 
 message DirectoryService {
@@ -438,7 +443,7 @@ message DirectoryService {
   }
 
   string serviceName = 1;
-  string organizationName = 2;
+  Organization organization = 2;
   string apiSpecificationType = 3;
   string documentationURL = 4;
   string publicSupportContact = 5;
@@ -451,7 +456,7 @@ message DirectoryService {
 }
 
 message RequestAccessToServiceRequest {
-  string organizationName = 1;
+  string organizationSerialNumber = 1;
   string serviceName = 2;
 }
 
@@ -511,7 +516,7 @@ message ListAuditLogsResponse {
 
 message RetrieveClaimForOrderRequest {
   string orderReference = 1;
-  string orderOrganizationName = 2;
+  string orderOrganizationSerialNumber = 2;
 }
 
 message RetrieveClaimForOrderResponse {

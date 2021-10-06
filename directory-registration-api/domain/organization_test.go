@@ -36,33 +36,26 @@ func Test_NewOrganization(t *testing.T) {
 			},
 			expectedErr: "error validating organization name: cannot be blank",
 		},
-		"short_serial_number": {
-			organization: organizationParams{
-				name:         "name",
-				serialNumber: "0123456789",
-			},
-			expectedErr: "error validating organization serial number: must be in a valid format",
-		},
 		"long_serial_number": {
 			organization: organizationParams{
 				name:         "name",
 				serialNumber: "012345678901234567890123456789",
 			},
-			expectedErr: "error validating organization serial number: must be in a valid format",
+			expectedErr: "error validating organization serial number: serial number is too long, max 20 bytes",
 		},
-		"invalid_serial_number": {
+		"serial_number_with_different_characters": {
 			organization: organizationParams{
 				name:         "name",
-				serialNumber: "0123456789abc456789",
+				serialNumber: "0123456789a&c456789",
 			},
-			expectedErr: "error validating organization serial number: must be in a valid format",
+			expectedErr: "",
 		},
 		"empty_serial_number": {
 			organization: organizationParams{
 				name:         "name",
 				serialNumber: "",
 			},
-			expectedErr: "error validating organization serial number: cannot be blank",
+			expectedErr: "error validating organization serial number: serial number is empty",
 		},
 		"happy_flow": {
 			organization: organizationParams{

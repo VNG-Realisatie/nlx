@@ -19,11 +19,11 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 		return nil, status.Error(codes.InvalidArgument, "an order reference must be provided")
 	}
 
-	if len(req.OrderOrganizationName) < 1 {
-		return nil, status.Error(codes.InvalidArgument, "an organization name of the order must be provided")
+	if len(req.OrderOrganizationSerialNumber) < 1 {
+		return nil, status.Error(codes.InvalidArgument, "an organization serial number of the order must be provided")
 	}
 
-	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, req.OrderOrganizationName)
+	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, req.OrderOrganizationSerialNumber)
 	if err != nil {
 		s.logger.Error("unable to get the inway proxy address of the external organization", zap.Error(err))
 		return nil, status.Error(codes.Internal, "unable to retrieve claim")

@@ -23,7 +23,6 @@ import (
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/common/tls"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
@@ -146,7 +145,7 @@ func NewOutway(
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	err := tls.ValidateSerialNumber(cert.Subject.SerialNumber)
+	err := common_tls.ValidateSerialNumber(cert.Subject.SerialNumber)
 	if err != nil {
 		return nil, fmt.Errorf("validation error for subject serial number from cert: %s", err)
 	}

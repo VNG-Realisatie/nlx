@@ -62,7 +62,7 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 	for i, service := range resp.Services {
 		convertedService := convertDirectoryService(service)
 
-		accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, convertedService.OrganizationName, convertedService.ServiceName)
+		accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, convertedService.Organization.Name, convertedService.ServiceName)
 		if err != nil {
 			s.logger.Error("error getting latest access request and access proof", zap.Error(err))
 			return nil, status.Errorf(codes.Internal, "database error")
@@ -79,17 +79,17 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 
 // GetOrganizationService returns a specific service of and organization
 func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
-	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
+	logger := s.logger.With(zap.String("organizationName", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
-	service, err := s.getService(ctx, logger, request.OrganizationName, request.ServiceName) // @TODO change to serial number
+	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)
 	if err != nil {
 		return nil, err
 	}
 
 	directoryService := convertDirectoryService(service)
 
-	accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, directoryService.OrganizationName, directoryService.ServiceName)
+	accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, directoryService.Organization.Name, directoryService.ServiceName)
 	if err != nil {
 		s.logger.Error("error getting latest access request and access proof", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "database error")
@@ -120,11 +120,11 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 
 // RequestAccessToService records an access request and sends it to the organization
 func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
-	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName)) // @TODO change to serial number
+	logger := s.logger.With(zap.String("organizationName", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
 
 	ar := &database.OutgoingAccessRequest{
-		OrganizationName: request.OrganizationName,
+		OrganizationName: request.OrganizationSerialNumber, // @TODO: Name->SerialNumber
 		ServiceName:      request.ServiceName,
 	}
 
@@ -138,7 +138,7 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 		return nil, err
 	}
 
-	service, err := s.getService(ctx, logger, request.OrganizationName, request.ServiceName)
+	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)
 	if err != nil {
 		return nil, err
 	}
@@ -185,9 +185,11 @@ func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api
 		State:                serviceState,
 	}
 
-	// @TODO: use Serial Number and org object in api.DirectoryService
 	if s.Organization != nil {
-		service.OrganizationName = s.Organization.Name
+		service.Organization = &api.Organization{
+			SerialNumber: s.Organization.SerialNumber,
+			Name:         s.Organization.Name,
+		}
 	}
 
 	// @TODO: Use costs object in api.DirectoryService
@@ -230,6 +232,7 @@ func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.Outg
 	}, nil
 }
 
+// @TODO: Serial Number
 func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase database.ConfigDatabase, organizationName, serviceName string) (*api.OutgoingAccessRequest, *api.AccessProof, error) {
 	latestAccessRequest, errDatabase := configDatabase.GetLatestOutgoingAccessRequest(ctx, organizationName, serviceName)
 	if errDatabase != nil {

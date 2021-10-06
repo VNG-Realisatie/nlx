@@ -52,7 +52,6 @@ func newCertificateBundle() (*common_tls.CertificateBundle, error) {
 }
 
 func setProxyMetadata(ctx context.Context) context.Context {
-	// @TODO: generate values based on the actual bundle?
 	md := metadata.Pairs(
 		"nlx-organization", "organization-a",
 		"nlx-public-key-der", "ZHVtbXktcHVibGljLWtleQo=",

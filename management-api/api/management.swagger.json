@@ -293,7 +293,7 @@
         ]
       }
     },
-    "/api/v1/directory/organizations/{organizationName}/services/{serviceName}": {
+    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}": {
       "get": {
         "operationId": "Directory_GetOrganizationService",
         "responses": {
@@ -312,7 +312,7 @@
         },
         "parameters": [
           {
-            "name": "organizationName",
+            "name": "organizationSerialNumber",
             "in": "path",
             "required": true,
             "type": "string"
@@ -329,7 +329,7 @@
         ]
       }
     },
-    "/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests": {
+    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests": {
       "post": {
         "operationId": "Directory_RequestAccessToService",
         "responses": {
@@ -348,7 +348,7 @@
         },
         "parameters": [
           {
-            "name": "organizationName",
+            "name": "organizationSerialNumber",
             "in": "path",
             "required": true,
             "type": "string"
@@ -734,7 +734,7 @@
             "type": "string"
           },
           {
-            "name": "orderOrganizationName",
+            "name": "orderOrganizationSerialNumber",
             "in": "query",
             "required": false,
             "type": "string"
@@ -1287,8 +1287,8 @@
         "serviceName": {
           "type": "string"
         },
-        "organizationName": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/managementOrganization"
         },
         "apiSpecificationType": {
           "type": "string"
@@ -1674,6 +1674,17 @@
           "type": "string"
         },
         "service": {
+          "type": "string"
+        }
+      }
+    },
+    "managementOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         }
       }
