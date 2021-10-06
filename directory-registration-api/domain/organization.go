@@ -8,6 +8,7 @@ import (
 	"regexp"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"go.nlx.io/nlx/common/tls"
 )
 
 type Organization struct {
@@ -16,7 +17,6 @@ type Organization struct {
 }
 
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-._\s]{1,100}$`)
-var organizationSerialNumberRegex = regexp.MustCompile(`^\d{20}$`)
 
 func NewOrganization(name, serialNumber string) (*Organization, error) {
 	err := validation.Validate(name, validation.Required, validation.Match(organizationNameRegex))
@@ -24,7 +24,7 @@ func NewOrganization(name, serialNumber string) (*Organization, error) {
 		return nil, fmt.Errorf("error validating organization name: %s", err)
 	}
 
-	err = validation.Validate(serialNumber, validation.Required, validation.Match(organizationSerialNumberRegex))
+	err = tls.ValidateSerialNumber(serialNumber)
 	if err != nil {
 		return nil, fmt.Errorf("error validating organization serial number: %s", err)
 	}
