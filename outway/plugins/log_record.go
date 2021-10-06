@@ -128,8 +128,8 @@ func (plugin *LogRecordPlugin) createLogRecord(context *Context) (*LogRecordID, 
 
 	recordData := createRecordData(context.Request.Header, context.Destination.Path)
 	record := &transactionlog.Record{
-		SrcOrganization:  plugin.organizationSerialNumber,              // @TODO change to serial number
-		DestOrganization: context.Destination.OrganizationSerialNumber, // @TODO change to serial number
+		SrcOrganization:  plugin.organizationSerialNumber,
+		DestOrganization: context.Destination.OrganizationSerialNumber,
 		ServiceName:      context.Destination.Service,
 		LogrecordID:      logRecordID.String(),
 		Data:             recordData,

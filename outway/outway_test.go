@@ -25,7 +25,7 @@ import (
 
 type authRequest struct {
 	Headers      http.Header `json:"headers"`
-	Organization string      `json:"organization"` // @TODO change to serial number
+	Organization string      `json:"organization"`
 	Service      string      `json:"service"`
 }
 
@@ -113,7 +113,7 @@ func TestNewOutwayExeception(t *testing.T) {
 
 func TestAuthListen(t *testing.T) {
 	logger := zap.NewNop()
-	// Createa a outway with a mock service
+	// Create an outway with a mock service
 	outway := &Outway{
 		organization: &Organization{
 			serialNumber: "00000000000000000001",
@@ -144,7 +144,7 @@ func TestAuthListen(t *testing.T) {
 		if user := authRequest.Headers.Get("Authorization-Proxy"); user == "Bearer token" {
 			authResponse.Authorized = true
 			if encodeErr := json.NewEncoder(w).Encode(authResponse); encodeErr != nil {
-				panic(encodeErr)
+				t.Fatal(encodeErr)
 			}
 			return
 		}
@@ -152,7 +152,7 @@ func TestAuthListen(t *testing.T) {
 		authResponse.Authorized = false
 		authResponse.Reason = "invalid user"
 		if encodeErr := json.NewEncoder(w).Encode(authResponse); encodeErr != nil {
-			panic(encodeErr)
+			t.Fatal(encodeErr)
 		}
 	}))
 	defer mockAuthServer.Close()

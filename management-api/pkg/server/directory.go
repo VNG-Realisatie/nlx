@@ -82,7 +82,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
-	service, err := s.getService(ctx, logger, request.OrganizationName, request.ServiceName)
+	service, err := s.getService(ctx, logger, request.OrganizationName, request.ServiceName) // @TODO change to serial number
 	if err != nil {
 		return nil, err
 	}
@@ -101,15 +101,14 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	return directoryService, nil
 }
 
-// @TODO: organizationName to serialNumber
-func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationName, serviceName string) (*inspectionapi.ListServicesResponse_Service, error) {
+func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationSerialNumber, serviceName string) (*inspectionapi.ListServicesResponse_Service, error) {
 	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "directory not available")
 	}
 
 	for _, s := range resp.Services {
-		if s.Organization.Name == organizationName && s.Name == serviceName {
+		if s.Organization.SerialNumber == organizationSerialNumber && s.Name == serviceName {
 			return s, nil
 		}
 	}
@@ -121,7 +120,7 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 
 // RequestAccessToService records an access request and sends it to the organization
 func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
-	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName))
+	logger := s.logger.With(zap.String("organizationName", request.OrganizationName), zap.String("serviceName", request.ServiceName)) // @TODO change to serial number
 	logger.Info("rpc request RequestAccessToService")
 
 	ar := &database.OutgoingAccessRequest{
