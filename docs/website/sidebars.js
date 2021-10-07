@@ -24,7 +24,7 @@ module.exports = {
       items: [
         {
           type: 'category',
-          label: 'Docker compose',
+          label: 'Docker Compose',
           collapsible: true,
           collapsed: true,
           items: [

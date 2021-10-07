@@ -1,6 +1,6 @@
 ---
 id: 2createcertificate
-title: 2. Create Certicates
+title: 2. Create Certificates
 ---
 
 # 2. Create Certificates
