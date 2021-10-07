@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 const (
@@ -24,7 +25,6 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	serviceName := mockservicename
 
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
-	healthyStates := []bool{true, true}
 
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
@@ -35,7 +35,16 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), cert,
 		organizationSerialNumber, serviceName,
-		inwayAddresses, healthyStates)
+		[]inspectionapi.Inway{
+			{
+				Address: inwayAddresses[0],
+				State:   inspectionapi.Inway_UP,
+			},
+			{
+				Address: inwayAddresses[1],
+				State:   inspectionapi.Inway_UP,
+			},
+		})
 
 	assert.Nil(t, err)
 	assert.Equal(t, inwayAddresses, l.GetInwayAddresses())

@@ -270,8 +270,7 @@ func (o *Outway) createService(
 	// Look for healthy inwayaddresses unless it there is only one
 	// known address.
 	moreEndpoints := len(serviceToImplement.Inways) > 1
-	InwayAddresses := []string{}
-	HealthyStates := []bool{}
+	inways := []inspectionapi.Inway{}
 
 	for _, inway := range serviceToImplement.Inways {
 		inwayAddress := inway.Address
@@ -283,8 +282,13 @@ func (o *Outway) createService(
 			// if there is only one unhealthy endpoint then
 			// we use that one endpoint anyway which is useful
 			// for testing / setup purposes.
-			InwayAddresses = append(InwayAddresses, inwayAddress)
-			HealthyStates = append(HealthyStates, healthy)
+
+			// Cloned this way to avoid the following error:
+			// govet: copylocks: call of append copies lock value: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+			inways = append(inways, inspectionapi.Inway{
+				Address: inway.Address,
+				State:   inway.State,
+			})
 
 			continue
 		}
@@ -306,8 +310,12 @@ func (o *Outway) createService(
 				zap.String("inway address", inwayAddress),
 			)
 
-			InwayAddresses = append(InwayAddresses, inwayAddress)
-			HealthyStates = append(HealthyStates, healthy)
+			// Cloned this way to avoid the following error:
+			// govet: copylocks: call of append copies lock value: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+			inways = append(inways, inspectionapi.Inway{
+				Address: inway.Address,
+				State:   inway.State,
+			})
 
 			continue
 		}
@@ -318,8 +326,7 @@ func (o *Outway) createService(
 		o.orgCert,
 		serviceToImplement.Organization.SerialNumber,
 		serviceToImplement.Name,
-		InwayAddresses,
-		HealthyStates,
+		inways,
 	)
 	if err != nil {
 		if err == errNoInwaysAvailable {

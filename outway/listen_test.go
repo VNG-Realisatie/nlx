@@ -450,9 +450,6 @@ func TestFailingTransport(t *testing.T) {
 	// Setup mock httpservice
 	outway.servicesDirectory["00000000000000000001.mockservice"] = &inwayMessage
 
-	inwayAddresses := []string{"inway.00000000000000000001"}
-	healthyStates := []bool{true}
-
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -462,7 +459,10 @@ func TestFailingTransport(t *testing.T) {
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), cert,
 		"00000000000000000001", "mockservice",
-		inwayAddresses, healthyStates)
+		[]inspectionapi.Inway{{
+			Address: "inway.00000000000000000001",
+			State:   inspectionapi.Inway_UP,
+		}})
 
 	assert.Nil(t, err)
 

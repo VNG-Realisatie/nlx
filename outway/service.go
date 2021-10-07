@@ -17,6 +17,7 @@ import (
 	"golang.org/x/net/http2"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 )
 
 var errNoInwaysAvailable = errors.New("no inways available")
@@ -33,8 +34,7 @@ type RoundRobinLoadBalancedHTTPService struct {
 	organizationSerialNumber string
 	serviceName              string
 
-	inwayAddresses  []string
-	healthyStates   []bool
+	inways          []inspectionapi.Inway
 	loadBalanceLock sync.Mutex
 	count           int
 
@@ -79,10 +79,9 @@ func NewRoundRobinLoadBalancedHTTPService(
 	cert *common_tls.CertificateBundle,
 	organizationSerialNumber,
 	serviceName string,
-	inwayAddresses []string,
-	healthyStates []bool,
+	inways []inspectionapi.Inway,
 ) (*RoundRobinLoadBalancedHTTPService, error) {
-	if len(inwayAddresses) == 0 {
+	if len(inways) == 0 {
 		return nil, errNoInwaysAvailable
 	}
 
@@ -90,19 +89,20 @@ func NewRoundRobinLoadBalancedHTTPService(
 		organizationSerialNumber: organizationSerialNumber,
 		serviceName:              serviceName,
 		count:                    0,
-		inwayAddresses:           inwayAddresses,
-		healthyStates:            healthyStates,
-		proxies:                  make([]*httputil.ReverseProxy, len(inwayAddresses)),
+		inways:                   inways,
+		proxies:                  make([]*httputil.ReverseProxy, len(inways)),
 	}
 	s.logger = logger.With(zap.String("outway-service-full-name", s.FullName()))
 
 	tlsConfig := cert.TLSConfig()
 	roundTripTransport := newRoundTripHTTPTransport(logger, tlsConfig)
 
-	for i, inwayAddress := range inwayAddresses {
-		endpointURL, err := url.Parse("https://" + inwayAddress)
+	// index is used instead of `_, inway` to avoid the following error:
+	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+	for i := range inways {
+		endpointURL, err := url.Parse("https://" + inways[0].Address)
 		if err != nil {
-			return nil, errors.Wrap(err, "inway address:"+inwayAddress+" is not a valid url")
+			return nil, errors.Wrap(err, "inway address:"+inways[0].Address+" is not a valid url")
 		}
 
 		endpointURL.Path = "/" + serviceName
@@ -135,16 +135,28 @@ func (s *RoundRobinLoadBalancedHTTPService) GetProxies() []*httputil.ReverseProx
 // log the error and return some helpful text.
 // set 503 Status Service Temporarily Unavailable response.
 func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWriter, r *http.Request, e error) {
-	msg := ("failed request to " + r.URL.String() +
+	msg := "failed request to " + r.URL.String() +
 		" try again later / check firewall?" +
-		" check O1 and M1 at https://docs.nlx.io/support/common-errors/")
+		" check O1 and M1 at https://docs.nlx.io/support/common-errors/"
 	s.logger.Error(msg)
 	http.Error(w, msg, http.StatusServiceUnavailable)
 }
 
 // GetInwayAddresses returns the possible inwayaddresses of the httpservice
+func (s *RoundRobinLoadBalancedHTTPService) GetInways() []inspectionapi.Inway {
+	return s.inways
+}
+
 func (s *RoundRobinLoadBalancedHTTPService) GetInwayAddresses() []string {
-	return s.inwayAddresses
+	addresses := []string{}
+
+	// index is used instead of `_, inway` to avoid the following error:
+	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+	for i := range s.inways {
+		addresses = append(addresses, s.inways[i].Address)
+	}
+
+	return addresses
 }
 
 func (s *RoundRobinLoadBalancedHTTPService) getProxy() *httputil.ReverseProxy {
