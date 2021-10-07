@@ -49,7 +49,7 @@ func TestRetrieveClaim(t *testing.T) {
 		"when_getting_the_organization_inway_proxy_address_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "organization-a",
+				OrderOrganizationSerialNumber: "organization-a", // @TODO serial number
 			},
 			setup: func(service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().

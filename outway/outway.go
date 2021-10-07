@@ -151,11 +151,14 @@ func NewOutway(
 	}
 
 	organizationName := cert.Subject.Organization[0]
+	organizationSerialNumber := cert.Subject.SerialNumber
 
 	o := &Outway{
-		ctx:    ctx,
-		wg:     &sync.WaitGroup{},
-		logger: logger.With(zap.String("outway-organization-name", organizationName)),
+		ctx: ctx,
+		wg:  &sync.WaitGroup{},
+		logger: logger.With(
+			zap.String("outway-organization-name", organizationName),
+			zap.String("outway-organization-serialnumber", organizationSerialNumber)),
 		organization: &Organization{
 			serialNumber: cert.Subject.SerialNumber,
 			name:         organizationName,
@@ -211,7 +214,6 @@ func NewOutway(
 	return o, nil
 }
 
-//
 func newForwardingProxy() *httputil.ReverseProxy {
 	director := func(req *http.Request) {
 		if _, ok := req.Header["User-Agent"]; !ok {
@@ -288,13 +290,17 @@ func (o *Outway) createService(
 		}
 
 		if !healthy && moreEndpoints {
-			o.logger.Info("ignoring unhealthy inway endpoint. we have healthy ones.", zap.String("unhealthy endpoint", inwayAddress))
+			o.logger.Info("ignoring unhealthy inway endpoint. we have healthy ones.",
+				zap.String("unhealthy endpoint", inwayAddress),
+				zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
+				zap.String("service-organization-name", serviceToImplement.Organization.Name))
 			continue
 		}
 
 		if !healthy && !moreEndpoints {
 			o.logger.Info(
 				"inway might not be healthy / reachable by directory / behind firewall",
+				zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
 				zap.String("service-organization-name", serviceToImplement.Organization.Name),
 				zap.String("service-name", serviceToImplement.Name),
 				zap.String("inway address", inwayAddress),
@@ -319,6 +325,7 @@ func (o *Outway) createService(
 		if err == errNoInwaysAvailable {
 			o.logger.Debug(
 				"service exists but there are no inwayaddresses available",
+				zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
 				zap.String("service-organization-name", serviceToImplement.Organization.Name),
 				zap.String("service-name", serviceToImplement.Name))
 
@@ -327,6 +334,7 @@ func (o *Outway) createService(
 
 		o.logger.Error(
 			"failed to create new service",
+			zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
 			zap.String("service-organization-name", serviceToImplement.Organization.Name),
 			zap.String("service-name", serviceToImplement.Name),
 			zap.Error(err))
@@ -339,6 +347,7 @@ func (o *Outway) createService(
 	o.logger.Debug(
 		"implemented service",
 		zap.String("service-name", serviceToImplement.Name),
+		zap.String("service-organization-serial-number", serviceToImplement.Organization.SerialNumber),
 		zap.String("service-organization-name", serviceToImplement.Organization.Name),
 	)
 

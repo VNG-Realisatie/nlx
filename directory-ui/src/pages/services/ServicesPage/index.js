@@ -52,7 +52,6 @@ const ServicesPage = ({ location, history }) => {
     const loadServices = async () => {
       try {
         const services = await getServices()
-        console.warn(services)
         setState({
           ...state,
           loading: false,

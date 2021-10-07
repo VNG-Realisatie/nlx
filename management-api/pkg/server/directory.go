@@ -79,7 +79,7 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 
 // GetOrganizationService returns a specific service of and organization
 func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
-	logger := s.logger.With(zap.String("organizationName", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
+	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
 	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)

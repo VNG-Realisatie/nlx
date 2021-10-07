@@ -73,7 +73,7 @@ describe('reduce the inway states to a service status', () => {
 })
 
 describe('mapping the API response', () => {
-  it('should map the properties', () => {
+  it('should map the properties without costs', () => {
     const apiResponse = {
       services: [
         {
@@ -97,13 +97,53 @@ describe('mapping the API response', () => {
         apiType: 'openapi',
         contactEmailAddress: 'foo@bar.baz',
         documentationUrl: 'https://www.duck.com',
-        monthlyCosts: 0,
         name: 'bar',
-        oneTimeCosts: 0,
         organization: 'foo',
-        requestCosts: 0,
         status: 'down',
         serialNumber: '00000000000000000000',
+        oneTimeCosts: 0,
+        monthlyCosts: 0,
+        requestCosts: 0,
+      },
+    ])
+  })
+
+  it('should map the properties with costs', () => {
+    const apiResponse = {
+      services: [
+        {
+          /* eslint-disable camelcase */
+          organization: {
+            name: 'foo',
+            serial_number: '00000000000000000000',
+          },
+          name: 'bar',
+          inway_addresses: ['https://www.duck.com'],
+          documentation_url: 'https://www.duck.com',
+          api_specification_type: 'openapi',
+          public_support_contact: 'foo@bar.baz',
+          costs: {
+            one_time: 1,
+            monthly: 2,
+            request: 3,
+          },
+          /* eslint-enable camelcase */
+        },
+      ],
+    }
+
+    expect(mapListServicesAPIResponse(apiResponse)).toEqual([
+      {
+        apiType: 'openapi',
+        contactEmailAddress: 'foo@bar.baz',
+        documentationUrl: 'https://www.duck.com',
+        name: 'bar',
+        organization: 'foo',
+        status: 'down',
+        serialNumber: '00000000000000000000',
+        oneTimeCosts: 1,
+        monthlyCosts: 2,
+        requestCosts: 3,
       },
     ])
   })

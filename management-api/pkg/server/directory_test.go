@@ -216,6 +216,7 @@ func timestampProto(t time.Time) *timestamppb.Timestamp {
 }
 
 //nolint:funlen // this is a test method
+// @TODO enable tests
 // func TestGetOrganizationService(t *testing.T) {
 //	ctx := context.Background()
 //
