@@ -9,9 +9,11 @@ import DrawerHeader from './index'
 
 const service = {
   name: 'service',
-  organization: 'organisation',
+  organization: {
+    name: 'organisation',
+    serialNumber: '00000000000000000000',
+  },
   status: SERVICE_STATE_UP,
-  serialNumber: '00000000000000000000',
 }
 
 const closeHandler = jest.fn()

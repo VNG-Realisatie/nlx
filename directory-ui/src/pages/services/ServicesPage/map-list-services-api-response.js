@@ -30,8 +30,10 @@ export const reduceInwayStatesToStatus = (inways = []) => {
 export const mapListServicesAPIResponse = (response) => {
   if (response.services) {
     return response.services.map((service) => ({
-      organization: service.organization.name,
-      serialNumber: service.organization.serial_number || '',
+      organization: {
+        name: service.organization.name,
+        serialNumber: service.organization.serial_number || '',
+      },
       name: service.name,
       status: reduceInwayStatesToStatus(service.inways),
       apiType: service.api_specification_type,

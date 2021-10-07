@@ -100,9 +100,9 @@ func NewRoundRobinLoadBalancedHTTPService(
 	// index is used instead of `_, inway` to avoid the following error:
 	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
 	for i := range inways {
-		endpointURL, err := url.Parse("https://" + inways[0].Address)
+		endpointURL, err := url.Parse("https://" + inways[i].Address)
 		if err != nil {
-			return nil, errors.Wrap(err, "inway address:"+inways[0].Address+" is not a valid url")
+			return nil, errors.Wrap(err, "inway address:"+inways[i].Address+" is not a valid url")
 		}
 
 		endpointURL.Path = "/" + serviceName

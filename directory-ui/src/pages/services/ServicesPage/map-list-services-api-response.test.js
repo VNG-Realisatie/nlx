@@ -94,13 +94,15 @@ describe('mapping the API response', () => {
 
     expect(mapListServicesAPIResponse(apiResponse)).toEqual([
       {
+        organization: {
+          name: 'foo',
+          serialNumber: '00000000000000000000',
+        },
+        name: 'bar',
         apiType: 'openapi',
         contactEmailAddress: 'foo@bar.baz',
         documentationUrl: 'https://www.duck.com',
-        name: 'bar',
-        organization: 'foo',
         status: 'down',
-        serialNumber: '00000000000000000000',
         oneTimeCosts: 0,
         monthlyCosts: 0,
         requestCosts: 0,
@@ -134,16 +136,18 @@ describe('mapping the API response', () => {
 
     expect(mapListServicesAPIResponse(apiResponse)).toEqual([
       {
+        organization: {
+          name: 'foo',
+          serialNumber: '00000000000000000000',
+        },
+        name: 'bar',
         apiType: 'openapi',
         contactEmailAddress: 'foo@bar.baz',
         documentationUrl: 'https://www.duck.com',
-        name: 'bar',
-        organization: 'foo',
         status: 'down',
-        serialNumber: '00000000000000000000',
-        oneTimeCosts: 1,
-        monthlyCosts: 2,
-        requestCosts: 3,
+        oneTimeCosts: 0.01,
+        monthlyCosts: 0.02,
+        requestCosts: 0.03,
       },
     ])
   })

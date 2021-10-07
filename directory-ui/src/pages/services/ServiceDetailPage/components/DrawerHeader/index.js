@@ -8,16 +8,16 @@ import StateIndicator from '../../../../../components/StateIndicator'
 import { SubTitle, Summary } from './index.styles'
 
 const DrawerHeader = ({ service }) => {
-  const { name, organization, status, apiType, serialNumber } = service
+  const { name, status, apiType, organization } = service
 
   return (
     <header data-testid="directory-detail-header">
       <Drawer.Header title={name} closeButtonLabel="Close" />
-      <SubTitle>{organization}</SubTitle>
+      <SubTitle>{organization.name}</SubTitle>
       <Summary>
         <StateIndicator state={status} showText />
         {apiType && <span>{apiType}</span>}
-        <span>Serienummer {serialNumber}</span>
+        <span>Serienummer {organization.serialNumber}</span>
       </Summary>
     </header>
   )
@@ -26,7 +26,10 @@ const DrawerHeader = ({ service }) => {
 DrawerHeader.propTypes = {
   service: shape({
     name: string.isRequired,
-    organization: string.isRequired,
+    organization: shape({
+      name: string.isRequired,
+      serialNumber: string.isRequired,
+    }),
     status: string.isRequired,
     apiType: string,
   }),

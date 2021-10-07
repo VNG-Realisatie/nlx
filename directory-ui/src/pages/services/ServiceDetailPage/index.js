@@ -53,9 +53,11 @@ ServiceDetailPage.propTypes = {
     contactEmailAddress: string,
     documentationUrl: string,
     name: string.isRequired,
-    organization: string.isRequired,
+    organization: shape({
+      name: string.isRequired,
+      serialNumber: string.isRequired,
+    }),
     status: string.isRequired,
-    serialNumber: string.isRequired,
     oneTimeCosts: number,
     monthlyCosts: number,
     requestCosts: number,

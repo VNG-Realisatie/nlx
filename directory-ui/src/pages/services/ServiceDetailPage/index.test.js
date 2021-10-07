@@ -15,7 +15,10 @@ let service
 beforeEach(() => {
   service = {
     id: 'Test Organization/Test Service',
-    organization: 'Test Organization',
+    organization: {
+      name: 'Test Organization',
+      serialNumber: '01234567890123456789',
+    },
     name: 'Test Service',
     status: 'degraded',
     apiType: 'API',
