@@ -7,11 +7,11 @@ import { object } from 'prop-types'
 import Documentation from '../../components/Documentation'
 
 const DocumentationPage = ({ match }) => {
-  const { organizationName, serviceName } = match.params
+  const { organizationSerialNumber, serviceName } = match.params
   return (
     <Documentation
       serviceName={serviceName}
-      organizationName={organizationName}
+      organizationSerialNumber={organizationSerialNumber}
     />
   )
 }

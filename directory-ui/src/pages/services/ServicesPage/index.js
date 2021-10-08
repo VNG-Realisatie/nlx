@@ -103,7 +103,7 @@ const ServicesPage = ({ location, history }) => {
           />
 
           <Route
-            path="/:organizationName/:serviceName"
+            path="/:organizationSerialNumber/:serviceName"
             render={() => {
               const selectedService = services.find(
                 (service) => service.name === serviceName,

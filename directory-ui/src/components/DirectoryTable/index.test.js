@@ -4,7 +4,7 @@
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
-import { SERVICE_STATE_UP } from '../../components/StateIndicator'
+import { SERVICE_STATE_UP } from '../StateIndicator'
 import DirectoryServices from './index'
 
 test('renders without crashing', () => {
@@ -34,7 +34,10 @@ test('show a table with rows for every service', () => {
       <DirectoryServices
         services={[
           {
-            organization: 'Test Organization',
+            organization: {
+              name: 'Test Organization',
+              serialNumber: '00000000000000000001',
+            },
             name: 'Test Service',
             status: SERVICE_STATE_UP,
           },

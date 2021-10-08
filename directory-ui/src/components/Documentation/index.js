@@ -7,8 +7,8 @@ import { string } from 'prop-types'
 import { RedocStandalone } from 'redoc'
 import theme from '../../theme'
 
-const Documentation = ({ organizationName, serviceName }) => {
-  const urlSafeOrganization = encodeURIComponent(organizationName)
+const Documentation = ({ organizationSerialNumber, serviceName }) => {
+  const urlSafeOrganization = encodeURIComponent(organizationSerialNumber)
   const urlSafeName = encodeURIComponent(serviceName)
   const specUrl = `/api/organizations/${urlSafeOrganization}/services/${urlSafeName}/api-spec`
 
@@ -33,7 +33,7 @@ const Documentation = ({ organizationName, serviceName }) => {
 }
 
 Documentation.propTypes = {
-  organizationName: string.isRequired,
+  organizationSerialNumber: string.isRequired,
   serviceName: string.isRequired,
 }
 

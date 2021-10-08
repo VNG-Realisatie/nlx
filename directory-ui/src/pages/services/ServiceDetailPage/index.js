@@ -56,7 +56,7 @@ ServiceDetailPage.propTypes = {
     organization: shape({
       name: string.isRequired,
       serialNumber: string.isRequired,
-    }),
+    }).isRequired,
     status: string.isRequired,
     oneTimeCosts: number,
     monthlyCosts: number,

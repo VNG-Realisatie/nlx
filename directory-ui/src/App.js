@@ -26,12 +26,12 @@ const App = () => (
 
         <Switch>
           <Route
-            path="/documentation/:organizationName/:serviceName"
+            path="/documentation/:organizationSerialNumber/:serviceName"
             component={DocumentationPage}
           />
           <Route
             exact
-            path="/:organizationName?/:serviceName?"
+            path="/:organizationSerialNumber?/:serviceName?"
             component={ServiceOverviewPage}
           />
         </Switch>

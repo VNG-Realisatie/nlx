@@ -9,7 +9,10 @@ import Documentation from './index'
 test('renders without crashing', () => {
   expect(() =>
     render(
-      <Documentation serviceName="service" organizationName="organization" />,
+      <Documentation
+        serviceName="service"
+        organizationSerialNumber="00000000000000000001"
+      />,
     ),
   ).not.toThrow()
 })

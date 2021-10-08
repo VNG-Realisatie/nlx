@@ -15,7 +15,10 @@ const filterServicesByOnlineStatus = (services) => {
 const filterServicesByQuery = (services, query) => {
   return services.filter(
     (service) =>
-      service.organization.toLowerCase().includes(query.toLowerCase()) ||
+      service.organization.name.toLowerCase().includes(query.toLowerCase()) ||
+      service.organization.serialNumber
+        .toLowerCase()
+        .includes(query.toLowerCase()) ||
       service.name.toLowerCase().includes(query.toLowerCase()),
   )
 }
@@ -58,7 +61,7 @@ const DirectoryTable = ({
         <tbody>
           {filteredServices.map((service) => (
             <DirectoryServiceRow
-              key={`${service.organization}-${service.name}`}
+              key={`${service.organization.serialNumber}-${service.name}`}
               service={service}
               selected={service.name === selectedServiceName}
             />
@@ -79,8 +82,10 @@ DirectoryTable.propTypes = {
       apiType: string,
       contactEmailAddress: string,
       documentationUrl: string,
-      name: string.isRequired,
-      organization: string.isRequired,
+      organization: shape({
+        name: string.isRequired,
+        serialNumber: string.isRequired,
+      }).isRequired,
       status: string,
     }),
   ).isRequired,

@@ -29,7 +29,7 @@ DrawerHeader.propTypes = {
     organization: shape({
       name: string.isRequired,
       serialNumber: string.isRequired,
-    }),
+    }).isRequired,
     status: string.isRequired,
     apiType: string,
   }),

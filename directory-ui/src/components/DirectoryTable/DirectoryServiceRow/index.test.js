@@ -8,7 +8,10 @@ import DirectoryServiceRow from './index'
 
 const serviceData = {
   id: 'my-service',
-  organization: 'Test Organization',
+  organization: {
+    name: 'Test Organization',
+    serialNumber: '00000000000000000001',
+  },
   name: 'Test Service',
   status: SERVICE_STATE_DEGRADED,
   apiType: 'API',

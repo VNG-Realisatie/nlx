@@ -11,21 +11,21 @@ const DirectoryServiceRow = ({ service, ...props }) => {
 
   return (
     <Table.Tr
-      to={`/${organization}/${name}`}
-      name={`${organization} - ${name}`}
+      to={`/${organization.serialNumber}/${name}`}
+      name={`${organization.name} - ${name}`}
       data-testid="directory-service-row"
       {...props}
     >
       <Table.MobileTd>
         <StateIndicator state={status} />
         <Table.MobileTdContent>
-          <p>{organization}</p>
+          <p>{organization.name}</p>
           <p>{name}</p>
           {apiType && <p>{apiType}</p>}
         </Table.MobileTdContent>
       </Table.MobileTd>
 
-      <Table.Td>{organization}</Table.Td>
+      <Table.Td>{organization.name}</Table.Td>
       <Table.Td>{name}</Table.Td>
       <Table.Td>
         <StateIndicator state={status} />
@@ -39,7 +39,10 @@ DirectoryServiceRow.propTypes = {
   service: shape({
     apiType: string,
     name: string.isRequired,
-    organization: string.isRequired,
+    organization: shape({
+      name: string.isRequired,
+      serialNumber: string.isRequired,
+    }).isRequired,
     status: string.isRequired,
   }),
 }
