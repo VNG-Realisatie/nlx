@@ -117,6 +117,11 @@ func (p *Proxy) streamInterceptor(srv interface{}, serverStream grpc.ServerStrea
 		return status.Error(codes.Unauthenticated, "certificate is missing organization")
 	}
 
+	if peerCert.Subject.SerialNumber == "" {
+		p.logger.Warn("certificate is missing serial number")
+		return status.Error(codes.Unauthenticated, "certificate is missing serial number")
+	}
+
 	publicKey, ok := peerCert.PublicKey.(*rsa.PublicKey)
 	if !ok {
 		p.logger.Warn("invalid format for public key")

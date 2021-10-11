@@ -116,11 +116,33 @@ func TestMissingOrganization(t *testing.T) {
 	assert.Empty(t, s.svc.reqs)
 }
 
+// nolint:dupl // testing different property
+func TestMissingSerialNumber(t *testing.T) {
+	clientCert, err := getCertificateBundle(OrgWithoutSerialNumber)
+	assert.NoError(t, err)
+
+	p, s, c, _ := setup(t, clientCert)
+	p.RegisterService(test.GetTestServiceDesc())
+
+	ctx := context.Background()
+	resp, err := c.Test(ctx, &test.TestRequest{Name: "Foo"})
+
+	assert.Nil(t, resp)
+	assert.Error(t, err)
+
+	st := status.Convert(err)
+	assert.Equal(t, codes.Unauthenticated, st.Code())
+	assert.Equal(t, "certificate is missing serial number", st.Message())
+
+	assert.Empty(t, s.svc.reqs)
+}
+
 type CertificateBundleOrganizationName string
 
 const (
-	OrgNLXTest     CertificateBundleOrganizationName = "org-nlx-test"
-	OrgWithoutName CertificateBundleOrganizationName = "org-without-name"
+	OrgNLXTest             CertificateBundleOrganizationName = "org-nlx-test"
+	OrgWithoutName         CertificateBundleOrganizationName = "org-without-name"
+	OrgWithoutSerialNumber CertificateBundleOrganizationName = "org-without-serial-number"
 )
 
 func getCertificateBundle(name CertificateBundleOrganizationName) (*tls.CertificateBundle, error) {
