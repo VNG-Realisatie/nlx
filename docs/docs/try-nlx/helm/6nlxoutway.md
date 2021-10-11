@@ -1,6 +1,6 @@
 ---
-id: nlx-outway
-title: Install NLX Outway
+id: 6nlxoutway
+title: 6. Install NLX Outway
 ---
 
 # 6. Install NLX Outway

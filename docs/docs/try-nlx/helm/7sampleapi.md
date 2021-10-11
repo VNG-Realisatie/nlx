@@ -1,6 +1,6 @@
 ---
-id: sample-api
-title: Install sample API
+id: 7sampleapi
+title: 7. Install sample API
 ---
 
 # 7. Install sample API

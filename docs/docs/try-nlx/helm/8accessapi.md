@@ -1,6 +1,6 @@
 ---
-id: access-api
-title: Access API through a client
+id: 8accessapi
+title: 8. Access API through a client
 ---
 
 # 8. Access API through a client

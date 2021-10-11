@@ -1,6 +1,6 @@
 ---
-id: nlx-inway
-title: Install NLX Inway
+id: 5nlxinway
+title: 5. Install NLX Inway
 ---
 
 # 5. Install NLX Inway

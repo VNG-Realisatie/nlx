@@ -1,6 +1,6 @@
 ---
-id: preparation
-title: Preparation
+id: 0preparation
+title: 0. Preparation
 ---
 
 # 0. Preparation
@@ -34,10 +34,10 @@ cd your-directory
 * [OpenSSL](https://www.openssl.org/source/)
 * [Git](https://git-scm.com/docs/git-archive)
 
-**MacOS users**
+**MacOS users**  
 Openssl on Mac OS is not suitable for creating V3 CA certificates. Therefore only for Mac OS users:` brew install openssl@1.1`
 
-**Windows users**
+**Windows users**  
 Install OpenSSL with the following command: `choco install OpenSSL.Light`
 
 ## Download base files
@@ -65,12 +65,12 @@ The following files must be available:
 
 ```
 internal-issuer.yaml
-inway-internal-tls.yaml
+inway-internal-tls.yaml 
 job-create-administrator.yaml
-management-internal-tls.yaml
+management-internal-tls.yaml 
 nlx-inway-values.yaml
 nlx-management-values.yaml
-nlx-outway-values.yaml
+nlx-outway-values.yaml 
 outway-internal-tls.yaml
 ```
 

@@ -1,6 +1,6 @@
 ---
-id: nlx-management
-title: Install NLX Management
+id: 4nlxmanagement
+title: 4. Install NLX Management
 ---
 
 # 4. Install NLX Management
@@ -20,7 +20,7 @@ kubectl -n nlx apply -f management-internal-tls.yaml
 
 We are now going to create a configuration file for the NLX management installation. Open the file 'nlx-management-values.yaml' in an editor (e.g. nano, nvim, notepad, etc), edit the values below and then save the file:
 
-- `<hostname nlx-management>` replace this with the hostname on which your NLX management should run eg: management.mijn-organization.nl
+- `<hostname nlx-management>` replace this with the hostname on which your NLX management should run eg: management.mijn-organization.nl 
    **IMPORTANT: this DNS entry must already exist and resolve to the ingress controller**
 - `<postgres-password>` replace this with the Postgres password you saved earlier.
 - The values `<file: [naam]>` must be replaced by the contents of the named file. You have all these files in your working directory.
