@@ -4,6 +4,6 @@
  */
 BEGIN transaction;
 
-ALTER TABLE nlx_management.access_requests_incoming ADD COLUMN organization_serial_number CHAR(20) NOT NULL;
+ALTER TABLE nlx_management.access_requests_incoming ADD COLUMN organization_serial_number VARCHAR(20) NOT NULL;
 
 COMMIT;
