@@ -9,7 +9,7 @@ NLX is built as a core component of the [Common Ground vision](https://github.co
 
 Important business benefits of NLX are:
 
-* Lower integration costs because of standardised API integration layer
+* Lower integration costs because of standardized API integration layer
 * Better data quality because data is used at the data source
 * Better AVG compliance because end users get insight into data usage
 * Better logging and auditing of data usage
@@ -46,8 +46,8 @@ functional requirements and business context before launch.
 
 Consuming API’s is easier than providing an API. A good place to start is to
 consume an already available API. Such as for example the [BAG
-API](https://www.kadaster.nl/web/kadaster.nl/zakelijk/registraties/basisregistraties/bag) 
-of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch 
+API](https://www.kadaster.nl/web/kadaster.nl/zakelijk/registraties/basisregistraties/bag)
+of the Dutch Kadaster or the [KVK API](https://developers.kvk.nl/) of the Dutch
 Chamber of Commerce.
 
 Providing API’s through NLX is quite straightforward when the API’s are already
@@ -68,7 +68,7 @@ within and across organizations.
 NLX provides a developer friendly way to use standardised resources between
 organizations. It provides a gateway for querying services on the ecosystem as
 well as a gateway to offer services to the ecosystem. NLX provides support
-for HTTP/1.x services like REST/JSON and SOAP/XML. HTTP/2 support (gRPC) has 
+for HTTP/1.x services like REST/JSON and SOAP/XML. HTTP/2 support (gRPC) has
 been added.
 
 NLX provides two different types of gateways: the **Inway** and **Outway**.
