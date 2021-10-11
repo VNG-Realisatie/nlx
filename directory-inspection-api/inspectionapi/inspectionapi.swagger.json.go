@@ -120,6 +120,23 @@ const (
       ],
       "default": "INWAY"
     },
+    "ListServicesResponseCosts": {
+      "type": "object",
+      "properties": {
+        "one_time": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthly": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "request": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "ListServicesResponseService": {
       "type": "object",
       "properties": {
@@ -145,27 +162,10 @@ const (
           }
         },
         "costs": {
-          "$ref": "#/definitions/inspectionapiCosts"
+          "$ref": "#/definitions/ListServicesResponseCosts"
         },
         "organization": {
-          "$ref": "#/definitions/inspectionapiOrganization"
-        }
-      }
-    },
-    "inspectionapiCosts": {
-      "type": "object",
-      "properties": {
-        "one_time": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthly": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "request": {
-          "type": "integer",
-          "format": "int32"
+          "$ref": "#/definitions/inspectionapiListServicesResponseOrganization"
         }
       }
     },
@@ -218,6 +218,17 @@ const (
           "items": {
             "$ref": "#/definitions/ListServicesResponseService"
           }
+        }
+      }
+    },
+    "inspectionapiListServicesResponseOrganization": {
+      "type": "object",
+      "properties": {
+        "serial_number": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },

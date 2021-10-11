@@ -1287,7 +1287,7 @@
           "type": "string"
         },
         "organization": {
-          "$ref": "#/definitions/managementOrganization"
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "apiSpecificationType": {
           "type": "string"
@@ -1688,17 +1688,6 @@
         }
       }
     },
-    "managementOrganization": {
-      "type": "object",
-      "properties": {
-        "serialNumber": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "managementOutgoingAccessRequest": {
       "type": "object",
       "properties": {
@@ -1891,6 +1880,17 @@
       "type": "object",
       "properties": {
         "organizationInway": {
+          "type": "string"
+        }
+      }
+    },
+    "nlxmanagementOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         }
       }

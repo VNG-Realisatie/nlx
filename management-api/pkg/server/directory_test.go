@@ -124,11 +124,11 @@ func TestListDirectoryServices(t *testing.T) {
 	clientServices := []*inspectionapi.ListServicesResponse_Service{
 		{
 			Name:                 "test-service-1",
-			Organization:         &inspectionapi.Organization{Name: "test-organization-a"},
+			Organization:         &inspectionapi.ListServicesResponse_Organization{Name: "test-organization-a"},
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationUrl:     "https://example.com",
 			PublicSupportContact: "test@example.com",
-			Costs: &inspectionapi.Costs{
+			Costs: &inspectionapi.ListServicesResponse_Costs{
 				OneTime: 1,
 				Monthly: 5,
 				Request: 250,

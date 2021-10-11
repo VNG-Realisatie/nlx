@@ -62,7 +62,7 @@ func TestInspectionService_List(t *testing.T) {
 				Services: []*inspectionapi.ListServicesResponse_Service{
 					{
 						Name: "Dummy Service Name",
-						Costs: &inspectionapi.Costs{
+						Costs: &inspectionapi.ListServicesResponse_Costs{
 							Monthly: 1,
 							Request: 5,
 							OneTime: 250,

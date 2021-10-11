@@ -61,6 +61,11 @@ message ListServicesResponse {
 	repeated Service services = 1;
 }
 
+message Organization {
+	string serial_number = 1;
+	string name = 2;
+}
+
 message ListOrganizationsResponse {
 	repeated Organization organizations = 1;
 }

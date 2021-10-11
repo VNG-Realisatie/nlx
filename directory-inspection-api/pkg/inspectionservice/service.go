@@ -67,14 +67,14 @@ func convertFromDatabaseService(model *database.Service) *inspectionapi.ListServ
 	}
 
 	if model.Organization != nil {
-		service.Organization = &inspectionapi.Organization{
+		service.Organization = &inspectionapi.ListServicesResponse_Organization{
 			SerialNumber: model.Organization.SerialNumber,
 			Name:         model.Organization.Name,
 		}
 	}
 
 	if model.Costs != nil {
-		service.Costs = &inspectionapi.Costs{
+		service.Costs = &inspectionapi.ListServicesResponse_Costs{
 			OneTime: int32(model.Costs.OneTime),
 			Monthly: int32(model.Costs.Monthly),
 			Request: int32(model.Costs.Request),

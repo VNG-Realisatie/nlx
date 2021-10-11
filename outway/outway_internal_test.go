@@ -88,7 +88,7 @@ func TestUpdateServiceList(t *testing.T) {
 			Services: []*inspectionapi.ListServicesResponse_Service{
 				{
 					Name: "mock-service-a",
-					Organization: &inspectionapi.Organization{
+					Organization: &inspectionapi.ListServicesResponse_Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "mock-org-a",
 					},
@@ -96,7 +96,7 @@ func TestUpdateServiceList(t *testing.T) {
 				},
 				{
 					Name: "mock-service-b",
-					Organization: &inspectionapi.Organization{
+					Organization: &inspectionapi.ListServicesResponse_Organization{
 						SerialNumber: "00000000000000000002",
 						Name:         "mock-org-b",
 					},
@@ -104,7 +104,7 @@ func TestUpdateServiceList(t *testing.T) {
 				},
 				{
 					Name: "mock-service-c",
-					Organization: &inspectionapi.Organization{
+					Organization: &inspectionapi.ListServicesResponse_Organization{
 						SerialNumber: "00000000000000000003",
 						Name:         "mock-org-c",
 					},
