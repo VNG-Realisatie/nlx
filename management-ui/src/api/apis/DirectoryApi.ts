@@ -30,12 +30,12 @@ import {
 } from '../models';
 
 export interface DirectoryGetOrganizationServiceRequest {
-    organizationName: string;
+    organizationSerialNumber: string;
     serviceName: string;
 }
 
 export interface DirectoryRequestAccessToServiceRequest {
-    organizationName: string;
+    organizationSerialNumber: string;
     serviceName: string;
 }
 
@@ -47,8 +47,8 @@ export class DirectoryApi extends runtime.BaseAPI {
     /**
      */
     async directoryGetOrganizationServiceRaw(requestParameters: DirectoryGetOrganizationServiceRequest): Promise<runtime.ApiResponse<ManagementDirectoryService>> {
-        if (requestParameters.organizationName === null || requestParameters.organizationName === undefined) {
-            throw new runtime.RequiredError('organizationName','Required parameter requestParameters.organizationName was null or undefined when calling directoryGetOrganizationService.');
+        if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling directoryGetOrganizationService.');
         }
 
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
@@ -60,7 +60,7 @@ export class DirectoryApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/directory/organizations/{organizationName}/services/{serviceName}`.replace(`{${"organizationName"}}`, encodeURIComponent(String(requestParameters.organizationName))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -103,8 +103,8 @@ export class DirectoryApi extends runtime.BaseAPI {
     /**
      */
     async directoryRequestAccessToServiceRaw(requestParameters: DirectoryRequestAccessToServiceRequest): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
-        if (requestParameters.organizationName === null || requestParameters.organizationName === undefined) {
-            throw new runtime.RequiredError('organizationName','Required parameter requestParameters.organizationName was null or undefined when calling directoryRequestAccessToService.');
+        if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling directoryRequestAccessToService.');
         }
 
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
@@ -116,7 +116,7 @@ export class DirectoryApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/directory/organizations/{organizationName}/services/{serviceName}/access-requests`.replace(`{${"organizationName"}}`, encodeURIComponent(String(requestParameters.organizationName))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

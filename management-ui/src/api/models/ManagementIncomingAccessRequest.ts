@@ -18,6 +18,10 @@ import {
     ManagementAccessRequestStateFromJSON,
     ManagementAccessRequestStateFromJSONTyped,
     ManagementAccessRequestStateToJSON,
+    ManagementIncomingAccessRequestOrganization,
+    ManagementIncomingAccessRequestOrganizationFromJSON,
+    ManagementIncomingAccessRequestOrganizationFromJSONTyped,
+    ManagementIncomingAccessRequestOrganizationToJSON,
 } from './';
 
 /**
@@ -34,10 +38,10 @@ export interface ManagementIncomingAccessRequest {
     id?: string;
     /**
      * 
-     * @type {string}
+     * @type {ManagementIncomingAccessRequestOrganization}
      * @memberof ManagementIncomingAccessRequest
      */
-    organizationName?: string;
+    organization?: ManagementIncomingAccessRequestOrganization;
     /**
      * 
      * @type {string}
@@ -75,7 +79,7 @@ export function ManagementIncomingAccessRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
+        'organization': !exists(json, 'organization') ? undefined : ManagementIncomingAccessRequestOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'state': !exists(json, 'state') ? undefined : ManagementAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
@@ -93,7 +97,7 @@ export function ManagementIncomingAccessRequestToJSON(value?: ManagementIncoming
     return {
         
         'id': value.id,
-        'organizationName': value.organizationName,
+        'organization': ManagementIncomingAccessRequestOrganizationToJSON(value.organization),
         'serviceName': value.serviceName,
         'state': ManagementAccessRequestStateToJSON(value.state),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

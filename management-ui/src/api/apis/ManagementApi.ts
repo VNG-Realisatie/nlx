@@ -129,7 +129,7 @@ export interface ManagementListAccessGrantsForServiceRequest {
     serviceName: string;
 }
 
-export interface ManagementListIncomingAccessRequestRequest {
+export interface ManagementListIncomingAccessRequestsRequest {
     serviceName: string;
 }
 
@@ -148,7 +148,7 @@ export interface ManagementRejectIncomingAccessRequestRequest {
 
 export interface ManagementRetrieveClaimForOrderRequest {
     orderReference?: string;
-    orderOrganizationName?: string;
+    orderOrganizationSerialNumber?: string;
 }
 
 export interface ManagementRevokeAccessGrantRequest {
@@ -572,9 +572,9 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListIncomingAccessRequestRaw(requestParameters: ManagementListIncomingAccessRequestRequest): Promise<runtime.ApiResponse<ManagementListIncomingAccessRequestsResponse>> {
+    async managementListIncomingAccessRequestsRaw(requestParameters: ManagementListIncomingAccessRequestsRequest): Promise<runtime.ApiResponse<ManagementListIncomingAccessRequestsResponse>> {
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementListIncomingAccessRequest.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementListIncomingAccessRequests.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -593,8 +593,8 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListIncomingAccessRequest(requestParameters: ManagementListIncomingAccessRequestRequest): Promise<ManagementListIncomingAccessRequestsResponse> {
-        const response = await this.managementListIncomingAccessRequestRaw(requestParameters);
+    async managementListIncomingAccessRequests(requestParameters: ManagementListIncomingAccessRequestsRequest): Promise<ManagementListIncomingAccessRequestsResponse> {
+        const response = await this.managementListIncomingAccessRequestsRaw(requestParameters);
         return await response.value();
     }
 
@@ -770,8 +770,8 @@ export class ManagementApi extends runtime.BaseAPI {
             queryParameters['orderReference'] = requestParameters.orderReference;
         }
 
-        if (requestParameters.orderOrganizationName !== undefined) {
-            queryParameters['orderOrganizationName'] = requestParameters.orderOrganizationName;
+        if (requestParameters.orderOrganizationSerialNumber !== undefined) {
+            queryParameters['orderOrganizationSerialNumber'] = requestParameters.orderOrganizationSerialNumber;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    AccessGrantOrganization,
-    AccessGrantOrganizationFromJSON,
-    AccessGrantOrganizationFromJSONTyped,
-    AccessGrantOrganizationToJSON,
+    ManagementAccessGrantOrganization,
+    ManagementAccessGrantOrganizationFromJSON,
+    ManagementAccessGrantOrganizationFromJSONTyped,
+    ManagementAccessGrantOrganizationToJSON,
 } from './';
 
 /**
@@ -34,10 +34,10 @@ export interface ManagementAccessGrant {
     id?: string;
     /**
      * 
-     * @type {AccessGrantOrganization}
+     * @type {ManagementAccessGrantOrganization}
      * @memberof ManagementAccessGrant
      */
-    organization?: AccessGrantOrganization;
+    organization?: ManagementAccessGrantOrganization;
     /**
      * 
      * @type {string}
@@ -81,7 +81,7 @@ export function ManagementAccessGrantFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : AccessGrantOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ManagementAccessGrantOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
@@ -100,7 +100,7 @@ export function ManagementAccessGrantToJSON(value?: ManagementAccessGrant | null
     return {
         
         'id': value.id,
-        'organization': AccessGrantOrganizationToJSON(value.organization),
+        'organization': ManagementAccessGrantOrganizationToJSON(value.organization),
         'serviceName': value.serviceName,
         'publicKeyFingerprint': value.publicKeyFingerprint,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

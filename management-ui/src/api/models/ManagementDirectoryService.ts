@@ -26,6 +26,10 @@ import {
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestFromJSONTyped,
     ManagementOutgoingAccessRequestToJSON,
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
 } from './';
 
 /**
@@ -42,10 +46,10 @@ export interface ManagementDirectoryService {
     serviceName?: string;
     /**
      * 
-     * @type {string}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementDirectoryService
      */
-    organizationName?: string;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -113,7 +117,7 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
-        'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'apiSpecificationType': !exists(json, 'apiSpecificationType') ? undefined : json['apiSpecificationType'],
         'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
@@ -136,7 +140,7 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
     return {
         
         'serviceName': value.serviceName,
-        'organizationName': value.organizationName,
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'apiSpecificationType': value.apiSpecificationType,
         'documentationURL': value.documentationURL,
         'publicSupportContact': value.publicSupportContact,
