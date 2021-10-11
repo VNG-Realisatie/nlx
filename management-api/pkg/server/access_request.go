@@ -10,12 +10,12 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/golang/protobuf/ptypes"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/management-api/api"
@@ -388,38 +388,18 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 
 // nolint:dupl // incoming access request looks like outgoing access request
 func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) (*api.IncomingAccessRequest, error) {
-	createdAt, err := ptypes.TimestampProto(accessRequest.CreatedAt)
-	if err != nil {
-		return nil, err
-	}
-
-	updatedAt, err := ptypes.TimestampProto(accessRequest.UpdatedAt)
-	if err != nil {
-		return nil, err
-	}
-
 	return &api.IncomingAccessRequest{
 		Id:               uint64(accessRequest.ID),
 		OrganizationName: accessRequest.Organization.Name,
 		ServiceName:      accessRequest.Service.Name,
 		State:            incomingAccessRequestStateToProto(accessRequest.State),
-		CreatedAt:        createdAt,
-		UpdatedAt:        updatedAt,
+		CreatedAt:        timestamppb.New(accessRequest.CreatedAt),
+		UpdatedAt:        timestamppb.New(accessRequest.UpdatedAt),
 	}, nil
 }
 
 // nolint:dupl // outgoing access request looks like incoming access request
 func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
-	createdAt, err := ptypes.TimestampProto(request.CreatedAt)
-	if err != nil {
-		return nil, err
-	}
-
-	updatedAt, err := ptypes.TimestampProto(request.UpdatedAt)
-	if err != nil {
-		return nil, err
-	}
-
 	var details *api.ErrorDetails
 
 	if request.ErrorCause != "" {
@@ -432,7 +412,7 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api
 		details = &api.ErrorDetails{
 			Code:       code,
 			Cause:      request.ErrorCause,
-			StackTrace: []string(request.ErrorStackTrace),
+			StackTrace: request.ErrorStackTrace,
 		}
 	}
 
@@ -442,7 +422,7 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api
 		ServiceName:      request.ServiceName,
 		State:            outgoingAccessRequestStateToProto(request.State),
 		ErrorDetails:     details,
-		CreatedAt:        createdAt,
-		UpdatedAt:        updatedAt,
+		CreatedAt:        timestamppb.New(request.CreatedAt),
+		UpdatedAt:        timestamppb.New(request.UpdatedAt),
 	}, nil
 }
