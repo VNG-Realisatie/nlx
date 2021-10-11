@@ -1669,6 +1669,9 @@
         "organizationName": {
           "type": "string"
         },
+        "organizationSerialNumber": {
+          "type": "string"
+        },
         "publicKeyHash": {
           "type": "string"
         },
