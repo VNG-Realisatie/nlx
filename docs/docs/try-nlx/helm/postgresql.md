@@ -1,6 +1,6 @@
 ---
-id: 3postgresql
-title: 3. Install PostgreSQL
+id: postgresql
+title: Install PostgreSQL
 ---
 
 # 3. Install PostgreSQL
