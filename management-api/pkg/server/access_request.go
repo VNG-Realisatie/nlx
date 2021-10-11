@@ -389,12 +389,15 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 // nolint:dupl // incoming access request looks like outgoing access request
 func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) (*api.IncomingAccessRequest, error) {
 	return &api.IncomingAccessRequest{
-		Id:               uint64(accessRequest.ID),
-		OrganizationName: accessRequest.Organization.Name,
-		ServiceName:      accessRequest.Service.Name,
-		State:            incomingAccessRequestStateToProto(accessRequest.State),
-		CreatedAt:        timestamppb.New(accessRequest.CreatedAt),
-		UpdatedAt:        timestamppb.New(accessRequest.UpdatedAt),
+		Id: uint64(accessRequest.ID),
+		Organization: &api.IncomingAccessRequest_Organization{
+			Name:         accessRequest.Organization.Name,
+			SerialNumber: accessRequest.Organization.SerialNumber,
+		},
+		ServiceName: accessRequest.Service.Name,
+		State:       incomingAccessRequestStateToProto(accessRequest.State),
+		CreatedAt:   timestamppb.New(accessRequest.CreatedAt),
+		UpdatedAt:   timestamppb.New(accessRequest.UpdatedAt),
 	}, nil
 }
 

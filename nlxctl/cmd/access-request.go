@@ -39,12 +39,13 @@ func init() {
 }
 
 type accessRequestDetails struct {
-	ID               uint64
-	State            api.AccessRequestState
-	OrganizationName string
-	ServiceName      string
-	CreatedAt        *timestamppb.Timestamp
-	UpdatedAt        *timestamppb.Timestamp
+	ID                       uint64
+	State                    api.AccessRequestState
+	OrganizationName         string
+	OrganizationSerialNumber string
+	ServiceName              string
+	CreatedAt                *timestamppb.Timestamp
+	UpdatedAt                *timestamppb.Timestamp
 }
 
 func printAccessRequest(details accessRequestDetails) {
@@ -135,12 +136,13 @@ var listAccessRequestCommand = &cobra.Command{
 
 		for _, accessRequest := range response.AccessRequests {
 			printAccessRequest(accessRequestDetails{
-				ID:               accessRequest.Id,
-				State:            accessRequest.State,
-				OrganizationName: accessRequest.OrganizationName,
-				ServiceName:      accessRequest.ServiceName,
-				CreatedAt:        accessRequest.CreatedAt,
-				UpdatedAt:        accessRequest.UpdatedAt,
+				ID:                       accessRequest.Id,
+				State:                    accessRequest.State,
+				OrganizationName:         accessRequest.Organization.Name,
+				OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
+				ServiceName:              accessRequest.ServiceName,
+				CreatedAt:                accessRequest.CreatedAt,
+				UpdatedAt:                accessRequest.UpdatedAt,
 			})
 		}
 	},

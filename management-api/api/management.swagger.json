@@ -963,17 +963,6 @@
     }
   },
   "definitions": {
-    "AccessGrantOrganization": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "serialNumber": {
-          "type": "string"
-        }
-      }
-    },
     "AuditLogRecordActionType": {
       "type": "string",
       "enum": [
@@ -1013,7 +1002,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/AccessGrantOrganization"
+          "$ref": "#/definitions/managementAccessGrantOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1032,6 +1021,17 @@
         "accessRequestId": {
           "type": "string",
           "format": "uint64"
+        }
+      }
+    },
+    "managementAccessGrantOrganization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "serialNumber": {
+          "type": "string"
         }
       }
     },
@@ -1417,8 +1417,8 @@
           "type": "string",
           "format": "uint64"
         },
-        "organizationName": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/managementIncomingAccessRequestOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1433,6 +1433,17 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "managementIncomingAccessRequestOrganization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "serialNumber": {
+          "type": "string"
         }
       }
     },
