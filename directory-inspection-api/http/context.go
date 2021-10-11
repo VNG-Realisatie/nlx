@@ -28,7 +28,7 @@ func (s *Server) ServiceCtx(next http.Handler) http.Handler {
 			s.name AS name
 		FROM directory.services s
 		INNER JOIN directory.organizations o ON o.id = s.organization_id
-        WHERE o.name = $1 AND s.name = $2
+        WHERE o.serial_number = $1 AND s.name = $2
 	`)
 
 	if err != nil {
@@ -36,11 +36,11 @@ func (s *Server) ServiceCtx(next http.Handler) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		organizationName := chi.URLParam(r, "organization_name")
+		organizationSerialNumber := chi.URLParam(r, "organization_serial_number")
 		serviceName := chi.URLParam(r, "service_name")
 
 		var service Service
-		err := selectServiceStatement.QueryRowx(organizationName, serviceName).StructScan(&service)
+		err := selectServiceStatement.QueryRowx(organizationSerialNumber, serviceName).StructScan(&service)
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return

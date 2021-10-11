@@ -29,7 +29,7 @@ func createRouter(s *Server) *chi.Mux {
 		s.logger.Fatal("Error creating API spec handler", zap.Error(err))
 	}
 
-	r.Route("/api/organizations/{organization_name}/services/{service_name}", func(r chi.Router) {
+	r.Route("/api/organizations/{organization_serial_number}/services/{service_name}", func(r chi.Router) {
 		r.Use(s.ServiceCtx)
 		r.Get("/api-spec", apiSpecHandler.handleFunc())
 	})
