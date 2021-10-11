@@ -114,7 +114,7 @@
     },
     "/api/v1/access-requests/incoming/services/{serviceName}": {
       "get": {
-        "operationId": "Management_ListIncomingAccessRequest",
+        "operationId": "Management_ListIncomingAccessRequests",
         "responses": {
           "200": {
             "description": "A successful response.",

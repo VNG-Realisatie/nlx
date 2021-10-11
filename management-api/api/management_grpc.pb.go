@@ -33,7 +33,7 @@ type ManagementClient interface {
 	RegisterInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error)
 	UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*Inway, error)
 	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListIncomingAccessRequest(ctx context.Context, in *ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
+	ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateAccessRequest(ctx context.Context, in *CreateAccessRequestRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error)
@@ -184,9 +184,9 @@ func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayReque
 	return out, nil
 }
 
-func (c *managementClient) ListIncomingAccessRequest(ctx context.Context, in *ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error) {
+func (c *managementClient) ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error) {
 	out := new(ListIncomingAccessRequestsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIncomingAccessRequest", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIncomingAccessRequests", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -337,7 +337,7 @@ type ManagementServer interface {
 	RegisterInway(context.Context, *Inway) (*Inway, error)
 	UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error)
 	DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error)
-	ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error)
+	ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error)
 	CreateAccessRequest(context.Context, *CreateAccessRequestRequest) (*OutgoingAccessRequest, error)
@@ -401,8 +401,8 @@ func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRe
 func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteInway not implemented")
 }
-func (UnimplementedManagementServer) ListIncomingAccessRequest(context.Context, *ListIncomingAccessRequestsRequests) (*ListIncomingAccessRequestsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequest not implemented")
+func (UnimplementedManagementServer) ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequests not implemented")
 }
 func (UnimplementedManagementServer) ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApproveIncomingAccessRequest not implemented")
@@ -711,20 +711,20 @@ func _Management_DeleteInway_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListIncomingAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListIncomingAccessRequestsRequests)
+func _Management_ListIncomingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListIncomingAccessRequestsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListIncomingAccessRequest(ctx, in)
+		return srv.(ManagementServer).ListIncomingAccessRequests(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListIncomingAccessRequest",
+		FullMethod: "/nlx.management.Management/ListIncomingAccessRequests",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListIncomingAccessRequest(ctx, req.(*ListIncomingAccessRequestsRequests))
+		return srv.(ManagementServer).ListIncomingAccessRequests(ctx, req.(*ListIncomingAccessRequestsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1045,8 +1045,8 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Management_DeleteInway_Handler,
 		},
 		{
-			MethodName: "ListIncomingAccessRequest",
-			Handler:    _Management_ListIncomingAccessRequest_Handler,
+			MethodName: "ListIncomingAccessRequests",
+			Handler:    _Management_ListIncomingAccessRequests_Handler,
 		},
 		{
 			MethodName: "ApproveIncomingAccessRequest",

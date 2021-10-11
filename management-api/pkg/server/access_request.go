@@ -52,7 +52,7 @@ func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState
 	return api.AccessRequestState_UNSPECIFIED
 }
 
-func (s *ManagementService) ListIncomingAccessRequest(ctx context.Context, req *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
+func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req *api.ListIncomingAccessRequestsRequest) (*api.ListIncomingAccessRequestsResponse, error) {
 	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
 	if err != nil {
 		if errIsNotFound(err) {

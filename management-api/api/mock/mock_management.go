@@ -317,24 +317,24 @@ func (mr *MockManagementClientMockRecorder) ListAuditLogs(ctx, in interface{}, o
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementClient)(nil).ListAuditLogs), varargs...)
 }
 
-// ListIncomingAccessRequest mocks base method.
-func (m *MockManagementClient) ListIncomingAccessRequest(ctx context.Context, in *api.ListIncomingAccessRequestsRequests, opts ...grpc.CallOption) (*api.ListIncomingAccessRequestsResponse, error) {
+// ListIncomingAccessRequests mocks base method.
+func (m *MockManagementClient) ListIncomingAccessRequests(ctx context.Context, in *api.ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*api.ListIncomingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "ListIncomingAccessRequest", varargs...)
+	ret := m.ctrl.Call(m, "ListIncomingAccessRequests", varargs...)
 	ret0, _ := ret[0].(*api.ListIncomingAccessRequestsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListIncomingAccessRequest indicates an expected call of ListIncomingAccessRequest.
-func (mr *MockManagementClientMockRecorder) ListIncomingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+// ListIncomingAccessRequests indicates an expected call of ListIncomingAccessRequests.
+func (mr *MockManagementClientMockRecorder) ListIncomingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).ListIncomingAccessRequest), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequests", reflect.TypeOf((*MockManagementClient)(nil).ListIncomingAccessRequests), varargs...)
 }
 
 // ListIncomingOrders mocks base method.
@@ -850,19 +850,19 @@ func (mr *MockManagementServerMockRecorder) ListAuditLogs(arg0, arg1 interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogs", reflect.TypeOf((*MockManagementServer)(nil).ListAuditLogs), arg0, arg1)
 }
 
-// ListIncomingAccessRequest mocks base method.
-func (m *MockManagementServer) ListIncomingAccessRequest(arg0 context.Context, arg1 *api.ListIncomingAccessRequestsRequests) (*api.ListIncomingAccessRequestsResponse, error) {
+// ListIncomingAccessRequests mocks base method.
+func (m *MockManagementServer) ListIncomingAccessRequests(arg0 context.Context, arg1 *api.ListIncomingAccessRequestsRequest) (*api.ListIncomingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListIncomingAccessRequest", arg0, arg1)
+	ret := m.ctrl.Call(m, "ListIncomingAccessRequests", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListIncomingAccessRequestsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListIncomingAccessRequest indicates an expected call of ListIncomingAccessRequest.
-func (mr *MockManagementServerMockRecorder) ListIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+// ListIncomingAccessRequests indicates an expected call of ListIncomingAccessRequests.
+func (mr *MockManagementServerMockRecorder) ListIncomingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).ListIncomingAccessRequest), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequests", reflect.TypeOf((*MockManagementServer)(nil).ListIncomingAccessRequests), arg0, arg1)
 }
 
 // ListIncomingOrders mocks base method.

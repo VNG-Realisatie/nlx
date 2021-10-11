@@ -127,7 +127,7 @@ var listAccessRequestCommand = &cobra.Command{
 	Use:   "list",
 	Short: "List incoming access requests",
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getManagementClient().ListIncomingAccessRequest(context.Background(), &api.ListIncomingAccessRequestsRequests{
+		response, err := getManagementClient().ListIncomingAccessRequests(context.Background(), &api.ListIncomingAccessRequestsRequest{
 			ServiceName: listAccessRequestsOptions.serviceName,
 		})
 		if err != nil {

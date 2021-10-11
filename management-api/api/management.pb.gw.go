@@ -570,8 +570,8 @@ func local_request_Management_DeleteInway_0(ctx context.Context, marshaler runti
 
 }
 
-func request_Management_ListIncomingAccessRequest_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListIncomingAccessRequestsRequests
+func request_Management_ListIncomingAccessRequests_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListIncomingAccessRequestsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -591,13 +591,13 @@ func request_Management_ListIncomingAccessRequest_0(ctx context.Context, marshal
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
 	}
 
-	msg, err := client.ListIncomingAccessRequest(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.ListIncomingAccessRequests(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Management_ListIncomingAccessRequest_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListIncomingAccessRequestsRequests
+func local_request_Management_ListIncomingAccessRequests_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListIncomingAccessRequestsRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -617,7 +617,7 @@ func local_request_Management_ListIncomingAccessRequest_0(ctx context.Context, m
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
 	}
 
-	msg, err := server.ListIncomingAccessRequest(ctx, &protoReq)
+	msg, err := server.ListIncomingAccessRequests(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -1734,18 +1734,18 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
-	mux.Handle("GET", pattern_Management_ListIncomingAccessRequest_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Management_ListIncomingAccessRequests_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequest")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListIncomingAccessRequest_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListIncomingAccessRequests_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1753,7 +1753,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 			return
 		}
 
-		forward_Management_ListIncomingAccessRequest_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Management_ListIncomingAccessRequests_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -2478,23 +2478,23 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 
 	})
 
-	mux.Handle("GET", pattern_Management_ListIncomingAccessRequest_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Management_ListIncomingAccessRequests_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequest")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests")
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListIncomingAccessRequest_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListIncomingAccessRequests_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Management_ListIncomingAccessRequest_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Management_ListIncomingAccessRequests_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -2810,7 +2810,7 @@ var (
 
 	pattern_Management_DeleteInway_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "inways", "name"}, ""))
 
-	pattern_Management_ListIncomingAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "access-requests", "incoming", "services", "serviceName"}, ""))
+	pattern_Management_ListIncomingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "access-requests", "incoming", "services", "serviceName"}, ""))
 
 	pattern_Management_ApproveIncomingAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "incoming", "services", "serviceName", "accessRequestID", "approve"}, ""))
 
@@ -2870,7 +2870,7 @@ var (
 
 	forward_Management_DeleteInway_0 = runtime.ForwardResponseMessage
 
-	forward_Management_ListIncomingAccessRequest_0 = runtime.ForwardResponseMessage
+	forward_Management_ListIncomingAccessRequests_0 = runtime.ForwardResponseMessage
 
 	forward_Management_ApproveIncomingAccessRequest_0 = runtime.ForwardResponseMessage
 

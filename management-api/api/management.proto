@@ -51,7 +51,7 @@ service Management {
   rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/inways/{name}"};
   }
-  rpc ListIncomingAccessRequest (ListIncomingAccessRequestsRequests) returns (ListIncomingAccessRequestsResponse) {
+  rpc ListIncomingAccessRequests (ListIncomingAccessRequestsRequest) returns (ListIncomingAccessRequestsResponse) {
     option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
   }
   rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
@@ -335,7 +335,7 @@ message IncomingAccessRequest {
   google.protobuf.Timestamp updatedAt = 6;
 }
 
-message ListIncomingAccessRequestsRequests {
+message ListIncomingAccessRequestsRequest {
   string serviceName = 1;
 }
 
