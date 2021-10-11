@@ -2,15 +2,6 @@
 // Licensed under the EUPL
 //
 import { makeAutoObservable } from 'mobx'
-import { string, instanceOf } from 'prop-types'
-
-export const accessProofPropTypes = {
-  id: string.isRequired,
-  organizationName: string,
-  serviceName: string,
-  createdAt: instanceOf(Date),
-  updatedAt: instanceOf(Date),
-}
 
 class AccessProofModel {
   id = ''
