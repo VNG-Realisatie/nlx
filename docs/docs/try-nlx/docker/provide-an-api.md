@@ -56,8 +56,8 @@ In the following example we will use [Swagger Petstore](https://petstore.swagger
 To provide our API in the NLX network we have to create a service in the Management UI.
 You can do that by going to the services page where you click on the 'Add service' button.
 
-For the service name, use `SwaggerPetStore` and for the API endpoint URL use `https://petstore.swagger.io/v2`. 
-Select `Inway-01` as the inway to be used by this service. The remaining fields can 
+For the service name, use `SwaggerPetStore` and for the API endpoint URL use `https://petstore.swagger.io/v2`.
+Select `Inway-01` as the inway to be used by this service. The remaining fields can
 be left blank.
 
 ![Add service screen](/img/nlx-management-add-service-screen.png "Add service screen")
@@ -77,7 +77,7 @@ After adding the service, you should see the service in the services page and in
 Now let's try to fetch some data from our inway using our outway using `curl`:
 
 ```bash
-curl http://localhost/my-organization/SwaggerPetStore/v2/pet/20002085
+curl http://localhost/{{ my-certificate-subject-serial-number }}/SwaggerPetStore/v2/pet/20002085
 ```
 
 The response of the `curl` command should look similar to the following output (where `ORGANIZATION_NAME`/`PUBLIC_KEY_FINGERPRINT` are derived from the certificate generated in [step 3](./retrieve-a-demo-certificate)).
@@ -90,11 +90,11 @@ We are denied access because we first need to request access. This is one of the
 
 In order to request access, follow these steps:
 
-1. Navigate to the 'Directory' in NLX Management. 
+1. Navigate to the 'Directory' in NLX Management.
 1. Select the service `SwaggerPetstore` from the list and click on 'Toegang aanvragen'.
 1. Now navigate to the 'Services' page and again select the service `SwaggerPetStore`.
-1. You should see one access request under the section 'Toegansverzoeken'. 
-1. Expand the section and click on 'Accepteren' to accept the access request. 
+1. You should see one access request under the section 'Toegansverzoeken'.
+1. Expand the section and click on 'Accepteren' to accept the access request.
 1. You now have an access grant for the service.
 
 Let's try to fetch the data again.

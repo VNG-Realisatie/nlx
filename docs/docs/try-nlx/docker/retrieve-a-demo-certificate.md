@@ -46,7 +46,7 @@ Answer the questions accordingly:
 - **Country Name**, enter any value
 - **State**, enter any value
 - **Locality Name**, enter any value
-- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.  
+- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.
   A good value could be: `my-organization`.
 - **Organization Unit Name**, enter any value
 - **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your inway, e.g. `inway.my-organization.nl` or `nlx.my-organization.nl`. For an outway this FQDN does not have to be resolvable. It is possible to use the inway certificate for the outway and NLX Management.
@@ -76,7 +76,7 @@ If all of the above went well, you should see at least two files listed:
 We will use the NLX certportal to retrieve an NLX developer certificate.
 
 First let's copy the contents of `org.csr`. We will use this to generate the demo certificate.
-Make sure to copy the complete output, including *-----BEGIN CERTIFICATE REQUEST-----* and *-----END CERTIFICATE REQUEST-----*.
+Make sure to copy the complete output, including `-----BEGIN CERTIFICATE REQUEST-----` and `-----END CERTIFICATE REQUEST-----`.
 
 ```bash
 cat org.csr
@@ -103,8 +103,9 @@ openssl x509 -in org.crt -text | grep Subject:
 
 The output should contain the answers you've provided when you created the certificate.
 
-Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl`
+Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl/serialNumber=01234567890123456789`.
 
+The value after `serialNumber=` in the Subject's CN field is the primary way to identify your organization on NLX. For details about this, see the [organization identification](/reference-information/organization-identification) page.
 
 ## In sum
 

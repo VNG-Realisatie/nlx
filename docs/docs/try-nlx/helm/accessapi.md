@@ -45,10 +45,10 @@ You now have access to the service via NLX.
 Due to the port forwarding, your outway is now accessible from your local machine.
 
 Replace in the command below:
-- `<your organization>` for the organization name you entered in your external certificate.
+- `<your subject serial number>` for the certificate's serial number you entered in your external certificate. How to find this value is described in [Create Certificates](./create-certificate)
 
 ```
-curl http://localhost:8080/<your organization>/basisregister-fictieve-kentekens/voertuigen
+curl http://localhost:8080/<your subject serial number>/basisregister-fictieve-kentekens/voertuigen
 ```
 
 Now run the command to query the API via the NLX Outway.

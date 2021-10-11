@@ -159,3 +159,19 @@ kubectl create secret tls external-tls \
 ```
 
 Your certificate now exists as secret in Kubernetes. We will use this secret when we install NLX management and the NLX inway.
+
+## Obtaining your Subject Serial Number
+
+The Subject Serial Number of your certificate, added by the Certificate Portal, is the primary identifier of your organization within NLX.
+
+To obtain your serial number, see the Subject part of the certificate by running:
+
+```bash
+openssl x509 -in org.crt -text | grep Subject:
+```
+
+Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl/serialNumber=01234567890123456789`.
+
+The value after `serialNumber=` in the Subject's CN field is the Subject Serial Number. Save this, because it will later be used to access your own APIs when using the Outway.
+
+For details about this, see the [organization identification](/reference-information/organization-identification) page.
