@@ -193,7 +193,7 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.OutgoingAccessRequestCreate(ctx, userInfo.username, userInfo.userAgent, req.OrganizationName, req.ServiceName)
+	err = s.auditLogger.OutgoingAccessRequestCreate(ctx, userInfo.username, userInfo.userAgent, req.OrganizationSerialNumber, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -204,7 +204,9 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 	}
 
 	ar := &database.OutgoingAccessRequest{
-		OrganizationName:     req.OrganizationName,
+		Organization: database.Organization{
+			SerialNumber: req.OrganizationSerialNumber,
+		},
 		ServiceName:          req.ServiceName,
 		PublicKeyPEM:         publicKey,
 		PublicKeyFingerprint: s.orgCert.PublicKeyFingerprint(),
@@ -255,7 +257,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		s.logger.Error(
 			"converting outgoing access request",
 			zap.Uint("id", accessRequest.ID),
-			zap.String("organization", accessRequest.OrganizationName),
+			zap.Any("organization", accessRequest.Organization),
 			zap.String("service", accessRequest.ServiceName),
 			zap.Error(err),
 		)
@@ -390,7 +392,7 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) (*api.IncomingAccessRequest, error) {
 	return &api.IncomingAccessRequest{
 		Id: uint64(accessRequest.ID),
-		Organization: &api.IncomingAccessRequest_Organization{
+		Organization: &api.Organization{
 			Name:         accessRequest.Organization.Name,
 			SerialNumber: accessRequest.Organization.SerialNumber,
 		},
@@ -420,12 +422,15 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api
 	}
 
 	return &api.OutgoingAccessRequest{
-		Id:               uint64(request.ID),
-		OrganizationName: request.OrganizationName,
-		ServiceName:      request.ServiceName,
-		State:            outgoingAccessRequestStateToProto(request.State),
-		ErrorDetails:     details,
-		CreatedAt:        timestamppb.New(request.CreatedAt),
-		UpdatedAt:        timestamppb.New(request.UpdatedAt),
+		Id: uint64(request.ID),
+		Organization: &api.Organization{
+			SerialNumber: request.Organization.SerialNumber,
+			Name:         request.Organization.Name,
+		},
+		ServiceName:  request.ServiceName,
+		State:        outgoingAccessRequestStateToProto(request.State),
+		ErrorDetails: details,
+		CreatedAt:    timestamppb.New(request.CreatedAt),
+		UpdatedAt:    timestamppb.New(request.UpdatedAt),
 	}, nil
 }

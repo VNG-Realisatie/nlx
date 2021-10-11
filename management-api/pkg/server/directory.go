@@ -62,7 +62,7 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 	for i, service := range resp.Services {
 		convertedService := convertDirectoryService(service)
 
-		accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, convertedService.Organization.Name, convertedService.ServiceName)
+		accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, convertedService.Organization.SerialNumber, convertedService.ServiceName)
 		if err != nil {
 			s.logger.Error("error getting latest access request and access proof", zap.Error(err))
 			return nil, status.Errorf(codes.Internal, "database error")
@@ -89,7 +89,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 
 	directoryService := convertDirectoryService(service)
 
-	accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, directoryService.Organization.Name, directoryService.ServiceName)
+	accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, directoryService.Organization.SerialNumber, directoryService.ServiceName)
 	if err != nil {
 		s.logger.Error("error getting latest access request and access proof", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "database error")
@@ -124,8 +124,10 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 	logger.Info("rpc request RequestAccessToService")
 
 	ar := &database.OutgoingAccessRequest{
-		OrganizationName: request.OrganizationSerialNumber, // @TODO: Name->SerialNumber
-		ServiceName:      request.ServiceName,
+		Organization: database.Organization{
+			SerialNumber: request.OrganizationSerialNumber,
+		},
+		ServiceName: request.ServiceName,
 	}
 
 	accessRequest, err := s.configDatabase.CreateOutgoingAccessRequest(ctx, ar)
@@ -232,9 +234,8 @@ func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.Outg
 	}, nil
 }
 
-// @TODO: Serial Number
-func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase database.ConfigDatabase, organizationName, serviceName string) (*api.OutgoingAccessRequest, *api.AccessProof, error) {
-	latestAccessRequest, errDatabase := configDatabase.GetLatestOutgoingAccessRequest(ctx, organizationName, serviceName)
+func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) (*api.OutgoingAccessRequest, *api.AccessProof, error) {
+	latestAccessRequest, errDatabase := configDatabase.GetLatestOutgoingAccessRequest(ctx, organizationSerialNumber, serviceName)
 	if errDatabase != nil {
 		if !errIsNotFound(errDatabase) {
 			return nil, nil, errors.Wrap(errDatabase, "error retrieving latest access request")
@@ -289,11 +290,14 @@ func convertAccessProof(accessProof *database.AccessProof) (*api.AccessProof, er
 	}
 
 	return &api.AccessProof{
-		Id:               uint64(accessProof.ID),
-		OrganizationName: accessProof.OutgoingAccessRequest.OrganizationName,
-		ServiceName:      accessProof.OutgoingAccessRequest.ServiceName,
-		CreatedAt:        createdAt,
-		RevokedAt:        revokedAt,
-		AccessRequestId:  uint64(accessProof.OutgoingAccessRequest.ID),
+		Id: uint64(accessProof.ID),
+		Organization: &api.Organization{
+			SerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
+			Name:         accessProof.OutgoingAccessRequest.Organization.Name,
+		},
+		ServiceName:     accessProof.OutgoingAccessRequest.ServiceName,
+		CreatedAt:       createdAt,
+		RevokedAt:       revokedAt,
+		AccessRequestId: uint64(accessProof.OutgoingAccessRequest.ID),
 	}, nil
 }

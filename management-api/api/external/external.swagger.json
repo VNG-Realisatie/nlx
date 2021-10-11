@@ -63,8 +63,8 @@
           "type": "string",
           "format": "uint64"
         },
-        "organizationName": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -134,6 +134,17 @@
           "type": "string"
         },
         "service": {
+          "type": "string"
+        }
+      }
+    },
+    "nlxmanagementOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         }
       }

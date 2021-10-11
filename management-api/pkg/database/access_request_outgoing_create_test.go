@@ -44,7 +44,10 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 			loadFixtures: true,
 			args: args{
 				accessRequest: &database.OutgoingAccessRequest{
-					OrganizationName:     "fixture-organization-name",
+					Organization: database.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "fixture-organization-name",
+					},
 					ServiceName:          "fixture-service-name",
 					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
@@ -59,7 +62,10 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 			loadFixtures: false,
 			args: args{
 				accessRequest: &database.OutgoingAccessRequest{
-					OrganizationName:     "my-org",
+					Organization: database.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "my-org",
+					},
 					ServiceName:          "my-service",
 					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
@@ -69,8 +75,11 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 				},
 			},
 			want: &database.OutgoingAccessRequest{
-				ID:                   nonFixturesStartID,
-				OrganizationName:     "my-org",
+				ID: nonFixturesStartID,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "my-org",
+				},
 				ServiceName:          "my-service",
 				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),

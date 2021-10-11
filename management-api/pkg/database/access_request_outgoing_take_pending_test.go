@@ -49,8 +49,11 @@ func TestTakePendingOutgoingAccessRequest(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			want: &database.OutgoingAccessRequest{
-				ID:                   1,
-				OrganizationName:     "fixture-organization-name",
+				ID: 1,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "fixture-organization-name",
+				},
 				ServiceName:          "fixture-service-name",
 				ReferenceID:          1,
 				State:                database.OutgoingAccessRequestCreated,
@@ -77,7 +80,7 @@ func TestTakePendingOutgoingAccessRequest(t *testing.T) {
 
 			if tt.wantErr == nil && tt.want != nil {
 				assert.Equal(t, tt.want.ID, got.ID)
-				assert.Equal(t, tt.want.OrganizationName, got.OrganizationName)
+				assert.Equal(t, tt.want.Organization, got.Organization)
 				assert.Equal(t, tt.want.ServiceName, got.ServiceName)
 				assert.Equal(t, tt.want.ReferenceID, got.ReferenceID)
 				assert.Equal(t, tt.want.State, got.State)

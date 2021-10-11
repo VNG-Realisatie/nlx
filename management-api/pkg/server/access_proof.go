@@ -52,11 +52,14 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 	revokedAt := timestamppb.New(grant.RevokedAt.Time)
 
 	return &api.AccessProof{
-		Id:               uint64(grant.ID),
-		AccessRequestId:  uint64(grant.IncomingAccessRequest.ID),
-		OrganizationName: grant.IncomingAccessRequest.Organization.Name,
-		ServiceName:      grant.IncomingAccessRequest.Service.Name,
-		CreatedAt:        createdAt,
-		RevokedAt:        revokedAt,
+		Id:              uint64(grant.ID),
+		AccessRequestId: uint64(grant.IncomingAccessRequest.ID),
+		Organization: &api.Organization{
+			SerialNumber: grant.IncomingAccessRequest.Organization.SerialNumber,
+			Name:         grant.IncomingAccessRequest.Organization.Name,
+		},
+		ServiceName: grant.IncomingAccessRequest.Service.Name,
+		CreatedAt:   createdAt,
+		RevokedAt:   revokedAt,
 	}, nil
 }

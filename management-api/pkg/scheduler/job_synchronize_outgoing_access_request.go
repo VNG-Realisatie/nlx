@@ -92,7 +92,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 
 	if err != nil {
 		if errors.Is(err, server.ErrServiceDoesNotExist) {
-			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, request.OrganizationName, request.ServiceName)
+			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, request.Organization.SerialNumber, request.ServiceName)
 		}
 
 		errorDetails := diagnostics.ParseError(err)
@@ -123,7 +123,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, uint, error) {
-	client, err := job.getOrganizationManagementClient(ctx, request.OrganizationName)
+	client, err := job.getOrganizationManagementClient(ctx, request.Organization.SerialNumber)
 	if err != nil {
 		return database.OutgoingAccessRequestFailed, 0, err
 	}
@@ -141,7 +141,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Co
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, error) {
-	client, err := job.getOrganizationManagementClient(ctx, request.OrganizationName)
+	client, err := job.getOrganizationManagementClient(ctx, request.Organization.SerialNumber)
 	if err != nil {
 		return "", err
 	}
@@ -176,10 +176,10 @@ func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx contex
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
-	remoteProof, err := job.retrieveAccessProof(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
+	remoteProof, err := job.retrieveAccessProof(ctx, outgoingAccessRequest.Organization.SerialNumber, outgoingAccessRequest.ServiceName)
 	if err != nil {
 		if errors.Is(err, server.ErrServiceDoesNotExist) {
-			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.OrganizationName, outgoingAccessRequest.ServiceName)
+			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.Organization.SerialNumber, outgoingAccessRequest.ServiceName)
 		}
 
 		return err
@@ -219,8 +219,8 @@ func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Cont
 	return nil
 }
 
-func (job *SynchronizeOutgoingAccessRequestJob) retrieveAccessProof(ctx context.Context, organizationName, serviceName string) (*database.AccessProof, error) {
-	client, err := job.getOrganizationManagementClient(ctx, organizationName)
+func (job *SynchronizeOutgoingAccessRequestJob) retrieveAccessProof(ctx context.Context, organizationSerialNumber, serviceName string) (*database.AccessProof, error) {
+	client, err := job.getOrganizationManagementClient(ctx, organizationSerialNumber)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, erro
 		revokedAt = time.Time{}
 	}
 
-	return &database.AccessProof{
+	dbAccessProof := &database.AccessProof{
 		ID:        uint(accessProof.Id),
 		CreatedAt: createdAt,
 		RevokedAt: sql.NullTime{
@@ -264,15 +264,23 @@ func parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, erro
 			Valid: !revokedAt.IsZero(),
 		},
 		OutgoingAccessRequest: &database.OutgoingAccessRequest{
-			ID:               uint(accessProof.AccessRequestId),
-			OrganizationName: accessProof.OrganizationName,
-			ServiceName:      accessProof.ServiceName,
+			ID:          uint(accessProof.AccessRequestId),
+			ServiceName: accessProof.ServiceName,
 		},
-	}, nil
+	}
+
+	if accessProof.Organization != nil {
+		dbAccessProof.OutgoingAccessRequest.Organization = database.Organization{
+			SerialNumber: accessProof.Organization.SerialNumber,
+			Name:         accessProof.Organization.Name,
+		}
+	}
+
+	return dbAccessProof, nil
 }
 
-func (job *SynchronizeOutgoingAccessRequestJob) getOrganizationManagementClient(ctx context.Context, organizationName string) (management.Client, error) {
-	address, err := job.directoryClient.GetOrganizationInwayProxyAddress(ctx, organizationName)
+func (job *SynchronizeOutgoingAccessRequestJob) getOrganizationManagementClient(ctx context.Context, organizationSerialNumber string) (management.Client, error) {
+	address, err := job.directoryClient.GetOrganizationInwayProxyAddress(ctx, organizationSerialNumber)
 	if err != nil {
 		return nil, err
 	}

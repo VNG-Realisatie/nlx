@@ -107,7 +107,8 @@ func TestGetAccessProof(t *testing.T) {
 						IncomingAccessRequest: &database.IncomingAccessRequest{
 							ID: 1,
 							Organization: database.IncomingAccessRequestOrganization{
-								Name: certBundle.Certificate().Subject.Organization[0],
+								SerialNumber: certBundle.Certificate().Subject.SerialNumber,
+								Name:         certBundle.Certificate().Subject.Organization[0],
 							},
 							ServiceID: 1,
 							Service: &database.Service{
@@ -119,12 +120,15 @@ func TestGetAccessProof(t *testing.T) {
 				return ctx
 			},
 			want: &api.AccessProof{
-				Id:               1,
-				CreatedAt:        ts,
-				RevokedAt:        ts,
-				AccessRequestId:  1,
-				OrganizationName: "nlx-test",
-				ServiceName:      "service",
+				Id:              1,
+				CreatedAt:       ts,
+				RevokedAt:       ts,
+				AccessRequestId: 1,
+				Organization: &api.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "nlx-test",
+				},
+				ServiceName: "service",
 			},
 		},
 	}

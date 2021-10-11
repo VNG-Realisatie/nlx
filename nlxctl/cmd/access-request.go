@@ -19,7 +19,7 @@ func init() {
 	accessRequestCommand.AddCommand(createAccessRequestCommand)
 	accessRequestCommand.AddCommand(approveAccessRequestCommand)
 
-	createAccessRequestCommand.Flags().StringVarP(&accessRequestOptions.organizationName, "organization", "", "", "Name of the organization")
+	createAccessRequestCommand.Flags().StringVarP(&accessRequestOptions.organizationSerialNumber, "organization", "", "", "Serial number of the organization")
 	createAccessRequestCommand.Flags().StringVarP(&accessRequestOptions.serviceName, "service", "", "", "Name of the service")
 
 	listAccessRequestCommand.Flags().StringVarP(&listAccessRequestsOptions.serviceName, "service", "s", "", "Name of the service")
@@ -74,9 +74,9 @@ var accessRequestCommand = &cobra.Command{
 }
 
 var accessRequestOptions struct {
-	id               uint64
-	organizationName string
-	serviceName      string
+	id                       uint64
+	organizationSerialNumber string
+	serviceName              string
 }
 
 var approveAccessRequestCommand = &cobra.Command{
@@ -100,20 +100,20 @@ var createAccessRequestCommand = &cobra.Command{
 	Short: "Request access to another service",
 	Run: func(cmd *cobra.Command, args []string) {
 		accessRequest, err := getManagementClient().CreateAccessRequest(context.Background(), &api.CreateAccessRequestRequest{
-			OrganizationName: accessRequestOptions.organizationName,
-			ServiceName:      accessRequestOptions.serviceName,
+			OrganizationSerialNumber: accessRequestOptions.organizationSerialNumber,
+			ServiceName:              accessRequestOptions.serviceName,
 		})
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		printAccessRequest(accessRequestDetails{
-			ID:               accessRequest.Id,
-			State:            accessRequest.State,
-			OrganizationName: accessRequest.OrganizationName,
-			ServiceName:      accessRequest.ServiceName,
-			CreatedAt:        accessRequest.CreatedAt,
-			UpdatedAt:        accessRequest.UpdatedAt,
+			ID:                       accessRequest.Id,
+			State:                    accessRequest.State,
+			OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
+			ServiceName:              accessRequest.ServiceName,
+			CreatedAt:                accessRequest.CreatedAt,
+			UpdatedAt:                accessRequest.UpdatedAt,
 		})
 	},
 }

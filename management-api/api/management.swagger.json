@@ -1042,8 +1042,8 @@
           "type": "string",
           "format": "uint64"
         },
-        "organizationName": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1142,7 +1142,7 @@
     "managementCreateAccessRequestRequest": {
       "type": "object",
       "properties": {
-        "organizationName": {
+        "organizationSerialNumber": {
           "type": "string"
         },
         "serviceName": {
@@ -1418,7 +1418,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/managementIncomingAccessRequestOrganization"
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1433,17 +1433,6 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
-        }
-      }
-    },
-    "managementIncomingAccessRequestOrganization": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "serialNumber": {
-          "type": "string"
         }
       }
     },
@@ -1698,8 +1687,8 @@
           "type": "string",
           "format": "uint64"
         },
-        "organizationName": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "serviceName": {
           "type": "string"

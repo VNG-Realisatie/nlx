@@ -17,11 +17,13 @@ import (
 
 func getCreatedAccessRequests() map[string]testCase {
 	accessRequest := &database.OutgoingAccessRequest{
-		ID:               1,
-		OrganizationName: "organization-a",
-		ServiceName:      "service",
-		State:            database.OutgoingAccessRequestCreated,
-		ReferenceID:      2,
+		ID: 1,
+		Organization: database.Organization{
+			SerialNumber: "00000000000000000001",
+		},
+		ServiceName: "service",
+		State:       database.OutgoingAccessRequestCreated,
+		ReferenceID: 2,
 	}
 
 	return map[string]testCase{
@@ -34,7 +36,7 @@ func getCreatedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("", errors.New("arbitrary error"))
 
 				mocks.db.
@@ -56,7 +58,7 @@ func getCreatedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("hostname:7200", nil)
 
 				mocks.management.
@@ -68,7 +70,7 @@ func getCreatedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					DeleteOutgoingAccessRequests(gomock.Any(), "organization-a", "service").
+					DeleteOutgoingAccessRequests(gomock.Any(), "00000000000000000001", "service").
 					Return(nil)
 
 				mocks.management.
@@ -90,7 +92,7 @@ func getCreatedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("hostname:7200", nil)
 
 				mocks.management.

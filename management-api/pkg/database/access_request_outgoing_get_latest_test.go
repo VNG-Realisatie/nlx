@@ -31,8 +31,8 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 	require.NoError(t, err)
 
 	type args struct {
-		organizationName string
-		serviceName      string
+		organizationSerialNumber string
+		serviceName              string
 	}
 
 	tests := map[string]struct {
@@ -44,8 +44,8 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 		"when_there_are_no_access_requests_present": {
 			loadFixtures: false,
 			args: args{
-				organizationName: "arbitrary",
-				serviceName:      "arbitrary",
+				organizationSerialNumber: "arbitrary",
+				serviceName:              "arbitrary",
 			},
 			want:    nil,
 			wantErr: database.ErrNotFound,
@@ -53,12 +53,15 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-organization-name",
-				serviceName:      "fixture-service-name",
+				organizationSerialNumber: "00000000000000000001",
+				serviceName:              "fixture-service-name",
 			},
 			want: &database.OutgoingAccessRequest{
-				ID:                   2,
-				OrganizationName:     "fixture-organization-name",
+				ID: 2,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "fixture-organization-name",
+				},
 				ServiceName:          "fixture-service-name",
 				ReferenceID:          1,
 				State:                database.OutgoingAccessRequestApproved,
@@ -80,7 +83,7 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.GetLatestOutgoingAccessRequest(context.Background(), tt.args.organizationName, tt.args.serviceName)
+			got, err := configDb.GetLatestOutgoingAccessRequest(context.Background(), tt.args.organizationSerialNumber, tt.args.serviceName)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {

@@ -54,8 +54,11 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 				id: 1,
 			},
 			want: &database.OutgoingAccessRequest{
-				ID:                   1,
-				OrganizationName:     "fixture-organization-name",
+				ID: 1,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "fixture-organization-name",
+				},
 				ServiceName:          "fixture-service-name",
 				ReferenceID:          1,
 				State:                database.OutgoingAccessRequestCreated,

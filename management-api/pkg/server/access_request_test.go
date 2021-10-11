@@ -51,7 +51,7 @@ func TestCreateAccessRequest(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "test-organization", "test-service").
+					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "00000000000000000001", "test-service").
 					Return(nil)
 
 				publicKeyPEM, err := certBundle.PublicKeyPEM()
@@ -60,15 +60,20 @@ func TestCreateAccessRequest(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
-						OrganizationName:     "test-organization",
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+						},
 						ServiceName:          "test-service",
 						PublicKeyPEM:         publicKeyPEM,
 						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
 						State:                database.OutgoingAccessRequestCreated,
 					}).
 					Return(&database.OutgoingAccessRequest{
-						ID:                   1,
-						OrganizationName:     "test-organization",
+						ID: 1,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization",
+						},
 						ServiceName:          "test-service",
 						PublicKeyPEM:         publicKeyPEM,
 						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
@@ -80,16 +85,19 @@ func TestCreateAccessRequest(t *testing.T) {
 				return ctx
 			},
 			request: &api.CreateAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "test-service",
 			},
 			want: &api.OutgoingAccessRequest{
-				Id:               1,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            api.AccessRequestState_CREATED,
-				CreatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
-				UpdatedAt:        createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+				Id: 1,
+				Organization: &api.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
+				},
+				ServiceName: "test-service",
+				State:       api.AccessRequestState_CREATED,
+				CreatedAt:   createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+				UpdatedAt:   createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 			},
 		},
 		"with_an_active_access_request": {
@@ -101,7 +109,7 @@ func TestCreateAccessRequest(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "test-organization", "test-service").
+					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "00000000000000000001", "test-service").
 					Return(nil)
 
 				publicKeyPEM, err := certBundle.PublicKeyPEM()
@@ -110,7 +118,9 @@ func TestCreateAccessRequest(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
-						OrganizationName:     "test-organization",
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+						},
 						ServiceName:          "test-service",
 						PublicKeyPEM:         publicKeyPEM,
 						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
@@ -121,8 +131,8 @@ func TestCreateAccessRequest(t *testing.T) {
 				return ctx
 			},
 			request: &api.CreateAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "test-service",
 			},
 			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
 		},
@@ -195,10 +205,13 @@ func TestSendAccessRequest(t *testing.T) {
 			},
 			&database.OutgoingAccessRequest{
 
-				ID:               1,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            database.OutgoingAccessRequestCreated,
+				ID: 1,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
+				},
+				ServiceName: "test-service",
+				State:       database.OutgoingAccessRequestCreated,
 			},
 			nil,
 			func(mock *gomock.Call) {
@@ -215,22 +228,28 @@ func TestSendAccessRequest(t *testing.T) {
 				AccessRequestID:  1,
 			},
 			&database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            database.OutgoingAccessRequestCreated,
+				ID: 1,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
+				},
+				ServiceName: "test-service",
+				State:       database.OutgoingAccessRequestCreated,
 			},
 			nil,
 			func(mock *gomock.Call) {
 				mock.Return(nil)
 			},
 			&api.OutgoingAccessRequest{
-				Id:               1,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            api.AccessRequestState_CREATED,
-				CreatedAt:        createTimestamp(time.Time{}),
-				UpdatedAt:        createTimestamp(time.Time{}),
+				Id: 1,
+				Organization: &api.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
+				},
+				ServiceName: "test-service",
+				State:       api.AccessRequestState_CREATED,
+				CreatedAt:   createTimestamp(time.Time{}),
+				UpdatedAt:   createTimestamp(time.Time{}),
 			},
 			nil,
 		},
@@ -242,22 +261,28 @@ func TestSendAccessRequest(t *testing.T) {
 				AccessRequestID:  1,
 			},
 			&database.OutgoingAccessRequest{
-				ID:               1,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            database.OutgoingAccessRequestFailed,
+				ID: 1,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
+				},
+				ServiceName: "test-service",
+				State:       database.OutgoingAccessRequestFailed,
 			},
 			nil,
 			func(mock *gomock.Call) {
 				mock.Return(nil)
 			},
 			&api.OutgoingAccessRequest{
-				Id:               1,
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				State:            api.AccessRequestState_CREATED,
-				CreatedAt:        createTimestamp(time.Time{}),
-				UpdatedAt:        createTimestamp(time.Time{}),
+				Id: 1,
+				Organization: &api.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
+				},
+				ServiceName: "test-service",
+				State:       api.AccessRequestState_CREATED,
+				CreatedAt:   createTimestamp(time.Time{}),
+				UpdatedAt:   createTimestamp(time.Time{}),
 			},
 			nil,
 		},

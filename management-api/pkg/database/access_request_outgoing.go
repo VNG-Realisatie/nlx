@@ -31,9 +31,14 @@ const (
 	OutgoingAccessRequestFailed   OutgoingAccessRequestState = "failed"
 )
 
+type Organization struct {
+	SerialNumber string
+	Name         string
+}
+
 type OutgoingAccessRequest struct {
 	ID                   uint
-	OrganizationName     string // @TODO: OrganizationSerialNumber
+	Organization         Organization `gorm:"embedded;embeddedPrefix:organization_"`
 	ServiceName          string
 	ReferenceID          uint
 	State                OutgoingAccessRequestState
@@ -64,8 +69,8 @@ func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Contex
 		WithContext(ctx).
 		Model(OutgoingAccessRequest{}).
 		Where(
-			"organization_name = ? AND service_name = ? AND public_key_fingerprint = ? AND state IN ?",
-			accessRequest.OrganizationName,
+			"organization_serial_number = ? AND service_name = ? AND public_key_fingerprint = ? AND state IN ?",
+			accessRequest.Organization.SerialNumber,
 			accessRequest.ServiceName,
 			accessRequest.PublicKeyFingerprint,
 			[]string{
@@ -108,12 +113,12 @@ func (db *PostgresConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, 
 	return accessRequest, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationName, serviceName string) (*OutgoingAccessRequest, error) {
+func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*OutgoingAccessRequest, error) {
 	accessRequest := &OutgoingAccessRequest{}
 
 	if err := db.DB.
 		WithContext(ctx).
-		Where("organization_name = ? AND service_name = ?", organizationName, serviceName).
+		Where("organization_serial_number = ? AND service_name = ?", organizationSerialNumber, serviceName).
 		Order("created_at DESC").
 		First(accessRequest).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -173,10 +178,10 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 		Save(outgoingAccessRequest).Error
 }
 
-func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) error {
+func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error {
 	return db.DB.
 		WithContext(ctx).
-		Where("organization_name = ? AND service_name = ?", organizationName, serviceName).
+		Where("organization_serial_number = ? AND service_name = ?", organizationSerialNumber, serviceName).
 		Delete(&OutgoingAccessRequest{}).
 		Error
 }

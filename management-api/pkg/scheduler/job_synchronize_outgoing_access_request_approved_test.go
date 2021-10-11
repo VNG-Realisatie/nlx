@@ -19,10 +19,12 @@ import (
 
 func getApprovedAccessRequests() map[string]testCase {
 	accessRequest := &database.OutgoingAccessRequest{
-		ID:               1,
-		OrganizationName: "organization-b",
-		ServiceName:      "service",
-		State:            database.OutgoingAccessRequestApproved,
+		ID: 1,
+		Organization: database.Organization{
+			SerialNumber: "00000000000000000002",
+		},
+		ServiceName: "service",
+		State:       database.OutgoingAccessRequestApproved,
 	}
 
 	return map[string]testCase{
@@ -35,7 +37,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("", errors.New("arbitrary error"))
 
 				mocks.db.
@@ -57,7 +59,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -90,7 +92,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -129,7 +131,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -170,7 +172,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -179,9 +181,12 @@ func getApprovedAccessRequests() map[string]testCase {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						OrganizationName: "organization-a",
-						ServiceName:      "service",
-						RevokedAt:        nil,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "organization-a",
+						},
+						ServiceName: "service",
+						RevokedAt:   nil,
 					}, nil)
 
 				mocks.db.
@@ -220,7 +225,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -229,10 +234,13 @@ func getApprovedAccessRequests() map[string]testCase {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						OrganizationName: "organization-a",
-						ServiceName:      "service",
-						CreatedAt:        ts,
-						RevokedAt:        ts,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "organization-a",
+						},
+						ServiceName: "service",
+						CreatedAt:   ts,
+						RevokedAt:   ts,
 					}, nil)
 
 				mocks.db.
@@ -275,7 +283,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -284,10 +292,13 @@ func getApprovedAccessRequests() map[string]testCase {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						OrganizationName: "organization-a",
-						ServiceName:      "service",
-						CreatedAt:        ts,
-						RevokedAt:        ts,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "organization-a",
+						},
+						ServiceName: "service",
+						CreatedAt:   ts,
+						RevokedAt:   ts,
 					}, nil)
 
 				mocks.db.
@@ -322,7 +333,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -331,9 +342,12 @@ func getApprovedAccessRequests() map[string]testCase {
 						ServiceName: "service",
 					}).
 					Return(&api.AccessProof{
-						OrganizationName: "organization-a",
-						ServiceName:      "service",
-						RevokedAt:        nil,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "organization-a",
+						},
+						ServiceName: "service",
+						RevokedAt:   nil,
 					}, nil)
 
 				mocks.db.
@@ -344,10 +358,12 @@ func getApprovedAccessRequests() map[string]testCase {
 				mocks.db.
 					EXPECT().
 					CreateAccessProof(gomock.Any(), &database.OutgoingAccessRequest{
-						ID:               1,
-						OrganizationName: "organization-b",
-						ServiceName:      "service",
-						State:            database.OutgoingAccessRequestApproved,
+						ID: 1,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000002",
+						},
+						ServiceName: "service",
+						State:       database.OutgoingAccessRequestApproved,
 					}).
 					Return(nil, nil)
 
@@ -369,7 +385,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.directory.
 					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "organization-b").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("localhost:8000", nil)
 
 				mocks.management.
@@ -381,7 +397,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					DeleteOutgoingAccessRequests(gomock.Any(), "organization-b", "service").
+					DeleteOutgoingAccessRequests(gomock.Any(), "00000000000000000002", "service").
 					Return(nil)
 
 				mocks.management.

@@ -98,6 +98,11 @@ service Management {
   }
 }
 
+message Organization {
+  string serialNumber = 1;
+  string name = 2;
+}
+
 message SynchronizeOrdersResponse {
   repeated IncomingOrder orders = 1;
 }
@@ -314,7 +319,7 @@ message ErrorDetails {
 
 message OutgoingAccessRequest {
   uint64 id = 1;
-  string organizationName = 2;
+  Organization organization = 2;
   string serviceName = 3;
   AccessRequestState state = 4;
   google.protobuf.Timestamp createdAt = 5;
@@ -323,11 +328,6 @@ message OutgoingAccessRequest {
 }
 
 message IncomingAccessRequest {
-  message Organization {
-    string name = 1;
-    string serialNumber = 2;
-  }
-
   uint64 id = 1;
   Organization organization = 2;
   string serviceName = 3;
@@ -364,7 +364,7 @@ message ListOutgoingAccessRequestsResponse {
 }
 
 message CreateAccessRequestRequest {
-  string organizationName = 1;
+  string organizationSerialNumber = 1;
   string serviceName = 2;
 }
 
@@ -403,7 +403,7 @@ message AccessGrant {
 
 message AccessProof {
   uint64 id = 1;
-  string organizationName = 2;
+  Organization organization = 2;
   string serviceName = 3;
   google.protobuf.Timestamp createdAt = 4;
   google.protobuf.Timestamp revokedAt = 5;
@@ -436,11 +436,6 @@ message DirectoryAccessRequest {
   AccessRequestState state = 2;
   google.protobuf.Timestamp createdAt = 3;
   google.protobuf.Timestamp updatedAt = 4;
-}
-
-message Organization {
-  string serialNumber = 1;
-  string name = 2;
 }
 
 message DirectoryService {

@@ -1,5 +1,6 @@
 - id: 1
   organization_name: fixture-organization-name
+  organization_serial_number: "00000000000000000001"
   service_name: fixture-service-name
   state: created
   public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
@@ -29,6 +30,7 @@
 
 - id: 2
   organization_name: fixture-organization-name
+  organization_serial_number: "00000000000000000001"
   service_name: fixture-service-name
   state: approved
   public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
@@ -58,6 +60,7 @@
 
 - id: 3
   organization_name: fixture-organization-name-two
+  organization_serial_number: "00000000000000000002"
   service_name: fixture-service-name-two
   state: approved
   public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
@@ -87,6 +90,7 @@
 
 - id: 4
   organization_name: fixture-organization-name-two
+  organization_serial_number: "00000000000000000002"
   service_name: fixture-service-name
   state: approved
   public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
