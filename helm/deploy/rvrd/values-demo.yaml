@@ -96,4 +96,7 @@ nlx-inway:
     selfAddress: inway.demo.rvrd.nl:443
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
   service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+    loadBalancerIP: 51.138.9.186
     type: LoadBalancer
