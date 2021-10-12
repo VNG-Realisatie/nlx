@@ -1,11 +1,15 @@
 Run semantic release:
   extends: .node-base
   stage: Tools
+  variables: 
+    HELM_VERSION: v3.6.0
   script:
     - apk --no-cache add git
-    - apk --no-cache add helm --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing
+    - wget https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz
+    - tar -zxvf helm-$HELM_VERSION-linux-amd64.tar.gz
+    - mv linux-amd64/helm /usr/local/bin/helm
     - install_npm_dependencies
-    - start_section release "Running semanic release"
+    - start_section release "Running semantic release"
     - npx semantic-release
     - stop_section release
   rules:
