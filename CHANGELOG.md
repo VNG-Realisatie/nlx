@@ -1,3 +1,20 @@
+# [0.116.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.115.0...v0.116.0) (2021-10-12)
+
+
+### Bug Fixes
+
+* **docs:** resolve broken link to Try NLX ([df0f75c](https://gitlab.com/commonground/nlx/nlx/commit/df0f75c5c358b02c280a2f3ecd3ae2d453938a5d))
+
+
+### Features
+
+* register organization inway in directory via inways instead of management api ([c905d77](https://gitlab.com/commonground/nlx/nlx/commit/c905d77aafe2dba76e263902dee26aefe7269cfb))
+
+
+### Reverts
+
+* register organization inway in directory via inways instead of management api ([b6159aa](https://gitlab.com/commonground/nlx/nlx/commit/b6159aa1b451aac3c295d54595eab5bd5c123d36))
+
 # [0.115.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.114.1...v0.115.0) (2021-09-21)
 
 
