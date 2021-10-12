@@ -156,6 +156,7 @@ ca:
 nlx-directory:
   config:
     monitorOfflineServiceTTL: 30  # seconds
+    logLevel: debug
   postgresql:
     hostname: shared-postgresql
     database: postgres

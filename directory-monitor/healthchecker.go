@@ -287,10 +287,15 @@ func (h *HealthChecker) runHealthChecker(shutdown chan struct{}) {
 		select {
 		case <-time.After(healthCheckInterval):
 			h.availabilitiesLock.RLock()
+
+			h.logger.Debug("running health checks", zap.Int("availability count", len(h.availabilities)))
+
 			for _, av := range h.availabilities {
 				go h.checkInwayStatus(*av)
 			}
 			h.availabilitiesLock.RUnlock()
+
+			h.logger.Debug("running health checks complete")
 		case <-shutdown:
 			return
 		}
@@ -298,9 +303,12 @@ func (h *HealthChecker) runHealthChecker(shutdown chan struct{}) {
 }
 
 func (h *HealthChecker) checkInwayStatus(av availability) {
-	logger := h.logger.With(zap.String("canonical-service-name", av.OrganizationName+`.`+av.ServiceName), zap.String("inway-address", av.Address))
+	logger := h.logger.With(zap.Uint64("id", av.ID), zap.Uint64("inway-id", av.InwayID), zap.String("organization", av.OrganizationName), zap.String("service", av.ServiceName), zap.String("inway-address", av.Address))
+	healthCheckURL := `https://` + av.Address + "/.nlx/health/" + av.ServiceName
 
-	resp, err := h.httpClient.Get(`https://` + av.Address + "/.nlx/health/" + av.ServiceName)
+	logger.Debug("checking inway status", zap.String("health check URL", healthCheckURL))
+
+	resp, err := h.httpClient.Get(healthCheckURL)
 	if err != nil {
 		logger.Error("failed to check health", zap.Error(err))
 		h.updateAvailabilityHealth(av, false)
@@ -326,7 +334,11 @@ func (h *HealthChecker) checkInwayStatus(av availability) {
 		return
 	}
 
+	logger.Debug("updating availability health")
 	h.updateAvailabilityHealth(av, status.Healthy)
+	logger.Debug("updating availability health done")
+
+	logger.Debug("finished checking inway status", zap.Bool("health", status.Healthy), zap.String("version", status.Version))
 }
 
 func (h *HealthChecker) updateAvailabilityHealth(av availability, newHealth bool) {
