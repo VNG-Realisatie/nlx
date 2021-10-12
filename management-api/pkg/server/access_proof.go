@@ -37,7 +37,7 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	grant, err := s.configDatabase.GetLatestAccessGrantForService(ctx, md.OrganizationName, req.ServiceName)
+	grant, err := s.configDatabase.GetLatestAccessGrantForService(ctx, md.OrganizationSerialNumber, req.ServiceName)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, "access proof not found")

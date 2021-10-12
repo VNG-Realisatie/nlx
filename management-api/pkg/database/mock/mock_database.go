@@ -288,18 +288,18 @@ func (mr *MockConfigDatabaseMockRecorder) GetInway(ctx, name interface{}) *gomoc
 }
 
 // GetLatestAccessGrantForService mocks base method.
-func (m *MockConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*database.AccessGrant, error) {
+func (m *MockConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName string) (*database.AccessGrant, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLatestAccessGrantForService", ctx, organizationName, serviceName)
+	ret := m.ctrl.Call(m, "GetLatestAccessGrantForService", ctx, organizationSerialNumber, serviceName)
 	ret0, _ := ret[0].(*database.AccessGrant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetLatestAccessGrantForService indicates an expected call of GetLatestAccessGrantForService.
-func (mr *MockConfigDatabaseMockRecorder) GetLatestAccessGrantForService(ctx, organizationName, serviceName interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) GetLatestAccessGrantForService(ctx, organizationSerialNumber, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestAccessGrantForService", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestAccessGrantForService), ctx, organizationName, serviceName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestAccessGrantForService", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestAccessGrantForService), ctx, organizationSerialNumber, serviceName)
 }
 
 // GetLatestIncomingAccessRequest mocks base method.

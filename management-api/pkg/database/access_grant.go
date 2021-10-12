@@ -112,14 +112,14 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 	return accessGrants, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*AccessGrant, error) {
+func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName string) (*AccessGrant, error) {
 	accessGrant := &AccessGrant{}
 
 	if err := db.DB.
 		WithContext(ctx).
 		Preload("IncomingAccessRequest").
 		Preload("IncomingAccessRequest.Service").
-		Joins("JOIN nlx_management.access_requests_incoming r ON r.id = access_grants.access_request_incoming_id AND r.organization_name = ?", organizationName).
+		Joins("JOIN nlx_management.access_requests_incoming r ON r.id = access_grants.access_request_incoming_id AND r.organization_serial_number = ?", organizationSerialNumber).
 		Joins("JOIN nlx_management.services s ON s.id = r.service_id AND s.name = ?", serviceName).
 		Order("created_at DESC").
 		First(accessGrant).Error; err != nil {

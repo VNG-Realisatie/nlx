@@ -49,7 +49,7 @@ func TestGetAccessProof(t *testing.T) {
 					Return(&database.Service{Name: "service"}, nil)
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, "nlx-test", "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
 					Return(nil, errors.New("error"))
 
 				return ctx
@@ -67,7 +67,7 @@ func TestGetAccessProof(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.Organization[0], "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
 					Return(nil, database.ErrNotFound)
 
 				return ctx
@@ -98,7 +98,7 @@ func TestGetAccessProof(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.Organization[0], "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
 					Return(&database.AccessGrant{
 						CreatedAt:               now,
 						RevokedAt:               sql.NullTime{Time: now},

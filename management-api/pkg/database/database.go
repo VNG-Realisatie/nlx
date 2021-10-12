@@ -49,7 +49,7 @@ type ConfigDatabase interface {
 	RevokeAccessGrant(ctx context.Context, id uint, revokedAt time.Time) (*AccessGrant, error)
 	GetAccessGrant(ctx context.Context, id uint) (*AccessGrant, error)
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
-	GetLatestAccessGrantForService(ctx context.Context, organizationName, serviceName string) (*AccessGrant, error)
+	GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName string) (*AccessGrant, error)
 
 	CreateAccessProof(ctx context.Context, accessRequest *OutgoingAccessRequest) (*AccessProof, error)
 	RevokeAccessProof(ctx context.Context, id uint, revokedAt time.Time) (*AccessProof, error)

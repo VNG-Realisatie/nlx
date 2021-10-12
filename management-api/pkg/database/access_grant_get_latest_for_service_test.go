@@ -32,8 +32,8 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 	require.NoError(t, err)
 
 	type args struct {
-		organizationName string
-		serviceName      string
+		organizationSerialNumber string
+		serviceName              string
 	}
 
 	tests := map[string]struct {
@@ -45,8 +45,8 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 		"when_organization_not_found": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "non-existing-organization",
-				serviceName:      "fixture-service-name",
+				organizationSerialNumber: "00000000000000000000",
+				serviceName:              "fixture-service-name",
 			},
 			want:    nil,
 			wantErr: database.ErrNotFound,
@@ -54,8 +54,8 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 		"when_service_not_found": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-organization-name",
-				serviceName:      "non-existing-service",
+				organizationSerialNumber: "00000000000000000001",
+				serviceName:              "non-existing-service",
 			},
 			want:    nil,
 			wantErr: database.ErrNotFound,
@@ -63,8 +63,8 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-organization-name",
-				serviceName:      "fixture-service-name",
+				organizationSerialNumber: "00000000000000000001",
+				serviceName:              "fixture-service-name",
 			},
 			want: &database.AccessGrant{
 				ID:                      1,
@@ -115,7 +115,7 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.GetLatestAccessGrantForService(context.Background(), tt.args.organizationName, tt.args.serviceName)
+			got, err := configDb.GetLatestAccessGrantForService(context.Background(), tt.args.organizationSerialNumber, tt.args.serviceName)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
