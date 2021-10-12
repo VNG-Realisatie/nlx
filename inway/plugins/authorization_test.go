@@ -28,15 +28,15 @@ func TestAuthorizationPlugin(t *testing.T) {
 				Grants: []*plugins.Grant{},
 			},
 			expectedStatusCode: http.StatusForbidden,
-			expectedMessage:    "nlx-inway: permission denied, organization \"mock-org\" or public key fingerprint \"mock-public-key-fingerprint\" is not allowed access.\n",
+			expectedMessage:    "nlx-inway: permission denied, organization \"00000000000000000001\" or public key fingerprint \"mock-public-key-fingerprint\" is not allowed access.\n",
 		},
 		"happy_flow": {
 			service: &plugins.Service{
 				Name: "mock-service",
 				Grants: []*plugins.Grant{
 					{
-						OrganizationName:     "mock-org",
-						PublicKeyFingerprint: "mock-public-key-fingerprint",
+						OrganizationSerialNumber: "00000000000000000001",
+						PublicKeyFingerprint:     "mock-public-key-fingerprint",
 					},
 				},
 			},
@@ -51,8 +51,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 			context := fakeContext(&plugins.Destination{
 				Service: tt.service,
 			}, nil, &plugins.AuthInfo{
-				OrganizationName:     "mock-org",
-				PublicKeyFingerprint: "mock-public-key-fingerprint",
+				OrganizationSerialNumber: "00000000000000000001",
+				PublicKeyFingerprint:     "mock-public-key-fingerprint",
 			})
 
 			err := authorizationPlugin.Serve(nopServeFunc)(context)

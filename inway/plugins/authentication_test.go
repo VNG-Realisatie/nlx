@@ -40,6 +40,19 @@ func TestAuthenticationPlugin(t *testing.T) {
 			expectedStatusCode: http.StatusBadRequest,
 			expectedMessage:    "nlx-inway: invalid certificate provided: missing organizations attribute in subject\n",
 		},
+		"invalid_certificate_without_serial_number": {
+			certifcate: func() *x509.Certificate {
+				cert, _ := common_tls.NewBundleFromFiles(
+					filepath.Join(pkiDir, "org-without-serial-number-chain.pem"),
+					filepath.Join(pkiDir, "org-without-serial-number-key.pem"),
+					filepath.Join(pkiDir, "ca-root.pem"),
+				)
+
+				return cert.Certificate()
+			}(),
+			expectedStatusCode: http.StatusBadRequest,
+			expectedMessage:    "nlx-inway: invalid certificate provided: missing value for serial number in subject\n",
+		},
 		"happy_flow": {
 			certifcate: func() *x509.Certificate {
 				cert, _ := common_tls.NewBundleFromFiles(

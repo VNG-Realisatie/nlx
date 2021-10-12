@@ -8,6 +8,7 @@ import (
 
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/tls"
 	common_tls "go.nlx.io/nlx/common/tls"
 )
 
@@ -45,10 +46,21 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			return nil
 		}
 
-		requesterOrganization := organizations[0]
+		requesterOrganizationName := organizations[0]
 
-		if requesterOrganization == "" {
+		if requesterOrganizationName == "" {
 			msg := "invalid certificate provided: missing value for organization in subject"
+			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
+			logger.Warn(msg)
+
+			return nil
+		}
+
+		requesterOrganizationSerialNumber := peerCertificate.Subject.SerialNumber
+
+		err := tls.ValidateSerialNumber(requesterOrganizationSerialNumber)
+		if err != nil {
+			msg := "invalid certificate provided: missing value for serial number in subject"
 			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
 			logger.Warn(msg)
 
@@ -63,11 +75,12 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			return nil
 		}
 
-		context.Request.Header.Set("X-NLX-Request-Organization", requesterOrganization)
+		context.Request.Header.Set("X-NLX-Request-Organization", requesterOrganizationSerialNumber)
 
-		context.AuthInfo.OrganizationName = requesterOrganization
+		context.AuthInfo.OrganizationSerialNumber = requesterOrganizationName
 		context.AuthInfo.PublicKeyFingerprint = common_tls.X509PublicKeyFingerprint(peerCertificate)
-		context.LogData["organizationName"] = requesterOrganization
+		context.LogData["organizationName"] = requesterOrganizationName
+		context.LogData["organizationSerialNumber"] = requesterOrganizationSerialNumber
 
 		return next(context)
 	}

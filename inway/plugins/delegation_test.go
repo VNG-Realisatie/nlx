@@ -36,10 +36,10 @@ func TestDelegationPlugin(t *testing.T) {
 	certPEM, _ := cert.PublicKeyPEM()
 	certFingerprint := cert.PublicKeyFingerprint()
 
-	validClaim, err := getJWTAsSignedString(cert, "delegatee-org", "mock-service")
+	validClaim, err := getJWTAsSignedString(cert, "00000000000000000098", "mock-service")
 	assert.Nil(t, err)
 
-	validClaimOtherService, err := getJWTAsSignedString(cert, "delegatee-org", "mock-service-other")
+	validClaimOtherService, err := getJWTAsSignedString(cert, "00000000000000000098", "mock-service-other")
 	assert.Nil(t, err)
 
 	validClaimOtherDelegatee, err := getJWTAsSignedString(cert, "nlx-hackerman", "mock-service")
@@ -86,9 +86,9 @@ func TestDelegationPlugin(t *testing.T) {
 				Name: "mock-service",
 				Grants: []*plugins.Grant{
 					{
-						OrganizationName:     "issuer-org",
-						PublicKeyPEM:         certPEM,
-						PublicKeyFingerprint: certFingerprint,
+						OrganizationSerialNumber: "00000000000000000099",
+						PublicKeyPEM:             certPEM,
+						PublicKeyFingerprint:     certFingerprint,
 					},
 				},
 			},
@@ -102,9 +102,9 @@ func TestDelegationPlugin(t *testing.T) {
 				Name: "mock-service",
 				Grants: []*plugins.Grant{
 					{
-						OrganizationName:     "issuer-org",
-						PublicKeyPEM:         certPEM,
-						PublicKeyFingerprint: certFingerprint,
+						OrganizationSerialNumber: "00000000000000000099",
+						PublicKeyPEM:             certPEM,
+						PublicKeyFingerprint:     certFingerprint,
 					},
 				},
 			},
@@ -126,8 +126,8 @@ func TestDelegationPlugin(t *testing.T) {
 				Service:      tt.service,
 				Organization: "nlx-test",
 			}, nil, &plugins.AuthInfo{
-				OrganizationName:     "delegatee-org",
-				PublicKeyFingerprint: certFingerprint,
+				OrganizationSerialNumber: "00000000000000000098",
+				PublicKeyFingerprint:     certFingerprint,
 			})
 
 			context.Request.Header.Add("X-NLX-Request-Claim", tt.claim)
@@ -145,10 +145,10 @@ func TestDelegationPlugin(t *testing.T) {
 			assert.Equal(t, tt.expectedStatusCode, response.StatusCode)
 
 			if tt.delegationSuccess {
-				assert.Equal(t, "issuer-org", context.LogData["delegator"])
+				assert.Equal(t, "00000000000000000099", context.LogData["delegator"])
 				assert.Equal(t, "order-reference", context.LogData["orderReference"])
 
-				assert.Equal(t, "issuer-org", context.AuthInfo.OrganizationName)
+				assert.Equal(t, "00000000000000000099", context.AuthInfo.OrganizationSerialNumber)
 				assert.Equal(t, certFingerprint, context.AuthInfo.PublicKeyFingerprint)
 			}
 		})
@@ -161,13 +161,13 @@ func getJWTAsSignedString(orgCert *common_tls.CertificateBundle, delegatee, serv
 		OrderReference: "order-reference",
 		Services: []delegation.Service{
 			{
-				Service:      service,
-				Organization: "nlx-test",
+				Service:                  service,
+				OrganizationSerialNumber: "00000000000000000001",
 			},
 		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
-			Issuer:    "issuer-org",
+			Issuer:    "00000000000000000099",
 		},
 	}
 

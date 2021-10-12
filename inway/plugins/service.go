@@ -20,7 +20,7 @@ type Service struct {
 }
 
 type Grant struct {
-	OrganizationName     string
-	PublicKeyPEM         string
-	PublicKeyFingerprint string
+	OrganizationSerialNumber string
+	PublicKeyPEM             string
+	PublicKeyFingerprint     string
 }

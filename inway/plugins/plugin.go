@@ -25,8 +25,8 @@ type Context struct {
 }
 
 type AuthInfo struct {
-	OrganizationName     string
-	PublicKeyFingerprint string
+	OrganizationSerialNumber string
+	PublicKeyFingerprint     string
 }
 
 type ServeFunc func(context *Context) error

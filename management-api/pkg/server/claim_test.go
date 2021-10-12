@@ -67,7 +67,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					EXPECT().
 					GetOutgoingOrderByReference(gomock.Any(), "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    certBundle.Certificate().Subject.Organization[0],
+						Delegatee:    certBundle.Certificate().Subject.SerialNumber,
 						PublicKeyPEM: "arbitrary-invalid-public-key-in-pem-format",
 					}, nil)
 
@@ -86,7 +86,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					EXPECT().
 					GetOutgoingOrderByReference(ctx, "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    certBundle.Certificate().Subject.Organization[0],
+						Delegatee:    certBundle.Certificate().Subject.SerialNumber,
 						PublicKeyPEM: arbitraryPublicKeyPEM,
 						ValidUntil:   now.Add(4 * time.Hour),
 					}, nil)
@@ -109,7 +109,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					EXPECT().
 					GetOutgoingOrderByReference(gomock.Any(), "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    orgCerts.Certificate().Subject.Organization[0],
+						Delegatee:    orgCerts.Certificate().Subject.SerialNumber,
 						PublicKeyPEM: publicKeyPEM,
 						RevokedAt: sql.NullTime{
 							Time:  now.Add(-1 * time.Hour),
@@ -134,7 +134,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					EXPECT().
 					GetOutgoingOrderByReference(ctx, "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    orgCerts.Certificate().Subject.Organization[0],
+						Delegatee:    orgCerts.Certificate().Subject.SerialNumber,
 						PublicKeyPEM: publicKeyPEM,
 						ValidUntil:   now.Add(-1 * time.Hour),
 					}, nil)
@@ -160,7 +160,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					EXPECT().
 					GetOutgoingOrderByReference(ctx, "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    requesterCertBundle.Certificate().Subject.Organization[0],
+						Delegatee:    requesterCertBundle.Certificate().Subject.SerialNumber,
 						PublicKeyPEM: requesterPublicKeyPEM,
 						ValidUntil:   now.Add(2 * time.Hour),
 					}, nil)
@@ -173,9 +173,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 			want: delegation.JWTClaims{
 				StandardClaims: jwt.StandardClaims{
 					ExpiresAt: now.Add(2 * time.Hour).Unix(),
-					Issuer:    "nlx-test",
+					Issuer:    "00000000000000000001",
 				},
-				Delegatee:      "nlx-test-b",
+				Delegatee:      "00000000000000000002",
 				OrderReference: "order-reference",
 			},
 		},
@@ -193,7 +193,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					EXPECT().
 					GetOutgoingOrderByReference(ctx, "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    requesterCertBundle.Certificate().Subject.Organization[0],
+						Delegatee:    requesterCertBundle.Certificate().Subject.SerialNumber,
 						PublicKeyPEM: requesterPublicKeyPEM,
 						ValidUntil:   now.Add(4 * time.Hour),
 					}, nil)
@@ -206,9 +206,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 			want: delegation.JWTClaims{
 				StandardClaims: jwt.StandardClaims{
 					ExpiresAt: now.Add(4 * time.Hour).Unix(),
-					Issuer:    "nlx-test",
+					Issuer:    "00000000000000000001",
 				},
-				Delegatee:      "nlx-test-b",
+				Delegatee:      "00000000000000000002",
 				OrderReference: "order-reference",
 				Services:       nil,
 			},

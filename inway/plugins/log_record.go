@@ -14,14 +14,14 @@ import (
 )
 
 type LogRecordPlugin struct {
-	organizationName string
-	txLogger         transactionlog.TransactionLogger
+	organizationSerialNumber string
+	txLogger                 transactionlog.TransactionLogger
 }
 
-func NewLogRecordPlugin(organizationName string, txLogger transactionlog.TransactionLogger) *LogRecordPlugin {
+func NewLogRecordPlugin(organizationSerialNumber string, txLogger transactionlog.TransactionLogger) *LogRecordPlugin {
 	return &LogRecordPlugin{
-		organizationName: organizationName,
-		txLogger:         txLogger,
+		organizationSerialNumber: organizationSerialNumber,
+		txLogger:                 txLogger,
 	}
 }
 
@@ -30,7 +30,7 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 		logRecordID := context.Request.Header.Get("X-NLX-Logrecord-Id")
 		if logRecordID == "" {
 			http.Error(context.Response, "nlx-inway: missing logrecord id", http.StatusBadRequest)
-			context.Logger.Warn("Received request with missing logrecord id from " + context.AuthInfo.OrganizationName)
+			context.Logger.Warn("Received request with missing logrecord id from organization " + context.AuthInfo.OrganizationSerialNumber)
 
 			return nil
 		}
@@ -73,14 +73,14 @@ func createRecordData(h http.Header, p string) map[string]interface{} {
 
 func (plugin *LogRecordPlugin) createLogRecord(context *Context, logRecordID string) error {
 	recordData := createRecordData(context.Request.Header, context.Destination.Path)
-	organizationName, ok := context.LogData["organizationName"]
+	organizationSerialNumber, ok := context.LogData["organizationSerialNumber"]
 
 	if !ok {
 		return fmt.Errorf("missing organization name in log data")
 	}
 
 	record := &transactionlog.Record{
-		SrcOrganization:  organizationName,
+		SrcOrganization:  organizationSerialNumber,
 		DestOrganization: context.Destination.Organization,
 		ServiceName:      context.Destination.Service.Name,
 		LogrecordID:      logRecordID,

@@ -6,8 +6,8 @@ package delegation
 import "github.com/golang-jwt/jwt"
 
 type Service struct {
-	Service      string `json:"service"`
-	Organization string `json:"organization"`
+	Service                  string `json:"service"`
+	OrganizationSerialNumber string `json:"organization_serial_number"`
 }
 
 type JWTClaims struct {

@@ -115,7 +115,7 @@ The response of the `curl` command should look similar to the following output.
     "accept-encoding": "gzip",
     "user-agent": "curl/7.54.0",
     "x-nlx-logrecord-id": "<arbitrary-logrecord-id>",
-    "x-nlx-request-organization": "my-organization",
+    "x-nlx-request-organization": "00000000000000000001",
     "x-forwarded-port": "443"
   },
   "url": "https://petstore.swagger.io/v2/pet/20002085"

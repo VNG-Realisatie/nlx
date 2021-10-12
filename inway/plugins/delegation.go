@@ -30,10 +30,10 @@ func NewDelegationPlugin() *DelegationPlugin {
 	return &DelegationPlugin{}
 }
 
-func isServiceInClaims(claims *delegation.JWTClaims, serviceName, organizationName string) bool {
+func isServiceInClaims(claims *delegation.JWTClaims, serviceName, organizationSerialNumber string) bool {
 	for _, service := range claims.Services {
 		if service.Service == serviceName &&
-			service.Organization == organizationName {
+			service.OrganizationSerialNumber == organizationSerialNumber {
 			return true
 		}
 	}
@@ -53,7 +53,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		claims := &delegation.JWTClaims{}
 
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
-			if claims.Delegatee != context.AuthInfo.OrganizationName {
+			if claims.Delegatee != context.AuthInfo.OrganizationSerialNumber {
 				return nil, ErrRequestingOrganizationIsNotDelegatee
 			}
 
@@ -62,7 +62,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			}
 
 			for _, grant := range context.Destination.Service.Grants {
-				if grant.OrganizationName == claims.Issuer {
+				if grant.OrganizationSerialNumber == claims.Issuer {
 					publicKey, err := parsePublicKeyFromPEM(grant.PublicKeyPEM)
 					if err != nil {
 						return nil, err
@@ -83,7 +83,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			return nil
 		}
 
-		context.AuthInfo.OrganizationName = claims.Issuer
+		context.AuthInfo.OrganizationSerialNumber = claims.Issuer
 		context.AuthInfo.PublicKeyFingerprint = publicKeyFingerprint
 
 		context.LogData["delegator"] = claims.Issuer

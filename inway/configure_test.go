@@ -78,9 +78,10 @@ func TestStartConfigurationPolling(t *testing.T) {
 							AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 								Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 									{
-										OrganizationName: "mock-org",
-										PublicKeyHash:    "mock-public-key-hash",
-										PublicKeyPEM:     "mock-public-key-pem",
+										OrganizationSerialNumber: "00000000000000000001",
+										OrganizationName:         "mock-org",
+										PublicKeyHash:            "mock-public-key-hash",
+										PublicKeyPEM:             "mock-public-key-pem",
 									},
 								},
 							},
@@ -101,9 +102,9 @@ func TestStartConfigurationPolling(t *testing.T) {
 				PublicSupportContact:        "public@support.mock",
 				Grants: []*plugins.Grant{
 					{
-						OrganizationName:     "mock-org",
-						PublicKeyFingerprint: "mock-public-key-hash",
-						PublicKeyPEM:         "mock-public-key-pem",
+						OrganizationSerialNumber: "00000000000000000001",
+						PublicKeyFingerprint:     "mock-public-key-hash",
+						PublicKeyPEM:             "mock-public-key-pem",
 					},
 				},
 			},

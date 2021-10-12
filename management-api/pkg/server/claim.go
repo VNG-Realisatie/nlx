@@ -43,8 +43,8 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.Internal, "failed to find order")
 	}
 
-	if order.Delegatee != md.OrganizationName {
-		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization %s not found", req.OrderReference, md.OrganizationName)
+	if order.Delegatee != md.OrganizationSerialNumber {
+		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization serialnumber %s not found", req.OrderReference, md.OrganizationSerialNumber)
 	}
 
 	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(order.PublicKeyPEM))
@@ -73,18 +73,18 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 	claims := delegation.JWTClaims{
 		Services:       make([]delegation.Service, len(order.Services)),
-		Delegatee:      md.OrganizationName,
+		Delegatee:      md.OrganizationSerialNumber,
 		OrderReference: req.OrderReference,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiresAt.Unix(),
-			Issuer:    s.orgCert.Certificate().Subject.Organization[0],
+			Issuer:    s.orgCert.Certificate().Subject.SerialNumber,
 		},
 	}
 
 	for i, service := range order.Services {
 		claims.Services[i] = delegation.Service{
-			Organization: service.Organization,
-			Service:      service.Service,
+			OrganizationSerialNumber: service.Organization,
+			Service:                  service.Service,
 		}
 	}
 

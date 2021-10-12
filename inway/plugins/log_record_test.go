@@ -46,8 +46,8 @@ func TestLoginPlugin(t *testing.T) {
 				db := mock_transactionlog.NewMockTransactionLogger(ctrl)
 				db.EXPECT().AddRecord(&transactionlog.Record{
 					LogrecordID:      "mock-log-record-id",
-					SrcOrganization:  "mock-source-organization",
-					DestOrganization: "mock-destination-organization",
+					SrcOrganization:  "99999999999999999999",
+					DestOrganization: "11111111111111111111",
 					ServiceName:      "mock-service",
 					Data: map[string]interface{}{
 						"request-path": "/path",
@@ -70,8 +70,8 @@ func TestLoginPlugin(t *testing.T) {
 				db := mock_transactionlog.NewMockTransactionLogger(ctrl)
 				db.EXPECT().AddRecord(&transactionlog.Record{
 					LogrecordID:      "mock-log-record-id",
-					SrcOrganization:  "mock-source-organization",
-					DestOrganization: "mock-destination-organization",
+					SrcOrganization:  "99999999999999999999",
+					DestOrganization: "11111111111111111111",
 					ServiceName:      "mock-service",
 					Data: map[string]interface{}{
 						"request-path":              "/path",
@@ -92,18 +92,19 @@ func TestLoginPlugin(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			logRecordPlugin := plugins.NewLogRecordPlugin("mock-org", tt.tranactionLogger(ctrl))
+			logRecordPlugin := plugins.NewLogRecordPlugin("99999999999999999999", tt.tranactionLogger(ctrl))
 
 			context := fakeContext(&plugins.Destination{
-				Organization: "mock-destination-organization",
+				Organization: "11111111111111111111",
 				Path:         "/path",
 				Service: &plugins.Service{
 					Name: "mock-service"},
 			}, nil, &plugins.AuthInfo{
-				OrganizationName: "mock-org",
+				OrganizationSerialNumber: "99999999999999999999",
 			})
 
 			context.LogData["organizationName"] = "mock-source-organization"
+			context.LogData["organizationSerialNumber"] = "99999999999999999999"
 
 			for header, value := range tt.headers {
 				context.Request.Header.Add(header, value)
