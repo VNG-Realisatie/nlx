@@ -732,7 +732,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, "nlx-test", "service").
+					GetLatestIncomingAccessRequest(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
 					Return(nil, errors.New("error"))
 
 				return ctx
@@ -765,7 +765,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 					EXPECT().
 					GetLatestIncomingAccessRequest(
 						ctx,
-						certBundle.Certificate().Subject.Organization[0],
+						certBundle.Certificate().Subject.SerialNumber,
 						"service",
 					).
 					Return(&database.IncomingAccessRequest{

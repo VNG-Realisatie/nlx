@@ -56,13 +56,13 @@ func (db *PostgresConfigDatabase) ListAllIncomingAccessRequests(ctx context.Cont
 	return accessRequests, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationName, serviceName string) (*IncomingAccessRequest, error) {
+func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*IncomingAccessRequest, error) {
 	accessRequest := &IncomingAccessRequest{}
 
 	if err := db.DB.
 		WithContext(ctx).
 		Preload("Service").
-		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_name = ? AND s.name = ?", organizationName, serviceName).
+		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_serial_number = ? AND s.name = ?", organizationSerialNumber, serviceName).
 		Order("created_at DESC").
 		First(&accessRequest).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

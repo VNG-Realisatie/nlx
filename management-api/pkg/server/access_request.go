@@ -377,7 +377,7 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	request, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationName, req.ServiceName)
+	request, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.ServiceName)
 	if err != nil {
 		s.logger.Error("failed to retrieve latest outgoing access request", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to retrieve access request")
