@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"errors"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	common_testing "go.nlx.io/nlx/common/testing"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -28,7 +30,9 @@ func TestCreateOutgoingOrder(t *testing.T) {
 	validFrom := time.Now().UTC()
 	validUntil := time.Now().Add(1 * time.Hour).UTC()
 
-	certBundle, err := getCertificateBundle(OrgNLXTest)
+	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
 	require.NoError(t, err)
 
 	testPublicKeyPEM, err := certBundle.PublicKeyPEM()

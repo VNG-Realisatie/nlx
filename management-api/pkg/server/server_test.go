@@ -7,7 +7,6 @@ import (
 	"context"
 	"crypto/x509"
 	"encoding/base64"
-	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -17,6 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/metadata"
 
+	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -26,27 +26,10 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-type CertificateBundleOrganizationName string
-
-const (
-	OrgNLXTest             CertificateBundleOrganizationName = "org-nlx-test"
-	OrgNLXTestB            CertificateBundleOrganizationName = "org-nlx-test-b"
-	OrgWithoutName         CertificateBundleOrganizationName = "org-without-name"
-	OrgWithoutSerialNumber CertificateBundleOrganizationName = "org-without-serial-number"
-)
-
-func getCertificateBundle(name CertificateBundleOrganizationName) (*common_tls.CertificateBundle, error) {
+func newCertificateBundle() (*common_tls.CertificateBundle, error) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
-	return common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, fmt.Sprintf("%s-chain.pem", name)),
-		filepath.Join(pkiDir, fmt.Sprintf("%s-key.pem", name)),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-}
-
-func newCertificateBundle() (*common_tls.CertificateBundle, error) {
-	return getCertificateBundle(OrgNLXTest)
+	return common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
 }
 
 func setProxyMetadata(t *testing.T, ctx context.Context) context.Context {

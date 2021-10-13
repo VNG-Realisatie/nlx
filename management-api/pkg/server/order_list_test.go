@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -260,7 +262,9 @@ func TestListOrders(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(t *testing.T, mocks serviceMocks, certBundle *common_tls.CertificateBundle) context.Context {
-				requesterCertBundle, err := getCertificateBundle(OrgNLXTestB)
+				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+				requesterCertBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
 				require.NoError(t, err)
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)
@@ -309,7 +313,9 @@ func TestListOrders(t *testing.T) {
 		},
 		"happy_flow_revoked": {
 			setup: func(t *testing.T, mocks serviceMocks, certBundle *common_tls.CertificateBundle) context.Context {
-				requesterCertBundle, err := getCertificateBundle(OrgNLXTestB)
+				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+				requesterCertBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
 				require.NoError(t, err)
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)

@@ -7,7 +7,6 @@ import (
 	"context"
 	"crypto/x509"
 	"encoding/base64"
-	"fmt"
 	"log"
 	"path/filepath"
 	"testing"
@@ -21,6 +20,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/test/bufconn"
 
+	common_testing "go.nlx.io/nlx/common/testing"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/grpcproxy"
 	"go.nlx.io/nlx/inway/grpcproxy/test"
@@ -97,7 +97,9 @@ func TestMetadataToUpstreamCantBeOverridden(t *testing.T) {
 }
 
 func TestMissingOrganization(t *testing.T) {
-	clientCert, err := getCertificateBundle(OrgWithoutName)
+	pkiDir := filepath.Join("..", "..", "testing", "pki")
+
+	clientCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutName)
 	assert.NoError(t, err)
 
 	p, s, c, _ := setup(t, clientCert)
@@ -118,7 +120,9 @@ func TestMissingOrganization(t *testing.T) {
 
 // nolint:dupl // testing different property
 func TestMissingSerialNumber(t *testing.T) {
-	clientCert, err := getCertificateBundle(OrgWithoutSerialNumber)
+	pkiDir := filepath.Join("..", "..", "testing", "pki")
+
+	clientCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutSerialNumber)
 	assert.NoError(t, err)
 
 	p, s, c, _ := setup(t, clientCert)
@@ -137,31 +141,15 @@ func TestMissingSerialNumber(t *testing.T) {
 	assert.Empty(t, s.svc.reqs)
 }
 
-type CertificateBundleOrganizationName string
-
-const (
-	OrgNLXTest             CertificateBundleOrganizationName = "org-nlx-test"
-	OrgWithoutName         CertificateBundleOrganizationName = "org-without-name"
-	OrgWithoutSerialNumber CertificateBundleOrganizationName = "org-without-serial-number"
-)
-
-func getCertificateBundle(name CertificateBundleOrganizationName) (*tls.CertificateBundle, error) {
-	pkiDir := filepath.Join("..", "..", "testing", "pki")
-
-	return tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, fmt.Sprintf("%s-chain.pem", name)),
-		filepath.Join(pkiDir, fmt.Sprintf("%s-key.pem", name)),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
-}
-
 func setup(t *testing.T, clientCert *tls.CertificateBundle) (*grpcproxy.Proxy, *testServer, test.TestServiceClient, *tls.CertificateBundle) {
 	ctx := context.Background()
 
 	logger, err := zap.NewDevelopment()
 	require.NoError(t, err)
 
-	certBundle, err := getCertificateBundle(OrgNLXTest)
+	pkiDir := filepath.Join("..", "..", "testing", "pki")
+
+	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
 	assert.NoError(t, err)
 
 	s := newTestServer(t, certBundle)

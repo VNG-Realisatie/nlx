@@ -13,8 +13,10 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/common/delegation"
+	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/plugins"
 )
@@ -23,29 +25,33 @@ import (
 func TestDelegationPlugin(t *testing.T) {
 	delegationPlugin := plugins.NewDelegationPlugin()
 
-	var pkiDir = filepath.Join("..", "..", "testing", "pki")
-
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
+	const (
+		serviceProviderSerialNumber = "00000000000000000099"
 	)
 
-	cert.PublicKey()
+	pkiDir := filepath.Join("..", "..", "testing", "pki")
 
-	certPEM, _ := cert.PublicKeyPEM()
-	certFingerprint := cert.PublicKeyFingerprint()
+	delegatorCertBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
-	validClaim, err := getJWTAsSignedString(cert, "00000000000000000098", "mock-service")
+	delegateeCertBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
+	require.NoError(t, err)
+
+	delegatorCertBundle.PublicKey()
+
+	certPEM, err := delegatorCertBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
+	validClaim, err := getJWTAsSignedString(delegatorCertBundle, delegateeCertBundle.Certificate().Subject.SerialNumber, serviceProviderSerialNumber, "mock-service")
 	assert.Nil(t, err)
 
-	validClaimOtherService, err := getJWTAsSignedString(cert, "00000000000000000098", "mock-service-other")
+	validClaimOtherService, err := getJWTAsSignedString(delegatorCertBundle, delegateeCertBundle.Certificate().Subject.SerialNumber, serviceProviderSerialNumber, "mock-service-other")
 	assert.Nil(t, err)
 
-	validClaimOtherDelegatee, err := getJWTAsSignedString(cert, "nlx-hackerman", "mock-service")
+	validClaimOtherDelegatee, err := getJWTAsSignedString(delegatorCertBundle, "nlx-hackerman", serviceProviderSerialNumber, "mock-service")
 	assert.Nil(t, err)
 
-	validClaimOtherDelegateeAndService, err := getJWTAsSignedString(cert, "nlx-hackerman", "mock-service-without-valid-grant")
+	validClaimOtherDelegateeAndService, err := getJWTAsSignedString(delegatorCertBundle, "nlx-hackerman", serviceProviderSerialNumber, "mock-service-without-valid-grant")
 	assert.Nil(t, err)
 
 	tests := map[string]struct {
@@ -86,9 +92,9 @@ func TestDelegationPlugin(t *testing.T) {
 				Name: "mock-service",
 				Grants: []*plugins.Grant{
 					{
-						OrganizationSerialNumber: "00000000000000000099",
+						OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
 						PublicKeyPEM:             certPEM,
-						PublicKeyFingerprint:     certFingerprint,
+						PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
 					},
 				},
 			},
@@ -102,9 +108,9 @@ func TestDelegationPlugin(t *testing.T) {
 				Name: "mock-service",
 				Grants: []*plugins.Grant{
 					{
-						OrganizationSerialNumber: "00000000000000000099",
+						OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
 						PublicKeyPEM:             certPEM,
-						PublicKeyFingerprint:     certFingerprint,
+						PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
 					},
 				},
 			},
@@ -124,10 +130,10 @@ func TestDelegationPlugin(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			context := fakeContext(&plugins.Destination{
 				Service:      tt.service,
-				Organization: "nlx-test",
+				Organization: serviceProviderSerialNumber,
 			}, nil, &plugins.AuthInfo{
-				OrganizationSerialNumber: "00000000000000000098",
-				PublicKeyFingerprint:     certFingerprint,
+				OrganizationSerialNumber: delegateeCertBundle.Certificate().Subject.SerialNumber,
+				PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
 			})
 
 			context.Request.Header.Add("X-NLX-Request-Claim", tt.claim)
@@ -145,35 +151,36 @@ func TestDelegationPlugin(t *testing.T) {
 			assert.Equal(t, tt.expectedStatusCode, response.StatusCode)
 
 			if tt.delegationSuccess {
-				assert.Equal(t, "00000000000000000099", context.LogData["delegator"])
+				assert.Equal(t, delegatorCertBundle.Certificate().Subject.SerialNumber, context.LogData["delegator"])
 				assert.Equal(t, "order-reference", context.LogData["orderReference"])
 
-				assert.Equal(t, "00000000000000000099", context.AuthInfo.OrganizationSerialNumber)
-				assert.Equal(t, certFingerprint, context.AuthInfo.PublicKeyFingerprint)
+				assert.Equal(t, delegatorCertBundle.Certificate().Subject.SerialNumber, context.AuthInfo.OrganizationSerialNumber)
+				assert.Equal(t, delegatorCertBundle.PublicKeyFingerprint(), context.AuthInfo.PublicKeyFingerprint)
 			}
 		})
 	}
 }
 
-func getJWTAsSignedString(orgCert *common_tls.CertificateBundle, delegatee, service string) (string, error) {
+// nolint:unparam // we want to keep the param name for readability
+func getJWTAsSignedString(delegatorOrgCert *common_tls.CertificateBundle, delegateeSerialNumber, serviceProviderSerialNumber, service string) (string, error) {
 	claims := delegation.JWTClaims{
-		Delegatee:      delegatee,
+		Delegatee:      delegateeSerialNumber,
 		OrderReference: "order-reference",
 		Services: []delegation.Service{
 			{
+				OrganizationSerialNumber: serviceProviderSerialNumber,
 				Service:                  service,
-				OrganizationSerialNumber: "00000000000000000001",
 			},
 		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
-			Issuer:    "00000000000000000099",
+			Issuer:    delegatorOrgCert.Certificate().Subject.SerialNumber,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
 
-	signedString, err := token.SignedString(orgCert.PrivateKey())
+	signedString, err := token.SignedString(delegatorOrgCert.PrivateKey())
 	if err != nil {
 		return "", err
 	}

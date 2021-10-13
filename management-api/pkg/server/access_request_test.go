@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"errors"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -19,6 +20,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/diagnostics"
+	common_testing "go.nlx.io/nlx/common/testing"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -635,7 +637,9 @@ func TestExternalRequestAccess(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(t *testing.T, db *mock_database.MockConfigDatabase) context.Context {
-				certBundle, err := getCertificateBundle(OrgNLXTestB)
+				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+				certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
 				require.NoError(t, err)
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)

@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"database/sql"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -17,6 +18,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
+	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -148,7 +150,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 		},
 		"happy_flow_with_short_valid_until": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
-				requesterCertBundle, err := getCertificateBundle(OrgNLXTestB)
+				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+				requesterCertBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
 				require.NoError(t, err)
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)
@@ -181,7 +185,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 		},
 		"happy_flow": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
-				requesterCertBundle, err := getCertificateBundle(OrgNLXTestB)
+				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+				requesterCertBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
 				require.NoError(t, err)
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)

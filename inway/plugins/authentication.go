@@ -8,7 +8,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/common/tls"
 	common_tls "go.nlx.io/nlx/common/tls"
 )
 
@@ -58,7 +57,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		requesterOrganizationSerialNumber := peerCertificate.Subject.SerialNumber
 
-		err := tls.ValidateSerialNumber(requesterOrganizationSerialNumber)
+		err := common_tls.ValidateSerialNumber(requesterOrganizationSerialNumber)
 		if err != nil {
 			msg := "invalid certificate provided: missing value for serial number in subject"
 			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
