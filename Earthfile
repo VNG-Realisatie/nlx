@@ -1,4 +1,4 @@
-FROM golang:1.16.4-alpine
+FROM lucianonooijen/nlx-earthly:latest
 
 WORKDIR /src
 
@@ -18,45 +18,11 @@ mocks:
     BUILD +mocks-directory-inspection-api
     BUILD +mocks-directory-registration-api
 
-proto-deps:
-    ENV PROTOBUF_VERSION=3.17.3
-
+deps:
     COPY go.mod go.sum /src/
-
-    RUN apk add --no-cache protoc curl git unzip
-
-    RUN go mod download
-
-    RUN curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip && \
-        unzip -q -d /protobuf protoc-${PROTOBUF_VERSION}-linux-x86_64.zip 'include/*' && \
-        rm protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
-
-    RUN curl -LO https://github.com/googleapis/googleapis/archive/master.zip && \
-        unzip -q master.zip 'googleapis-master/google/api/*' && \
-        mv googleapis-master /protobuf/googleapis && \
-        rm master.zip
-
-    RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.3.0 && \
-        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.3.0 && \
-        go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.25.0 && \
-        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
-
-    SAVE IMAGE --cache-hint
-
-mocks-deps:
-    COPY go.mod go.sum /src/
-
-    RUN apk add --no-cache curl git unzip
-
-    RUN go mod download
-
-    RUN go install github.com/golang/mock/mockgen@v1.6.0
-
-    SAVE IMAGE --cache-hint
 
 proto-directory-inspection-api:
-    FROM +proto-deps
-
+    FROM +deps
     COPY ./directory-inspection-api/inspectionapi/*.proto /src
 
     RUN mkdir -p /dist || true && \
@@ -80,8 +46,7 @@ proto-directory-inspection-api:
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-inspection-api/inspectionapi/
 
 proto-directory-registration-api:
-    FROM +proto-deps
-
+    FROM +deps
     COPY ./directory-registration-api/registrationapi/*.proto /src
 
     RUN mkdir -p /dist || true && \
@@ -105,8 +70,7 @@ proto-directory-registration-api:
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-registration-api/registrationapi/
 
 proto-management-api:
-    FROM +proto-deps
-
+    FROM +deps
     COPY ./management-api/api/*.proto /src/
     COPY ./management-api/api/external/*.proto /src/external/
 
@@ -136,8 +100,7 @@ proto-management-api:
     SAVE ARTIFACT /dist/external/*.* AS LOCAL ./management-api/api/external/
 
 proto-inway-test:
-    FROM +proto-deps
-
+    FROM +deps
     COPY ./inway/grpcproxy/test/*.proto /src
 
     RUN mkdir -p /dist || true && \
@@ -152,8 +115,7 @@ proto-inway-test:
     SAVE ARTIFACT /dist/* AS LOCAL ./inway/grpcproxy/test/
 
 mocks-management-api:
-    FROM +mocks-deps
-
+    FROM +deps
     COPY ./management-api /src/management-api
     COPY ./common /src/common
     COPY ./directory-inspection-api /src/directory-inspection-api
@@ -184,8 +146,7 @@ mocks-management-api:
     SAVE ARTIFACT /dist/management-api/pkg/txlogdb/mock/*.go AS LOCAL ./management-api/pkg/txlogdb/mock/
 
 mocks-common:
-    FROM +mocks-deps
-
+    FROM +deps
     COPY ./common /src/common
 
     RUN mkdir -p /dist || true
@@ -195,8 +156,7 @@ mocks-common:
     SAVE ARTIFACT /dist/mock_logger.go AS LOCAL ./common/transactionlog/mock/mock_logger.go
 
 mocks-directory-inspection-api:
-    FROM +mocks-deps
-
+    FROM +deps
     COPY ./directory-inspection-api /src/directory-inspection-api
 
     RUN mkdir -p /dist || true
@@ -209,8 +169,7 @@ mocks-directory-inspection-api:
     SAVE ARTIFACT /dist/pkg/database/mock/mock_database.go AS LOCAL ./directory-inspection-api/pkg/database/mock/mock_database.go
 
 mocks-directory-registration-api:
-    FROM +mocks-deps
-
+    FROM +deps
     COPY ./directory-registration-api /src/directory-registration-api
 
     RUN mkdir -p /dist || true
