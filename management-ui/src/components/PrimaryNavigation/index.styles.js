@@ -25,7 +25,7 @@ export const Nav = styled.nav`
   background: #313131;
   position: sticky;
   top: 0;
-  height: 100vh;
+  min-height: 100vh;
 `
 
 export const StyledHomeLink = styled(Link)`
