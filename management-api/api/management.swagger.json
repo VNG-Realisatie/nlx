@@ -216,7 +216,7 @@
         ]
       }
     },
-    "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send": {
+    "/api/v1/access-requests/outgoing/{accessRequestID}/send": {
       "post": {
         "operationId": "Management_SendAccessRequest",
         "responses": {
@@ -234,18 +234,6 @@
           }
         },
         "parameters": [
-          {
-            "name": "organizationName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "accessRequestID",
             "in": "path",

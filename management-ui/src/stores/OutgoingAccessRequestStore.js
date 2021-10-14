@@ -56,8 +56,6 @@ class OutgoingAccessRequestStore {
   retry = flow(function* retry(outgoingAccessRequestModel) {
     const response =
       yield this._managementApiClient.managementSendAccessRequest({
-        organizationName: outgoingAccessRequestModel.organizationName,
-        serviceName: outgoingAccessRequestModel.serviceName,
         accessRequestID: outgoingAccessRequestModel.id,
       })
     yield this.updateFromServer(response)

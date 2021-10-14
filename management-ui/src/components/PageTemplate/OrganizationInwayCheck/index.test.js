@@ -110,7 +110,7 @@ function managementApiClientWithService(managementApiClient) {
       accessGrants: [],
     })
 
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [],

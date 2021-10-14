@@ -22,6 +22,10 @@ import {
     ManagementErrorDetailsFromJSON,
     ManagementErrorDetailsFromJSONTyped,
     ManagementErrorDetailsToJSON,
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
 } from './';
 
 /**
@@ -38,10 +42,10 @@ export interface ManagementOutgoingAccessRequest {
     id?: string;
     /**
      * 
-     * @type {string}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementOutgoingAccessRequest
      */
-    organizationName?: string;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -85,7 +89,7 @@ export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'state': !exists(json, 'state') ? undefined : ManagementAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
@@ -104,7 +108,7 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
     return {
         
         'id': value.id,
-        'organizationName': value.organizationName,
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'serviceName': value.serviceName,
         'state': ManagementAccessRequestStateToJSON(value.state),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

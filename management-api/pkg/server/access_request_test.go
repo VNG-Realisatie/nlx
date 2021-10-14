@@ -171,9 +171,7 @@ func TestSendAccessRequest(t *testing.T) {
 		{
 			"non_existing",
 			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  1,
+				AccessRequestID: 1,
 			},
 			nil,
 			database.ErrNotFound,
@@ -186,9 +184,7 @@ func TestSendAccessRequest(t *testing.T) {
 		{
 			"database_error",
 			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  1,
+				AccessRequestID: 1,
 			},
 			nil,
 			errors.New("an error"),
@@ -201,9 +197,7 @@ func TestSendAccessRequest(t *testing.T) {
 		{
 			"update_failed",
 			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  1,
+				AccessRequestID: 1,
 			},
 			&database.OutgoingAccessRequest{
 
@@ -225,9 +219,7 @@ func TestSendAccessRequest(t *testing.T) {
 		{
 			"created_state",
 			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  1,
+				AccessRequestID: 1,
 			},
 			&database.OutgoingAccessRequest{
 				ID: 1,
@@ -258,9 +250,7 @@ func TestSendAccessRequest(t *testing.T) {
 		{
 			"failed_state",
 			&api.SendAccessRequestRequest{
-				OrganizationName: "test-organization",
-				ServiceName:      "test-service",
-				AccessRequestID:  1,
+				AccessRequestID: 1,
 			},
 			&database.OutgoingAccessRequest{
 				ID: 1,

@@ -161,8 +161,6 @@ export interface ManagementRevokeOutgoingOrderRequest {
 }
 
 export interface ManagementSendAccessRequestRequest {
-    organizationName: string;
-    serviceName: string;
     accessRequestID: string;
 }
 
@@ -856,14 +854,6 @@ export class ManagementApi extends runtime.BaseAPI {
     /**
      */
     async managementSendAccessRequestRaw(requestParameters: ManagementSendAccessRequestRequest): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
-        if (requestParameters.organizationName === null || requestParameters.organizationName === undefined) {
-            throw new runtime.RequiredError('organizationName','Required parameter requestParameters.organizationName was null or undefined when calling managementSendAccessRequest.');
-        }
-
-        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementSendAccessRequest.');
-        }
-
         if (requestParameters.accessRequestID === null || requestParameters.accessRequestID === undefined) {
             throw new runtime.RequiredError('accessRequestID','Required parameter requestParameters.accessRequestID was null or undefined when calling managementSendAccessRequest.');
         }
@@ -873,7 +863,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send`.replace(`{${"organizationName"}}`, encodeURIComponent(String(requestParameters.organizationName))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"accessRequestID"}}`, encodeURIComponent(String(requestParameters.accessRequestID))),
+            path: `/api/v1/access-requests/outgoing/{accessRequestID}/send`.replace(`{${"accessRequestID"}}`, encodeURIComponent(String(requestParameters.accessRequestID))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

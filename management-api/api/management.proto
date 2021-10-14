@@ -64,7 +64,7 @@ service Management {
     option (google.api.http) = {post: "/api/v1/access-requests" body: "*"};
   }
   rpc SendAccessRequest (SendAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/organizations/{organizationName}/services/{serviceName}/{accessRequestID}/send"};
+    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{accessRequestID}/send"};
   }
   rpc GetSettings (google.protobuf.Empty) returns (Settings) {
     option (google.api.http) = {get: "/api/v1/settings"};
@@ -369,9 +369,7 @@ message CreateAccessRequestRequest {
 }
 
 message SendAccessRequestRequest {
-  string organizationName = 1;
-  string serviceName = 2;
-  uint64 accessRequestID = 3;
+  uint64 accessRequestID = 1;
 }
 
 message ListAccessGrantsForServiceRequest {

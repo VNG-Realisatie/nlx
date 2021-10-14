@@ -24,7 +24,7 @@ export interface ManagementCreateAccessRequestRequest {
      * @type {string}
      * @memberof ManagementCreateAccessRequestRequest
      */
-    organizationName?: string;
+    organizationSerialNumber?: string;
     /**
      * 
      * @type {string}
@@ -43,7 +43,7 @@ export function ManagementCreateAccessRequestRequestFromJSONTyped(json: any, ign
     }
     return {
         
-        'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
+        'organizationSerialNumber': !exists(json, 'organizationSerialNumber') ? undefined : json['organizationSerialNumber'],
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
     };
 }
@@ -57,7 +57,7 @@ export function ManagementCreateAccessRequestRequestToJSON(value?: ManagementCre
     }
     return {
         
-        'organizationName': value.organizationName,
+        'organizationSerialNumber': value.organizationSerialNumber,
         'serviceName': value.serviceName,
     };
 }

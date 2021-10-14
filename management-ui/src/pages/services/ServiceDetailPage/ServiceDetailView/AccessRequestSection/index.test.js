@@ -30,7 +30,7 @@ test('polling with access request section collapsed', async () => {
     ],
   })
 
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [
@@ -76,7 +76,7 @@ test('polling with access request section expanded', async () => {
     name: 'service-a',
   })
 
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValueOnce({
       accessRequests: [

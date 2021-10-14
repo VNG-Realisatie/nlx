@@ -19,7 +19,6 @@ export * from './ManagementErrorDetails';
 export * from './ManagementGetServiceResponse';
 export * from './ManagementGetStatisticsOfServicesResponse';
 export * from './ManagementIncomingAccessRequest';
-export * from './ManagementIncomingAccessRequestOrganization';
 export * from './ManagementIncomingOrder';
 export * from './ManagementInway';
 export * from './ManagementInwayService';

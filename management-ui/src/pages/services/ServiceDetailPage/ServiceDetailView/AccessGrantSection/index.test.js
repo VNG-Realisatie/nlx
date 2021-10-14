@@ -95,7 +95,7 @@ test('polling with access grant section expanded', async () => {
       accessGrants: [],
     })
 
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [],

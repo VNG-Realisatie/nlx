@@ -128,7 +128,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
     ],
   })
 
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValueOnce({
       accessRequests: [
@@ -159,7 +159,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
   })
 
   expect(
-    managementApiClient.managementListIncomingAccessRequest,
+    managementApiClient.managementListIncomingAccessRequests,
   ).toHaveBeenCalled()
   expect(serviceModel.incomingAccessRequests).toHaveLength(2)
   expect(serviceModel.incomingAccessRequestCount).toBe(2)

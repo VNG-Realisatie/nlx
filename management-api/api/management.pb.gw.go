@@ -811,26 +811,6 @@ func request_Management_SendAccessRequest_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["organizationName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
-	}
-
-	protoReq.OrganizationName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
-	}
-
-	val, ok = pathParams["serviceName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
-	}
-
-	protoReq.ServiceName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
-	}
-
 	val, ok = pathParams["accessRequestID"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessRequestID")
@@ -856,26 +836,6 @@ func local_request_Management_SendAccessRequest_0(ctx context.Context, marshaler
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["organizationName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationName")
-	}
-
-	protoReq.OrganizationName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationName", err)
-	}
-
-	val, ok = pathParams["serviceName"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
-	}
-
-	protoReq.ServiceName, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
-	}
 
 	val, ok = pathParams["accessRequestID"]
 	if !ok {
@@ -2818,7 +2778,7 @@ var (
 
 	pattern_Management_CreateAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "access-requests"}, ""))
 
-	pattern_Management_SendAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7, 1, 0, 4, 1, 5, 8, 2, 9}, []string{"api", "v1", "access-requests", "outgoing", "organizations", "organizationName", "services", "serviceName", "accessRequestID", "send"}, ""))
+	pattern_Management_SendAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "access-requests", "outgoing", "accessRequestID", "send"}, ""))
 
 	pattern_Management_GetSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "settings"}, ""))
 

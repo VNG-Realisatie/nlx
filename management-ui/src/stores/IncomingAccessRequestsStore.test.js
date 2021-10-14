@@ -18,7 +18,7 @@ test('fetching, getting and updating from server', async () => {
   const service = { name: 'Service' }
 
   const managementApiClient = new ManagementApi()
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [
@@ -54,7 +54,7 @@ test('fetching, getting and updating from server', async () => {
   await incomingAccessRequestStore.fetchForService(service)
 
   expect(
-    managementApiClient.managementListIncomingAccessRequest,
+    managementApiClient.managementListIncomingAccessRequests,
   ).toHaveBeenCalledWith({ serviceName: 'Service' })
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
 
@@ -130,7 +130,7 @@ test('fetching for a service should update existing in-memory models instead of 
     managementApiClient,
   })
 
-  managementApiClient.managementListIncomingAccessRequest = jest
+  managementApiClient.managementListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValueOnce({
       accessRequests: [
@@ -216,7 +216,7 @@ describe('have the access requests been changed for a service', () => {
   })
 
   it('should indicate changed if the number of access requests have changed', async () => {
-    managementApiClient.managementListIncomingAccessRequest = jest
+    managementApiClient.managementListIncomingAccessRequests = jest
       .fn()
       .mockResolvedValueOnce({ accessRequests: [] })
       .mockResolvedValue({
@@ -232,7 +232,7 @@ describe('have the access requests been changed for a service', () => {
   })
 
   it('should indicate changed if the changed access request has a different id', async () => {
-    managementApiClient.managementListIncomingAccessRequest = jest
+    managementApiClient.managementListIncomingAccessRequests = jest
       .fn()
       .mockResolvedValueOnce({
         accessRequests: [ACCESS_REQUEST_ONE],
@@ -250,7 +250,7 @@ describe('have the access requests been changed for a service', () => {
   })
 
   it('should not indicate changed if the latest access request is the same', async () => {
-    managementApiClient.managementListIncomingAccessRequest = jest
+    managementApiClient.managementListIncomingAccessRequests = jest
       .fn()
       .mockResolvedValue({
         accessRequests: [ACCESS_REQUEST_ONE],

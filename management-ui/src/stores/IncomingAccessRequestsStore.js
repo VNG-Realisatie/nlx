@@ -59,7 +59,7 @@ class IncomingAccessRequestsStore {
 
   returnForService = async ({ name }) => {
     const result =
-      await this._managementApiClient.managementListIncomingAccessRequest({
+      await this._managementApiClient.managementListIncomingAccessRequests({
         serviceName: name,
       })
     return result.accessRequests
