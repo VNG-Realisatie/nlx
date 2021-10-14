@@ -1,4 +1,4 @@
-FROM lucianonooijen/nlx-earthly:latest
+FROM registry.gitlab.com/commonground/nlx/earthly-base-image:latest
 
 WORKDIR /src
 
