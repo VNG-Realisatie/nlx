@@ -101,9 +101,11 @@ func TestListServices(t *testing.T) {
 							Mode: "whitelist",
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 								{
-									OrganizationName: "mock-organization-name",
-									PublicKeyHash:    "mock-publickey-fingerprint",
-									PublicKeyPEM:     "mock-publickey-pem",
+									Organization: &api.Organization{
+										Name: "mock-organization-name",
+									},
+									PublicKeyHash: "mock-publickey-fingerprint",
+									PublicKeyPEM:  "mock-publickey-pem",
 								},
 							},
 						},

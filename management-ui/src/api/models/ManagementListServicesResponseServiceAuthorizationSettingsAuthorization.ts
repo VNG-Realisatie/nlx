@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,16 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
     /**
      * 
-     * @type {string}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
-    organizationName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
-     */
-    organizationSerialNumber?: string;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -55,8 +56,7 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
     }
     return {
         
-        'organizationName': !exists(json, 'organizationName') ? undefined : json['organizationName'],
-        'organizationSerialNumber': !exists(json, 'organizationSerialNumber') ? undefined : json['organizationSerialNumber'],
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'publicKeyHash': !exists(json, 'publicKeyHash') ? undefined : json['publicKeyHash'],
         'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
     };
@@ -71,8 +71,7 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
     }
     return {
         
-        'organizationName': value.organizationName,
-        'organizationSerialNumber': value.organizationSerialNumber,
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'publicKeyHash': value.publicKeyHash,
         'publicKeyPEM': value.publicKeyPEM,
     };

@@ -168,7 +168,6 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	return &emptypb.Empty{}, nil
 }
 
-// ListServices returns a list of services
 func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServicesRequest) (*api.ListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
@@ -252,10 +251,12 @@ func (s *ManagementService) GetStatisticsOfServices(ctx context.Context, request
 
 func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.ListServicesResponse_Service_AuthorizationSettings_Authorization {
 	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
-		OrganizationName:         accessGrant.IncomingAccessRequest.Organization.Name,
-		OrganizationSerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
-		PublicKeyHash:            accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
-		PublicKeyPEM:             accessGrant.IncomingAccessRequest.PublicKeyPEM,
+		Organization: &api.Organization{
+			Name:         accessGrant.IncomingAccessRequest.Organization.Name,
+			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
+		},
+		PublicKeyHash: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
+		PublicKeyPEM:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
 	}
 }
 

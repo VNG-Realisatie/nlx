@@ -186,7 +186,7 @@ func serviceToPluginService(service *api.ListServicesResponse_Service) *plugins.
 
 	for _, auth := range service.AuthorizationSettings.Authorizations {
 		pluginService.Grants = append(pluginService.Grants, &plugins.Grant{
-			OrganizationSerialNumber: auth.OrganizationSerialNumber,
+			OrganizationSerialNumber: auth.Organization.SerialNumber,
 			PublicKeyPEM:             auth.PublicKeyPEM,
 			PublicKeyFingerprint:     auth.PublicKeyHash,
 		})

@@ -1643,11 +1643,8 @@
     "managementListServicesResponseServiceAuthorizationSettingsAuthorization": {
       "type": "object",
       "properties": {
-        "organizationName": {
-          "type": "string"
-        },
-        "organizationSerialNumber": {
-          "type": "string"
+        "organization": {
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "publicKeyHash": {
           "type": "string"

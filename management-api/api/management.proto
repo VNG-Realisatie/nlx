@@ -261,10 +261,9 @@ message ListServicesResponse {
       repeated Authorization authorizations = 2;
 
       message Authorization  {
-        string organizationName = 1;
-        string organizationSerialNumber = 2;
-        string publicKeyHash = 3;
-        string publicKeyPEM = 4;
+        Organization organization = 1;
+        string publicKeyHash = 2;
+        string publicKeyPEM = 3;
       }
     }
   }

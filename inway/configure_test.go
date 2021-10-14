@@ -78,10 +78,12 @@ func TestStartConfigurationPolling(t *testing.T) {
 							AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
 								Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 									{
-										OrganizationSerialNumber: "00000000000000000001",
-										OrganizationName:         "mock-org",
-										PublicKeyHash:            "mock-public-key-hash",
-										PublicKeyPEM:             "mock-public-key-pem",
+										Organization: &api.Organization{
+											SerialNumber: "00000000000000000001",
+											Name:         "mock-org",
+										},
+										PublicKeyHash: "mock-public-key-hash",
+										PublicKeyPEM:  "mock-public-key-pem",
 									},
 								},
 							},
