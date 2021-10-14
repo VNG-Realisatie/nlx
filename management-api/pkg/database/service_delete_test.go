@@ -23,8 +23,8 @@ func TestDeleteService(t *testing.T) {
 	setup(t)
 
 	type args struct {
-		serviceName      string
-		organizationName string
+		serviceName              string
+		organizationSerialNumber string
 	}
 
 	tests := map[string]struct {
@@ -35,8 +35,8 @@ func TestDeleteService(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				serviceName:      "fixture-service-name",
-				organizationName: "fixture-organization-name",
+				serviceName:              "fixture-service-name",
+				organizationSerialNumber: "00000000000000000000",
 			},
 			wantErr: nil,
 		},
@@ -51,24 +51,24 @@ func TestDeleteService(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			err := configDb.DeleteService(context.Background(), tt.args.serviceName, tt.args.organizationName)
+			err := configDb.DeleteService(context.Background(), tt.args.serviceName, tt.args.organizationSerialNumber)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				assertServiceDeleted(t, configDb, tt.args.serviceName, tt.args.organizationName)
+				assertServiceDeleted(t, configDb, tt.args.serviceName, tt.args.organizationSerialNumber)
 			}
 		})
 	}
 }
 
-func assertServiceDeleted(t *testing.T, repo database.ConfigDatabase, serviceName, organizationName string) {
+func assertServiceDeleted(t *testing.T, repo database.ConfigDatabase, serviceName, organizationSerialNumber string) {
 	_, err := repo.GetService(context.Background(), serviceName)
 	require.Equal(t, database.ErrNotFound, err)
 
 	outgoingOrders, err := repo.ListOutgoingOrders(context.Background())
 	for _, o := range outgoingOrders {
 		for _, s := range o.Services {
-			if serviceName == s.Service && organizationName == s.Organization {
+			if serviceName == s.Service && organizationSerialNumber == s.Organization.SerialNumber {
 				t.Error("outgoing order for service is not deleted")
 			}
 		}

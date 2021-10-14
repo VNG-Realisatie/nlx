@@ -61,7 +61,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
@@ -98,8 +98,11 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil:  fixtureTime,
 						Services: []database.IncomingOrderService{
 							{
-								Service:      "new-service-one",
-								Organization: "new-organization-one",
+								Service: "new-service-one",
+								Organization: database.IncomingOrderServiceOrganization{
+									Name:         "new-organization-one",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},
@@ -114,7 +117,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
@@ -134,7 +137,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("new-service-one", "new-organization-one"),
+						domain.NewIncomingOrderService("new-service-one", "00000000000000000001", "new-organization-one"),
 					},
 				}),
 			},
@@ -153,8 +156,11 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil:  fixtureTime,
 						Services: []database.IncomingOrderService{
 							{
-								Service:      "service-one",
-								Organization: "organization-one",
+								Service: "service-one",
+								Organization: database.IncomingOrderServiceOrganization{
+									Name:         "organization-one",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},
@@ -167,8 +173,11 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil:  fixtureTime,
 						Services: []database.IncomingOrderService{
 							{
-								Service:      "service-two",
-								Organization: "organization-two",
+								Service: "service-two",
+								Organization: database.IncomingOrderServiceOrganization{
+									Name:         "organization-two",
+									SerialNumber: "00000000000000000002",
+								},
 							},
 						},
 					},
@@ -183,7 +192,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service", "fixture-organization"),
+						domain.NewIncomingOrderService("fixture-service", "00000000000000000001", "fixture-organization"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
@@ -194,7 +203,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
@@ -214,7 +223,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("service-one", "organization-one"),
+						domain.NewIncomingOrderService("service-one", "00000000000000000001", "organization-one"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
@@ -225,7 +234,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("service-two", "organization-two"),
+						domain.NewIncomingOrderService("service-two", "00000000000000000002", "organization-two"),
 					},
 				}),
 			},

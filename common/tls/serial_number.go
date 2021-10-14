@@ -10,8 +10,8 @@ import (
 const maxSerialNumberByteLength = 20
 
 var (
-	ErrSerialNumberEmpty   = errors.New("serial number is empty")
-	ErrSerialNumberTooLong = fmt.Errorf("serial number is too long, max %d bytes", maxSerialNumberByteLength)
+	ErrSerialNumberEmpty   = errors.New("cannot be empty")
+	ErrSerialNumberTooLong = fmt.Errorf("too long, max %d bytes", maxSerialNumberByteLength)
 )
 
 func ValidateSerialNumber(serialNumber string) error {

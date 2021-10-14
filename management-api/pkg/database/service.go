@@ -136,7 +136,7 @@ func (db *PostgresConfigDatabase) setServiceInways(ctx context.Context, serviceI
 		Replace(inways)
 }
 
-func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, serviceName, organizationName string) error {
+func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, serviceName, organizationSerialNumber string) error {
 	tx := db.DB.Begin()
 	defer tx.Rollback()
 
@@ -152,8 +152,10 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, serviceName
 	}
 
 	err = dbWithTx.Where(&OutgoingOrderService{
-		Service:      serviceName,
-		Organization: organizationName,
+		Service: serviceName,
+		Organization: OutgoingOrderServiceOrganization{
+			SerialNumber: organizationSerialNumber,
+		},
 	}).Delete(&OutgoingOrderService{}).Error
 	if err != nil {
 		return err
@@ -162,7 +164,7 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, serviceName
 	err = dbWithTx.Where(&OutgoingAccessRequest{
 		ServiceName: serviceName,
 		Organization: Organization{
-			Name: organizationName,
+			SerialNumber: organizationSerialNumber,
 		},
 	}).Delete(&OutgoingAccessRequest{}).Error
 	if err != nil {

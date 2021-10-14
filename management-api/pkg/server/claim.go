@@ -83,7 +83,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 	for i, service := range order.Services {
 		claims.Services[i] = delegation.Service{
-			OrganizationSerialNumber: service.Organization,
+			OrganizationSerialNumber: service.Organization.SerialNumber,
 			Service:                  service.Service,
 		}
 	}

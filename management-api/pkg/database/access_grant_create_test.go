@@ -9,10 +9,11 @@ package database_test
 import (
 	"context"
 	"database/sql"
+	"testing"
+
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"testing"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )

@@ -88,7 +88,7 @@ service Management {
     option (google.api.http) = {post: "/api/v1/orders/outgoing" body: "*"};
   }
   rpc RevokeOutgoingOrder (RevokeOutgoingOrderRequest) returns (google.protobuf.Empty){
-    option (google.api.http) = {put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"}; 
+    option (google.api.http) = {put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"};
   }
   rpc ListOutgoingOrders (google.protobuf.Empty) returns (ListOutgoingOrdersResponse) {
     option (google.api.http) = {get: "/api/v1/orders/outgoing"};
@@ -536,11 +536,11 @@ message CreateOutgoingOrderRequest {
 
 message RevokeOutgoingOrderRequest{
   string delegatee = 1;
-  string reference = 2; 
+  string reference = 2;
 }
 
 message OrderService {
-  string organization = 1;
+  Organization organization = 1;
   string service = 2;
 }
 

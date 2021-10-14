@@ -12,7 +12,6 @@ import (
 
 	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
-	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -212,7 +211,7 @@ func TestListDirectoryServices(t *testing.T) {
 				},
 				ServiceName:     "test-service-1",
 				AccessRequestId: 1,
-				CreatedAt:       timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+				CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 			},
 			LatestAccessRequest: &api.OutgoingAccessRequest{
 				Id: 1,
@@ -222,18 +221,13 @@ func TestListDirectoryServices(t *testing.T) {
 				},
 				ServiceName: "test-service-1",
 				State:       api.AccessRequestState_CREATED,
-				CreatedAt:   timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
-				UpdatedAt:   timestampProto(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+				CreatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+				UpdatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 			},
 		},
 	}
 
 	assert.Equal(t, expected, response.Services)
-}
-
-func timestampProto(t time.Time) *timestamppb.Timestamp {
-	tp, _ := ptypes.TimestampProto(t)
-	return tp
 }
 
 // nolint:funlen // this is a test method
@@ -313,8 +307,8 @@ func TestGetOrganizationService(t *testing.T) {
 					},
 					ServiceName: "test-service",
 					State:       api.AccessRequestState_CREATED,
-					CreatedAt:   timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-					UpdatedAt:   timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+					CreatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+					UpdatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				},
 				LatestAccessProof: &api.AccessProof{
 					Id:              1,
@@ -324,7 +318,7 @@ func TestGetOrganizationService(t *testing.T) {
 						SerialNumber: "00000000000000000001",
 						Name:         "test-organization",
 					},
-					CreatedAt: timestampProto(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+					CreatedAt: timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				},
 			},
 			nil,

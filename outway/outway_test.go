@@ -75,7 +75,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			"localhost:8080",
 			"",
 			"",
-			"validation error for subject serial number from cert: serial number is empty",
+			"validation error for subject serial number from cert: cannot be empty",
 		},
 		{
 			"authorization service URL set but no CA for authorization provided",

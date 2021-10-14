@@ -7,17 +7,27 @@ import (
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+
+	common_tls "go.nlx.io/nlx/common/tls"
 )
+
+type incomingOrderServiceOrganization struct {
+	serialNumber string
+	name         string
+}
 
 type IncomingOrderService struct {
 	service      string
-	organization string
+	organization incomingOrderServiceOrganization
 }
 
-func NewIncomingOrderService(service, organization string) IncomingOrderService {
+func NewIncomingOrderService(service, organizationSerialNumber, organizationName string) IncomingOrderService {
 	return IncomingOrderService{
-		service:      service,
-		organization: organization,
+		service: service,
+		organization: incomingOrderServiceOrganization{
+			serialNumber: organizationSerialNumber,
+			name:         organizationName,
+		},
 	}
 }
 
@@ -25,8 +35,12 @@ func (s *IncomingOrderService) Service() string {
 	return s.service
 }
 
-func (s *IncomingOrderService) Organization() string {
-	return s.organization
+func (s *IncomingOrderService) OrganizationSerialNumber() string {
+	return s.organization.serialNumber
+}
+
+func (s *IncomingOrderService) OrganizationName() string {
+	return s.organization.name
 }
 
 type IncomingOrder struct {
@@ -58,6 +72,17 @@ const (
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
 var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
+func validateOrganizationSerialNumber(value interface{}) error {
+	valueAsString, _ := value.(string)
+
+	err := common_tls.ValidateSerialNumber(valueAsString)
+	if err != nil {
+		return fmt.Errorf("organization serial number must be in a valid format: %s", err)
+	}
+
+	return err
+}
+
 func NewIncomingOrder(args *NewIncomingOrderArgs) (*IncomingOrder, error) {
 	err := validation.Validate(args.Reference, validation.Required)
 	if err != nil {
@@ -85,7 +110,12 @@ func NewIncomingOrder(args *NewIncomingOrderArgs) (*IncomingOrder, error) {
 			return errors.New("expecting an order-service")
 		}
 
-		err = validation.Validate(orderService.organization, validation.Match(organizationNameRegex).Error("organization must be in a valid format"))
+		err = validation.Validate(orderService.organization.name, validation.Match(organizationNameRegex).Error("organization must be in a valid format"))
+		if err != nil {
+			return fmt.Errorf("organization: %s", err)
+		}
+
+		err = validation.Validate(orderService.organization.serialNumber, validation.By(validateOrganizationSerialNumber))
 		if err != nil {
 			return fmt.Errorf("organization: %s", err)
 		}

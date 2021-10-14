@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -58,8 +59,11 @@ func TestListOutgoingOrders(t *testing.T) {
 							RevokedAt:   sql.NullTime{},
 							Services: []database.OutgoingOrderService{
 								{
-									Service:      "service-a",
-									Organization: "organization-a",
+									Service: "service-a",
+									Organization: database.OutgoingOrderServiceOrganization{
+										Name:         "a-organization",
+										SerialNumber: "00000000000000000001",
+									},
 								},
 							},
 						},
@@ -71,12 +75,15 @@ func TestListOutgoingOrders(t *testing.T) {
 						Reference:   "reference",
 						Description: "description",
 						Delegatee:   "saas-organization-x",
-						ValidFrom:   timestampProto(validFrom),
-						ValidUntil:  timestampProto(validUntil),
+						ValidFrom:   timestamppb.New(validFrom),
+						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Service:      "service-a",
-								Organization: "organization-a",
+								Service: "service-a",
+								Organization: &api.Organization{
+									Name:         "a-organization",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},
@@ -128,7 +135,7 @@ func TestListIncomingOrders(t *testing.T) {
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				services := []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("service-a", "organization-a"),
+					domain.NewIncomingOrderService("service-a", "00000000000000000001", "organization-a"),
 				}
 				model, _ := domain.NewIncomingOrder(
 					&domain.NewIncomingOrderArgs{
@@ -155,12 +162,15 @@ func TestListIncomingOrders(t *testing.T) {
 						Reference:   "reference",
 						Description: "description",
 						Delegator:   "nlx-test",
-						ValidFrom:   timestampProto(validFrom),
-						ValidUntil:  timestampProto(validUntil),
+						ValidFrom:   timestamppb.New(validFrom),
+						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Service:      "service-a",
-								Organization: "organization-a",
+								Service: "service-a",
+								Organization: &api.Organization{
+									Name:         "organization-a",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},
@@ -171,7 +181,7 @@ func TestListIncomingOrders(t *testing.T) {
 		"happy_flow_revoked": {
 			setup: func(mocks serviceMocks) {
 				services := []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("service-a", "organization-a"),
+					domain.NewIncomingOrderService("service-a", "00000000000000000001", "organization-a"),
 				}
 				model, _ := domain.NewIncomingOrder(
 					&domain.NewIncomingOrderArgs{
@@ -198,13 +208,16 @@ func TestListIncomingOrders(t *testing.T) {
 						Reference:   "reference",
 						Description: "description",
 						Delegator:   "nlx-test",
-						ValidFrom:   timestampProto(validFrom),
-						ValidUntil:  timestampProto(validUntil),
-						RevokedAt:   timestampProto(revokedAt),
+						ValidFrom:   timestamppb.New(validFrom),
+						ValidUntil:  timestamppb.New(validUntil),
+						RevokedAt:   timestamppb.New(revokedAt),
 						Services: []*api.OrderService{
 							{
-								Service:      "service-a",
-								Organization: "organization-a",
+								Service: "service-a",
+								Organization: &api.Organization{
+									Name:         "organization-a",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},
@@ -284,8 +297,11 @@ func TestListOrders(t *testing.T) {
 							RevokedAt:   sql.NullTime{},
 							Services: []database.OutgoingOrderService{
 								{
-									Service:      "service-a",
-									Organization: "organization-a",
+									Service: "service-a",
+									Organization: database.OutgoingOrderServiceOrganization{
+										Name:         "organization-a",
+										SerialNumber: "00000000000000000001",
+									},
 								},
 							},
 						},
@@ -299,12 +315,15 @@ func TestListOrders(t *testing.T) {
 						Reference:   "reference",
 						Description: "description",
 						Delegator:   "nlx-test",
-						ValidFrom:   timestampProto(validFrom),
-						ValidUntil:  timestampProto(validUntil),
+						ValidFrom:   timestamppb.New(validFrom),
+						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Service:      "service-a",
-								Organization: "organization-a",
+								Service: "service-a",
+								Organization: &api.Organization{
+									Name:         "organization-a",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},
@@ -338,8 +357,11 @@ func TestListOrders(t *testing.T) {
 							},
 							Services: []database.OutgoingOrderService{
 								{
-									Service:      "service-a",
-									Organization: "organization-a",
+									Service: "service-a",
+									Organization: database.OutgoingOrderServiceOrganization{
+										Name:         "organization-a",
+										SerialNumber: "00000000000000000001",
+									},
 								},
 							},
 						},
@@ -353,13 +375,16 @@ func TestListOrders(t *testing.T) {
 						Reference:   "reference",
 						Description: "description",
 						Delegator:   "nlx-test",
-						ValidFrom:   timestampProto(validFrom),
-						ValidUntil:  timestampProto(validUntil),
-						RevokedAt:   timestampProto(revokedAt),
+						ValidFrom:   timestamppb.New(validFrom),
+						ValidUntil:  timestamppb.New(validUntil),
+						RevokedAt:   timestamppb.New(revokedAt),
 						Services: []*api.OrderService{
 							{
-								Service:      "service-a",
-								Organization: "organization-a",
+								Service: "service-a",
+								Organization: &api.Organization{
+									Name:         "organization-a",
+									SerialNumber: "00000000000000000001",
+								},
 							},
 						},
 					},

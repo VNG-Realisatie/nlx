@@ -1658,7 +1658,7 @@
       "type": "object",
       "properties": {
         "organization": {
-          "type": "string"
+          "$ref": "#/definitions/nlxmanagementOrganization"
         },
         "service": {
           "type": "string"

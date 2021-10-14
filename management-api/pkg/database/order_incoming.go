@@ -14,16 +14,6 @@ import (
 	"go.nlx.io/nlx/management-api/domain"
 )
 
-type IncomingOrderService struct {
-	IncomingOrderID uint
-	Service         string
-	Organization    string
-}
-
-func (s *IncomingOrderService) TableName() string {
-	return "nlx_management.incoming_orders_services"
-}
-
 type IncomingOrder struct {
 	ID           uint
 	Reference    string
@@ -39,6 +29,21 @@ type IncomingOrder struct {
 
 func (o *IncomingOrder) TableName() string {
 	return "nlx_management.incoming_orders"
+}
+
+type IncomingOrderService struct {
+	IncomingOrderID uint
+	Service         string
+	Organization    IncomingOrderServiceOrganization `gorm:"embedded;embeddedPrefix:organization_"`
+}
+
+func (s *IncomingOrderService) TableName() string {
+	return "nlx_management.incoming_orders_services"
+}
+
+type IncomingOrderServiceOrganization struct {
+	Name         string
+	SerialNumber string
 }
 
 func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error) {
@@ -57,7 +62,7 @@ func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*do
 		services := make([]domain.IncomingOrderService, len(order.Services))
 
 		for i, service := range order.Services {
-			services[i] = domain.NewIncomingOrderService(service.Service, service.Organization)
+			services[i] = domain.NewIncomingOrderService(service.Service, service.Organization.SerialNumber, service.Organization.Name)
 		}
 
 		var revokedAt *time.Time

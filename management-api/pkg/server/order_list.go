@@ -112,8 +112,11 @@ func convertOutgoingOrderServices(services []database.OutgoingOrderService) []*a
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
-			Organization: service.Organization,
-			Service:      service.Service,
+			Organization: &api.Organization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			},
+			Service: service.Service,
 		}
 	}
 
@@ -125,8 +128,11 @@ func convertIncomingOrderServices(services []database.IncomingOrderService) []*a
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
-			Organization: service.Organization,
-			Service:      service.Service,
+			Organization: &api.Organization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			},
+			Service: service.Service,
 		}
 	}
 
@@ -138,8 +144,11 @@ func convertDomainIncomingOrderServices(services []domain.IncomingOrderService) 
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
-			Organization: service.Organization(),
-			Service:      service.Service(),
+			Organization: &api.Organization{
+				SerialNumber: service.OrganizationSerialNumber(),
+				Name:         service.OrganizationName(),
+			},
+			Service: service.Service(),
 		}
 	}
 

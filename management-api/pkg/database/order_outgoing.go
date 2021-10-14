@@ -14,16 +14,6 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type OutgoingOrderService struct {
-	OutgoingOrderID uint
-	Service         string
-	Organization    string
-}
-
-func (s *OutgoingOrderService) TableName() string {
-	return "nlx_management.outgoing_orders_services"
-}
-
 type OutgoingOrder struct {
 	ID           uint
 	Reference    string
@@ -39,6 +29,21 @@ type OutgoingOrder struct {
 
 func (o *OutgoingOrder) TableName() string {
 	return "nlx_management.outgoing_orders"
+}
+
+type OutgoingOrderService struct {
+	OutgoingOrderID uint
+	Service         string
+	Organization    OutgoingOrderServiceOrganization `gorm:"embedded;embeddedPrefix:organization_"`
+}
+
+func (s *OutgoingOrderService) TableName() string {
+	return "nlx_management.outgoing_orders_services"
+}
+
+type OutgoingOrderServiceOrganization struct {
+	Name         string
+	SerialNumber string
 }
 
 var ErrDuplicateOutgoingOrder = errors.New("duplicate outgoing order")
@@ -67,8 +72,11 @@ func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order
 	for _, service := range order.Services {
 		orderServices = append(orderServices, OutgoingOrderService{
 			OutgoingOrderID: order.ID,
-			Organization:    service.Organization,
-			Service:         service.Service,
+			Organization: OutgoingOrderServiceOrganization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			},
+			Service: service.Service,
 		})
 	}
 

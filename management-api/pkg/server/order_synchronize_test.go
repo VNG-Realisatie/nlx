@@ -46,7 +46,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return(&inspectionapi.ListOrganizationsResponse{
 						Organizations: []*inspectionapi.Organization{
 							{
-								SerialNumber: "0000000000000000001",
+								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
 							},
 						},
@@ -66,7 +66,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return(&inspectionapi.ListOrganizationsResponse{
 						Organizations: []*inspectionapi.Organization{
 							{
-								SerialNumber: "0000000000000000001",
+								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
 							},
 						},
@@ -92,7 +92,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return(&inspectionapi.ListOrganizationsResponse{
 						Organizations: []*inspectionapi.Organization{
 							{
-								SerialNumber: "0000000000000000001",
+								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
 							},
 						},
@@ -115,8 +115,11 @@ func TestSynchronizeOrders(t *testing.T) {
 								ValidUntil:  timestamppb.New(validUntil),
 								Services: []*api.OrderService{
 									{
-										Organization: "org-a",
-										Service:      "service-1",
+										Organization: &api.Organization{
+											Name:         "organization-a",
+											SerialNumber: "00000000000000000001",
+										},
+										Service: "service-1",
 									},
 								},
 							},
@@ -134,8 +137,11 @@ func TestSynchronizeOrders(t *testing.T) {
 							ValidUntil:  validUntil,
 							Services: []database.IncomingOrderService{
 								{
-									Organization: "org-a",
-									Service:      "service-1",
+									Organization: database.IncomingOrderServiceOrganization{
+										Name:         "organization-a",
+										SerialNumber: "00000000000000000001",
+									},
+									Service: "service-1",
 								},
 							},
 						},
@@ -158,8 +164,11 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Organization: "org-a",
-								Service:      "service-1",
+								Organization: &api.Organization{
+									Name:         "organization-a",
+									SerialNumber: "00000000000000000001",
+								},
+								Service: "service-1",
 							},
 						},
 					},
@@ -171,7 +180,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return(&inspectionapi.ListOrganizationsResponse{
 						Organizations: []*inspectionapi.Organization{
 							{
-								SerialNumber: "0000000000000000001",
+								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
 							},
 						},
@@ -194,8 +203,11 @@ func TestSynchronizeOrders(t *testing.T) {
 								ValidUntil:  timestamppb.New(validUntil),
 								Services: []*api.OrderService{
 									{
-										Organization: "org-a",
-										Service:      "service-1",
+										Organization: &api.Organization{
+											Name:         "organization-a",
+											SerialNumber: "00000000000000000001",
+										},
+										Service: "service-1",
 									},
 								},
 							},
@@ -213,8 +225,11 @@ func TestSynchronizeOrders(t *testing.T) {
 							ValidUntil:  validUntil,
 							Services: []database.IncomingOrderService{
 								{
-									Organization: "org-a",
-									Service:      "service-1",
+									Organization: database.IncomingOrderServiceOrganization{
+										Name:         "organization-a",
+										SerialNumber: "00000000000000000001",
+									},
+									Service: "service-1",
 								},
 							},
 						},
@@ -237,8 +252,11 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Organization: "org-a",
-								Service:      "service-1",
+								Organization: &api.Organization{
+									Name:         "organization-a",
+									SerialNumber: "00000000000000000001",
+								},
+								Service: "service-1",
 							},
 						},
 					},
@@ -250,7 +268,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return(&inspectionapi.ListOrganizationsResponse{
 						Organizations: []*inspectionapi.Organization{
 							{
-								SerialNumber: "0000000000000000001",
+								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
 							},
 						},
@@ -273,8 +291,11 @@ func TestSynchronizeOrders(t *testing.T) {
 								ValidUntil:  timestamppb.New(validUntil),
 								Services: []*api.OrderService{
 									{
-										Organization: "org-a",
-										Service:      "service-1",
+										Organization: &api.Organization{
+											Name:         "organization-a",
+											SerialNumber: "00000000000000000001",
+										},
+										Service: "service-1",
 									},
 								},
 							},
@@ -295,8 +316,11 @@ func TestSynchronizeOrders(t *testing.T) {
 							ValidUntil: validUntil,
 							Services: []database.IncomingOrderService{
 								{
-									Organization: "org-a",
-									Service:      "service-1",
+									Organization: database.IncomingOrderServiceOrganization{
+										Name:         "organization-a",
+										SerialNumber: "00000000000000000001",
+									},
+									Service: "service-1",
 								},
 							},
 						},

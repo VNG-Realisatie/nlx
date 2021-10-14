@@ -30,7 +30,7 @@ func Test_NewIncomingOrder(t *testing.T) {
 				ValidFrom:   validFrom,
 				ValidUntil:  validUntil,
 				Services: []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("my-service", "my-organization"),
+					domain.NewIncomingOrderService("my-service", "00000000000000000001", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("reference: cannot be blank"),
@@ -44,7 +44,7 @@ func Test_NewIncomingOrder(t *testing.T) {
 				ValidFrom:   validFrom,
 				ValidUntil:  validUntil,
 				Services: []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("my-service", "my-organization"),
+					domain.NewIncomingOrderService("my-service", "00000000000000000001", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("description: cannot be blank"),
@@ -58,7 +58,7 @@ func Test_NewIncomingOrder(t *testing.T) {
 				ValidFrom:   validFrom,
 				ValidUntil:  validUntil,
 				Services: []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("my-service", "my-organization"),
+					domain.NewIncomingOrderService("my-service", "00000000000000000001", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("delegator: cannot be blank"),
@@ -84,7 +84,7 @@ func Test_NewIncomingOrder(t *testing.T) {
 				ValidFrom:   time.Now(),
 				ValidUntil:  time.Now().Add(-1 * time.Hour),
 				Services: []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("my-service", "my-organization"),
+					domain.NewIncomingOrderService("my-service", "00000000000000000001", "my-organization"),
 				},
 			},
 			expectedErr: errors.New("valid from: order can not expire before the start date"),
@@ -98,7 +98,7 @@ func Test_NewIncomingOrder(t *testing.T) {
 				ValidFrom:   validFrom,
 				ValidUntil:  validUntil,
 				Services: []domain.IncomingOrderService{
-					domain.NewIncomingOrderService("my-service", "my-organization"),
+					domain.NewIncomingOrderService("my-service", "00000000000000000001", "my-organization"),
 				},
 			},
 		},

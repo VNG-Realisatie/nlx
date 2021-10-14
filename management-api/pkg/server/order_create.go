@@ -11,6 +11,8 @@ import (
 	"fmt"
 	"regexp"
 
+	common_tls "go.nlx.io/nlx/common/tls"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -41,7 +43,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 
 	for _, service := range order.Services {
 		services = append(services, auditlog.RecordService{
-			Organization: service.Organization,
+			Organization: service.Organization.Name,
 			Service:      service.Service,
 		})
 	}
@@ -71,8 +73,14 @@ func convertOrder(request *api.CreateOutgoingOrderRequest) *database.OutgoingOrd
 
 	for i, service := range request.Services {
 		services[i] = database.OutgoingOrderService{
-			Organization: service.Organization,
-			Service:      service.Service,
+			Service: service.Service,
+		}
+
+		if service.Organization != nil {
+			services[i].Organization = database.OutgoingOrderServiceOrganization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			}
 		}
 	}
 
@@ -87,9 +95,22 @@ func convertOrder(request *api.CreateOutgoingOrderRequest) *database.OutgoingOrd
 	}
 }
 
+func validateOrganizationSerialNumber(value interface{}) error {
+	valueAsString, _ := value.(string)
+
+	err := common_tls.ValidateSerialNumber(valueAsString)
+	if err != nil {
+		return fmt.Errorf("organization serial number must be in a valid format: %s", err)
+	}
+
+	return err
+}
+
 func validateOrder(order *database.OutgoingOrder) error {
 	serviceNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 	organizationNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
+
+	fmt.Printf("%#v\n", order.Services)
 
 	return validation.ValidateStruct(
 		order,
@@ -103,12 +124,20 @@ func validateOrder(order *database.OutgoingOrder) error {
 				return errors.New("expecting an outgoing order-service")
 			}
 
-			return validation.ValidateStruct(
+			err := validation.ValidateStruct(
 				&orderService,
-				validation.Field(&orderService.Organization, validation.Match(organizationNameRegex).
-					Error("organization must be in a valid format")),
 				validation.Field(&orderService.Service, validation.Match(serviceNameRegex).
 					Error("service must be in a valid format")),
+			)
+			if err != nil {
+				return err
+			}
+
+			return validation.ValidateStruct(
+				&orderService.Organization,
+				validation.Field(&orderService.Organization.Name, validation.Match(organizationNameRegex).
+					Error("organization name must be in a valid format")),
+				validation.Field(&orderService.Organization.SerialNumber, validation.By(validateOrganizationSerialNumber)),
 			)
 		}))),
 		validation.Field(&order.Delegatee, validation.Match(organizationNameRegex)),

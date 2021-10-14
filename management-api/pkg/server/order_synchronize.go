@@ -64,8 +64,11 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 
 		for i, service := range order.Services {
 			services[i] = database.IncomingOrderService{
-				Organization: service.Organization,
-				Service:      service.Service,
+				Organization: database.IncomingOrderServiceOrganization{
+					Name:         service.Organization.Name,
+					SerialNumber: service.Organization.SerialNumber,
+				},
+				Service: service.Service,
 			}
 		}
 

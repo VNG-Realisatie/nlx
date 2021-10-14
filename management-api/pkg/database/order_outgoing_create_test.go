@@ -50,8 +50,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					CreatedAt:   now,
 					Services: []database.OutgoingOrderService{
 						{
-							Service:      "service",
-							Organization: "organization",
+							Service: "service",
+							Organization: database.OutgoingOrderServiceOrganization{
+								Name:         "organization-one",
+								SerialNumber: "00000000000000000001",
+							},
 						},
 					},
 				},
@@ -74,7 +77,10 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						{
 							OutgoingOrderID: fixturesStartID,
 							Service:         "fixture-service",
-							Organization:    "fixture-organization",
+							Organization: database.OutgoingOrderServiceOrganization{
+								Name:         "fixture-organization",
+								SerialNumber: "00000000000000000001",
+							},
 						},
 					},
 				},

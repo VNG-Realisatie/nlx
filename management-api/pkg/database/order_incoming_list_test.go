@@ -39,7 +39,7 @@ func TestListIncomingOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service", "fixture-organization"),
+						domain.NewIncomingOrderService("fixture-service", "00000000000000000001", "fixture-organization"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
@@ -50,7 +50,7 @@ func TestListIncomingOrders(t *testing.T) {
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{

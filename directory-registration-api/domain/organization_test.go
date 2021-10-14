@@ -41,7 +41,7 @@ func Test_NewOrganization(t *testing.T) {
 				name:         "name",
 				serialNumber: "012345678901234567890123456789",
 			},
-			expectedErr: "error validating organization serial number: serial number is too long, max 20 bytes",
+			expectedErr: "error validating organization serial number: too long, max 20 bytes",
 		},
 		"serial_number_with_different_characters": {
 			organization: organizationParams{
@@ -55,7 +55,7 @@ func Test_NewOrganization(t *testing.T) {
 				name:         "name",
 				serialNumber: "",
 			},
-			expectedErr: "error validating organization serial number: serial number is empty",
+			expectedErr: "error validating organization serial number: cannot be empty",
 		},
 		"happy_flow": {
 			organization: organizationParams{

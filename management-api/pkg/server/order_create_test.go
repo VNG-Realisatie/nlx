@@ -48,8 +48,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			ValidUntil:   timestamppb.New(validUntil),
 			Services: []*api.OrderService{
 				{
-					Organization: "a-organization",
-					Service:      "a-service",
+					Organization: &api.Organization{
+						Name:         "a-organization",
+						SerialNumber: "00000000000000000001",
+					},
+					Service: "a-service",
 				},
 			},
 		}
@@ -159,8 +162,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
 							{
-								Organization: "a-organization",
-								Service:      "a-service",
+								Organization: database.OutgoingOrderServiceOrganization{
+									Name:         "a-organization",
+									SerialNumber: "00000000000000000001",
+								},
+								Service: "a-service",
 							},
 						},
 					}).
@@ -195,8 +201,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
 							{
-								Organization: "a-organization",
-								Service:      "a-service",
+								Organization: database.OutgoingOrderServiceOrganization{
+									Name:         "a-organization",
+									SerialNumber: "00000000000000000001",
+								},
+								Service: "a-service",
 							},
 						},
 					}).
@@ -208,7 +217,6 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 		},
 		"when_creating_audit_log_Fails": {
-			wantErr: status.Error(codes.Internal, "failed to write to auditlog"),
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
@@ -224,6 +232,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request := validCreateOutgoingOrderRequest()
 				return &request
 			}(),
+			wantErr: status.Error(codes.Internal, "failed to write to auditlog"),
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
@@ -238,8 +247,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
 							{
-								Organization: "a-organization",
-								Service:      "a-service",
+								Organization: database.OutgoingOrderServiceOrganization{
+									Name:         "a-organization",
+									SerialNumber: "00000000000000000001",
+								},
+								Service: "a-service",
 							},
 						},
 					}).

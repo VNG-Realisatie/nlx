@@ -53,7 +53,10 @@ func TestListOutgoingOrders(t *testing.T) {
 						{
 							OutgoingOrderID: 1,
 							Service:         "fixture-service",
-							Organization:    "fixture-organization",
+							Organization: database.OutgoingOrderServiceOrganization{
+								Name:         "fixture-organization",
+								SerialNumber: "00000000000000000001",
+							},
 						},
 					},
 				},
@@ -71,7 +74,10 @@ func TestListOutgoingOrders(t *testing.T) {
 						{
 							OutgoingOrderID: 2,
 							Service:         "fixture-service-two",
-							Organization:    "fixture-organization-two",
+							Organization: database.OutgoingOrderServiceOrganization{
+								Name:         "fixture-organization-two",
+								SerialNumber: "00000000000000000002",
+							},
 						},
 					},
 				},

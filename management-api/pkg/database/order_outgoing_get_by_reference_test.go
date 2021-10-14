@@ -68,7 +68,10 @@ func TestGetOutgoingOrderByReference(t *testing.T) {
 					{
 						OutgoingOrderID: 1,
 						Service:         "fixture-service",
-						Organization:    "fixture-organization",
+						Organization: database.OutgoingOrderServiceOrganization{
+							Name:         "fixture-organization",
+							SerialNumber: "00000000000000000001",
+						},
 					},
 				},
 			},
