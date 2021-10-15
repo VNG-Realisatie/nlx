@@ -52,7 +52,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					AnyTimes()
 
 				mocks.r.EXPECT().
-					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationSerialNumber, "localhost").
 					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -75,7 +75,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					AnyTimes()
 
 				mocks.r.EXPECT().
-					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationSerialNumber, "localhost").
 					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -93,7 +93,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					AnyTimes()
 
 				mocks.r.EXPECT().
-					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationSerialNumber, "localhost").
 					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{
@@ -148,7 +148,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 					RegisterService(gomock.Any()).Return(nil)
 
 				mocks.r.EXPECT().
-					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationName, "localhost").
+					ClearIfSetAsOrganizationInway(gomock.Any(), testOrganizationSerialNumber, "localhost").
 					Return(nil)
 			},
 			request: &registrationapi.RegisterInwayRequest{

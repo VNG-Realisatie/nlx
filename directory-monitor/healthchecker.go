@@ -40,11 +40,11 @@ type HealthChecker struct {
 }
 
 type availability struct {
-	ID               uint64 `json:"id"`
-	OrganizationName string `json:"organization_name"`
-	ServiceName      string `json:"service_name"`
-	Address          string `json:"address"`
-	InwayID          uint64 `json:"inway_id"`
+	ID                       uint64 `json:"id"`
+	OrganizationSerialNumber string `json:"organization_serial_number"`
+	ServiceName              string `json:"service_name"`
+	Address                  string `json:"address"`
+	InwayID                  uint64 `json:"inway_id"`
 }
 
 func (a *availability) healthCheckURL() string {
@@ -94,7 +94,7 @@ func (h *HealthChecker) Run(
 		SELECT
 			availabilities.id,
 			availabilities.inway_id,
-			organizations.name AS organization_name,
+			organizations.serial_number AS organization_serial_number,
 			services.name AS service_name,
 			inways.address
 		FROM directory.availabilities
@@ -310,7 +310,7 @@ func (h *HealthChecker) runHealthChecker(shutdown chan struct{}) {
 }
 
 func (h *HealthChecker) checkInwayStatus(av availability) {
-	logger := h.logger.With(zap.Uint64("id", av.ID), zap.Uint64("inway-id", av.InwayID), zap.String("organization", av.OrganizationName), zap.String("service", av.ServiceName), zap.String("inway-address", av.Address))
+	logger := h.logger.With(zap.Uint64("id", av.ID), zap.Uint64("inway-id", av.InwayID), zap.String("organization-serial-number", av.OrganizationSerialNumber), zap.String("service", av.ServiceName), zap.String("inway-address", av.Address))
 	healthCheckURL := av.healthCheckURL()
 
 	logger.Debug("checking inway status", zap.String("health check URL", healthCheckURL))
@@ -365,9 +365,9 @@ func (h *HealthChecker) updateAvailabilityHealth(av availability, newHealth bool
 
 	if rowsAffected == 1 {
 		if !newHealth {
-			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became unhealthy", av.OrganizationName, av.ServiceName, av.Address))
+			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became unhealthy", av.OrganizationSerialNumber, av.ServiceName, av.Address))
 		} else {
-			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became healthy", av.OrganizationName, av.ServiceName, av.Address))
+			h.logger.Info(fmt.Sprintf("inway %s.%s>%s became healthy", av.OrganizationSerialNumber, av.ServiceName, av.Address))
 		}
 	}
 }

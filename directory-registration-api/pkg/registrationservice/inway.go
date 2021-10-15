@@ -72,7 +72,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 		}
 	} else {
 		h.logger.Debug("is not organization inway")
-		err = h.repository.ClearIfSetAsOrganizationInway(ctx, organizationInformation.Name, inwayModel.Address())
+		err = h.repository.ClearIfSetAsOrganizationInway(ctx, organizationInformation.SerialNumber, inwayModel.Address())
 
 		if err != nil {
 			h.logger.Error("failed to execute ClearIfSetAsOrganizationInway", zap.String("inway", inwayModel.ToString()), zap.Error(err))
