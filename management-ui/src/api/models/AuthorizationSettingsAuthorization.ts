@@ -23,39 +23,46 @@ import {
 /**
  * 
  * @export
- * @interface ManagementOrderService
+ * @interface AuthorizationSettingsAuthorization
  */
-export interface ManagementOrderService {
+export interface AuthorizationSettingsAuthorization {
     /**
      * 
      * @type {NlxmanagementOrganization}
-     * @memberof ManagementOrderService
+     * @memberof AuthorizationSettingsAuthorization
      */
     organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOrderService
+     * @memberof AuthorizationSettingsAuthorization
      */
-    service?: string;
+    publicKeyHash?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthorizationSettingsAuthorization
+     */
+    publicKeyPEM?: string;
 }
 
-export function ManagementOrderServiceFromJSON(json: any): ManagementOrderService {
-    return ManagementOrderServiceFromJSONTyped(json, false);
+export function AuthorizationSettingsAuthorizationFromJSON(json: any): AuthorizationSettingsAuthorization {
+    return AuthorizationSettingsAuthorizationFromJSONTyped(json, false);
 }
 
-export function ManagementOrderServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOrderService {
+export function AuthorizationSettingsAuthorizationFromJSONTyped(json: any, ignoreDiscriminator: boolean): AuthorizationSettingsAuthorization {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
-        'service': !exists(json, 'service') ? undefined : json['service'],
+        'publicKeyHash': !exists(json, 'publicKeyHash') ? undefined : json['publicKeyHash'],
+        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
     };
 }
 
-export function ManagementOrderServiceToJSON(value?: ManagementOrderService | null): any {
+export function AuthorizationSettingsAuthorizationToJSON(value?: AuthorizationSettingsAuthorization | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -65,7 +72,8 @@ export function ManagementOrderServiceToJSON(value?: ManagementOrderService | nu
     return {
         
         'organization': NlxmanagementOrganizationToJSON(value.organization),
-        'service': value.service,
+        'publicKeyHash': value.publicKeyHash,
+        'publicKeyPEM': value.publicKeyPEM,
     };
 }
 

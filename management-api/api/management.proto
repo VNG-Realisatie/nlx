@@ -328,15 +328,6 @@ message RejectIncomingAccessRequestRequest {
   uint64 accessRequestID = 2;
 }
 
-message ListOutgoingAccessRequestsRequest {
-  string organizationName = 1;
-  string serviceName = 2;
-}
-
-message ListOutgoingAccessRequestsResponse {
-  repeated OutgoingAccessRequest accessRequests = 1;
-}
-
 message CreateAccessRequestRequest {
   string organizationSerialNumber = 1;
   string serviceName = 2;

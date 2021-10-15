@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementListServicesResponseServiceAuthorizationSettings,
-    ManagementListServicesResponseServiceAuthorizationSettingsFromJSON,
-    ManagementListServicesResponseServiceAuthorizationSettingsFromJSONTyped,
-    ManagementListServicesResponseServiceAuthorizationSettingsToJSON,
+    ServiceAuthorizationSettings,
+    ServiceAuthorizationSettingsFromJSON,
+    ServiceAuthorizationSettingsFromJSONTyped,
+    ServiceAuthorizationSettingsToJSON,
 } from './';
 
 /**
@@ -70,10 +70,10 @@ export interface ManagementListServicesResponseService {
     publicSupportContact?: string;
     /**
      * 
-     * @type {ManagementListServicesResponseServiceAuthorizationSettings}
+     * @type {ServiceAuthorizationSettings}
      * @memberof ManagementListServicesResponseService
      */
-    authorizationSettings?: ManagementListServicesResponseServiceAuthorizationSettings;
+    authorizationSettings?: ServiceAuthorizationSettings;
     /**
      * 
      * @type {Array<string>}
@@ -123,7 +123,7 @@ export function ManagementListServicesResponseServiceFromJSONTyped(json: any, ig
         'internal': !exists(json, 'internal') ? undefined : json['internal'],
         'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
-        'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ManagementListServicesResponseServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
+        'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
         'incomingAccessRequestCount': !exists(json, 'incomingAccessRequestCount') ? undefined : json['incomingAccessRequestCount'],
         'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
@@ -148,7 +148,7 @@ export function ManagementListServicesResponseServiceToJSON(value?: ManagementLi
         'internal': value.internal,
         'techSupportContact': value.techSupportContact,
         'publicSupportContact': value.publicSupportContact,
-        'authorizationSettings': ManagementListServicesResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
+        'authorizationSettings': ServiceAuthorizationSettingsToJSON(value.authorizationSettings),
         'inways': value.inways,
         'incomingAccessRequestCount': value.incomingAccessRequestCount,
         'oneTimeCosts': value.oneTimeCosts,
