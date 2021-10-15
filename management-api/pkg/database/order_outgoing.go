@@ -122,12 +122,12 @@ func (db *PostgresConfigDatabase) ListOutgoingOrders(ctx context.Context) ([]*Ou
 	return orders, nil
 }
 
-func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.Context, organizationName string) ([]*OutgoingOrder, error) {
+func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.Context, organizationSerialNumber string) ([]*OutgoingOrder, error) {
 	orders := []*OutgoingOrder{}
 
 	if err := db.DB.
 		WithContext(ctx).
-		Where("delegatee = ?", organizationName).
+		Where("delegatee = ?", organizationSerialNumber).
 		Order("valid_until desc").
 		Preload("Services").
 		Find(&orders).Error; err != nil {

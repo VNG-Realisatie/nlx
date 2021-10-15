@@ -34,7 +34,7 @@ type ConfigDatabase interface {
 	GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*OutgoingAccessRequest, error)
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
 	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error
-	DeleteOutgoingAccessRequests(ctx context.Context, organizationName, serviceName string) error
+	DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error
 	TakePendingOutgoingAccessRequest(ctx context.Context) (*OutgoingAccessRequest, error)
 	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 
@@ -64,7 +64,7 @@ type ConfigDatabase interface {
 	CreateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error
 	GetOutgoingOrderByReference(ctx context.Context, reference string) (*OutgoingOrder, error)
 	ListOutgoingOrders(ctx context.Context) ([]*OutgoingOrder, error)
-	ListOutgoingOrdersByOrganization(ctx context.Context, organizationName string) ([]*OutgoingOrder, error)
+	ListOutgoingOrdersByOrganization(ctx context.Context, organizationSerialNumber string) ([]*OutgoingOrder, error)
 	RevokeOutgoingOrderByReference(ctx context.Context, delegatee, reference string, revokedAt time.Time) error
 
 	ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error)

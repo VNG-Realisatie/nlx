@@ -22,8 +22,8 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 	setup(t)
 
 	type args struct {
-		organizationName string
-		serviceName      string
+		organizationSerialNumber string
+		serviceName              string
 	}
 
 	tests := map[string]struct {
@@ -34,16 +34,16 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 		"when_there_are_no_access_requests_present": {
 			loadFixtures: false,
 			args: args{
-				organizationName: "arbitrary",
-				serviceName:      "arbitrary",
+				organizationSerialNumber: "arbitrary",
+				serviceName:              "arbitrary",
 			},
 			wantErr: nil,
 		},
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-organization-name",
-				serviceName:      "fixture-service-name",
+				organizationSerialNumber: "00000000000000000001",
+				serviceName:              "fixture-service-name",
 			},
 			wantErr: nil,
 		},
@@ -58,17 +58,17 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			err := configDb.DeleteOutgoingAccessRequests(context.Background(), tt.args.organizationName, tt.args.serviceName)
+			err := configDb.DeleteOutgoingAccessRequests(context.Background(), tt.args.organizationSerialNumber, tt.args.serviceName)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				assertOutgoingAccessRequestDeleted(t, configDb, tt.args.organizationName, tt.args.serviceName)
+				assertOutgoingAccessRequestDeleted(t, configDb, tt.args.organizationSerialNumber, tt.args.serviceName)
 			}
 		})
 	}
 }
 
-func assertOutgoingAccessRequestDeleted(t *testing.T, repo database.ConfigDatabase, organizationName, serviceName string) {
-	_, err := repo.GetLatestOutgoingAccessRequest(context.Background(), organizationName, serviceName)
+func assertOutgoingAccessRequestDeleted(t *testing.T, repo database.ConfigDatabase, organizationSerialNumber, serviceName string) {
+	_, err := repo.GetLatestOutgoingAccessRequest(context.Background(), organizationSerialNumber, serviceName)
 	require.Equal(t, err, database.ErrNotFound)
 }

@@ -99,7 +99,8 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 	external.RegisterDelegationServiceServer(grpcServer, managementService)
 
 	e := &environment.Environment{
-		OrganizationName: orgCert.Certificate().Subject.Organization[0],
+		OrganizationSerialNumber: orgCert.Certificate().Subject.SerialNumber,
+		OrganizationName:         orgCert.Certificate().Subject.Organization[0],
 	}
 
 	directoryService := server.NewDirectoryService(logger, e, directoryClient, db)

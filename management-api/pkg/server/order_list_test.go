@@ -266,7 +266,7 @@ func TestListOrders(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					ListOutgoingOrdersByOrganization(ctx, certBundle.Certificate().Subject.Organization[0]).
+					ListOutgoingOrdersByOrganization(ctx, certBundle.Certificate().Subject.SerialNumber).
 					Return(nil, errors.New("arbitrary error"))
 
 				return ctx
@@ -282,11 +282,11 @@ func TestListOrders(t *testing.T) {
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)
 
-				requesterOrganizationName := requesterCertBundle.Certificate().Subject.Organization[0]
+				requesterOrganizationSerialNumber := requesterCertBundle.Certificate().Subject.SerialNumber
 
 				mocks.db.
 					EXPECT().
-					ListOutgoingOrdersByOrganization(ctx, requesterOrganizationName).
+					ListOutgoingOrdersByOrganization(ctx, requesterOrganizationSerialNumber).
 					Return([]*database.OutgoingOrder{
 						{
 							Reference:   "reference",
@@ -339,11 +339,11 @@ func TestListOrders(t *testing.T) {
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), requesterCertBundle)
 
-				requesterOrganizationName := requesterCertBundle.Certificate().Subject.Organization[0]
+				requesterOrganizationSerialNumber := requesterCertBundle.Certificate().Subject.SerialNumber
 
 				mocks.db.
 					EXPECT().
-					ListOutgoingOrdersByOrganization(ctx, requesterOrganizationName).
+					ListOutgoingOrdersByOrganization(ctx, requesterOrganizationSerialNumber).
 					Return([]*database.OutgoingOrder{
 						{
 							Reference:   "reference",

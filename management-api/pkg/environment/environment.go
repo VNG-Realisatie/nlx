@@ -4,5 +4,6 @@
 package environment
 
 type Environment struct {
-	OrganizationName string `json:"organizationName"`
+	OrganizationSerialNumber string `json:"organizationSerialNumber"`
+	OrganizationName         string `json:"organizationName"`
 }
