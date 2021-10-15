@@ -42,7 +42,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	destination := plugins.Destination{
-		Organization: i.organizationName,
+		Organization: i.organization.SerialNumber,
 		Path:         "/" + urlparts[1],
 		Service:      service,
 	}

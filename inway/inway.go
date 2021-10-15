@@ -41,9 +41,14 @@ const announceToDirectoryInterval = 10 * time.Second
 
 var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 
+type Organization struct {
+	SerialNumber string
+	Name         string
+}
+
 type Inway struct {
 	name                        string
-	organizationName            string
+	organization                Organization
 	address                     string
 	listenManagementAddress     string
 	isOrganizationInway         bool
@@ -100,11 +105,16 @@ func NewInway(params *Params) (*Inway, error) {
 	}
 
 	organizationName := orgCert.Subject.Organization[0]
-	logger.Info("loaded certificates for inway", zap.String("inway-organization-name", organizationName))
+	organizationSerialNumber := orgCert.Subject.SerialNumber
+
+	logger.Info("loaded certificates for inway", zap.String("inway-organization-serial-number", organizationSerialNumber), zap.String("inway-organization-name", organizationName))
 
 	i := &Inway{
-		logger:                  logger.With(zap.String("inway-organization-name", organizationName)),
-		organizationName:        organizationName,
+		logger: logger.With(zap.String("inway-organization-serial-number", organizationName)),
+		organization: Organization{
+			SerialNumber: organizationSerialNumber,
+			Name:         organizationName,
+		},
 		listenManagementAddress: params.ListenManagementAddress,
 		address:                 params.Address,
 		orgCertBundle:           params.OrgCertBundle,
@@ -116,7 +126,7 @@ func NewInway(params *Params) (*Inway, error) {
 			plugins.NewAuthenticationPlugin(),
 			plugins.NewDelegationPlugin(),
 			plugins.NewAuthorizationPlugin(),
-			plugins.NewLogRecordPlugin(organizationName, params.Txlogger),
+			plugins.NewLogRecordPlugin(organizationSerialNumber, params.Txlogger),
 		},
 	}
 
