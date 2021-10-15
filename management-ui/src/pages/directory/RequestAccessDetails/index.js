@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { number, string } from 'prop-types'
+import { number, string, shape } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import {
   SectionHeader,
@@ -18,7 +18,7 @@ const costFormatter = new Intl.NumberFormat('nl-NL', {
 })
 
 const RequestAccessDetails = ({
-  organizationName,
+  organization,
   serviceName,
   oneTimeCosts,
   monthlyCosts,
@@ -36,7 +36,7 @@ const RequestAccessDetails = ({
           <StyledIconServices />
           <ServiceData>
             <strong>{serviceName}</strong>
-            <span>{organizationName}</span>
+            <span>{organization.name}</span>
           </ServiceData>
         </SectionContentService>
 
@@ -72,7 +72,10 @@ const RequestAccessDetails = ({
 }
 
 RequestAccessDetails.propTypes = {
-  organizationName: string.isRequired,
+  organization: shape({
+    serialNumber: string.isRequired,
+    name: string.isRequired,
+  }).isRequired,
   serviceName: string.isRequired,
   oneTimeCosts: number,
   monthlyCosts: number,

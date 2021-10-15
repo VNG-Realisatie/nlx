@@ -13,7 +13,11 @@ function throwErrorWhenNotInstanceOf(object, model) {
 }
 
 class DirectoryServiceModel {
-  organizationName = ''
+  organization = {
+    name: '',
+    serialNumber: '',
+  }
+
   serviceName = ''
   state = ''
   apiSpecificationType = ''
@@ -24,7 +28,6 @@ class DirectoryServiceModel {
   oneTimeCosts = 0
   monthlyCosts = 0
   requestCosts = 0
-  serialNumber = ''
 
   constructor({
     directoryServicesStore,
@@ -44,10 +47,6 @@ class DirectoryServiceModel {
     latestAccessRequest = null,
     latestAccessProof = null,
   }) => {
-    if (serviceData.organizationName) {
-      this.organizationName = serviceData.organizationName
-    }
-
     if (serviceData.serviceName) {
       this.serviceName = serviceData.serviceName
     }
@@ -80,8 +79,9 @@ class DirectoryServiceModel {
       this.requestCosts = serviceData.requestCosts / 100
     }
 
-    if (serviceData.serialNumber) {
-      this.serialNumber = serviceData.serialNumber
+    if (serviceData.organization) {
+      this.organization.name = serviceData.organization.name
+      this.organization.serialNumber = serviceData.organization.serialNumber
     }
 
     throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
@@ -94,7 +94,10 @@ class DirectoryServiceModel {
   }
 
   fetch = async () => {
-    await this.directoryServicesStore.fetch(this)
+    await this.directoryServicesStore.fetch(
+      this.organization.serialNumber,
+      this.serviceName,
+    )
   }
 
   requestAccess = flow(function* requestAccess() {

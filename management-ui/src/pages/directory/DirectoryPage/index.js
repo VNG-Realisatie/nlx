@@ -44,9 +44,12 @@ const DirectoryPage = () => {
           <DirectoryPageView services={services} selectedServiceName={name} />
           <Route
             exact
-            path="/directory/:organizationName/:serviceName"
+            path="/directory/:organizationSerialNumber/:serviceName"
             render={({ match }) => {
-              const service = getService(match.params)
+              const service = getService(
+                match.params.organizationSerialNumber,
+                match.params.serviceName,
+              )
 
               if (service) {
                 service.fetch()

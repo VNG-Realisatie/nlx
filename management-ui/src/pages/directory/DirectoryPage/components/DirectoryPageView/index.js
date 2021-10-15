@@ -29,7 +29,7 @@ const DirectoryPageView = ({ services, selectedServiceName }) => {
       <tbody>
         {services.map((service) => (
           <DirectoryServiceRow
-            key={`${service.organizationName}-${service.serviceName}`}
+            key={`${service.organization.serialNumber}-${service.serviceName}`}
             service={service}
             selected={service.serviceName === selectedServiceName}
           />
@@ -42,7 +42,10 @@ const DirectoryPageView = ({ services, selectedServiceName }) => {
 DirectoryPageView.propTypes = {
   services: arrayOf(
     shape({
-      organizationName: string.isRequired,
+      organization: shape({
+        serialNumber: string.isRequired,
+        name: string.isRequired,
+      }).isRequired,
       serviceName: string.isRequired,
     }),
   ).isRequired,

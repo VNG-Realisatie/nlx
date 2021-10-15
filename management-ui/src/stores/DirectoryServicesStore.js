@@ -19,17 +19,17 @@ class DirectoryServicesStore {
     this._directoryApiClient = directoryApiClient
   }
 
-  fetch = flow(function* fetch({ organizationName, serviceName }) {
+  fetch = flow(function* fetch(organizationSerialNumber, serviceName) {
     const serviceData =
       yield this._directoryApiClient.directoryGetOrganizationService({
-        organizationName,
+        organizationSerialNumber,
         serviceName,
       })
 
-    let directoryService = this.getService({
-      organizationName,
+    let directoryService = this.getService(
+      organizationSerialNumber,
       serviceName,
-    })
+    )
 
     if (!directoryService) {
       directoryService = this._updateFromServer(serviceData)
@@ -64,18 +64,18 @@ class DirectoryServicesStore {
     }
   }).bind(this)
 
-  getService = ({ organizationName, serviceName }) => {
+  getService = (organizationSerialNumber, serviceName) => {
     return this.services.find(
       (service) =>
-        service.organizationName === organizationName &&
+        service.organization.serialNumber === organizationSerialNumber &&
         service.serviceName === serviceName,
     )
   }
 
-  async requestAccess(directoryService) {
+  async requestAccess(organizationSerialNumber, serviceName) {
     return this._rootStore.outgoingAccessRequestStore.create({
-      organizationName: directoryService.organizationName,
-      serviceName: directoryService.serviceName,
+      organizationName: organizationSerialNumber,
+      serviceName: serviceName,
     })
   }
 
@@ -88,10 +88,10 @@ class DirectoryServicesStore {
       serviceData.latestAccessProof,
     )
 
-    const cachedDirectoryService = this.getService({
-      organizationName: serviceData.organizationName,
-      serviceName: serviceData.serviceName,
-    })
+    const cachedDirectoryService = this.getService(
+      serviceData.organizationSerialNumber,
+      serviceData.serviceName,
+    )
 
     if (cachedDirectoryService) {
       return cachedDirectoryService.update({

@@ -32,7 +32,10 @@ DirectoryDetailView.propTypes = {
     contactEmailAddress: string,
     documentationUrl: string,
     name: string.isRequired,
-    organization: string.isRequired,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
     status: string.isRequired,
     oneTimeCosts: number,
     monthlyCosts: number,

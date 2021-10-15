@@ -30,7 +30,7 @@ const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
   const { showDrawer } = useDrawerStack()
   const {
-    organizationName,
+    organization,
     serviceName,
     latestAccessRequest,
     latestAccessProof,
@@ -44,7 +44,7 @@ const DirectoryDetailView = ({ service }) => {
     okText: t('Send'),
     children: (
       <RequestAccessDetails
-        organizationName={organizationName}
+        organization={organization}
         serviceName={serviceName}
         oneTimeCosts={oneTimeCosts}
         monthlyCosts={monthlyCosts}
@@ -137,7 +137,10 @@ const DirectoryDetailView = ({ service }) => {
 
 DirectoryDetailView.propTypes = {
   service: shape({
-    organizationName: string.isRequired,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
     latestAccessRequest: object,
     latestAccessProof: object,
     requestAccess: func.isRequired,

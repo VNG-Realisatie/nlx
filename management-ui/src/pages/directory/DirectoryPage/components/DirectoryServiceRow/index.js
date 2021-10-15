@@ -9,20 +9,20 @@ import Table from '../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../../RequestAccessDetails'
 import getDirectoryServiceAccessUIState, {
+  SHOW_ACCESS_REVOKED,
   SHOW_REQUEST_ACCESS,
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_REJECTED,
-  SHOW_ACCESS_REVOKED,
 } from '../../../directoryServiceAccessState'
 import StateIndicator from '../../../../../components/StateIndicator'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessMessage from '../AccessMessage'
-import { StyledTdAccess, AccessMessageWrapper } from './index.styles'
+import { AccessMessageWrapper, StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service, ...props }) => {
   const { t } = useTranslation()
   const {
-    organizationName,
+    organization,
     serviceName,
     state,
     apiSpecificationType,
@@ -35,7 +35,7 @@ const DirectoryServiceRow = ({ service, ...props }) => {
     okText: t('Send'),
     children: (
       <RequestAccessDetails
-        organizationName={organizationName}
+        organizationName={organization.name} // TODO: use serial number
         serviceName={serviceName}
       />
     ),
@@ -72,12 +72,12 @@ const DirectoryServiceRow = ({ service, ...props }) => {
 
   return (
     <Table.Tr
-      to={`/directory/${organizationName}/${serviceName}`}
-      name={`${organizationName} - ${serviceName}`}
+      to={`/directory/${organization.serialNumber}/${serviceName}`}
+      name={`${organization.name} - ${serviceName}`}
       data-testid="directory-service-row"
       {...props}
     >
-      <Table.Td>{organizationName}</Table.Td>
+      <Table.Td>{organization.name}</Table.Td>
       <Table.Td>{serviceName}</Table.Td>
       <Table.Td>
         <StateIndicator state={state} />
@@ -99,7 +99,10 @@ const DirectoryServiceRow = ({ service, ...props }) => {
 
 DirectoryServiceRow.propTypes = {
   service: shape({
-    organizationName: string.isRequired,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
     serviceName: string.isRequired,
     state: string.isRequired,
     apiSpecificationType: string,

@@ -39,11 +39,11 @@ class OutgoingAccessRequestStore {
     return outgoingAccessRequest
   }
 
-  create = flow(function* create({ organizationName, serviceName }) {
+  create = flow(function* create(organizationSerialNumber, serviceName) {
     const response =
       yield this._managementApiClient.managementCreateAccessRequest({
         body: {
-          organizationName,
+          organizationSerialNumber,
           serviceName,
         },
       })

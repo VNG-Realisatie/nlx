@@ -14,11 +14,13 @@ test('initializing the model', () => {
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
     serviceData: {
-      organizationName: 'Organization',
+      organization: {
+        name: 'Organization',
+        serialNumber: '00000000000000000001',
+      },
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
-      serialNumber: '',
     },
   })
 
@@ -27,6 +29,11 @@ test('initializing the model', () => {
 
   expect(directoryService.latestAccessRequest).toBeNull()
   expect(directoryService.latestAccessProof).toBeNull()
+
+  expect(directoryService.organization.name).toEqual('Organization')
+  expect(directoryService.organization.serialNumber).toEqual(
+    '00000000000000000001',
+  )
 
   const latestAccessRequest = new OutgoingAccessRequestModel({
     outgoingAccessRequestStore: {},
@@ -56,7 +63,10 @@ test('updating the model with an invalid latest access request and access proof'
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
     serviceData: {
-      organizationName: 'Organization',
+      organization: {
+        name: 'Organization',
+        serialNumber: '00000000000000000001',
+      },
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
@@ -85,7 +95,10 @@ test('(re-)fetching the model', async () => {
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: rootStore.directoryServicesStore,
     serviceData: {
-      organizationName: 'Organization',
+      organization: {
+        name: 'Organization',
+        serialNumber: '00000000000000000001',
+      },
       serviceName: 'Service',
       state: 'up',
       apiSpecificationType: 'API',
@@ -143,7 +156,10 @@ describe('access to this service', () => {
     directoryService = new DirectoryServiceModel({
       directoryServicesStore: {},
       serviceData: {
-        organizationName: 'Organization',
+        organization: {
+          name: 'Organization',
+          serialNumber: '00000000000000000001',
+        },
         serviceName: 'Service',
         state: 'up',
         apiSpecificationType: 'API',

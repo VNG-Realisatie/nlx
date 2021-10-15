@@ -59,7 +59,10 @@ const DirectoryDetailPage = ({ service, parentUrl }) => {
 
 DirectoryDetailPage.propTypes = {
   service: shape({
-    organizationName: string.isRequired,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
     serviceName: string.isRequired,
     state: string.isRequired,
     apiSpecificationType: string,
@@ -70,7 +73,6 @@ DirectoryDetailPage.propTypes = {
     fetch: func.isRequired,
     requestAccess: func.isRequired,
     retryRequestAccess: func.isRequired,
-    serialNumber: string.isRequired,
   }),
   parentUrl: string,
 }
