@@ -455,7 +455,7 @@ message AuditLogRecord {
   }
 
   message Service {
-    string organization = 1;
+    Organization organization = 1;
     string service = 2;
   }
 

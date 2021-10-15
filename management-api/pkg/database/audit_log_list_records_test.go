@@ -9,10 +9,11 @@ package database_test
 import (
 	"context"
 	"database/sql"
+	"testing"
+
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"testing"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -44,10 +45,13 @@ func TestListAuditLogRecords(t *testing.T) {
 					},
 					Services: []database.AuditLogService{
 						{
-							AuditLogID:   1,
-							Service:      "fixture-service-name",
-							Organization: "fixture-organization-name",
-							CreatedAt:    fixtureTime,
+							AuditLogID: 1,
+							Service:    "fixture-service-name",
+							Organization: database.AuditLogServiceOrganization{
+								SerialNumber: "00000000000000000001",
+								Name:         "fixture-organization-name",
+							},
+							CreatedAt: fixtureTime,
 						},
 					},
 					CreatedAt: fixtureTime,

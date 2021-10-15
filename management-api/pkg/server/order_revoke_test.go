@@ -36,13 +36,13 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 						gomock.Any(),
 						"Jane Doe",
 						"nlxctl",
-						"test-delegatee",
+						"00000000000000000001",
 						"test-reference",
 					)
 
 				mocks.db.
 					EXPECT().
-					RevokeOutgoingOrderByReference(ctx, "test-delegatee", "test-reference", gomock.Any()).
+					RevokeOutgoingOrderByReference(ctx, "00000000000000000001", "test-reference", gomock.Any()).
 					Return(errors.New("arbitrary error"))
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -50,7 +50,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			&api.RevokeOutgoingOrderRequest{
-				Delegatee: "test-delegatee",
+				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
 			nil,
@@ -64,7 +64,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 						gomock.Any(),
 						"Jane Doe",
 						"nlxctl",
-						"test-delegatee",
+						"00000000000000000001",
 						"test-reference",
 					).
 					Return(errors.New("arbitrary error"))
@@ -74,7 +74,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			&api.RevokeOutgoingOrderRequest{
-				Delegatee: "test-delegatee",
+				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
 			nil,
@@ -88,13 +88,13 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 						gomock.Any(),
 						"Jane Doe",
 						"nlxctl",
-						"test-delegatee",
+						"00000000000000000001",
 						"test-reference",
 					)
 
 				mocks.db.
 					EXPECT().
-					RevokeOutgoingOrderByReference(ctx, "test-delegatee", "test-reference", gomock.Any()).
+					RevokeOutgoingOrderByReference(ctx, "00000000000000000001", "test-reference", gomock.Any()).
 					Return(database.ErrNotFound)
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -102,11 +102,11 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			&api.RevokeOutgoingOrderRequest{
-				Delegatee: "test-delegatee",
+				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
 			nil,
-			status.Error(codes.NotFound, "outgoing order with delegatee test-delegatee and reference test-reference does not exist"),
+			status.Error(codes.NotFound, "outgoing order with delegatee 00000000000000000001 and reference test-reference does not exist"),
 		},
 		"when_delegatee_missing": {
 			func(ctx context.Context, mocks serviceMocks) {},
@@ -128,7 +128,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			&api.RevokeOutgoingOrderRequest{
-				Delegatee: "test-delegatee",
+				Delegatee: "00000000000000000001",
 				Reference: "",
 			},
 			nil,
@@ -142,13 +142,13 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 						gomock.Any(),
 						"Jane Doe",
 						"nlxctl",
-						"test-delegatee",
+						"00000000000000000001",
 						"test-reference",
 					)
 
 				mocks.db.
 					EXPECT().
-					RevokeOutgoingOrderByReference(ctx, "test-delegatee", "test-reference", gomock.Any()).
+					RevokeOutgoingOrderByReference(ctx, "00000000000000000001", "test-reference", gomock.Any()).
 					Return(nil)
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -156,7 +156,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			&api.RevokeOutgoingOrderRequest{
-				Delegatee: "test-delegatee",
+				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
 			&emptypb.Empty{},

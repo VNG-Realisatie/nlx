@@ -169,7 +169,8 @@ func TestRevokeAccessGrant(t *testing.T) {
 								Name: "test-service",
 							},
 							Organization: database.IncomingAccessRequestOrganization{
-								Name: "test-organization",
+								SerialNumber: "00000000000000000001",
+								Name:         "test-organization",
 							},
 						}}, nil,
 				)
@@ -180,6 +181,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 						gomock.Any(),
 						"Jane Doe",
 						"nlxctl",
+						"00000000000000000001",
 						"test-organization",
 						"test-service",
 					)
@@ -233,8 +235,8 @@ func createDummyAccessGrant(createdAt time.Time) *database.AccessGrant {
 			ID:        1,
 			ServiceID: 1,
 			Organization: database.IncomingAccessRequestOrganization{
-				Name:         "test-organization",
 				SerialNumber: "00000000000000000001",
+				Name:         "test-organization",
 			},
 			State:                database.IncomingAccessRequestReceived,
 			PublicKeyFingerprint: "test-finger-print",

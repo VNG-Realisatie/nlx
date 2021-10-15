@@ -101,8 +101,11 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 
 		for j, service := range record.Services {
 			convertedRecords[i].Services[j] = &api.AuditLogRecord_Service{
-				Organization: service.Organization,
-				Service:      service.Service,
+				Organization: &api.Organization{
+					SerialNumber: service.Organization.SerialNumber,
+					Name:         service.Organization.Name,
+				},
+				Service: service.Service,
 			}
 		}
 	}

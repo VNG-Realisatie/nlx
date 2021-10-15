@@ -42,7 +42,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		return api.CreateOutgoingOrderRequest{
 			Reference:    "a-reference",
 			Description:  "a-description",
-			Delegatee:    "a-delegatee",
+			Delegatee:    "00000000000000000001",
 			PublicKeyPEM: testPublicKeyPEM,
 			ValidFrom:    timestamppb.New(validFrom),
 			ValidUntil:   timestamppb.New(validUntil),
@@ -50,7 +50,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				{
 					Organization: &api.Organization{
 						Name:         "a-organization",
-						SerialNumber: "00000000000000000001",
+						SerialNumber: "10000000000000000001",
 					},
 					Service: "a-service",
 				},
@@ -98,10 +98,10 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		"when_providing_an_invalid_delegatee": {
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validCreateOutgoingOrderRequest()
-				request.Delegatee = "invalid / delegatee"
+				request.Delegatee = "00000000000000000000000001_too_long"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: must be in a valid format."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: organization serial number must be in a valid format: too long, max 20 bytes."),
 		},
 		"when_providing_an_end_date_which_is_before_the_start_date": {
 			request: func() *api.CreateOutgoingOrderRequest {
@@ -144,10 +144,13 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
-							Organization: "a-organization",
-							Service:      "a-service",
+							Organization: auditlog.RecordServiceOrganization{
+								SerialNumber: "10000000000000000001",
+								Name:         "a-organization",
+							},
+							Service: "a-service",
 						},
 					})
 
@@ -157,14 +160,14 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						Reference:    "a-reference",
 						Description:  "a-description",
 						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "a-delegatee",
+						Delegatee:    "00000000000000000001",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
 							{
 								Organization: database.OutgoingOrderServiceOrganization{
+									SerialNumber: "10000000000000000001",
 									Name:         "a-organization",
-									SerialNumber: "00000000000000000001",
 								},
 								Service: "a-service",
 							},
@@ -176,17 +179,20 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request := validCreateOutgoingOrderRequest()
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "an order with reference a-reference for a-delegatee already exist"),
+			wantErr: status.Error(codes.InvalidArgument, "an order with reference a-reference for 00000000000000000001 already exist"),
 		},
 		"when_creating_the_order_fails": {
 			wantErr: status.Error(codes.Internal, "failed to create outgoing order"),
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
-							Organization: "a-organization",
-							Service:      "a-service",
+							Organization: auditlog.RecordServiceOrganization{
+								SerialNumber: "10000000000000000001",
+								Name:         "a-organization",
+							},
+							Service: "a-service",
 						},
 					})
 
@@ -196,14 +202,14 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						Reference:    "a-reference",
 						Description:  "a-description",
 						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "a-delegatee",
+						Delegatee:    "00000000000000000001",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
 							{
 								Organization: database.OutgoingOrderServiceOrganization{
+									SerialNumber: "10000000000000000001",
 									Name:         "a-organization",
-									SerialNumber: "00000000000000000001",
 								},
 								Service: "a-service",
 							},
@@ -220,10 +226,13 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
-							Organization: "a-organization",
-							Service:      "a-service",
+							Organization: auditlog.RecordServiceOrganization{
+								SerialNumber: "10000000000000000001",
+								Name:         "a-organization",
+							},
+							Service: "a-service",
 						},
 					}).
 					Return(errors.New("arbitrary error"))
@@ -242,14 +251,14 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						Reference:    "a-reference",
 						Description:  "a-description",
 						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "a-delegatee",
+						Delegatee:    "00000000000000000001",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
 							{
 								Organization: database.OutgoingOrderServiceOrganization{
+									SerialNumber: "10000000000000000001",
 									Name:         "a-organization",
-									SerialNumber: "00000000000000000001",
 								},
 								Service: "a-service",
 							},
@@ -259,10 +268,13 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "a-delegatee", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
-							Organization: "a-organization",
-							Service:      "a-service",
+							Organization: auditlog.RecordServiceOrganization{
+								SerialNumber: "10000000000000000001",
+								Name:         "a-organization",
+							},
+							Service: "a-service",
 						},
 					})
 			},

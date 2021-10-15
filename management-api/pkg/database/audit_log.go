@@ -44,10 +44,15 @@ func (a *AuditLog) TableName() string {
 	return "nlx_management.audit_logs"
 }
 
+type AuditLogServiceOrganization struct {
+	SerialNumber string
+	Name         string
+}
+
 type AuditLogService struct {
 	AuditLogID   uint64
 	Service      string
-	Organization string
+	Organization AuditLogServiceOrganization `gorm:"embedded;embeddedPrefix:organization_"`
 	CreatedAt    time.Time
 }
 

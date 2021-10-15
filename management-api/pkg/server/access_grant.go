@@ -67,7 +67,7 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
-	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.username, userInfo.userAgent, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
+	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.username, userInfo.userAgent, accessGrant.IncomingAccessRequest.Organization.SerialNumber, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

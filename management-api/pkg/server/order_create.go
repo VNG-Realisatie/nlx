@@ -43,8 +43,11 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 
 	for _, service := range order.Services {
 		services = append(services, auditlog.RecordService{
-			Organization: service.Organization.Name,
-			Service:      service.Service,
+			Organization: auditlog.RecordServiceOrganization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			},
+			Service: service.Service,
 		})
 	}
 

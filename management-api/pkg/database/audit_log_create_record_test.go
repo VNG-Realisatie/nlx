@@ -47,10 +47,13 @@ func TestCreateAuditLogRecord(t *testing.T) {
 					Data:       sql.NullString{},
 					Services: []database.AuditLogService{
 						{
-							AuditLogID:   1,
-							Service:      "fixture-service-name",
-							Organization: "fixture-organization-name",
-							CreatedAt:    now,
+							AuditLogID: 1,
+							Service:    "fixture-service-name",
+							Organization: database.AuditLogServiceOrganization{
+								SerialNumber: "00000000000000000001",
+								Name:         "fixture-organization-name",
+							},
+							CreatedAt: now,
 						},
 					},
 					CreatedAt: now,
@@ -65,10 +68,13 @@ func TestCreateAuditLogRecord(t *testing.T) {
 				Data:       sql.NullString{},
 				Services: []database.AuditLogService{
 					{
-						AuditLogID:   1,
-						Service:      "fixture-service-name",
-						Organization: "fixture-organization-name",
-						CreatedAt:    now,
+						AuditLogID: 1,
+						Service:    "fixture-service-name",
+						Organization: database.AuditLogServiceOrganization{
+							SerialNumber: "00000000000000000001",
+							Name:         "fixture-organization-name",
+						},
+						CreatedAt: now,
 					},
 				},
 				CreatedAt: now,

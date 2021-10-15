@@ -1,5 +1,6 @@
 - id: 1
   audit_log_id: 1
-  organization: fixture-organization-name
+  organization_name: fixture-organization-name
+  organization_serial_number: "00000000000000000001"
   service: fixture-service-name
   created_at: 2021-01-02 01:02:03.000000+00

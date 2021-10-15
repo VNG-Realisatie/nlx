@@ -114,7 +114,7 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.Name, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -153,7 +153,7 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.Name, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

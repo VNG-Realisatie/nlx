@@ -36,45 +36,45 @@ func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
 }
 
 // AccessGrantRevoke mocks base method.
-func (m *MockLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, serviceName string) error {
+func (m *MockLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, serviceName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AccessGrantRevoke", ctx, userName, userAgent, organization, serviceName)
+	ret := m.ctrl.Call(m, "AccessGrantRevoke", ctx, userName, userAgent, organizationSerialNumber, organizationName, serviceName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AccessGrantRevoke indicates an expected call of AccessGrantRevoke.
-func (mr *MockLoggerMockRecorder) AccessGrantRevoke(ctx, userName, userAgent, organization, serviceName interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) AccessGrantRevoke(ctx, userName, userAgent, organizationSerialNumber, organizationName, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessGrantRevoke", reflect.TypeOf((*MockLogger)(nil).AccessGrantRevoke), ctx, userName, userAgent, organization, serviceName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessGrantRevoke", reflect.TypeOf((*MockLogger)(nil).AccessGrantRevoke), ctx, userName, userAgent, organizationSerialNumber, organizationName, serviceName)
 }
 
 // IncomingAccessRequestAccept mocks base method.
-func (m *MockLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error {
+func (m *MockLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IncomingAccessRequestAccept", ctx, userName, userAgent, organization, service)
+	ret := m.ctrl.Call(m, "IncomingAccessRequestAccept", ctx, userName, userAgent, organizationSerialNumber, organizationName, service)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // IncomingAccessRequestAccept indicates an expected call of IncomingAccessRequestAccept.
-func (mr *MockLoggerMockRecorder) IncomingAccessRequestAccept(ctx, userName, userAgent, organization, service interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) IncomingAccessRequestAccept(ctx, userName, userAgent, organizationSerialNumber, organizationName, service interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncomingAccessRequestAccept", reflect.TypeOf((*MockLogger)(nil).IncomingAccessRequestAccept), ctx, userName, userAgent, organization, service)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncomingAccessRequestAccept", reflect.TypeOf((*MockLogger)(nil).IncomingAccessRequestAccept), ctx, userName, userAgent, organizationSerialNumber, organizationName, service)
 }
 
 // IncomingAccessRequestReject mocks base method.
-func (m *MockLogger) IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error {
+func (m *MockLogger) IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IncomingAccessRequestReject", ctx, userName, userAgent, organization, service)
+	ret := m.ctrl.Call(m, "IncomingAccessRequestReject", ctx, userName, userAgent, organizationSerialNumber, organizationName, service)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // IncomingAccessRequestReject indicates an expected call of IncomingAccessRequestReject.
-func (mr *MockLoggerMockRecorder) IncomingAccessRequestReject(ctx, userName, userAgent, organization, service interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) IncomingAccessRequestReject(ctx, userName, userAgent, organizationSerialNumber, organizationName, service interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncomingAccessRequestReject", reflect.TypeOf((*MockLogger)(nil).IncomingAccessRequestReject), ctx, userName, userAgent, organization, service)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncomingAccessRequestReject", reflect.TypeOf((*MockLogger)(nil).IncomingAccessRequestReject), ctx, userName, userAgent, organizationSerialNumber, organizationName, service)
 }
 
 // ListAll mocks base method.
@@ -177,17 +177,17 @@ func (mr *MockLoggerMockRecorder) OrganizationSettingsUpdate(ctx, userName, user
 }
 
 // OutgoingAccessRequestCreate mocks base method.
-func (m *MockLogger) OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error {
+func (m *MockLogger) OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organizationSerialNumber, service string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OutgoingAccessRequestCreate", ctx, userName, userAgent, organization, service)
+	ret := m.ctrl.Call(m, "OutgoingAccessRequestCreate", ctx, userName, userAgent, organizationSerialNumber, service)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // OutgoingAccessRequestCreate indicates an expected call of OutgoingAccessRequestCreate.
-func (mr *MockLoggerMockRecorder) OutgoingAccessRequestCreate(ctx, userName, userAgent, organization, service interface{}) *gomock.Call {
+func (mr *MockLoggerMockRecorder) OutgoingAccessRequestCreate(ctx, userName, userAgent, organizationSerialNumber, service interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutgoingAccessRequestCreate", reflect.TypeOf((*MockLogger)(nil).OutgoingAccessRequestCreate), ctx, userName, userAgent, organization, service)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutgoingAccessRequestCreate", reflect.TypeOf((*MockLogger)(nil).OutgoingAccessRequestCreate), ctx, userName, userAgent, organizationSerialNumber, service)
 }
 
 // ServiceCreate mocks base method.

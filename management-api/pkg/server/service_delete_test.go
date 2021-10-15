@@ -56,7 +56,7 @@ func TestDeleteService(t *testing.T) {
 			})),
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().
-					DeleteService(gomock.Any(), "my-service", "nlx-test").
+					DeleteService(gomock.Any(), "my-service", "00000000000000000001").
 					Return(fmt.Errorf("error"))
 
 				mocks.al.EXPECT().
@@ -75,7 +75,7 @@ func TestDeleteService(t *testing.T) {
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					DeleteService(gomock.Any(), "my-service", "nlx-test")
+					DeleteService(gomock.Any(), "my-service", "00000000000000000001")
 
 				mocks.al.
 					EXPECT().

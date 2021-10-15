@@ -25,8 +25,13 @@ type RecordData struct {
 	Reference *string
 }
 
+type RecordServiceOrganization struct {
+	SerialNumber string
+	Name         string
+}
+
 type RecordService struct {
-	Organization string
+	Organization RecordServiceOrganization
 	Service      string
 }
 
@@ -54,10 +59,10 @@ type Logger interface {
 	LoginSuccess(ctx context.Context, userName, userAgent string) error
 	LoginFail(ctx context.Context, userAgent string) error
 	LogoutSuccess(ctx context.Context, userName, userAgent string) error
-	IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error
-	IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error
-	AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, serviceName string) error
-	OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error
+	IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error
+	IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error
+	AccessGrantRevoke(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, serviceName string) error
+	OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organizationSerialNumber, service string) error
 	OrderCreate(ctx context.Context, userName, userAgent, delegatee string, services []RecordService) error
 	OrderOutgoingRevoke(ctx context.Context, userName, userAgent, delegatee, reference string) error
 	ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error

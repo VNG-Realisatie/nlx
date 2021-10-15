@@ -158,7 +158,7 @@ func TestListAuditLogs(t *testing.T) {
 					UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
 					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 					Data: &auditlog.RecordData{
-						Delegatee: newStringPointer("test-delegatee"),
+						Delegatee: newStringPointer("00000000000000000001"),
 						Reference: newStringPointer("test-reference"),
 					},
 				},
@@ -177,7 +177,7 @@ func TestListAuditLogs(t *testing.T) {
 						Services:        []*api.AuditLogRecord_Service{},
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 						Data: &api.AuditLogRecordMetadata{
-							Delegatee: "test-delegatee",
+							Delegatee: "00000000000000000001",
 							Reference: "test-reference",
 						},
 					},

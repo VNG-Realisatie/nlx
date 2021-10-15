@@ -367,7 +367,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		{
 			"update_state_fails",
 			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
 				return auditLogger
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -380,7 +380,8 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			},
 			&database.IncomingAccessRequest{
 				Organization: database.IncomingAccessRequestOrganization{
-					Name: "test-organization",
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
 				},
 				Service: &database.Service{
 					Name: "test-service",
@@ -395,7 +396,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		{
 			"happy_flow",
 			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
 				return auditLogger
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -408,7 +409,8 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			},
 			&database.IncomingAccessRequest{
 				Organization: database.IncomingAccessRequestOrganization{
-					Name: "test-organization",
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
 				},
 				Service: &database.Service{
 					Name: "test-service",
@@ -482,7 +484,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		{
 			"update_state_fails",
 			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
 				return auditLogger
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -495,7 +497,8 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			},
 			&database.IncomingAccessRequest{
 				Organization: database.IncomingAccessRequestOrganization{
-					Name: "test-organization",
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
 				},
 				Service: &database.Service{
 					Name: "other-service",
@@ -510,7 +513,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		{
 			"happy_flow",
 			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "test-organization", "test-service")
+				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
 				return auditLogger
 			},
 			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -523,7 +526,8 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			},
 			&database.IncomingAccessRequest{
 				Organization: database.IncomingAccessRequestOrganization{
-					Name: "test-organization",
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization",
 				},
 				Service: &database.Service{
 					Name: "other-service",

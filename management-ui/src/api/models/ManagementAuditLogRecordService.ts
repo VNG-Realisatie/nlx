@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,10 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface ManagementAuditLogRecordService {
     /**
      * 
-     * @type {string}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementAuditLogRecordService
      */
-    organization?: string;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -43,7 +50,7 @@ export function ManagementAuditLogRecordServiceFromJSONTyped(json: any, ignoreDi
     }
     return {
         
-        'organization': !exists(json, 'organization') ? undefined : json['organization'],
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'service': !exists(json, 'service') ? undefined : json['service'],
     };
 }
@@ -57,7 +64,7 @@ export function ManagementAuditLogRecordServiceToJSON(value?: ManagementAuditLog
     }
     return {
         
-        'organization': value.organization,
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'service': value.service,
     };
 }

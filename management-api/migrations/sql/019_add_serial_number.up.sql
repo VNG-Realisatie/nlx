@@ -17,4 +17,7 @@ ALTER TABLE nlx_management.incoming_orders_services ADD COLUMN organization_seri
 ALTER TABLE nlx_management.outgoing_orders_services RENAME COLUMN organization TO organization_name;
 ALTER TABLE nlx_management.outgoing_orders_services ADD COLUMN organization_serial_number VARCHAR(20) NOT NULL;
 
+ALTER TABLE nlx_management.audit_logs_services RENAME COLUMN organization TO organization_name;
+ALTER TABLE nlx_management.audit_logs_services ADD COLUMN organization_serial_number VARCHAR(20) NOT NULL;
+
 COMMIT;

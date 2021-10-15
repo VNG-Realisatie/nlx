@@ -85,7 +85,7 @@ func TestDownloadFinanceExport(t *testing.T) {
 
 				logDB.EXPECT().
 					FilterRecords(ctx, &txlogdb.Filters{
-						Destination: "nlx-test",
+						Destination: "00000000000000000001",
 						Direction:   transactionlog.DirectionIn,
 					}).
 					Return(nil, errors.New("random error"))
@@ -105,7 +105,7 @@ func TestDownloadFinanceExport(t *testing.T) {
 
 				logDB.EXPECT().
 					FilterRecords(ctx, &txlogdb.Filters{
-						Destination: "nlx-test",
+						Destination: "00000000000000000001",
 						Direction:   transactionlog.DirectionIn,
 					}).
 					Return([]txlogdb.Record{

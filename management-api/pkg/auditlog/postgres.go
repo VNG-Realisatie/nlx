@@ -72,8 +72,11 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) ([]*Record
 
 		for j, service := range record.Services {
 			convertedRecords[i].Services[j] = RecordService{
-				Organization: service.Organization,
-				Service:      service.Service,
+				Organization: RecordServiceOrganization{
+					SerialNumber: service.Organization.SerialNumber,
+					Name:         service.Organization.Name,
+				},
+				Service: service.Service,
 			}
 		}
 	}
@@ -116,14 +119,17 @@ func (a *PostgresLogger) LogoutSuccess(ctx context.Context, userName, userAgent 
 	return err
 }
 
-func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organization, service string) error {
+func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error {
 	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Organization: organization,
-				Service:      service,
+				Organization: database.AuditLogServiceOrganization{
+					SerialNumber: organizationSerialNumber,
+					Name:         organizationName,
+				},
+				Service: service,
 			},
 		},
 		ActionType: database.IncomingAccessRequestAccept,
@@ -134,14 +140,17 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userNa
 	return err
 }
 
-func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organization, service string) error {
+func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error {
 	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Organization: organization,
-				Service:      service,
+				Organization: database.AuditLogServiceOrganization{
+					SerialNumber: organizationSerialNumber,
+					Name:         organizationName,
+				},
+				Service: service,
 			},
 		},
 		ActionType: database.IncomingAccessRequestReject,
@@ -152,14 +161,17 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userNa
 	return err
 }
 
-func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organization, service string) error {
+func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error {
 	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Organization: organization,
-				Service:      service,
+				Organization: database.AuditLogServiceOrganization{
+					SerialNumber: organizationSerialNumber,
+					Name:         organizationName,
+				},
+				Service: service,
 			},
 		},
 		ActionType: database.AccessGrantRevoke,
@@ -170,14 +182,16 @@ func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAg
 	return err
 }
 
-func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organization, service string) error {
+func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organizationSerialNumber, service string) error {
 	record := &database.AuditLog{
 		UserAgent: userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Organization: organization,
-				Service:      service,
+				Organization: database.AuditLogServiceOrganization{
+					SerialNumber: organizationSerialNumber,
+				},
+				Service: service,
 			},
 		},
 		ActionType: database.OutgoingAccessRequestCreate,
@@ -250,8 +264,10 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 
 	for i, service := range services {
 		record.Services[i] = database.AuditLogService{
-			Organization: service.Organization,
-			Service:      service.Service,
+			Organization: database.AuditLogServiceOrganization{
+				SerialNumber: delegatee,
+			},
+			Service: service.Service,
 		}
 	}
 
