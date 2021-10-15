@@ -32,7 +32,7 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 	require.NoError(t, err)
 
 	type args struct {
-		organizationName string
+		organizationSerialNumber string
 	}
 
 	tests := map[string]struct {
@@ -44,7 +44,7 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 		"happy_flow_when_no_orders": {
 			loadFixtures: false,
 			args: args{
-				organizationName: "arbitrary",
+				organizationSerialNumber: "arbitrary",
 			},
 			want:    []*database.OutgoingOrder{},
 			wantErr: nil,
@@ -52,14 +52,14 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				organizationName: "fixture-delegatee-three",
+				organizationSerialNumber: "00000000000000000003",
 			},
 			want: []*database.OutgoingOrder{
 				{
 					ID:           4,
 					Reference:    "fixture-reference-four",
 					Description:  "fixture-description",
-					Delegatee:    "fixture-delegatee-three",
+					Delegatee:    "00000000000000000003",
 					PublicKeyPEM: fixturePublicKeyPEM,
 					RevokedAt:    sql.NullTime{},
 					ValidFrom:    fixtureTime,
@@ -71,7 +71,7 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 					ID:           3,
 					Reference:    "fixture-reference-three",
 					Description:  "fixture-description",
-					Delegatee:    "fixture-delegatee-three",
+					Delegatee:    "00000000000000000003",
 					PublicKeyPEM: fixturePublicKeyPEM,
 					RevokedAt: sql.NullTime{
 						Time:  fixtureTime,
@@ -96,7 +96,7 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.ListOutgoingOrdersByOrganization(context.Background(), tt.args.organizationName)
+			got, err := configDb.ListOutgoingOrdersByOrganization(context.Background(), tt.args.organizationSerialNumber)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {

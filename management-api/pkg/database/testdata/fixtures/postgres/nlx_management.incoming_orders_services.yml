@@ -1,9 +1,9 @@
 - incoming_order_id: 1
   service: fixture-service
-  organization_serial_number: "00000000000000000001"
+  organization_serial_number: "10000000000000000001"
   organization_name: fixture-organization
 
 - incoming_order_id: 2
   service: fixture-service-two
-  organization_serial_number: "00000000000000000002"
+  organization_serial_number: "10000000000000000002"
   organization_name: fixture-organization-two

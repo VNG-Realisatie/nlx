@@ -8,10 +8,11 @@ package database_test
 
 import (
 	"context"
+	"testing"
+
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"testing"
 
 	"go.nlx.io/nlx/management-api/domain"
 )
@@ -34,29 +35,29 @@ func TestListIncomingOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator",
+					Delegator:   "00000000000000000001",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service", "00000000000000000001", "fixture-organization"),
+						domain.NewIncomingOrderService("fixture-service", "10000000000000000001", "fixture-organization"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-two",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-two",
+					Delegator:   "00000000000000000002",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "10000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-three",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-three",
+					Delegator:   "00000000000000000003",
 					RevokedAt:   &fixtureTime,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,

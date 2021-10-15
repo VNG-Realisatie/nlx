@@ -44,7 +44,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "fixture-reference",
 						Description: "new-description",
-						Delegator:   "fixture-delegator",
+						Delegator:   "00000000000000000001",
 						RevokedAt:   sql.NullTime{},
 						ValidFrom:   fixtureTime,
 						ValidUntil:  fixtureTime,
@@ -56,18 +56,18 @@ func TestSynchronizeOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-two",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-two",
+					Delegator:   "00000000000000000002",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "10000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-three",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-three",
+					Delegator:   "00000000000000000003",
 					RevokedAt:   &fixtureTime,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
@@ -76,7 +76,7 @@ func TestSynchronizeOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference",
 					Description: "new-description",
-					Delegator:   "fixture-delegator",
+					Delegator:   "00000000000000000001",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
@@ -92,7 +92,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "fixture-reference",
 						Description: "new-description",
-						Delegator:   "fixture-delegator",
+						Delegator:   "00000000000000000001",
 						RevokedAt:   sql.NullTime{},
 						ValidFrom:   fixtureTime,
 						ValidUntil:  fixtureTime,
@@ -101,7 +101,7 @@ func TestSynchronizeOrders(t *testing.T) {
 								Service: "new-service-one",
 								Organization: database.IncomingOrderServiceOrganization{
 									Name:         "new-organization-one",
-									SerialNumber: "00000000000000000001",
+									SerialNumber: "10000000000000000001",
 								},
 							},
 						},
@@ -112,18 +112,18 @@ func TestSynchronizeOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-two",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-two",
+					Delegator:   "00000000000000000002",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "10000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-three",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-three",
+					Delegator:   "00000000000000000003",
 					RevokedAt:   &fixtureTime,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
@@ -132,12 +132,12 @@ func TestSynchronizeOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference",
 					Description: "new-description",
-					Delegator:   "fixture-delegator",
+					Delegator:   "00000000000000000001",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("new-service-one", "00000000000000000001", "new-organization-one"),
+						domain.NewIncomingOrderService("new-service-one", "10000000000000000001", "new-organization-one"),
 					},
 				}),
 			},
@@ -150,7 +150,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "reference-one",
 						Description: "description",
-						Delegator:   "delegator-one",
+						Delegator:   "20000000000000000001",
 						RevokedAt:   sql.NullTime{},
 						ValidFrom:   fixtureTime,
 						ValidUntil:  fixtureTime,
@@ -159,7 +159,7 @@ func TestSynchronizeOrders(t *testing.T) {
 								Service: "service-one",
 								Organization: database.IncomingOrderServiceOrganization{
 									Name:         "organization-one",
-									SerialNumber: "00000000000000000001",
+									SerialNumber: "10000000000000000001",
 								},
 							},
 						},
@@ -167,7 +167,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "reference-two",
 						Description: "description",
-						Delegator:   "delegator-two",
+						Delegator:   "20000000000000000002",
 						RevokedAt:   sql.NullTime{},
 						ValidFrom:   fixtureTime,
 						ValidUntil:  fixtureTime,
@@ -176,7 +176,7 @@ func TestSynchronizeOrders(t *testing.T) {
 								Service: "service-two",
 								Organization: database.IncomingOrderServiceOrganization{
 									Name:         "organization-two",
-									SerialNumber: "00000000000000000002",
+									SerialNumber: "10000000000000000002",
 								},
 							},
 						},
@@ -187,29 +187,29 @@ func TestSynchronizeOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator",
+					Delegator:   "00000000000000000001",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service", "00000000000000000001", "fixture-organization"),
+						domain.NewIncomingOrderService("fixture-service", "10000000000000000001", "fixture-organization"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-two",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-two",
+					Delegator:   "00000000000000000002",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("fixture-service-two", "00000000000000000002", "fixture-organization-two"),
+						domain.NewIncomingOrderService("fixture-service-two", "10000000000000000002", "fixture-organization-two"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "fixture-reference-three",
 					Description: "fixture-description",
-					Delegator:   "fixture-delegator-three",
+					Delegator:   "00000000000000000003",
 					RevokedAt:   &fixtureTime,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
@@ -218,23 +218,23 @@ func TestSynchronizeOrders(t *testing.T) {
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "reference-one",
 					Description: "description",
-					Delegator:   "delegator-one",
+					Delegator:   "20000000000000000001",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("service-one", "00000000000000000001", "organization-one"),
+						domain.NewIncomingOrderService("service-one", "10000000000000000001", "organization-one"),
 					},
 				}),
 				newIncomingOrder(t, &domain.NewIncomingOrderArgs{
 					Reference:   "reference-two",
 					Description: "description",
-					Delegator:   "delegator-two",
+					Delegator:   "20000000000000000002",
 					RevokedAt:   nil,
 					ValidFrom:   fixtureTime,
 					ValidUntil:  fixtureTime,
 					Services: []domain.IncomingOrderService{
-						domain.NewIncomingOrderService("service-two", "00000000000000000002", "organization-two"),
+						domain.NewIncomingOrderService("service-two", "10000000000000000002", "organization-two"),
 					},
 				}),
 			},

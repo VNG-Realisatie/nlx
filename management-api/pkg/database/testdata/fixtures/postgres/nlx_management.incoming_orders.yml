@@ -15,7 +15,7 @@
     O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
     P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
     -----END PUBLIC KEY-----
-  delegator: fixture-delegator
+  delegator: "00000000000000000001"
   reference: fixture-reference
   valid_from: 2021-01-02 01:02:03.000000+00
   valid_until: 2021-01-02 01:02:03.000000+00
@@ -39,7 +39,7 @@
     O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
     P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
     -----END PUBLIC KEY-----
-  delegator: fixture-delegator-two
+  delegator: "00000000000000000002"
   reference: fixture-reference-two
   valid_from: 2021-01-02 01:02:03.000000+00
   valid_until: 2021-01-02 01:02:03.000000+00
@@ -63,7 +63,7 @@
     O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
     P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
     -----END PUBLIC KEY-----
-  delegator: fixture-delegator-three
+  delegator: "00000000000000000003"
   reference: fixture-reference-three
   valid_from: 2021-01-02 01:02:03.000000+00
   valid_until: 2021-01-02 01:02:03.000000+00

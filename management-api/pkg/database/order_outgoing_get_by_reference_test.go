@@ -58,7 +58,7 @@ func TestGetOutgoingOrderByReference(t *testing.T) {
 				ID:           1,
 				Reference:    "fixture-reference",
 				Description:  "fixture-description",
-				Delegatee:    "fixture-delegatee",
+				Delegatee:    "00000000000000000001",
 				PublicKeyPEM: fixturePublicKeyPEM,
 				RevokedAt:    sql.NullTime{},
 				ValidFrom:    fixtureTime,
@@ -70,7 +70,7 @@ func TestGetOutgoingOrderByReference(t *testing.T) {
 						Service:         "fixture-service",
 						Organization: database.OutgoingOrderServiceOrganization{
 							Name:         "fixture-organization",
-							SerialNumber: "00000000000000000001",
+							SerialNumber: "10000000000000000001",
 						},
 					},
 				},

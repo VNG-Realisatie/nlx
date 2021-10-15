@@ -43,7 +43,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				outgoingOrder: &database.OutgoingOrder{
 					Reference:   "fixture-reference",
 					Description: "description",
-					Delegatee:   "fixture-delegatee",
+					Delegatee:   "00000000000000000001",
 					RevokedAt:   sql.NullTime{},
 					ValidFrom:   now,
 					ValidUntil:  now,
@@ -53,7 +53,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 							Service: "service",
 							Organization: database.OutgoingOrderServiceOrganization{
 								Name:         "organization-one",
-								SerialNumber: "00000000000000000001",
+								SerialNumber: "10000000000000000001",
 							},
 						},
 					},
@@ -68,7 +68,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					ID:          fixturesStartID,
 					Reference:   "reference-one",
 					Description: "description",
-					Delegatee:   "delegatee",
+					Delegatee:   "00000000000000000001",
 					RevokedAt:   sql.NullTime{},
 					ValidFrom:   now,
 					ValidUntil:  now,
@@ -79,7 +79,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 							Service:         "fixture-service",
 							Organization: database.OutgoingOrderServiceOrganization{
 								Name:         "fixture-organization",
-								SerialNumber: "00000000000000000001",
+								SerialNumber: "10000000000000000001",
 							},
 						},
 					},

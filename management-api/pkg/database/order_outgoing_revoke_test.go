@@ -52,14 +52,14 @@ func TestRevokeOutgoingOrderByReference(t *testing.T) {
 		"when_order_is_already_revoked": {
 			loadFixtures: false,
 			args: args{
-				delegatee: "fixture-delegatee",
+				delegatee: "00000000000000000001",
 				reference: "fixture-reference",
 				revokedAt: fixtureTimeNew,
 			},
 			want: &database.OutgoingOrder{
 				Reference:   "fixture-reference",
 				Description: "fixture-description",
-				Delegatee:   "fixture-delegatee",
+				Delegatee:   "00000000000000000001",
 				RevokedAt: sql.NullTime{
 					Valid: true,
 					Time:  fixtureTimeNew,
@@ -72,14 +72,14 @@ func TestRevokeOutgoingOrderByReference(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				delegatee: "fixture-delegatee",
+				delegatee: "00000000000000000001",
 				reference: "fixture-reference",
 				revokedAt: fixtureTimeNew,
 			},
 			want: &database.OutgoingOrder{
 				Reference:   "fixture-reference",
 				Description: "fixture-description",
-				Delegatee:   "fixture-delegatee",
+				Delegatee:   "00000000000000000001",
 				RevokedAt: sql.NullTime{
 					Valid: true,
 					Time:  fixtureTimeNew,
