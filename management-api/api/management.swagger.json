@@ -972,6 +972,20 @@
       ],
       "default": "loginSuccess"
     },
+    "AuthorizationSettingsAuthorization": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "$ref": "#/definitions/nlxmanagementOrganization"
+        },
+        "publicKeyHash": {
+          "type": "string"
+        },
+        "publicKeyPEM": {
+          "type": "string"
+        }
+      }
+    },
     "DirectoryServiceState": {
       "type": "string",
       "enum": [
@@ -981,6 +995,20 @@
         "degraded"
       ],
       "default": "unknown"
+    },
+    "ServiceAuthorizationSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "authorizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuthorizationSettingsAuthorization"
+          }
+        }
+      }
     },
     "managementAccessGrant": {
       "type": "object",
@@ -1600,7 +1628,7 @@
           "type": "string"
         },
         "authorizationSettings": {
-          "$ref": "#/definitions/managementListServicesResponseServiceAuthorizationSettings"
+          "$ref": "#/definitions/ServiceAuthorizationSettings"
         },
         "inways": {
           "type": "array",
@@ -1623,34 +1651,6 @@
         "requestCosts": {
           "type": "integer",
           "format": "int32"
-        }
-      }
-    },
-    "managementListServicesResponseServiceAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementListServicesResponseServiceAuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementListServicesResponseServiceAuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
-        },
-        "publicKeyHash": {
-          "type": "string"
-        },
-        "publicKeyPEM": {
-          "type": "string"
         }
       }
     },

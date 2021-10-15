@@ -8,27 +8,72 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func TestServiceValidate(t *testing.T) {
+// nolint:dupl // this is a test function
+func TestCreateServiceValidate(t *testing.T) {
 	tests := map[string]struct {
-		service *api.Service
+		service *api.CreateServiceRequest
 		err     string
 	}{
 		"without_name_and_endpoint": {
-			service: &api.Service{
+			service: &api.CreateServiceRequest{
 				Name:        "",
 				EndpointURL: "",
 			},
 			err: "endpointURL: cannot be blank; name: cannot be blank.",
 		},
 		"using_invalid_endpoint": {
-			service: &api.Service{
+			service: &api.CreateServiceRequest{
 				Name:        "my-service",
 				EndpointURL: "invalid-endpoint",
 			},
 			err: "endpointURL: must be a valid URL.",
 		},
 		"happy_flow": {
-			service: &api.Service{
+			service: &api.CreateServiceRequest{
+				Name:        "my-service",
+				EndpointURL: "https://my-service.test",
+			},
+			err: "",
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			err := tt.service.Validate()
+			if err != nil {
+				assert.EqualError(t, err, tt.err)
+				return
+			}
+
+			assert.Equal(t, nil, err)
+		})
+	}
+}
+
+// nolint:dupl // this is a test function
+func TestUpdateServiceValidate(t *testing.T) {
+	tests := map[string]struct {
+		service *api.UpdateServiceRequest
+		err     string
+	}{
+		"without_name_and_endpoint": {
+			service: &api.UpdateServiceRequest{
+				Name:        "",
+				EndpointURL: "",
+			},
+			err: "endpointURL: cannot be blank; name: cannot be blank.",
+		},
+		"using_invalid_endpoint": {
+			service: &api.UpdateServiceRequest{
+				Name:        "my-service",
+				EndpointURL: "invalid-endpoint",
+			},
+			err: "endpointURL: must be a valid URL.",
+		},
+		"happy_flow": {
+			service: &api.UpdateServiceRequest{
 				Name:        "my-service",
 				EndpointURL: "https://my-service.test",
 			},

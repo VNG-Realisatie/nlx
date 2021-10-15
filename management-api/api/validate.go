@@ -21,37 +21,24 @@ func (inway *Inway) Validate() error {
 	)
 }
 
-// Validate the service, check if all fields are valid
-func (service *Service) Validate() error {
-	return validation.ValidateStruct(
-		service,
-		validation.Field(&service.Name, validation.Required, validation.Match(nameRegex)),
-		validation.Field(&service.EndpointURL, validation.Required, is.URL),
-		validation.Field(&service.DocumentationURL, is.URL),
-		validation.Field(&service.ApiSpecificationURL, is.URL),
-	)
-}
-
 // Validate the service when creating a new one, check if all fields are valid
 func (s *CreateServiceRequest) Validate() error {
-	service := &Service{
-		Name:                s.Name,
-		EndpointURL:         s.EndpointURL,
-		DocumentationURL:    s.DocumentationURL,
-		ApiSpecificationURL: s.ApiSpecificationURL,
-	}
-
-	return service.Validate()
+	return validation.ValidateStruct(
+		s,
+		validation.Field(&s.Name, validation.Required, validation.Match(nameRegex)),
+		validation.Field(&s.EndpointURL, validation.Required, is.URL),
+		validation.Field(&s.DocumentationURL, is.URL),
+		validation.Field(&s.ApiSpecificationURL, is.URL),
+	)
 }
 
 // Validate the service when updating it, check if all fields are valid
 func (s *UpdateServiceRequest) Validate() error {
-	service := &Service{
-		Name:                s.Name,
-		EndpointURL:         s.EndpointURL,
-		DocumentationURL:    s.DocumentationURL,
-		ApiSpecificationURL: s.ApiSpecificationURL,
-	}
-
-	return service.Validate()
+	return validation.ValidateStruct(
+		s,
+		validation.Field(&s.Name, validation.Required, validation.Match(nameRegex)),
+		validation.Field(&s.EndpointURL, validation.Required, is.URL),
+		validation.Field(&s.DocumentationURL, is.URL),
+		validation.Field(&s.ApiSpecificationURL, is.URL),
+	)
 }
