@@ -120,7 +120,7 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 
 // RequestAccessToService records an access request and sends it to the organization
 func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
-	logger := s.logger.With(zap.String("organizationName", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
+	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
 
 	ar := &database.OutgoingAccessRequest{

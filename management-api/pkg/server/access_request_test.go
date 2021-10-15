@@ -650,8 +650,8 @@ func TestExternalRequestAccess(t *testing.T) {
 					CreateIncomingAccessRequest(ctx, &database.IncomingAccessRequest{
 						ServiceID: 1,
 						Organization: database.IncomingAccessRequestOrganization{
-							Name:         certBundle.Certificate().Subject.Organization[0],
 							SerialNumber: certBundle.Certificate().Subject.SerialNumber,
+							Name:         certBundle.Certificate().Subject.Organization[0],
 						},
 						State:                database.IncomingAccessRequestReceived,
 						PublicKeyPEM:         publicKeyPEM,

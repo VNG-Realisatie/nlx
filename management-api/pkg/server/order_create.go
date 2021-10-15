@@ -110,8 +110,6 @@ func validateOrder(order *database.OutgoingOrder) error {
 	serviceNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 	organizationNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
-	fmt.Printf("%#v\n", order.Services)
-
 	return validation.ValidateStruct(
 		order,
 		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
@@ -140,7 +138,7 @@ func validateOrder(order *database.OutgoingOrder) error {
 				validation.Field(&orderService.Organization.SerialNumber, validation.By(validateOrganizationSerialNumber)),
 			)
 		}))),
-		validation.Field(&order.Delegatee, validation.Match(organizationNameRegex)),
+		validation.Field(&order.Delegatee, validation.By(validateOrganizationSerialNumber)),
 	)
 }
 
