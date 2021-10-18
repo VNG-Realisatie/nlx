@@ -13,12 +13,18 @@ describe('the EnvironmentRepository', () => {
   describe('getting the environment', () => {
     describe('when the api is up', () => {
       beforeEach(() => {
-        fetchMock.mockResponses(JSON.stringify({ organizationName: 'test' }))
+        fetchMock.mockResponses(
+          JSON.stringify({
+            organizationName: 'test',
+            organizationSerialNumber: '00000000000000000001',
+          }),
+        )
       })
 
       it('should return the environment', async () => {
         expect(await EnvironmentRepository.getCurrent()).toEqual({
           organizationName: 'test',
+          organizationSerialNumber: '00000000000000000001',
         })
       })
     })

@@ -19,7 +19,10 @@ test('show the organizationName', async () => {
   expect(container).toBeEmptyDOMElement()
 
   await act(async () => {
-    environment.resolve({ organizationName: 'test' })
+    environment.resolve({
+      organizationName: 'test',
+      organizationSerialNumber: '00000000000000000001',
+    })
   })
 
   expect(container).toHaveTextContent('test')
@@ -27,9 +30,10 @@ test('show the organizationName', async () => {
 })
 
 test('adding a title when used in the header', async () => {
-  const getEnvironment = jest
-    .fn()
-    .mockResolvedValue({ organizationName: 'test' })
+  const getEnvironment = jest.fn().mockResolvedValue({
+    organizationName: 'test',
+    organizationSerialNumber: '00000000000000000001',
+  })
 
   renderWithProviders(
     <OrganizationName getEnvironment={getEnvironment} isHeader />,
@@ -37,5 +41,6 @@ test('adding a title when used in the header', async () => {
 
   await waitFor(() => screen.findByTitle('test'))
 
-  expect(screen.getByTitle('test')).toHaveTextContent('test')
+  expect(screen.getByTitle('test')).toHaveTextContent(/test/)
+  expect(screen.getByTitle('test')).toHaveTextContent(/00000000000000000001/)
 })

@@ -8,7 +8,7 @@ import usePromise from '../../hooks/use-promise'
 import EnvironmentRepository from '../../domain/environment-repository'
 import { StyledTextWithEllipsis } from './index.styles'
 
-const OrganizationName = ({ getEnvironment, isHeader, ...props }) => {
+const OrganizationInfo = ({ getEnvironment, isHeader, ...props }) => {
   const { result } = usePromise(getEnvironment)
 
   return result ? (
@@ -17,19 +17,20 @@ const OrganizationName = ({ getEnvironment, isHeader, ...props }) => {
       isHeader={isHeader}
       {...props}
     >
-      {result.organizationName}
+      {result.organizationName} <br />
+      <small>{result.organizationSerialNumber}</small>
     </StyledTextWithEllipsis>
   ) : null
 }
 
-OrganizationName.propTypes = {
+OrganizationInfo.propTypes = {
   getEnvironment: func,
   isHeader: bool,
 }
 
-OrganizationName.defaultProps = {
+OrganizationInfo.defaultProps = {
   getEnvironment: EnvironmentRepository.getCurrent,
   isHeader: false,
 }
 
-export default OrganizationName
+export default OrganizationInfo
