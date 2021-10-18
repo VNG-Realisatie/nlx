@@ -24,7 +24,7 @@ const AddOrderPage = () => {
   const serviceNames = directoryServicesStore.servicesWithAccess.map(
     (service) => ({
       service: service.serviceName,
-      organization: service.organizationName,
+      organization: service.organization,
     }),
   )
 

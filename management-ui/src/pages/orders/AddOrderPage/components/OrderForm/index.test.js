@@ -15,7 +15,10 @@ test('the form values of the onSubmitHandler', async () => {
     <OrderForm
       services={[
         {
-          organization: 'organization-a',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
+          },
           service: 'service-a',
         },
       ]}
@@ -45,7 +48,10 @@ test('the form values of the onSubmitHandler', async () => {
       publicKeyPEM: 'my-public-key-pem',
       services: [
         {
-          organization: 'organization-a',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
+          },
           service: 'service-a',
         },
       ],

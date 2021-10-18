@@ -36,9 +36,12 @@ const OrderRow = ({ order }) => {
           {order.services.map((service, i) => (
             <Item
               key={i}
-              title={`${service.organization} - ${service.service}`}
+              title={`${service.organization.name} (${service.organization.serialNumber}) - ${service.service}`}
             >
-              <OrganizationName>{service.organization}</OrganizationName>
+              <OrganizationName>
+                {service.organization.name} ({service.organization.serialNumber}
+                )
+              </OrganizationName>
               <Separator> - </Separator>
               {service.service}
             </Item>

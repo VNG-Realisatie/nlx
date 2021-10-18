@@ -38,11 +38,13 @@ const Services = ({ services }) => {
             <tbody>
               {services.map(({ service, organization }) => (
                 <Table.Tr
-                  to={`/directory/${organization}/${service}`}
-                  key={`${organization}_${service}`}
+                  to={`/directory/${organization.serialNumber}/${service}`}
+                  key={`${organization.serialNumber}_${service}`}
                 >
                   <Table.Td>
-                    <OrganizationName>{organization}</OrganizationName>
+                    <OrganizationName>
+                      {organization.name} ({organization.serialNumber})
+                    </OrganizationName>
                     <Separator> - </Separator>
                     <small>{service}</small>
                   </Table.Td>
@@ -62,7 +64,10 @@ Services.propTypes = {
   services: arrayOf(
     shape({
       service: string.isRequired,
-      organization: string.isRequired,
+      organization: shape({
+        serialNumber: string.isRequired,
+        name: string.isRequired,
+      }).isRequired,
     }),
   ).isRequired,
 }

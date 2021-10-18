@@ -77,10 +77,22 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref1',
         description: 'my own description',
-        delegatee: 'delegatee',
+        delegatee: '10000000000000000000',
         services: [
-          { organization: 'organization X', service: 'service Y' },
-          { organization: 'organization Y', service: 'service Z' },
+          {
+            organization: {
+              serialNumber: '00000000000000000001',
+              name: 'organization X',
+            },
+            service: 'service Y',
+          },
+          {
+            organization: {
+              serialNumber: '00000000000000000002',
+              name: 'organization Y',
+            },
+            service: 'service Z',
+          },
         ],
         validFrom: new Date(new Date().getTime() - day).toISOString(),
         validUntil: new Date(new Date().getTime() + day).toISOString(),
@@ -92,8 +104,16 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref2',
         description: 'my own description',
-        delegatee: 'delegatee',
-        services: [{ organization: 'organization X', service: 'service Y' }],
+        delegatee: '20000000000000000000',
+        services: [
+          {
+            organization: {
+              serialNumber: '00000000000000000002',
+              name: 'organization X',
+            },
+            service: 'service Y',
+          },
+        ],
         validFrom: new Date(new Date().getTime() - day).toISOString(),
         validUntil: new Date(new Date().getTime() - day).toISOString(),
         revokedAt: null,
@@ -104,8 +124,16 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref3',
         description: 'my own description',
-        delegatee: 'delegatee',
-        services: [{ organization: 'organization X', service: 'service Y' }],
+        delegatee: '30000000000000000000',
+        services: [
+          {
+            organization: {
+              serialNumber: '00000000000000000003',
+              name: 'organization X',
+            },
+            service: 'service Y',
+          },
+        ],
         validFrom: new Date(new Date().getTime() + day).toISOString(),
         validUntil: new Date(new Date().getTime() + 2 * day).toISOString(),
         revokedAt: null,
@@ -116,8 +144,16 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref4',
         description: 'my own description',
-        delegatee: 'delegatee',
-        services: [{ organization: 'organization X', service: 'service Y' }],
+        delegatee: '40000000000000000000',
+        services: [
+          {
+            organization: {
+              serialNumber: '00000000000000000004',
+              name: 'organization X',
+            },
+            service: 'service Y',
+          },
+        ],
         validFrom: new Date(new Date().getTime() - day).toISOString(),
         validUntil: new Date(new Date().getTime() + day).toISOString(),
         revokedAt: new Date(),
@@ -139,13 +175,13 @@ test('content should render expected data', () => {
   const firstOrder = within(firstOrderEl)
   expect(firstOrder.getByTitle('Active')).toBeInTheDocument()
   expect(firstOrder.getByText('my own description')).toBeInTheDocument()
-  expect(firstOrder.getByText('delegatee')).toBeInTheDocument()
+  expect(firstOrder.getByText('10000000000000000000')).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('organization X - service Y'),
+    firstOrder.getByTitle('organization X (00000000000000000001) - service Y'),
   ).toBeInTheDocument()
-  expect(firstOrder.getByTitle('organization Y - service Z')).toHaveTextContent(
-    'organization Y - service Z',
-  )
+  expect(
+    firstOrder.getByTitle('organization Y (00000000000000000002) - service Z'),
+  ).toHaveTextContent('organization Y (00000000000000000002) - service Z')
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
   expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()
@@ -157,5 +193,7 @@ test('content should render expected data', () => {
   expect(within(fourthOrder).getByTitle('Inactive')).toBeInTheDocument()
 
   fireEvent.click(firstOrderEl)
-  expect(history.location.pathname).toEqual('/orders/outgoing/delegatee/ref1')
+  expect(history.location.pathname).toEqual(
+    '/orders/outgoing/10000000000000000000/ref1',
+  )
 })

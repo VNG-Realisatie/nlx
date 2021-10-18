@@ -39,7 +39,10 @@ test('listing the services', async () => {
   const { history } = createComponent([
     {
       service: 'My Service',
-      organization: 'My Organization',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'My Organization',
+      },
     },
   ])
 
@@ -52,6 +55,6 @@ test('listing the services', async () => {
   fireEvent.click(service)
 
   expect(history.location.pathname).toEqual(
-    '/directory/My Organization/My Service',
+    '/directory/00000000000000000001/My Service',
   )
 })

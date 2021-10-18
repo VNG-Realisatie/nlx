@@ -35,8 +35,7 @@ const OrderForm = ({ services, onSubmitHandler }) => {
       .required(t('This field is required')),
     reference: Yup.string().required(t('This field is required')),
     delegatee: Yup.string()
-      .max(100, t('Maximum of n characters allowed', { n: 100 }))
-      .matches(/^[a-zA-Z0-9-. _\s]{1,}$/, t('Please use a URL friendly name'))
+      .max(20, t('Maximum of n characters allowed', { n: 20 }))
       .required(t('This field is required')),
     publicKeyPEM: Yup.string().required(t('This field is required')),
     validFrom: isoDateSchema(t('Invalid date')).required(
@@ -46,7 +45,10 @@ const OrderForm = ({ services, onSubmitHandler }) => {
     services: Yup.array()
       .of(
         Yup.object().shape({
-          organization: Yup.string(),
+          organization: Yup.object().shape({
+            serialNumber: Yup.string(),
+            name: Yup.string(),
+          }),
           service: Yup.string(),
         }),
       )
@@ -55,7 +57,7 @@ const OrderForm = ({ services, onSubmitHandler }) => {
 
   const selectableServices = services.map((service) => ({
     value: service,
-    label: `${service.organization} - ${service.service}`,
+    label: `${service.organization.name} (${service.organization.serialNumber}) - ${service.service}`,
   }))
 
   const handleSubmit = (values) => {
@@ -140,7 +142,10 @@ const OrderForm = ({ services, onSubmitHandler }) => {
 OrderForm.propTypes = {
   services: arrayOf(
     shape({
-      organization: string,
+      organization: shape({
+        serialNumber: string.isRequired,
+        name: string.isRequired,
+      }).isRequired,
       service: string,
     }),
   ),
