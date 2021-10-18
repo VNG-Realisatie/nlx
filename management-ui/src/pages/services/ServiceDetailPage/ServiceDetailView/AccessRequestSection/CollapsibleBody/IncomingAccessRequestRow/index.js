@@ -15,16 +15,17 @@ const IncomingAccessRequestRow = ({
   rejectHandler,
 }) => {
   const { t } = useTranslation()
-  const { id, organizationName, serviceName } = accessRequest
+  const { id, organization, serviceName } = accessRequest
 
   const [ConfirmApproveModal, confirmApprove] = useConfirmationModal({
     okText: t('Approve'),
     children: (
       <p>
         {t(
-          'Approving this access request will grant organizationName access to serviceName. Are you sure?',
+          'Approving this access request will grant organizationName (organizationSerialNumber) access to serviceName. Are you sure?',
           {
-            organizationName,
+            organizationName: organization.name,
+            organizationSerialNumber: organization.serialNumber,
             serviceName,
           },
         )}
@@ -37,9 +38,10 @@ const IncomingAccessRequestRow = ({
     children: (
       <p>
         {t(
-          'Rejecting this access request will refuse organizationName access to serviceName. Are you sure?',
+          'Rejecting this access request will refuse organizationName (organizationSerialNumber) access to serviceName. Are you sure?',
           {
-            organizationName,
+            organizationName: organization.name,
+            organizationSerialNumber: organization.serialNumber,
             serviceName,
           },
         )}
@@ -61,7 +63,15 @@ const IncomingAccessRequestRow = ({
 
   return (
     <Table.Tr data-testid={`service-incoming-accessrequest-${id}`}>
-      <Table.Td>{organizationName}</Table.Td>
+      <Table.Td>
+        {organization.name}
+        <br />
+        <small>
+          {t('Serial Number serialNumber', {
+            serialNumber: organization.serialNumber,
+          })}
+        </small>
+      </Table.Td>
       <TdActions>
         <StyledButton size="small" variant="link" onClick={approve}>
           <IconCheck title={t('Approve')} />
@@ -80,7 +90,10 @@ const IncomingAccessRequestRow = ({
 IncomingAccessRequestRow.propTypes = {
   accessRequest: shape({
     id: string,
-    organizationName: string.isRequired,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
     serviceName: string.isRequired,
   }).isRequired,
   approveHandler: func.isRequired,

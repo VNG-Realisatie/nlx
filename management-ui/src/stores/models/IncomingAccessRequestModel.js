@@ -14,7 +14,11 @@ export const STATES = {
 
 class IncomingAccessRequestModel {
   id = ''
-  organizationName = ''
+  organization = {
+    serialNumber: '',
+    name: '',
+  }
+
   serviceName = ''
   state = ''
   createdAt = ''
@@ -40,8 +44,10 @@ class IncomingAccessRequestModel {
       this.id = accessRequestData.id
     }
 
-    if (accessRequestData.organizationName) {
-      this.organizationName = accessRequestData.organizationName
+    if (accessRequestData.organization) {
+      this.organization.serialNumber =
+        accessRequestData.organization.serialNumber
+      this.organization.name = accessRequestData.organization.name
     }
 
     if (accessRequestData.serviceName) {
