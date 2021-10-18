@@ -119,7 +119,13 @@ test('requesting access to a service', async () => {
 
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: rootStore.directoryServicesStore,
-    serviceData: {},
+    serviceData: {
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'organization',
+      },
+      serviceName: 'service',
+    },
   })
 
   jest
@@ -129,7 +135,8 @@ test('requesting access to a service', async () => {
   await directoryService.requestAccess()
 
   expect(rootStore.directoryServicesStore.requestAccess).toHaveBeenCalledWith(
-    directoryService,
+    '00000000000000000001',
+    'service',
   )
 })
 

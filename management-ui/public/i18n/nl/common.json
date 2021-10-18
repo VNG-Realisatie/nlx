@@ -21,7 +21,7 @@
   "Access requested": "Toegang aangevraagd",
   "Access requests": "Toegangsverzoeken",
   "Access revoked": "Toegang ingetrokken",
-  "Access will be revoked for the serviceName service from organizationName": "Toegang zal worden ingetrokken voor de {{serviceName}} service van {{organizationName}}",
+  "Access will be revoked for the serviceName service from organizationName (organizationSerialNumber)": "Toegang zal worden ingetrokken voor de {{serviceName}} service van {{organizationName}} ({{organizationSerialNumber}})",
   "Account menu": "Account menu",
   "Active": "Actief",
   "Add new service": "Nieuwe service toevoegen",

@@ -21,7 +21,7 @@
   "Access requested": "Access requested",
   "Access requests": "Access requests",
   "Access revoked": "Access revoked",
-  "Access will be revoked for the serviceName service from organizationName": "Access will be revoked for the {{serviceName}} service from {{organizationName}}",
+  "Access will be revoked for the serviceName service from organizationName (organizationSerialNumber)": "Access will be revoked for the {{serviceName}} service from {{organizationName}} ({{organizationSerialNumber}})",
   "Account menu": "Account menu",
   "Active": "Active",
   "Add new service": "Add new service",

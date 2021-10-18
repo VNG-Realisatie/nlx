@@ -83,7 +83,10 @@ test('polling with access request section expanded', async () => {
         {
           id: '1',
           serviceName: 'service-a',
-          organizationName: 'organization-a',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
+          },
           state: STATES.RECEIVED,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -119,7 +122,8 @@ test('polling with access request section expanded', async () => {
 
   fireEvent.click(toggler)
 
-  expect(getByText('organization-a')).toBeInTheDocument()
+  expect(getByText(/organization-a/)).toBeInTheDocument()
+  expect(getByText(/Serial Number serialNumber/)).toBeInTheDocument()
   expect(queryByText('Show updates')).not.toBeInTheDocument()
 
   act(() => {
