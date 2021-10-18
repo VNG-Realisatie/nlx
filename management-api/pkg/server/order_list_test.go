@@ -53,7 +53,7 @@ func TestListOutgoingOrders(t *testing.T) {
 						{
 							Reference:   "reference",
 							Description: "description",
-							Delegatee:   "saas-organization-x",
+							Delegatee:   "10000000000000000001",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
 							RevokedAt:   sql.NullTime{},
@@ -74,7 +74,7 @@ func TestListOutgoingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegatee:   "saas-organization-x",
+						Delegatee:   "10000000000000000001",
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
@@ -141,7 +141,7 @@ func TestListIncomingOrders(t *testing.T) {
 					&domain.NewIncomingOrderArgs{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						RevokedAt:   nil,
 						ValidFrom:   validFrom,
 						ValidUntil:  validUntil,
@@ -161,7 +161,7 @@ func TestListIncomingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
@@ -187,7 +187,7 @@ func TestListIncomingOrders(t *testing.T) {
 					&domain.NewIncomingOrderArgs{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						RevokedAt:   &revokedAt,
 						ValidFrom:   validFrom,
 						ValidUntil:  validUntil,
@@ -207,7 +207,7 @@ func TestListIncomingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
 						RevokedAt:   timestamppb.New(revokedAt),
@@ -291,7 +291,7 @@ func TestListOrders(t *testing.T) {
 						{
 							Reference:   "reference",
 							Description: "description",
-							Delegatee:   "saas-organization-x",
+							Delegatee:   "10000000000000000001",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
 							RevokedAt:   sql.NullTime{},
@@ -314,7 +314,7 @@ func TestListOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
 						Services: []*api.OrderService{
@@ -348,7 +348,7 @@ func TestListOrders(t *testing.T) {
 						{
 							Reference:   "reference",
 							Description: "description",
-							Delegatee:   "saas-organization-x",
+							Delegatee:   "10000000000000000001",
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
 							RevokedAt: sql.NullTime{
@@ -374,7 +374,7 @@ func TestListOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
 						RevokedAt:   timestamppb.New(revokedAt),

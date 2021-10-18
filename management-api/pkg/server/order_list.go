@@ -96,7 +96,7 @@ func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*
 		incomingOrders[i] = &api.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
-			Delegator:   s.orgCert.Certificate().Subject.Organization[0],
+			Delegator:   s.orgCert.Certificate().Subject.SerialNumber,
 			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:   timestamppb.New(order.ValidFrom),
 			ValidUntil:  timestamppb.New(order.ValidUntil),
