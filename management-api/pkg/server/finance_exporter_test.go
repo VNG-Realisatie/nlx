@@ -25,7 +25,7 @@ func TestFinanceCSVExporter(t *testing.T) {
 		"exporting_with_rows_works": {
 			rows: []FinanceRow{
 				{
-					Organization:     "Test",
+					Organization:     "00000000000000000001",
 					ServiceName:      "service-test 1",
 					Month:            "januari 2021",
 					PricePerRequest:  125,
@@ -35,7 +35,7 @@ func TestFinanceCSVExporter(t *testing.T) {
 					TransactionCosts: 125 * 194,
 				},
 				{
-					Organization:     "Test",
+					Organization:     "00000000000000000001",
 					ServiceName:      "service-test 2",
 					Month:            "januari 2021",
 					PricePerRequest:  25,
@@ -47,8 +47,8 @@ func TestFinanceCSVExporter(t *testing.T) {
 			},
 			csvLines: []string{
 				"Organization,Service name,Month,Price per request,Number of requests,Setup costs,Monthly costs,Transaction costs",
-				`Test,service-test 1,januari 2021,"€1,25",194,"€15,00","€10,00","€242,50"`,
-				`Test,service-test 2,januari 2021,"€0,25",75,"€14,00","€9,00","€93,75"`,
+				`00000000000000000001,service-test 1,januari 2021,"€1,25",194,"€15,00","€10,00","€242,50"`,
+				`00000000000000000001,service-test 2,januari 2021,"€0,25",75,"€14,00","€9,00","€93,75"`,
 			},
 		},
 	}
