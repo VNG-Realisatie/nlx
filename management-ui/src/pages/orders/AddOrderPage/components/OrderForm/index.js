@@ -9,12 +9,12 @@ import { useTranslation } from 'react-i18next'
 import {
   Button,
   FieldLabel,
+  Fieldset,
   Select,
   TextInput,
-  Fieldset,
 } from '@commonground/design-system'
 import DateInput, { isoDateSchema } from '../../../../../components/DateInput'
-import { StyledForm, DateInputsWrapper, DateInputWrapper } from './index.styles'
+import { DateInputsWrapper, DateInputWrapper, StyledForm } from './index.styles'
 
 const OrderForm = ({ services, onSubmitHandler }) => {
   const { t } = useTranslation()
@@ -95,9 +95,7 @@ const OrderForm = ({ services, onSubmitHandler }) => {
           <TextInput name="delegatee" size="l">
             <FieldLabel
               label={t('Delegated organization')}
-              small={t(
-                'The name must match the name of the organization in its certificate',
-              )}
+              small={t('Serial number of the delegatee')}
             />
           </TextInput>
 
