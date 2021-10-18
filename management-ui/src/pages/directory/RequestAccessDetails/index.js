@@ -36,7 +36,9 @@ const RequestAccessDetails = ({
           <StyledIconServices />
           <ServiceData>
             <strong>{serviceName}</strong>
-            <span>{organization.name}</span>
+            <span>
+              {organization.name} ({organization.serialNumber})
+            </span>
           </ServiceData>
         </SectionContentService>
 
