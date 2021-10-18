@@ -96,7 +96,7 @@ func (i *Inway) UpdatedAt() time.Time {
 
 func (i *Inway) ToString() string {
 	return fmt.Sprintf(
-		"name: %s, organization: %s, address: %s, nlx version: %s, created at: %s, updated at: %s",
-		i.Name(), i.organization.Name(), i.Address(), i.NlxVersion(), i.CreatedAt(), i.UpdatedAt(),
+		"name: %s, organization serial number: %s, organization name: %s, address: %s, nlx version: %s, created at: %s, updated at: %s",
+		i.Name(), i.organization.serialNumber, i.organization.Name(), i.Address(), i.NlxVersion(), i.CreatedAt(), i.UpdatedAt(),
 	)
 }
