@@ -29,9 +29,18 @@ dex:
     hosts:
       - dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
 
+nginx-video-player-ui-proxy:
+  organizationName: "Gemeente Stijns"
+  outwayProxyUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  ingress:
+    enabled: true
+    hosts:
+        # abbreviated name, because https://gitlab.com/commonground/nlx/nlx/-/blob/master/technical-docs/notes.md#1215-rename-current-organizations
+      - nlx-nginx-vp-p-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
 video-player-ui:
   organizationName: "Gemeente Stijns"
-  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  outwayProxyUrl: http://nlx-nginx-vp-p-gemeente-stijns-{{DOMAIN_SUFFIX}}
   ingress:
     enabled: true
     hosts:

@@ -90,6 +90,19 @@ dex:
         hosts:
           - dex.acc.gemeentestijns.nl
 
+nginx-video-player-proxy:
+  outwayProxyUrl: https://nginx-video-player-proxy.acc.gemeentestijns.nl
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - nginx-video-player-proxy.acc.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-nginx-video-player-proxy-ingress-tls
+        hosts:
+          - nginx-video-player-proxy.acc.gemeentestijns.nl
+
 video-player-ui:
   organizationName: Gemeente Stijns
   outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
