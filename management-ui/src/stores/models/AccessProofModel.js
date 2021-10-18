@@ -5,7 +5,11 @@ import { makeAutoObservable } from 'mobx'
 
 class AccessProofModel {
   id = ''
-  organizationName = ''
+  organization = {
+    serialNumber: '',
+    name: '',
+  }
+
   serviceName = ''
   createdAt = null
   revokedAt = null
@@ -26,8 +30,9 @@ class AccessProofModel {
       this.id = accessProofData.id
     }
 
-    if (accessProofData.organizationName) {
-      this.organizationName = accessProofData.organizationName
+    if (accessProofData.organization) {
+      this.organization.serialNumber = accessProofData.organization.serialNumber
+      this.organization.name = accessProofData.organization.name
     }
 
     if (accessProofData.serviceName) {

@@ -101,12 +101,10 @@ class DirectoryServiceModel {
   }
 
   requestAccess = flow(function* requestAccess() {
-    try {
-      this.latestAccessRequest =
-        yield this.directoryServicesStore.requestAccess(this)
-    } catch (error) {
-      this.latestAccessRequest = null
-    }
+    yield this.directoryServicesStore.requestAccess(
+      this.organization.serialNumber,
+      this.serviceName,
+    )
   }).bind(this)
 
   retryRequestAccess = flow(function* retryRequestAccess() {

@@ -2,11 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { number, shape, func, string, instanceOf } from 'prop-types'
+import { number, shape, func, string, instanceOf, object } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Spinner, Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { outgoingAccessRequestPropTypes } from '../../../../../../stores/models/OutgoingAccessRequestModel'
 import {
   SHOW_REQUEST_ACCESS,
   SHOW_HAS_ACCESS,
@@ -153,10 +152,25 @@ const AccessSection = ({
 
 AccessSection.propTypes = {
   displayState: number,
-  latestAccessRequest: shape(outgoingAccessRequestPropTypes),
+  latestAccessRequest: shape({
+    id: string,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
+    serviceName: string.isRequired,
+    state: string,
+    createdAt: instanceOf(Date),
+    updatedAt: instanceOf(Date),
+    errorDetails: object,
+    retry: func,
+  }),
   latestAccessProof: shape({
     id: string.isRequired,
-    organizationName: string,
+    organization: shape({
+      serialNumber: string.isRequired,
+      name: string.isRequired,
+    }).isRequired,
     serviceName: string,
     createdAt: instanceOf(Date),
     updatedAt: instanceOf(Date),
