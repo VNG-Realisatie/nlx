@@ -12,7 +12,10 @@ jest.mock('../../../../../components/Modal')
 test('can request access', async () => {
   const service = {
     id: 'Test Organization/Test Service',
-    organizationName: 'Test Organization',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'Test Organization',
+    },
     serviceName: 'Test Service',
     state: 'degraded',
     apiSpecificationType: 'API',
@@ -38,7 +41,10 @@ test('can request access', async () => {
 test('display stacktrace when requesting access failed', () => {
   const service = {
     id: 'my-service',
-    organizationName: 'Test Organization',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'Test Organization',
+    },
     serviceName: 'Test Service',
     latestAccessRequest: {
       id: 'my-latest-access-request',

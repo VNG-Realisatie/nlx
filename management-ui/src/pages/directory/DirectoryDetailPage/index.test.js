@@ -16,7 +16,10 @@ let service
 beforeEach(() => {
   service = observable({
     id: 'Test Organization/Test Service',
-    organizationName: 'Test Organization',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'Test Organization',
+    },
     serviceName: 'Test Service',
     state: 'degraded',
     apiSpecificationType: 'API',
@@ -24,7 +27,6 @@ beforeEach(() => {
     fetch: jest.fn(),
     requestAccess: jest.fn(),
     retryRequestAccess: jest.fn(),
-    serialNumber: '',
   })
 })
 

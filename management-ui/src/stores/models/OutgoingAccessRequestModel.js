@@ -27,7 +27,11 @@ export const outgoingAccessRequestPropTypes = {
 
 class OutgoingAccessRequestModel {
   id = ''
-  organizationName = ''
+  organization = {
+    serialNumber: '',
+    name: '',
+  }
+
   serviceName = ''
   state = ''
   createdAt = null
@@ -51,8 +55,10 @@ class OutgoingAccessRequestModel {
       this.id = accessRequestData.id
     }
 
-    if (accessRequestData.organizationName) {
-      this.organizationName = accessRequestData.organizationName
+    if (accessRequestData.organization) {
+      this.organization.serialNumber =
+        accessRequestData.organization.serialNumber
+      this.organization.name = accessRequestData.organization.name
     }
 
     if (accessRequestData.serviceName) {

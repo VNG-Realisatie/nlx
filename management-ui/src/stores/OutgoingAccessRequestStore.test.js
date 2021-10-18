@@ -23,7 +23,10 @@ test('creating an outgoing access request', async () => {
     .fn()
     .mockResolvedValue({
       id: '42',
-      organizationName: 'organization-name',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'organization-name',
+      },
       serviceName: 'service-name',
       state: ACCESS_REQUEST_STATES.CREATED,
       createdAt: '2020-10-07T13:01:11.288349Z',
@@ -34,23 +37,26 @@ test('creating an outgoing access request', async () => {
     managementApiClient,
   })
 
-  const outgoingAccessRequest = await outgoingAccessRequestStore.create({
-    organizationName: 'organization-name',
-    serviceName: 'service-name',
-  })
+  const outgoingAccessRequest = await outgoingAccessRequestStore.create(
+    '00000000000000000001',
+    'service-name',
+  )
 
   expect(
     managementApiClient.managementCreateAccessRequest,
   ).toHaveBeenCalledWith({
     body: {
-      organizationName: 'organization-name',
+      organizationSerialNumber: '00000000000000000001',
       serviceName: 'service-name',
     },
   })
 
   expect(outgoingAccessRequest).toBeInstanceOf(OutgoingAccessRequestModel)
   expect(outgoingAccessRequest.id).toEqual('42')
-  expect(outgoingAccessRequest.organizationName).toEqual('organization-name')
+  expect(outgoingAccessRequest.organization.serialNumber).toEqual(
+    '00000000000000000001',
+  )
+  expect(outgoingAccessRequest.organization.name).toEqual('organization-name')
   expect(outgoingAccessRequest.serviceName).toEqual('service-name')
   expect(outgoingAccessRequest.state).toEqual(ACCESS_REQUEST_STATES.CREATED)
   expect(outgoingAccessRequest.createdAt).toEqual(

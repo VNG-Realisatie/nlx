@@ -108,7 +108,8 @@ test('(re-)fetching the model', async () => {
   await directoryService.fetch()
 
   expect(rootStore.directoryServicesStore.fetch).toHaveBeenCalledWith(
-    directoryService,
+    '00000000000000000001',
+    'Service',
   )
 })
 

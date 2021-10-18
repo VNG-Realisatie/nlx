@@ -35,7 +35,7 @@ const DirectoryServiceRow = ({ service, ...props }) => {
     okText: t('Send'),
     children: (
       <RequestAccessDetails
-        organizationName={organization.name} // TODO: use serial number
+        organization={organization}
         serviceName={serviceName}
       />
     ),

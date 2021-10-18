@@ -24,11 +24,17 @@ test('fetching all directory services', async () => {
   directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [
       {
-        organizationName: 'Org A',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
+        },
         serviceName: 'Service A',
       },
       {
-        organizationName: 'Org B',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
+        },
         serviceName: 'Service B',
       },
     ],
@@ -72,11 +78,17 @@ test('fetching a single service', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValueOnce({
-      organizationName: 'Org A',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Org A',
+      },
       serviceName: 'Service A',
     })
     .mockReturnValue({
-      organizationName: 'Org A',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Org A',
+      },
       serviceName: 'Service A',
       latestAccessRequest: { id: 'abc', state: 'CREATED' },
       latestAccessProof: { id: 'abc' },
@@ -89,20 +101,20 @@ test('fetching a single service', async () => {
   const directoryServicesStore = rootStore.directoryServicesStore
   expect(directoryServicesStore.services).toHaveLength(0)
 
-  let service = await directoryServicesStore.fetch({
-    organizationName: 'Org A',
-    serviceName: 'Service A',
-  })
+  let service = await directoryServicesStore.fetch(
+    '00000000000000000001',
+    'Service A',
+  )
 
   expect(directoryServicesStore.services).toHaveLength(1)
   expect(service).toBeInstanceOf(DirectoryServiceModel)
   expect(service.latestAccessRequest).toBeNull()
   expect(service.latestAccessProof).toBeNull()
 
-  service = await directoryServicesStore.fetch({
-    organizationName: 'Org A',
-    serviceName: 'Service A',
-  })
+  service = await directoryServicesStore.fetch(
+    '00000000000000000001',
+    'Service A',
+  )
 
   expect(service).toBeInstanceOf(DirectoryServiceModel)
   expect(service.latestAccessRequest).toBeInstanceOf(OutgoingAccessRequestModel)
@@ -120,15 +132,21 @@ test('requesting access to a service in the directory', async () => {
 
   const directoryService = new DirectoryServiceModel({
     serviceData: {
-      organizationName: 'organization',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'organization',
+      },
       serviceName: 'service',
     },
   })
 
-  await rootStore.directoryServicesStore.requestAccess(directoryService)
+  await rootStore.directoryServicesStore.requestAccess(
+    directoryService.organization.serialNumber,
+    directoryService.serviceName,
+  )
 
-  expect(rootStore.outgoingAccessRequestStore.create).toHaveBeenCalledWith({
-    organizationName: 'organization',
-    serviceName: 'service',
-  })
+  expect(rootStore.outgoingAccessRequestStore.create).toHaveBeenCalledWith(
+    '00000000000000000001',
+    'service',
+  )
 })

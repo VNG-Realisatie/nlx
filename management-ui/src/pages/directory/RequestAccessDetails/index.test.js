@@ -8,7 +8,10 @@ import RequestAccessDetails from './index'
 test('Request Access Details', () => {
   const { container, rerender } = renderWithProviders(
     <RequestAccessDetails
-      organizationName="organization"
+      organization={{
+        serialNumber: '00000000000000000001',
+        name: 'organization',
+      }}
       serviceName="service"
     />,
   )
@@ -19,7 +22,10 @@ test('Request Access Details', () => {
 
   rerender(
     <RequestAccessDetails
-      organizationName="organization"
+      organization={{
+        serialNumber: '00000000000000000001',
+        name: 'organization',
+      }}
       serviceName="service"
       oneTimeCosts={5}
       monthlyCosts={10}

@@ -32,7 +32,10 @@ test('show a table with rows for every service', () => {
     <DirectoryServices
       services={[
         {
-          organizationName: 'Test Organization',
+          organization: {
+            name: 'Test Organization',
+            serialNumber: '00000000000000000001',
+          },
           serviceName: 'Test Service',
         },
       ]}

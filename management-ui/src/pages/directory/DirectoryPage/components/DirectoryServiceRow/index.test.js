@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { configure } from 'mobx'
-import { fireEvent, act, waitFor } from '@testing-library/react'
+import { act, fireEvent, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 import {
@@ -19,7 +19,10 @@ const buildServiceModel = () => {
   return new DirectoryServiceModel({
     serviceData: {
       id: 'my-service',
-      organizationName: 'Test Organization',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Test Organization',
+      },
       serviceName: 'Test Service',
       state: SERVICE_STATE_DEGRADED,
       apiSpecificationType: 'API',

@@ -10,7 +10,10 @@ let accessRequestData
 beforeEach(() => {
   accessRequestData = {
     id: 'abcd',
-    organizationName: 'Organization',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'Organization',
+    },
     serviceName: 'Service',
     state: ACCESS_REQUEST_STATES.RECEIVED,
     createdAt: '2020-10-01',
@@ -25,8 +28,8 @@ test('should properly construct object', () => {
   })
 
   expect(accessRequest.id).toBe(accessRequestData.id)
-  expect(accessRequest.organizationName).toBe(
-    accessRequestData.organizationName,
+  expect(accessRequest.organization.name).toBe(
+    accessRequestData.organization.name,
   )
   expect(accessRequest.serviceName).toBe(accessRequestData.serviceName)
   expect(accessRequest.state).toBe(accessRequestData.state)

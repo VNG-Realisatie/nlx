@@ -8,10 +8,12 @@ import DrawerHeader from './index'
 
 const service = {
   serviceName: 'service',
-  organizationName: 'organisation',
+  organization: {
+    name: 'Organization',
+    serialNumber: '00000000000000000001',
+  },
   state: 'up',
   apiSpecificationType: 'OpenAPI',
-  serialNumber: '00000000000000000000',
 }
 
 const closeHandler = jest.fn()

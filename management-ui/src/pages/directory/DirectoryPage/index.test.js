@@ -118,12 +118,17 @@ test('navigating to the detail page should re-fetch the directory model', async 
   // the detail page this allows us to first put a spy on
   // the fetch-method of the ServiceDirectory model
 
+  configure({ safeDescriptors: false })
+
   const directoryApiClient = new DirectoryApi()
 
   directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [
       {
-        organizationName: 'foo',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'foo',
+        },
         serviceName: 'bar',
         state: 'up',
       },

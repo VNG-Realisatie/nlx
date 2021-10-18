@@ -73,10 +73,10 @@ class DirectoryServicesStore {
   }
 
   async requestAccess(organizationSerialNumber, serviceName) {
-    return this._rootStore.outgoingAccessRequestStore.create({
-      organizationName: organizationSerialNumber,
-      serviceName: serviceName,
-    })
+    return this._rootStore.outgoingAccessRequestStore.create(
+      organizationSerialNumber,
+      serviceName,
+    )
   }
 
   _updateFromServer(serviceData) {
