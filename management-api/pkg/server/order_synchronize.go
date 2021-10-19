@@ -44,7 +44,8 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 			if err != nil {
 				s.logger.Error(
 					"unable to synchronize organization orders",
-					zap.String("organization", org.Name),
+					zap.String("organization-serial-number", org.SerialNumber),
+					zap.String("organization-name", org.Name),
 					zap.Error(err),
 				)
 
