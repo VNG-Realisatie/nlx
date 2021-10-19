@@ -11,7 +11,7 @@
     "@semantic-release/git": "10.0.0",
     "@semantic-release/gitlab": "7.0.3",
     "glob": "7.2.0",
-    "replace-in-file": "6.2.0",
+    "replace-in-file": "6.3.1",
     "semantic-release": "18.0.0"
   },
   "repository": {
