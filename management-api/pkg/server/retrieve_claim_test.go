@@ -49,7 +49,7 @@ func TestRetrieveClaim(t *testing.T) {
 		"when_getting_the_organization_inway_proxy_address_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "organization-a", // @TODO serial number
+				OrderOrganizationSerialNumber: "00000000000000000001",
 			},
 			setup: func(t *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -64,7 +64,7 @@ func TestRetrieveClaim(t *testing.T) {
 		"when_creating_the_management_client_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "organization-a",
+				OrderOrganizationSerialNumber: "00000000000000000001",
 			},
 			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -87,7 +87,7 @@ func TestRetrieveClaim(t *testing.T) {
 		"when_order_is_revoked": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "organization-a",
+				OrderOrganizationSerialNumber: "00000000000000000001",
 			},
 			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -127,7 +127,7 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 	ctx := setProxyMetadata(t, context.Background())
 
 	mocks.dc.EXPECT().
-		GetOrganizationInwayProxyAddress(gomock.Any(), "organization-a").
+		GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 		Return("inway-proxy-address", nil)
 
 	mocks.mc.EXPECT().Close()
@@ -142,7 +142,7 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 
 	response, err := service.RetrieveClaimForOrder(ctx, &api.RetrieveClaimForOrderRequest{
 		OrderReference:                "order-reference-a",
-		OrderOrganizationSerialNumber: "organization-a",
+		OrderOrganizationSerialNumber: "00000000000000000001",
 	})
 
 	assert.NoError(t, err)
