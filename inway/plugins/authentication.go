@@ -76,7 +76,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		context.Request.Header.Set("X-NLX-Request-Organization", requesterOrganizationSerialNumber)
 
-		context.AuthInfo.OrganizationSerialNumber = requesterOrganizationName
+		context.AuthInfo.OrganizationSerialNumber = requesterOrganizationSerialNumber
 		context.AuthInfo.PublicKeyFingerprint = common_tls.X509PublicKeyFingerprint(peerCertificate)
 		context.LogData["organizationName"] = requesterOrganizationName
 		context.LogData["organizationSerialNumber"] = requesterOrganizationSerialNumber
