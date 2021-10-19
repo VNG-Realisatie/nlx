@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/video-player-ui
-  tag: 62a46e44
+  tag: 7b796af1
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

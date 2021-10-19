@@ -44,7 +44,7 @@ video-player-ui:
   ingress:
     enabled: true
     hosts:
-      - nlx-video-player-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}
+      - nlx-vp-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}
 
 nginx-websockets-proxy:
   organizationName: "Gemeente Stijns"

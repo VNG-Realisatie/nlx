@@ -140,7 +140,7 @@ parkeerrechten-viewer:
           - parkeerrechten-viewer.demo.gemeentestijns.nl
 
 nginx-video-player-ui-proxy:
-  outwayProxyUrl: https://nginx-video-player-proxy.demo.gemeentestijns.nl
+  outwayProxyUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
   ingress:
     enabled: true
     annotations:
@@ -154,7 +154,7 @@ nginx-video-player-ui-proxy:
 
 video-player-ui:
   organizationName: Gemeente Stijns
-  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  outwayProxyUrl: http://nginx-video-player-proxy.demo.gemeentestijns.nl
   ingress:
     enabled: true
     annotations:

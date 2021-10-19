@@ -91,7 +91,7 @@ dex:
           - dex.acc.gemeentestijns.nl
 
 nginx-video-player-proxy:
-  outwayProxyUrl: https://nginx-video-player-proxy.acc.gemeentestijns.nl
+  outwayProxyUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
   ingress:
     enabled: true
     annotations:
@@ -105,7 +105,7 @@ nginx-video-player-proxy:
 
 video-player-ui:
   organizationName: Gemeente Stijns
-  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  outwayProxyUrl: http://nginx-video-player-proxy.acc.gemeentestijns.nl
   ingress:
     enabled: true
     annotations:
