@@ -13,6 +13,6 @@ The proof of concept does not provide a security mechanism for applications yet.
 ## Services
 Services receive traffic from the NLX network through the inway. The inway performs authentication on organizational level and attaches a header with the organization name of the requester:
 
-    X-NLX-Requester-Organization: {OrganisationName}
+    X-NLX-Requester-Organization: {OrganizationSerialNumber}
 
 With this header a service is able to implement its own authorization logic.
