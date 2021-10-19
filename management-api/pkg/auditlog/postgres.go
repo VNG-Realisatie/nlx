@@ -265,7 +265,8 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 	for i, service := range services {
 		record.Services[i] = database.AuditLogService{
 			Organization: database.AuditLogServiceOrganization{
-				SerialNumber: delegatee,
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
 			},
 			Service: service.Service,
 		}
