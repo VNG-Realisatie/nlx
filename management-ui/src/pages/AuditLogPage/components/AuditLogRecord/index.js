@@ -79,7 +79,7 @@ const AuditLogRecord = ({
     meta.push(client)
   }
 
-  let organization = ''
+  let organization = {}
   let service = ''
   let servicesList = ''
 
@@ -87,12 +87,18 @@ const AuditLogRecord = ({
     organization = services[0].organization
     service = services[0].service
     servicesList = services
-      .map((service) => `${service.service} (${service.organization})`)
+      .map(
+        (service) =>
+          `${service.service} (${service.organization.name} (${service.organization.serialNumber}))`,
+      )
       .join(', ')
   }
 
   const dataDelegatee = data.delegatee
   const dataReference = data.reference
+
+  const organizationSerialNumber = organization.serialNumber
+  const organizationName = organization.name
 
   return (
     <Template action={action} dateTime={dateTimeString} meta={meta} {...props}>
@@ -107,32 +113,52 @@ const AuditLogRecord = ({
       ) : action === ACTION_LOGIN_FAIL ? (
         <Trans>Failed login attempt</Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_ACCEPT ? (
-        <Trans values={{ user, organization, service }}>
+        <Trans
+          values={{ user, organizationSerialNumber, organizationName, service }}
+        >
           <strong>{{ user }}</strong> has approved the access request from{' '}
-          <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
+          <strong>
+            {{ organizationName }} ({{ organizationSerialNumber }})
+          </strong>{' '}
+          for <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_REJECT ? (
         <Trans values={{ user, organization, service }}>
           <strong>{{ user }}</strong> has rejected the access request from{' '}
-          <strong>{{ organization }}</strong> for <strong>{{ service }}</strong>
+          <strong>
+            {{ organizationName }} ({{ organizationSerialNumber }})
+          </strong>{' '}
+          for <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_ACCESS_GRANT_REVOKE ? (
-        <Trans values={{ user, organization, service }}>
+        <Trans
+          values={{ user, organizationSerialNumber, organizationName, service }}
+        >
           <strong>{{ user }}</strong> has revoked access for{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>{{ organization }}</strong>
+          <strong>
+            {{ organizationName }} ({{ organizationSerialNumber }})
+          </strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_CREATE ? (
-        <Trans values={{ user, organization, service }}>
+        <Trans
+          values={{ user, organizationSerialNumber, organizationName, service }}
+        >
           <strong>{{ user }}</strong> has requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>{{ organization }}</strong>
+          <strong>
+            {{ organizationName }} ({{ organizationSerialNumber }})
+          </strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_FAIL ? (
-        <Trans values={{ user, organization, service }}>
+        <Trans
+          values={{ user, organizationSerialNumber, organizationName, service }}
+        >
           <strong>{{ user }}</strong> failed to request access to{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>{{ organization }}</strong>
+          <strong>
+            {{ organizationName }} ({{ organizationSerialNumber }})
+          </strong>
         </Trans>
       ) : action === ACTION_SERVICE_CREATE ? (
         <Trans values={{ user, service }}>
@@ -159,7 +185,7 @@ const AuditLogRecord = ({
           <strong>{{ user }}</strong> updated the organization settings
         </Trans>
       ) : action === ACTION_ORDER_CREATE ? (
-        <Trans values={{ user, servicesList, delegatee, organization, action }}>
+        <Trans values={{ user, servicesList, delegatee, action }}>
           <strong>{{ user }}</strong> gave {{ delegatee }} the order to consume
           the services {{ servicesList }}
         </Trans>
@@ -186,7 +212,10 @@ AuditLogRecord.propTypes = {
   services: arrayOf(
     shape({
       service: string,
-      organization: string,
+      organization: shape({
+        serialNumber: string,
+        name: string,
+      }),
     }),
   ),
   operatingSystem: string,

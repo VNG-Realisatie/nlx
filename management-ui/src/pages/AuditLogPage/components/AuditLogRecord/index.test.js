@@ -32,33 +32,42 @@ test.concurrent.each([
       services: [
         {
           service: 'Kadaster',
-          organization: 'Gemeente Stijns',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
         },
       ],
     },
     'check.svg',
-    'John Doe has approved the access request from Gemeente Stijns for Kadaster',
+    'John Doe has approved the access request from Gemeente Stijns (00000000000000000001) for Kadaster',
   ],
   [
     {
       action: ACTION_INCOMING_ACCESS_REQUEST_REJECT,
       services: [
         {
-          organization: 'Gemeente Stijns',
           service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
         },
       ],
     },
     'close.svg',
-    'John Doe has rejected the access request from Gemeente Stijns for Kadaster',
+    'John Doe has rejected the access request from Gemeente Stijns (00000000000000000001) for Kadaster',
   ],
   [
     {
       action: ACTION_ACCESS_GRANT_REVOKE,
       services: [
         {
-          organization: 'Gemeente Stijns',
           service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
         },
       ],
     },
@@ -70,26 +79,32 @@ test.concurrent.each([
       action: ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
       services: [
         {
-          organization: 'Gemeente Stijns',
           service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
         },
       ],
     },
     'key.svg',
-    'John Doe has requested access to Kadaster from Gemeente Stijns',
+    'John Doe has requested access to Kadaster from Gemeente Stijns (00000000000000000001)',
   ],
   [
     {
       action: ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
       services: [
         {
-          organization: 'Gemeente Stijns',
           service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
         },
       ],
     },
     'key.svg',
-    'John Doe failed to request access to Kadaster from Gemeente Stijns',
+    'John Doe failed to request access to Kadaster from Gemeente Stijns (00000000000000000001)',
   ],
   [
     {
@@ -97,6 +112,10 @@ test.concurrent.each([
       services: [
         {
           service: 'Kadaster',
+          organization: {
+            serialNumber: '',
+            name: '',
+          },
         },
       ],
     },
@@ -109,6 +128,10 @@ test.concurrent.each([
       services: [
         {
           service: 'Kadaster',
+          organization: {
+            serialNumber: '',
+            name: '',
+          },
         },
       ],
     },
@@ -121,6 +144,10 @@ test.concurrent.each([
       services: [
         {
           service: 'Kadaster',
+          organization: {
+            serialNumber: '',
+            name: '',
+          },
         },
       ],
     },
@@ -140,28 +167,34 @@ test.concurrent.each([
       delegatee: 'Vergunningsoftware BV',
       services: [
         {
-          organization: 'RvRD',
           service: 'fictieve-kentekens',
+          organization: {
+            serialNumber: '00000000000000000002',
+            name: 'RvRD',
+          },
         },
         {
-          organization: 'Gemeente Amsterdam',
           service: 'vakantieverhuur',
+          organization: {
+            serialNumber: '00000000000000000003',
+            name: 'Gemeente Amsterdam',
+          },
         },
       ],
     },
     'cog.svg',
-    'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD), vakantieverhuur (Gemeente Amsterdam)',
+    'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD (00000000000000000002)), vakantieverhuur (Gemeente Amsterdam (00000000000000000003))',
   ],
   [
     {
       action: ACTION_ORDER_OUTGOING_REVOKE,
       data: {
-        delegatee: 'Kadaster',
+        delegatee: '00000000000000000001',
         reference: '0123456AB',
       },
     },
     'revoke.svg',
-    'John Doe has revoked the outgoing order for Kadaster with reference 0123456AB',
+    'John Doe has revoked the outgoing order for 00000000000000000001 with reference 0123456AB',
   ],
   [
     { action: 'unknown action' },
