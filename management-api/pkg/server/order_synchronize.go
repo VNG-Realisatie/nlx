@@ -111,7 +111,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 }
 
 func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *inspectionapi.Organization) ([]*api.IncomingOrder, error) {
-	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, organization.Name)
+	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, organization.SerialNumber)
 	if err != nil {
 		return nil, err
 	}
