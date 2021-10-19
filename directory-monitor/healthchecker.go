@@ -47,6 +47,10 @@ type availability struct {
 	InwayID          uint64 `json:"inway_id"`
 }
 
+func (a *availability) healthCheckURL() string {
+	return fmt.Sprintf("https://%s/.nlx/health/%s", a.Address, a.ServiceName)
+}
+
 type databaseAction struct {
 	Action       string        `json:"action"`
 	Availability *availability `json:"availability"`
@@ -60,15 +64,18 @@ const (
 
 	postgresListenerReconnectTimeoutMin = 10 * time.Second
 	postgresListenerReconnectTimeoutMax = 1 * time.Minute
+
+	idleConnectionTimeout = 1 * time.Second
 )
 
-func NewHealthChecker(logger *zap.Logger, certificate *common_tls.CertificateBundle) *HealthChecker {
+func New(logger *zap.Logger, certificate *common_tls.CertificateBundle) *HealthChecker {
 	return &HealthChecker{
 		logger:         logger,
 		availabilities: make(map[uint64]*availability),
 		httpClient: &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: certificate.TLSConfig(),
+				IdleConnTimeout: idleConnectionTimeout,
 			},
 			Timeout: monitorHTTPTimeout,
 		},
@@ -304,7 +311,7 @@ func (h *HealthChecker) runHealthChecker(shutdown chan struct{}) {
 
 func (h *HealthChecker) checkInwayStatus(av availability) {
 	logger := h.logger.With(zap.Uint64("id", av.ID), zap.Uint64("inway-id", av.InwayID), zap.String("organization", av.OrganizationName), zap.String("service", av.ServiceName), zap.String("inway-address", av.Address))
-	healthCheckURL := `https://` + av.Address + "/.nlx/health/" + av.ServiceName
+	healthCheckURL := av.healthCheckURL()
 
 	logger.Debug("checking inway status", zap.String("health check URL", healthCheckURL))
 
@@ -316,6 +323,8 @@ func (h *HealthChecker) checkInwayStatus(av availability) {
 		return
 	}
 	defer resp.Body.Close()
+
+	logger.Debug("done checking inway status", zap.Int("http status code", resp.StatusCode))
 
 	if resp.StatusCode != http.StatusOK {
 		logger.Info(fmt.Sprintf("inway /health endpoint returned non-200 http status: %d", resp.StatusCode))

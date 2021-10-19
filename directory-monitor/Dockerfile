@@ -32,4 +32,8 @@ RUN echo "hosts: files dns" > /etc/nsswitch.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/directory-monitor/dist/bin/nlx-directory-monitor /usr/local/bin/nlx-directory-monitor
 
+# Add non-priveleged user
+RUN adduser -D -u 1001 appuser
+USER appuser
+
 CMD ["/usr/local/bin/nlx-directory-monitor"]

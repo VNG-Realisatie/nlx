@@ -55,7 +55,7 @@ func main() {
 
 	logger.Debug("starting health checker", zap.Int("ttlOfflineService", options.TTLOfflineService))
 
-	healthChecker := monitor.NewHealthChecker(logger, certificate)
+	healthChecker := monitor.New(logger, certificate)
 
 	go func() {
 		err = healthChecker.Run(logger, db, options.PostgresDSN, certificate, options.TTLOfflineService)
