@@ -53,7 +53,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					}, nil)
 
 				mocks.dc.EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "nlx-test").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("", errors.New("directory fails"))
 			},
 		},
@@ -73,7 +73,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					}, nil)
 
 				mocks.dc.EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "nlx-test").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
@@ -99,7 +99,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					}, nil)
 
 				mocks.dc.EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "nlx-test").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
@@ -109,7 +109,7 @@ func TestSynchronizeOrders(t *testing.T) {
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator:   "nlx-test",
+								Delegator:   "00000000000000000001",
 								RevokedAt:   nil,
 								ValidFrom:   timestamppb.New(validFrom),
 								ValidUntil:  timestamppb.New(validUntil),
@@ -131,7 +131,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						{
 							Reference:   "ref-order-1",
 							Description: "Order number 1",
-							Delegator:   "nlx-test",
+							Delegator:   "00000000000000000001",
 							RevokedAt:   sql.NullTime{},
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
@@ -158,7 +158,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						RevokedAt:   nil,
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
@@ -187,7 +187,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					}, nil)
 
 				mocks.dc.EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "nlx-test").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
@@ -197,7 +197,7 @@ func TestSynchronizeOrders(t *testing.T) {
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator:   "nlx-test",
+								Delegator:   "00000000000000000001",
 								RevokedAt:   nil,
 								ValidFrom:   timestamppb.New(validFrom),
 								ValidUntil:  timestamppb.New(validUntil),
@@ -219,7 +219,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						{
 							Reference:   "ref-order-1",
 							Description: "Order number 1",
-							Delegator:   "nlx-test",
+							Delegator:   "00000000000000000001",
 							RevokedAt:   sql.NullTime{},
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
@@ -246,7 +246,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
-						Delegator:   "nlx-test",
+						Delegator:   "00000000000000000001",
 						RevokedAt:   timestamppb.New(revokedAt),
 						ValidFrom:   timestamppb.New(validFrom),
 						ValidUntil:  timestamppb.New(validUntil),
@@ -275,7 +275,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					}, nil)
 
 				mocks.dc.EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "nlx-test").
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
@@ -285,7 +285,7 @@ func TestSynchronizeOrders(t *testing.T) {
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator:   "nlx-test",
+								Delegator:   "00000000000000000001",
 								RevokedAt:   timestamppb.New(revokedAt),
 								ValidFrom:   timestamppb.New(validFrom),
 								ValidUntil:  timestamppb.New(validUntil),
@@ -307,7 +307,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						{
 							Reference:   "ref-order-1",
 							Description: "Order number 1",
-							Delegator:   "nlx-test",
+							Delegator:   "00000000000000000001",
 							RevokedAt: sql.NullTime{
 								Valid: true,
 								Time:  revokedAt,
