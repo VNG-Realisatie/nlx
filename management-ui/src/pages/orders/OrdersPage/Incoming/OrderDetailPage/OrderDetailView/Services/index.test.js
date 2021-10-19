@@ -39,7 +39,10 @@ test('listing the services', async () => {
   const { history } = createComponent([
     {
       service: 'My Service',
-      organization: 'My Organization',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'My Organization',
+      },
     },
   ])
 
@@ -47,11 +50,13 @@ test('listing the services', async () => {
 
   const service = await screen.findByText('My Service')
   expect(service).toBeInTheDocument()
-  expect(await screen.findByText('My Organization')).toBeInTheDocument()
+  expect(
+    await screen.findByText('My Organization (00000000000000000001)'),
+  ).toBeInTheDocument()
 
   fireEvent.click(service)
 
   expect(history.location.pathname).toEqual(
-    '/directory/My Organization/My Service',
+    '/directory/00000000000000000001/My Service',
   )
 })
