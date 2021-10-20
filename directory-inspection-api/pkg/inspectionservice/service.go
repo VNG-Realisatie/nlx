@@ -67,7 +67,7 @@ func convertFromDatabaseService(model *database.Service) *inspectionapi.ListServ
 	}
 
 	if model.Organization != nil {
-		service.Organization = &inspectionapi.ListServicesResponse_Organization{
+		service.Organization = &inspectionapi.Organization{
 			SerialNumber: model.Organization.SerialNumber,
 			Name:         model.Organization.Name,
 		}

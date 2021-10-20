@@ -97,7 +97,7 @@ func TestOutwayListen(t *testing.T) {
 		outway.servicesHTTP["00000000000000000001.mockservice"+strconv.Itoa(i)] = mockService
 		inwayMessage := inspectionapi.ListServicesResponse_Service{
 			Name: "mockservice" + strconv.Itoa(i),
-			Organization: &inspectionapi.ListServicesResponse_Organization{
+			Organization: &inspectionapi.Organization{
 				SerialNumber: "00000000000000000001",
 				Name:         "test-org",
 			},
@@ -115,7 +115,7 @@ func TestOutwayListen(t *testing.T) {
 	outway.servicesHTTP["00000000000000000001.mockservicefail"] = mockFailService
 	inwayMessage := inspectionapi.ListServicesResponse_Service{
 		Name: "mockservicefail",
-		Organization: &inspectionapi.ListServicesResponse_Organization{
+		Organization: &inspectionapi.Organization{
 			SerialNumber: "00000000000000000001",
 			Name:         "test-org",
 		},
@@ -435,7 +435,7 @@ func TestFailingTransport(t *testing.T) {
 
 	inwayMessage := inspectionapi.ListServicesResponse_Service{
 		Name: "mockservice",
-		Organization: &inspectionapi.ListServicesResponse_Organization{
+		Organization: &inspectionapi.Organization{
 			SerialNumber: "00000000000000000001",
 			Name:         "test-org",
 		},

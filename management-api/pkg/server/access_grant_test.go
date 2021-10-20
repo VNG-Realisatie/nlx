@@ -60,7 +60,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 				AccessGrants: []*api.AccessGrant{
 					{
 						Id: 1,
-						Organization: &api.AccessGrant_Organization{
+						Organization: &api.Organization{
 							Name:         "test-organization",
 							SerialNumber: "00000000000000000001",
 						},
@@ -205,7 +205,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 				AccessGrantID: 42,
 			},
 			expectedResponse: &api.AccessGrant{
-				Organization: &api.AccessGrant_Organization{},
+				Organization: &api.Organization{},
 				CreatedAt:    createTimestamp(createdAt),
 			},
 			expectedErr: nil,

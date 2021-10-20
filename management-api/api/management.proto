@@ -350,11 +350,6 @@ message RevokeAccessGrantRequest {
 }
 
 message AccessGrant {
-  message Organization {
-    string name = 1;
-    string serialNumber = 2;
-  }
-
   uint64 id = 1;
   Organization organization = 2;
   string serviceName = 3;

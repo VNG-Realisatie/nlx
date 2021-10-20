@@ -165,7 +165,7 @@ const (
           "$ref": "#/definitions/ListServicesResponseCosts"
         },
         "organization": {
-          "$ref": "#/definitions/inspectionapiListServicesResponseOrganization"
+          "$ref": "#/definitions/inspectionapiOrganization"
         }
       }
     },
@@ -218,17 +218,6 @@ const (
           "items": {
             "$ref": "#/definitions/ListServicesResponseService"
           }
-        }
-      }
-    },
-    "inspectionapiListServicesResponseOrganization": {
-      "type": "object",
-      "properties": {
-        "serial_number": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
         }
       }
     },

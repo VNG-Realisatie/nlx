@@ -25,6 +25,11 @@ service DirectoryInspection {
 	}
 }
 
+message Organization {
+	string serial_number = 1;
+	string name = 2;
+}
+
 message Inway {
 	enum State {
 		UNKNOWN = 0;
@@ -36,11 +41,6 @@ message Inway {
 }
 
 message ListServicesResponse {
-    message Organization {
-        string serial_number = 1;
-        string name = 2;
-    }
-
     message Costs {
         int32 one_time = 1;
         int32 monthly = 2;
@@ -59,11 +59,6 @@ message ListServicesResponse {
 	}
 
 	repeated Service services = 1;
-}
-
-message Organization {
-	string serial_number = 1;
-	string name = 2;
 }
 
 message ListOrganizationsResponse {

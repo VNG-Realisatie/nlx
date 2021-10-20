@@ -976,7 +976,7 @@
       "type": "object",
       "properties": {
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "publicKeyHash": {
           "type": "string"
@@ -1018,7 +1018,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/managementAccessGrantOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1040,17 +1040,6 @@
         }
       }
     },
-    "managementAccessGrantOrganization": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "serialNumber": {
-          "type": "string"
-        }
-      }
-    },
     "managementAccessProof": {
       "type": "object",
       "properties": {
@@ -1059,7 +1048,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1148,7 +1137,7 @@
       "type": "object",
       "properties": {
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "service": {
           "type": "string"
@@ -1303,7 +1292,7 @@
           "type": "string"
         },
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "apiSpecificationType": {
           "type": "string"
@@ -1434,7 +1423,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1658,9 +1647,20 @@
       "type": "object",
       "properties": {
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "service": {
+          "type": "string"
+        }
+      }
+    },
+    "managementOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         }
       }
@@ -1673,7 +1673,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -1857,17 +1857,6 @@
       "type": "object",
       "properties": {
         "organizationInway": {
-          "type": "string"
-        }
-      }
-    },
-    "nlxmanagementOrganization": {
-      "type": "object",
-      "properties": {
-        "serialNumber": {
-          "type": "string"
-        },
-        "name": {
           "type": "string"
         }
       }

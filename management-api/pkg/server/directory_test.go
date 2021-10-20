@@ -126,7 +126,7 @@ func TestListDirectoryServices(t *testing.T) {
 	clientServices := []*inspectionapi.ListServicesResponse_Service{
 		{
 			Name: "test-service-1",
-			Organization: &inspectionapi.ListServicesResponse_Organization{
+			Organization: &inspectionapi.Organization{
 				SerialNumber: "00000000000000000001",
 				Name:         "test-organization-a",
 			},
@@ -286,7 +286,7 @@ func TestGetOrganizationService(t *testing.T) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
 						Name: "test-service",
-						Organization: &inspectionapi.ListServicesResponse_Organization{
+						Organization: &inspectionapi.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "test-organization",
 						},
@@ -339,7 +339,7 @@ func TestGetOrganizationService(t *testing.T) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
 						Name: "test-service",
-						Organization: &inspectionapi.ListServicesResponse_Organization{
+						Organization: &inspectionapi.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "test-organization",
 						},
@@ -386,7 +386,7 @@ func TestGetOrganizationService(t *testing.T) {
 				directoryClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&inspectionapi.ListServicesResponse{
 					Services: []*inspectionapi.ListServicesResponse_Service{{
 						Name: "test-service",
-						Organization: &inspectionapi.ListServicesResponse_Organization{
+						Organization: &inspectionapi.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "test-organization",
 						},
@@ -428,7 +428,7 @@ func TestGetOrganizationService(t *testing.T) {
 					Return(&inspectionapi.ListServicesResponse{
 						Services: []*inspectionapi.ListServicesResponse_Service{{
 							Name: "test-service",
-							Organization: &inspectionapi.ListServicesResponse_Organization{
+							Organization: &inspectionapi.Organization{
 								SerialNumber: "00000000000000000001",
 								Name:         "test-organization",
 							},

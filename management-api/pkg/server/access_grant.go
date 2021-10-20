@@ -105,7 +105,7 @@ func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
 
 	return &api.AccessGrant{
 		Id: uint64(accessGrant.ID),
-		Organization: &api.AccessGrant_Organization{
+		Organization: &api.Organization{
 			Name:         accessGrant.IncomingAccessRequest.Organization.Name,
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},

@@ -64,7 +64,7 @@
           "format": "uint64"
         },
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "serviceName": {
           "type": "string"
@@ -131,14 +131,14 @@
       "type": "object",
       "properties": {
         "organization": {
-          "$ref": "#/definitions/nlxmanagementOrganization"
+          "$ref": "#/definitions/managementOrganization"
         },
         "service": {
           "type": "string"
         }
       }
     },
-    "nlxmanagementOrganization": {
+    "managementOrganization": {
       "type": "object",
       "properties": {
         "serialNumber": {
