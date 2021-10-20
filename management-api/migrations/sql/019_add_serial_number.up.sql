@@ -7,6 +7,10 @@ BEGIN transaction;
 ALTER TABLE nlx_management.access_requests_incoming ADD COLUMN organization_serial_number VARCHAR(20) NOT NULL;
 ALTER TABLE nlx_management.access_requests_outgoing ADD COLUMN organization_serial_number VARCHAR(20) NOT NULL;
 
+-- delete audit logs, since we dont have the organization serial numbers for the services in the old records
+DELETE FROM nlx_management.audit_logs_services;
+DELETE FROM nlx_management.audit_logs;
+
 -- delete access requests, since we dont have the organization serial number in the old records
 DELETE FROM nlx_management.access_requests_incoming;
 DELETE FROM nlx_management.access_requests_outgoing;
