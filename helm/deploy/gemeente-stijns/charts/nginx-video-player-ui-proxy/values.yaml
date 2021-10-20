@@ -7,8 +7,8 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/nginx-video-player-ui-proxy
-  tag: latest
-  pullPolicy: Always
+  tag: c4798a6b
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""
