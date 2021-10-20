@@ -3,7 +3,7 @@ begin transaction;
 truncate table directory.organizations cascade;
 
 alter table directory.organizations
-    add column serial_number char(20) not null;
+    add column serial_number varchar(20) not null;
 
 create unique index organizations_uq_serial_number
     on directory.organizations (serial_number);
