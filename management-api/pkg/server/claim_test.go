@@ -18,10 +18,10 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
-	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 // nolint:funlen // this is a test

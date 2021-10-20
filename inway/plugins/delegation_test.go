@@ -16,9 +16,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/common/delegation"
-	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/plugins"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 //nolint:funlen // this is a test

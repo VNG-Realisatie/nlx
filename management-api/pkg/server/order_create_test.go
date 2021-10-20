@@ -19,10 +19,10 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	common_testing "go.nlx.io/nlx/common/testing"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 //nolint:funlen // this is a test method

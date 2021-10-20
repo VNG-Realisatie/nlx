@@ -20,10 +20,10 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/test/bufconn"
 
-	common_testing "go.nlx.io/nlx/common/testing"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/grpcproxy"
 	"go.nlx.io/nlx/inway/grpcproxy/test"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 func TestUnknownServiceMethod(t *testing.T) {

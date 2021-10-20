@@ -20,7 +20,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/diagnostics"
-	common_testing "go.nlx.io/nlx/common/testing"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -28,6 +27,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 func createTimestamp(ti time.Time) *timestamppb.Timestamp {

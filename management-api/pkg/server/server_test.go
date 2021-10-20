@@ -16,7 +16,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/metadata"
 
-	common_testing "go.nlx.io/nlx/common/testing"
 	common_tls "go.nlx.io/nlx/common/tls"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -24,6 +23,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/management"
 	mock_management "go.nlx.io/nlx/management-api/pkg/management/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 func newCertificateBundle() (*common_tls.CertificateBundle, error) {
