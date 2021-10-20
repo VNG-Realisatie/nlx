@@ -125,10 +125,8 @@ const AuditLogRecord = ({
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_REJECT ? (
         <Trans values={{ user, organization, service }}>
           <strong>{{ user }}</strong> has rejected the access request from{' '}
-          <strong>
-            {{ organizationName }} ({{ organizationSerialNumber }})
-          </strong>{' '}
-          for <strong>{{ service }}</strong>
+          <strong>{{ organizationSerialNumber }}</strong> for{' '}
+          <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_ACCESS_GRANT_REVOKE ? (
         <Trans
@@ -146,9 +144,7 @@ const AuditLogRecord = ({
         >
           <strong>{{ user }}</strong> has requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>
-            {{ organizationSerialNumber }}
-          </strong>
+          <strong>{{ organizationSerialNumber }}</strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_FAIL ? (
         <Trans

@@ -56,7 +56,7 @@ test.concurrent.each([
       ],
     },
     'close.svg',
-    'John Doe has rejected the access request from Gemeente Stijns (00000000000000000001) for Kadaster',
+    'John Doe has rejected the access request from 00000000000000000001 for Kadaster',
   ],
   [
     {
