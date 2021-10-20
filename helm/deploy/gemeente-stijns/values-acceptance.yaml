@@ -115,7 +115,7 @@ parkeerrechten-viewer:
         hosts:
           - parkeerrechten-viewer.acc.gemeentestijns.nl
 
-nginx-video-player-ui-proxy:
+nginx-video-player-proxy:
   outwayProxyUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-video-stream
   ingress:
     enabled: true
