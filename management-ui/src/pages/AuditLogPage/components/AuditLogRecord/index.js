@@ -147,7 +147,7 @@ const AuditLogRecord = ({
           <strong>{{ user }}</strong> has requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
           <strong>
-            {{ organizationName }} ({{ organizationSerialNumber }})
+            {{ organizationSerialNumber }}
           </strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_FAIL ? (

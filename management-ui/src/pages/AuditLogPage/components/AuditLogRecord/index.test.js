@@ -88,7 +88,7 @@ test.concurrent.each([
       ],
     },
     'key.svg',
-    'John Doe has requested access to Kadaster from Gemeente Stijns (00000000000000000001)',
+    'John Doe has requested access to Kadaster from 00000000000000000001',
   ],
   [
     {
