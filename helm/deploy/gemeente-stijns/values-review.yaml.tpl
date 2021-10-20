@@ -31,7 +31,7 @@ dex:
 
 nginx-video-player-ui-proxy:
   organizationName: "Gemeente Stijns"
-  outwayProxyUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  outwayProxyUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-video-stream
   ingress:
     enabled: true
     hosts:
@@ -48,7 +48,7 @@ video-player-ui:
 
 nginx-websockets-proxy:
   organizationName: "Gemeente Stijns"
-  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-websockets
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-websockets
   ingress:
     enabled: true
     hosts:

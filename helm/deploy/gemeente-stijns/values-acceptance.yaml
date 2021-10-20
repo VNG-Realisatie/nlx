@@ -116,7 +116,7 @@ parkeerrechten-viewer:
           - parkeerrechten-viewer.acc.gemeentestijns.nl
 
 nginx-video-player-ui-proxy:
-  outwayProxyUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  outwayProxyUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-video-stream
   ingress:
     enabled: true
     annotations:
@@ -143,7 +143,7 @@ video-player-ui:
           - video-player-ui.acc.gemeentestijns.nl
 
 nginx-websockets-proxy:
-  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-websockets
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-websockets
   ingress:
     enabled: true
     annotations:

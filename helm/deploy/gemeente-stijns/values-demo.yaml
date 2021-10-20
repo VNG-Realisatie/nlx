@@ -124,7 +124,7 @@ parkeerrechten-api:
 
 parkeerrechten-viewer:
   enabled: true
-  parkeerrechtenApiBaseUrl: http://gemeente-stijns-nlx-outway/Gemeente%20Stijns/parkeerrechten/
+  parkeerrechtenApiBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567890/parkeerrechten/
   organizationName: "Gemeente Stijns"
   organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
   organizationColor: "#ED7380"
@@ -140,7 +140,7 @@ parkeerrechten-viewer:
           - parkeerrechten-viewer.demo.gemeentestijns.nl
 
 nginx-video-player-ui-proxy:
-  outwayProxyUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-video-stream
+  outwayProxyUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-video-stream
   ingress:
     enabled: true
     annotations:
@@ -167,7 +167,7 @@ video-player-ui:
           - video-player-ui.demo.gemeentestijns.nl
 
 nginx-websockets-proxy:
-  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/RvRD/voorbeeld-websockets
+  outwayServiceBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/voorbeeld-websockets
   ingress:
     enabled: true
     annotations:
