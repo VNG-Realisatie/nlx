@@ -126,9 +126,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
 						Name:         testServiceName,
-						MonthlyCosts: int32(500),
-						RequestCosts: int32(100),
-						OneTimeCosts: int32(50),
+						MonthlyCosts: 500,
+						RequestCosts: 100,
+						OneTimeCosts: 50,
 					},
 				},
 			},
@@ -156,9 +156,9 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 				Services: []*registrationapi.RegisterInwayRequest_RegisterService{
 					{
 						Name:         testServiceName,
-						MonthlyCosts: int32(500),
-						RequestCosts: int32(100),
-						OneTimeCosts: int32(50),
+						MonthlyCosts: 500,
+						RequestCosts: 100,
+						OneTimeCosts: 50,
 					},
 				},
 			},

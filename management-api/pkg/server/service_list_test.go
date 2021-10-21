@@ -80,7 +80,8 @@ func TestListServices(t *testing.T) {
 						IncomingAccessRequest: &database.IncomingAccessRequest{
 							ID: 1,
 							Organization: database.IncomingAccessRequestOrganization{
-								Name: "mock-organization-name",
+								Name:         "mock-organization-name",
+								SerialNumber: "0123456789012346789",
 							},
 							ServiceID: 1,
 							Service: &database.Service{
@@ -102,7 +103,8 @@ func TestListServices(t *testing.T) {
 							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
 								{
 									Organization: &api.Organization{
-										Name: "mock-organization-name",
+										Name:         "mock-organization-name",
+										SerialNumber: "0123456789012346789",
 									},
 									PublicKeyHash: "mock-publickey-fingerprint",
 									PublicKeyPEM:  "mock-publickey-pem",

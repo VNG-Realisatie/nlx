@@ -211,8 +211,8 @@ func createNewInway(t *testing.T, inwayArgs *domain.NewInwayArgs) *domain.Inway 
 
 const testOrganizationSerialNumber = "01234567890123456789"
 
-func createNewOrganization(t *testing.T, name, serialNumber string) *domain.Organization {
-	model, err := domain.NewOrganization(name, serialNumber)
+func createNewOrganization(t *testing.T, name, organizationSerialNumber string) *domain.Organization {
+	model, err := domain.NewOrganization(name, organizationSerialNumber)
 	require.NoError(t, err)
 
 	return model

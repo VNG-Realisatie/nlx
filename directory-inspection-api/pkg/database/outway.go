@@ -7,6 +7,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
+
 	"go.nlx.io/nlx/common/nlxversion"
 )
 
@@ -17,4 +19,16 @@ func (db PostgreSQLDirectoryDatabase) RegisterOutwayVersion(_ context.Context, v
 	}
 
 	return nil
+}
+
+func prepareRegisterOutwayStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+	registerOutwayStatement, err := db.PrepareNamed(`
+		INSERT INTO directory.outways (version)
+		VALUES (:version)
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	return registerOutwayStatement, nil
 }

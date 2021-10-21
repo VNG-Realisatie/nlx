@@ -63,7 +63,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 	}
 
 	if inwayModel.IsOrganizationInway() {
-		h.logger.Debug("is organization inway")
+		h.logger.Debug("is organization inway", zap.String("inway", inwayModel.ToString()))
 		err = h.repository.SetOrganizationInway(ctx, organizationInformation.SerialNumber, inwayModel.Address())
 
 		if err != nil {
@@ -71,7 +71,7 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 			return nil, status.New(codes.Internal, "failed to set organization inway").Err()
 		}
 	} else {
-		h.logger.Debug("is not organization inway")
+		h.logger.Debug("is not organization inway", zap.String("inway", inwayModel.ToString()))
 		err = h.repository.ClearIfSetAsOrganizationInway(ctx, organizationInformation.SerialNumber, inwayModel.Address())
 
 		if err != nil {
@@ -97,16 +97,16 @@ func (h *DirectoryRegistrationService) RegisterInway(ctx context.Context, req *r
 
 		serviceModel, err := domain.NewService(
 			&domain.NewServiceArgs{
-				Name:                 s.Name,
-				SerialNumber:         organizationInformation.SerialNumber,
-				Internal:             s.Internal,
-				DocumentationURL:     s.DocumentationUrl,
-				APISpecificationType: serviceSpecificationType,
-				PublicSupportContact: s.PublicSupportContact,
-				TechSupportContact:   s.TechSupportContact,
-				OneTimeCosts:         uint(s.OneTimeCosts),
-				MonthlyCosts:         uint(s.MonthlyCosts),
-				RequestCosts:         uint(s.RequestCosts),
+				Name:                     s.Name,
+				OrganizationSerialNumber: organizationInformation.SerialNumber,
+				Internal:                 s.Internal,
+				DocumentationURL:         s.DocumentationUrl,
+				APISpecificationType:     serviceSpecificationType,
+				PublicSupportContact:     s.PublicSupportContact,
+				TechSupportContact:       s.TechSupportContact,
+				OneTimeCosts:             uint(s.OneTimeCosts),
+				MonthlyCosts:             uint(s.MonthlyCosts),
+				RequestCosts:             uint(s.RequestCosts),
 			},
 		)
 		if err != nil {

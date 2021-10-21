@@ -65,3 +65,18 @@ func prepareSelectOrganizationInwayAddressStatement(db *sqlx.DB) (*sqlx.NamedStm
 
 	return db.PrepareNamed(s)
 }
+
+func prepareSelectOrganizationsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
+	listOrganizationsStatement, err := db.Preparex(`
+		SELECT
+			serial_number,
+			name
+		FROM directory.organizations
+		ORDER BY name
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	return listOrganizationsStatement, nil
+}

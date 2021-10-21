@@ -10,30 +10,30 @@ import (
 )
 
 type Service struct {
-	id                   uint
-	name                 string
-	serialNumber         string
-	internal             bool
-	documentationURL     string
-	apiSpecificationType SpecificationType
-	publicSupportContact string
-	techSupportContact   string
-	oneTimeCosts         uint
-	monthlyCosts         uint
-	requestCosts         uint
+	id                       uint
+	name                     string
+	organizationSerialNumber string
+	internal                 bool
+	documentationURL         string
+	apiSpecificationType     SpecificationType
+	publicSupportContact     string
+	techSupportContact       string
+	oneTimeCosts             uint
+	monthlyCosts             uint
+	requestCosts             uint
 }
 
 type NewServiceArgs struct {
-	Name                 string
-	SerialNumber         string
-	Internal             bool
-	DocumentationURL     string
-	APISpecificationType SpecificationType
-	PublicSupportContact string
-	TechSupportContact   string
-	OneTimeCosts         uint
-	MonthlyCosts         uint
-	RequestCosts         uint
+	Name                     string
+	OrganizationSerialNumber string
+	Internal                 bool
+	DocumentationURL         string
+	APISpecificationType     SpecificationType
+	PublicSupportContact     string
+	TechSupportContact       string
+	OneTimeCosts             uint
+	MonthlyCosts             uint
+	RequestCosts             uint
 }
 
 type SpecificationType string
@@ -55,16 +55,16 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 	}
 
 	return &Service{
-		name:                 args.Name,
-		serialNumber:         args.SerialNumber,
-		documentationURL:     args.DocumentationURL,
-		apiSpecificationType: args.APISpecificationType,
-		publicSupportContact: args.PublicSupportContact,
-		techSupportContact:   args.TechSupportContact,
-		oneTimeCosts:         args.OneTimeCosts,
-		monthlyCosts:         args.MonthlyCosts,
-		requestCosts:         args.RequestCosts,
-		internal:             args.Internal,
+		name:                     args.Name,
+		organizationSerialNumber: args.OrganizationSerialNumber,
+		documentationURL:         args.DocumentationURL,
+		apiSpecificationType:     args.APISpecificationType,
+		publicSupportContact:     args.PublicSupportContact,
+		techSupportContact:       args.TechSupportContact,
+		oneTimeCosts:             args.OneTimeCosts,
+		monthlyCosts:             args.MonthlyCosts,
+		requestCosts:             args.RequestCosts,
+		internal:                 args.Internal,
 	}, nil
 }
 
@@ -81,7 +81,7 @@ func (i *Service) Name() string {
 }
 
 func (i *Service) SerialNumber() string {
-	return i.serialNumber
+	return i.organizationSerialNumber
 }
 
 func (i *Service) DocumentationURL() string {

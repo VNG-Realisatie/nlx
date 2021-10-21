@@ -27,16 +27,16 @@ func TestRegisterService(t *testing.T) {
 			createRegistrations: func(t *testing.T) []*domain.Service {
 				s, err := domain.NewService(
 					&domain.NewServiceArgs{
-						Name:                 "my-service",
-						SerialNumber:         testOrganizationSerialNumber,
-						Internal:             true,
-						DocumentationURL:     "documentation-url",
-						APISpecificationType: domain.OpenAPI3,
-						PublicSupportContact: "public-support-contact",
-						TechSupportContact:   "tech-support-contact",
-						OneTimeCosts:         1,
-						MonthlyCosts:         2,
-						RequestCosts:         3,
+						Name:                     "my-service",
+						OrganizationSerialNumber: testOrganizationSerialNumber,
+						Internal:                 true,
+						DocumentationURL:         "documentation-url",
+						APISpecificationType:     domain.OpenAPI3,
+						PublicSupportContact:     "public-support-contact",
+						TechSupportContact:       "tech-support-contact",
+						OneTimeCosts:             1,
+						MonthlyCosts:             2,
+						RequestCosts:             3,
 					},
 				)
 				require.NoError(t, err)

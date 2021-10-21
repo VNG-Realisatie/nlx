@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 )
 
@@ -109,4 +110,40 @@ func (db PostgreSQLDirectoryDatabase) ListServices(_ context.Context, organizati
 	}
 
 	return result, nil
+}
+
+func prepareSelectServicesStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
+	selectServicesStatement, err := db.Preparex(`
+		SELECT
+			o.serial_number as organization_serial_number,
+			o.name AS organization_name,
+			s.name AS service_name,
+			s.internal as service_internal,
+			s.one_time_costs as one_time_costs,
+			s.monthly_costs as monthly_costs,
+			s.request_costs as request_costs,
+			array_remove(array_agg(i.address), NULL) AS inway_addresses,
+			COALESCE(s.documentation_url, '') AS documentation_url,
+			COALESCE(s.api_specification_type, '') AS api_specification_type,
+			COALESCE(s.public_support_contact, '') AS public_support_contact,
+			array_remove(array_agg(a.healthy), NULL) as healthy_statuses
+		FROM directory.services s
+		INNER JOIN directory.availabilities a ON a.service_id = s.id
+		INNER JOIN directory.organizations o ON o.id = s.organization_id
+		INNER JOIN directory.inways i ON i.id = a.inway_id
+		WHERE (
+			internal = false
+			OR (
+				internal = true
+				AND o.serial_number = $1
+			)
+		)
+		GROUP BY s.id, o.id
+		ORDER BY o.name, s.name
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	return selectServicesStatement, nil
 }
