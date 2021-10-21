@@ -5,6 +5,7 @@ package outway
 
 import (
 	"crypto/tls"
+	"fmt"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -135,10 +136,8 @@ func (s *RoundRobinLoadBalancedHTTPService) GetProxies() []*httputil.ReverseProx
 // log the error and return some helpful text.
 // set 503 Status Service Temporarily Unavailable response.
 func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWriter, r *http.Request, e error) {
-	msg := "failed request to " + r.URL.String() +
-		" try again later / check firewall?" +
-		" check O1 and M1 at https://docs.nlx.io/support/common-errors/"
-	s.logger.Error(msg)
+	msg := fmt.Sprintf("failed request to '%s', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/", r.URL.String())
+	s.logger.Error(msg, zap.Error(e))
 	http.Error(w, msg, http.StatusServiceUnavailable)
 }
 

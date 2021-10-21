@@ -406,9 +406,9 @@ func (o *Outway) updateServiceList() error {
 		// if HttpService is used/created before update
 		// httpService on changes.
 		if exists {
-			inwayFromDirectory := o.servicesDirectory[serviceKey].Inways
+			inwaysFromDirectory := o.servicesDirectory[serviceKey].Inways
 
-			changed := !reflect.DeepEqual(inwayFromDirectory, serviceToImplement.Inways)
+			changed := !reflect.DeepEqual(inwaysFromDirectory, serviceToImplement.Inways)
 
 			if changed {
 				o.createService(serviceToImplement)

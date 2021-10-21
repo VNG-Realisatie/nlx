@@ -30,7 +30,7 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 		logRecordID := context.Request.Header.Get("X-NLX-Logrecord-Id")
 		if logRecordID == "" {
 			http.Error(context.Response, "nlx-inway: missing logrecord id", http.StatusBadRequest)
-			context.Logger.Warn("Received request with missing logrecord id", zap.String("organization_serial_number",  context.AuthInfo.OrganizationSerialNumber))
+			context.Logger.Warn("Received request with missing logrecord id", zap.String("organization_serial_number", context.AuthInfo.OrganizationSerialNumber))
 
 			return nil
 		}
