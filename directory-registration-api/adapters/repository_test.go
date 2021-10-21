@@ -13,20 +13,19 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/go-testfixtures/testfixtures/v3"
-	"go.nlx.io/nlx/directory-registration-api/domain"
-	"go.nlx.io/nlx/testing/testingutils"
-	"go.uber.org/zap"
-
 	"github.com/DATA-DOG/go-txdb"
+	"github.com/go-testfixtures/testfixtures/v3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 	"go.nlx.io/nlx/directory-registration-api/domain/directory"
+	"go.nlx.io/nlx/testing/testingutils"
 )
 
 var setupOnce sync.Once

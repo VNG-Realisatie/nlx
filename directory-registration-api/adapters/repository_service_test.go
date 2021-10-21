@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"go.nlx.io/nlx/directory-registration-api/domain"
-
 	"github.com/stretchr/testify/require"
+
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 func TestRegisterService(t *testing.T) {

@@ -7,13 +7,13 @@
 package adapters_test
 
 import (
-	"go.nlx.io/nlx/directory-registration-api/domain"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-registration-api/adapters"
+	"go.nlx.io/nlx/directory-registration-api/domain"
 )
 
 func TestRegisterInway(t *testing.T) {

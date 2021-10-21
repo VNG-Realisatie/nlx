@@ -18,9 +18,9 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"go.nlx.io/nlx/testing/testingutils"
 
 	"go.nlx.io/nlx/directory-inspection-api/pkg/database"
+	"go.nlx.io/nlx/testing/testingutils"
 )
 
 var setupOnce sync.Once

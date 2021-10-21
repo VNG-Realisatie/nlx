@@ -6,13 +6,14 @@ package mock_signer
 
 import (
 	x509 "crypto/x509"
+	http "net/http"
+	reflect "reflect"
+
 	certdb "github.com/cloudflare/cfssl/certdb"
 	config "github.com/cloudflare/cfssl/config"
 	info "github.com/cloudflare/cfssl/info"
 	signer "github.com/cloudflare/cfssl/signer"
 	gomock "github.com/golang/mock/gomock"
-	http "net/http"
-	reflect "reflect"
 )
 
 // MockSigner is a mock of Signer interface

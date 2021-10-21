@@ -16,9 +16,10 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"go.nlx.io/nlx/testing/testingutils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"go.nlx.io/nlx/testing/testingutils"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )

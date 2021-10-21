@@ -11,14 +11,13 @@ import (
 	"fmt"
 	"regexp"
 
-	common_tls "go.nlx.io/nlx/common/tls"
-
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"

@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+
 	txlogdb "go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 

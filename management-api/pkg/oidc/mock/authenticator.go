@@ -6,12 +6,13 @@ package mock
 
 import (
 	context "context"
+	http "net/http"
+	reflect "reflect"
+
 	oidc "github.com/coreos/go-oidc"
 	gomock "github.com/golang/mock/gomock"
 	sessions "github.com/gorilla/sessions"
 	oauth2 "golang.org/x/oauth2"
-	http "net/http"
-	reflect "reflect"
 )
 
 // MockOAuth2Config is a mock of OAuth2Config interface

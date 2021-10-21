@@ -9,15 +9,16 @@ package database_test
 import (
 	"context"
 	"database/sql"
-	"github.com/lib/pq"
-	"go.nlx.io/nlx/common/diagnostics"
 	"testing"
+
+	"github.com/lib/pq"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
