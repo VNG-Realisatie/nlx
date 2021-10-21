@@ -36,13 +36,6 @@ proto-directory-inspection-api:
             --openapiv2_out=/dist --openapiv2_opt=json_names_for_fields=false \
             ./inspectionapi.proto
 
-    RUN echo "package inspectionapi" > /dist/inspectionapi.swagger.json.go && \
-        echo "const (" >> /dist/inspectionapi.swagger.json.go && \
-        echo "SwaggerJSONDirectoryInspection = \`" >> /dist/inspectionapi.swagger.json.go && \
-        cat /dist/inspectionapi.swagger.json >> /dist/inspectionapi.swagger.json.go && \
-        echo "\`)" >> /dist/inspectionapi.swagger.json.go && \
-        go fmt /dist/inspectionapi.swagger.json.go
-
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-inspection-api/inspectionapi/
 
 proto-directory-registration-api:
@@ -59,13 +52,6 @@ proto-directory-registration-api:
             --grpc-gateway_out=/dist \
             --openapiv2_out=/dist \
             ./registrationapi.proto
-
-    RUN echo "package registrationapi" > /dist/registrationapi.swagger.json.go && \
-        echo "const (" >> /dist/registrationapi.swagger.json.go && \
-        echo "SwaggerJSONDirectoryregistration = \`" >> /dist/registrationapi.swagger.json.go && \
-        cat /dist/registrationapi.swagger.json >> /dist/registrationapi.swagger.json.go && \
-        echo "\`)" >> /dist/registrationapi.swagger.json.go && \
-        go fmt /dist/registrationapi.swagger.json.go
 
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-registration-api/registrationapi/
 
