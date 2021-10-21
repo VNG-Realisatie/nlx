@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 
 //go:build integration
-// +build integration
 
 package adapters_test
 

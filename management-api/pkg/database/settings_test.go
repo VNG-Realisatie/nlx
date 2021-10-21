@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-// +build integration
+//go:build integration
 
 package database_test
 
