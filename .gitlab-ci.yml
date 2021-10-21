@@ -1,5 +1,4 @@
 stages:
-  - Setup
   - Tests
   - Build
   - Deploy
@@ -10,4 +9,3 @@ stages:
   - external
 
 include: '.gitlab/ci/**.yml'
-
