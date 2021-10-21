@@ -69,6 +69,8 @@ func TestMetadataToUpstreamCantBeOverridden(t *testing.T) {
 		"forwarded", "spoofed-forwarded",
 		"nlx-organization-name", "spoofed-organization",
 		"nlx-organization-name", "spoofed-organization",
+		"nlx-organization-serial-number", "01234567890123456789",
+		"nlx-organization-serial-number", "01234567890123456789",
 		"nlx-public-key-der", "spoofed-public-key",
 		"nlx-public-key-der", "spoofed-public-key",
 		"nlx-public-key-fingerprint", "spoofed-fingerprint",
@@ -90,55 +92,54 @@ func TestMetadataToUpstreamCantBeOverridden(t *testing.T) {
 
 	assert.Equal(t, []string{"for=bufconn,host=inway.test"}, md.Get("forwarded"))
 	assert.Equal(t, []string{"nlx-test"}, md.Get("nlx-organization-name"))
+	assert.Equal(t, []string{"00000000000000000001"}, md.Get("nlx-organization-serial-number"))
 	assert.Equal(t, []string{publicKeyDEREncoded}, md.Get("nlx-public-key-der"))
 	assert.Equal(t, []string{certBundle.PublicKeyFingerprint()}, md.Get("nlx-public-key-fingerprint"))
 	assert.Equal(t, []string{"foo"}, md.Get("some-key"))
 	assert.Equal(t, []string{"bar", "foobar"}, md.Get("some-other-key"))
 }
 
-func TestMissingOrganization(t *testing.T) {
-	pkiDir := filepath.Join("..", "..", "testing", "pki")
+func TestMissingProperty(t *testing.T) {
+	tests := map[string]struct {
+		testingBundle common_testing.CertificateBundleOrganizationName
+		expectedCode  codes.Code
+		expectedErr   string
+	}{
+		"missing_organization": {
+			testingBundle: common_testing.OrgWithoutName,
+			expectedCode:  codes.Unauthenticated,
+			expectedErr:   "certificate is missing organization",
+		},
+		"missing_serial_number": {
+			testingBundle: common_testing.OrgWithoutSerialNumber,
+			expectedCode:  codes.Unauthenticated,
+			expectedErr:   "certificate is missing serial number",
+		},
+	}
 
-	clientCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutName)
-	assert.NoError(t, err)
+	for name, args := range tests {
+		t.Run(name, func(t *testing.T) {
+			pkiDir := filepath.Join("..", "..", "testing", "pki")
 
-	p, s, c, _ := setup(t, clientCert)
-	p.RegisterService(test.GetTestServiceDesc())
+			clientCert, err := common_testing.GetCertificateBundle(pkiDir, args.testingBundle)
+			assert.NoError(t, err)
 
-	ctx := context.Background()
-	resp, err := c.Test(ctx, &test.TestRequest{Name: "Foo"})
+			p, s, c, _ := setup(t, clientCert)
+			p.RegisterService(test.GetTestServiceDesc())
 
-	assert.Nil(t, resp)
-	assert.Error(t, err)
+			ctx := context.Background()
+			resp, err := c.Test(ctx, &test.TestRequest{Name: "Foo"})
 
-	st := status.Convert(err)
-	assert.Equal(t, codes.Unauthenticated, st.Code())
-	assert.Equal(t, "certificate is missing organization", st.Message())
+			assert.Nil(t, resp)
+			assert.Error(t, err)
 
-	assert.Empty(t, s.svc.reqs)
-}
+			st := status.Convert(err)
+			assert.Equal(t, args.expectedCode, st.Code())
+			assert.Equal(t, args.expectedErr, st.Message())
 
-// nolint:dupl // testing different property
-func TestMissingSerialNumber(t *testing.T) {
-	pkiDir := filepath.Join("..", "..", "testing", "pki")
-
-	clientCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutSerialNumber)
-	assert.NoError(t, err)
-
-	p, s, c, _ := setup(t, clientCert)
-	p.RegisterService(test.GetTestServiceDesc())
-
-	ctx := context.Background()
-	resp, err := c.Test(ctx, &test.TestRequest{Name: "Foo"})
-
-	assert.Nil(t, resp)
-	assert.Error(t, err)
-
-	st := status.Convert(err)
-	assert.Equal(t, codes.Unauthenticated, st.Code())
-	assert.Equal(t, "certificate is missing serial number", st.Message())
-
-	assert.Empty(t, s.svc.reqs)
+			assert.Empty(t, s.svc.reqs)
+		})
+	}
 }
 
 func setup(t *testing.T, clientCert *tls.CertificateBundle) (*grpcproxy.Proxy, *testServer, test.TestServiceClient, *tls.CertificateBundle) {
