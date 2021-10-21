@@ -7,7 +7,7 @@ test('creating instance', () => {
   const order = new IncomingOrderModel({
     orderData: {
       reference: 'my-reference',
-      delegator: 'Vergunningsoftware BV',
+      delegator: '01234567890123456789',
       description: 'description',
       services: [],
       revokedAt: '2020-10-03T12:00:00Z',
@@ -17,7 +17,7 @@ test('creating instance', () => {
   })
 
   expect(order.reference).toEqual('my-reference')
-  expect(order.delegator).toBe('Vergunningsoftware BV')
+  expect(order.delegator).toBe('01234567890123456789')
   expect(order.description).toBe('description')
   expect(order.services).toEqual([])
   expect(order.revokedAt).toEqual(new Date('2020-10-03T12:00:00Z'))

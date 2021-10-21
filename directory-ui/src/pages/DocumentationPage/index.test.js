@@ -13,7 +13,7 @@ test('renders without crashing', () => {
         match={{
           params: {
             serviceName: 'test-service',
-            organizationSerialNumber: 'test-organization',
+            organizationSerialNumber: '01234567890123456789',
           },
         }}
       />,

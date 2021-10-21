@@ -17,7 +17,7 @@ test('display order details', () => {
     orderStore: rootStore.orderStore,
     orderData: {
       reference: 'my-reference',
-      delegator: 'delegator',
+      delegator: '01234567890123456789',
       validFrom: '2021-01-01T00:00:00.000Z',
       validUntil: '3000-01-01T00:00:00.000Z',
       services: [],

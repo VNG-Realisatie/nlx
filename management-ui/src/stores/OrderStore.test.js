@@ -125,11 +125,11 @@ test('fetch incoming orders', async () => {
     .mockResolvedValue({
       orders: [
         {
-          delegator: 'delegator 1',
+          delegator: '01234567890123456789',
           reference: 'reference',
         },
         {
-          delegator: 'delegator 2',
+          delegator: '01234567890123456780',
           reference: 'reference',
         },
       ],
@@ -149,6 +149,6 @@ test('fetch incoming orders', async () => {
   await waitFor(() => expect(store.isLoading).toBe(false))
   expect(store.incomingOrders).toHaveLength(2)
 
-  const firstOrder = store.getIncoming('delegator 1', 'reference')
+  const firstOrder = store.getIncoming('01234567890123456789', 'reference')
   expect(firstOrder).toBeInstanceOf(IncomingOrderModel)
 })

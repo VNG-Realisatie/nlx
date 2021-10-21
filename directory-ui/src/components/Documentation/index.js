@@ -8,11 +8,11 @@ import { RedocStandalone } from 'redoc'
 import theme from '../../theme'
 
 const Documentation = ({ organizationSerialNumber, serviceName }) => {
-  const urlSafeOrganizationSerialNumber = encodeURIComponent(
+  const uriEncodedOrganizationSerialNumber = encodeURIComponent(
     organizationSerialNumber,
   )
-  const urlSafeName = encodeURIComponent(serviceName)
-  const specUrl = `/api/organizations/${urlSafeOrganizationSerialNumber}/services/${urlSafeName}/api-spec`
+  const uriEncodedServiceName = encodeURIComponent(serviceName)
+  const specUrl = `/api/organizations/${uriEncodedOrganizationSerialNumber}/services/${uriEncodedServiceName}/api-spec`
 
   const style = {
     colors: { primary: { main: theme.tokens.colorBrand1 } },

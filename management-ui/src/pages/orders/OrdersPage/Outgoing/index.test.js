@@ -24,7 +24,7 @@ test('displays an order row for each order', () => {
       orderData: {
         reference: 'ref1',
         description: 'my own description',
-        delegator: 'delegator',
+        delegator: '01234567890123456789',
         services: [],
         validUntil: '2021-05-10',
       },
@@ -34,7 +34,7 @@ test('displays an order row for each order', () => {
       orderData: {
         reference: 'ref2',
         description: 'my own description',
-        delegator: 'goatadelee',
+        delegator: '01234567890123456789',
         services: [],
         validUntil: '2021-05-05',
       },
