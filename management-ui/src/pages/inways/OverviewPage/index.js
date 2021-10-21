@@ -5,8 +5,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
-import { Route, useParams } from 'react-router-dom'
-
+import { Route, useLocation, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import InwayDetailPage from '../InwayDetailPage'
@@ -14,10 +13,11 @@ import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwayStore } from '../../../hooks/use-stores'
 import InwaysPageView from './InwaysPageView'
 
-const InwaysPage = () => {
+const OverviewPage = () => {
   const { t } = useTranslation()
   const { isInitiallyFetched, inways, error, getInway } = useInwayStore()
   const { name } = useParams()
+  const { pathname } = useLocation()
 
   return (
     <PageTemplate>
@@ -37,7 +37,7 @@ const InwaysPage = () => {
       )}
 
       <Route
-        path="/inways/:name"
+        path={`${pathname}/:name`}
         render={({ match }) => {
           const inway = getInway({ name: match.params.name })
 
@@ -45,11 +45,11 @@ const InwaysPage = () => {
             inway.fetch()
           }
 
-          return <InwayDetailPage parentUrl="/inways" inway={inway} />
+          return <InwayDetailPage parentUrl={pathname} inway={inway} />
         }}
       />
     </PageTemplate>
   )
 }
 
-export default observer(InwaysPage)
+export default observer(OverviewPage)
