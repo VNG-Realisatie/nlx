@@ -8,7 +8,7 @@ import Table from '../../../../components/Table'
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
 import InwayRow from './InwayRow'
 
-const InwaysPageView = ({ inways, selectedInwayName }) => {
+const Inways = ({ inways, selectedInwayName }) => {
   const { t } = useTranslation()
 
   return inways != null && inways.length === 0 ? (
@@ -40,9 +40,9 @@ const InwaysPageView = ({ inways, selectedInwayName }) => {
   )
 }
 
-InwaysPageView.propTypes = {
+Inways.propTypes = {
   inways: array,
   selectedInwayName: string,
 }
 
-export default InwaysPageView
+export default Inways

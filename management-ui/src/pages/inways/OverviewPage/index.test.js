@@ -12,9 +12,7 @@ import { ManagementApi } from '../../../api'
 import InwaysPage from './index'
 
 jest.mock('../../../components/PageTemplate')
-jest.mock('./InwaysPageView', () => () => (
-  <p data-testid="inways-list">mock inways</p>
-))
+jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
 
 test('fetching all inways', async () => {
   const managementApiClient = new ManagementApi()

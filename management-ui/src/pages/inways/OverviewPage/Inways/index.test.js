@@ -4,7 +4,7 @@
 import React from 'react'
 
 import { renderWithProviders } from '../../../../test-utils'
-import InwaysPageView from './index'
+import Inways from './index'
 
 jest.mock('./InwayRow', () => () => (
   <tr data-testid="mock-row">
@@ -13,14 +13,14 @@ jest.mock('./InwayRow', () => () => (
 ))
 
 test('no inways', () => {
-  const { getByText } = renderWithProviders(<InwaysPageView inways={[]} />)
+  const { getByText } = renderWithProviders(<Inways inways={[]} />)
   expect(getByText(/^There are no inways registered yet$/)).toBeInTheDocument()
 })
 
 test('service list', () => {
   const inways = [{ name: 'inway1' }, { name: 'inway2' }]
   const { getByTestId, getAllByTestId } = renderWithProviders(
-    <InwaysPageView inways={inways} />,
+    <Inways inways={inways} />,
   )
 
   expect(getByTestId('inways-list')).toBeInTheDocument()

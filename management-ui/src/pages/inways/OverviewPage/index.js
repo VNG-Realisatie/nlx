@@ -11,7 +11,7 @@ import PageTemplate from '../../../components/PageTemplate'
 import InwayDetailPage from '../InwayDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwayStore } from '../../../hooks/use-stores'
-import InwaysPageView from './InwaysPageView'
+import Inways from './Inways'
 
 const OverviewPage = () => {
   const { t } = useTranslation()
@@ -33,7 +33,7 @@ const OverviewPage = () => {
           {t('Failed to load the inways')}
         </Alert>
       ) : (
-        <InwaysPageView inways={inways} selectedInwayName={name} />
+        <Inways inways={inways} selectedInwayName={name} />
       )}
 
       <Route
