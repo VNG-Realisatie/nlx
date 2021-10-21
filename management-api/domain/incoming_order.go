@@ -68,6 +68,7 @@ const (
 	descriptionMaxLength = 100
 )
 
+// Usage is documented in /docs/docs/reference-information/data-validation.md
 // nolint:gocritic // these are valid regex patterns
 var organizationNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-. _\s]{1,100}$`)
 var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)

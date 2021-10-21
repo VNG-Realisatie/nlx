@@ -43,6 +43,7 @@ const (
 	OpenAPI3 SpecificationType = "OpenAPI3"
 )
 
+// Usage is documented in /docs/docs/reference-information/data-validation.md
 var serviceNameRegex = regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 
 func NewService(args *NewServiceArgs) (*Service, error) {

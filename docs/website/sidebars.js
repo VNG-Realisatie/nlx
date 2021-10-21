@@ -76,6 +76,7 @@ module.exports = {
       collapsed: true,
       items: [
         'reference-information/organization-identification',
+        'reference-information/data-validation',
         'reference-information/transaction-log-headers',
         'reference-information/monitoring',
         'reference-information/outway-as-proxy',
