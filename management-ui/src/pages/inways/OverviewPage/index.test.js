@@ -5,14 +5,46 @@
 import React from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
+import { screen } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
-import InwaysPage from './index'
+import OverviewPage from './index'
 
 jest.mock('../../../components/PageTemplate')
 jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
+
+test('the Inways page', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [],
+  })
+
+  const history = createMemoryHistory({ initialEntries: ['/inways'] })
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{}}>
+        <StoreProvider rootStore={rootStore}>
+          <OverviewPage />
+        </StoreProvider>
+      </UserContextProvider>
+    </Router>,
+  )
+
+  const showAllButton = screen.getByLabelText('Show all')
+  expect(showAllButton.getAttribute('href')).toBe('/inways')
+
+  const showInwaysButton = screen.getByLabelText('Show Inways')
+  expect(showInwaysButton.getAttribute('href')).toBe('/inways')
+
+  const showOutwaysButton = screen.getByLabelText('Show Outways')
+  expect(showOutwaysButton.getAttribute('href')).toBe('/inways')
+})
 
 test('fetching all inways', async () => {
   const managementApiClient = new ManagementApi()
@@ -41,7 +73,7 @@ test('fetching all inways', async () => {
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <InwaysPage />
+          <OverviewPage />
         </StoreProvider>
       </UserContextProvider>
     </Router>,
@@ -66,7 +98,7 @@ test('failed to load inways', async () => {
     <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <InwaysPage />
+          <OverviewPage />
         </StoreProvider>
       </UserContextProvider>
     </MemoryRouter>,

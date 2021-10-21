@@ -15,6 +15,7 @@ import InwayStore from './InwayStore'
 import FinanceStore from './FinanceStore'
 import AuditLogStore from './AuditLogStore'
 import OrderStore from './OrderStore'
+import OutwayStore from './OutwayStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -50,6 +51,10 @@ export class RootStore {
       managementApiClient,
     })
     this.inwayStore = new InwayStore({
+      rootStore: this,
+      managementApiClient,
+    })
+    this.outwayStore = new OutwayStore({
       rootStore: this,
       managementApiClient,
     })

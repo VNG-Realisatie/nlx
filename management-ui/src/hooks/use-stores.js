@@ -44,6 +44,11 @@ export const useInwayStore = () => {
   return inwayStore
 }
 
+export const useOutwayStore = () => {
+  const stores = useStores()
+  return stores.outwayStore
+}
+
 export const useOrderStore = () => {
   const { orderStore } = useStores()
   return orderStore
