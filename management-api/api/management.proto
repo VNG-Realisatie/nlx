@@ -232,14 +232,14 @@ message ListServicesResponse {
     int32 requestCosts = 13;
 
     message AuthorizationSettings {
-      string mode = 1;
-      repeated Authorization authorizations = 2;
-
       message Authorization  {
         Organization organization = 1;
         string publicKeyHash = 2;
         string publicKeyPEM = 3;
       }
+
+      string mode = 1;
+      repeated Authorization authorizations = 2;
     }
   }
 }
