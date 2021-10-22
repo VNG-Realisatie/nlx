@@ -99,7 +99,7 @@ test('the /services/add-service route renders the AddServicePage', () => {
   expect(getByTestId('add-service-page')).toBeInTheDocument()
 })
 
-test('the /inways route renders the OverviewPage', () => {
+test('the /inways-and-outways route renders the OverviewPage', () => {
   const history = createMemoryHistory({ initialEntries: ['/inways'] })
   const { getByTestId } = renderWithProviders(
     <Router history={history}>

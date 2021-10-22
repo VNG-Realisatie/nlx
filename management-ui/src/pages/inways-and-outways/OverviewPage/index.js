@@ -33,7 +33,7 @@ const OverviewPage = () => {
         <Button
           as={ActionsBarButton}
           aria-label={t('Show all')}
-          to="/inways"
+          to="/inways-and-outways"
           variant="secondary"
         >
           {t('Show all')} ({outwayStore.outways.length + inways.length})
@@ -42,7 +42,7 @@ const OverviewPage = () => {
           as={ActionsBarButton}
           aria-label={t('Show Inways')}
           variant="secondary"
-          to="/inways"
+          to="/inways-and-outways"
         >
           {t('Inways')} ({inways.length})
         </Button>
@@ -50,7 +50,7 @@ const OverviewPage = () => {
           as={ActionsBarButton}
           aria-label={t('Show Outways')}
           variant="secondary"
-          to="/inways"
+          to="/inways-and-outways"
         >
           {t('Outways')} ({outwayStore.outways.length})
         </Button>
@@ -67,7 +67,7 @@ const OverviewPage = () => {
       )}
 
       <Route
-        path="/inways/:name"
+        path="/inways-and-outways/:name"
         render={({ match }) => {
           const inway = getInway({ name: match.params.name })
 
@@ -75,7 +75,9 @@ const OverviewPage = () => {
             inway.fetch()
           }
 
-          return <InwayDetailPage parentUrl="/inways" inway={inway} />
+          return (
+            <InwayDetailPage parentUrl="/inways-and-outways" inway={inway} />
+          )
         }}
       />
     </PageTemplate>

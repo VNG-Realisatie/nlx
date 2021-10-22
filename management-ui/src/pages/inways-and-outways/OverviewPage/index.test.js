@@ -15,13 +15,13 @@ import OverviewPage from './index'
 jest.mock('../../../components/PageTemplate')
 jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
 
-test('the Inways page', async () => {
+test('the Overviews page', async () => {
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListInways = jest.fn().mockResolvedValue({
     inways: [],
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/inways'] })
+  const history = createMemoryHistory({})
   const rootStore = new RootStore({
     managementApiClient,
   })
@@ -37,13 +37,13 @@ test('the Inways page', async () => {
   )
 
   const showAllButton = screen.getByLabelText('Show all')
-  expect(showAllButton.getAttribute('href')).toBe('/inways')
+  expect(showAllButton.getAttribute('href')).toBe('/inways-and-outways')
 
   const showInwaysButton = screen.getByLabelText('Show Inways')
-  expect(showInwaysButton.getAttribute('href')).toBe('/inways')
+  expect(showInwaysButton.getAttribute('href')).toBe('/inways-and-outways')
 
   const showOutwaysButton = screen.getByLabelText('Show Outways')
-  expect(showOutwaysButton.getAttribute('href')).toBe('/inways')
+  expect(showOutwaysButton.getAttribute('href')).toBe('/inways-and-outways')
 })
 
 test('fetching all inways', async () => {

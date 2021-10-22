@@ -34,9 +34,12 @@ const PrimaryNavigation = () => {
           <StyledNLXManagementLogo />
         </StyledHomeLink>
 
-        <StyledLink to="/inways" aria-label={t('Inways page')}>
+        <StyledLink
+          to="/inways-and-outways"
+          aria-label={t('Inways and Outways page')}
+        >
           <StyledIcon as={IconArrowLeftRight} size="x-large" />
-          {t('Inways')}
+          {t('Inways and Outways')}
         </StyledLink>
 
         <StyledLink to="/services" aria-label={t('Services page')}>
