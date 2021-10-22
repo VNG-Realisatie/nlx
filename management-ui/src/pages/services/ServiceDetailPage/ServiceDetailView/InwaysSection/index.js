@@ -36,7 +36,7 @@ const InwaysSection = ({ inways }) => {
                 <Table.Tr
                   key={i}
                   data-testid={`service-inway-${i}`}
-                  to={`/inways/${inway}`}
+                  to={`/inways-and-outways/${inway}`}
                 >
                   <Table.Td>
                     <StyledInwayName>{inway}</StyledInwayName>

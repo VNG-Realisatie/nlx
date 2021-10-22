@@ -4,12 +4,12 @@
 import logViolations from '../axe-utilities/log-violations'
 import { generateServiceName } from '../helpers/services'
 
-describe('Inways', () => {
+describe('Inways and Outways', () => {
   beforeEach(() => {
     cy.loginUsingDex()
-    cy.visit('/inways')
+    cy.visit('/inways-and-outways')
     cy.injectAxe()
-    cy.get('h1').should('contain', 'Inways')
+    cy.get('h1').should('contain', 'Inways and Outways')
   })
 
   it('Screens are accessible and details can be closed', () => {
@@ -29,7 +29,7 @@ describe('Inways', () => {
     )
 
     cy.closeTopDrawer()
-    cy.location().should('match', /\/inways$/)
+    cy.location().should('match', /\/inways-and-outways$/)
   })
 
   it('Deeplink to inway details and go to connected service page', () => {
@@ -44,7 +44,7 @@ describe('Inways', () => {
     cy.dismissToaster('De service is toegevoegd')
 
     // Go to service via inway
-    cy.visit(`/inways/${Cypress.env('INWAY_NAME')}`)
+    cy.visit(`/inways-and-outways/${Cypress.env('INWAY_NAME')}`)
     cy.findByText('Gekoppelde services').click()
     cy.findByText(serviceName).click()
 

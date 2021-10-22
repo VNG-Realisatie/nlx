@@ -14,7 +14,7 @@ import { useInwayStore, useOutwayStore } from '../../../hooks/use-stores'
 import { ActionsBar, ActionsBarButton } from './index.styles'
 import Inways from './Inways'
 
-const OverviewPage = () => {
+const InwaysAndOutwaysPage = () => {
   const { t } = useTranslation()
   const { isInitiallyFetched, inways, error, getInway } = useInwayStore()
   const outwayStore = useOutwayStore()
@@ -23,7 +23,7 @@ const OverviewPage = () => {
   return (
     <PageTemplate>
       <PageTemplate.Header
-        title={t('Inways')}
+        title={t('Inways and Outways')}
         description={t(
           'Gateways to provide (Inways) or consume (Outways) services.',
         )}
@@ -84,4 +84,4 @@ const OverviewPage = () => {
   )
 }
 
-export default observer(OverviewPage)
+export default observer(InwaysAndOutwaysPage)

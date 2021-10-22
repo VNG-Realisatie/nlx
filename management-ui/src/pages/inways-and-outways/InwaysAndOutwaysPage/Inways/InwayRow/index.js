@@ -13,7 +13,7 @@ const InwayRow = ({ inway, ...props }) => {
 
   return (
     <Table.Tr
-      to={`/inways/${name}`}
+      to={`/inways-and-outways/${name}`}
       name={name}
       data-testid="inway-row"
       {...props}

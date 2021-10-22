@@ -6,7 +6,7 @@ import { elementType } from 'prop-types'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import LoginOIDCPage from '../pages/LoginOIDCPage'
 import ServicesPage from '../pages/services/ServicesPage'
-import InwaysOverview from '../pages/inways-and-outways/OverviewPage'
+import InwaysAndOutwaysPage from '../pages/inways-and-outways/InwaysAndOutwaysPage'
 import AddServicePage from '../pages/services/AddServicePage'
 import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/services/EditServicePage'
@@ -25,7 +25,7 @@ const Routes = ({ authorizationPage }) => (
 
     <AuthenticatedRoute
       path="/inways-and-outways/:name?"
-      component={InwaysOverview}
+      component={InwaysAndOutwaysPage}
     />
     <AuthenticatedRoute
       path="/services/add-service"

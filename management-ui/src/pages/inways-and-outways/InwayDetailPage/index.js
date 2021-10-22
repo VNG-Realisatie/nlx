@@ -43,7 +43,7 @@ InwayDetailPage.propTypes = {
 }
 
 InwayDetailPage.defaultProps = {
-  parentUrl: '/inways',
+  parentUrl: '/inways-and-outways',
 }
 
 export default InwayDetailPage

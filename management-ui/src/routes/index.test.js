@@ -4,10 +4,9 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-
 import { renderWithProviders } from '../test-utils'
 import { UserContextProvider } from '../user-context'
-import Routes from '.'
+import Routes from './index'
 
 jest.mock('../pages/LoginOIDCPage', () => () => (
   <div data-testid="login-page" />
@@ -15,8 +14,8 @@ jest.mock('../pages/LoginOIDCPage', () => () => (
 jest.mock('../pages/services/ServicesPage', () => () => (
   <div data-testid="services-page" />
 ))
-jest.mock('../pages/inways/OverviewPage', () => () => (
-  <div data-testid="overview-page" />
+jest.mock('../pages/inways-and-outways/InwaysAndOutwaysPage', () => () => (
+  <div data-testid="inways-and-outways-page" />
 ))
 jest.mock('../pages/services/AddServicePage', () => () => (
   <div data-testid="add-service-page" />
@@ -49,7 +48,7 @@ test('when not authenticated it redirects to /login when navigating to /', async
   expect(history.location.pathname).toEqual('/login')
 })
 
-test('redirects to /inways when navigating to /', async () => {
+test('redirects to /inways-and-outways when navigating to /', async () => {
   const history = createMemoryHistory()
   renderWithProviders(
     <Router history={history}>
@@ -58,7 +57,7 @@ test('redirects to /inways when navigating to /', async () => {
       </UserContextProvider>
     </Router>,
   )
-  expect(history.location.pathname).toEqual('/inways')
+  expect(history.location.pathname).toEqual('/inways-and-outways')
 })
 
 test('the /login route renders the LoginOIDCPage', () => {
@@ -100,7 +99,9 @@ test('the /services/add-service route renders the AddServicePage', () => {
 })
 
 test('the /inways-and-outways route renders the OverviewPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/inways'] })
+  const history = createMemoryHistory({
+    initialEntries: ['/inways-and-outways'],
+  })
   const { getByTestId } = renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{ id: '42' }}>
@@ -108,7 +109,7 @@ test('the /inways-and-outways route renders the OverviewPage', () => {
       </UserContextProvider>
     </Router>,
   )
-  expect(getByTestId('overview-page')).toBeInTheDocument()
+  expect(getByTestId('inways-and-outways-page')).toBeInTheDocument()
 })
 
 test('the /audit-log route renders the AuditLogPage', () => {

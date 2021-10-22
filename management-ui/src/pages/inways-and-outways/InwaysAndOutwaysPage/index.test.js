@@ -10,7 +10,7 @@ import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
-import OverviewPage from './index'
+import InwaysAndOutwaysPage from './index'
 
 jest.mock('../../../components/PageTemplate')
 jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
@@ -30,7 +30,7 @@ test('the Overviews page', async () => {
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <OverviewPage />
+          <InwaysAndOutwaysPage />
         </StoreProvider>
       </UserContextProvider>
     </Router>,
@@ -64,7 +64,7 @@ test('fetching all inways', async () => {
     ],
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/inways'] })
+  const history = createMemoryHistory({ initialEntries: ['/inways-and-outways'] })
   const rootStore = new RootStore({
     managementApiClient,
   })
@@ -73,7 +73,7 @@ test('fetching all inways', async () => {
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <OverviewPage />
+          <InwaysAndOutwaysPage />
         </StoreProvider>
       </UserContextProvider>
     </Router>,
@@ -98,7 +98,7 @@ test('failed to load inways', async () => {
     <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <OverviewPage />
+          <InwaysAndOutwaysPage />
         </StoreProvider>
       </UserContextProvider>
     </MemoryRouter>,
