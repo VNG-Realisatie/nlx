@@ -30,7 +30,7 @@ Answer the questions accordingly:
 - **Country Name**, enter `Netherlands`
 - **State**, enter the name of the province, e.g. `Utrecht`
 - **Locality Name**, enter the name of the city, e.g. `Utrecht`
-- **Organization Name**, enter your organization name
+- **Organization Name**, enter your organization name (please use a URL-friendly value with a maximum length of 100 characters)
 - **Organization Unit Name**, enter the name of your organization unit name (optional)
 - **Common name**, for an inway this should correspond to the Fully Qualified Domain Name (FQDN) of your inway, e.g. `inway.my-organization.nl` or `nlx.my-organization.nl`. For an outway this FQDN does not have to be resolvable. It is possible to use the inway certificate for the outway and NLX Management.
 - **Email Address**, enter your e-mail address (optional)

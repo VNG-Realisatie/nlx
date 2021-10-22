@@ -46,7 +46,7 @@ Answer the questions accordingly:
 - **Country Name**, enter any value
 - **State**, enter any value
 - **Locality Name**, enter any value
-- **Organization Name**, please enter a URL-friendly value. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.
+- **Organization Name**, please enter a URL-friendly value with a maximum length of 100 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.
   A good value could be: `my-organization`.
 - **Organization Unit Name**, enter any value
 - **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your inway, e.g. `inway.my-organization.nl` or `nlx.my-organization.nl`. For an outway this FQDN does not have to be resolvable. It is possible to use the inway certificate for the outway and NLX Management.

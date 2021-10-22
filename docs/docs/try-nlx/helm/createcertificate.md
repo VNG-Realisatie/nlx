@@ -106,7 +106,7 @@ You now have to answer a series of questions. Below is an example of the answers
 - Country Name (2 letter code) []: NL
 - State or Province Name (full name) []: Noord holland
 - Locality Name (eg, city) []: Haarlem
-- Organization Name (eg, company) []: mijn-organisatie
+- Organization Name (eg, company) []: mijn-organisatie (url friendly name with a maximum length of 100 characters)
   (remember this because we will need it later)
 - Organizational Unit Name (eg, section) []: <skip>
 - Common Name (eg, fully qualified host name) []:
