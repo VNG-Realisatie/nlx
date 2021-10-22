@@ -31,7 +31,7 @@ test('display order details', async () => {
     .mockResolvedValue({
       orders: [
         {
-          delegatee: 'delegatee',
+          delegatee: '01234567890123456789',
           reference: 'my-reference',
           description: 'description',
           validFrom: '2020-01-01',

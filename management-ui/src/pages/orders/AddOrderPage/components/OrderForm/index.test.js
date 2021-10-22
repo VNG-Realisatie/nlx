@@ -28,7 +28,10 @@ test('the form values of the onSubmitHandler', async () => {
 
   userEvent.type(getByLabelText(/Order description/), 'my-description')
   userEvent.type(getByLabelText(/Reference/), 'my-reference')
-  userEvent.type(getByLabelText(/Delegated organization/), 'my-delegatee')
+  userEvent.type(
+    getByLabelText(/Delegated organization/),
+    '01234567890123456789',
+  )
   userEvent.type(getByLabelText(/Public key PEM/), 'my-public-key-pem')
   fireEvent.change(getByLabelText(/Valid from/), {
     target: { value: '2021-01-01' },
@@ -44,7 +47,7 @@ test('the form values of the onSubmitHandler', async () => {
     expect(onSubmitHandlerMock).toHaveBeenCalledWith({
       description: 'my-description',
       reference: 'my-reference',
-      delegatee: 'my-delegatee',
+      delegatee: '01234567890123456789',
       publicKeyPEM: 'my-public-key-pem',
       services: [
         {

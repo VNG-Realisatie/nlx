@@ -42,7 +42,7 @@ test('rendering the orders page', async () => {
         {
           reference: 'ref1',
           description: 'description of the first outgoing order',
-          delegatee: 'delegatee',
+          delegatee: '01234567890123456789',
           services: [],
           validFrom: '2021-05-04',
           validUntil: '2021-05-10',
