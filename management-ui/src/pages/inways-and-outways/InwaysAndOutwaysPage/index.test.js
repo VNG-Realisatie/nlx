@@ -64,7 +64,9 @@ test('fetching all inways', async () => {
     ],
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/inways-and-outways'] })
+  const history = createMemoryHistory({
+    initialEntries: ['/inways-and-outways'],
+  })
   const rootStore = new RootStore({
     managementApiClient,
   })

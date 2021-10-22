@@ -23,6 +23,7 @@ import { ReactComponent as SvgKey } from './key.svg'
 import { ReactComponent as SvgMail } from './mail.svg'
 import { ReactComponent as SvgMoneyEuroCircleLine } from './money-euro-circle-line.svg'
 import { ReactComponent as SvgOrganization } from './organization.svg'
+import { ReactComponent as SvgOutway } from './outway.svg'
 import { ReactComponent as SvgPencil } from './pencil.svg'
 import { ReactComponent as SvgPlus } from './plus.svg'
 import { ReactComponent as SvgRevoke } from './revoke.svg'
@@ -75,6 +76,7 @@ export const IconMoneyEuroCircleLine = (props) => (
 export const IconOrganization = (props) => (
   <Icon as={SvgOrganization} {...props} />
 )
+export const IconOutway = (props) => <Icon as={SvgOutway} {...props} />
 export const IconPencil = (props) => <Icon as={SvgPencil} {...props} />
 export const IconPlus = (props) => <Icon as={SvgPlus} {...props} />
 export const IconRevoke = (props) => <Icon as={SvgRevoke} {...props} />

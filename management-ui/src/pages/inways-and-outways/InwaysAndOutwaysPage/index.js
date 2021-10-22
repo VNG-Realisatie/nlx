@@ -11,7 +11,12 @@ import PageTemplate from '../../../components/PageTemplate'
 import InwayDetailPage from '../InwayDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwayStore, useOutwayStore } from '../../../hooks/use-stores'
-import { ActionsBar, ActionsBarButton } from './index.styles'
+import {
+  ActionsBar,
+  ActionsBarButton,
+  StyledIconInway,
+  StyledIconOutway,
+} from './index.styles'
 import Inways from './Inways'
 
 const InwaysAndOutwaysPage = () => {
@@ -44,7 +49,7 @@ const InwaysAndOutwaysPage = () => {
           variant="secondary"
           to="/inways-and-outways"
         >
-          {t('Inways')} ({inways.length})
+          <StyledIconInway /> {t('Inways')} ({inways.length})
         </Button>
         <Button
           as={ActionsBarButton}
@@ -52,7 +57,7 @@ const InwaysAndOutwaysPage = () => {
           variant="secondary"
           to="/inways-and-outways"
         >
-          {t('Outways')} ({outwayStore.outways.length})
+          <StyledIconOutway /> {t('Outways')} ({outwayStore.outways.length})
         </Button>
       </ActionsBar>
 
