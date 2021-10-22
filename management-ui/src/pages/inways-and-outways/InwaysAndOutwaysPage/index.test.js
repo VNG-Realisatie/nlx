@@ -3,50 +3,35 @@
 //
 
 import React from 'react'
-import { MemoryRouter, Router } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { screen } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
-import InwaysAndOutwaysPage from './index'
+import Routes from '../../../routes'
 
 jest.mock('../../../components/PageTemplate')
 jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
 
-test('the Overviews page', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [],
+function renderPage(rootStore) {
+  const history = createMemoryHistory({
+    initialEntries: ['/inways-and-outways'],
   })
 
-  const history = createMemoryHistory({})
-  const rootStore = new RootStore({
-    managementApiClient,
-  })
-
-  renderWithProviders(
+  return renderWithProviders(
     <Router history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <InwaysAndOutwaysPage />
+          <Routes />
         </StoreProvider>
       </UserContextProvider>
     </Router>,
   )
+}
 
-  const showAllButton = screen.getByLabelText('Show all')
-  expect(showAllButton.getAttribute('href')).toBe('/inways-and-outways')
-
-  const showInwaysButton = screen.getByLabelText('Show Inways')
-  expect(showInwaysButton.getAttribute('href')).toBe('/inways-and-outways')
-
-  const showOutwaysButton = screen.getByLabelText('Show Outways')
-  expect(showOutwaysButton.getAttribute('href')).toBe('/inways-and-outways')
-})
-
-test('fetching all inways', async () => {
+test('the InwaysAndOutwaysPage page', async () => {
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListInways = jest.fn().mockResolvedValue({
     inways: [
@@ -64,48 +49,44 @@ test('fetching all inways', async () => {
     ],
   })
 
-  const history = createMemoryHistory({
-    initialEntries: ['/inways-and-outways'],
-  })
   const rootStore = new RootStore({
     managementApiClient,
   })
 
-  const { getByRole, getByTestId } = renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={rootStore}>
-          <InwaysAndOutwaysPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </Router>,
+  renderPage(rootStore)
+
+  const showInwaysButton = screen.getByLabelText('Show Inways')
+  expect(showInwaysButton.getAttribute('href')).toBe(
+    '/inways-and-outways/inways',
   )
 
-  expect(getByRole('progressbar')).toBeInTheDocument()
-  expect(() => getByTestId('inways-list')).toThrow()
+  const showOutwaysButton = screen.getByLabelText('Show Outways')
+  expect(showOutwaysButton.getAttribute('href')).toBe(
+    '/inways-and-outways/outways',
+  )
+
+  expect(screen.getByRole('progressbar')).toBeInTheDocument()
+  expect(() => screen.getByTestId('inways-list')).toThrow()
 
   await waitFor(() =>
-    expect(getByTestId('inways-list')).toHaveTextContent('mock inways'),
+    expect(screen.getByTestId('inways-list')).toHaveTextContent('mock inways'),
   )
 })
 
 test('failed to load inways', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListInways = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+
   const rootStore = new RootStore({
-    inwayRepository: {
-      getAll: jest.fn().mockRejectedValue(new Error('arbitrary error')),
-    },
+    managementApiClient,
   })
 
-  const { findByText, getByTestId } = renderWithProviders(
-    <MemoryRouter>
-      <UserContextProvider user={{}}>
-        <StoreProvider rootStore={rootStore}>
-          <InwaysAndOutwaysPage />
-        </StoreProvider>
-      </UserContextProvider>
-    </MemoryRouter>,
-  )
+  renderPage(rootStore)
 
-  expect(() => getByTestId('inways-list')).toThrow()
-  expect(await findByText(/^Failed to load the inways$/)).toBeInTheDocument()
+  expect(() => screen.getByTestId('inways-list')).toThrow()
+  expect(
+    await screen.findByText(/^Failed to load the inways$/),
+  ).toBeInTheDocument()
 })

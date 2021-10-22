@@ -48,7 +48,7 @@ test('when not authenticated it redirects to /login when navigating to /', async
   expect(history.location.pathname).toEqual('/login')
 })
 
-test('redirects to /inways-and-outways when navigating to /', async () => {
+test('redirects to /inways-and-outways/inways when navigating to /', async () => {
   const history = createMemoryHistory()
   renderWithProviders(
     <Router history={history}>
@@ -57,7 +57,19 @@ test('redirects to /inways-and-outways when navigating to /', async () => {
       </UserContextProvider>
     </Router>,
   )
-  expect(history.location.pathname).toEqual('/inways-and-outways')
+  expect(history.location.pathname).toEqual('/inways-and-outways/inways')
+})
+
+test('redirects to /inways-and-outways/inways when navigating to /inways-and-outways', async () => {
+  const history = createMemoryHistory()
+  renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(history.location.pathname).toEqual('/inways-and-outways/inways')
 })
 
 test('the /login route renders the LoginOIDCPage', () => {

@@ -21,9 +21,10 @@ import Inways from './Inways'
 
 const InwaysAndOutwaysPage = () => {
   const { t } = useTranslation()
-  const { isInitiallyFetched, inways, error, getInway } = useInwayStore()
+  const { isInitiallyFetched, error } = useInwayStore()
+  const inwayStore = useInwayStore()
   const outwayStore = useOutwayStore()
-  const { name } = useParams()
+  const params = useParams()
 
   return (
     <PageTemplate>
@@ -37,25 +38,17 @@ const InwaysAndOutwaysPage = () => {
       <ActionsBar>
         <Button
           as={ActionsBarButton}
-          aria-label={t('Show all')}
-          to="/inways-and-outways"
-          variant="secondary"
-        >
-          {t('Show all')} ({outwayStore.outways.length + inways.length})
-        </Button>
-        <Button
-          as={ActionsBarButton}
           aria-label={t('Show Inways')}
           variant="secondary"
-          to="/inways-and-outways"
+          to="/inways-and-outways/inways"
         >
-          <StyledIconInway /> {t('Inways')} ({inways.length})
+          <StyledIconInway /> {t('Inways')} ({inwayStore.inways.length})
         </Button>
         <Button
           as={ActionsBarButton}
           aria-label={t('Show Outways')}
           variant="secondary"
-          to="/inways-and-outways"
+          to="/inways-and-outways/outways"
         >
           <StyledIconOutway /> {t('Outways')} ({outwayStore.outways.length})
         </Button>
@@ -67,21 +60,24 @@ const InwaysAndOutwaysPage = () => {
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the inways')}
         </Alert>
-      ) : (
-        <Inways inways={inways} selectedInwayName={name} />
-      )}
+      ) : params.type === 'inways' ? (
+        <Inways inways={inwayStore.inways} selectedInwayName={params.name} />
+      ) : params.type === 'outways' ? null : null}
 
       <Route
-        path="/inways-and-outways/:name"
+        path="/inways-and-outways/inways/:name"
         render={({ match }) => {
-          const inway = getInway({ name: match.params.name })
+          const inway = inwayStore.getInway({ name: match.params.name })
 
           if (inway) {
             inway.fetch()
           }
 
           return (
-            <InwayDetailPage parentUrl="/inways-and-outways" inway={inway} />
+            <InwayDetailPage
+              parentUrl="/inways-and-outways/inways"
+              inway={inway}
+            />
           )
         }}
       />

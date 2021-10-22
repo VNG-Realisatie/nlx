@@ -23,8 +23,13 @@ const Routes = ({ authorizationPage }) => (
     <Redirect exact path="/" to="/inways-and-outways" />
     <Route path={LoginRoutePath} component={authorizationPage} />
 
+    <Redirect
+      exact
+      path="/inways-and-outways"
+      to="/inways-and-outways/inways"
+    />
     <AuthenticatedRoute
-      path="/inways-and-outways/:name?"
+      path="/inways-and-outways/:type(inways|outways)?/:name?"
       component={InwaysAndOutwaysPage}
     />
     <AuthenticatedRoute
