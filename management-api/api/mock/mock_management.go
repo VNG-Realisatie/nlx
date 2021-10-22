@@ -9,10 +9,9 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-
-	api "go.nlx.io/nlx/management-api/api"
 )
 
 // MockManagementClient is a mock of ManagementClient interface.
@@ -398,6 +397,26 @@ func (mr *MockManagementClientMockRecorder) ListOutgoingOrders(ctx, in interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingOrders", reflect.TypeOf((*MockManagementClient)(nil).ListOutgoingOrders), varargs...)
 }
 
+// ListOutways mocks base method.
+func (m *MockManagementClient) ListOutways(ctx context.Context, in *api.ListOutwaysRequest, opts ...grpc.CallOption) (*api.ListOutwaysResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOutways", varargs...)
+	ret0, _ := ret[0].(*api.ListOutwaysResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutways indicates an expected call of ListOutways.
+func (mr *MockManagementClientMockRecorder) ListOutways(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutways", reflect.TypeOf((*MockManagementClient)(nil).ListOutways), varargs...)
+}
+
 // ListServices mocks base method.
 func (m *MockManagementClient) ListServices(ctx context.Context, in *api.ListServicesRequest, opts ...grpc.CallOption) (*api.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
@@ -436,6 +455,26 @@ func (mr *MockManagementClientMockRecorder) RegisterInway(ctx, in interface{}, o
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockManagementClient)(nil).RegisterInway), varargs...)
+}
+
+// RegisterOutway mocks base method.
+func (m *MockManagementClient) RegisterOutway(ctx context.Context, in *api.RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RegisterOutway", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterOutway indicates an expected call of RegisterOutway.
+func (mr *MockManagementClientMockRecorder) RegisterOutway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutway", reflect.TypeOf((*MockManagementClient)(nil).RegisterOutway), varargs...)
 }
 
 // RejectIncomingAccessRequest mocks base method.
@@ -911,6 +950,21 @@ func (mr *MockManagementServerMockRecorder) ListOutgoingOrders(arg0, arg1 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingOrders", reflect.TypeOf((*MockManagementServer)(nil).ListOutgoingOrders), arg0, arg1)
 }
 
+// ListOutways mocks base method.
+func (m *MockManagementServer) ListOutways(arg0 context.Context, arg1 *api.ListOutwaysRequest) (*api.ListOutwaysResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutways", arg0, arg1)
+	ret0, _ := ret[0].(*api.ListOutwaysResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutways indicates an expected call of ListOutways.
+func (mr *MockManagementServerMockRecorder) ListOutways(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutways", reflect.TypeOf((*MockManagementServer)(nil).ListOutways), arg0, arg1)
+}
+
 // ListServices mocks base method.
 func (m *MockManagementServer) ListServices(arg0 context.Context, arg1 *api.ListServicesRequest) (*api.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
@@ -939,6 +993,21 @@ func (m *MockManagementServer) RegisterInway(arg0 context.Context, arg1 *api.Inw
 func (mr *MockManagementServerMockRecorder) RegisterInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockManagementServer)(nil).RegisterInway), arg0, arg1)
+}
+
+// RegisterOutway mocks base method.
+func (m *MockManagementServer) RegisterOutway(arg0 context.Context, arg1 *api.RegisterOutwayRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterOutway", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterOutway indicates an expected call of RegisterOutway.
+func (mr *MockManagementServerMockRecorder) RegisterOutway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutway", reflect.TypeOf((*MockManagementServer)(nil).RegisterOutway), arg0, arg1)
 }
 
 // RejectIncomingAccessRequest mocks base method.

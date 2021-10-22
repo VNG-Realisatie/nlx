@@ -4,7 +4,6 @@ package api
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -34,6 +33,8 @@ type ManagementClient interface {
 	RegisterInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error)
 	UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*Inway, error)
 	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error)
 	ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -179,6 +180,24 @@ func (c *managementClient) UpdateInway(ctx context.Context, in *UpdateInwayReque
 func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteInway", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/RegisterOutway", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error) {
+	out := new(ListOutwaysResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutways", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -338,6 +357,8 @@ type ManagementServer interface {
 	RegisterInway(context.Context, *Inway) (*Inway, error)
 	UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error)
 	DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error)
+	RegisterOutway(context.Context, *RegisterOutwayRequest) (*emptypb.Empty, error)
+	ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error)
 	ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error)
@@ -401,6 +422,12 @@ func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRe
 }
 func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteInway not implemented")
+}
+func (UnimplementedManagementServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterOutway not implemented")
+}
+func (UnimplementedManagementServer) ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOutways not implemented")
 }
 func (UnimplementedManagementServer) ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequests not implemented")
@@ -708,6 +735,42 @@ func _Management_DeleteInway_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServer).DeleteInway(ctx, req.(*DeleteInwayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_RegisterOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterOutwayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).RegisterOutway(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/RegisterOutway",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).RegisterOutway(ctx, req.(*RegisterOutwayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_ListOutways_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOutwaysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).ListOutways(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/ListOutways",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).ListOutways(ctx, req.(*ListOutwaysRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1044,6 +1107,14 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteInway",
 			Handler:    _Management_DeleteInway_Handler,
+		},
+		{
+			MethodName: "RegisterOutway",
+			Handler:    _Management_RegisterOutway_Handler,
+		},
+		{
+			MethodName: "ListOutways",
+			Handler:    _Management_ListOutways_Handler,
 		},
 		{
 			MethodName: "ListIncomingAccessRequests",

@@ -9,7 +9,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-
 	nlxversion "go.nlx.io/nlx/common/nlxversion"
 	database "go.nlx.io/nlx/directory-inspection-api/pkg/database"
 )

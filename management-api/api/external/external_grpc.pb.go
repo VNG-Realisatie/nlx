@@ -4,13 +4,11 @@ package external
 
 import (
 	context "context"
-
+	api "go.nlx.io/nlx/management-api/api"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-
-	api "go.nlx.io/nlx/management-api/api"
 )
 
 // This is a compile-time assertion to ensure that this generated file

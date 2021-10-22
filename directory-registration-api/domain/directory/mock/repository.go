@@ -9,7 +9,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-
 	domain "go.nlx.io/nlx/directory-registration-api/domain"
 )
 

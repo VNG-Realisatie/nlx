@@ -1,11 +1,14 @@
 package api_test
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/management-api/api"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 // nolint:dupl // this is a test function
@@ -120,6 +123,66 @@ func TestInwayValidate(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			err := tt.inway.Validate()
+			if err != nil {
+				assert.EqualError(t, err, tt.err)
+				return
+			}
+
+			assert.Equal(t, nil, err)
+		})
+	}
+}
+
+func TestOutwayValidate(t *testing.T) {
+	pkiDir := filepath.Join("..", "..", "testing", "pki")
+
+	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
+
+	testPublicKeyPEM, err := certBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
+	tests := map[string]struct {
+		req *api.RegisterOutwayRequest
+		err string
+	}{
+		"without_name": {
+			req: &api.RegisterOutwayRequest{
+				Name:         "",
+				PublicKeyPEM: testPublicKeyPEM,
+				Version:      "unknown",
+			},
+			err: "name: cannot be blank.",
+		},
+		"without_public_key_pem": {
+			req: &api.RegisterOutwayRequest{
+				Name:    "inway42.test",
+				Version: "unknown",
+			},
+			err: "publicKeyPEM: cannot be blank.",
+		},
+		"without_version": {
+			req: &api.RegisterOutwayRequest{
+				Name:         "inway42.test",
+				PublicKeyPEM: testPublicKeyPEM,
+			},
+			err: "version: cannot be blank.",
+		},
+		"happy_flow": {
+			req: &api.RegisterOutwayRequest{
+				Name:         "inway42.test",
+				PublicKeyPEM: testPublicKeyPEM,
+				Version:      "unknown",
+			},
+			err: "",
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			err := tt.req.Validate()
 			if err != nil {
 				assert.EqualError(t, err, tt.err)
 				return

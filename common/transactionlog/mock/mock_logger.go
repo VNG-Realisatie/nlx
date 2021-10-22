@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-
 	transactionlog "go.nlx.io/nlx/common/transactionlog"
 )
 

@@ -63,6 +63,8 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 10
           env:
+            - name: OUTWAY_NAME
+              value: {{ default (include "nlx-outway.fullname" .) .Values.config.name }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
             - name: TLS_ROOT_CERT

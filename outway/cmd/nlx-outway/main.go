@@ -28,6 +28,8 @@ import (
 )
 
 var options struct {
+	Name string `long:"name" env:"OUTWAY_NAME" description:"Name of the outway. Every outway should have a unique name within the organization." required:"true"`
+
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	ListenHTTPS   bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
 
@@ -131,6 +133,11 @@ func main() {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
+	publicKeyPEM, err := cert.PublicKeyPEM()
+	if err != nil {
+		logger.Fatal("unable to get public key pem from certificate TLS files", zap.Error(err))
+	}
+
 	creds := credentials.NewTLS(cert.TLSConfig())
 
 	conn, err := grpc.DialContext(context.TODO(), options.ManagementAPIAddress, grpc.WithTransportCredentials(creds))
@@ -139,6 +146,15 @@ func main() {
 	}
 
 	client := api.NewManagementClient(conn)
+
+	_, err = client.RegisterOutway(context.TODO(), &api.RegisterOutwayRequest{
+		Name:         options.Name,
+		PublicKeyPEM: publicKeyPEM,
+		Version:      version.BuildVersion,
+	})
+	if err != nil {
+		logger.Fatal("failed to register outway in Management API", zap.Error(err))
+	}
 
 	ow, err := outway.NewOutway(
 		context.Background(),

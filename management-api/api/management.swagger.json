@@ -685,6 +685,58 @@
         ]
       }
     },
+    "/api/v1/outways": {
+      "get": {
+        "operationId": "Management_ListOutways",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementListOutwaysResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      },
+      "post": {
+        "operationId": "Management_RegisterOutway",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/managementRegisterOutwayRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/retrieve-claim": {
       "get": {
         "operationId": "Management_RetrieveClaimForOrder",
@@ -1581,6 +1633,17 @@
         }
       }
     },
+    "managementListOutwaysResponse": {
+      "type": "object",
+      "properties": {
+        "outways": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementOutway"
+          }
+        }
+      }
+    },
     "managementListServicesResponse": {
       "type": "object",
       "properties": {
@@ -1723,6 +1786,37 @@
         "revokedAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "managementOutway": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "ipAddress": {
+          "type": "string"
+        },
+        "publicKeyPEM": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "managementRegisterOutwayRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "publicKeyPEM": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
         }
       }
     },

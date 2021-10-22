@@ -21,6 +21,16 @@ func (inway *Inway) Validate() error {
 	)
 }
 
+// Validate the outway, check if all fields are valid
+func (req *RegisterOutwayRequest) Validate() error {
+	return validation.ValidateStruct(
+		req,
+		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
+		validation.Field(&req.PublicKeyPEM, validation.Required),
+		validation.Field(&req.Version, validation.Required),
+	)
+}
+
 // Validate the service when creating a new one, check if all fields are valid
 func (s *CreateServiceRequest) Validate() error {
 	return validation.ValidateStruct(

@@ -10,7 +10,6 @@ import (
 	time "time"
 
 	gomock "github.com/golang/mock/gomock"
-
 	diagnostics "go.nlx.io/nlx/common/diagnostics"
 	domain "go.nlx.io/nlx/management-api/domain"
 	database "go.nlx.io/nlx/management-api/pkg/database"
@@ -363,6 +362,21 @@ func (mr *MockConfigDatabaseMockRecorder) GetOutgoingOrderByReference(ctx, refer
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutgoingOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutgoingOrderByReference), ctx, reference)
 }
 
+// GetOutway mocks base method.
+func (m *MockConfigDatabase) GetOutway(ctx context.Context, name string) (*database.Outway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOutway", ctx, name)
+	ret0, _ := ret[0].(*database.Outway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOutway indicates an expected call of GetOutway.
+func (mr *MockConfigDatabaseMockRecorder) GetOutway(ctx, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutway", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutway), ctx, name)
+}
+
 // GetService mocks base method.
 func (m *MockConfigDatabase) GetService(ctx context.Context, name string) (*database.Service, error) {
 	m.ctrl.T.Helper()
@@ -513,6 +527,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListOutgoingOrdersByOrganization(ctx, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutgoingOrdersByOrganization", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutgoingOrdersByOrganization), ctx, organizationSerialNumber)
 }
 
+// ListOutways mocks base method.
+func (m *MockConfigDatabase) ListOutways(ctx context.Context) ([]*database.Outway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOutways", ctx)
+	ret0, _ := ret[0].([]*database.Outway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOutways indicates an expected call of ListOutways.
+func (mr *MockConfigDatabaseMockRecorder) ListOutways(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutways", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutways), ctx)
+}
+
 // ListServices mocks base method.
 func (m *MockConfigDatabase) ListServices(ctx context.Context) ([]*database.Service, error) {
 	m.ctrl.T.Helper()
@@ -555,6 +584,20 @@ func (m *MockConfigDatabase) RegisterInway(ctx context.Context, inway *database.
 func (mr *MockConfigDatabaseMockRecorder) RegisterInway(ctx, inway interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockConfigDatabase)(nil).RegisterInway), ctx, inway)
+}
+
+// RegisterOutway mocks base method.
+func (m *MockConfigDatabase) RegisterOutway(ctx context.Context, outway *database.Outway) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterOutway", ctx, outway)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterOutway indicates an expected call of RegisterOutway.
+func (mr *MockConfigDatabaseMockRecorder) RegisterOutway(ctx, outway interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutway", reflect.TypeOf((*MockConfigDatabase)(nil).RegisterOutway), ctx, outway)
 }
 
 // RevokeAccessGrant mocks base method.
