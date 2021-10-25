@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, flow } from 'mobx'
 
 class OutwayModel {
   _name = ''
@@ -25,10 +25,18 @@ class OutwayModel {
     return this._version
   }
 
-  constructor({ outwayData }) {
+  constructor({ store, outwayData }) {
     makeAutoObservable(this)
+
+    this.outwayStore = store
+
     this.update(outwayData)
   }
+
+  fetch = flow(function* fetch() {
+    const outway = yield this.outwayStore.fetch({ name: this.name })
+    this.with(outway)
+  }).bind(this)
 
   update = function (outway) {
     this._name = outway.name

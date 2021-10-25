@@ -9,7 +9,10 @@ class OutwayStore {
   _outways = []
 
   // This is set to true after the first call has been made. Regardless of success.
-  isInitiallyFetched = false
+  _isInitiallyFetched = false
+
+  // This is internal state to prevent concurrent fetchInways calls being in flight.
+  _isFetching = false
 
   constructor({ rootStore, managementApiClient }) {
     makeAutoObservable(this)
@@ -45,6 +48,41 @@ class OutwayStore {
       this.isFetching = false
     }
   }).bind(this)
+
+  fetch = flow(function* fetch({ name }) {
+    const outwayData = yield this._managementApiClient.managementGetOutway({
+      name,
+    })
+    let outway = this.getByName({ name })
+
+    if (!outway) {
+      outway = this._updateFromServer(outwayData)
+      this._outways.push(outway)
+      return outway
+    }
+
+    return this._updateFromServer(outwayData)
+  }).bind(this)
+
+  getByName = ({ name }) => {
+    return this._outways.find((outway) => outway.name === name)
+  }
+
+  _updateFromServer(outwayData) {
+    const cachedOutway = this.getInway({
+      name: outwayData.name,
+    })
+
+    if (cachedOutway) {
+      cachedOutway.with(outwayData)
+      return cachedOutway
+    }
+
+    return new OutwayModel({
+      store: this,
+      outwayData: outwayData,
+    })
+  }
 }
 
 export default OutwayStore

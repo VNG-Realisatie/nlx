@@ -9,6 +9,7 @@ import { Route, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import InwayDetailPage from '../InwayDetailPage'
+import OutwayDetailPage from '../OutwayDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwayStore, useOutwayStore } from '../../../hooks/use-stores'
 import {
@@ -83,6 +84,20 @@ const InwaysAndOutwaysPage = () => {
             <InwayDetailPage
               parentUrl="/inways-and-outways/inways"
               inway={inway}
+            />
+          )
+        }}
+      />
+
+      <Route
+        path="/inways-and-outways/outways/:name"
+        render={({ match }) => {
+          const outway = outwayStore.getByName({ name: match.params.name })
+
+          return (
+            <OutwayDetailPage
+              parentUrl="/inways-and-outways/outways"
+              outway={outway}
             />
           )
         }}
