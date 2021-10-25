@@ -15,7 +15,7 @@ test('no inways', () => {
   ).toBeInTheDocument()
 })
 
-test('service list', () => {
+test('list all inways', () => {
   const inways = [
     new InwayModel({ inway: { name: 'inway1' } }),
     new InwayModel({ inway: { name: 'inway2' } }),
