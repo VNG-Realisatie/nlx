@@ -18,6 +18,7 @@ type data struct {
 
 func serveHTML(w http.ResponseWriter, r *http.Request) {
 	environmentSubdomain := os.Getenv("ENVIRONMENT_SUBDOMAIN")
+	reviewSlugWithDomain := os.Getenv("ENVIRONMENT_SLUG_WITH_DOMAIN")
 
 	templateFilePath := templateForSubdomain(environmentSubdomain)
 
@@ -29,7 +30,7 @@ func serveHTML(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.Execute(w, &data{
-		ReviewSlugWithDomain: os.Getenv("ENVIRONMENT_SLUG_WITH_DOMAIN"),
+		ReviewSlugWithDomain: reviewSlugWithDomain,
 		EnvironmentSubdomain: environmentSubdomain,
 	})
 	if err != nil {
@@ -53,8 +54,6 @@ func templateForSubdomain(subdomain string) string {
 	switch subdomain {
 	case "review":
 		templateFilePath = path.Join("templates", "sites-review.html")
-	case "acc":
-		templateFilePath = path.Join("templates", "sites-acc.html")
 	default:
 		templateFilePath = path.Join("templates", "sites.html")
 	}

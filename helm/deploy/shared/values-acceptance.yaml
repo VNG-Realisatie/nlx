@@ -138,7 +138,7 @@ nlx-directory:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
       hosts:
-        - "directory.acc.nlx.io"
+        - directory.acc.nlx.io
       tls:
         - secretName: shared-nlx-directory-ui-ingress-tls
           hosts:
@@ -149,7 +149,7 @@ nlx-docs:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - "docs.acc.nlx.io"
+      - docs.acc.nlx.io
     tls:
       - secretName: shared-nlx-docs-ingress-tls
         hosts:
@@ -160,7 +160,7 @@ ca-certportal:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - "certportal.acc.nlx.io"
+      - certportal.acc.nlx.io
     tls:
       - secretName: shared-ca-certportal-ingress-tls
         hosts:
@@ -173,7 +173,7 @@ apps-overview:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - "links.acc.nlx.io"
+      - links.acc.nlx.io
     tls:
       - secretName: shared-nlx-apps-overview-ingress-tls
         hosts:

@@ -162,11 +162,11 @@ nlx-directory:
     type: LoadBalancer
     inspection:
       annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
       loadBalancerIP: 20.86.243.85
     registration:
       annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
       loadBalancerIP: 20.86.244.209
 
 nlx-docs:
@@ -203,7 +203,7 @@ apps-overview:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - "links.demo.nlx.io"
+      - links.demo.nlx.io
     tls:
       - secretName: shared-nlx-apps-overview-ingress-tls
         hosts:
