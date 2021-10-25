@@ -2,27 +2,31 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-
+import { MemoryRouter } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
+import InwayModel from '../../../../stores/models/InwayModel'
 import Inways from './index'
 
-jest.mock('./InwayRow', () => () => (
-  <tr data-testid="mock-row">
-    <td>inway</td>
-  </tr>
-))
-
 test('no inways', () => {
-  const { getByText } = renderWithProviders(<Inways inways={[]} />)
-  expect(getByText(/^There are no inways registered yet$/)).toBeInTheDocument()
+  renderWithProviders(<Inways inways={[]} />)
+  expect(
+    screen.getByText(/^There are no inways registered yet$/),
+  ).toBeInTheDocument()
 })
 
 test('service list', () => {
-  const inways = [{ name: 'inway1' }, { name: 'inway2' }]
-  const { getByTestId, getAllByTestId } = renderWithProviders(
-    <Inways inways={inways} />,
+  const inways = [
+    new InwayModel({ inway: { name: 'inway1' } }),
+    new InwayModel({ inway: { name: 'inway2' } }),
+  ]
+
+  renderWithProviders(
+    <MemoryRouter>
+      <Inways inways={inways} />
+    </MemoryRouter>,
   )
 
-  expect(getByTestId('inways-list')).toBeInTheDocument()
-  expect(getAllByTestId('mock-row')).toHaveLength(2)
+  expect(screen.getByTestId('inways-list')).toBeInTheDocument()
+  expect(screen.getAllByTestId('inway-row')).toHaveLength(2)
 })

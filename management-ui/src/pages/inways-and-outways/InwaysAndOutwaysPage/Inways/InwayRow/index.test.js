@@ -4,34 +4,38 @@
 import React from 'react'
 import { renderWithProviders } from '../../../../../test-utils'
 
+import InwayModel from '../../../../../stores/models/InwayModel'
 import InwayRow from './index'
 
-test('row shows expected data', () => {
-  const inway = {
-    name: 'inway',
-    hostname: 'hostname',
-    selfAddress: 'selfie',
-    services: [
-      {
-        name: 'service1',
-      },
-      {
-        name: 'service2',
-      },
-    ],
-    version: 'test',
-  }
+test('rendering the InwayRow', () => {
+  const inwayModel = new InwayModel({
+    inway: {
+      name: 'inway-name',
+      hostname: 'MyComputer.local',
+      selfAddress: 'inway.organization-a.nlx.local:7913',
+      services: [
+        {
+          name: 'service1',
+        },
+        {
+          name: 'service2',
+        },
+      ],
+      version: 'v0.0.42',
+    },
+  })
+
   const { getByText, getByTestId } = renderWithProviders(
     <table>
       <tbody>
-        <InwayRow inway={inway} />
+        <InwayRow inway={inwayModel} />
       </tbody>
     </table>,
   )
 
-  expect(getByText('inway')).toBeInTheDocument()
-  expect(getByText('hostname')).toBeInTheDocument()
-  expect(getByText('selfie')).toBeInTheDocument()
+  expect(getByText('inway-name')).toBeInTheDocument()
+  expect(getByText('MyComputer.local')).toBeInTheDocument()
+  expect(getByText('inway.organization-a.nlx.local:7913')).toBeInTheDocument()
   expect(getByTestId('services-count')).toHaveTextContent('2')
-  expect(getByText('test')).toBeInTheDocument()
+  expect(getByText('v0.0.42')).toBeInTheDocument()
 })
