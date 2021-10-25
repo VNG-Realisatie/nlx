@@ -2,16 +2,17 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { array, string } from 'prop-types'
+import { arrayOf, instanceOf, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../components/Table'
 import EmptyContentMessage from '../../../../components/EmptyContentMessage'
+import InwayModel from '../../../../stores/models/InwayModel'
 import InwayRow from './InwayRow'
 
 const Inways = ({ inways, selectedInwayName }) => {
   const { t } = useTranslation()
 
-  return inways != null && inways.length === 0 ? (
+  return inways.length === 0 ? (
     <EmptyContentMessage>
       {t('There are no inways registered yet')}
     </EmptyContentMessage>
@@ -41,8 +42,12 @@ const Inways = ({ inways, selectedInwayName }) => {
 }
 
 Inways.propTypes = {
-  inways: array,
+  inways: arrayOf(instanceOf(InwayModel)),
   selectedInwayName: string,
+}
+
+Inways.defaultProps = {
+  inways: [],
 }
 
 export default Inways
