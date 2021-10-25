@@ -63,12 +63,18 @@ import {
     ManagementListOutgoingOrdersResponse,
     ManagementListOutgoingOrdersResponseFromJSON,
     ManagementListOutgoingOrdersResponseToJSON,
+    ManagementListOutwaysResponse,
+    ManagementListOutwaysResponseFromJSON,
+    ManagementListOutwaysResponseToJSON,
     ManagementListServicesResponse,
     ManagementListServicesResponseFromJSON,
     ManagementListServicesResponseToJSON,
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
+    ManagementRegisterOutwayRequest,
+    ManagementRegisterOutwayRequestFromJSON,
+    ManagementRegisterOutwayRequestToJSON,
     ManagementRetrieveClaimForOrderResponse,
     ManagementRetrieveClaimForOrderResponseFromJSON,
     ManagementRetrieveClaimForOrderResponseToJSON,
@@ -139,6 +145,10 @@ export interface ManagementListServicesRequest {
 
 export interface ManagementRegisterInwayRequest {
     body: ManagementInway;
+}
+
+export interface ManagementRegisterOutwayOperationRequest {
+    body: ManagementRegisterOutwayRequest;
 }
 
 export interface ManagementRejectIncomingAccessRequestRequest {
@@ -670,6 +680,30 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
+    async managementListOutwaysRaw(): Promise<runtime.ApiResponse<ManagementListOutwaysResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/outways`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementListOutwaysResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementListOutways(): Promise<ManagementListOutwaysResponse> {
+        const response = await this.managementListOutwaysRaw();
+        return await response.value();
+    }
+
+    /**
+     */
     async managementListServicesRaw(requestParameters: ManagementListServicesRequest): Promise<runtime.ApiResponse<ManagementListServicesResponse>> {
         const queryParameters: runtime.HTTPQuery = {};
 
@@ -724,6 +758,37 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementRegisterInway(requestParameters: ManagementRegisterInwayRequest): Promise<ManagementInway> {
         const response = await this.managementRegisterInwayRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementRegisterOutwayRaw(requestParameters: ManagementRegisterOutwayOperationRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.body === null || requestParameters.body === undefined) {
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementRegisterOutway.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v1/outways`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ManagementRegisterOutwayRequestToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementRegisterOutway(requestParameters: ManagementRegisterOutwayOperationRequest): Promise<object> {
+        const response = await this.managementRegisterOutwayRaw(requestParameters);
         return await response.value();
     }
 

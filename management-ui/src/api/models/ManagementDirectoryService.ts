@@ -22,14 +22,14 @@ import {
     ManagementAccessProofFromJSON,
     ManagementAccessProofFromJSONTyped,
     ManagementAccessProofToJSON,
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestFromJSONTyped,
     ManagementOutgoingAccessRequestToJSON,
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
 } from './';
 
 /**
@@ -46,10 +46,10 @@ export interface ManagementDirectoryService {
     serviceName?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ManagementOrganization}
      * @memberof ManagementDirectoryService
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ManagementOrganization;
     /**
      * 
      * @type {string}
@@ -117,7 +117,7 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
         'apiSpecificationType': !exists(json, 'apiSpecificationType') ? undefined : json['apiSpecificationType'],
         'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
@@ -140,7 +140,7 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
     return {
         
         'serviceName': value.serviceName,
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ManagementOrganizationToJSON(value.organization),
         'apiSpecificationType': value.apiSpecificationType,
         'documentationURL': value.documentationURL,
         'publicSupportContact': value.publicSupportContact,

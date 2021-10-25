@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
 } from './';
 
 /**
@@ -34,10 +34,10 @@ export interface ManagementAccessProof {
     id?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ManagementOrganization}
      * @memberof ManagementAccessProof
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ManagementOrganization;
     /**
      * 
      * @type {string}
@@ -75,7 +75,7 @@ export function ManagementAccessProofFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
@@ -93,7 +93,7 @@ export function ManagementAccessProofToJSON(value?: ManagementAccessProof | null
     return {
         
         'id': value.id,
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ManagementOrganizationToJSON(value.organization),
         'serviceName': value.serviceName,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),

@@ -18,10 +18,10 @@ import {
     ManagementAccessRequestStateFromJSON,
     ManagementAccessRequestStateFromJSONTyped,
     ManagementAccessRequestStateToJSON,
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
 } from './';
 
 /**
@@ -38,10 +38,10 @@ export interface ManagementIncomingAccessRequest {
     id?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ManagementOrganization}
      * @memberof ManagementIncomingAccessRequest
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ManagementOrganization;
     /**
      * 
      * @type {string}
@@ -79,7 +79,7 @@ export function ManagementIncomingAccessRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
         'state': !exists(json, 'state') ? undefined : ManagementAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
@@ -97,7 +97,7 @@ export function ManagementIncomingAccessRequestToJSON(value?: ManagementIncoming
     return {
         
         'id': value.id,
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ManagementOrganizationToJSON(value.organization),
         'serviceName': value.serviceName,
         'state': ManagementAccessRequestStateToJSON(value.state),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

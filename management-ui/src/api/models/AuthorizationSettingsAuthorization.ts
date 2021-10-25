@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
 } from './';
 
 /**
@@ -28,10 +28,10 @@ import {
 export interface AuthorizationSettingsAuthorization {
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ManagementOrganization}
      * @memberof AuthorizationSettingsAuthorization
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ManagementOrganization;
     /**
      * 
      * @type {string}
@@ -56,7 +56,7 @@ export function AuthorizationSettingsAuthorizationFromJSONTyped(json: any, ignor
     }
     return {
         
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
         'publicKeyHash': !exists(json, 'publicKeyHash') ? undefined : json['publicKeyHash'],
         'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
     };
@@ -71,7 +71,7 @@ export function AuthorizationSettingsAuthorizationToJSON(value?: AuthorizationSe
     }
     return {
         
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ManagementOrganizationToJSON(value.organization),
         'publicKeyHash': value.publicKeyHash,
         'publicKeyPEM': value.publicKeyPEM,
     };
