@@ -8,6 +8,9 @@ class OutwayStore {
   _isLoading = false
   _outways = []
 
+  // This is set to true after the first call has been made. Regardless of success.
+  isInitiallyFetched = false
+
   constructor({ rootStore, managementApiClient }) {
     makeAutoObservable(this)
 
@@ -23,19 +26,23 @@ class OutwayStore {
     return this._outways
   }
 
-  fetchAll = flow(function* fetchAll() {
-    try {
-      this._isLoading = true
-      const result = yield this._managementApiClient.managementListOutways()
+  fetchAll = flow(function* fetchInways() {
+    if (this.isFetching) {
+      return
+    }
 
+    this.isFetching = true
+
+    try {
+      const result = yield this._managementApiClient.managementListOutways()
       this._outways = result.outways.map(
         (outway) => new OutwayModel({ store: this, outwayData: outway }),
       )
-
-      this._isLoading = false
     } catch (err) {
-      this._isLoading = false
       throw new Error(err.message)
+    } finally {
+      this.isInitiallyFetched = true
+      this.isFetching = false
     }
   }).bind(this)
 }

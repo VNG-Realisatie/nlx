@@ -45,8 +45,11 @@ export const useInwayStore = () => {
 }
 
 export const useOutwayStore = () => {
-  const stores = useStores()
-  return stores.outwayStore
+  const { outwayStore } = useStores()
+  if (!outwayStore.isInitiallyFetched) {
+    outwayStore.fetchAll()
+  }
+  return outwayStore
 }
 
 export const useOrderStore = () => {

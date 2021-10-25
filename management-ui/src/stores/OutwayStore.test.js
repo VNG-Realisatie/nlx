@@ -20,6 +20,8 @@ test('fetching, getting and updating from server', async () => {
     outways: [
       {
         name: 'my-outway',
+        ipAddress: '127.0.0.1',
+        publicKeyPEM: 'public-key-pem',
         version: 'v0.0.42',
       },
     ],

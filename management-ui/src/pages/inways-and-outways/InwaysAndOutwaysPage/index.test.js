@@ -49,6 +49,17 @@ test('the InwaysAndOutwaysPage page', async () => {
     ],
   })
 
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'name',
+        ipAddress: '127.0.0.1',
+        publicKeyPEM: 'public-key-pem',
+        version: 'version',
+      },
+    ],
+  })
+
   const rootStore = new RootStore({
     managementApiClient,
   })
@@ -78,6 +89,17 @@ test('failed to load inways', async () => {
   managementApiClient.managementListInways = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'name',
+        ipAddress: '127.0.0.1',
+        publicKeyPEM: 'public-key-pem',
+        version: 'version',
+      },
+    ],
+  })
 
   const rootStore = new RootStore({
     managementApiClient,

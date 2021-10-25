@@ -18,6 +18,7 @@ import {
   StyledIconOutway,
 } from './index.styles'
 import Inways from './Inways'
+import Outways from './Outways'
 
 const InwaysAndOutwaysPage = () => {
   const { t } = useTranslation()
@@ -62,7 +63,12 @@ const InwaysAndOutwaysPage = () => {
         </Alert>
       ) : params.type === 'inways' ? (
         <Inways inways={inwayStore.inways} selectedInwayName={params.name} />
-      ) : params.type === 'outways' ? null : null}
+      ) : params.type === 'outways' ? (
+        <Outways
+          outways={outwayStore.outways}
+          selectedOutwayName={params.name}
+        />
+      ) : null}
 
       <Route
         path="/inways-and-outways/inways/:name"
