@@ -7,8 +7,19 @@ import { Button } from '@commonground/design-system'
 
 import { Section, StyledIconExternalLink } from './index.styles'
 
+const getSpecificationUrl = (organizationSerialNumber, serviceName) => {
+  const directoryHostname = `${window.location.protocol}//${window.location.hostname}`
+  const specUri = `api/organizations/${organizationSerialNumber}/services/${serviceName}/api-spec`
+  const directoryDocUrl = `${directoryHostname}/${specUri}`
+
+  const redocUrl = new URL('https://redocly.github.io/redoc/')
+  redocUrl.searchParams.set('url', directoryDocUrl)
+  return redocUrl
+}
+
 const ExternalLinkSection = ({ service }) => {
   const { documentationUrl, organization, name, apiType } = service
+  const specificationUrl = getSpecificationUrl(organization.serialNumber, name)
 
   return (
     <Section>
@@ -28,7 +39,8 @@ const ExternalLinkSection = ({ service }) => {
       <Button
         variant="secondary"
         as="a"
-        href={`/documentation/${organization}/${name}`}
+        href={apiType ? specificationUrl : ''}
+        target="_blank"
         role="button"
         rel="noreferrer"
         aria-disabled={!apiType}
@@ -44,7 +56,10 @@ const ExternalLinkSection = ({ service }) => {
 ExternalLinkSection.propTypes = {
   service: shape({
     documentationUrl: string,
-    organization: string,
+    organization: shape({
+      name: string,
+      serialNumber: string,
+    }),
     name: string,
     apiType: string,
   }),
