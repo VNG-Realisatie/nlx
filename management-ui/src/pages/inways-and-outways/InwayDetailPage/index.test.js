@@ -14,8 +14,8 @@ jest.mock('./InwayDetailPageView', () => ({ inway }) => (
 
 test('display inway details', () => {
   const { getByTestId } = renderWithProviders(
-    <Router location="/inways-and-outways/forty-two">
-      <Route path="/inways-and-outways/:name">
+    <Router location="/inways-and-outways/inways/forty-two">
+      <Route path="/inways-and-outways/inways/:name">
         <InwayDetailPage inway={{ name: 'forty-two' }} />
       </Route>
     </Router>,
@@ -26,8 +26,8 @@ test('display inway details', () => {
 
 test('display a non-existing inway', async () => {
   const { findByTestId } = renderWithProviders(
-    <Router location="/inways-and-outways/forty-two">
-      <Route path="/inways-and-outways/:name">
+    <Router location="/inways-and-outways/inways/forty-two">
+      <Route path="/inways-and-outways/inways/:name">
         <InwayDetailPage inway={null} />
       </Route>
     </Router>,

@@ -13,7 +13,7 @@ test('initializing the store', () => {
   expect(store.outways).toEqual([])
 })
 
-test('fetching all inways', async () => {
+test('fetching all outways', async () => {
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
@@ -33,8 +33,8 @@ test('fetching all inways', async () => {
 
   await store.fetchAll()
   expect(store.outways).toHaveLength(1)
-  const initialAuditLog = store.outways[0]
-  expect(initialAuditLog).toBeInstanceOf(OutwayModel)
+  const initialOutway = store.outways[0]
+  expect(initialOutway).toBeInstanceOf(OutwayModel)
 })
 
 test('fetching a single outway', async () => {
