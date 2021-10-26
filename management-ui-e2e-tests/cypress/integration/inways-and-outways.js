@@ -9,7 +9,7 @@ describe('Inways and Outways', () => {
     cy.loginUsingDex()
     cy.visit('/inways-and-outways/inways')
     cy.injectAxe()
-    cy.get('h1').should('contain', 'Inways and Outways')
+    cy.get('h1').should('contain', 'In- en Outways')
   })
 
   it('Screens are accessible and details can be closed', () => {
