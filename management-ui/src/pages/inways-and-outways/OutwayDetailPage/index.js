@@ -16,12 +16,12 @@ const OutwayDetailPage = ({ parentUrl, outway }) => {
   const close = () => history.push(parentUrl)
 
   return (
-    <Drawer noMask closeHandler={close}>
+    <Drawer noMask closeHandler={close} data-testid="outway-detail-page">
       <Drawer.Header
         as="header"
         title={name}
         closeButtonLabel={t('Close')}
-        data-testid="gateway-name"
+        data-testid="outway-name"
       />
 
       <Drawer.Content>

@@ -92,7 +92,7 @@ const InwaysAndOutwaysPage = () => {
       <Route
         path="/inways-and-outways/outways/:name"
         render={({ match }) => {
-          const outway = outwayStore.getByName({ name: match.params.name })
+          const outway = outwayStore.getByName(match.params.name)
 
           return (
             <OutwayDetailPage

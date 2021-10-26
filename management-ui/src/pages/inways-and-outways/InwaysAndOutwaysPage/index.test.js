@@ -14,7 +14,6 @@ import Routes from '../../../routes'
 
 jest.mock('../../../components/PageTemplate')
 jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
-jest.mock('./Outways', () => () => <p data-testid="outways-list">mock outways</p>)
 
 function renderPage(rootStore) {
   const history = createMemoryHistory({
@@ -53,10 +52,10 @@ test('the InwaysAndOutwaysPage page', async () => {
   managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
     outways: [
       {
-        name: 'name',
+        name: 'Outway Name',
         ipAddress: '127.0.0.1',
         publicKeyPEM: 'public-key-pem',
-        version: 'version',
+        version: '0.0.42',
       },
     ],
   })
@@ -65,7 +64,7 @@ test('the InwaysAndOutwaysPage page', async () => {
     managementApiClient,
   })
 
-  renderPage(rootStore)
+  const { container } = renderPage(rootStore)
 
   const showInwaysButton = screen.getByLabelText('Show Inways')
   expect(showInwaysButton.getAttribute('href')).toBe(
@@ -87,10 +86,17 @@ test('the InwaysAndOutwaysPage page', async () => {
   fireEvent.click(showOutwaysButton)
 
   await waitFor(() =>
-    expect(screen.getByTestId('outways-list')).toHaveTextContent(
-      'mock outways',
-    ),
+    expect(screen.getByTestId('outways-list')).toBeInTheDocument(),
   )
+
+  const firstOutwayEl = container.querySelectorAll('tbody tr')[0]
+
+  fireEvent.click(firstOutwayEl)
+
+  await waitFor(() => {
+    expect(screen.getByTestId('outway-detail-page')).toBeInTheDocument()
+    expect(screen.getByTestId('outway-specs')).toBeInTheDocument()
+  })
 })
 
 test('failed to load inways', async () => {
