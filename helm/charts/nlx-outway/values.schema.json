@@ -24,6 +24,10 @@
           "type": "string",
           "description": "Used to retrieve information about services from the directory."
         },
+        "name": {
+          "type": "string",
+          "description": "Unique identifier of this outway."
+        },
         "logLevel": {
           "type": "string",
           "description": "Override the default loglevel set by config.logType",
