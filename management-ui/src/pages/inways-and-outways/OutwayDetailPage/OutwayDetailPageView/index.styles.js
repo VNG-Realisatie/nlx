@@ -20,3 +20,9 @@ export const StyledIconOutway = styled(IconOutway)`
 export const StyledSpecList = styled(SpecList)`
   margin-bottom: ${(p) => p.theme.tokens.spacing05};
 `
+
+export const StyledCode = styled.code`
+  overflow: auto;
+  font-size: 0.8rem;
+  display: block;
+`

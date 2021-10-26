@@ -4,6 +4,7 @@
 import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
 import OutwayDetails from './index'
 
@@ -17,7 +18,7 @@ beforeEach(() => {
   jest.useFakeTimers()
 })
 
-test('should display outway details', () => {
+test('should display outway details', async () => {
   const { getByTestId, getByText } = renderWithProviders(
     <Router>
       <OutwayDetails outway={outway} />
@@ -26,5 +27,10 @@ test('should display outway details', () => {
 
   expect(getByTestId('gateway-type')).toHaveTextContent('outway')
   expect(getByText('127.0.0.1')).toBeInTheDocument()
-  expect(getByText('public-key-pem')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByLabelText('Certificate'))
+
+  await waitFor(() => {
+    expect(getByText('public-key-pem')).toBeInTheDocument()
+  })
 })

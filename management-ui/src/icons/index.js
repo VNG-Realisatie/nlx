@@ -9,12 +9,13 @@ import { ReactComponent as SvgArrowDownLine } from './arrow-down-line.svg'
 import { ReactComponent as SvgBarChart } from './bar-chart.svg'
 import { ReactComponent as SvgBarcode } from './barcode.svg'
 import { ReactComponent as SvgBin } from './bin.svg'
+import { ReactComponent as SvgCertificate } from './certificate.svg'
 import { ReactComponent as SvgClose } from './close.svg'
 import { ReactComponent as SvgCheck } from './check.svg'
 import { ReactComponent as SvgCheckboxMultiple } from './checkbox-multiple.svg'
 import { ReactComponent as SvgChevron } from './chevron.svg'
-import { ReactComponent as SvgDownload } from './download.svg'
 import { ReactComponent as SvgChevronRight } from './chevron-right.svg'
+import { ReactComponent as SvgDownload } from './download.svg'
 import { ReactComponent as SvgDirectory } from './directory.svg'
 import { ReactComponent as SvgExternalLink } from './external-link.svg'
 import { ReactComponent as SvgHidden } from './hidden.svg'
@@ -52,6 +53,9 @@ export const IconArrowDownLine = (props) => (
 export const IconBarChart = (props) => <Icon as={SvgBarChart} {...props} />
 export const IconBarcode = (props) => <Icon as={SvgBarcode} {...props} />
 export const IconBin = (props) => <Icon as={SvgBin} {...props} />
+export const IconCertificate = (props) => (
+  <Icon as={SvgCertificate} {...props} />
+)
 export const IconClose = (props) => <Icon as={SvgClose} {...props} />
 export const IconCheck = (props) => <Icon as={SvgCheck} {...props} />
 export const IconCheckboxMultiple = (props) => (
