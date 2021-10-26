@@ -40,6 +40,7 @@ func mockIP(t *testing.T, ip string) pgtype.Inet {
 	}
 }
 
+//nolint:funlen // this is a test function
 func TestRegisterOutway(t *testing.T) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
@@ -60,23 +61,7 @@ func TestRegisterOutway(t *testing.T) {
 		args    args
 		wantErr error
 	}{
-		"ip_address_from_context": {
-			args: args{
-				database: &database.Outway{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					IPAddress:    mockIP(t, "127.1.1.1/32"),
-					Version:      "unknown",
-				},
-				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
-				},
-				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
-			},
-		},
-		"the_connection_context_must_contain_an_address": {
+		"when_the_connection_context_does_not_contain_an_address": {
 			args: args{
 				database: &database.Outway{
 					Name:         "outway42.ip-context-required",
@@ -92,7 +77,34 @@ func TestRegisterOutway(t *testing.T) {
 			},
 			wantErr: status.Error(codes.Internal, "peer addr is invalid"),
 		},
-		"ipv6": {
+		"when_providing_an_invalid_outway_name": {
+			args: args{
+				request: &api.RegisterOutwayRequest{
+					Name:         "",
+					PublicKeyPEM: testPublicKeyPEM,
+					Version:      "unknown",
+				},
+				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid outway: name: cannot be blank."),
+		},
+		"happy_flow_ipv4": {
+			args: args{
+				database: &database.Outway{
+					Name:         "outway42.basic",
+					PublicKeyPEM: testPublicKeyPEM,
+					IPAddress:    mockIP(t, "127.1.1.1/32"),
+					Version:      "unknown",
+				},
+				request: &api.RegisterOutwayRequest{
+					Name:         "outway42.basic",
+					PublicKeyPEM: testPublicKeyPEM,
+					Version:      "unknown",
+				},
+				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
+			},
+		},
+		"happy_flow_ipv6": {
 			args: args{
 				database: &database.Outway{
 					Name:         "outway42.ipv6",
