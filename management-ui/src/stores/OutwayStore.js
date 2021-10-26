@@ -64,17 +64,15 @@ class OutwayStore {
     return this._updateFromServer(outwayData)
   }).bind(this)
 
-  getByName = ({ name }) => {
+  getByName = (name) => {
     return this._outways.find((outway) => outway.name === name)
   }
 
   _updateFromServer(outwayData) {
-    const cachedOutway = this.getInway({
-      name: outwayData.name,
-    })
+    const cachedOutway = this.getByName(outwayData.name)
 
     if (cachedOutway) {
-      cachedOutway.with(outwayData)
+      cachedOutway.update(outwayData)
       return cachedOutway
     }
 
