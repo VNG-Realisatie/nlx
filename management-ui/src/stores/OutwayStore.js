@@ -7,11 +7,6 @@ import OutwayModel from './models/OutwayModel'
 class OutwayStore {
   _isLoading = false
   _outways = []
-
-  // This is set to true after the first call has been made. Regardless of success.
-  _isInitiallyFetched = false
-
-  // This is internal state to prevent concurrent fetchInways calls being in flight.
   _isFetching = false
 
   constructor({ rootStore, managementApiClient }) {
@@ -30,22 +25,21 @@ class OutwayStore {
   }
 
   fetchAll = flow(function* fetchInways() {
-    if (this.isFetching) {
+    if (this._isFetching) {
       return
     }
 
-    this.isFetching = true
+    this._isFetching = true
 
     try {
       const result = yield this._managementApiClient.managementListOutways()
       this._outways = result.outways.map(
         (outway) => new OutwayModel({ store: this, outwayData: outway }),
       )
+      this._isFetching = false
     } catch (err) {
+      this._isFetching = false
       throw new Error(err.message)
-    } finally {
-      this.isInitiallyFetched = true
-      this.isFetching = false
     }
   }).bind(this)
 

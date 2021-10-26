@@ -2,14 +2,13 @@
 // Licensed under the EUPL
 //
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
 import { Route, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import InwayDetailPage from '../InwayDetailPage'
-import OutwayDetailPage from '../OutwayDetailPage'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwayStore, useOutwayStore } from '../../../hooks/use-stores'
 import {
@@ -23,10 +22,18 @@ import Outways from './Outways'
 
 const InwaysAndOutwaysPage = () => {
   const { t } = useTranslation()
-  const { isInitiallyFetched, error } = useInwayStore()
   const inwayStore = useInwayStore()
   const outwayStore = useOutwayStore()
   const params = useParams()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await inwayStore.fetchInways()
+      await outwayStore.fetchAll()
+    }
+
+    fetchData()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PageTemplate>
@@ -56,19 +63,29 @@ const InwaysAndOutwaysPage = () => {
         </Button>
       </ActionsBar>
 
-      {!isInitiallyFetched ? (
-        <LoadingMessage />
-      ) : error ? (
-        <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the inways')}
-        </Alert>
-      ) : params.type === 'inways' ? (
-        <Inways inways={inwayStore.inways} selectedInwayName={params.name} />
+      {params.type === 'inways' ? (
+        inwayStore.isFetching ? (
+          <LoadingMessage />
+        ) : inwayStore.error ? (
+          <Alert variant="error" data-testid="error-message">
+            {t('Failed to load the inways')}
+          </Alert>
+        ) : (
+          <Inways inways={inwayStore.inways} selectedInwayName={params.name} />
+        )
       ) : params.type === 'outways' ? (
-        <Outways
-          outways={outwayStore.outways}
-          selectedOutwayName={params.name}
-        />
+        outwayStore.isFetching ? (
+          <LoadingMessage />
+        ) : outwayStore.error ? (
+          <Alert variant="error" data-testid="error-message">
+            {t('Failed to load the outways')}
+          </Alert>
+        ) : (
+          <Outways
+            outways={outwayStore.outways}
+            selectedOutwayName={params.name}
+          />
+        )
       ) : null}
 
       <Route
@@ -84,20 +101,6 @@ const InwaysAndOutwaysPage = () => {
             <InwayDetailPage
               parentUrl="/inways-and-outways/inways"
               inway={inway}
-            />
-          )
-        }}
-      />
-
-      <Route
-        path="/inways-and-outways/outways/:name"
-        render={({ match }) => {
-          const outway = outwayStore.getByName(match.params.name)
-
-          return (
-            <OutwayDetailPage
-              parentUrl="/inways-and-outways/outways"
-              outway={outway}
             />
           )
         }}

@@ -64,7 +64,7 @@ test('the InwaysAndOutwaysPage page', async () => {
     managementApiClient,
   })
 
-  const { container } = renderPage(rootStore)
+  renderPage(rootStore)
 
   const showInwaysButton = screen.getByLabelText('Show Inways')
   expect(showInwaysButton.getAttribute('href')).toBe(
@@ -88,15 +88,6 @@ test('the InwaysAndOutwaysPage page', async () => {
   await waitFor(() =>
     expect(screen.getByTestId('outways-list')).toBeInTheDocument(),
   )
-
-  const firstOutwayEl = container.querySelectorAll('tbody tr')[0]
-
-  fireEvent.click(firstOutwayEl)
-
-  await waitFor(() => {
-    expect(screen.getByTestId('outway-detail-page')).toBeInTheDocument()
-    expect(screen.getByTestId('outway-specs')).toBeInTheDocument()
-  })
 })
 
 test('failed to load inways', async () => {

@@ -14,7 +14,7 @@ export const SubHeader = styled.div`
 `
 
 export const StyledIconOutway = styled(IconOutway)`
-  fill: ${(p) => p.theme.tokens.colorPaletteGray50};
+  fill: ${(p) => p.theme.colorFocus};
 `
 
 export const StyledSpecList = styled(SpecList)`
