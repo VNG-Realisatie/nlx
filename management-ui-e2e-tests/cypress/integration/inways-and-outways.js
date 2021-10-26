@@ -7,7 +7,7 @@ import { generateServiceName } from '../helpers/services'
 describe('Inways and Outways', () => {
   beforeEach(() => {
     cy.loginUsingDex()
-    cy.visit('/inways-and-outways')
+    cy.visit('/inways-and-outways/inways')
     cy.injectAxe()
     cy.get('h1').should('contain', 'Inways and Outways')
   })
@@ -29,7 +29,7 @@ describe('Inways and Outways', () => {
     )
 
     cy.closeTopDrawer()
-    cy.location().should('match', /\/inways-and-outways$/)
+    cy.location().should('match', /\/inways-and-outways\/inways$/)
   })
 
   it('Deeplink to inway details and go to connected service page', () => {
@@ -44,7 +44,7 @@ describe('Inways and Outways', () => {
     cy.dismissToaster('De service is toegevoegd')
 
     // Go to service via inway
-    cy.visit(`/inways-and-outways/${Cypress.env('INWAY_NAME')}`)
+    cy.visit(`/inways-and-outways/inways/${Cypress.env('INWAY_NAME')}`)
     cy.findByText('Gekoppelde services').click()
     cy.findByText(serviceName).click()
 
