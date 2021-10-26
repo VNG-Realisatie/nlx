@@ -76,7 +76,7 @@
   "Failed to load audit logs": "Failed to load audit logs",
   "Failed to load orders": "Failed to load orders",
   "Failed to load the details for this inway": "Failed to load the details for inway: {{name}}",
-  "Failed to load the details for this outway": "Failed to load the details for this outway",
+  "Failed to load the details for this outway": "Failed to load the details for outway: {{name}}",
   "Failed to load the directory": "Failed to load the directory",
   "Failed to load the inways": "Failed to load the inways",
   "Failed to load the order for delegatee": "Failed to load the order {{reference}} for {{delegatee}}",
