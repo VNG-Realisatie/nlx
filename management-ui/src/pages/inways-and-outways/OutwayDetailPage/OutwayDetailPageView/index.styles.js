@@ -25,4 +25,5 @@ export const StyledCode = styled.code`
   overflow: auto;
   font-size: 0.8rem;
   display: block;
+  white-space: pre;
 `
