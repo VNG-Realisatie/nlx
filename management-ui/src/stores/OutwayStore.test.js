@@ -52,6 +52,8 @@ test('fetching a single outway', async () => {
     managementApiClient,
   })
 
+  expect(outwayStore.getByName('non-existing-outway-name')).toBeUndefined()
+
   const outway = await outwayStore.fetch({ name: 'My Outway' })
 
   expect(managementApiClient.managementGetOutway).toHaveBeenCalledWith({
@@ -59,4 +61,6 @@ test('fetching a single outway', async () => {
   })
   expect(outway).toBeInstanceOf(OutwayModel)
   expect(outway.name).toEqual('My Outway')
+
+  expect(outwayStore.getByName(outway.name).name).toEqual('My Outway')
 })
