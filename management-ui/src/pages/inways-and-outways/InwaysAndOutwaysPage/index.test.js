@@ -5,7 +5,7 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
@@ -14,6 +14,7 @@ import Routes from '../../../routes'
 
 jest.mock('../../../components/PageTemplate')
 jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
+jest.mock('./Outways', () => () => <p data-testid="outways-list">mock outways</p>)
 
 function renderPage(rootStore) {
   const history = createMemoryHistory({
@@ -81,6 +82,14 @@ test('the InwaysAndOutwaysPage page', async () => {
 
   await waitFor(() =>
     expect(screen.getByTestId('inways-list')).toHaveTextContent('mock inways'),
+  )
+
+  fireEvent.click(showOutwaysButton)
+
+  await waitFor(() =>
+    expect(screen.getByTestId('outways-list')).toHaveTextContent(
+      'mock outways',
+    ),
   )
 })
 
