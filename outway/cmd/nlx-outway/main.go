@@ -133,7 +133,7 @@ func main() {
 		logger.Fatal("loading TLS files", zap.Error(err))
 	}
 
-	publicKeyPEM, err := cert.PublicKeyPEM()
+	publicKeyPEM, err := orgCert.PublicKeyPEM()
 	if err != nil {
 		logger.Fatal("unable to get public key pem from certificate TLS files", zap.Error(err))
 	}
