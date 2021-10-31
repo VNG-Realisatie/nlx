@@ -1,3 +1,11 @@
+## [0.117.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.117.0...v0.117.1) (2021-10-31)
+
+
+### Bug Fixes
+
+* **management:** update public key pem in database when registering an outway ([e0ef0e0](https://gitlab.com/commonground/nlx/nlx/commit/e0ef0e04c98ccb1a49478863dcb41417d5809daf))
+* **outway:** send organization certificate public key to management api ([d7bcaee](https://gitlab.com/commonground/nlx/nlx/commit/d7bcaee61e044729bbf4e8df400bc8126271610e))
+
 # [0.117.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.116.0...v0.117.0) (2021-10-31)
 
 
