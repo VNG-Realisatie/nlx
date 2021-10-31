@@ -40,7 +40,7 @@ func TestRegisterOutway(t *testing.T) {
 			loadFixtures: true,
 			arg: &database.Outway{
 				Name:         "fixture-outway-1",
-				PublicKeyPEM: fixturePublicKeyPEM,
+				PublicKeyPEM: "foobar",
 				IPAddress:    mockIP(t, "127.0.0.2/32"),
 				Version:      "1.0.0",
 				CreatedAt:    fixtureTime,
@@ -49,7 +49,7 @@ func TestRegisterOutway(t *testing.T) {
 			want: &database.Outway{
 				ID:           1,
 				Name:         "fixture-outway-1",
-				PublicKeyPEM: fixturePublicKeyPEM,
+				PublicKeyPEM: "foobar",
 				IPAddress:    mockIP(t, "127.0.0.2/32"),
 				Version:      "1.0.0",
 				CreatedAt:    fixtureTime,

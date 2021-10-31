@@ -33,7 +33,7 @@ func (db *PostgresConfigDatabase) RegisterOutway(ctx context.Context, outway *Ou
 		Omit(clause.Associations).
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "name"}},
-			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address"}),
+			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "public_key_pem"}),
 		}).
 		Create(outway).Error
 }
