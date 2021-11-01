@@ -9,6 +9,7 @@ all:
 proto:
     BUILD +proto-directory-inspection-api
     BUILD +proto-directory-registration-api
+    BUILD +proto-directory-api
     BUILD +proto-management-api
     BUILD +proto-inway-test
 
@@ -17,6 +18,7 @@ mocks:
     BUILD +mocks-common
     BUILD +mocks-directory-inspection-api
     BUILD +mocks-directory-registration-api
+    BUILD +mocks-directory-api
 
 deps:
     COPY go.mod go.sum /src/
@@ -56,6 +58,24 @@ proto-directory-registration-api:
     RUN goimports -w -local "go.nlx.io" /dist/
 
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-registration-api/registrationapi/
+
+proto-directory-api:
+    FROM +deps
+    COPY ./directory-api/api/*.proto /src
+
+    RUN mkdir -p /dist || true && \
+        protoc \
+            -I. \
+            -I/protobuf/include \
+            -I/protobuf/googleapis \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
+            --grpc-gateway_out=/dist \
+            --openapiv2_out=/dist \
+            ./directoryapi.proto
+    RUN goimports -w -local "go.nlx.io" /dist/
+
+    SAVE ARTIFACT /dist/* AS LOCAL ./directory-api/api/
 
 proto-management-api:
     FROM +deps
@@ -172,3 +192,18 @@ mocks-directory-registration-api:
 
     SAVE ARTIFACT /dist/registrationapi/mock/mock_directory_registration_api.go AS LOCAL ./directory-registration-api/registrationapi/mock/mock_directory_registration_api.go
     SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-registration-api/domain/directory/mock/repository.go
+
+mocks-directory-api:
+    FROM +deps
+    COPY ./directory-api /src/directory-api
+
+    RUN mkdir -p /dist || true
+    WORKDIR /src/directory-api
+
+    RUN mockgen -source api/directoryapi_grpc.pb.go -package=mock -destination /dist/api/mock/mock_directory_api.go
+    RUN mockgen -source domain/directory/repository.go -package=directory_mock -destination /dist/domain/directory/mock/repository.go
+
+    RUN goimports -w -local "go.nlx.io" /dist/
+
+    SAVE ARTIFACT /dist/api/mock/mock_directory_api.go AS LOCAL ./directory-api/api/mock/mock_directory_api.go
+    SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-api/domain/directory/mock/repository.go

@@ -1,0 +1,305 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "directoryapi.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Directory"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/directory/list-organizations": {
+      "get": {
+        "operationId": "Directory_ListOrganizations",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiListOrganizationsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
+    "/api/directory/list-services": {
+      "get": {
+        "operationId": "Directory_ListServices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiListServicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "operationId": "Directory_ListInOutwayStatistics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiListInOutwayStatisticsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "InwayState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "UP",
+        "DOWN"
+      ],
+      "default": "UNKNOWN"
+    },
+    "ListInOutwayStatisticsResponseStatistics": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/ListInOutwayStatisticsResponseStatisticsType"
+        },
+        "version": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ListInOutwayStatisticsResponseStatisticsType": {
+      "type": "string",
+      "enum": [
+        "INWAY",
+        "OUTWAY"
+      ],
+      "default": "INWAY"
+    },
+    "ListServicesResponseCosts": {
+      "type": "object",
+      "properties": {
+        "oneTime": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthly": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "request": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ListServicesResponseService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "documentationUrl": {
+          "type": "string"
+        },
+        "apiSpecificationType": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "inways": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/directoryapiInway"
+          }
+        },
+        "costs": {
+          "$ref": "#/definitions/ListServicesResponseCosts"
+        },
+        "organization": {
+          "$ref": "#/definitions/directoryapiOrganization"
+        }
+      }
+    },
+    "RegisterInwayRequestRegisterService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "documentationUrl": {
+          "type": "string"
+        },
+        "apiSpecificationType": {
+          "type": "string"
+        },
+        "apiSpecificationDocumentUrl": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean"
+        },
+        "publicSupportContact": {
+          "type": "string"
+        },
+        "techSupportContact": {
+          "type": "string"
+        },
+        "oneTimeCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "monthlyCosts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestCosts": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "directoryapiGetOrganizationInwayResponse": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiInway": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/InwayState"
+        }
+      }
+    },
+    "directoryapiListInOutwayStatisticsResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListInOutwayStatisticsResponseStatistics"
+          }
+        }
+      }
+    },
+    "directoryapiListOrganizationsResponse": {
+      "type": "object",
+      "properties": {
+        "organizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/directoryapiOrganization"
+          }
+        }
+      }
+    },
+    "directoryapiListServicesResponse": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListServicesResponseService"
+          }
+        }
+      }
+    },
+    "directoryapiOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiRegisterInwayResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
