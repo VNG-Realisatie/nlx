@@ -48,7 +48,10 @@ test('display stacktrace when requesting access failed', () => {
     serviceName: 'Test Service',
     latestAccessRequest: {
       id: 'my-latest-access-request',
-      organizationName: 'organization',
+      organization: {
+        serialNumber: '00000000000000000002',
+        name: 'organization',
+      },
       serviceName: 'service',
       state: ACCESS_REQUEST_STATES.FAILED,
       createdAt: new Date('2020-06-30T08:31:41.106Z'),

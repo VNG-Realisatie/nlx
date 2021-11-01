@@ -38,7 +38,10 @@ test('Correctly renders the other states of access', () => {
   // Only `updatedAt` is used by this component, based on displayState
   const latestAccessRequest = {
     id: 'id',
-    organizationName: 'foo',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'foo',
+    },
     serviceName: 'bar',
     state: 'CREATED',
     createdAt: new Date('2020-10-01T12:00:00Z'),
@@ -82,7 +85,10 @@ test('Correctly renders the other states of access', () => {
       latestAccessRequest={latestAccessRequest}
       latestAccessProof={{
         id: 'id',
-        organizationName: 'foo',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'foo',
+        },
         serviceName: 'bar',
         createdAt: new Date('2020-10-02T12:01:00Z'),
         revokedAt: null,
@@ -97,7 +103,10 @@ test('Correctly renders the other states of access', () => {
       latestAccessRequest={latestAccessRequest}
       latestAccessProof={{
         id: 'id',
-        organizationName: 'foo',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'foo',
+        },
         serviceName: 'bar',
         createdAt: new Date('2020-10-02T12:01:00Z'),
         revokedAt: new Date('2020-10-03T12:01:00Z'),

@@ -4,6 +4,7 @@
 import React from 'react'
 import { Route, StaticRouter as Router } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
+import OutwayModel from '../../../stores/models/OutwayModel'
 import OutwayDetailPage from './index'
 
 /* eslint-disable react/prop-types */
@@ -13,10 +14,16 @@ jest.mock('./OutwayDetailPageView', () => ({ outway }) => (
 /* eslint-enable react/prop-types */
 
 test('display outway details', () => {
+  const outwayModel = new OutwayModel({
+    outwayData: {
+      name: 'forty-two',
+    },
+  })
+
   const { getByTestId } = renderWithProviders(
     <Router location="/inways-and-outways/forty-two">
       <Route path="/inways-and-outways/:name">
-        <OutwayDetailPage outway={{ name: 'forty-two' }} />
+        <OutwayDetailPage outway={outwayModel} />
       </Route>
     </Router>,
   )
