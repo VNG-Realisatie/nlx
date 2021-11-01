@@ -28,7 +28,7 @@ test('should display outway details', async () => {
   expect(getByTestId('gateway-type')).toHaveTextContent('outway')
   expect(getByText('127.0.0.1')).toBeInTheDocument()
 
-  fireEvent.click(screen.getByLabelText('Certificate'))
+  fireEvent.click(screen.getByText('Certificate'))
 
   await waitFor(() => {
     expect(getByText('public-key-pem')).toBeInTheDocument()
