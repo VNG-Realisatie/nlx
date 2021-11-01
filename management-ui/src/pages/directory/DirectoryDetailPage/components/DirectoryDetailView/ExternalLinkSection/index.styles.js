@@ -12,10 +12,6 @@ export const Section = styled.section`
 
   & > * {
     flex: 1 1 50%;
-
-    &:first-child {
-      margin-right: ${(p) => p.theme.tokens.spacing05};
-    }
   }
 `
 
