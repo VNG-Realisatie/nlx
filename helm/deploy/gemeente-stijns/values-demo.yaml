@@ -55,7 +55,7 @@ managementAPI:
     endpointURL: http://gemeente-stijns-parkeerrechten-api:8000
     apiSpecificationURL: http://gemeente-stijns-parkeerrechten-api:8000/schema?format=openapi-json
     publicSupportContact: support@nlx.io
-    documentationUrl: https://nlx.io
+    documentationUrl: https://docs.nlx.io
     inways:
       - gemeente-stijns-nlx-inway
 
@@ -110,7 +110,7 @@ nlx-inway:
     directoryRegistrationHostname: directory-registration-api.demo.nlx.io
   service:
     annotations:
-      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
     loadBalancerIP: 51.105.223.98
     type: LoadBalancer
 
@@ -150,7 +150,7 @@ nginx-video-player-ui-proxy:
     tls:
       - secretName: gemeentestijns-nginx-video-player-proxy-ingress-tls
         hosts:
-          - nginx-video-player-proxy.demo.gemeentestijns.nl    
+          - nginx-video-player-proxy.demo.gemeentestijns.nl
 
 video-player-ui:
   organizationName: Gemeente Stijns

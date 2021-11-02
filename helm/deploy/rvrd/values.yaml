@@ -123,7 +123,7 @@ managementAPI:
     endpointURL: http://rvrd-basisregister-fictieve-kentekens
     apiSpecificationURL: http://rvrd-basisregister-fictieve-kentekens/openapi.json
     publicSupportContact: support@nlx.io
-    documentationUrl: https://nlx.io
+    documentationUrl: https://docs.nlx.io
     inways:
       - rvrd-nlx-inway
   servicePersonen:
@@ -131,7 +131,7 @@ managementAPI:
     endpointURL: http://rvrd-basisregister-fictieve-personen
     apiSpecificationURL: http://rvrd-basisregister-fictieve-personen/openapi.json
     publicSupportContact: support@nlx.io
-    documentationUrl: https://nlx.io
+    documentationUrl: https://docs.nlx.io
     inways:
       - rvrd-nlx-inway
   serviceVideoStream:
