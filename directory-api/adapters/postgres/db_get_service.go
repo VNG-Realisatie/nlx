@@ -14,17 +14,18 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 	}
 
 	type dbService struct {
-		ID                   uint   `db:"id"`
-		Name                 string `db:"name"`
-		SerialNumber         string `db:"organization_serial_number"`
-		DocumentationURL     string `db:"documentation_url"`
-		APISpecificationType string `db:"api_specification_type"`
-		PublicSupportContact string `db:"public_support_contact"`
-		TechSupportContact   string `db:"tech_support_contact"`
-		OneTimeCosts         int32  `db:"one_time_costs"`
-		MonthlyCosts         int32  `db:"monthly_costs"`
-		RequestCosts         int32  `db:"request_costs"`
-		Internal             bool   `db:"internal"`
+		ID                       uint   `db:"id"`
+		Name                     string `db:"name"`
+		OrganizationSerialNumber string `db:"organization_serial_number"`
+		OrganizationName         string `db:"organization_name"`
+		DocumentationURL         string `db:"documentation_url"`
+		APISpecificationType     string `db:"api_specification_type"`
+		PublicSupportContact     string `db:"public_support_contact"`
+		TechSupportContact       string `db:"tech_support_contact"`
+		OneTimeCosts             int32  `db:"one_time_costs"`
+		MonthlyCosts             int32  `db:"monthly_costs"`
+		RequestCosts             int32  `db:"request_costs"`
+		Internal                 bool   `db:"internal"`
 	}
 
 	result := dbService{}
@@ -37,7 +38,8 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 	model, err := domain.NewService(
 		&domain.NewServiceArgs{
 			Name:                     result.Name,
-			OrganizationSerialNumber: result.SerialNumber,
+			OrganizationSerialNumber: result.OrganizationSerialNumber,
+			OrganizationName:         result.OrganizationName,
 			Internal:                 result.Internal,
 			DocumentationURL:         result.DocumentationURL,
 			APISpecificationType:     domain.SpecificationType(result.APISpecificationType),
@@ -49,7 +51,7 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 		},
 	)
 	if err != nil {
-		return nil, fmt.Errorf("invalid inway model in database: %v", err)
+		return nil, fmt.Errorf("invalid service model in database: %v", err)
 	}
 
 	model.SetID(result.ID)
@@ -59,7 +61,7 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 
 func prepareGetServiceStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
-		select directory.services.id as id, directory.services.name as name, documentation_url, api_specification_type, internal, tech_support_contact, public_support_contact, directory.organizations.serial_number as organization_serial_number, one_time_costs, monthly_costs, request_costs
+		select directory.services.id as id, directory.services.name as name, documentation_url, api_specification_type, internal, tech_support_contact, public_support_contact, directory.organizations.serial_number as organization_serial_number, directory.organizations.name as organization_name, one_time_costs, monthly_costs, request_costs
 		from directory.services
 		join directory.organizations
 		    on directory.services.organization_id = directory.organizations.id

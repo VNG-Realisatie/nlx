@@ -137,5 +137,5 @@ func getDBName(loadFixtures bool) string {
 		suffix = fixtureSuffix
 	}
 
-	return fmt.Sprintf("test_direction%s", suffix)
+	return fmt.Sprintf("test_directory%s", suffix)
 }

@@ -32,15 +32,15 @@ func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 		&result,
 		&registerParams{
 			Name:                 model.Name(),
-			SerialNumber:         model.SerialNumber(),
+			SerialNumber:         model.Organization().SerialNumber(),
 			Internal:             model.Internal(),
 			DocumentationURL:     model.DocumentationURL(),
 			APISpecificationType: string(model.APISpecificationType()),
 			PublicSupportContact: model.PublicSupportContact(),
 			TechSupportContact:   model.TechSupportContact(),
-			OneTimeCosts:         int32(model.OneTimeCosts()),
-			MonthlyCosts:         int32(model.MonthlyCosts()),
-			RequestCosts:         int32(model.RequestCosts()),
+			OneTimeCosts:         int32(model.Costs().OneTime),
+			MonthlyCosts:         int32(model.Costs().Monthly),
+			RequestCosts:         int32(model.Costs().Request),
 		})
 
 	if err != nil {

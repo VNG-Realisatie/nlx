@@ -100,6 +100,7 @@ func (h *DirectoryService) RegisterInway(ctx context.Context, req *directoryapi.
 			&domain.NewServiceArgs{
 				Name:                     s.Name,
 				OrganizationSerialNumber: organizationInformation.SerialNumber,
+				OrganizationName:         organizationInformation.Name,
 				Internal:                 s.Internal,
 				DocumentationURL:         s.DocumentationUrl,
 				APISpecificationType:     serviceSpecificationType,

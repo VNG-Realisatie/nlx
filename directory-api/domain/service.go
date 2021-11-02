@@ -9,23 +9,28 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
+type ServiceCosts struct {
+	OneTime int
+	Monthly int
+	Request int
+}
+
 type Service struct {
-	id                       uint
-	name                     string
-	organizationSerialNumber string
-	internal                 bool
-	documentationURL         string
-	apiSpecificationType     SpecificationType
-	publicSupportContact     string
-	techSupportContact       string
-	oneTimeCosts             uint
-	monthlyCosts             uint
-	requestCosts             uint
+	id                   uint
+	name                 string
+	organization         *Organization
+	internal             bool
+	documentationURL     string
+	apiSpecificationType SpecificationType
+	publicSupportContact string
+	techSupportContact   string
+	costs                *ServiceCosts
 }
 
 type NewServiceArgs struct {
 	Name                     string
 	OrganizationSerialNumber string
+	OrganizationName         string
 	Internal                 bool
 	DocumentationURL         string
 	APISpecificationType     SpecificationType
@@ -55,17 +60,24 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 		return nil, err
 	}
 
+	organization, err := NewOrganization(args.OrganizationName, args.OrganizationSerialNumber)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Service{
-		name:                     args.Name,
-		organizationSerialNumber: args.OrganizationSerialNumber,
-		documentationURL:         args.DocumentationURL,
-		apiSpecificationType:     args.APISpecificationType,
-		publicSupportContact:     args.PublicSupportContact,
-		techSupportContact:       args.TechSupportContact,
-		oneTimeCosts:             args.OneTimeCosts,
-		monthlyCosts:             args.MonthlyCosts,
-		requestCosts:             args.RequestCosts,
-		internal:                 args.Internal,
+		name:                 args.Name,
+		organization:         organization,
+		documentationURL:     args.DocumentationURL,
+		apiSpecificationType: args.APISpecificationType,
+		publicSupportContact: args.PublicSupportContact,
+		techSupportContact:   args.TechSupportContact,
+		costs: &ServiceCosts{
+			OneTime: int(args.OneTimeCosts),
+			Monthly: int(args.MonthlyCosts),
+			Request: int(args.RequestCosts),
+		},
+		internal: args.Internal,
 	}, nil
 }
 
@@ -81,8 +93,8 @@ func (i *Service) Name() string {
 	return i.name
 }
 
-func (i *Service) SerialNumber() string {
-	return i.organizationSerialNumber
+func (i *Service) Organization() *Organization {
+	return i.organization
 }
 
 func (i *Service) DocumentationURL() string {
@@ -101,16 +113,8 @@ func (i *Service) TechSupportContact() string {
 	return i.techSupportContact
 }
 
-func (i *Service) OneTimeCosts() uint {
-	return i.oneTimeCosts
-}
-
-func (i *Service) MonthlyCosts() uint {
-	return i.monthlyCosts
-}
-
-func (i *Service) RequestCosts() uint {
-	return i.requestCosts
+func (i *Service) Costs() *ServiceCosts {
+	return i.costs
 }
 
 func (i *Service) Internal() bool {

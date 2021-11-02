@@ -111,6 +111,10 @@ func NewPostgreSQLConnection(dsn string) (*sqlx.DB, error) {
 	return db, nil
 }
 
+func (db *PostgreSQLRepository) Shutdown() error {
+	return db.db.Close()
+}
+
 func PostgreSQLPerformMigrations(dsn string) error {
 	migrator, err := migrate.New("file://../../../directory-db/migrations", dsn)
 	if err != nil {

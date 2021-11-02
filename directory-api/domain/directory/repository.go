@@ -33,5 +33,5 @@ type Repository interface {
 	// ListOrganizations(ctx context.Context) ([]*Organization, error)
 	// ListVersionStatistics(ctx context.Context) ([]*VersionStatistics, error)
 
-	// Shutdown() error
+	Shutdown() error
 }

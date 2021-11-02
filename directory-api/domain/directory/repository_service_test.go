@@ -29,6 +29,7 @@ func TestRegisterService(t *testing.T) {
 					&domain.NewServiceArgs{
 						Name:                     "my-service",
 						OrganizationSerialNumber: testOrganizationSerialNumber,
+						OrganizationName:         "organization-d",
 						Internal:                 true,
 						DocumentationURL:         "documentation-url",
 						APISpecificationType:     domain.OpenAPI3,
