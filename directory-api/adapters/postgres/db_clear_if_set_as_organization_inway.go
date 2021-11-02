@@ -1,9 +1,10 @@
-package adapters
+package pgadapter
 
 import (
 	"context"
 	"errors"
 
+	"go.nlx.io/nlx/directory-api/domain/directory"
 	"go.uber.org/zap"
 )
 
@@ -12,7 +13,7 @@ import (
 func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context, serialNumber, selfAddress string) error {
 	organizationSelfAddress, err := r.GetOrganizationInwayAddress(ctx, serialNumber)
 	if err != nil {
-		if errors.Is(err, ErrOrganizationNotFound) {
+		if errors.Is(err, directory.ErrOrganizationNotFound) {
 			return nil
 		}
 

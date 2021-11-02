@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package adapters_test
+package directory_test
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"go.nlx.io/nlx/directory-api/adapters"
 	"go.nlx.io/nlx/directory-api/domain"
+	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func TestSetOrganizationInway(t *testing.T) {
@@ -51,7 +51,7 @@ func TestSetOrganizationInway(t *testing.T) {
 				organizationSerialNumber: testOrganizationSerialNumber,
 				inwayAddress:             "does-not-exist.com",
 			},
-			expectedErr: adapters.ErrNoInwayWithAddress,
+			expectedErr: directory.ErrNoInwayWithAddress,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -132,7 +132,7 @@ func TestClearOrganizationInway(t *testing.T) {
 			input: inputParams{
 				organizationSerialNumber: "12345678900987654321",
 			},
-			expectedErr: adapters.ErrOrganizationNotFound,
+			expectedErr: directory.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -219,7 +219,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 				organizationSerialNumber: "010203040506070809",
 			},
 			expectedAddress: "",
-			expectedErr:     adapters.ErrOrganizationNotFound,
+			expectedErr:     directory.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {

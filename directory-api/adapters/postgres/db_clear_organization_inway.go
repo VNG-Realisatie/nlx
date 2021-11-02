@@ -1,9 +1,10 @@
-package adapters
+package pgadapter
 
 import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
+	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organizationSerialNumber string) error {
@@ -22,7 +23,7 @@ func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organ
 	}
 
 	if n != 1 {
-		return ErrOrganizationNotFound
+		return directory.ErrOrganizationNotFound
 	}
 
 	return nil

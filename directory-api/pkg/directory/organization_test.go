@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.nlx.io/nlx/directory-api/adapters"
+	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
@@ -38,7 +38,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 				mocks.r.
 					EXPECT().
 					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
-					Return(adapters.ErrOrganizationNotFound)
+					Return(directory.ErrOrganizationNotFound)
 			},
 			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,

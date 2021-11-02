@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package adapters_test
+package directory_test
 
 import (
 	"context"
@@ -21,7 +21,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/directory-api/adapters"
+	pgadapter "go.nlx.io/nlx/directory-api/adapters/postgres"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory"
 	"go.nlx.io/nlx/testing/testingutils"
@@ -52,7 +52,7 @@ func setupDatabase(t *testing.T, loadFixtures bool) {
 	}
 
 	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", dbName)
-	err = adapters.PostgreSQLPerformMigrations(dsnForMigrations)
+	err = pgadapter.PostgreSQLPerformMigrations(dsnForMigrations)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,7 +70,7 @@ func setupDatabase(t *testing.T, loadFixtures bool) {
 		fixtures, err := testfixtures.New(
 			testfixtures.Database(db.DB),
 			testfixtures.Dialect("postgres"),
-			testfixtures.Directory("testdata/fixtures/postgres"),
+			testfixtures.Directory("../../adapters/postgres/testdata/fixtures"),
 			testfixtures.DangerousSkipTestDatabaseCheck(),
 		)
 
@@ -79,13 +79,13 @@ func setupDatabase(t *testing.T, loadFixtures bool) {
 	}
 }
 
-func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*adapters.PostgreSQLRepository, func() error) {
+func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*pgadapter.PostgreSQLRepository, func() error) {
 	db, err := sqlx.Open(getDriverName(loadFixtures), id)
 	require.NoError(t, err)
 
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	repo, err := adapters.New(zap.NewNop(), db)
+	repo, err := pgadapter.New(zap.NewNop(), db)
 	require.NoError(t, err)
 
 	return repo, db.Close

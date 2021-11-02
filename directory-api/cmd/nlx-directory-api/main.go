@@ -23,7 +23,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
-	"go.nlx.io/nlx/directory-api/adapters"
+	pgadapter "go.nlx.io/nlx/directory-api/adapters/postgres"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/pkg/directory"
 	"go.nlx.io/nlx/directory-db/dbversion"
@@ -108,14 +108,14 @@ func main() {
 		logger.Fatal("loading certificate", zap.Error(err))
 	}
 
-	db, err := adapters.NewPostgreSQLConnection(options.PostgresDSN)
+	db, err := pgadapter.NewPostgreSQLConnection(options.PostgresDSN)
 	if err != nil {
 		logger.Fatal("can not create db connection:", zap.Error(err))
 	}
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	inwayRepository, err := adapters.New(logger, db)
+	inwayRepository, err := pgadapter.New(logger, db)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}

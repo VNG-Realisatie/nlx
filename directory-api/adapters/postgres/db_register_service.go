@@ -1,4 +1,4 @@
-package adapters
+package pgadapter
 
 import (
 	"fmt"

@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package adapters_test
+package directory_test
 
 import (
 	"testing"
@@ -11,8 +11,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"go.nlx.io/nlx/directory-api/adapters"
 	"go.nlx.io/nlx/directory-api/domain"
+	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func TestRegisterInway(t *testing.T) {
@@ -136,7 +136,7 @@ func TestRegisterInway(t *testing.T) {
 						CreatedAt:    now,
 						UpdatedAt:    now,
 					},
-					expectedErr: adapters.ErrDuplicateAddress,
+					expectedErr: directory.ErrDuplicateAddress,
 				},
 			},
 			expectedInway: nil,

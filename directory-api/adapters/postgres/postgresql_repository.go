@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package adapters
+package pgadapter
 
 import (
 	"errors"
@@ -14,12 +14,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 	"go.uber.org/zap"
-)
-
-var (
-	ErrDuplicateAddress     = errors.New("another inway is already registered with this address")
-	ErrNoInwayWithAddress   = errors.New("no inway found for address")
-	ErrOrganizationNotFound = errors.New("no organization found")
 )
 
 type PostgreSQLRepository struct {
@@ -118,7 +112,7 @@ func NewPostgreSQLConnection(dsn string) (*sqlx.DB, error) {
 }
 
 func PostgreSQLPerformMigrations(dsn string) error {
-	migrator, err := migrate.New("file://../../directory-db/migrations", dsn)
+	migrator, err := migrate.New("file://../../../directory-db/migrations", dsn)
 	if err != nil {
 		return fmt.Errorf("setup migrator: %v", err)
 	}

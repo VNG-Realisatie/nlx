@@ -7,12 +7,11 @@ import (
 	"context"
 	"errors"
 
+	"go.nlx.io/nlx/directory-api/domain/directory"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	"go.nlx.io/nlx/directory-api/adapters"
 )
 
 func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
@@ -27,7 +26,7 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 
 	err = h.repository.ClearOrganizationInway(ctx, organization.SerialNumber)
 	if err != nil {
-		if errors.Is(err, adapters.ErrOrganizationNotFound) {
+		if errors.Is(err, directory.ErrOrganizationNotFound) {
 			logger.Info("did not clear organization because the organization could not be found", zap.Any("organization", organization))
 			return &emptypb.Empty{}, nil
 		}

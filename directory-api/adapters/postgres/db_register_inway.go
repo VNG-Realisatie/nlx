@@ -1,4 +1,4 @@
-package adapters
+package pgadapter
 
 import (
 	"time"
@@ -6,6 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"go.nlx.io/nlx/directory-api/domain"
+	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
@@ -32,7 +33,7 @@ func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	})
 
 	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
-		return ErrDuplicateAddress
+		return directory.ErrDuplicateAddress
 	}
 
 	return err

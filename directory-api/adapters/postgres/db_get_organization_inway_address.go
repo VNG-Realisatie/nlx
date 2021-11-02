@@ -1,4 +1,4 @@
-package adapters
+package pgadapter
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/jmoiron/sqlx"
+	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
@@ -18,7 +19,7 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 	err := r.selectOrganizationInwayAddressStmt.GetContext(ctx, &address, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", ErrOrganizationNotFound
+			return "", directory.ErrOrganizationNotFound
 		}
 
 		return "", err

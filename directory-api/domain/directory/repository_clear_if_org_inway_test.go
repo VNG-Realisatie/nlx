@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package adapters_test
+package directory_test
 
 import (
 	"context"
