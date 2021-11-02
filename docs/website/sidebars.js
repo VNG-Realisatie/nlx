@@ -45,6 +45,7 @@ module.exports = {
             'try-nlx/helm/preparation',
             'try-nlx/helm/create-namespace',
             'try-nlx/helm/create-certificate',
+            'try-nlx/helm/postgresql',
             'try-nlx/helm/nlx-management',
             'try-nlx/helm/nlx-inway',
             'try-nlx/helm/nlx-outway',
