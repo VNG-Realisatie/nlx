@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package directory_test
+package storage_test
 
 import (
 	"testing"
@@ -12,13 +12,11 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func TestRegisterInway(t *testing.T) {
 	t.Parallel()
-
-	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -136,7 +134,7 @@ func TestRegisterInway(t *testing.T) {
 						CreatedAt:    now,
 						UpdatedAt:    now,
 					},
-					expectedErr: directory.ErrDuplicateAddress,
+					expectedErr: storage.ErrDuplicateAddress,
 				},
 			},
 			expectedInway: nil,
@@ -183,20 +181,20 @@ func TestRegisterInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name(), false)
+			storage, close := new(t, false)
 			defer close()
 
 			registrations := tt.registrations
 
 			for _, registration := range registrations {
 				iw := createNewInway(t, registration.inwayArgs)
-				err = repo.RegisterInway(iw)
+				err = storage.RegisterInway(iw)
 				require.Equal(t, registration.expectedErr, err)
 			}
 
 			if tt.expectedInway != nil {
 				expectedInway := createNewInway(t, tt.expectedInway)
-				assertInwayInRepository(t, repo, expectedInway)
+				assertInwayInRepository(t, storage, expectedInway)
 			}
 		})
 	}

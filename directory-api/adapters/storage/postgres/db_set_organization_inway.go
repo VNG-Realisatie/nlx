@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	"github.com/jmoiron/sqlx"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error {
@@ -23,7 +23,7 @@ func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organiz
 	err := r.selectInwayByAddressStmt.GetContext(ctx, &ioID, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return directory.ErrNoInwayWithAddress
+			return storage.ErrNoInwayWithAddress
 		}
 
 		return err

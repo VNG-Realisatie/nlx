@@ -17,7 +17,7 @@ import (
 
 	"go.nlx.io/nlx/common/tls"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
-	directory_mock "go.nlx.io/nlx/directory-api/domain/directory/mock"
+	storage_mock "go.nlx.io/nlx/directory-api/domain/directory/storage/mock"
 	"go.nlx.io/nlx/directory-api/pkg/directory"
 )
 
@@ -186,7 +186,7 @@ func TestDirectoryRegistrationService_RegisterInway(t *testing.T) {
 }
 
 type serviceMocks struct {
-	r *directory_mock.MockRepository
+	r *storage_mock.MockRepository
 }
 
 const testOrganizationName = "Test Organization Name"
@@ -207,7 +207,7 @@ func newService(t *testing.T) (*directory.DirectoryService, serviceMocks) {
 	})
 
 	mocks := serviceMocks{
-		r: directory_mock.NewMockRepository(ctrl),
+		r: storage_mock.NewMockRepository(ctrl),
 	}
 
 	service := directory.New(

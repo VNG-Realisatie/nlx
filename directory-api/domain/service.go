@@ -14,6 +14,17 @@ type ServiceCosts struct {
 	Monthly int
 	Request int
 }
+type ServiceInways struct {
+	Address string
+	State   ServiceInwayState
+}
+
+type ServiceInwayState string
+
+const (
+	InwayDOWN ServiceInwayState = "DOWN"
+	InwayUP   ServiceInwayState = "UP"
+)
 
 type Service struct {
 	id                   uint
@@ -25,6 +36,7 @@ type Service struct {
 	publicSupportContact string
 	techSupportContact   string
 	costs                *ServiceCosts
+	inways               []*ServiceInways
 }
 
 type NewServiceArgs struct {
@@ -39,6 +51,7 @@ type NewServiceArgs struct {
 	OneTimeCosts             uint
 	MonthlyCosts             uint
 	RequestCosts             uint
+	Inways                   []*ServiceInways
 }
 
 type SpecificationType string
@@ -77,6 +90,7 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 			Monthly: int(args.MonthlyCosts),
 			Request: int(args.RequestCosts),
 		},
+		inways:   args.Inways,
 		internal: args.Internal,
 	}, nil
 }
@@ -119,4 +133,8 @@ func (i *Service) Costs() *ServiceCosts {
 
 func (i *Service) Internal() bool {
 	return i.internal
+}
+
+func (i *Service) Inways() []*ServiceInways {
+	return i.inways
 }

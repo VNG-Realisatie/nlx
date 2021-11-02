@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	"github.com/jmoiron/sqlx"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
@@ -19,7 +19,7 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 	err := r.selectOrganizationInwayAddressStmt.GetContext(ctx, &address, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", directory.ErrOrganizationNotFound
+			return "", storage.ErrOrganizationNotFound
 		}
 
 		return "", err

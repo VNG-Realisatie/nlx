@@ -6,7 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
@@ -33,7 +33,7 @@ func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	})
 
 	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
-		return directory.ErrDuplicateAddress
+		return storage.ErrDuplicateAddress
 	}
 
 	return err

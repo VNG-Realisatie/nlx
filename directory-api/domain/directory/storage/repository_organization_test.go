@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package directory_test
+package storage_test
 
 import (
 	"context"
@@ -13,13 +13,11 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func TestSetOrganizationInway(t *testing.T) {
 	t.Parallel()
-
-	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -51,7 +49,7 @@ func TestSetOrganizationInway(t *testing.T) {
 				organizationSerialNumber: testOrganizationSerialNumber,
 				inwayAddress:             "does-not-exist.com",
 			},
-			expectedErr: directory.ErrNoInwayWithAddress,
+			expectedErr: storage.ErrNoInwayWithAddress,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -78,7 +76,7 @@ func TestSetOrganizationInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name(), false)
+			storage, close := new(t, false)
 			defer close()
 
 			inwayArgs := tt.setup(t)
@@ -86,14 +84,14 @@ func TestSetOrganizationInway(t *testing.T) {
 			inwayModel, err := domain.NewInway(inwayArgs)
 			require.NoError(t, err)
 
-			err = repo.RegisterInway(inwayModel)
+			err = storage.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), tt.input.organizationSerialNumber, tt.input.inwayAddress)
+			err = storage.SetOrganizationInway(context.Background(), tt.input.organizationSerialNumber, tt.input.inwayAddress)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {
-				assertOrganizationInwayAddress(t, repo, tt.input.organizationSerialNumber, tt.input.inwayAddress)
+				assertOrganizationInwayAddress(t, storage, tt.input.organizationSerialNumber, tt.input.inwayAddress)
 			}
 		})
 	}
@@ -101,8 +99,6 @@ func TestSetOrganizationInway(t *testing.T) {
 
 func TestClearOrganizationInway(t *testing.T) {
 	t.Parallel()
-
-	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -132,7 +128,7 @@ func TestClearOrganizationInway(t *testing.T) {
 			input: inputParams{
 				organizationSerialNumber: "12345678900987654321",
 			},
-			expectedErr: directory.ErrOrganizationNotFound,
+			expectedErr: storage.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -158,7 +154,7 @@ func TestClearOrganizationInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name(), false)
+			storage, close := new(t, false)
 			defer close()
 
 			inwayArgs := tt.setup(t)
@@ -166,19 +162,19 @@ func TestClearOrganizationInway(t *testing.T) {
 			inwayModel, err := domain.NewInway(inwayArgs)
 			require.NoError(t, err)
 
-			err = repo.RegisterInway(inwayModel)
+			err = storage.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().SerialNumber(), inwayModel.Address())
+			err = storage.SetOrganizationInway(context.Background(), inwayModel.Organization().SerialNumber(), inwayModel.Address())
 			require.NoError(t, err)
 
 			t.Logf("tt.input.organizationSerialNumber = %s", tt.input.organizationSerialNumber)
 
-			err = repo.ClearOrganizationInway(context.Background(), tt.input.organizationSerialNumber)
+			err = storage.ClearOrganizationInway(context.Background(), tt.input.organizationSerialNumber)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {
-				assertOrganizationInwayAddress(t, repo, tt.input.organizationSerialNumber, "")
+				assertOrganizationInwayAddress(t, storage, tt.input.organizationSerialNumber, "")
 			}
 		})
 	}
@@ -186,8 +182,6 @@ func TestClearOrganizationInway(t *testing.T) {
 
 func TestGetOrganizationInwayAddress(t *testing.T) {
 	t.Parallel()
-
-	setup(t)
 
 	now, err := time.Parse(time.RFC3339, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
@@ -219,7 +213,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 				organizationSerialNumber: "010203040506070809",
 			},
 			expectedAddress: "",
-			expectedErr:     directory.ErrOrganizationNotFound,
+			expectedErr:     storage.ErrOrganizationNotFound,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -246,7 +240,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name(), false)
+			storage, close := new(t, false)
 			defer close()
 
 			inwayArgs := tt.setup(t)
@@ -254,13 +248,13 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 			inwayModel, err := domain.NewInway(inwayArgs)
 			require.NoError(t, err)
 
-			err = repo.RegisterInway(inwayModel)
+			err = storage.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
-			err = repo.SetOrganizationInway(context.Background(), inwayModel.Organization().SerialNumber(), inwayModel.Address())
+			err = storage.SetOrganizationInway(context.Background(), inwayModel.Organization().SerialNumber(), inwayModel.Address())
 			require.Equal(t, nil, err)
 
-			address, err := repo.GetOrganizationInwayAddress(context.Background(), tt.input.organizationSerialNumber)
+			address, err := storage.GetOrganizationInwayAddress(context.Background(), tt.input.organizationSerialNumber)
 			require.Equal(t, tt.expectedErr, err)
 
 			if tt.expectedErr == nil {

@@ -10,11 +10,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	"go.nlx.io/nlx/directory-api/domain/directory"
 )
 
 func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
@@ -38,7 +37,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 				mocks.r.
 					EXPECT().
 					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
-					Return(directory.ErrOrganizationNotFound)
+					Return(storage.ErrOrganizationNotFound)
 			},
 			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,

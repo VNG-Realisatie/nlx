@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package directory_test
+package storage_test
 
 import (
 	"context"
@@ -14,8 +14,6 @@ import (
 
 func TestClearIfSetAsOrganizationInway(t *testing.T) {
 	t.Parallel()
-
-	setup(t)
 
 	var (
 		testOrgSerialNumber = "01234567890123456789"
@@ -43,13 +41,13 @@ func TestClearIfSetAsOrganizationInway(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name(), true)
+			storage, close := new(t, true)
 			defer close()
 
-			err := repo.ClearIfSetAsOrganizationInway(context.Background(), testOrgSerialNumber, tt.inwayAddress)
+			err := storage.ClearIfSetAsOrganizationInway(context.Background(), testOrgSerialNumber, tt.inwayAddress)
 			require.NoError(t, err)
 
-			orgInwayAddress, err := repo.GetOrganizationInwayAddress(context.Background(), testOrgSerialNumber)
+			orgInwayAddress, err := storage.GetOrganizationInwayAddress(context.Background(), testOrgSerialNumber)
 			require.NoError(t, err)
 			require.Equal(t, tt.expectedOrgInway, orgInwayAddress)
 		})

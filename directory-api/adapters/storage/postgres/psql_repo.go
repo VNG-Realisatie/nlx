@@ -27,6 +27,7 @@ type PostgreSQLRepository struct {
 	setOrganizationInwayStmt           *sqlx.NamedStmt
 	clearOrganizationInwayStmt         *sqlx.NamedStmt
 	selectOrganizationInwayAddressStmt *sqlx.NamedStmt
+	// selectServicesStmt                 *sqlx.Stmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -79,6 +80,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select organization inway address statement: %s", err)
 	}
 
+	// selectServicesStatement, err := prepareSelectServicesStatement(db)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to prepare select services statement: %s", err)
+	// }
+
 	return &PostgreSQLRepository{
 		logger:                             logger.Named("postgres repository"),
 		db:                                 db,
@@ -90,6 +96,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		setOrganizationInwayStmt:           setOrganizationInwayStmt,
 		clearOrganizationInwayStmt:         clearOrganizationInwayStmt,
 		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
+		// selectServicesStmt:                 selectServicesStatement,
 	}, nil
 }
 
@@ -116,7 +123,7 @@ func (db *PostgreSQLRepository) Shutdown() error {
 }
 
 func PostgreSQLPerformMigrations(dsn string) error {
-	migrator, err := migrate.New("file://../../../directory-db/migrations", dsn)
+	migrator, err := migrate.New("file://../../../../directory-db/migrations", dsn)
 	if err != nil {
 		return fmt.Errorf("setup migrator: %v", err)
 	}

@@ -23,7 +23,7 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
-	pgadapter "go.nlx.io/nlx/directory-api/adapters/postgres"
+	pgadapter "go.nlx.io/nlx/directory-api/adapters/storage/postgres"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/pkg/directory"
 	"go.nlx.io/nlx/directory-db/dbversion"

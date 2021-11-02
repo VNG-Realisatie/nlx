@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package directory_test
+package storage_test
 
 import (
 	"testing"
@@ -16,8 +16,6 @@ import (
 
 func TestRegisterService(t *testing.T) {
 	t.Parallel()
-
-	setup(t)
 
 	tests := map[string]struct {
 		createRegistrations func(*testing.T) []*domain.Service
@@ -59,7 +57,7 @@ func TestRegisterService(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := newRepo(t, t.Name(), false)
+			storage, close := new(t, false)
 			defer close()
 
 			models := tt.createRegistrations(t)
@@ -74,12 +72,12 @@ func TestRegisterService(t *testing.T) {
 			})
 			require.NoError(t, err)
 
-			err = repo.RegisterInway(inwayModel)
+			err = storage.RegisterInway(inwayModel)
 			require.NoError(t, err)
 
 			var lastErr error
 			for _, model := range models {
-				err := repo.RegisterService(model)
+				err := storage.RegisterService(model)
 				lastErr = err
 			}
 
@@ -87,7 +85,7 @@ func TestRegisterService(t *testing.T) {
 
 			if tt.expectedErr == nil {
 				lastRegistration := models[len(models)-1]
-				assertServiceInRepository(t, repo, lastRegistration)
+				assertServiceInRepository(t, storage, lastRegistration)
 			}
 		})
 	}

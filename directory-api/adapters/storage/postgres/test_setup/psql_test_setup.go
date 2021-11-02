@@ -3,10 +3,9 @@
 
 //go:build integration
 
-package directory_test
+package pgadapter_test_setup
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"sync"
@@ -17,30 +16,17 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	pgadapter "go.nlx.io/nlx/directory-api/adapters/postgres"
-	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	pgadapter "go.nlx.io/nlx/directory-api/adapters/storage/postgres"
 	"go.nlx.io/nlx/testing/testingutils"
 )
 
-var setupOnce sync.Once
-
 const fixtureSuffix = "_fixtures"
 
-func setup(t *testing.T) {
-	setupOnce.Do(func() {
-		setupPostgreSQLRepository(t)
-	})
-}
-
-func setupPostgreSQLRepository(t *testing.T) {
-	setupDatabase(t, false) // Without fixtures
-	setupDatabase(t, true)  // With fixtures
-}
+var setupOnceFixtures sync.Once
+var setupOnce sync.Once
 
 func setupDatabase(t *testing.T, loadFixtures bool) {
 	dbName := getDBName(loadFixtures)
@@ -70,7 +56,7 @@ func setupDatabase(t *testing.T, loadFixtures bool) {
 		fixtures, err := testfixtures.New(
 			testfixtures.Database(db.DB),
 			testfixtures.Dialect("postgres"),
-			testfixtures.Directory("../../adapters/postgres/testdata/fixtures"),
+			testfixtures.Directory("../../../adapters/storage/postgres/test_setup/testdata/fixtures"),
 			testfixtures.DangerousSkipTestDatabaseCheck(),
 		)
 
@@ -79,8 +65,18 @@ func setupDatabase(t *testing.T, loadFixtures bool) {
 	}
 }
 
-func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*pgadapter.PostgreSQLRepository, func() error) {
-	db, err := sqlx.Open(getDriverName(loadFixtures), id)
+func New(t *testing.T, loadFixtures bool) (*pgadapter.PostgreSQLRepository, func() error) {
+	if loadFixtures {
+		setupOnceFixtures.Do(func() {
+			setupDatabase(t, true)
+		})
+	} else {
+		setupOnce.Do(func() {
+			setupDatabase(t, false)
+		})
+	}
+
+	db, err := sqlx.Open(getDriverName(loadFixtures), t.Name())
 	require.NoError(t, err)
 
 	db.MapperFunc(xstrings.ToSnakeCase)
@@ -89,37 +85,6 @@ func newPostgreSQLRepository(t *testing.T, id string, loadFixtures bool) (*pgada
 	require.NoError(t, err)
 
 	return repo, db.Close
-}
-
-func newRepo(t *testing.T, id string, loadFixtures bool) (directory.Repository, func() error) {
-	return newPostgreSQLRepository(t, id, loadFixtures)
-}
-
-func assertOrganizationInwayAddress(t *testing.T, repo directory.Repository, serialNumber, inwayAddress string) {
-	t.Logf("serial number in assertOrganizationInwayAddress: %s", serialNumber)
-	result, err := repo.GetOrganizationInwayAddress(context.Background(), serialNumber)
-	require.NoError(t, err)
-
-	assert.Equal(t, inwayAddress, result)
-}
-
-func assertInwayInRepository(t *testing.T, repo directory.Repository, iw *domain.Inway) {
-	require.NotNil(t, iw)
-
-	inwayFromRepo, err := repo.GetInway(iw.Name(), iw.Organization().SerialNumber())
-	require.NoError(t, err)
-
-	assert.Equal(t, iw, inwayFromRepo)
-}
-
-func assertServiceInRepository(t *testing.T, repo directory.Repository, s *domain.Service) {
-	require.NotNil(t, s)
-
-	model, err := repo.GetService(s.ID())
-	require.NoError(t, err)
-
-	assert.EqualValues(t, s, model)
-
 }
 
 func getDriverName(loadFixtures bool) string {

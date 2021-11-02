@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -26,7 +26,7 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 
 	err = h.repository.ClearOrganizationInway(ctx, organization.SerialNumber)
 	if err != nil {
-		if errors.Is(err, directory.ErrOrganizationNotFound) {
+		if errors.Is(err, storage.ErrOrganizationNotFound) {
 			logger.Info("did not clear organization because the organization could not be found", zap.Any("organization", organization))
 			return &emptypb.Empty{}, nil
 		}

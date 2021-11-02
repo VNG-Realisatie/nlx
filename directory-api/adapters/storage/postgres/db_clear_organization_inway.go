@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organizationSerialNumber string) error {
@@ -23,7 +23,7 @@ func (r *PostgreSQLRepository) ClearOrganizationInway(ctx context.Context, organ
 	}
 
 	if n != 1 {
-		return directory.ErrOrganizationNotFound
+		return storage.ErrOrganizationNotFound
 	}
 
 	return nil

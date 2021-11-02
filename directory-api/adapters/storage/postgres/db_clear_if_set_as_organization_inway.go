@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"go.nlx.io/nlx/directory-api/domain/directory"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 	"go.uber.org/zap"
 )
 
@@ -13,7 +13,7 @@ import (
 func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context, serialNumber, selfAddress string) error {
 	organizationSelfAddress, err := r.GetOrganizationInwayAddress(ctx, serialNumber)
 	if err != nil {
-		if errors.Is(err, directory.ErrOrganizationNotFound) {
+		if errors.Is(err, storage.ErrOrganizationNotFound) {
 			return nil
 		}
 

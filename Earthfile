@@ -201,9 +201,9 @@ mocks-directory-api:
     WORKDIR /src/directory-api
 
     RUN mockgen -source api/directoryapi_grpc.pb.go -package=mock -destination /dist/api/mock/mock_directory_api.go
-    RUN mockgen -source domain/directory/repository.go -package=directory_mock -destination /dist/domain/directory/mock/repository.go
+    RUN mockgen -source domain/directory/storage/repository.go -package=directory_mock -destination /dist/domain/directory/storage/mock/repository.go
 
     RUN goimports -w -local "go.nlx.io" /dist/
 
     SAVE ARTIFACT /dist/api/mock/mock_directory_api.go AS LOCAL ./directory-api/api/mock/mock_directory_api.go
-    SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-api/domain/directory/mock/repository.go
+    SAVE ARTIFACT /dist/domain/directory/storage/mock/repository.go AS LOCAL ./directory-api/domain/directory/storage/mock/repository.go
