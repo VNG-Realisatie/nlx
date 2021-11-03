@@ -11,9 +11,9 @@ Download and install the Helm chart from the basisregister-fictieve-kentekens by
 
 
 ```
-git clone https://gitlab.com/commonground/nlx/nlx.git helm/deploy/rvrd/charts/basisregister-fictieve-kentekens
+git clone https://gitlab.com/commonground/nlx/nlx.git
 
-helm -n nlx upgrade --install brfk helm/deploy/rvrd/charts/basisregister-fictieve-kentekens
+helm -n nlx upgrade --install brfk nlx/helm/deploy/rvrd/charts/basisregister-fictieve-kentekens
 ```
 
 Check with `kubectl -n nlx get pods` if the Service pod is healthy.
