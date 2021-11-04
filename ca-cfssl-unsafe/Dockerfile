@@ -1,5 +1,5 @@
 # Use go 1.x based on alpine image.
-FROM golang:1.17.2-alpine AS build-cfssl
+FROM golang:1.17.3-alpine AS build-cfssl
 
 # Disable go-modules
 ENV GO111MODULE=off
