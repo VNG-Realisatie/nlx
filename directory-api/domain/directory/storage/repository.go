@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
@@ -29,9 +30,9 @@ type Repository interface {
 	GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error)
 
 	// ListServices(ctx context.Context, organizationSerialNumber string) ([]*Service, error)
-	// RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error
+	RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error
 	// ListOrganizations(ctx context.Context) ([]*Organization, error)
-	// ListVersionStatistics(ctx context.Context) ([]*VersionStatistics, error)
+	ListVersionStatistics(ctx context.Context) ([]*domain.VersionStatistics, error)
 
 	Shutdown() error
 }

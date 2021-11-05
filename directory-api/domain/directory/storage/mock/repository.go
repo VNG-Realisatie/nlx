@@ -10,6 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 
+	nlxversion "go.nlx.io/nlx/common/nlxversion"
 	domain "go.nlx.io/nlx/directory-api/domain"
 )
 
@@ -109,6 +110,21 @@ func (mr *MockRepositoryMockRecorder) GetService(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockRepository)(nil).GetService), id)
 }
 
+// ListVersionStatistics mocks base method.
+func (m *MockRepository) ListVersionStatistics(ctx context.Context) ([]*domain.VersionStatistics, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListVersionStatistics", ctx)
+	ret0, _ := ret[0].([]*domain.VersionStatistics)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListVersionStatistics indicates an expected call of ListVersionStatistics.
+func (mr *MockRepositoryMockRecorder) ListVersionStatistics(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListVersionStatistics", reflect.TypeOf((*MockRepository)(nil).ListVersionStatistics), ctx)
+}
+
 // RegisterInway mocks base method.
 func (m *MockRepository) RegisterInway(arg0 *domain.Inway) error {
 	m.ctrl.T.Helper()
@@ -121,6 +137,20 @@ func (m *MockRepository) RegisterInway(arg0 *domain.Inway) error {
 func (mr *MockRepositoryMockRecorder) RegisterInway(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockRepository)(nil).RegisterInway), arg0)
+}
+
+// RegisterOutwayVersion mocks base method.
+func (m *MockRepository) RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterOutwayVersion", ctx, version)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterOutwayVersion indicates an expected call of RegisterOutwayVersion.
+func (mr *MockRepositoryMockRecorder) RegisterOutwayVersion(ctx, version interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutwayVersion", reflect.TypeOf((*MockRepository)(nil).RegisterOutwayVersion), ctx, version)
 }
 
 // RegisterService mocks base method.
