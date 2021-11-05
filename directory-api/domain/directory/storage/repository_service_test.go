@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-api/domain"
@@ -17,30 +18,47 @@ import (
 func TestRegisterService(t *testing.T) {
 	t.Parallel()
 
+	type service struct {
+		Name                     string
+		OrganizationSerialNumber string
+		OrganizationName         string
+		Internal                 bool
+		DocumentationURL         string
+		APISpecificationType     domain.SpecificationType
+		PublicSupportContact     string
+		TechSupportContact       string
+		Costs                    *domain.ServiceCosts
+	}
+
+	type organization struct {
+		SerialNumber string
+		Name         string
+	}
+
 	tests := map[string]struct {
-		createRegistrations func(*testing.T) []*domain.Service
-		expectedErr         error
+		services     []*service
+		organization *organization
+		expectedErr  error
 	}{
 		"new_service": {
-			createRegistrations: func(t *testing.T) []*domain.Service {
-				s, err := domain.NewService(
-					&domain.NewServiceArgs{
-						Name:                     "my-service",
-						OrganizationSerialNumber: testOrganizationSerialNumber,
-						OrganizationName:         "organization-d",
-						Internal:                 true,
-						DocumentationURL:         "documentation-url",
-						APISpecificationType:     domain.OpenAPI3,
-						PublicSupportContact:     "public-support-contact",
-						TechSupportContact:       "tech-support-contact",
-						OneTimeCosts:             1,
-						MonthlyCosts:             2,
-						RequestCosts:             3,
+			services: []*service{
+				{
+					Name:                 "my-service",
+					Internal:             true,
+					DocumentationURL:     "documentation-url",
+					APISpecificationType: domain.OpenAPI3,
+					PublicSupportContact: "public-support-contact",
+					TechSupportContact:   "tech-support-contact",
+					Costs: &domain.ServiceCosts{
+						OneTime: 1,
+						Monthly: 2,
+						Request: 3,
 					},
-				)
-				require.NoError(t, err)
-
-				return []*domain.Service{s}
+				},
+			},
+			organization: &organization{
+				SerialNumber: testOrganizationSerialNumber,
+				Name:         "organization-d",
 			},
 			expectedErr: nil,
 		},
@@ -60,11 +78,27 @@ func TestRegisterService(t *testing.T) {
 			storage, close := new(t, false)
 			defer close()
 
-			models := tt.createRegistrations(t)
+			organization, err := domain.NewOrganization(tt.organization.SerialNumber, tt.organization.Name)
+			assert.NoError(t, err)
+
+			services := make([]*domain.Service, len(tt.services))
+			for i, s := range tt.services {
+				services[i], err = domain.NewService(&domain.NewServiceArgs{
+					Name:                 s.Name,
+					Organization:         organization,
+					Internal:             s.Internal,
+					DocumentationURL:     s.DocumentationURL,
+					APISpecificationType: s.APISpecificationType,
+					PublicSupportContact: s.PublicSupportContact,
+					TechSupportContact:   s.TechSupportContact,
+					Costs:                s.Costs,
+				})
+				assert.NoError(t, err)
+			}
 
 			inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
 				Name:         "inway-for-service",
-				Organization: createNewOrganization(t, "organization-d", testOrganizationSerialNumber),
+				Organization: organization,
 				Address:      "my-org.com",
 				NlxVersion:   domain.NlxVersionUnknown,
 				CreatedAt:    now,
@@ -76,15 +110,15 @@ func TestRegisterService(t *testing.T) {
 			require.NoError(t, err)
 
 			var lastErr error
-			for _, model := range models {
-				err := storage.RegisterService(model)
+			for _, s := range services {
+				err := storage.RegisterService(s)
 				lastErr = err
 			}
 
 			require.Equal(t, tt.expectedErr, lastErr)
 
 			if tt.expectedErr == nil {
-				lastRegistration := models[len(models)-1]
+				lastRegistration := services[len(services)-1]
 				assertServiceInRepository(t, storage, lastRegistration)
 			}
 		})

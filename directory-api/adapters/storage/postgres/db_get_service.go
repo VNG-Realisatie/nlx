@@ -35,19 +35,25 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 		return nil, fmt.Errorf("failed to get service with id %v: %s", id, err)
 	}
 
+	organization, err := domain.NewOrganization(result.OrganizationName, result.OrganizationSerialNumber)
+	if err != nil {
+		return nil, fmt.Errorf("invalid organization model in database: %v", err)
+	}
+
 	model, err := domain.NewService(
 		&domain.NewServiceArgs{
-			Name:                     result.Name,
-			OrganizationSerialNumber: result.OrganizationSerialNumber,
-			OrganizationName:         result.OrganizationName,
-			Internal:                 result.Internal,
-			DocumentationURL:         result.DocumentationURL,
-			APISpecificationType:     domain.SpecificationType(result.APISpecificationType),
-			PublicSupportContact:     result.PublicSupportContact,
-			TechSupportContact:       result.TechSupportContact,
-			OneTimeCosts:             uint(result.OneTimeCosts),
-			MonthlyCosts:             uint(result.MonthlyCosts),
-			RequestCosts:             uint(result.RequestCosts),
+			Name:                 result.Name,
+			Organization:         organization,
+			Internal:             result.Internal,
+			DocumentationURL:     result.DocumentationURL,
+			APISpecificationType: domain.SpecificationType(result.APISpecificationType),
+			PublicSupportContact: result.PublicSupportContact,
+			TechSupportContact:   result.TechSupportContact,
+			Costs: &domain.ServiceCosts{
+				OneTime: uint(result.OneTimeCosts),
+				Monthly: uint(result.MonthlyCosts),
+				Request: uint(result.RequestCosts),
+			},
 		},
 	)
 	if err != nil {

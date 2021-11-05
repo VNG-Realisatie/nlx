@@ -10,21 +10,10 @@ import (
 )
 
 type ServiceCosts struct {
-	OneTime int
-	Monthly int
-	Request int
+	OneTime uint
+	Monthly uint
+	Request uint
 }
-type ServiceInways struct {
-	Address string
-	State   ServiceInwayState
-}
-
-type ServiceInwayState string
-
-const (
-	InwayDOWN ServiceInwayState = "DOWN"
-	InwayUP   ServiceInwayState = "UP"
-)
 
 type Service struct {
 	id                   uint
@@ -36,22 +25,19 @@ type Service struct {
 	publicSupportContact string
 	techSupportContact   string
 	costs                *ServiceCosts
-	inways               []*ServiceInways
+	inways               []*ServiceInway
 }
 
 type NewServiceArgs struct {
-	Name                     string
-	OrganizationSerialNumber string
-	OrganizationName         string
-	Internal                 bool
-	DocumentationURL         string
-	APISpecificationType     SpecificationType
-	PublicSupportContact     string
-	TechSupportContact       string
-	OneTimeCosts             uint
-	MonthlyCosts             uint
-	RequestCosts             uint
-	Inways                   []*ServiceInways
+	Name                 string
+	Organization         *Organization
+	Internal             bool
+	DocumentationURL     string
+	APISpecificationType SpecificationType
+	PublicSupportContact string
+	TechSupportContact   string
+	Costs                *ServiceCosts
+	Inways               []*ServiceInway
 }
 
 type SpecificationType string
@@ -68,30 +54,23 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 	err := validation.ValidateStruct(
 		args,
 		validation.Field(&args.Name, validation.Required, validation.Match(serviceNameRegex)),
+		validation.Field(&args.Organization, validation.Required),
+		validation.Field(&args.Costs, validation.Required),
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	organization, err := NewOrganization(args.OrganizationName, args.OrganizationSerialNumber)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Service{
 		name:                 args.Name,
-		organization:         organization,
+		organization:         args.Organization,
 		documentationURL:     args.DocumentationURL,
 		apiSpecificationType: args.APISpecificationType,
 		publicSupportContact: args.PublicSupportContact,
 		techSupportContact:   args.TechSupportContact,
-		costs: &ServiceCosts{
-			OneTime: int(args.OneTimeCosts),
-			Monthly: int(args.MonthlyCosts),
-			Request: int(args.RequestCosts),
-		},
-		inways:   args.Inways,
-		internal: args.Internal,
+		costs:                args.Costs,
+		inways:               args.Inways,
+		internal:             args.Internal,
 	}, nil
 }
 
@@ -135,6 +114,47 @@ func (i *Service) Internal() bool {
 	return i.internal
 }
 
-func (i *Service) Inways() []*ServiceInways {
+func (i *Service) Inways() []*ServiceInway {
 	return i.inways
+}
+
+type ServiceInway struct {
+	address string
+	state   ServiceInwayState
+}
+
+type ServiceInwayState string
+
+const (
+	InwayDOWN ServiceInwayState = "DOWN"
+	InwayUP   ServiceInwayState = "UP"
+)
+
+type NewServiceInwayArgs struct {
+	Address string
+	State   ServiceInwayState
+}
+
+func NewServiceInway(args *NewServiceInwayArgs) (*ServiceInway, error) {
+	err := validation.ValidateStruct(
+		args,
+		validation.Field(&args.Address, validation.Required),
+		validation.Field(&args.State, validation.Required),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ServiceInway{
+		address: args.Address,
+		state:   args.State,
+	}, nil
+}
+
+func (i *ServiceInway) Address() string {
+	return i.address
+}
+
+func (i *ServiceInway) State() ServiceInwayState {
+	return i.state
 }

@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 // ClearIfSetAsOrganizationInway clears the inway for the given organization.

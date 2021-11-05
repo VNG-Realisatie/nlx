@@ -10,10 +10,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {

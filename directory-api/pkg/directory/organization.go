@@ -7,11 +7,12 @@ import (
 	"context"
 	"errors"
 
-	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {

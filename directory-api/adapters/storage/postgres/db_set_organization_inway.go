@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/jmoiron/sqlx"
+
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 

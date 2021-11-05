@@ -12,25 +12,43 @@ import (
 )
 
 func Test_NewService(t *testing.T) {
+	type args struct {
+		Name                     string
+		APISpecificationType     domain.SpecificationType
+		OrganizationSerialNumber string
+		OrganizationName         string
+		Costs                    *domain.ServiceCosts
+	}
+
 	tests := map[string]struct {
-		args        *domain.NewServiceArgs
+		args        *args
 		expectedErr string
 	}{
 		"invalid_name": {
-			args: &domain.NewServiceArgs{
+			args: &args{
 				Name:                     "#*%",
 				APISpecificationType:     domain.OpenAPI2,
 				OrganizationSerialNumber: "00000000000000000001",
 				OrganizationName:         "org",
+				Costs: &domain.ServiceCosts{
+					OneTime: 1,
+					Monthly: 2,
+					Request: 3,
+				},
 			},
 			expectedErr: "Name: must be in a valid format.",
 		},
 		"happy_flow": {
-			args: &domain.NewServiceArgs{
+			args: &args{
 				Name:                     "name",
 				APISpecificationType:     domain.OpenAPI2,
 				OrganizationSerialNumber: "00000000000000000001",
 				OrganizationName:         "org",
+				Costs: &domain.ServiceCosts{
+					OneTime: 1,
+					Monthly: 2,
+					Request: 3,
+				},
 			},
 			expectedErr: "",
 		},
@@ -40,7 +58,15 @@ func Test_NewService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := domain.NewService(tt.args)
+			org, err := domain.NewOrganization(tt.args.OrganizationName, tt.args.OrganizationSerialNumber)
+			assert.NoError(t, err)
+
+			result, err := domain.NewService(&domain.NewServiceArgs{
+				Name:                 tt.args.Name,
+				APISpecificationType: tt.args.APISpecificationType,
+				Organization:         org,
+				Costs:                tt.args.Costs,
+			})
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)

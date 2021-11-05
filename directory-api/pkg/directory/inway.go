@@ -96,19 +96,26 @@ func (h *DirectoryService) RegisterInway(ctx context.Context, req *directoryapi.
 			s.Name,
 		)
 
+		organization, err := domain.NewOrganization(organizationInformation.Name, organizationInformation.SerialNumber)
+		if err != nil {
+			msg := fmt.Sprintf("validation for organization with serial number '%s' failed: %s", organizationInformation.SerialNumber, err.Error())
+			return nil, status.New(codes.InvalidArgument, msg).Err()
+		}
+
 		serviceModel, err := domain.NewService(
 			&domain.NewServiceArgs{
-				Name:                     s.Name,
-				OrganizationSerialNumber: organizationInformation.SerialNumber,
-				OrganizationName:         organizationInformation.Name,
-				Internal:                 s.Internal,
-				DocumentationURL:         s.DocumentationUrl,
-				APISpecificationType:     serviceSpecificationType,
-				PublicSupportContact:     s.PublicSupportContact,
-				TechSupportContact:       s.TechSupportContact,
-				OneTimeCosts:             uint(s.OneTimeCosts),
-				MonthlyCosts:             uint(s.MonthlyCosts),
-				RequestCosts:             uint(s.RequestCosts),
+				Name:                 s.Name,
+				Organization:         organization,
+				Internal:             s.Internal,
+				DocumentationURL:     s.DocumentationUrl,
+				APISpecificationType: serviceSpecificationType,
+				PublicSupportContact: s.PublicSupportContact,
+				TechSupportContact:   s.TechSupportContact,
+				Costs: &domain.ServiceCosts{
+					OneTime: uint(s.OneTimeCosts),
+					Monthly: uint(s.MonthlyCosts),
+					Request: uint(s.RequestCosts),
+				},
 			},
 		)
 		if err != nil {
