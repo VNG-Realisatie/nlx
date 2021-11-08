@@ -1,0 +1,15 @@
+- id: 1
+  announced: RAW=NOW()
+  version: 1.0.0
+
+- id: 2
+  announced: RAW=NOW()
+  version: 1.0.0
+
+- id: 3
+  announced: RAW=NOW()
+  version: 2.0.0
+
+- id: 4
+  announced: RAW=NOW() - INTERVAL '1 DAY'
+  version: 1.0.0
