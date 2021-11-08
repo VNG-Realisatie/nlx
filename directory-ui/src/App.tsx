@@ -11,7 +11,7 @@ import ServiceOverviewPage from './pages/services/ServicesPage'
 import theme from './theme'
 import '@fontsource/source-sans-pro/latin.css'
 
-const App = () => (
+const App: React.FC = () => (
   <>
     <ThemeProvider theme={theme}>
       <GlobalStyles />

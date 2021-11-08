@@ -81,7 +81,9 @@ Filters.propTypes = {
 }
 
 Filters.defaultProps = {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onQueryChanged: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onStatusFilterChanged: () => {},
 }
 
