@@ -1,3 +1,16 @@
+# [0.118.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.117.1...v0.118.0) (2021-11-08)
+
+
+### Bug Fixes
+
+* **management:** remove broken specification button ([f68bbea](https://gitlab.com/commonground/nlx/nlx/commit/f68bbead8498a9fa2f87182e61aea11c07661743))
+
+
+### Features
+
+* **directory:** open specifiation links in external redoc website ([970a523](https://gitlab.com/commonground/nlx/nlx/commit/970a52320b51bca2e4399efce93295edb38895ae))
+* **management:** add open specification button for service details ([435f1d3](https://gitlab.com/commonground/nlx/nlx/commit/435f1d3a3bd2e22b4654af86caf23dfb8a0f89af))
+
 ## [0.117.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.117.0...v0.117.1) (2021-10-31)
 
 
