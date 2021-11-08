@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/parkeerrechten-api
-  tag: 8adfec86
+  tag: 29c4de73
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

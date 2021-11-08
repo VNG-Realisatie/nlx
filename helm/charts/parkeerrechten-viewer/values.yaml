@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/parkeerrechten-viewer
-  tag: 5e49a367
+  tag: 29c4de73
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
