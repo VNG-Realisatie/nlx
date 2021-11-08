@@ -21,7 +21,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "@commonground/eslint-config-cra-standard-prettier": "6.0.0",
+    "@commonground/eslint-config-cra-standard-prettier": "6.1.0",
     "@testing-library/jest-dom": "5.15.0",
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
