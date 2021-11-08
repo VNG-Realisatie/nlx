@@ -13,13 +13,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	pgadapter_test "go.nlx.io/nlx/directory-api/adapters/storage/postgres/test_setup"
+	pgadapter_test_setup "go.nlx.io/nlx/directory-api/adapters/storage/postgres/test_setup"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func new(t *testing.T, loadFixtures bool) (storage.Repository, func() error) {
-	return pgadapter_test.New(t, loadFixtures)
+	return pgadapter_test_setup.New(t, loadFixtures)
 }
 
 func assertOrganizationInwayAddress(t *testing.T, repo storage.Repository, serialNumber, inwayAddress string) {

@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package pgadapter_test
+package storage_test
 
 import (
 	"context"
@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	pgadapter_test_setup "go.nlx.io/nlx/directory-api/adapters/storage/postgres/test_setup"
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
@@ -35,7 +34,7 @@ func TestListVersionStatistics(t *testing.T) {
 				{
 					GatewayType: "inway",
 					Version:     "1.0.0",
-					Amount:      1,
+					Amount:      3,
 				},
 				{
 					GatewayType: "outway",
@@ -58,7 +57,7 @@ func TestListVersionStatistics(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := pgadapter_test_setup.New(t, tt.loadFixtures)
+			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
 			got, err := repo.ListVersionStatistics(context.Background())

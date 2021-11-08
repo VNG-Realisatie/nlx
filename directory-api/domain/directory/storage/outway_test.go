@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package pgadapter_test
+package storage_test
 
 import (
 	"context"
@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/common/nlxversion"
-	pgadapter_test_setup "go.nlx.io/nlx/directory-api/adapters/storage/postgres/test_setup"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
@@ -45,7 +44,7 @@ func TestRegisterOutwayVersion(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := pgadapter_test_setup.New(t, tt.loadFixtures)
+			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
 			err := repo.RegisterOutwayVersion(context.Background(), tt.args.version)
