@@ -6,12 +6,12 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
 func (r *PostgreSQLRepository) ListServices(_ context.Context, organizationSerialNumber string) ([]*domain.Service, error) {
-
-	rows, err := db.selectServicesStatement.Queryx(organizationSerialNumber)
+	rows, err := r.selectServicesStmt.Queryx(organizationSerialNumber)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute stmtSelectServices: %v", err)
 	}
@@ -34,7 +34,7 @@ func (r *PostgreSQLRepository) ListServices(_ context.Context, organizationSeria
 
 	var queryResult []*dbService
 
-	err = sqlx.StructScan(rows, queryResult)
+	err = sqlx.StructScan(rows, &queryResult)
 	if err != nil {
 		return nil, err
 	}
@@ -51,60 +51,39 @@ func (r *PostgreSQLRepository) ListServices(_ context.Context, organizationSeria
 			return nil, err
 		}
 
-		result := make([]*domain.Inway, len(service.InwayAddresses))
+		inways := make([]*domain.NewServiceInwayArgs, len(service.InwayAddresses))
 
-		result[i], err = domain.NewService()
+		for i, inwayAddress := range service.InwayAddresses {
+			inwayArgs := &domain.NewServiceInwayArgs{
+				Address: inwayAddress,
+				State:   domain.InwayDOWN,
+			}
+
+			if service.HealthyStatuses[i] {
+				inwayArgs.State = domain.InwayUP
+			}
+
+			inways[i] = inwayArgs
+		}
+
+		result[i], err = domain.NewService(&domain.NewServiceArgs{
+			Name:                 service.Name,
+			Organization:         organization,
+			Internal:             service.Internal,
+			DocumentationURL:     service.DocumentationURL,
+			APISpecificationType: domain.SpecificationType(service.APISpecificationType),
+			PublicSupportContact: service.PublicSupportContact,
+			TechSupportContact:   service.TechSupportContact,
+			Costs: &domain.NewServiceCostsArgs{
+				OneTime: uint(service.OneTimeCosts),
+				Monthly: uint(service.MonthlyCosts),
+				Request: uint(service.RequestCosts),
+			},
+			Inways: inways,
+		})
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	for rows.Next() {
-		var (
-			respService = &dbService{}
-		)
-
-		err = rows.Scan(
-			&respOrganization.SerialNumber,
-			&respOrganization.Name,
-			&respService.Name,
-			&respService.Internal,
-			&respCosts.OneTime,
-			&respCosts.Monthly,
-			&respCosts.Request,
-			&inwayAddresses,
-			&respService.DocumentationURL,
-			&respService.APISpecificationType,
-			&respService.PublicSupportContact,
-			&healthyStatuses,
-		)
-
-		respService.Organization = respOrganization
-		respService.Costs = respCosts
-
-		if err != nil {
-			return nil, fmt.Errorf("failed to scan into struct: %v", err)
-		}
-
-		if len(inwayAddresses) != len(healthyStatuses) {
-			db.logger.Error("length of the inwayadresses does not match healthchecks")
-		}
-
-		var inway *Inway
-		for inwayIndex, inwayAddress := range inwayAddresses {
-			inway = &Inway{
-				Address: inwayAddress,
-				State:   InwayDOWN,
-			}
-
-			if healthyStatuses[inwayIndex] {
-				inway.State = InwayUP
-			}
-
-			respService.Inways = append(respService.Inways, inway)
-		}
-
-		result = append(result, respService)
 	}
 
 	return result, nil
@@ -115,8 +94,8 @@ func prepareSelectServicesStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 		SELECT
 			o.serial_number as organization_serial_number,
 			o.name AS organization_name,
-			s.name AS service_name,
-			s.internal as service_internal,
+			s.name AS name,
+			s.internal as internal,
 			s.one_time_costs as one_time_costs,
 			s.monthly_costs as monthly_costs,
 			s.request_costs as request_costs,

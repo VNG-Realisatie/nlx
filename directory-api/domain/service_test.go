@@ -17,7 +17,7 @@ func Test_NewService(t *testing.T) {
 		APISpecificationType     domain.SpecificationType
 		OrganizationSerialNumber string
 		OrganizationName         string
-		Costs                    *domain.ServiceCosts
+		Costs                    *domain.NewServiceCostsArgs
 	}
 
 	tests := map[string]struct {
@@ -30,7 +30,7 @@ func Test_NewService(t *testing.T) {
 				APISpecificationType:     domain.OpenAPI2,
 				OrganizationSerialNumber: "00000000000000000001",
 				OrganizationName:         "org",
-				Costs: &domain.ServiceCosts{
+				Costs: &domain.NewServiceCostsArgs{
 					OneTime: 1,
 					Monthly: 2,
 					Request: 3,
@@ -44,7 +44,7 @@ func Test_NewService(t *testing.T) {
 				APISpecificationType:     domain.OpenAPI2,
 				OrganizationSerialNumber: "00000000000000000001",
 				OrganizationName:         "org",
-				Costs: &domain.ServiceCosts{
+				Costs: &domain.NewServiceCostsArgs{
 					OneTime: 1,
 					Monthly: 2,
 					Request: 3,

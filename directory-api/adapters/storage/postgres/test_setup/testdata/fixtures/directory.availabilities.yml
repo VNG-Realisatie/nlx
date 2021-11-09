@@ -1,0 +1,7 @@
+- id: 1
+  inway_id: 1
+  service_id: 1
+  healthy: true
+  unhealthy_since: NULL
+  last_announced: RAW=NOW()
+  active: true

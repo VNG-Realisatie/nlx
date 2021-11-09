@@ -38,9 +38,9 @@ func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 			APISpecificationType: string(model.APISpecificationType()),
 			PublicSupportContact: model.PublicSupportContact(),
 			TechSupportContact:   model.TechSupportContact(),
-			OneTimeCosts:         int32(model.Costs().OneTime),
-			MonthlyCosts:         int32(model.Costs().Monthly),
-			RequestCosts:         int32(model.Costs().Request),
+			OneTimeCosts:         int32(model.Costs().OneTime()),
+			MonthlyCosts:         int32(model.Costs().Monthly()),
+			RequestCosts:         int32(model.Costs().Request()),
 		})
 
 	if err != nil {

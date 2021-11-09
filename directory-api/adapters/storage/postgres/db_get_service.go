@@ -49,7 +49,7 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 			APISpecificationType: domain.SpecificationType(result.APISpecificationType),
 			PublicSupportContact: result.PublicSupportContact,
 			TechSupportContact:   result.TechSupportContact,
-			Costs: &domain.ServiceCosts{
+			Costs: &domain.NewServiceCostsArgs{
 				OneTime: uint(result.OneTimeCosts),
 				Monthly: uint(result.MonthlyCosts),
 				Request: uint(result.RequestCosts),

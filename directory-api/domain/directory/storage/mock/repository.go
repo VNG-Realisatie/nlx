@@ -110,6 +110,21 @@ func (mr *MockRepositoryMockRecorder) GetService(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetService", reflect.TypeOf((*MockRepository)(nil).GetService), id)
 }
 
+// ListServices mocks base method.
+func (m *MockRepository) ListServices(ctx context.Context, organizationSerialNumber string) ([]*domain.Service, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListServices", ctx, organizationSerialNumber)
+	ret0, _ := ret[0].([]*domain.Service)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockRepositoryMockRecorder) ListServices(ctx, organizationSerialNumber interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockRepository)(nil).ListServices), ctx, organizationSerialNumber)
+}
+
 // ListVersionStatistics mocks base method.
 func (m *MockRepository) ListVersionStatistics(ctx context.Context) ([]*domain.VersionStatistics, error) {
 	m.ctrl.T.Helper()

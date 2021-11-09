@@ -111,7 +111,7 @@ func (h *DirectoryService) RegisterInway(ctx context.Context, req *directoryapi.
 				APISpecificationType: serviceSpecificationType,
 				PublicSupportContact: s.PublicSupportContact,
 				TechSupportContact:   s.TechSupportContact,
-				Costs: &domain.ServiceCosts{
+				Costs: &domain.NewServiceCostsArgs{
 					OneTime: uint(s.OneTimeCosts),
 					Monthly: uint(s.MonthlyCosts),
 					Request: uint(s.RequestCosts),

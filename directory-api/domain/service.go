@@ -79,7 +79,9 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 		return nil, err
 	}
 
-	for _, inway := range args.Inways {
+	inways := make([]*ServiceInway, len(args.Inways))
+
+	for i, inway := range args.Inways {
 		err := validation.ValidateStruct(
 			inway,
 			validation.Field(&inway.Address, validation.Required),
@@ -88,6 +90,11 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 
 		if err != nil {
 			return nil, err
+		}
+
+		inways[i] = &ServiceInway{
+			address: inway.Address,
+			state:   inway.State,
 		}
 	}
 
@@ -98,9 +105,13 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 		apiSpecificationType: args.APISpecificationType,
 		publicSupportContact: args.PublicSupportContact,
 		techSupportContact:   args.TechSupportContact,
-		costs:                args.Costs,
-		inways:               args.Inways,
-		internal:             args.Internal,
+		costs: &ServiceCosts{
+			oneTime: args.Costs.OneTime,
+			monthly: args.Costs.Monthly,
+			request: args.Costs.Request,
+		},
+		inways:   inways,
+		internal: args.Internal,
 	}, nil
 }
 
