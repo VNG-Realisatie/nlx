@@ -122,6 +122,7 @@ Form.propTypes = {
 }
 
 Form.defaultProps = {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onSubmitHandler: () => {},
   initialValues: DEFAULT_INITIAL_VALUES,
 }

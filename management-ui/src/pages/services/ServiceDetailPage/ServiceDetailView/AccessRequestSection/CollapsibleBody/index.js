@@ -102,6 +102,7 @@ CollapsibleBody.propTypes = {
   onApproveOrRejectCallbackHandler: func,
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {}
 
 CollapsibleBody.defaultProps = {

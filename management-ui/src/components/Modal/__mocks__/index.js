@@ -1,6 +1,9 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const modalExports = jest.requireActual('../index')
 export default modalExports.default
 export { modalExports }

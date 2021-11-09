@@ -4,6 +4,8 @@
 
 // This file is in ES5 on purpose, to be able to be shared between `i18n.js` for use in the application and in
 // `../i18next.parser.config.js` for use in build validation and generation of translations.
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const dayjs = require('dayjs')
 const localizedFormat = require('dayjs/plugin/localizedFormat')
 dayjs.extend(localizedFormat)
@@ -25,6 +27,7 @@ module.exports = {
   interpolation: {
     escapeValue: false, // react already safes from xss
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     format: (value, format, lng) => {
       /**
        * Date

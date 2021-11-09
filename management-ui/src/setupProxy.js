@@ -2,6 +2,8 @@
 // Licensed under the EUPL
 //
 
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const getProxyUrl = (proxy) =>
