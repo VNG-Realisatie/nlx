@@ -1,3 +1,10 @@
+## [0.118.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.118.0...v0.118.1) (2021-11-09)
+
+
+### Bug Fixes
+
+* **management:** if an access request already exists it is reused ([571913c](https://gitlab.com/commonground/nlx/nlx/commit/571913cacb7eed7a09b37f0a6e3065539f12bda5))
+
 # [0.118.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.117.1...v0.118.0) (2021-11-08)
 
 
