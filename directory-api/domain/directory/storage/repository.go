@@ -29,7 +29,7 @@ type Repository interface {
 	ClearIfSetAsOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error
 	GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error)
 
-	// ListServices(ctx context.Context, organizationSerialNumber string) ([]*Service, error)
+	ListServices(ctx context.Context, organizationSerialNumber string) ([]*domain.Service, error)
 	RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error
 	// ListOrganizations(ctx context.Context) ([]*Organization, error)
 	ListVersionStatistics(ctx context.Context) ([]*domain.VersionStatistics, error)

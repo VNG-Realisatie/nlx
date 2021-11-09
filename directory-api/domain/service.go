@@ -10,9 +10,27 @@ import (
 )
 
 type ServiceCosts struct {
+	oneTime uint
+	monthly uint
+	request uint
+}
+
+type NewServiceCostsArgs struct {
 	OneTime uint
 	Monthly uint
 	Request uint
+}
+
+func (s *ServiceCosts) OneTime() uint {
+	return s.oneTime
+}
+
+func (s *ServiceCosts) Monthly() uint {
+	return s.monthly
+}
+
+func (s *ServiceCosts) Request() uint {
+	return s.request
 }
 
 type Service struct {
@@ -36,8 +54,8 @@ type NewServiceArgs struct {
 	APISpecificationType SpecificationType
 	PublicSupportContact string
 	TechSupportContact   string
-	Costs                *ServiceCosts
-	Inways               []*ServiceInway
+	Costs                *NewServiceCostsArgs
+	Inways               []*NewServiceInwayArgs
 }
 
 type SpecificationType string
@@ -59,6 +77,18 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 	)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, inway := range args.Inways {
+		err := validation.ValidateStruct(
+			inway,
+			validation.Field(&inway.Address, validation.Required),
+			validation.Field(&inway.State, validation.Required),
+		)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &Service{
@@ -123,6 +153,14 @@ type ServiceInway struct {
 	state   ServiceInwayState
 }
 
+func (s *ServiceInway) Address() string {
+	return s.address
+}
+
+func (s *ServiceInway) State() ServiceInwayState {
+	return s.state
+}
+
 type ServiceInwayState string
 
 const (
@@ -133,28 +171,4 @@ const (
 type NewServiceInwayArgs struct {
 	Address string
 	State   ServiceInwayState
-}
-
-func NewServiceInway(args *NewServiceInwayArgs) (*ServiceInway, error) {
-	err := validation.ValidateStruct(
-		args,
-		validation.Field(&args.Address, validation.Required),
-		validation.Field(&args.State, validation.Required),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ServiceInway{
-		address: args.Address,
-		state:   args.State,
-	}, nil
-}
-
-func (i *ServiceInway) Address() string {
-	return i.address
-}
-
-func (i *ServiceInway) State() ServiceInwayState {
-	return i.state
 }
