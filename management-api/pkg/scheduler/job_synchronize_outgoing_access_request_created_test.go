@@ -10,6 +10,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/server"
@@ -101,7 +102,8 @@ func getCreatedAccessRequests() map[string]testCase {
 						ServiceName: "service",
 					}, gomock.Any()).
 					Return(&external.RequestAccessResponse{
-						ReferenceId: 2,
+						ReferenceId:        2,
+						AccessRequestState: api.AccessRequestState_RECEIVED,
 					}, nil)
 
 				mocks.db.

@@ -344,6 +344,21 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 		State:                database.IncomingAccessRequestReceived,
 	}
 
+	existingIncomingAccessRequest, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.GetServiceName())
+	if err != nil {
+		if !errIsNotFound(err) {
+			s.logger.Error("getting latest incoming access request failed", zap.String("organization-serial-number", md.OrganizationSerialNumber), zap.String("service-name", req.ServiceName), zap.Error(err))
+			return nil, status.Error(codes.Internal, "failed to create access request")
+		}
+	}
+
+	if isIncomingAccessRequestStillActive(existingIncomingAccessRequest) {
+		return &external.RequestAccessResponse{
+			ReferenceId:        uint64(existingIncomingAccessRequest.ID),
+			AccessRequestState: incomingAccessRequestStateToProto(existingIncomingAccessRequest.State),
+		}, nil
+	}
+
 	createdRequest, err := s.configDatabase.CreateIncomingAccessRequest(ctx, request)
 	if err != nil {
 		if errors.Is(err, database.ErrActiveAccessRequest) {
@@ -356,7 +371,8 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	}
 
 	return &external.RequestAccessResponse{
-		ReferenceId: uint64(createdRequest.ID),
+		ReferenceId:        uint64(createdRequest.ID),
+		AccessRequestState: incomingAccessRequestStateToProto(createdRequest.State),
 	}, nil
 }
 
@@ -386,6 +402,10 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 	return &external.GetAccessRequestStateResponse{
 		State: incomingAccessRequestStateToProto(request.State),
 	}, nil
+}
+
+func isIncomingAccessRequestStillActive(incomingAccessRequest *database.IncomingAccessRequest) bool {
+	return incomingAccessRequest != nil && (incomingAccessRequest.State == database.IncomingAccessRequestApproved || incomingAccessRequest.State == database.IncomingAccessRequestReceived)
 }
 
 // nolint:dupl // incoming access request looks like outgoing access request

@@ -9,10 +9,11 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	api "go.nlx.io/nlx/management-api/api"
-	external "go.nlx.io/nlx/management-api/api/external"
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+
+	api "go.nlx.io/nlx/management-api/api"
+	external "go.nlx.io/nlx/management-api/api/external"
 )
 
 // MockAccessRequestServiceClient is a mock of AccessRequestServiceClient interface.

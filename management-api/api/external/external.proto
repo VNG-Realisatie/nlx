@@ -36,6 +36,7 @@ message GetAccessProofRequest {
 
 message RequestAccessResponse {
   uint64 reference_id = 1;
+  nlx.management.AccessRequestState access_request_state = 2;
 }
 
 message RequestClaimRequest {

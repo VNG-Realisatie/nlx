@@ -25,6 +25,8 @@ func TestRevokeAccessGrant(t *testing.T) {
 
 	now := time.Now()
 
+	fixtureTimeNew := getCustomFixtureTime(t, "2021-01-04T01:02:03Z")
+
 	fixtureTime := getFixtureTime(t)
 
 	fixtureCertBundle, err := newFixtureCertificateBundle()
@@ -66,7 +68,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 			loadFixtures: true,
 			args: args{
 				accessGrantID: 1,
-				revokedAt:     now,
+				revokedAt:     fixtureTimeNew,
 			},
 			want: &database.AccessGrant{
 				ID:                      1,
@@ -95,14 +97,13 @@ func TestRevokeAccessGrant(t *testing.T) {
 						Name:         "fixture-organization-name",
 						SerialNumber: "00000000000000000001",
 					},
-					State:                database.IncomingAccessRequestReceived,
+					State:                database.IncomingAccessRequestRevoked,
 					CreatedAt:            fixtureTime,
-					UpdatedAt:            fixtureTime,
 					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				},
 				CreatedAt: fixtureTime,
-				RevokedAt: sql.NullTime{Time: now, Valid: true},
+				RevokedAt: sql.NullTime{Time: fixtureTimeNew, Valid: true},
 			},
 			wantErr: nil,
 		},
@@ -121,6 +122,10 @@ func TestRevokeAccessGrant(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
+				// This check makes sure that updated at has been set.
+				require.WithinDuration(t, now, got.IncomingAccessRequest.UpdatedAt, 1*time.Minute)
+				// Set to empty time because we are unable to determine the updated at.
+				got.IncomingAccessRequest.UpdatedAt = time.Time{}
 				require.Equal(t, tt.want, got)
 			}
 		})

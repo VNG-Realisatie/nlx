@@ -85,11 +85,27 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 		Valid: true,
 	}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Select("revoked_at").
-		Save(accessGrant).Error; err != nil {
+	if err := db.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.
+			WithContext(ctx).
+			Omit(clause.Associations).
+			Select("revoked_at").
+			Save(accessGrant).Error; err != nil {
+			return err
+		}
+
+		accessGrant.IncomingAccessRequest.State = IncomingAccessRequestRevoked
+
+		if err := tx.
+			WithContext(ctx).
+			Omit(clause.Associations).
+			Select("state", "updated_at").
+			Save(accessGrant.IncomingAccessRequest).Error; err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
 		return nil, err
 	}
 

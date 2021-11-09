@@ -45,6 +45,9 @@
         "referenceId": {
           "type": "string",
           "format": "uint64"
+        },
+        "accessRequestState": {
+          "$ref": "#/definitions/managementAccessRequestState"
         }
       }
     },
@@ -152,14 +155,11 @@
     "protobufAny": {
       "type": "object",
       "properties": {
-        "typeUrl": {
+        "@type": {
           "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
         }
-      }
+      },
+      "additionalProperties": {}
     },
     "rpcStatus": {
       "type": "object",

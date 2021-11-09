@@ -1430,7 +1430,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders", runtime.WithHTTPPathPattern("/api/v1/orders/synchronize"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1453,7 +1453,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled", runtime.WithHTTPPathPattern("/api/v1/finance/enabled"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1476,7 +1476,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport", runtime.WithHTTPPathPattern("/api/v1/finance/export"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1499,7 +1499,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListServices")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListServices", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1522,7 +1522,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1545,7 +1545,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateService", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1568,7 +1568,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1591,7 +1591,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1614,7 +1614,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices", runtime.WithHTTPPathPattern("/api/v1/statistics/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1637,7 +1637,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListInways")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListInways", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1660,7 +1660,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetInway")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1683,7 +1683,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterInway")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterInway", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1706,7 +1706,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateInway")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1729,7 +1729,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteInway")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1752,7 +1752,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1775,7 +1775,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutways")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutways", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1798,7 +1798,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1821,7 +1821,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1844,7 +1844,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1867,7 +1867,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1890,7 +1890,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{accessRequestID}/send"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1913,7 +1913,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetSettings")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1936,7 +1936,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1959,7 +1959,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1982,7 +1982,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2005,7 +2005,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs", runtime.WithHTTPPathPattern("/api/v1/audit-logs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2028,7 +2028,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder", runtime.WithHTTPPathPattern("/api/v1/retrieve-claim"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2051,7 +2051,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2074,7 +2074,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2097,7 +2097,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2120,7 +2120,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/incoming"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2152,7 +2152,7 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/ListServices")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/ListServices", runtime.WithHTTPPathPattern("/api/v1/directory/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2175,7 +2175,7 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2198,7 +2198,7 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService")
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2260,7 +2260,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders", runtime.WithHTTPPathPattern("/api/v1/orders/synchronize"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2280,7 +2280,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled", runtime.WithHTTPPathPattern("/api/v1/finance/enabled"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2300,7 +2300,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport", runtime.WithHTTPPathPattern("/api/v1/finance/export"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2320,7 +2320,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListServices")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListServices", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2340,7 +2340,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2360,7 +2360,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateService", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2380,7 +2380,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2400,7 +2400,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2420,7 +2420,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices", runtime.WithHTTPPathPattern("/api/v1/statistics/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2440,7 +2440,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListInways")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListInways", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2460,7 +2460,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetInway")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2480,7 +2480,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterInway")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterInway", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2500,7 +2500,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateInway")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2520,7 +2520,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteInway")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2540,7 +2540,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2560,7 +2560,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutways")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutways", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2580,7 +2580,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2600,7 +2600,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2620,7 +2620,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2640,7 +2640,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2660,7 +2660,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{accessRequestID}/send"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2680,7 +2680,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetSettings")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2700,7 +2700,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2720,7 +2720,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2740,7 +2740,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2760,7 +2760,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs", runtime.WithHTTPPathPattern("/api/v1/audit-logs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2780,7 +2780,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder", runtime.WithHTTPPathPattern("/api/v1/retrieve-claim"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2800,7 +2800,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2820,7 +2820,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2840,7 +2840,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2860,7 +2860,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/incoming"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3049,7 +3049,7 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/ListServices")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/ListServices", runtime.WithHTTPPathPattern("/api/v1/directory/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3069,7 +3069,7 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3089,7 +3089,7 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService")
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

@@ -562,6 +562,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 	}
 }
 
+//nolint funlen: this is a test
 func TestExternalRequestAccess(t *testing.T) {
 	tests := map[string]struct {
 		setup   func(*testing.T, *mock_database.MockConfigDatabase) context.Context
@@ -601,6 +602,11 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					Return(nil, database.ErrNotFound)
+
+				db.
+					EXPECT().
 					CreateIncomingAccessRequest(ctx, gomock.Any()).
 					Return(nil, errors.New("error"))
 
@@ -619,6 +625,11 @@ func TestExternalRequestAccess(t *testing.T) {
 						ID:   1,
 						Name: "Service",
 					}, nil)
+
+				db.
+					EXPECT().
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					Return(nil, database.ErrNotFound)
 
 				db.
 					EXPECT().
@@ -651,6 +662,11 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					Return(nil, database.ErrNotFound)
+
+				db.
+					EXPECT().
 					CreateIncomingAccessRequest(ctx, &database.IncomingAccessRequest{
 						ServiceID: 1,
 						Organization: database.IncomingAccessRequestOrganization{
@@ -669,6 +685,48 @@ func TestExternalRequestAccess(t *testing.T) {
 			},
 			want: &external.RequestAccessResponse{
 				ReferenceId: 42,
+			},
+		},
+		"happy_flow_existing_incoming_access_request": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase) context.Context {
+				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+				certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
+				require.NoError(t, err)
+
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+
+				publicKeyPEM, err := certBundle.PublicKeyPEM()
+				require.NoError(t, err)
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{
+						ID:   1,
+						Name: "Service",
+					}, nil)
+
+				db.
+					EXPECT().
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					Return(&database.IncomingAccessRequest{
+						ID:        43,
+						ServiceID: 1,
+						Organization: database.IncomingAccessRequestOrganization{
+							SerialNumber: certBundle.Certificate().Subject.SerialNumber,
+							Name:         certBundle.Certificate().Subject.Organization[0],
+						},
+						State:                database.IncomingAccessRequestApproved,
+						PublicKeyPEM:         publicKeyPEM,
+						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					}, nil)
+
+				return ctx
+			},
+			want: &external.RequestAccessResponse{
+				ReferenceId:        43,
+				AccessRequestState: api.AccessRequestState_APPROVED,
 			},
 		},
 	}

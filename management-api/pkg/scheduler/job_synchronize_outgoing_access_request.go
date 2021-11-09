@@ -137,7 +137,12 @@ func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Co
 		return database.OutgoingAccessRequestFailed, 0, err
 	}
 
-	return database.OutgoingAccessRequestReceived, uint(response.ReferenceId), nil
+	accessRequestState, err := convertAccessRequestState(response.AccessRequestState)
+	if err != nil {
+		return database.OutgoingAccessRequestFailed, 0, err
+	}
+
+	return accessRequestState, uint(response.ReferenceId), nil
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, error) {
@@ -155,24 +160,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx contex
 		return "", err
 	}
 
-	var state database.OutgoingAccessRequestState
-
-	switch response.State {
-	case api.AccessRequestState_CREATED:
-		state = database.OutgoingAccessRequestCreated
-	case api.AccessRequestState_APPROVED:
-		state = database.OutgoingAccessRequestApproved
-	case api.AccessRequestState_REJECTED:
-		state = database.OutgoingAccessRequestRejected
-	case api.AccessRequestState_RECEIVED:
-		state = database.OutgoingAccessRequestReceived
-	case api.AccessRequestState_FAILED:
-		state = database.OutgoingAccessRequestFailed
-	default:
-		return "", fmt.Errorf("invalid state for outgoing access request: %s", response.State)
-	}
-
-	return state, nil
+	return convertAccessRequestState(response.State)
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
@@ -291,4 +279,21 @@ func (job *SynchronizeOutgoingAccessRequestJob) getOrganizationManagementClient(
 	}
 
 	return client, nil
+}
+
+func convertAccessRequestState(state api.AccessRequestState) (database.OutgoingAccessRequestState, error) {
+	switch state {
+	case api.AccessRequestState_CREATED:
+		return database.OutgoingAccessRequestCreated, nil
+	case api.AccessRequestState_APPROVED:
+		return database.OutgoingAccessRequestApproved, nil
+	case api.AccessRequestState_REJECTED:
+		return database.OutgoingAccessRequestRejected, nil
+	case api.AccessRequestState_RECEIVED:
+		return database.OutgoingAccessRequestReceived, nil
+	case api.AccessRequestState_FAILED:
+		return database.OutgoingAccessRequestFailed, nil
+	default:
+		return "", fmt.Errorf("invalid state for outgoing access request: %s", state)
+	}
 }

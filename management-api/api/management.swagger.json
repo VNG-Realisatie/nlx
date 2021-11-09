@@ -918,7 +918,45 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/managementUpdateServiceRequest"
+              "type": "object",
+              "properties": {
+                "endpointURL": {
+                  "type": "string"
+                },
+                "documentationURL": {
+                  "type": "string"
+                },
+                "apiSpecificationURL": {
+                  "type": "string"
+                },
+                "internal": {
+                  "type": "boolean"
+                },
+                "techSupportContact": {
+                  "type": "string"
+                },
+                "publicSupportContact": {
+                  "type": "string"
+                },
+                "inways": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "oneTimeCosts": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "monthlyCosts": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "requestCosts": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
             }
           }
         ],
@@ -1859,50 +1897,6 @@
         }
       }
     },
-    "managementUpdateServiceRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "managementUpdateServiceResponse": {
       "type": "object",
       "properties": {
@@ -1958,14 +1952,11 @@
     "protobufAny": {
       "type": "object",
       "properties": {
-        "typeUrl": {
+        "@type": {
           "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
         }
-      }
+      },
+      "additionalProperties": {}
     },
     "rpcStatus": {
       "type": "object",
