@@ -14,6 +14,8 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/directory-api/domain"
 	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
@@ -66,6 +68,66 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 			}
 
 			got, err := service.ClearOrganizationInway(context.Background(), &emptypb.Empty{})
+
+			assert.Equal(t, tt.expectedResponse, got)
+			assert.Equal(t, tt.expectedError, err)
+		})
+	}
+}
+
+func TestListOrganizations(t *testing.T) {
+	tests := map[string]struct {
+		setup            func(serviceMocks)
+		expectedResponse *directoryapi.ListOrganizationsResponse
+		expectedError    error
+	}{
+		"database_error": {
+			setup: func(mocks serviceMocks) {
+				mocks.r.
+					EXPECT().
+					ListOrganizations(gomock.Any()).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.Internal, "Database error.").Err(),
+		},
+		"happy_flow": {
+			setup: func(mocks serviceMocks) {
+				organizationA, _ := domain.NewOrganization("org-a", "00000000000000000001")
+				organizationB, _ := domain.NewOrganization("org-b", "00000000000000000002")
+
+				mocks.r.
+					EXPECT().
+					ListOrganizations(gomock.Any()).
+					Return([]*domain.Organization{organizationA, organizationB}, nil)
+			},
+			expectedResponse: &directoryapi.ListOrganizationsResponse{
+				Organizations: []*directoryapi.Organization{
+					{
+						Name:         "org-a",
+						SerialNumber: "00000000000000000001",
+					},
+					{
+						Name:         "org-b",
+						SerialNumber: "00000000000000000002",
+					},
+				},
+			},
+			expectedError: nil,
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			service, mocks := newService(t)
+
+			if tt.setup != nil {
+				tt.setup(mocks)
+			}
+
+			got, err := service.ListOrganizations(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

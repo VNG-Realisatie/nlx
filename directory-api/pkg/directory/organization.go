@@ -12,6 +12,8 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/directory-api/domain"
 	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
@@ -38,4 +40,31 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 	}
 
 	return &emptypb.Empty{}, nil
+}
+
+func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListOrganizationsResponse, error) {
+	h.logger.Info("rpc request ListOrganizations")
+
+	organizations, err := h.repository.ListOrganizations(ctx)
+	if err != nil {
+		h.logger.Error("failed to select organizations from db", zap.Error(err))
+		return nil, status.New(codes.Internal, "Database error.").Err()
+	}
+
+	return convertFromDatabaseOrganization(organizations), nil
+}
+
+func convertFromDatabaseOrganization(model []*domain.Organization) *directoryapi.ListOrganizationsResponse {
+	result := &directoryapi.ListOrganizationsResponse{
+		Organizations: make([]*directoryapi.Organization, len(model)),
+	}
+
+	for i, organization := range model {
+		result.Organizations[i] = &directoryapi.Organization{
+			Name:         organization.Name(),
+			SerialNumber: organization.SerialNumber(),
+		}
+	}
+
+	return result
 }

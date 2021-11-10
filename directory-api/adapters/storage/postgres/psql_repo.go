@@ -30,6 +30,7 @@ type PostgreSQLRepository struct {
 	registerOutwayStmt                 *sqlx.NamedStmt
 	selectVersionStatisticsStmt        *sqlx.Stmt
 	selectServicesStmt                 *sqlx.Stmt
+	selectOrganizationsStmt            *sqlx.Stmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -97,6 +98,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select services statement: %s", err)
 	}
 
+	selectOrganizationsStmt, err := prepareSelectOrganizationsStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select organizations statement: %s", err)
+	}
+
 	return &PostgreSQLRepository{
 		logger:                             logger.Named("postgres repository"),
 		db:                                 db,
@@ -111,6 +117,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		registerOutwayStmt:                 registerOutwayStmt,
 		selectVersionStatisticsStmt:        selectVersionStatisticsStmt,
 		selectServicesStmt:                 selectServicesStatement,
+		selectOrganizationsStmt:            selectOrganizationsStmt,
 	}, nil
 }
 
