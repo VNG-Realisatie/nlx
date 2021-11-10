@@ -42,20 +42,19 @@ const EditServicePage = () => {
     }
   }
 
-  return (
-    <PageTemplate>
-      <PageTemplate.HeaderWithBackNavigation
-        backButtonTo={`/services/${name}`}
-        title={t('Edit service')}
-      />
-
-      {!isInitiallyFetched ? (
-        <LoadingMessage />
-      ) : error ? (
+  const Content = () => {
+    if (!isInitiallyFetched) {
+      return <LoadingMessage />
+    }
+    if (error) {
+      return (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the service', { name })}
         </Alert>
-      ) : service ? (
+      )
+    }
+    if (service) {
+      return (
         <>
           {updateError ? (
             <StyledUpdatedError
@@ -74,7 +73,18 @@ const EditServicePage = () => {
             submitButtonText={t('Update service')}
           />
         </>
-      ) : null}
+      )
+    }
+    return null
+  }
+
+  return (
+    <PageTemplate>
+      <PageTemplate.HeaderWithBackNavigation
+        backButtonTo={`/services/${name}`}
+        title={t('Edit service')}
+      />
+      <Content />
     </PageTemplate>
   )
 }

@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string, arrayOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Collapsible } from '@commonground/design-system'
@@ -15,12 +14,37 @@ import {
 } from '../../../../components/DetailView'
 
 import { IconServices } from '../../../../icons'
+import {
+  StyledActionsBar,
+  StyledRemoveButton,
+} from '../../../services/ServiceDetailPage/ServiceDetailView/index.styles'
+import { useConfirmationModal } from '../../../../components/ConfirmationModal'
+import Inway from '../../../../types/Inway'
 import { SubHeader, StyledIconInway, StyledSpecList } from './index.styles'
 
+interface InwayDetailsProps {
+  inway: Inway
+  removeHandler: () => void
+}
+
 // Note: if inway- & outway details are interchangable, we can rename this to GatewayDetails
-const InwayDetails = ({ inway }) => {
+const InwayDetails: React.FC<InwayDetailsProps> = ({
+  inway,
+  removeHandler,
+}) => {
   const { t } = useTranslation()
   const { ipAddress, hostname, selfAddress, version, services } = inway
+
+  const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
+    okText: t('Remove'),
+    children: <p>{t('Do you want to remove the service?')}</p>,
+  })
+
+  const handleRemove = async () => {
+    if (await confirmRemove()) {
+      removeHandler()
+    }
+  }
 
   return (
     <>
@@ -28,6 +52,13 @@ const InwayDetails = ({ inway }) => {
         <StyledIconInway inline />
         inway
       </SubHeader>
+
+      <StyledActionsBar>
+        <StyledRemoveButton
+          title={t('Remove service')}
+          onClick={handleRemove}
+        />
+      </StyledActionsBar>
 
       <StyledSpecList data-testid="inway-specs" alignValuesRight>
         <StyledSpecList.Item title={t('IP-address')} value={ipAddress} />
@@ -56,7 +87,7 @@ const InwayDetails = ({ inway }) => {
               <Table data-testid="inway-services-list" role="grid" withLinks>
                 <tbody>
                   {services.map(({ name }) => (
-                    <Table.Tr key={name} to={`/services/${name}`}>
+                    <Table.Tr name={name} key={name} to={`/services/${name}`}>
                       <Table.Td>{name}</Table.Td>
                     </Table.Tr>
                   ))}
@@ -68,25 +99,10 @@ const InwayDetails = ({ inway }) => {
           </StyledCollapsibleBody>
         </Collapsible>
       </SectionGroup>
+
+      <ConfirmRemoveModal />
     </>
   )
 }
-
-InwayDetails.propTypes = {
-  inway: shape({
-    name: string.isRequired,
-    ipAddress: string,
-    hostname: string,
-    selfAddress: string,
-    version: string,
-    services: arrayOf(
-      shape({
-        name: string,
-      }),
-    ),
-  }),
-}
-
-InwayDetails.defaultProps = {}
 
 export default observer(InwayDetails)

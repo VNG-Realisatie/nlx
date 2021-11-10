@@ -59,6 +59,18 @@ class InwayStore {
     return this.inways.find((inway) => inway.name === name)
   }
 
+  removeInway = flow(function* removeInway(name) {
+    const inway = this.getInway(name)
+    const index = this.services.indexOf(inway)
+
+    // TODO: add api call
+    yield this._managementApiClient.managementDeleteService({
+      name,
+    })
+
+    this.services.splice(index, 1)
+  }).bind(this)
+
   _updateFromServer(inwayData) {
     const cachedInway = this.getInway({
       name: inwayData.name,
