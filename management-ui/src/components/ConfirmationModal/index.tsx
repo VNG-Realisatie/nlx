@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import React, { useState, useRef } from 'react'
-import { func, string, bool, node } from 'prop-types'
 import { Button } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 
@@ -10,7 +9,19 @@ import deferredPromise from '../../utils/deferred-promise'
 import Modal from '../Modal'
 import { Footer } from './index.styles'
 
-const ConfirmationModal = ({
+interface UseConfirmationModalProps {
+  children?: React.ReactNode
+  title?: string
+  cancelText?: string
+  okText?: string
+}
+
+interface ConfirmationModalProps extends UseConfirmationModalProps {
+  isVisible: boolean
+  handleChoice: (choice: boolean | null) => void
+}
+
+const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isVisible,
   handleChoice,
   children,
@@ -18,10 +29,10 @@ const ConfirmationModal = ({
   cancelText,
   okText,
 }) => {
-  const [choice, setChoice] = useState(null)
+  const [choice, setChoice] = useState<boolean | null>(null)
   const { t } = useTranslation()
 
-  const makeChoice = (isConfirmed, closeModal) => () => {
+  const makeChoice = (isConfirmed: boolean, closeModal: () => void) => () => {
     setChoice(isConfirmed)
     closeModal()
   }
@@ -41,7 +52,7 @@ const ConfirmationModal = ({
         offset: '8rem',
       }}
       autoFocus
-      render={({ closeModal }) => (
+      render={({ closeModal }: { closeModal: () => void }) => (
         <>
           {children}
           <Footer>
@@ -63,33 +74,35 @@ const ConfirmationModal = ({
   )
 }
 
-ConfirmationModal.propTypes = {
-  isVisible: bool.isRequired,
-  handleChoice: func.isRequired,
-  children: node,
-  title: string,
-  cancelText: string,
-  okText: string,
-}
-
-export const useConfirmationModal = (props) => {
+type UseModelConfirmation = (
+  props: UseConfirmationModalProps,
+) => [React.FC, () => Promise<boolean | null>]
+export const useConfirmationModal: UseModelConfirmation = (props) => {
   const [showModal, setShowModal] = useState(false)
-  const choicePromise = useRef(null)
+  const choicePromise = useRef<Promise<boolean | null>>(null)
 
   const show = async () => {
-    choicePromise.current = deferredPromise()
+    if (!!choicePromise) {
+      // This has been confirmed to work correctly
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      choicePromise.current = deferredPromise<boolean | null>()
+    }
     setShowModal(true)
     return choicePromise.current
   }
 
-  const handleChoice = (isConfirmed) => {
+  const handleChoice = (isConfirmed: boolean | null) => {
     if (choicePromise === null) {
       return new Error(
         "Can't handle choice when ConfirmationModal is not shown",
       )
     }
 
-    choicePromise.current.resolve(isConfirmed)
+    // This has been confirmed to work correctly
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    choicePromise?.current?.resolve(isConfirmed)
     setShowModal(false)
   }
 
