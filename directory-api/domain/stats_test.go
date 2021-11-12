@@ -14,7 +14,6 @@ import (
 
 //nolint:funlen // this is a test
 func Test_NewVersionStatistics(t *testing.T) {
-
 	tests := map[string]struct {
 		args        domain.NewVersionStatisticsArgs
 		expectedErr error

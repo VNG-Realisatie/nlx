@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
 	"go.nlx.io/nlx/directory-api/domain"
 )
 

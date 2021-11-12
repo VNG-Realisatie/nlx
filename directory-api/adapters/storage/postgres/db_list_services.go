@@ -15,6 +15,7 @@ func (r *PostgreSQLRepository) ListServices(_ context.Context, organizationSeria
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute stmtSelectServices: %v", err)
 	}
+
 	type dbService struct {
 		ID                       uint           `db:"id"`
 		Name                     string         `db:"name"`
