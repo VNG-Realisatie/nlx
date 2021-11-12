@@ -16,14 +16,18 @@ const OrganizationInwayCheck = () => {
     applicationStore.isOrganizationInwaySet === false &&
     (servicesStore.services.length || orderStore.outgoingOrders.length)
 
-  return displayMessage ? (
-    <GlobalAlert>
-      {t(
-        'Please select an organization inway. At the moment access requests can not be received and outgoing orders can not be retrieved by other organizations.',
-      )}
-      <StyledLink to="/settings/general">{t('Go to settings')}</StyledLink>
-    </GlobalAlert>
-  ) : null
+  if (displayMessage) {
+    return (
+      <GlobalAlert>
+        {t(
+          'Please select an organization inway. At the moment access requests can not be received and outgoing orders can not be retrieved by other organizations.',
+        )}
+        <StyledLink to="/settings/general">{t('Go to settings')}</StyledLink>
+      </GlobalAlert>
+    )
+  }
+
+  return null
 }
 
 export default observer(OrganizationInwayCheck)

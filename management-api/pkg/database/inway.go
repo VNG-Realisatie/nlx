@@ -52,11 +52,44 @@ func (db *PostgresConfigDatabase) UpdateInway(ctx context.Context, inway *Inway)
 }
 
 func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) error {
-	return db.DB.
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	inway, err := db.GetInway(ctx, name)
+	if err != nil {
+		return err
+	}
+
+	// Delete services_inway entries for the inway
+	err = db.DeleteServicesConnectedToInway(ctx, inway)
+	if err != nil {
+		return err
+	}
+
+	// Load settings for organization inway, and clear it if the to delete inway is set as the organization inway
+	settings, err := db.GetSettings(ctx)
+	if err != nil {
+		return err
+	}
+
+	if settings.Inway != nil && settings.Inway.ID == inway.ID {
+		_, err = db.PutOrganizationInway(ctx, nil)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Remove the inway from the database
+	err = db.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Where(&Inway{Name: name}).
 		Delete(&Inway{}).Error
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 func (db *PostgresConfigDatabase) ListInways(ctx context.Context) ([]*Inway, error) {

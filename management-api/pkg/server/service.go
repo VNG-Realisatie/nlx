@@ -17,6 +17,8 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
+var InwayNotFoundError = status.Error(codes.NotFound, "inway not found")
+
 // CreateService creates a new service
 func (s *ManagementService) CreateService(ctx context.Context, request *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
 	logger := s.logger.With(zap.String("name", request.Name))
@@ -187,7 +189,7 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 		inway, err := s.configDatabase.GetInway(ctx, req.InwayName)
 		if err != nil {
 			if errIsNotFound(err) {
-				return nil, status.Error(codes.NotFound, "inway not found")
+				return nil, InwayNotFoundError
 			}
 
 			s.logger.Error("error getting inway from database", zap.String("name", req.InwayName), zap.Error(err))

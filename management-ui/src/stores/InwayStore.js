@@ -61,14 +61,15 @@ class InwayStore {
 
   removeInway = flow(function* removeInway(name) {
     const inway = this.getInway(name)
-    const index = this.services.indexOf(inway)
+    const index = this.inways.indexOf(inway)
 
-    // TODO: add api call
-    yield this._managementApiClient.managementDeleteService({
+    yield this._managementApiClient.managementDeleteInway({
       name,
     })
 
-    this.services.splice(index, 1)
+    // TODO: Correct handling + testing
+    this.inways.splice(index, 1)
+    this.fetchInways()
   }).bind(this)
 
   _updateFromServer(inwayData) {

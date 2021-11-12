@@ -22,7 +22,7 @@ const InwayDetailPage: React.FC<InwayDetailPageProps> = ({
   const { t } = useTranslation()
   const history = useHistory()
   const { removeInway } = useInwayStore()
-  const { applicationStore } = useApplicationStore()
+  const applicationStore = useApplicationStore()
   const { showToast } = useContext(ToasterContext)
   const close = () => history.push(parentUrl)
 
@@ -30,16 +30,20 @@ const InwayDetailPage: React.FC<InwayDetailPageProps> = ({
     try {
       await removeInway(inway.name)
 
+      // Close the editing side panel
+      close()
+
       // Update isOrganizationInwaySet if needed, to trigger the warning banner
       const settings = await applicationStore.getGeneralSettings()
       applicationStore.updateOrganizationInway({
         isOrganizationInwaySet: !!settings.organizationInway,
       })
     } catch (err) {
+      const e = err as { message: string }
+      console.warn(e)
       showToast({
         title: t('Failed to remove the inway'),
-        // body: err.message,
-        body: err,
+        body: e.message,
         variant: 'error',
       })
     }
