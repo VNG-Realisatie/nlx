@@ -6,16 +6,16 @@ package directory
 import (
 	"context"
 
-	"go.nlx.io/nlx/common/nlxversion"
-	directoryapi "go.nlx.io/nlx/directory-api/api"
-	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory/storage"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"go.nlx.io/nlx/common/nlxversion"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/directory-api/domain"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func registerOutwayVersion(ctx context.Context, db storage.Repository, version nlxversion.Version) {
@@ -80,7 +80,7 @@ func convertFromDatabaseService(models []*domain.Service) *directoryapi.ListServ
 		for i, inway := range serviceInways {
 			service.Inways[i] = &directoryapi.Inway{
 				Address: inway.Address(),
-				State:   directoryapi.Inway_State(inspectionapi.Inway_State_value[string(inway.State())]),
+				State:   directoryapi.Inway_State(directoryapi.Inway_State_value[string(inway.State())]),
 			}
 		}
 
