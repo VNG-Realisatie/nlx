@@ -22,7 +22,7 @@ func (r *PostgreSQLRepository) ListOrganizations(ctx context.Context) ([]*domain
 
 	var queryResult []*dbOrganization
 
-	err = rows.StructScan(queryResult)
+	err = sqlx.StructScan(rows, &queryResult)
 	if err != nil {
 		return nil, err
 	}
