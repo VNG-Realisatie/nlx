@@ -99,6 +99,7 @@ Service                         | gRPC | HTTP
 ------------------------------- | ---- | ----
 [S] directory-inspection-api    | 7901 | 7902
 [S] directory-registration-api  | 7903 |
+[S] directory-api               | 7904 | 7905
 [S] directory-monitor           |
 [A] management-api              | 7911 | 7912
 [A] inway                       | 7913

@@ -75,6 +75,18 @@ services:
         - ${IMAGE_PREFIX}nlxio/directory-registration-api:${DOCKER_CACHE_LATEST_TAG}
         - ${IMAGE_PREFIX}nlxio/directory-registration-api:${DOCKER_CACHE_BRANCH_TAG}
         - ${IMAGE_PREFIX}nlxio/directory-registration-api:acc-latest
+  directory-api:
+    image: "${IMAGE_PREFIX}nlxio/directory-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: directory-api/Dockerfile
+      args:
+        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
+        GIT_TAG_NAME: "${GIT_TAG_NAME}"
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/directory-api:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-api:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/directory-api:acc-latest
   directory-monitor:
     image: "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG}"
     build:

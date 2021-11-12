@@ -5,8 +5,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
-const getProxyUrl = (proxy?: string): string =>
-  proxy || 'http://directory-inspection-api.shared.nlx.local:7902'
+const getProxyUrl = (proxy) =>
+  proxy || 'http://directory-api.shared.nlx.local:7905'
 
 module.exports = function (app) {
   app.use(

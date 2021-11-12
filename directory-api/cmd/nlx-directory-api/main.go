@@ -6,16 +6,11 @@ package main
 import (
 	"context"
 	"log"
-	"net"
-	"net/http"
 	"time"
 
-	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/jessevdk/go-flags"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 
 	common_db "go.nlx.io/nlx/common/db"
 	nlxhttp "go.nlx.io/nlx/common/http"
@@ -24,14 +19,14 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	pgadapter "go.nlx.io/nlx/directory-api/adapters/storage/postgres"
-	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/directory-api/http"
 	"go.nlx.io/nlx/directory-api/pkg/directory"
 	"go.nlx.io/nlx/directory-db/dbversion"
 )
 
 var options struct {
 	ListenAddress      string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the directory to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenAddressPlain string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8444" description:"Address for the directory to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenAddressPlain string `long:"listen-address-plain" env:"LISTEN_ADDRESS_PLAIN" default:"127.0.0.1:8080" description:"Address for the directory to listen on using plain HTTP. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	NLXRootCert        string `long:"tls-nlx-root-cert" env:"TLS_NLX_ROOT_CERT" description:"Absolute or relative path to the NLX CA root cert .pem"`
 	DirectoryCertFile  string `long:"tls-directory-cert" env:"TLS_DIRECTORY_CERT" description:"Absolute or relative path to the Directory cert .pem"`
 	DirectoryKeyFile   string `long:"tls-directory-key" env:"TLS_DIRECTORY_KEY" description:"Absolute or relative path to the Directory key .pem"`
@@ -74,21 +69,6 @@ func newZapLogger() *zap.Logger {
 	return logger
 }
 
-func newGRPCServer(certificate *common_tls.CertificateBundle, logger *zap.Logger) *grpc.Server {
-	// setup zap connection for global grpc logging
-	grpc_zap.ReplaceGrpcLogger(logger)
-	// prepare grpc server options
-	serverTLSConfig := certificate.TLSConfig(certificate.WithTLSClientAuth())
-	serverTLSConfig.NextProtos = []string{"h2"}
-
-	opts := []grpc.ServerOption{
-		grpc.Creds(credentials.NewTLS(serverTLSConfig)),
-	}
-
-	// start grpc server and attach directory service
-	return grpc.NewServer(opts...)
-}
-
 func main() {
 	err := parseArgs()
 	if err != nil {
@@ -115,34 +95,25 @@ func main() {
 
 	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
-	inwayRepository, err := pgadapter.New(logger, db)
+	storage, err := pgadapter.New(logger, db)
 	if err != nil {
 		logger.Fatal("failed to setup postgresql directory database:", zap.Error(err))
 	}
 
 	httpClient := nlxhttp.NewHTTPClient(certificate)
-	registrationService := directory.New(
+	directoryService := directory.New(
 		logger,
-		inwayRepository,
+		storage,
 		httpClient,
 		common_tls.GetOrganizationInfoFromRequest,
 	)
 
-	grpcServer := newGRPCServer(certificate, logger)
-	directoryapi.RegisterDirectoryServer(grpcServer, registrationService)
+	httpServer := http.NewServer(db, certificate, logger)
 
-	listen, err := net.Listen("tcp", options.ListenAddress)
+	server, err := NewServer(logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, httpServer)
 	if err != nil {
-		logger.Fatal("failed to create listener", zap.Error(err))
+		logger.Fatal("could not start server", zap.Error(err))
 	}
-
-	go func() {
-		if err = grpcServer.Serve(listen); err != nil {
-			if err != http.ErrServerClosed {
-				log.Fatal("error serving", zap.Error(err))
-			}
-		}
-	}()
 
 	p.Wait()
 
@@ -151,26 +122,13 @@ func main() {
 	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	shutdownGrpcServer(gracefulCtx, grpcServer)
+	err = server.Shutdown(gracefulCtx)
+	if err != nil {
+		logger.Error("could not shutdown server", zap.Error(err))
+	}
 
 	err = db.Close()
 	if err != nil {
 		logger.Error("could not shutdown db", zap.Error(err))
-	}
-}
-
-func shutdownGrpcServer(ctx context.Context, s *grpc.Server) {
-	stopped := make(chan struct{})
-
-	go func() {
-		s.GracefulStop()
-		close(stopped)
-	}()
-
-	select {
-	case <-ctx.Done():
-		s.Stop()
-	case <-stopped:
-		return
 	}
 }
