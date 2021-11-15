@@ -60,29 +60,36 @@ func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) 
 		return err
 	}
 
-	// Delete services_inway entries for the inway
-	err = db.DeleteServicesConnectedToInway(ctx, inway)
-	if err != nil {
-		return err
-	}
-
 	// Load settings for organization inway, and clear it if the to delete inway is set as the organization inway
 	settings, err := db.GetSettings(ctx)
-	if err != nil {
+	if err != nil && !errors.Is(err, ErrNotFound) {
 		return err
 	}
 
-	if settings.Inway != nil && settings.Inway.ID == inway.ID {
-		_, err = db.PutOrganizationInway(ctx, nil)
+	if settings != nil && settings.Inway != nil && settings.Inway.ID == inway.ID {
+		err = tx.
+			WithContext(ctx).
+			Omit(clause.Associations).
+			Model(settings).
+			Update("inway_id", nil).Error
 		if err != nil {
 			return err
 		}
 	}
 
-	// Remove the inway from the database
-	err = db.DB.
+	// Remove inway service records
+	err = tx.
 		WithContext(ctx).
-		Omit(clause.Associations).
+		Exec(
+			"DELETE FROM nlx_management.inways_services WHERE inway_id = ?", inway.ID).
+		Error
+	if err != nil {
+		return err
+	}
+
+	// Remove the inway from the database
+	err = tx.
+		WithContext(ctx).
 		Where(&Inway{Name: name}).
 		Delete(&Inway{}).Error
 	if err != nil {

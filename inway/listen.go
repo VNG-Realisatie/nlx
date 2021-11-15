@@ -45,10 +45,7 @@ func (i *Inway) Run(ctx context.Context, address string) error {
 		}
 	}()
 
-	err := i.startConfigurationPolling(ctx)
-	if err != nil {
-		return err
-	}
+	go i.startConfigurationPolling(ctx)
 
 	go i.announceToDirectory(ctx)
 

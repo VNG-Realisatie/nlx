@@ -26,7 +26,7 @@ type PostgresConfigDatabase struct {
 	*gorm.DB
 }
 
-func NewPostgresConfigDatabase(connectionString string) (ConfigDatabase, error) {
+func New(connectionString string) (ConfigDatabase, error) {
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		return nil, err

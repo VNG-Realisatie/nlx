@@ -8,24 +8,16 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
-	"fmt"
 	"net"
 	"net/http"
 	"regexp"
 	"strings"
 	"sync"
-	"time"
 
-	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/monitoring"
-	"go.nlx.io/nlx/common/nlxversion"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/directory-registration-api/registrationapi"
@@ -33,11 +25,6 @@ import (
 	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
 )
-
-const retryFactor = 10
-const maxRetryDuration = 20 * time.Second
-const minRetryDuration = 100 * time.Millisecond
-const announceToDirectoryInterval = 10 * time.Second
 
 var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
 
@@ -65,17 +52,17 @@ type Inway struct {
 }
 
 type Params struct {
-	Context                      context.Context
-	Logger                       *zap.Logger
-	Txlogger                     transactionlog.TransactionLogger
-	ManagementClient             api.ManagementClient
-	ManagementProxy              *grpcproxy.Proxy
-	Name                         string
-	Address                      string
-	MonitoringAddress            string
-	ListenManagementAddress      string
-	OrgCertBundle                *common_tls.CertificateBundle
-	DirectoryRegistrationAddress string
+	Context                     context.Context
+	Logger                      *zap.Logger
+	Txlogger                    transactionlog.TransactionLogger
+	ManagementClient            api.ManagementClient
+	ManagementProxy             *grpcproxy.Proxy
+	Name                        string
+	Address                     string
+	MonitoringAddress           string
+	ListenManagementAddress     string
+	OrgCertBundle               *common_tls.CertificateBundle
+	DirectoryRegistrationClient registrationapi.DirectoryRegistrationClient
 }
 
 func NewInway(params *Params) (*Inway, error) {
@@ -115,13 +102,14 @@ func NewInway(params *Params) (*Inway, error) {
 			SerialNumber: organizationSerialNumber,
 			Name:         organizationName,
 		},
-		listenManagementAddress: params.ListenManagementAddress,
-		address:                 params.Address,
-		orgCertBundle:           params.OrgCertBundle,
-		managementClient:        params.ManagementClient,
-		managementProxy:         params.ManagementProxy,
-		services:                map[string]*plugins.Service{},
-		servicesLock:            sync.RWMutex{},
+		listenManagementAddress:     params.ListenManagementAddress,
+		address:                     params.Address,
+		orgCertBundle:               params.OrgCertBundle,
+		managementClient:            params.ManagementClient,
+		managementProxy:             params.ManagementProxy,
+		directoryRegistrationClient: params.DirectoryRegistrationClient,
+		services:                    map[string]*plugins.Service{},
+		servicesLock:                sync.RWMutex{},
 		plugins: []plugins.Plugin{
 			plugins.NewAuthenticationPlugin(),
 			plugins.NewDelegationPlugin(),
@@ -141,24 +129,6 @@ func NewInway(params *Params) (*Inway, error) {
 	} else {
 		i.name = getFingerPrint(orgCert.Raw)
 	}
-
-	directoryDialCredentials := credentials.NewTLS(params.OrgCertBundle.TLSConfig())
-	directoryDialOptions := []grpc.DialOption{
-		grpc.WithTransportCredentials(directoryDialCredentials),
-	}
-
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(params.Context, "inway"), 1*time.Minute)
-	directoryConn, err := grpc.DialContext(directoryConnCtx, params.DirectoryRegistrationAddress, directoryDialOptions...)
-
-	defer directoryConnCtxCancel()
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to setup connection to directory service")
-	}
-
-	i.directoryRegistrationClient = registrationapi.NewDirectoryRegistrationClient(directoryConn)
-
-	logger.Info("directory registration client setup complete", zap.String("directory-address", params.DirectoryRegistrationAddress))
 
 	return i, nil
 }
@@ -197,71 +167,4 @@ func getFingerPrint(rawCert []byte) string {
 	}
 
 	return base64.URLEncoding.EncodeToString(bytes)
-}
-
-func (i *Inway) announceToDirectory(ctx context.Context) {
-	expBackOff := &backoff.Backoff{
-		Min:    minRetryDuration,
-		Factor: retryFactor,
-		Max:    maxRetryDuration,
-	}
-
-	sleepDuration := announceToDirectoryInterval
-
-	for {
-		select {
-		case <-ctx.Done():
-			i.logger.Info("stopping directory announcement")
-			return
-		case <-time.After(sleepDuration):
-			ctx := context.Background()
-			protoServiceDetails := []*registrationapi.RegisterInwayRequest_RegisterService{}
-
-			for _, service := range i.services {
-				protoServiceDetails = append(protoServiceDetails, &registrationapi.RegisterInwayRequest_RegisterService{
-					Name:                        service.Name,
-					Internal:                    service.Internal,
-					DocumentationUrl:            service.DocumentationURL,
-					ApiSpecificationDocumentUrl: service.APISpecificationDocumentURL,
-					PublicSupportContact:        service.PublicSupportContact,
-					TechSupportContact:          service.TechSupportContact,
-					OneTimeCosts:                service.OneTimeCosts,
-					MonthlyCosts:                service.MonthlyCosts,
-					RequestCosts:                service.RequestCosts,
-				})
-			}
-
-			registerInwayRequest := &registrationapi.RegisterInwayRequest{
-				InwayName:           i.name,
-				InwayAddress:        i.address,
-				IsOrganizationInway: i.isOrganizationInway,
-				Services:            protoServiceDetails,
-			}
-			nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")
-			i.logger.Debug("registering inway", zap.Any("RegisterInwayRequest", registerInwayRequest), zap.Any("nlxVersion", nlxVersion))
-
-			resp, err := i.directoryRegistrationClient.RegisterInway(nlxVersion, registerInwayRequest)
-			if err != nil {
-				if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-					i.logger.Info("waiting for directory...", zap.Error(err))
-
-					sleepDuration = expBackOff.Duration()
-
-					continue
-				}
-
-				i.logger.Error("failed to register to directory", zap.Error(err))
-			}
-
-			if resp != nil && resp.Error != "" {
-				i.logger.Error(fmt.Sprintf("failed to register to directory: %s", resp.Error))
-			}
-
-			i.logger.Info("directory registration successful")
-
-			sleepDuration = announceToDirectoryInterval
-
-			expBackOff.Reset()
-		}
-	}
 }

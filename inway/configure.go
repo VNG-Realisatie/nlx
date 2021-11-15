@@ -22,73 +22,54 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
+const retryFactorConfigRetrieval = 2
+const minRetryDurationConfigRetrieval = 100 * time.Millisecond
+const maxRetryDurationConfigRetrieval = 20 * time.Second
 const configRetrievalInterval = 10 * time.Second
 
 var errManagementAPIUnavailable = fmt.Errorf("managementAPI unavailable")
 
-func (i *Inway) registerInwayToManagementAPI(ctx context.Context) error {
-	hostname, err := os.Hostname()
-	if err != nil {
-		i.logger.Warn("failed to get inway hostname", zap.Error(err))
+func (i *Inway) startConfigurationPolling(ctx context.Context) {
+	expBackOff := &backoff.Backoff{
+		Min:    minRetryDurationConfigRetrieval,
+		Factor: retryFactorConfigRetrieval,
+		Max:    maxRetryDurationConfigRetrieval,
 	}
+	sleepDuration := 0 * time.Second
 
-	_, err = i.managementClient.RegisterInway(ctx, &api.Inway{
-		Name:        i.name,
-		Version:     version.BuildVersion,
-		Hostname:    hostname,
-		SelfAddress: i.address,
-	})
+	for {
+		select {
+		case <-ctx.Done():
+			i.logger.Info("stopping configuration polling")
+			return
+		case <-time.After(sleepDuration):
+			err := i.registerToManagement(ctx)
+			if err != nil {
+				if errors.Is(err, errManagementAPIUnavailable) {
+					sleepDuration = expBackOff.Duration()
+					continue
+				}
 
-	if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-		return errManagementAPIUnavailable
-	}
+				expBackOff.Reset()
 
-	return err
-}
+				sleepDuration = configRetrievalInterval
 
-func (i *Inway) startConfigurationPolling(ctx context.Context) error {
-	if err := i.registerInwayToManagementAPI(ctx); err != nil {
-		return err
-	}
-
-	settings, err := i.managementClient.GetSettings(ctx, &emptypb.Empty{})
-	if err != nil {
-		return fmt.Errorf("error fetching settings: %s", err)
-	}
-
-	i.isOrganizationInway = settings.OrganizationInway == i.name
-	i.logger.Debug("fetched settings from management client", zap.Any("organization inway", settings.OrganizationInway), zap.Bool("i.isOrganizationInway", i.isOrganizationInway))
-
-	services, err := i.getServicesFromManagementAPI()
-	if err != nil && err != errManagementAPIUnavailable {
-		return err
-	}
-
-	err = i.SetServiceEndpoints(services)
-	if err != nil {
-		return err
-	}
-
-	go func() {
-		expBackOff := &backoff.Backoff{
-			Min:    100 * time.Millisecond,
-			Factor: 2,
-			Max:    20 * time.Second,
-		}
-		sleepDuration := configRetrievalInterval
-
-		for {
-			select {
-			case <-ctx.Done():
-				i.logger.Info("stopping config polling")
-				return
-			case <-time.After(sleepDuration):
-				sleepDuration = i.registerInwayAndUpdateConfig(expBackOff, configRetrievalInterval)
+				continue
 			}
-		}
-	}()
 
-	return nil
+			err = i.retrieveAndUpdateConfig()
+			if err != nil {
+				if errors.Is(err, errManagementAPIUnavailable) {
+					sleepDuration = expBackOff.Duration()
+					continue
+				}
+			}
+
+			expBackOff.Reset()
+
+			sleepDuration = configRetrievalInterval
+		}
+	}
 }
 
 // SetServiceEndpoints configures the inway with the provided endpoints
@@ -115,33 +96,19 @@ func (i *Inway) SetServiceEndpoints(endpoints []*plugins.Service) error {
 	return nil
 }
 
-func (i *Inway) registerInwayAndUpdateConfig(expBackOff *backoff.Backoff, defaultInterval time.Duration) time.Duration {
-	i.logger.Info("registering inway to management api")
-	err := i.registerInwayToManagementAPI(context.TODO())
-
-	if err != nil {
-		if errors.Is(err, errManagementAPIUnavailable) {
-			i.logger.Warn("management api not available, waiting for management-api...", zap.Error(err))
-			return expBackOff.Duration()
-		}
-
-		i.logger.Error("error from registerInwayToManagementAPI", zap.Error(err))
-
-		return defaultInterval
-	}
-
+func (i *Inway) retrieveAndUpdateConfig() error {
 	i.logger.Info("retrieving config from the management-api", zap.String("inwayname", i.name))
 
 	services, err := i.getServicesFromManagementAPI()
 	if err != nil {
 		if errors.Is(err, errManagementAPIUnavailable) {
 			i.logger.Warn("management api not available, waiting for management-api...", zap.Error(err))
-			return expBackOff.Duration()
+			return err
 		}
 
 		i.logger.Error("failed to contact the management-api", zap.Error(err))
 
-		return defaultInterval
+		return err
 	}
 
 	if i.isServiceConfigDifferent(services) {
@@ -150,23 +117,22 @@ func (i *Inway) registerInwayAndUpdateConfig(expBackOff *backoff.Backoff, defaul
 		err = i.SetServiceEndpoints(services)
 		if err != nil {
 			i.logger.Error("unable to configure the inway with the management-api response", zap.Error(err))
-			return defaultInterval
+			return err
 		}
 	}
 
 	settings, err := i.managementClient.GetSettings(context.Background(), &emptypb.Empty{})
 	if err != nil {
 		i.logger.Error("error fetching settings from managementClient", zap.Error(err))
-		return defaultInterval
+		return err
 	}
 
 	i.isOrganizationInway = settings.OrganizationInway == i.name
 	i.logger.Debug("fetched settings from management client", zap.Any("organization inway", settings.OrganizationInway), zap.Bool("i.isOrganizationInway", i.isOrganizationInway))
 
 	i.logger.Info("retrieved config successfully")
-	expBackOff.Reset()
 
-	return defaultInterval
+	return err
 }
 
 func (i *Inway) isServiceConfigDifferent(services []*plugins.Service) bool {
@@ -190,6 +156,27 @@ func (i *Inway) isServiceConfigDifferent(services []*plugins.Service) bool {
 	}
 
 	return matches != serviceCount
+}
+
+func (i *Inway) getServicesFromManagementAPI() ([]*plugins.Service, error) {
+	response, err := i.managementClient.ListServices(context.Background(), &api.ListServicesRequest{
+		InwayName: i.name,
+	})
+
+	if err != nil {
+		if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
+			return nil, errManagementAPIUnavailable
+		}
+
+		return nil, err
+	}
+
+	services := make([]*plugins.Service, len(response.Services))
+	for i, service := range response.Services {
+		services[i] = serviceToPluginService(service)
+	}
+
+	return services, nil
 }
 
 func serviceToPluginService(service *api.ListServicesResponse_Service) *plugins.Service {
@@ -218,23 +205,18 @@ func serviceToPluginService(service *api.ListServicesResponse_Service) *plugins.
 	return pluginService
 }
 
-func (i *Inway) getServicesFromManagementAPI() ([]*plugins.Service, error) {
-	response, err := i.managementClient.ListServices(context.Background(), &api.ListServicesRequest{
-		InwayName: i.name,
+func (i *Inway) registerToManagement(ctx context.Context) error {
+	hostname, err := os.Hostname()
+	if err != nil {
+		i.logger.Warn("failed to get inway hostname", zap.Error(err))
+	}
+
+	_, err = i.managementClient.RegisterInway(ctx, &api.Inway{
+		Name:        i.name,
+		Version:     version.BuildVersion,
+		Hostname:    hostname,
+		SelfAddress: i.address,
 	})
 
-	if err != nil {
-		if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
-			return nil, errManagementAPIUnavailable
-		}
-
-		return nil, err
-	}
-
-	services := make([]*plugins.Service, len(response.Services))
-	for i, service := range response.Services {
-		services[i] = serviceToPluginService(service)
-	}
-
-	return services, nil
+	return err
 }

@@ -22,10 +22,12 @@ import (
 	"go.nlx.io/nlx/common/cmd"
 	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
+	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
+	"go.nlx.io/nlx/directory-registration-api/registrationapi"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/grpcproxy"
 	"go.nlx.io/nlx/management-api/api"
@@ -94,24 +96,40 @@ func main() {
 
 	managementProxy, err := grpcproxy.New(context.TODO(), logger, options.ManagementAPIAddress, orgCert, cert)
 	if err != nil {
-		logger.Fatal("failed to setup  management api proxy", zap.Error(err))
+		logger.Fatal("failed to setup management api proxy", zap.Error(err))
 	}
 
 	managementProxy.RegisterService(external_api.GetAccessRequestServiceDesc())
 	managementProxy.RegisterService(external_api.GetDelegationServiceDesc())
 
+	directoryDialCredentials := credentials.NewTLS(orgCert.TLSConfig())
+	directoryDialOptions := []grpc.DialOption{
+		grpc.WithTransportCredentials(directoryDialCredentials),
+	}
+
+	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(context.Background(), "inway"), 1*time.Minute)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryRegistrationAddress, directoryDialOptions...)
+
+	defer directoryConnCtxCancel()
+
+	if err != nil {
+		logger.Fatal("failed to setup connection to directory registration api", zap.Error(err))
+	}
+
+	directoryRegistrationClient := registrationapi.NewDirectoryRegistrationClient(directoryConn)
+
 	params := &inway.Params{
-		Context:                      context.Background(),
-		Logger:                       logger,
-		Txlogger:                     txlogger,
-		ManagementClient:             api.NewManagementClient(conn),
-		ManagementProxy:              managementProxy,
-		Name:                         options.Name,
-		Address:                      options.Address,
-		MonitoringAddress:            options.MonitoringAddress,
-		ListenManagementAddress:      listenManagementAddress,
-		OrgCertBundle:                orgCert,
-		DirectoryRegistrationAddress: options.DirectoryRegistrationAddress,
+		Context:                     context.Background(),
+		Logger:                      logger,
+		Txlogger:                    txlogger,
+		ManagementClient:            api.NewManagementClient(conn),
+		ManagementProxy:             managementProxy,
+		Name:                        options.Name,
+		Address:                     options.Address,
+		MonitoringAddress:           options.MonitoringAddress,
+		ListenManagementAddress:     listenManagementAddress,
+		OrgCertBundle:               orgCert,
+		DirectoryRegistrationClient: directoryRegistrationClient,
 	}
 
 	iw, err := inway.NewInway(params)

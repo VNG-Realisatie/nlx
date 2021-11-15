@@ -165,7 +165,10 @@ mocks-directory-registration-api:
     RUN mkdir -p /dist || true
     WORKDIR /src/directory-registration-api
 
+    RUN mockgen -source registrationapi/registrationapi_grpc.pb.go -destination /dist/registrationapi/mock/mock_directory_registration_api.go
+
     RUN mockgen -source domain/directory/repository.go -package=directory_mock -destination /dist/domain/directory/mock/repository.go
     RUN goimports -w -local "go.nlx.io" /dist/
 
+    SAVE ARTIFACT /dist/registrationapi/mock/mock_directory_registration_api.go AS LOCAL ./directory-registration-api/registrationapi/mock/mock_directory_registration_api.go
     SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-registration-api/domain/directory/mock/repository.go
