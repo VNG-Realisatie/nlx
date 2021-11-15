@@ -67,6 +67,7 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     dex.shared.nlx.local
 127.0.0.1     directory-inspection-api.shared.nlx.local
 127.0.0.1     directory-registration-api.shared.nlx.local
+127.0.0.1     directory-api.shared.nlx.local
 
 127.0.0.1     management-api.organization-a.nlx.local
 127.0.0.1     inway.organization-a.nlx.local
@@ -79,6 +80,7 @@ Update the `/etc/hosts` file on your system:
 ::1           dex.shared.nlx.local
 ::1           directory-inspection-api.shared.nlx.local
 ::1           directory-registration-api.shared.nlx.local
+::1           directory-api.shared.nlx.local
 
 ::1           management-api.organization-a.nlx.local
 ::1           inway.organization-a.nlx.local

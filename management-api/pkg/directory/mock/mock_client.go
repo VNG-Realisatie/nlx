@@ -12,8 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
-	inspectionapi "go.nlx.io/nlx/directory-inspection-api/inspectionapi"
-	registrationapi "go.nlx.io/nlx/directory-registration-api/registrationapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
 // MockClient is a mock of Client interface.
@@ -60,14 +59,14 @@ func (mr *MockClientMockRecorder) ClearOrganizationInway(arg0, arg1 interface{},
 }
 
 // GetOrganizationInway mocks base method.
-func (m *MockClient) GetOrganizationInway(arg0 context.Context, arg1 *inspectionapi.GetOrganizationInwayRequest, arg2 ...grpc.CallOption) (*inspectionapi.GetOrganizationInwayResponse, error) {
+func (m *MockClient) GetOrganizationInway(arg0 context.Context, arg1 *directoryapi.GetOrganizationInwayRequest, arg2 ...grpc.CallOption) (*directoryapi.GetOrganizationInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetOrganizationInway", varargs...)
-	ret0, _ := ret[0].(*inspectionapi.GetOrganizationInwayResponse)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -95,14 +94,14 @@ func (mr *MockClientMockRecorder) GetOrganizationInwayProxyAddress(arg0, arg1 in
 }
 
 // ListInOutwayStatistics mocks base method.
-func (m *MockClient) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListInOutwayStatisticsResponse, error) {
+func (m *MockClient) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ListInOutwayStatistics", varargs...)
-	ret0, _ := ret[0].(*inspectionapi.ListInOutwayStatisticsResponse)
+	ret0, _ := ret[0].(*directoryapi.ListInOutwayStatisticsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -115,14 +114,14 @@ func (mr *MockClientMockRecorder) ListInOutwayStatistics(arg0, arg1 interface{},
 }
 
 // ListOrganizations mocks base method.
-func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListOrganizationsResponse, error) {
+func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListOrganizationsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ListOrganizations", varargs...)
-	ret0, _ := ret[0].(*inspectionapi.ListOrganizationsResponse)
+	ret0, _ := ret[0].(*directoryapi.ListOrganizationsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -135,14 +134,14 @@ func (mr *MockClientMockRecorder) ListOrganizations(arg0, arg1 interface{}, arg2
 }
 
 // ListServices mocks base method.
-func (m *MockClient) ListServices(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*inspectionapi.ListServicesResponse, error) {
+func (m *MockClient) ListServices(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ListServices", varargs...)
-	ret0, _ := ret[0].(*inspectionapi.ListServicesResponse)
+	ret0, _ := ret[0].(*directoryapi.ListServicesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -155,14 +154,14 @@ func (mr *MockClientMockRecorder) ListServices(arg0, arg1 interface{}, arg2 ...i
 }
 
 // RegisterInway mocks base method.
-func (m *MockClient) RegisterInway(arg0 context.Context, arg1 *registrationapi.RegisterInwayRequest, arg2 ...grpc.CallOption) (*registrationapi.RegisterInwayResponse, error) {
+func (m *MockClient) RegisterInway(arg0 context.Context, arg1 *directoryapi.RegisterInwayRequest, arg2 ...grpc.CallOption) (*directoryapi.RegisterInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RegisterInway", varargs...)
-	ret0, _ := ret[0].(*registrationapi.RegisterInwayResponse)
+	ret0, _ := ret[0].(*directoryapi.RegisterInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

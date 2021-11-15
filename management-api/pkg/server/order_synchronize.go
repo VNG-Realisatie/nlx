@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
@@ -37,7 +37,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 	}()
 
 	for _, organization := range response.Organizations {
-		go func(org *inspectionapi.Organization) {
+		go func(org *directoryapi.Organization) {
 			defer wc.Done()
 
 			orders, err := s.fetchOrganizationOrders(ctx, org)
@@ -110,7 +110,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 	return &api.SynchronizeOrdersResponse{Orders: incomingOrders}, nil
 }
 
-func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *inspectionapi.Organization) ([]*api.IncomingOrder, error) {
+func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *directoryapi.Organization) ([]*api.IncomingOrder, error) {
 	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, organization.SerialNumber)
 	if err != nil {
 		return nil, err

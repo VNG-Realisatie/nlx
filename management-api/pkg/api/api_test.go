@@ -22,13 +22,12 @@ type certFiles struct {
 var pkiDir = filepath.Join("..", "..", "..", "testing", "pki")
 
 var tests = []struct {
-	name                         string
-	cert                         certFiles
-	orgCert                      certFiles
-	db                           database.ConfigDatabase
-	directoryInspectionAddress   string
-	directoryRegistrationAddress string
-	expectedErrorMessage         string
+	name                 string
+	cert                 certFiles
+	orgCert              certFiles
+	db                   database.ConfigDatabase
+	directoryAddress     string
+	expectedErrorMessage string
 }{
 	{
 		"certificate_is_missing_organization",
@@ -43,7 +42,6 @@ var tests = []struct {
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		&mock_database.MockConfigDatabase{},
-		"",
 		"",
 		"cannot obtain organization name from self cert",
 	},
@@ -61,7 +59,6 @@ var tests = []struct {
 		},
 		nil,
 		"",
-		"",
 		"database is not configured",
 	},
 	{
@@ -78,25 +75,7 @@ var tests = []struct {
 		},
 		&mock_database.MockConfigDatabase{},
 		"",
-		"",
-		"directory inspection address is not configured",
-	},
-	{
-		"directory_registration_address_is_missing",
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		&mock_database.MockConfigDatabase{},
-		"directory-inspection.test:8443",
-		"",
-		"directory registration address is not configured",
+		"directory address is not configured",
 	},
 	{
 		"happy_flow",
@@ -111,8 +90,7 @@ var tests = []struct {
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		&mock_database.MockConfigDatabase{},
-		"directory-inspection.test:8443",
-		"directory-registration.test:8443",
+		"directory.test:8443",
 		"",
 	},
 }
@@ -139,8 +117,7 @@ func TestNewAPI(t *testing.T) {
 				logger,
 				cert,
 				orgCert,
-				test.directoryInspectionAddress,
-				test.directoryRegistrationAddress,
+				test.directoryAddress,
 				&oidc.Authenticator{},
 				mock_auditlog.NewMockLogger(mockCtrl),
 			)

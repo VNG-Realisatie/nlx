@@ -130,6 +130,7 @@ mocks-management-api:
     COPY ./common /src/common
     COPY ./directory-inspection-api /src/directory-inspection-api
     COPY ./directory-registration-api /src/directory-registration-api
+    COPY ./directory-api /src/directory-api
 
     RUN mkdir -p /dist || true
     WORKDIR /src/management-api

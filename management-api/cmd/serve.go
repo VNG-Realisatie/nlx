@@ -35,6 +35,7 @@ var serveOpts struct {
 	PostgresDSN                  string
 	DirectoryInspectionAddress   string
 	DirectoryRegistrationAddress string
+	DirectoryAddress             string
 	TransactionLogDSN            string
 	EnableBasicAuth              bool
 
@@ -51,6 +52,7 @@ func init() {
 	serveCommand.Flags().StringVarP(&serveOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryInspectionAddress, "directory-inspection-address", "", "", "Address of the directory inspection API")
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryRegistrationAddress, "directory-registration-address", "", "", "Address of the directory registration API")
+	serveCommand.Flags().StringVarP(&serveOpts.DirectoryAddress, "directory-address", "", "", "Address of the directory API")
 	serveCommand.Flags().BoolVarP(&serveOpts.EnableBasicAuth, "enable-basic-auth", "", false, "Enable HTTP basic authentication and disable OIDC")
 	serveCommand.Flags().StringVarP(&serveOpts.LogOptions.LogType, "log-type", "", "live", "Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.")
 	serveCommand.Flags().StringVarP(&serveOpts.LogOptions.LogLevel, "log-level", "", "", "Override the default loglevel as set by --log-type.")
@@ -68,15 +70,17 @@ func init() {
 	serveCommand.Flags().StringVarP(&serveOpts.oidcOptions.RedirectURL, "oidc-redirect-url", "", "", "The OIDC redirect URL")
 	serveCommand.Flags().BoolVarP(&serveOpts.oidcOptions.SessionCookieSecure, "session-cookie-secure", "", false, "Use 'secure' cookies")
 
+	// Deprecated flags
+	if err := serveCommand.Flags().MarkDeprecated("directory-registration-address", "please use '--directory-address' instead"); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := serveCommand.Flags().MarkDeprecated("directory-inspection-address", "please use '--directory-address' instead"); err != nil {
+		log.Fatal(err)
+	}
+
+	// Required flags
 	if err := serveCommand.MarkFlagRequired("postgres-dsn"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := serveCommand.MarkFlagRequired("directory-inspection-address"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := serveCommand.MarkFlagRequired("directory-registration-address"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -127,6 +131,16 @@ var serveCommand = &cobra.Command{
 
 			if serveOpts.oidcOptions.RedirectURL == "" {
 				log.Fatal(errors.New("oidc-redirect-url is required"))
+			}
+		}
+
+		if serveOpts.DirectoryAddress == "" {
+			if serveOpts.DirectoryInspectionAddress != "" {
+				serveOpts.DirectoryAddress = serveOpts.DirectoryInspectionAddress
+			} else if serveOpts.DirectoryRegistrationAddress != "" {
+				serveOpts.DirectoryAddress = serveOpts.DirectoryRegistrationAddress
+			} else {
+				log.Fatal(errors.New("directory-address is required"))
 			}
 		}
 
@@ -184,8 +198,7 @@ var serveCommand = &cobra.Command{
 			logger,
 			cert,
 			orgCert,
-			serveOpts.DirectoryInspectionAddress,
-			serveOpts.DirectoryRegistrationAddress,
+			serveOpts.DirectoryAddress,
 			authenticator,
 			auditLogger,
 		)

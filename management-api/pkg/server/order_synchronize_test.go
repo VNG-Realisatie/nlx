@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -43,8 +43,8 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
-					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.Organization{
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
@@ -63,8 +63,8 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
-					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.Organization{
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
@@ -89,8 +89,8 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
-					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.Organization{
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
@@ -177,8 +177,8 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
-					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.Organization{
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",
@@ -265,8 +265,8 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
-					Return(&inspectionapi.ListOrganizationsResponse{
-						Organizations: []*inspectionapi.Organization{
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
 								Name:         "nlx-test",

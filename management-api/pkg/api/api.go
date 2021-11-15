@@ -56,7 +56,7 @@ type Authenticator interface {
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, cert, orgCert *common_tls.CertificateBundle, directoryInspectionAddress, directoryRegistrationAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
+func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, cert, orgCert *common_tls.CertificateBundle, directoryAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
 	if db == nil {
 		return nil, errors.New("database is not configured")
 	}
@@ -65,19 +65,15 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	if directoryInspectionAddress == "" {
-		return nil, errors.New("directory inspection address is not configured")
-	}
-
-	if directoryRegistrationAddress == "" {
-		return nil, errors.New("directory registration address is not configured")
+	if directoryAddress == "" {
+		return nil, errors.New("directory address is not configured")
 	}
 
 	if authenticator == nil {
 		return nil, errors.New("authenticator is not configured")
 	}
 
-	directoryClient, err := directory.NewClient(context.TODO(), directoryInspectionAddress, directoryRegistrationAddress, orgCert)
+	directoryClient, err := directory.NewClient(context.TODO(), directoryAddress, orgCert)
 	if err != nil {
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}

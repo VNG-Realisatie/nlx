@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
@@ -32,10 +32,10 @@ type DirectoryService struct {
 	configDatabase  database.ConfigDatabase
 }
 
-var inwayStateToDirectoryState = map[inspectionapi.Inway_State]api.DirectoryService_State{
-	inspectionapi.Inway_UNKNOWN: api.DirectoryService_unknown,
-	inspectionapi.Inway_UP:      api.DirectoryService_up,
-	inspectionapi.Inway_DOWN:    api.DirectoryService_down,
+var inwayStateToDirectoryState = map[directoryapi.Inway_State]api.DirectoryService_State{
+	directoryapi.Inway_UNKNOWN: api.DirectoryService_unknown,
+	directoryapi.Inway_UP:      api.DirectoryService_up,
+	directoryapi.Inway_DOWN:    api.DirectoryService_down,
 }
 
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient directory.Client, configDatabase database.ConfigDatabase) *DirectoryService {
@@ -101,7 +101,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 	return directoryService, nil
 }
 
-func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationSerialNumber, serviceName string) (*inspectionapi.ListServicesResponse_Service, error) {
+func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationSerialNumber, serviceName string) (*directoryapi.ListServicesResponse_Service, error) {
 	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "directory not available")
@@ -152,14 +152,14 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 	return response, nil
 }
 
-func DetermineDirectoryServiceState(inways []*inspectionapi.Inway) api.DirectoryService_State {
+func DetermineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {
 	serviceState := api.DirectoryService_unknown
 
 	if len(inways) == 0 {
 		return serviceState
 	}
 
-	stateMap := map[inspectionapi.Inway_State]int{}
+	stateMap := map[directoryapi.Inway_State]int{}
 
 	for _, i := range inways {
 		stateMap[i.State]++
@@ -176,7 +176,7 @@ func DetermineDirectoryServiceState(inways []*inspectionapi.Inway) api.Directory
 	return serviceState
 }
 
-func convertDirectoryService(s *inspectionapi.ListServicesResponse_Service) *api.DirectoryService {
+func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.DirectoryService {
 	serviceState := DetermineDirectoryServiceState(s.Inways)
 
 	service := &api.DirectoryService{
