@@ -27,7 +27,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/inway"
 	"go.nlx.io/nlx/inway/grpcproxy"
 	"go.nlx.io/nlx/management-api/api"
@@ -39,7 +39,8 @@ var options struct {
 	ListenAddress                string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	ListenManagementAddress      string `long:"listen-management-address" env:"LISTEN_MANAGEMENT_ADDRESS" description:"Address for the inway to listen on for management requests. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	MonitoringAddress            string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services" required:"true"`
+	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services"`
+	DirectoryAddress             string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services"`
 	DisableLogdb                 bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
 	Address                      string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
@@ -116,20 +117,20 @@ func main() {
 		logger.Fatal("failed to setup connection to directory registration api", zap.Error(err))
 	}
 
-	directoryRegistrationClient := registrationapi.NewDirectoryRegistrationClient(directoryConn)
+	directoryClient := directoryapi.NewDirectoryClient(directoryConn)
 
 	params := &inway.Params{
-		Context:                     context.Background(),
-		Logger:                      logger,
-		Txlogger:                    txlogger,
-		ManagementClient:            api.NewManagementClient(conn),
-		ManagementProxy:             managementProxy,
-		Name:                        options.Name,
-		Address:                     options.Address,
-		MonitoringAddress:           options.MonitoringAddress,
-		ListenManagementAddress:     listenManagementAddress,
-		OrgCertBundle:               orgCert,
-		DirectoryRegistrationClient: directoryRegistrationClient,
+		Context:                 context.Background(),
+		Logger:                  logger,
+		Txlogger:                txlogger,
+		ManagementClient:        api.NewManagementClient(conn),
+		ManagementProxy:         managementProxy,
+		Name:                    options.Name,
+		Address:                 options.Address,
+		MonitoringAddress:       options.MonitoringAddress,
+		ListenManagementAddress: listenManagementAddress,
+		OrgCertBundle:           orgCert,
+		DirectoryClient:         directoryClient,
 	}
 
 	iw, err := inway.NewInway(params)
@@ -214,7 +215,7 @@ func setupLogger() *zap.Logger {
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
-	logger.Info("starting inway", zap.String("directory-registration-address", options.DirectoryRegistrationAddress))
+	logger.Info("starting inway", zap.String("directory-address", options.DirectoryAddress))
 
 	return logger
 }
@@ -257,5 +258,18 @@ func parseOptions() {
 
 	if len(args) > 0 {
 		log.Fatalf("unexpected arguments: %v", args)
+	}
+
+	// Deprecated flags
+	if options.DirectoryRegistrationAddress != "" {
+		log.Println("Flag --directory-registration-address has been deprecated, please use '--directory-address' instead")
+	}
+
+	if options.DirectoryAddress == "" {
+		if options.DirectoryRegistrationAddress == "" {
+			log.Fatal(errors.New("directory-address is required"))
+		}
+
+		options.DirectoryAddress = options.DirectoryRegistrationAddress
 	}
 }
