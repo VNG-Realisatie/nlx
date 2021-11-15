@@ -42,6 +42,32 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 	return &emptypb.Empty{}, nil
 }
 
+func (h *DirectoryService) GetOrganizationInway(ctx context.Context, req *directoryapi.GetOrganizationInwayRequest) (*directoryapi.GetOrganizationInwayResponse, error) {
+	h.logger.Info("rpc request GetOrganizationInwayAddress")
+
+	serialNumber := req.OrganizationSerialNumber
+	if serialNumber == "" {
+		return nil, status.New(codes.InvalidArgument, "organization serial number is empty").Err()
+	}
+
+	address, err := h.repository.GetOrganizationInwayAddress(ctx, serialNumber)
+	if err != nil {
+		if errors.Is(err, storage.ErrOrganizationNotFound) {
+			return nil, status.New(codes.NotFound, "organization has no inway").Err()
+		}
+
+		h.logger.Error("failed to select organization inway address from storage", zap.Error(err))
+
+		return nil, status.New(codes.Internal, "Storage error.").Err()
+	}
+
+	resp := &directoryapi.GetOrganizationInwayResponse{
+		Address: address,
+	}
+
+	return resp, nil
+}
+
 func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListOrganizationsResponse, error) {
 	h.logger.Info("rpc request ListOrganizations")
 
