@@ -20,7 +20,6 @@ import (
 	"go.nlx.io/nlx/common/version"
 	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 const configRetrievalInterval = 10 * time.Second
@@ -39,6 +38,10 @@ func (i *Inway) registerInwayToManagementAPI(ctx context.Context) error {
 		Hostname:    hostname,
 		SelfAddress: i.address,
 	})
+
+	if errStatus, ok := status.FromError(err); ok && errStatus.Code() == codes.Unavailable {
+		return errManagementAPIUnavailable
+	}
 
 	return err
 }
@@ -80,7 +83,7 @@ func (i *Inway) startConfigurationPolling(ctx context.Context) error {
 				i.logger.Info("stopping config polling")
 				return
 			case <-time.After(sleepDuration):
-				sleepDuration = i.updateConfig(expBackOff, configRetrievalInterval)
+				sleepDuration = i.registerInwayAndUpdateConfig(expBackOff, configRetrievalInterval)
 			}
 		}
 	}()
@@ -112,26 +115,28 @@ func (i *Inway) SetServiceEndpoints(endpoints []*plugins.Service) error {
 	return nil
 }
 
-func (i *Inway) updateConfig(expBackOff *backoff.Backoff, defaultInterval time.Duration) time.Duration {
+func (i *Inway) registerInwayAndUpdateConfig(expBackOff *backoff.Backoff, defaultInterval time.Duration) time.Duration {
+	i.logger.Info("registering inway to management api")
+	err := i.registerInwayToManagementAPI(context.TODO())
+
+	if err != nil {
+		if errors.Is(err, errManagementAPIUnavailable) {
+			i.logger.Warn("management api not available, waiting for management-api...", zap.Error(err))
+			return expBackOff.Duration()
+		}
+
+		i.logger.Error("error from registerInwayToManagementAPI", zap.Error(err))
+
+		return defaultInterval
+	}
+
 	i.logger.Info("retrieving config from the management-api", zap.String("inwayname", i.name))
 
 	services, err := i.getServicesFromManagementAPI()
 	if err != nil {
-		if err == errManagementAPIUnavailable {
-			i.logger.Info("waiting for management-api...", zap.Error(err))
+		if errors.Is(err, errManagementAPIUnavailable) {
+			i.logger.Warn("management api not available, waiting for management-api...", zap.Error(err))
 			return expBackOff.Duration()
-		}
-
-		// @FIXME: Discuss if this is the correct way to handle not-found inways
-		if errors.Is(err, server.InwayNotFoundError) {
-			i.logger.Info("detected database.ErrNotFound, trying to register inway to management api...")
-			errRegister := i.registerInwayToManagementAPI(context.TODO())
-
-			if errRegister != nil {
-				i.logger.Error("error from registerInwayToManagementAPI", zap.Error(errRegister))
-			}
-
-			return defaultInterval
 		}
 
 		i.logger.Error("failed to contact the management-api", zap.Error(err))
