@@ -49,7 +49,7 @@ require (
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/square/go-jose.v2 v2.6.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	gorm.io/driver/postgres v1.2.1
+	gorm.io/driver/postgres v1.2.2
 	gorm.io/gorm v1.22.2
 	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
 )
