@@ -5,7 +5,6 @@ package inway
 import (
 	"context"
 	"fmt"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -21,9 +20,6 @@ import (
 
 //nolint:funlen // this is a test
 func TestStartConfigurationPolling(t *testing.T) {
-	hostname, err := os.Hostname()
-	assert.Nil(t, err)
-
 	cert, _ := common_tls.NewBundleFromFiles(
 		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -31,35 +27,39 @@ func TestStartConfigurationPolling(t *testing.T) {
 	)
 
 	tests := map[string]struct {
-		managementClient     func(ctrl *gomock.Controller) *mock_api.MockManagementClient
-		expectError          bool
-		expectedErrorMessage string
-		expectedService      *plugins.Service
+		managementClient          func(ctrl *gomock.Controller) *mock_api.MockManagementClient
+		expectError               bool
+		expectedErrorMessage      string
+		expectedService           *plugins.Service
+		shouldBeOrganizationInway bool
 	}{
-		"cannot_register_to_management_api": {
+		"management_api_unavailable": {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
-				managementClient.EXPECT().RegisterInway(gomock.Any(), &api.Inway{
-					Name:        "mock-inway",
-					Version:     "unknown",
-					Hostname:    hostname,
-					SelfAddress: "localhost:1812",
-				}).Return(nil, fmt.Errorf("arbitrary error"))
+				managementClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(nil, errManagementAPIUnavailable)
 
 				return managementClient
 			},
-			expectError:          true,
-			expectedErrorMessage: "arbitrary error",
+			expectError:               true,
+			expectedErrorMessage:      "managementAPI unavailable",
+			shouldBeOrganizationInway: false,
 		},
-		"happy_flow": {
+		"get_settings_failed": {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
-				managementClient.EXPECT().RegisterInway(gomock.Any(), &api.Inway{
-					Name:        "mock-inway",
-					Version:     "unknown",
-					Hostname:    hostname,
-					SelfAddress: "localhost:1812",
-				}).Return(nil, nil)
+				managementClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&api.ListServicesResponse{}, nil)
+
+				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("arbitrary error"))
+
+				return managementClient
+			},
+			expectError:               true,
+			expectedErrorMessage:      "arbitrary error",
+			shouldBeOrganizationInway: false,
+		},
+		"happy_flow_organization_inway": {
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
+				managementClient := mock_api.NewMockManagementClient(ctrl)
 
 				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(&api.Settings{OrganizationInway: "mock-inway"}, nil)
 
@@ -92,8 +92,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 				}, nil)
 				return managementClient
 			},
-			expectError:          false,
-			expectedErrorMessage: "arbitrary error",
+			expectError: false,
 			expectedService: &plugins.Service{
 				Name:                        "mock-service",
 				EndpointURL:                 "http://endpoint.mock",
@@ -110,6 +109,23 @@ func TestStartConfigurationPolling(t *testing.T) {
 					},
 				},
 			},
+			shouldBeOrganizationInway: true,
+		},
+		"happy_flow_not_organization_inway": {
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
+				managementClient := mock_api.NewMockManagementClient(ctrl)
+
+				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(&api.Settings{OrganizationInway: "mock-inway-different"}, nil)
+
+				managementClient.EXPECT().ListServices(gomock.Any(), &api.ListServicesRequest{
+					InwayName: "mock-inway",
+				}).Return(&api.ListServicesResponse{
+					Services: []*api.ListServicesResponse_Service{},
+				}, nil)
+				return managementClient
+			},
+			expectError:               false,
+			shouldBeOrganizationInway: false,
 		},
 	}
 
@@ -126,23 +142,22 @@ func TestStartConfigurationPolling(t *testing.T) {
 			})
 
 			params := &Params{
-				Context:                      ctx,
-				Logger:                       zap.NewNop(),
-				Txlogger:                     nil,
-				ManagementClient:             tc.managementClient(ctrl),
-				ManagementProxy:              nil,
-				Name:                         "mock-inway",
-				Address:                      "localhost:1812",
-				MonitoringAddress:            "localhost:1813",
-				ListenManagementAddress:      "",
-				OrgCertBundle:                cert,
-				DirectoryRegistrationAddress: "localhost:1815",
+				Context:                 ctx,
+				Logger:                  zap.NewNop(),
+				Txlogger:                nil,
+				ManagementClient:        tc.managementClient(ctrl),
+				ManagementProxy:         nil,
+				Name:                    "mock-inway",
+				Address:                 "localhost:1812",
+				MonitoringAddress:       "localhost:1813",
+				ListenManagementAddress: "",
+				OrgCertBundle:           cert,
 			}
 
 			iw, err := NewInway(params)
 			assert.Nil(t, err)
 
-			err = iw.startConfigurationPolling(ctx)
+			err = iw.retrieveAndUpdateConfig()
 			if tc.expectError {
 				assert.EqualError(t, err, tc.expectedErrorMessage)
 			}
@@ -153,6 +168,8 @@ func TestStartConfigurationPolling(t *testing.T) {
 
 				assert.Equal(t, tc.expectedService, service)
 			}
+
+			assert.Equal(t, tc.shouldBeOrganizationInway, iw.isOrganizationInway)
 		})
 	}
 }

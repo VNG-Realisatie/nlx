@@ -42,17 +42,16 @@ func TestInwayApiSpec(t *testing.T) {
 	ctx := context.Background()
 
 	params := &Params{
-		Context:                      ctx,
-		Logger:                       logger,
-		Txlogger:                     nil,
-		ManagementClient:             nil,
-		ManagementProxy:              nil,
-		Name:                         "my-inway",
-		Address:                      "localhost:1811",
-		MonitoringAddress:            "localhost:1812",
-		ListenManagementAddress:      "localhost:1813",
-		OrgCertBundle:                cert,
-		DirectoryRegistrationAddress: "localhost:1815",
+		Context:                 ctx,
+		Logger:                  logger,
+		Txlogger:                nil,
+		ManagementClient:        nil,
+		ManagementProxy:         nil,
+		Name:                    "my-inway",
+		Address:                 "localhost:1811",
+		MonitoringAddress:       "localhost:1812",
+		ListenManagementAddress: "localhost:1813",
+		OrgCertBundle:           cert,
 	}
 
 	iw, err := NewInway(params)
