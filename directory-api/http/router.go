@@ -11,14 +11,14 @@ import (
 	"github.com/go-chi/chi"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
 func createRouter(s *Server) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Get("/api/swagger.json", func(w http.ResponseWriter, req *http.Request) {
-		_, err := io.Copy(w, strings.NewReader(inspectionapi.SwaggerJSONDirectoryInspection))
+		_, err := io.Copy(w, strings.NewReader(directoryapi.SwaggerJSONDirectory))
 		if err != nil {
 			s.logger.Error("failed writing response")
 		}
