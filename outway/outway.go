@@ -25,7 +25,7 @@ import (
 	"go.nlx.io/nlx/common/nlxversion"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/outway/plugins"
 )
@@ -38,21 +38,21 @@ type Organization struct {
 }
 
 type Outway struct {
-	ctx                       context.Context
-	wg                        *sync.WaitGroup
-	organization              *Organization // the organization running this outway
-	orgCert                   *common_tls.CertificateBundle
-	logger                    *zap.Logger
-	txlogger                  transactionlog.TransactionLogger
-	directoryInspectionClient inspectionapi.DirectoryInspectionClient
-	httpServer                *http.Server
-	monitorService            *monitoring.Service
-	requestHTTPHandler        loggerHTTPHandler
-	forwardingHTTPProxy       *httputil.ReverseProxy
-	servicesLock              sync.RWMutex
-	servicesHTTP              map[string]HTTPService
-	servicesDirectory         map[string]*inspectionapi.ListServicesResponse_Service
-	plugins                   []plugins.Plugin
+	ctx                 context.Context
+	wg                  *sync.WaitGroup
+	organization        *Organization // the organization running this outway
+	orgCert             *common_tls.CertificateBundle
+	logger              *zap.Logger
+	txlogger            transactionlog.TransactionLogger
+	directoryClient     directoryapi.DirectoryClient
+	httpServer          *http.Server
+	monitorService      *monitoring.Service
+	requestHTTPHandler  loggerHTTPHandler
+	forwardingHTTPProxy *httputil.ReverseProxy
+	servicesLock        sync.RWMutex
+	servicesHTTP        map[string]HTTPService
+	servicesDirectory   map[string]*directoryapi.ListServicesResponse_Service
+	plugins             []plugins.Plugin
 }
 
 func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) error {
@@ -94,7 +94,7 @@ func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string)
 	return nil
 }
 
-func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) error {
+func (o *Outway) startDirectoryInspector(directoryAddress string) error {
 	directoryDialCredentials := credentials.NewTLS(o.orgCert.TLSConfig())
 	directoryDialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(directoryDialCredentials),
@@ -106,15 +106,15 @@ func (o *Outway) startDirectoryInspector(directoryInspectionAddress string) erro
 	defer directoryConnCtxCancel()
 
 	directoryConn, err := grpc.DialContext(
-		directoryConnCtx, directoryInspectionAddress, directoryDialOptions...)
+		directoryConnCtx, directoryAddress, directoryDialOptions...)
 	if err != nil {
 		o.logger.Fatal("failed to setup connection to directory service", zap.Error(err))
 	}
 
-	o.directoryInspectionClient = inspectionapi.NewDirectoryInspectionClient(directoryConn)
+	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
 	o.logger.Info(
-		"directory inspection client setup complete",
-		zap.String("directory-inspection-address", directoryInspectionAddress))
+		"directory client setup complete",
+		zap.String("directory-address", directoryAddress))
 
 	// update service for the first time
 	err = o.updateServiceList()
@@ -135,7 +135,7 @@ func NewOutway(
 	managementClient api.ManagementClient,
 	monitoringAddress string,
 	orgCert *common_tls.CertificateBundle,
-	directoryInspectionAddress,
+	directoryAddress,
 	authServiceURL,
 	authCAPath string,
 	useAsHTTPProxy bool) (*Outway, error) {
@@ -167,7 +167,7 @@ func NewOutway(
 		orgCert: orgCert,
 
 		servicesHTTP:      make(map[string]HTTPService),
-		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 	}
 
 	if useAsHTTPProxy {
@@ -206,7 +206,7 @@ func NewOutway(
 		plugins.NewStripHeadersPlugin(o.organization.serialNumber),
 	}
 
-	err = o.startDirectoryInspector(directoryInspectionAddress)
+	err = o.startDirectoryInspector(directoryAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -260,22 +260,22 @@ func (o *Outway) keepServiceListUpToDate() {
 	}
 }
 
-func serviceKey(s *inspectionapi.ListServicesResponse_Service) string {
+func serviceKey(s *directoryapi.ListServicesResponse_Service) string {
 	return s.Organization.SerialNumber + "." + s.Name
 }
 
 func (o *Outway) createService(
-	serviceToImplement *inspectionapi.ListServicesResponse_Service,
+	serviceToImplement *directoryapi.ListServicesResponse_Service,
 ) {
 	// Look for healthy inwayaddresses unless it there is only one
 	// known address.
 	moreEndpoints := len(serviceToImplement.Inways) > 1
-	inways := []inspectionapi.Inway{}
+	inways := []directoryapi.Inway{}
 
 	for _, inway := range serviceToImplement.Inways {
 		inwayAddress := inway.Address
 
-		healthy := inway.State == inspectionapi.Inway_UP
+		healthy := inway.State == directoryapi.Inway_UP
 
 		if healthy {
 			// we want to use only healthy endpoints.
@@ -284,8 +284,8 @@ func (o *Outway) createService(
 			// for testing / setup purposes.
 
 			// Cloned this way to avoid the following error:
-			// govet: copylocks: call of append copies lock value: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
-			inways = append(inways, inspectionapi.Inway{
+			// govet: copylocks: call of append copies lock value: go.nlx.io/nlx/directory-api/directoryapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+			inways = append(inways, directoryapi.Inway{
 				Address: inway.Address,
 				State:   inway.State,
 			})
@@ -311,8 +311,8 @@ func (o *Outway) createService(
 			)
 
 			// Cloned this way to avoid the following error:
-			// govet: copylocks: call of append copies lock value: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
-			inways = append(inways, inspectionapi.Inway{
+			// govet: copylocks: call of append copies lock value: go.nlx.io/nlx/directory-api/directoryapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+			inways = append(inways, directoryapi.Inway{
 				Address: inway.Address,
 				State:   inway.State,
 			})
@@ -365,7 +365,7 @@ func (o *Outway) createService(
 
 func (o *Outway) updateServiceList() error {
 	if o.servicesDirectory == nil {
-		o.servicesDirectory = make(map[string]*inspectionapi.ListServicesResponse_Service)
+		o.servicesDirectory = make(map[string]*directoryapi.ListServicesResponse_Service)
 	}
 
 	if o.servicesHTTP == nil {
@@ -374,7 +374,7 @@ func (o *Outway) updateServiceList() error {
 
 	ctx := context.TODO()
 
-	resp, err := o.directoryInspectionClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{})
+	resp, err := o.directoryClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

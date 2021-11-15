@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"log"
 	"time"
 
@@ -35,7 +36,8 @@ var options struct {
 
 	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
-	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list" required:"true"`
+	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
+	DirectoryAddress           string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
 
 	UseAsHTTPProxy       bool   `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
 	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
@@ -56,20 +58,7 @@ var options struct {
 
 // nolint:funlen,gocyclo // this is the main function
 func main() {
-	args, err := flags.Parse(&options)
-	if err != nil {
-		if et, ok := err.(*flags.Error); ok {
-			if et.Type == flags.ErrHelp {
-				return
-			}
-		}
-
-		log.Fatalf("error parsing flags: %v", err)
-	}
-
-	if len(args) > 0 {
-		log.Fatalf("unexpected arguments: %v", args)
-	}
+	parseOptions()
 
 	p := process.NewProcess()
 
@@ -163,7 +152,7 @@ func main() {
 		client,
 		options.MonitoringAddress,
 		orgCert,
-		options.DirectoryInspectionAddress,
+		options.DirectoryAddress,
 		options.AuthorizationServiceAddress,
 		options.AuthorizationCA,
 		options.UseAsHTTPProxy)
@@ -191,5 +180,35 @@ func main() {
 
 	if logDB != nil {
 		logDB.Close()
+	}
+}
+
+func parseOptions() {
+	args, err := flags.Parse(&options)
+	if err != nil {
+		if et, ok := err.(*flags.Error); ok {
+			if et.Type == flags.ErrHelp {
+				return
+			}
+		}
+
+		log.Fatalf("error parsing flags: %v", err)
+	}
+
+	if len(args) > 0 {
+		log.Fatalf("unexpected arguments: %v", args)
+	}
+
+	// Deprecated flags
+	if options.DirectoryInspectionAddress != "" {
+		log.Println("Flag --directory-inspection-address has been deprecated, please use '--directory-address' instead")
+	}
+
+	if options.DirectoryAddress == "" {
+		if options.DirectoryInspectionAddress == "" {
+			log.Fatal(errors.New("directory-address is required"))
+		}
+
+		options.DirectoryAddress = options.DirectoryInspectionAddress
 	}
 }

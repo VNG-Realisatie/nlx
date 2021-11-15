@@ -23,7 +23,7 @@ import (
 	"go.nlx.io/nlx/common/monitoring"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	mock "go.nlx.io/nlx/outway/mock"
 	"go.nlx.io/nlx/outway/plugins"
 )
@@ -67,7 +67,7 @@ func TestOutwayListen(t *testing.T) {
 	// Create a outway with a mock service
 	outway := &Outway{
 		servicesHTTP:      make(map[string]HTTPService),
-		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 		logger:            logger,
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
@@ -95,16 +95,16 @@ func TestOutwayListen(t *testing.T) {
 
 	for i := 0; i < 11; i++ {
 		outway.servicesHTTP["00000000000000000001.mockservice"+strconv.Itoa(i)] = mockService
-		inwayMessage := inspectionapi.ListServicesResponse_Service{
+		inwayMessage := directoryapi.ListServicesResponse_Service{
 			Name: "mockservice" + strconv.Itoa(i),
-			Organization: &inspectionapi.Organization{
+			Organization: &directoryapi.Organization{
 				SerialNumber: "00000000000000000001",
 				Name:         "test-org",
 			},
-			Inways: []*inspectionapi.Inway{
+			Inways: []*directoryapi.Inway{
 				{
 					Address: "mock-service-a-1:123",
-					State:   inspectionapi.Inway_UP,
+					State:   directoryapi.Inway_UP,
 				},
 			},
 		}
@@ -113,16 +113,16 @@ func TestOutwayListen(t *testing.T) {
 
 	// Setup a Failing mock service.
 	outway.servicesHTTP["00000000000000000001.mockservicefail"] = mockFailService
-	inwayMessage := inspectionapi.ListServicesResponse_Service{
+	inwayMessage := directoryapi.ListServicesResponse_Service{
 		Name: "mockservicefail",
-		Organization: &inspectionapi.Organization{
+		Organization: &directoryapi.Organization{
 			SerialNumber: "00000000000000000001",
 			Name:         "test-org",
 		},
-		Inways: []*inspectionapi.Inway{
+		Inways: []*directoryapi.Inway{
 			{
 				Address: "mock-service-fail-1:123",
-				State:   inspectionapi.Inway_UP,
+				State:   directoryapi.Inway_UP,
 			},
 		},
 	}
@@ -163,7 +163,7 @@ func TestOutwayListen(t *testing.T) {
 func createMockOutway() *Outway {
 	return &Outway{
 		servicesHTTP:      make(map[string]HTTPService),
-		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 		logger:            zap.NewNop(),
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
@@ -410,7 +410,7 @@ func TestFailingTransport(t *testing.T) {
 	// Create a outway with a mock service
 	outway := &Outway{
 		servicesHTTP:      make(map[string]HTTPService),
-		servicesDirectory: make(map[string]*inspectionapi.ListServicesResponse_Service),
+		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 		logger:            logger,
 		txlogger:          transactionlog.NewDiscardTransactionLogger(),
 	}
@@ -433,16 +433,16 @@ func TestFailingTransport(t *testing.T) {
 		},
 	}
 
-	inwayMessage := inspectionapi.ListServicesResponse_Service{
+	inwayMessage := directoryapi.ListServicesResponse_Service{
 		Name: "mockservice",
-		Organization: &inspectionapi.Organization{
+		Organization: &directoryapi.Organization{
 			SerialNumber: "00000000000000000001",
 			Name:         "test-org",
 		},
-		Inways: []*inspectionapi.Inway{
+		Inways: []*directoryapi.Inway{
 			{
 				Address: "mock-service-:123",
-				State:   inspectionapi.Inway_UP,
+				State:   directoryapi.Inway_UP,
 			},
 		},
 	}
@@ -459,9 +459,9 @@ func TestFailingTransport(t *testing.T) {
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), cert,
 		"00000000000000000001", "mockservice",
-		[]inspectionapi.Inway{{
+		[]directoryapi.Inway{{
 			Address: "inway.00000000000000000001",
-			State:   inspectionapi.Inway_UP,
+			State:   directoryapi.Inway_UP,
 		}})
 
 	assert.Nil(t, err)

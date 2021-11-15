@@ -18,7 +18,7 @@ import (
 	"golang.org/x/net/http2"
 
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
 var errNoInwaysAvailable = errors.New("no inways available")
@@ -35,7 +35,7 @@ type RoundRobinLoadBalancedHTTPService struct {
 	organizationSerialNumber string
 	serviceName              string
 
-	inways          []inspectionapi.Inway
+	inways          []directoryapi.Inway
 	loadBalanceLock sync.Mutex
 	count           int
 
@@ -80,7 +80,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 	cert *common_tls.CertificateBundle,
 	organizationSerialNumber,
 	serviceName string,
-	inways []inspectionapi.Inway,
+	inways []directoryapi.Inway,
 ) (*RoundRobinLoadBalancedHTTPService, error) {
 	if len(inways) == 0 {
 		return nil, errNoInwaysAvailable
@@ -99,7 +99,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 	roundTripTransport := newRoundTripHTTPTransport(logger, tlsConfig)
 
 	// index is used instead of `_, inway` to avoid the following error:
-	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-api/directoryapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
 	for i := range inways {
 		endpointURL, err := url.Parse("https://" + inways[i].Address)
 		if err != nil {
@@ -142,7 +142,7 @@ func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWrit
 }
 
 // GetInwayAddresses returns the possible inwayaddresses of the httpservice
-func (s *RoundRobinLoadBalancedHTTPService) GetInways() []inspectionapi.Inway {
+func (s *RoundRobinLoadBalancedHTTPService) GetInways() []directoryapi.Inway {
 	return s.inways
 }
 
@@ -150,7 +150,7 @@ func (s *RoundRobinLoadBalancedHTTPService) GetInwayAddresses() []string {
 	addresses := []string{}
 
 	// index is used instead of `_, inway` to avoid the following error:
-	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-inspection-api/inspectionapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
+	// govet: copylocks: range var inway copies lock: go.nlx.io/nlx/directory-api/directoryapi.Inway contains google.golang.org/protobuf/internal/impl.MessageState contains sync.Mutex
 	for i := range s.inways {
 		addresses = append(addresses, s.inways[i].Address)
 	}

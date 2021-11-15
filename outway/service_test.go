@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
 const (
@@ -35,14 +35,14 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 	l, err := NewRoundRobinLoadBalancedHTTPService(
 		zap.NewNop(), cert,
 		organizationSerialNumber, serviceName,
-		[]inspectionapi.Inway{
+		[]directoryapi.Inway{
 			{
 				Address: inwayAddresses[0],
-				State:   inspectionapi.Inway_UP,
+				State:   directoryapi.Inway_UP,
 			},
 			{
 				Address: inwayAddresses[1],
-				State:   inspectionapi.Inway_UP,
+				State:   directoryapi.Inway_UP,
 			},
 		})
 

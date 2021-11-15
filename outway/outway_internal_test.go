@@ -17,8 +17,8 @@ import (
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi"
-	"go.nlx.io/nlx/directory-inspection-api/inspectionapi/mock"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/directory-api/api/mock"
 )
 
 //nolint:funlen // it is a test
@@ -26,7 +26,7 @@ func TestUpdateServiceList(t *testing.T) {
 	// Create mock directory client
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	client := mock.NewMockDirectoryInspectionClient(ctrl)
+	client := mock.NewMockDirectoryClient(ctrl)
 
 	logger := zaptest.NewLogger(t)
 
@@ -37,12 +37,12 @@ func TestUpdateServiceList(t *testing.T) {
 	)
 
 	o := &Outway{
-		ctx:                       context.Background(),
-		directoryInspectionClient: client,
-		logger:                    logger,
-		orgCert:                   cert,
-		servicesHTTP:              make(map[string]HTTPService),
-		servicesDirectory:         make(map[string]*inspectionapi.ListServicesResponse_Service),
+		ctx:               context.Background(),
+		directoryClient:   client,
+		logger:            logger,
+		orgCert:           cert,
+		servicesHTTP:      make(map[string]HTTPService),
+		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 	}
 
 	var err error
@@ -60,35 +60,35 @@ func TestUpdateServiceList(t *testing.T) {
 	err = o.updateServiceList()
 	assert.EqualError(t, err, "failed to fetch services from directory: mock error")
 
-	mockServiceAInways := []*inspectionapi.Inway{
+	mockServiceAInways := []*directoryapi.Inway{
 		{
 			Address: "mock-service-a-1:123",
-			State:   inspectionapi.Inway_UP,
+			State:   directoryapi.Inway_UP,
 		},
 		{
 			Address: "mock-service-a-2:123",
-			State:   inspectionapi.Inway_DOWN,
+			State:   directoryapi.Inway_DOWN,
 		},
 	}
 
-	mockServiceBInways := []*inspectionapi.Inway{
+	mockServiceBInways := []*directoryapi.Inway{
 		{
 			Address: "mock-service-b-1:123",
-			State:   inspectionapi.Inway_UP,
+			State:   directoryapi.Inway_UP,
 		},
 		{
 			Address: "mock-service-b-2:123",
-			State:   inspectionapi.Inway_UP,
+			State:   directoryapi.Inway_UP,
 		},
 	}
 
 	// Make the mock directory client provide a list of services when calling ListServices
 	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{}).Return(
-		&inspectionapi.ListServicesResponse{
-			Services: []*inspectionapi.ListServicesResponse_Service{
+		&directoryapi.ListServicesResponse{
+			Services: []*directoryapi.ListServicesResponse_Service{
 				{
 					Name: "mock-service-a",
-					Organization: &inspectionapi.Organization{
+					Organization: &directoryapi.Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "mock-org-a",
 					},
@@ -96,7 +96,7 @@ func TestUpdateServiceList(t *testing.T) {
 				},
 				{
 					Name: "mock-service-b",
-					Organization: &inspectionapi.Organization{
+					Organization: &directoryapi.Organization{
 						SerialNumber: "00000000000000000002",
 						Name:         "mock-org-b",
 					},
@@ -104,7 +104,7 @@ func TestUpdateServiceList(t *testing.T) {
 				},
 				{
 					Name: "mock-service-c",
-					Organization: &inspectionapi.Organization{
+					Organization: &directoryapi.Organization{
 						SerialNumber: "00000000000000000003",
 						Name:         "mock-org-c",
 					},
@@ -133,12 +133,12 @@ func TestUpdateServiceList(t *testing.T) {
 
 	tests := []struct {
 		serviceName string
-		inways      []*inspectionapi.Inway
+		inways      []*directoryapi.Inway
 	}{
 		{
 			serviceName: mockServiceAFullName,
 			// only one valid true healthy address
-			inways: []*inspectionapi.Inway{
+			inways: []*directoryapi.Inway{
 				{
 					Address: "mock-service-a-1:123",
 				},
