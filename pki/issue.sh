@@ -13,7 +13,7 @@ PKIS="shared organization-a organization-b"
 for PKI in ${PKIS}; do
   PKI_DIR="${BASE_DIR}/${PKI}"
 
-  for CERT_DIR in $(find "${PKI_DIR}/certs/*" -type d -maxdepth 0 -print); do
+  for CERT_DIR in $(find "${PKI_DIR}/certs/*" -maxdepth 0 -type d -print); do
     CERT="$(basename "${CERT_DIR}")"
     if [ -f "${CERT_DIR}/cert.pem" ] && [ ${FORCE} == 0 ]; then
       continue
