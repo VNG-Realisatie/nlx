@@ -7,6 +7,12 @@
   "tags": [
     {
       "name": "Directory"
+    },
+    {
+      "name": "DirectoryRegistration"
+    },
+    {
+      "name": "DirectoryInspection"
     }
   ],
   "consumes": [

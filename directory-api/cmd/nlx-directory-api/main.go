@@ -110,7 +110,7 @@ func main() {
 
 	httpServer := http.NewServer(db, certificate, logger)
 
-	server, err := NewServer(logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, httpServer)
+	server, err := NewServer(logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, directoryService, directoryService, httpServer)
 	if err != nil {
 		logger.Fatal("could not start server", zap.Error(err))
 	}

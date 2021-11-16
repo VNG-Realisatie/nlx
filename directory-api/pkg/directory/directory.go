@@ -19,6 +19,8 @@ var _ directoryapi.DirectoryServer = &DirectoryService{}
 
 type DirectoryService struct {
 	directoryapi.UnimplementedDirectoryServer
+	directoryapi.UnimplementedDirectoryRegistrationServer
+	directoryapi.UnimplementedDirectoryInspectionServer
 	logger                                *zap.Logger
 	repository                            storage.Repository
 	httpClient                            *http.Client

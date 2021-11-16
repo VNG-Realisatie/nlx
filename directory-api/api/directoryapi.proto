@@ -26,6 +26,34 @@ service Directory {
 	}
 }
 
+// Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
+service DirectoryRegistration {
+	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
+
+	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {}
+
+	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {}
+
+	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
+
+	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {}
+}
+
+// Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
+service DirectoryInspection {
+	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
+
+	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {}
+
+	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {}
+
+	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
+
+	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {}
+}
+
 message RegisterInwayRequest {
 	message RegisterService {
 		string name = 1;

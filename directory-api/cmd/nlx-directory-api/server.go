@@ -57,6 +57,8 @@ func NewServer(
 	addressPlain string,
 	certificate *common_tls.CertificateBundle,
 	directoryService directoryapi.DirectoryServer,
+	directoryRegistrationService directoryapi.DirectoryRegistrationServer,
+	directoryInspectionService directoryapi.DirectoryInspectionServer,
 	httpServer *directory_http.Server) (*Server, error) {
 	server := &Server{}
 
@@ -87,6 +89,8 @@ func NewServer(
 	// start grpc server and attach directory service
 	grpcServer := grpc.NewServer(opts...)
 	directoryapi.RegisterDirectoryServer(grpcServer, directoryService)
+	directoryapi.RegisterDirectoryRegistrationServer(grpcServer, directoryRegistrationService)
+	directoryapi.RegisterDirectoryInspectionServer(grpcServer, directoryInspectionService)
 
 	tlsConfig := certificate.TLSConfig()
 	tlsConfig.InsecureSkipVerify = true //nolint:gosec // local connection; hostname won't match
