@@ -74,29 +74,18 @@ Return the image name of the directory database image
 {{- end -}}
 
 {{/*
-Return the image name of the directory inspection image
+Return the image name of the directory api image
 */}}
-{{- define "nlx-directory.inspectionImage" -}}
+{{- define "nlx-directory.apiImage" -}}
 {{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.image.inspectionRepository -}}
+{{- $repositoryName := .Values.image.apiRepository -}}
 {{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.image.tag .Values.global.imageTag) -}}
 
 {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
 
 {{/*
-Return the image name of the directory registration image
-*/}}
-{{- define "nlx-directory.registrationImage" -}}
-{{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.image.registrationRepository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-
-{{/*
-Return the image name of the directory registration image
+Return the image name of the directory monitor image
 */}}
 {{- define "nlx-directory.monitorImage" -}}
 {{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
@@ -107,7 +96,7 @@ Return the image name of the directory registration image
 {{- end -}}
 
 {{/*
-Return the image name of the directory registration image
+Return the image name of the directory ui image
 */}}
 {{- define "nlx-directory.uiImage" -}}
 {{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}

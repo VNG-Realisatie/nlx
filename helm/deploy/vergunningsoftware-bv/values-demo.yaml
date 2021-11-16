@@ -47,12 +47,11 @@ global:
 
 nlx-outway:
   config:
-    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
 
 nlx-management:
   config:
-    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
-    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
     oidc:
       clientSecret: N6Gr4v8wZKlLuKrMSV1I
       discoveryURL: https://dex.demo.vergunningsoftware.nl

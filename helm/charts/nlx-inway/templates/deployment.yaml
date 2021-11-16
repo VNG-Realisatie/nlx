@@ -69,8 +69,14 @@ spec:
               value: {{ default (include "nlx-inway.fullname" .) .Values.config.name }}
             - name: SELF_ADDRESS
               value: {{ include "nlx-inway.selfAddress" . }}
-            - name: DIRECTORY_REGISTRATION_ADDRESS
-              value: "{{ .Values.config.directoryRegistrationHostname }}:443"
+            - name: DIRECTORY_ADDRESS
+            {{- if .Values.config.directoryHostname }}
+              value: {{ .Values.config.directoryHostname }}:443
+            {{- else if .Values.config.directoryRegistrationHostname }}
+              value: {{ .Values.config.directoryRegistrationHostname }}:443
+            {{ else }}
+              value: {{ required "The field config.directoryHostname is required" .Values.config.directoryHostname }}:443
+            {{ end }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
             - name: TLS_ROOT_CERT

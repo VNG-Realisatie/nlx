@@ -47,7 +47,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ $fullName }}-inspection-plain
+                name: {{ $fullName }}-api-plain
                 port:
                   name: http
         {{- else }}
@@ -57,7 +57,7 @@ spec:
               name: http
           - path: /api
             backend:
-              serviceName: {{ $fullName }}-inspection-plain
+              serviceName: {{ $fullName }}-api-plain
               name: http
         {{- end }}
   {{- end }}

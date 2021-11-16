@@ -59,8 +59,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | --------- | ----------- | ------- | -------- |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no | 
 | `image.databaseRepository` | Image repository | `nlxio/directory-db` | no |
-| `image.inspectionRepository` | Image repository | `nlxio/directory-inspection-api` | no |
-| `image.registrationRepository` | Image repository | `nlxio/directory-registration-api` | no |
+| `image.apiRepository` | Image repository | `nlxio/directory-api` | no |
 | `image.monitorRepository` | Image repository | `nlxio/directory-monitor` | no |
 | `image.uiRepository` | Image repository | `nlxio/directory-ui` | no |
 | `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | no |
@@ -76,22 +75,6 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no | 
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | no |
-
-### NLX Directory parameters
-
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
-| `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | yes | 
-| `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
-| `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` | no |
-| `config.oidc.clientSecret` | The OIDC client secret | `""` | yes |
-| `config.oidc.discoveryURL` | The OIDC discovery URL | `""` | yes |
-| `config.oidc.redirectURL` | The OIDC redirect URL | `""` | yes |
-| `config.oidc.sessionSignKey` | The OIDC session sign key | `""` | yes |
-| `config.monitorOfflineServiceTTL` | Time, in seconds, a service can be offline before being removed from the directory | `86400` | no |
-| `config.resetDatabase` | If `true` the database will be cleared after installing or upgrading | `false` | no |
 
 ## Postgres parameters
 
@@ -123,11 +106,9 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | no |
-| `service.inspection.port` | Port exposed by the service for the inspection API | `443` | no |
-| `service.inspection.plainPort` | Port exposed by the plain service for inspection API | `80` | no |
-| `service.inspection.annotations` | Annotations for inspection API | `{}` | no |
-| `service.registration.port` | Port exposed by the service for directory registration API | `443` | no |
-| `service.registration.annotations` | Annotations for registration API | `{}` | no |
+| `service.port` | Port exposed by the service for the directory API | `443` | no |
+| `service.plainPort` | Port exposed by the plain service for directory API | `80` | no |
+| `service.annotations` | Annotations for directory API | `{}` | no |
 | `ui.enabled` | Enable the Directory UI | `true` | no |
 | `ui.port` | Port exposed by the directory UI service | `80` | no |
 | `ui.ingress.enabled` | Enable Ingress | `false` | no |

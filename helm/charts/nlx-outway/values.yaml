@@ -23,6 +23,7 @@ config:
   logType: live
   logLevel: info
   name: ""
+  directoryHostname: ""
   directoryInspectionHostname: ""
   authorizationService:
     enabled: false

@@ -257,7 +257,7 @@ managementAPI:
 ################
 nlx-outway:
   config:
-    directoryInspectionHostname: shared-nlx-directory-inspection
+    directoryHostname: shared-nlx-directory-api
     authorizationService:
       enabled: true
       url: https://gemeente-stijns-auth-service
@@ -278,7 +278,7 @@ nlx-outway:
 
 nlx-inway:
   config:
-    directoryRegistrationHostname: shared-nlx-directory-registration
+    directoryHostname: shared-nlx-directory-api
     managementAPI:
       address: gemeente-stijns-nlx-management-api:443
   transactionLog:
@@ -298,8 +298,7 @@ nlx-inway:
 
 nlx-management:
   config:
-    directoryInspectionHostname: shared-nlx-directory-inspection
-    directoryRegistrationHostname: shared-nlx-directory-registration
+    directoryHostname: shared-nlx-directory-api
     oidc:
       clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
       discoveryURL: http://dex.gemeente-stijns.nlx.minikube

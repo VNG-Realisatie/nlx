@@ -20,9 +20,13 @@
             }
           }
         },
-        "directoryInspectionHostname": {
+        "directoryHostname": {
           "type": "string",
           "description": "Used to retrieve information about services from the directory."
+        },
+        "directoryInspectionHostname": {
+          "type": "string",
+          "description": "Used to retrieve information about services from the directory. This field has been deprecated use directoryHostname instead."
         },
         "name": {
           "type": "string",

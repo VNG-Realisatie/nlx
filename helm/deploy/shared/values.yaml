@@ -145,8 +145,7 @@ ca:
           - NLX Directory
       commonName: shared-nlx-directory
       dnsNames:
-        - shared-nlx-directory-inspection
-        - shared-nlx-directory-registration
+        - shared-nlx-directory-api
       issuerRef:
         name: shared
 

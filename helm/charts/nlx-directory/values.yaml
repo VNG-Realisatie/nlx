@@ -8,8 +8,7 @@ global:
 image:
   registry: docker.io
   databaseRepository: nlxio/directory-db
-  inspectionRepository: nlxio/directory-inspection-api
-  registrationRepository: nlxio/directory-registration-api
+  apiRepository: nlxio/directory-api
   monitorRepository: nlxio/directory-monitor
   uiRepository: nlxio/directory-ui
   tag: ""
@@ -62,13 +61,9 @@ serviceAccount:
 
 service:
   type: ClusterIP
-  inspection:
-    port: 443
-    plainPort: 80
-    annotations: { }
-  registration:
-    port: 443
-    annotations: { }
+  port: 443
+  plainPort: 80
+  annotations: { }
 
 podSecurityContext:
   fsGroup: 1001

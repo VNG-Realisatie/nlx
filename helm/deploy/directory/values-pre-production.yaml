@@ -14,11 +14,6 @@ nlx-directory:
             - directory.preprod.nlx.io
 
   service:
-    inspection:
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
-      loadBalancerIP: 20.86.244.123
-    registration:
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
-      loadBalancerIP: 20.86.243.126
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+    loadBalancerIP: 20.86.244.123

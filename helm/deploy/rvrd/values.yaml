@@ -285,8 +285,7 @@ ca:
 ################
 nlx-management:
   config:
-    directoryInspectionHostname: shared-nlx-directory-inspection
-    directoryRegistrationHostname: shared-nlx-directory-registration
+    directoryHostname: shared-nlx-directory-api
     oidc:
       clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
       discoveryURL: http://dex.rvrd.nlx.minikube
@@ -358,7 +357,7 @@ dex:
 
 nlx-inway:
   config:
-    directoryRegistrationHostname: shared-nlx-directory-registration
+    directoryHostname: shared-nlx-directory-api
     managementAPI:
       address: rvrd-nlx-management-api:443
   transactionLog:

@@ -9,9 +9,13 @@
     "config": {
       "type": "object",
       "properties": {
+        "directoryHostname": {
+          "type": "string",
+          "description": "Used to retrieve information about services from the NLX Directory and register your Outways/Inways to the NLX network."
+        },
         "directoryInspectionHostname": {
           "type": "string",
-          "description": "Used to retrieve information about services from the NLX Directory."
+          "description": "Used to retrieve information about services from the NLX Directory. This field has been deprecated use directoryHostname instead"
         },
         "directoryRegistrationHostname": {
           "type": "string",

@@ -55,8 +55,7 @@ ca:
 ################
 nlx-management:
   config:
-    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
-    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
     oidc:
       clientSecret: gKV1nhAtGx2fJLMbx0ao
       discoveryURL: https://dex.demo.rvrd.nl
@@ -94,7 +93,7 @@ dex:
 nlx-inway:
   config:
     selfAddress: inway.demo.rvrd.nl:443
-    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
   service:
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 

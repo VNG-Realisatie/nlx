@@ -64,12 +64,11 @@ managementAPI:
 ################
 nlx-outway:
   config:
-    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
 
 nlx-management:
   config:
-    directoryInspectionHostname: directory-inspection-api.demo.nlx.io
-    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
     oidc:
       clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
       discoveryURL: https://dex.demo.gemeentestijns.nl
@@ -107,7 +106,7 @@ dex:
 nlx-inway:
   config:
     selfAddress: inway.demo.gemeentestijns.nl:443
-    directoryRegistrationHostname: directory-registration-api.demo.nlx.io
+    directoryHostname: directory-api.demo.nlx.io
   service:
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static

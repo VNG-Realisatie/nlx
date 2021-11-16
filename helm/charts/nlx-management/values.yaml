@@ -23,6 +23,7 @@ fullnameOverride: ""
 config:
   logType: live
   logLevel: info
+  directoryHostname: ""
   directoryInspectionHostname: ""
   directoryRegistrationHostname: ""
   sessionCookieSecure: false

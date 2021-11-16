@@ -96,11 +96,16 @@ spec:
             - name: TRANSACTION_LOG_DSN
               value: 'postgres://$(TRANSACTION_LOG_USER):$(TRANSACTION_LOG_PASSWORD)@$(TRANSACTION_LOG_HOST):$(TRANSACTION_LOG_PORT)/$(TRANSACTION_LOG_DATABASE)'
           {{- end}}
-
-            - name: DIRECTORY_INSPECTION_ADDRESS
-              value: {{ required "Directory inspection hostname is required" .Values.config.directoryInspectionHostname }}:443
-            - name: DIRECTORY_REGISTRATION_ADDRESS
-              value: {{ required "Directory registration hostname is required" .Values.config.directoryRegistrationHostname }}:443
+            - name: DIRECTORY_ADDRESS
+            {{- if .Values.config.directoryHostname }}
+              value: {{ .Values.config.directoryHostname }}:443
+            {{- else if .Values.config.directoryInspectionHostname }}
+              value: {{ .Values.config.directoryInspectionHostname }}:443
+            {{- else if .Values.config.directoryRegistrationHostname }}
+              value: {{ .Values.config.directoryRegistrationHostname }}:443
+            {{ else }}
+              value: {{ required "The field config.directoryHostname is required" .Values.config.directoryHostname }}:443
+            {{ end }}
           {{- if .Values.config.enableBasicAuth }}
             - name: ENABLE_BASIC_AUTH
               value: "true"

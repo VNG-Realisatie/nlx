@@ -240,7 +240,7 @@ managementAPI:
 ################
 nlx-outway:
   config:
-    directoryInspectionHostname: shared-nlx-directory-inspection
+    directoryHostname: shared-nlx-directory-api
     managementAPI:
       address: vergunningsoftware-bv-nlx-management-api:443
   transactionLog:
@@ -259,8 +259,7 @@ nlx-outway:
 
 nlx-management:
   config:
-    directoryInspectionHostname: shared-nlx-directory-inspection
-    directoryRegistrationHostname: shared-nlx-directory-registration
+    directoryHostname: shared-nlx-directory-api
     oidc:
       clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
       discoveryURL: http://dex.vergunningsoftware-bv.nlx.minikube

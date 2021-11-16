@@ -9,9 +9,13 @@
     "config": {
       "type": "object",
       "properties": {
+        "directoryHostname": {
+          "type": "string",
+          "description": "ddress of the NLX Directory where the Inway will register its services."
+        },
         "directoryRegistrationHostname": {
           "type": "string",
-          "description": "Address of the NLX Directory where the Inway will register its services."
+          "description": "Address of the NLX Directory where the Inway will register its services. This field has been deprecated use directoryHostname instead"
         },
         "logLevel": {
           "type": "string",

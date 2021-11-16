@@ -88,8 +88,14 @@ spec:
           {{- end }}
             - name: MONITORING_ADDRESS
               value: 0.0.0.0:8081
-            - name: DIRECTORY_INSPECTION_ADDRESS
+            - name: DIRECTORY_ADDRESS
+            {{- if .Values.config.directoryHostname }}
+              value: {{ .Values.config.directoryHostname }}:443
+            {{- else if .Values.config.directoryInspectionHostname }}
               value: {{ .Values.config.directoryInspectionHostname }}:443
+            {{ else }}
+              value: {{ required "The field config.directoryHostname is required" .Values.config.directoryHostname }}:443
+            {{ end }}
           {{- if .Values.config.authorizationService.enabled }}
             - name: AUTHORIZATION_SERVICE_ADDRESS
               value: {{ .Values.config.authorizationService.url }}
