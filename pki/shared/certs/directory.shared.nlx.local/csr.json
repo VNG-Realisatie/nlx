@@ -5,11 +5,7 @@
     "size": 4096
   },
   "hosts": [
-    "directory-inspection-api.shared.nlx.local",
-    "directory-registration-api.shared.nlx.local",
     "directory-api.shared.nlx.local",
-    "directory-inspection-api.shared.nlx.minikube",
-    "directory-registration-api.shared.nlx.minikube",
     "directory-api.shared.nlx.minikube"
   ],
   "names": [
