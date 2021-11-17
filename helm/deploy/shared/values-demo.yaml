@@ -136,6 +136,7 @@ ca:
     directory-api:
       commonName: directory-api.demo.nlx.io
       dnsNames:
+        - directory-api.demo.nlx.io
         - directory-inspection-api.demo.nlx.io
         - directory-registration-api.demo.nlx.io
 
@@ -160,14 +161,9 @@ nlx-directory:
             - directory.nlx.io
   service:
     type: LoadBalancer
-    inspection:
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
-      loadBalancerIP: 20.86.243.85
-    registration:
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
-      loadBalancerIP: 20.86.244.209
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
+    loadBalancerIP: 20.86.243.85
 
 nlx-docs:
   replicaCount: 3
