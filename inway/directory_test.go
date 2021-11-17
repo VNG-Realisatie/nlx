@@ -12,8 +12,8 @@ import (
 
 	"go.nlx.io/nlx/common/nlxversion"
 	common_tls "go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
-	mock_directory_registration "go.nlx.io/nlx/directory-registration-api/registrationapi/mock"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
+	mock_directory "go.nlx.io/nlx/directory-api/api/mock"
 )
 
 func TestRegisterToDirectory(t *testing.T) {
@@ -24,19 +24,19 @@ func TestRegisterToDirectory(t *testing.T) {
 	)
 
 	tests := map[string]struct {
-		directoryClient func(ctx context.Context, ctrl *gomock.Controller) *mock_directory_registration.MockDirectoryRegistrationClient
+		directoryClient func(ctx context.Context, ctrl *gomock.Controller) *mock_directory.MockDirectoryClient
 		expectedError   error
 	}{
 		"registration_failed": {
-			directoryClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_directory_registration.MockDirectoryRegistrationClient {
+			directoryClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_directory.MockDirectoryClient {
 				nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")
 
-				directoryClient := mock_directory_registration.NewMockDirectoryRegistrationClient(ctrl)
-				directoryClient.EXPECT().RegisterInway(nlxVersion, &registrationapi.RegisterInwayRequest{
+				directoryClient := mock_directory.NewMockDirectoryClient(ctrl)
+				directoryClient.EXPECT().RegisterInway(nlxVersion, &directoryapi.RegisterInwayRequest{
 					InwayName:           "mock-inway",
 					InwayAddress:        "localhost:1812",
 					IsOrganizationInway: false,
-					Services:            []*registrationapi.RegisterInwayRequest_RegisterService{},
+					Services:            []*directoryapi.RegisterInwayRequest_RegisterService{},
 				}).Return(nil, fmt.Errorf("arbitrary error"))
 
 				return directoryClient
@@ -44,16 +44,16 @@ func TestRegisterToDirectory(t *testing.T) {
 			expectedError: fmt.Errorf("arbitrary error"),
 		},
 		"error_in_register_inway_response": {
-			directoryClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_directory_registration.MockDirectoryRegistrationClient {
+			directoryClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_directory.MockDirectoryClient {
 				nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")
 
-				directoryClient := mock_directory_registration.NewMockDirectoryRegistrationClient(ctrl)
-				directoryClient.EXPECT().RegisterInway(nlxVersion, &registrationapi.RegisterInwayRequest{
+				directoryClient := mock_directory.NewMockDirectoryClient(ctrl)
+				directoryClient.EXPECT().RegisterInway(nlxVersion, &directoryapi.RegisterInwayRequest{
 					InwayName:           "mock-inway",
 					InwayAddress:        "localhost:1812",
 					IsOrganizationInway: false,
-					Services:            []*registrationapi.RegisterInwayRequest_RegisterService{},
-				}).Return(&registrationapi.RegisterInwayResponse{
+					Services:            []*directoryapi.RegisterInwayRequest_RegisterService{},
+				}).Return(&directoryapi.RegisterInwayResponse{
 					Error: "call failed",
 				}, nil)
 				return directoryClient
@@ -61,16 +61,16 @@ func TestRegisterToDirectory(t *testing.T) {
 			expectedError: fmt.Errorf("call failed"),
 		},
 		"happy_flow": {
-			directoryClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_directory_registration.MockDirectoryRegistrationClient {
+			directoryClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_directory.MockDirectoryClient {
 				nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")
 
-				directoryClient := mock_directory_registration.NewMockDirectoryRegistrationClient(ctrl)
-				directoryClient.EXPECT().RegisterInway(nlxVersion, &registrationapi.RegisterInwayRequest{
+				directoryClient := mock_directory.NewMockDirectoryClient(ctrl)
+				directoryClient.EXPECT().RegisterInway(nlxVersion, &directoryapi.RegisterInwayRequest{
 					InwayName:           "mock-inway",
 					InwayAddress:        "localhost:1812",
 					IsOrganizationInway: false,
-					Services:            []*registrationapi.RegisterInwayRequest_RegisterService{},
-				}).Return(&registrationapi.RegisterInwayResponse{}, nil)
+					Services:            []*directoryapi.RegisterInwayRequest_RegisterService{},
+				}).Return(&directoryapi.RegisterInwayResponse{}, nil)
 
 				return directoryClient
 			},
@@ -90,16 +90,16 @@ func TestRegisterToDirectory(t *testing.T) {
 			})
 
 			params := &Params{
-				Context:                     ctx,
-				Logger:                      zap.NewNop(),
-				Txlogger:                    nil,
-				ManagementProxy:             nil,
-				Name:                        "mock-inway",
-				Address:                     "localhost:1812",
-				MonitoringAddress:           "localhost:1813",
-				ListenManagementAddress:     "",
-				OrgCertBundle:               cert,
-				DirectoryRegistrationClient: tc.directoryClient(ctx, ctrl),
+				Context:                 ctx,
+				Logger:                  zap.NewNop(),
+				Txlogger:                nil,
+				ManagementProxy:         nil,
+				Name:                    "mock-inway",
+				Address:                 "localhost:1812",
+				MonitoringAddress:       "localhost:1813",
+				ListenManagementAddress: "",
+				OrgCertBundle:           cert,
+				DirectoryClient:         tc.directoryClient(ctx, ctrl),
 			}
 
 			iw, err := NewInway(params)

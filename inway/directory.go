@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/directory-registration-api/registrationapi"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
 const retryFactorDirectory = 10
@@ -57,10 +57,10 @@ func (i *Inway) announceToDirectory(ctx context.Context) {
 }
 
 func (i *Inway) registerToDirectory(ctx context.Context) error {
-	protoServiceDetails := []*registrationapi.RegisterInwayRequest_RegisterService{}
+	protoServiceDetails := []*directoryapi.RegisterInwayRequest_RegisterService{}
 
 	for _, service := range i.services {
-		protoServiceDetails = append(protoServiceDetails, &registrationapi.RegisterInwayRequest_RegisterService{
+		protoServiceDetails = append(protoServiceDetails, &directoryapi.RegisterInwayRequest_RegisterService{
 			Name:                        service.Name,
 			Internal:                    service.Internal,
 			DocumentationUrl:            service.DocumentationURL,
@@ -73,7 +73,7 @@ func (i *Inway) registerToDirectory(ctx context.Context) error {
 		})
 	}
 
-	registerInwayRequest := &registrationapi.RegisterInwayRequest{
+	registerInwayRequest := &directoryapi.RegisterInwayRequest{
 		InwayName:           i.name,
 		InwayAddress:        i.address,
 		IsOrganizationInway: i.isOrganizationInway,
@@ -83,7 +83,7 @@ func (i *Inway) registerToDirectory(ctx context.Context) error {
 	nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")
 	i.logger.Debug("registering inway", zap.Any("RegisterInwayRequest", registerInwayRequest), zap.Any("nlxVersion", nlxVersion))
 
-	resp, err := i.directoryRegistrationClient.RegisterInway(nlxVersion, registerInwayRequest)
+	resp, err := i.directoryClient.RegisterInway(nlxVersion, registerInwayRequest)
 	if err != nil {
 		return err
 	}

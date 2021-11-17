@@ -109,7 +109,7 @@ func main() {
 	}
 
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(context.Background(), "inway"), 1*time.Minute)
-	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryRegistrationAddress, directoryDialOptions...)
+	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryAddress, directoryDialOptions...)
 
 	defer directoryConnCtxCancel()
 
