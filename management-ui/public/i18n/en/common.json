@@ -60,6 +60,7 @@
   "Delegated organization": "Delegated organization",
   "Directory": "Directory",
   "Directory page": "Directory page",
+  "Do you want to remove the inway?": "Are you sure you want to remove the inway? If this inway is used to access services, deleting the inway might cause these services to be unavailable on the NLX network.",
   "Do you want to remove the service?": "Do you want to remove the service?",
   "Do you want to revoke the order?": "Do you want to revoke the order?",
   "Documentation": "Documentation",

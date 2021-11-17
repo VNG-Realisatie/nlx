@@ -37,7 +37,7 @@ const InwayDetails: React.FC<InwayDetailsProps> = ({
 
   const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
     okText: t('Remove'),
-    children: <p>{t('Do you want to remove the service?')}</p>,
+    children: <p>{t('Do you want to remove the inway?')}</p>,
   })
 
   const handleRemove = async () => {

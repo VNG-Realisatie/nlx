@@ -67,7 +67,6 @@ class InwayStore {
       name,
     })
 
-    // TODO: Correct handling + testing
     this.inways.splice(index, 1)
     this.fetchInways()
   }).bind(this)
