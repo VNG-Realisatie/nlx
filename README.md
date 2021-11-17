@@ -65,8 +65,6 @@ Update the `/etc/hosts` file on your system:
 ```
 # NLX
 127.0.0.1     dex.shared.nlx.local
-127.0.0.1     directory-inspection-api.shared.nlx.local
-127.0.0.1     directory-registration-api.shared.nlx.local
 127.0.0.1     directory-api.shared.nlx.local
 
 127.0.0.1     management-api.organization-a.nlx.local
@@ -78,8 +76,6 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     management.organization-b.nlx.local
 
 ::1           dex.shared.nlx.local
-::1           directory-inspection-api.shared.nlx.local
-::1           directory-registration-api.shared.nlx.local
 ::1           directory-api.shared.nlx.local
 
 ::1           management-api.organization-a.nlx.local
@@ -99,8 +95,6 @@ This will start the following services:
 
 Service                         | gRPC | HTTP
 ------------------------------- | ---- | ----
-[S] directory-inspection-api    | 7901 | 7902
-[S] directory-registration-api  | 7903 |
 [S] directory-api               | 7904 | 7905
 [S] directory-monitor           |
 [A] management-api              | 7911 | 7912

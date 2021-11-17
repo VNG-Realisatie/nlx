@@ -58,12 +58,10 @@ Follow the approval process and submit the certificate signing request *org.csr*
 
 ## Environments
 
-Inways and outways use the `DIRECTORY_REGISTRATION_ADDRESS` and `DIRECTORY_INSPECTION_ADDRESS` settings to connect to the directory. Use the following values to connect to the (pre-)production environments:
+Inways and outways use the `DIRECTORY_ADDRESS` setting to connect to the directory. Use the following values to connect to the (pre-)production environments:
 
 **Pre-production**
-- directory-inspection-api.preprod.nlx.io
-- directory-registration-api.preprod.nlx.io
+- directory-api.preprod.nlx.io
 
 **Production**
-- directory-inspection-api.nlx.io
-- directory-registration-api.nlx.io
+- directory-api.nlx.io
