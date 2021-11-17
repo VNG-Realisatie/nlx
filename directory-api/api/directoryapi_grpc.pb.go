@@ -304,7 +304,7 @@ func NewDirectoryRegistrationClient(cc grpc.ClientConnInterface) DirectoryRegist
 
 func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error) {
 	out := new(RegisterInwayResponse)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/RegisterInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/RegisterInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -313,7 +313,7 @@ func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *Reg
 
 func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/ClearOrganizationInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ClearOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -322,7 +322,7 @@ func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context
 
 func (c *directoryRegistrationClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error) {
 	out := new(ListServicesResponse)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/ListServices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ListServices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -331,7 +331,7 @@ func (c *directoryRegistrationClient) ListServices(ctx context.Context, in *empt
 
 func (c *directoryRegistrationClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
 	out := new(ListOrganizationsResponse)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/ListOrganizations", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ListOrganizations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -340,7 +340,7 @@ func (c *directoryRegistrationClient) ListOrganizations(ctx context.Context, in 
 
 func (c *directoryRegistrationClient) GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error) {
 	out := new(GetOrganizationInwayResponse)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/GetOrganizationInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/GetOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +349,7 @@ func (c *directoryRegistrationClient) GetOrganizationInway(ctx context.Context, 
 
 func (c *directoryRegistrationClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
 	out := new(ListInOutwayStatisticsResponse)
-	err := c.cc.Invoke(ctx, "/registrationapi.DirectoryRegistration/ListInOutwayStatistics", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ListInOutwayStatistics", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
