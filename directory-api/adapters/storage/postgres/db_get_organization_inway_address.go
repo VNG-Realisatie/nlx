@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package pgadapter
 
 import (
@@ -20,7 +23,7 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 	err := r.selectOrganizationInwayAddressStmt.GetContext(ctx, &address, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", storage.ErrOrganizationNotFound
+			return "", storage.ErrNotFound
 		}
 
 		return "", err

@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	ErrDuplicateAddress     = errors.New("another inway is already registered with this address")
-	ErrNoInwayWithAddress   = errors.New("no inway found for address")
-	ErrOrganizationNotFound = errors.New("no organization found")
+	ErrDuplicateAddress   = errors.New("another inway is already registered with this address")
+	ErrNoInwayWithAddress = errors.New("no inway found for address")
+	ErrNotFound           = errors.New("no record found")
 )
 
 type Repository interface {

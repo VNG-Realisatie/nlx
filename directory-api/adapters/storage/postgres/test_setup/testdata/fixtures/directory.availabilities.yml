@@ -5,3 +5,4 @@
   unhealthy_since: NULL
   last_announced: RAW=NOW()
   active: true
+  

@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package pgadapter
 
 import (
@@ -14,7 +17,7 @@ import (
 func (r *PostgreSQLRepository) ClearIfSetAsOrganizationInway(ctx context.Context, serialNumber, selfAddress string) error {
 	organizationSelfAddress, err := r.GetOrganizationInwayAddress(ctx, serialNumber)
 	if err != nil {
-		if errors.Is(err, storage.ErrOrganizationNotFound) {
+		if errors.Is(err, storage.ErrNotFound) {
 			return nil
 		}
 

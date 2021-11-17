@@ -12,21 +12,16 @@ import (
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
-type VersionStatistics struct {
-	Type    VersionStatisticsType
+type versionStatistics struct {
+	Type    versionStatisticsType
 	Version string
 	Amount  uint32
 }
 
-type VersionStatisticsType string
-
-const (
-	TypeInway  VersionStatisticsType = "inway"
-	TypeOutway VersionStatisticsType = "outway"
-)
+type versionStatisticsType string
 
 func (r *PostgreSQLRepository) ListVersionStatistics(_ context.Context) ([]*domain.VersionStatistics, error) {
-	var result []*VersionStatistics
+	var result []*versionStatistics
 
 	err := r.selectVersionStatisticsStmt.Select(&result)
 	if err != nil {

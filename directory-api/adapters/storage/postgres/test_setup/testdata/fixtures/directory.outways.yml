@@ -13,3 +13,4 @@
 - id: 4
   announced: RAW=NOW() - INTERVAL '1 DAY'
   version: 1.0.0
+  

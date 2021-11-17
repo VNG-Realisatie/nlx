@@ -1,11 +1,17 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package pgadapter
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
 
 	"go.nlx.io/nlx/directory-api/domain"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
@@ -32,6 +38,10 @@ func (r *PostgreSQLRepository) GetService(id uint) (*domain.Service, error) {
 
 	err := r.getServiceStmt.Get(&result, &params{ID: id})
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, storage.ErrNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get service with id %v: %s", id, err)
 	}
 

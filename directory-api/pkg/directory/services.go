@@ -18,8 +18,11 @@ import (
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
-func registerOutwayVersion(ctx context.Context, db storage.Repository, version nlxversion.Version) {
-	_ = db.RegisterOutwayVersion(ctx, version)
+func registerOutwayVersion(ctx context.Context, logger *zap.Logger, db storage.Repository, version nlxversion.Version) {
+	err := db.RegisterOutwayVersion(ctx, version)
+	if err != nil {
+		logger.Error("failed to register outway version", zap.Error(err))
+	}
 }
 
 func (h *DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListServicesResponse, error) {
@@ -30,7 +33,7 @@ func (h *DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (
 	if ok {
 		if _, ok := md["grpcgateway-internal"]; !ok {
 			version := nlxversion.NewFromGRPCContext(ctx)
-			go registerOutwayVersion(ctx, h.repository, version)
+			go registerOutwayVersion(ctx, h.logger, h.repository, version)
 		}
 	}
 

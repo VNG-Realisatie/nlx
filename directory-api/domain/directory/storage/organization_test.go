@@ -7,7 +7,6 @@ package storage_test
 
 import (
 	"context"
-	"log"
 	"testing"
 	"time"
 
@@ -130,7 +129,7 @@ func TestClearOrganizationInway(t *testing.T) {
 			input: inputParams{
 				organizationSerialNumber: "12345678900987654321",
 			},
-			expectedErr: storage.ErrOrganizationNotFound,
+			expectedErr: storage.ErrNotFound,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -215,7 +214,7 @@ func TestGetOrganizationInwayAddress(t *testing.T) {
 				organizationSerialNumber: "010203040506070809",
 			},
 			expectedAddress: "",
-			expectedErr:     storage.ErrOrganizationNotFound,
+			expectedErr:     storage.ErrNotFound,
 		},
 		"happy_flow": {
 			setup: func(t *testing.T) *domain.NewInwayArgs {
@@ -318,7 +317,6 @@ func TestListOrganizations(t *testing.T) {
 			defer close()
 
 			want := make([]*domain.Organization, len(tt.want))
-			log.Println(len(tt.want), "THIS")
 
 			for i, s := range tt.want {
 				var err error

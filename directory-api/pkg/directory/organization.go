@@ -29,7 +29,7 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 
 	err = h.repository.ClearOrganizationInway(ctx, organization.SerialNumber)
 	if err != nil {
-		if errors.Is(err, storage.ErrOrganizationNotFound) {
+		if errors.Is(err, storage.ErrNotFound) {
 			logger.Info("did not clear organization because the organization could not be found", zap.Any("organization", organization))
 			return &emptypb.Empty{}, nil
 		}
@@ -52,8 +52,8 @@ func (h *DirectoryService) GetOrganizationInway(ctx context.Context, req *direct
 
 	address, err := h.repository.GetOrganizationInwayAddress(ctx, serialNumber)
 	if err != nil {
-		if errors.Is(err, storage.ErrOrganizationNotFound) {
-			return nil, status.New(codes.NotFound, "organization has no inway").Err()
+		if errors.Is(err, storage.ErrNotFound) {
+			return nil, status.New(codes.NotFound, "organization not found or has no inway").Err()
 		}
 
 		h.logger.Error("failed to select organization inway address from storage", zap.Error(err))

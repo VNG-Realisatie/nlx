@@ -19,7 +19,7 @@ import (
 	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
-func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
+func TestClearOrganizationInway(t *testing.T) {
 	tests := map[string]struct {
 		setup            func(serviceMocks)
 		expectedResponse *emptypb.Empty
@@ -40,7 +40,7 @@ func TestDirectoryRegistrationService_ClearOrganizationInway(t *testing.T) {
 				mocks.r.
 					EXPECT().
 					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
-					Return(storage.ErrOrganizationNotFound)
+					Return(storage.ErrNotFound)
 			},
 			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,

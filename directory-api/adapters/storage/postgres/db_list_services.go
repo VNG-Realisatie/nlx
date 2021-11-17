@@ -1,11 +1,16 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package pgadapter
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-api/domain"
 )
@@ -44,7 +49,10 @@ func (r *PostgreSQLRepository) ListServices(_ context.Context, organizationSeria
 
 	for i, service := range queryResult {
 		if len(service.InwayAddresses) != len(service.HealthyStatuses) {
-			r.logger.Error("length of the inwayadresses does not match healthchecks")
+			err := errors.New("length of the inwayadresses does not match healthchecks")
+			r.logger.Error("failed to convert service to domain model", zap.Error(err))
+
+			return nil, err
 		}
 
 		organization, err := domain.NewOrganization(service.OrganizationName, service.OrganizationSerialNumber)

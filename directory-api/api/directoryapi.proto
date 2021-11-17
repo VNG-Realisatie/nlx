@@ -78,7 +78,6 @@ message RegisterInwayResponse {
 	string error = 1;
 }
 
-
 message Organization {
 	string serial_number = 1;
 	string name = 2;
