@@ -62,6 +62,7 @@ proto-directory-registration-api:
 proto-directory-api:
     FROM +deps
     COPY ./directory-api/api/*.proto /src
+    COPY ./scripts/fix-directoryapi_grpc.pb.go.sh /fix.sh
 
     RUN mkdir -p /dist || true && \
         protoc \
@@ -74,6 +75,8 @@ proto-directory-api:
             --openapiv2_out=/dist \
             ./directoryapi.proto
     RUN goimports -w -local "go.nlx.io" /dist/
+
+    RUN sh /fix.sh /dist/directoryapi_grpc.pb.go
 
     SAVE ARTIFACT /dist/* AS LOCAL ./directory-api/api/
 
