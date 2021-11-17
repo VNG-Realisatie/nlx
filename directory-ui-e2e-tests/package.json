@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@commonground/eslint-config": "5.0.0",
-    "@testing-library/cypress": "8.0.1",
+    "@testing-library/cypress": "8.0.2",
     "cypress": "8.7.0"
   }
 }

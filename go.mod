@@ -39,18 +39,18 @@ require (
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.1
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20211020060615-d418f374d309
-	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1
+	golang.org/x/crypto v0.0.0-20211115234514-b4de73f9ece8
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/text v0.3.7
-	google.golang.org/genproto v0.0.0-20211026145609-4688e4c4e024
+	google.golang.org/genproto v0.0.0-20211116182654-e63d96a377c4
 	google.golang.org/grpc v1.42.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/square/go-jose.v2 v2.6.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	gorm.io/driver/postgres v1.2.1
-	gorm.io/gorm v1.22.2
+	gorm.io/driver/postgres v1.2.2
+	gorm.io/gorm v1.22.3
 	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
 )
 
