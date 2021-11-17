@@ -35,6 +35,12 @@ jest.mock('../DirectoryDetailPage', () => ({ service }) => (
 ))
 /* eslint-enable react/prop-types */
 
+jest.mock('../../../domain/environment-repository', () => ({
+  getCurrent: async () => ({
+    organizationSerialNumber: '12345678901234567890',
+  }),
+}))
+
 const renderDirectory = (store) =>
   renderWithProviders(
     <StoreProvider rootStore={store}>

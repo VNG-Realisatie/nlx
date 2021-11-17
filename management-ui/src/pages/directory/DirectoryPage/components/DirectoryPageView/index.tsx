@@ -2,13 +2,17 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { arrayOf, shape, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
 import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
+import Service from '../../../../../types/Service'
 
-const DirectoryPageView = ({ services, selectedServiceName }) => {
+const DirectoryPageView: React.FC<DirectoryPageViewProps> = ({
+  managementSubjectSerialNumber,
+  services,
+  selectedServiceName,
+}) => {
   const { t } = useTranslation()
 
   return services.length === 0 ? (
@@ -32,6 +36,10 @@ const DirectoryPageView = ({ services, selectedServiceName }) => {
             key={`${service.organization.serialNumber}-${service.serviceName}`}
             service={service}
             selected={service.serviceName === selectedServiceName}
+            ownService={
+              service.organization.serialNumber ===
+              managementSubjectSerialNumber
+            }
           />
         ))}
       </tbody>
@@ -39,17 +47,10 @@ const DirectoryPageView = ({ services, selectedServiceName }) => {
   )
 }
 
-DirectoryPageView.propTypes = {
-  services: arrayOf(
-    shape({
-      organization: shape({
-        serialNumber: string.isRequired,
-        name: string.isRequired,
-      }).isRequired,
-      serviceName: string.isRequired,
-    }),
-  ).isRequired,
-  selectedServiceName: string,
+interface DirectoryPageViewProps {
+  managementSubjectSerialNumber: string
+  services: Service[]
+  selectedServiceName: string
 }
 
 export default DirectoryPageView

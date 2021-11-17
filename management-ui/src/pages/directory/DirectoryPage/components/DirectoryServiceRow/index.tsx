@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { object, shape, string } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
@@ -17,9 +16,14 @@ import getDirectoryServiceAccessUIState, {
 import StateIndicator from '../../../../../components/StateIndicator'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessMessage from '../AccessMessage'
-import { AccessMessageWrapper, StyledTdAccess } from './index.styles'
+import Service from '../../../../../types/Service'
+import { StyledTd, AccessMessageWrapper, StyledTdAccess } from './index.styles'
 
-const DirectoryServiceRow = ({ service, ...props }) => {
+const DirectoryServiceRow: React.FC<DirectoryServiceRowProps> = ({
+  service,
+  ownService,
+  ...props
+}) => {
   const { t } = useTranslation()
   const {
     organization,
@@ -52,7 +56,7 @@ const DirectoryServiceRow = ({ service, ...props }) => {
     latestAccessProof,
   )
 
-  const handleQuickAccessButtonClick = (evt) => {
+  const handleQuickAccessButtonClick = (evt: Event) => {
     evt.stopPropagation()
 
     if (displayState === SHOW_REQUEST_FAILED) {
@@ -77,10 +81,12 @@ const DirectoryServiceRow = ({ service, ...props }) => {
       data-testid="directory-service-row"
       {...props}
     >
-      <Table.Td>{organization.name}</Table.Td>
+      <StyledTd color={ownService ? '#FFBC2C' : null}>
+        {organization.name}
+      </StyledTd>
       <Table.Td>{serviceName}</Table.Td>
       <Table.Td>
-        <StateIndicator state={state} />
+        <StateIndicator state={state} showText={false} />
       </Table.Td>
       <Table.Td>{apiSpecificationType}</Table.Td>
       <StyledTdAccess>
@@ -97,17 +103,10 @@ const DirectoryServiceRow = ({ service, ...props }) => {
   )
 }
 
-DirectoryServiceRow.propTypes = {
-  service: shape({
-    organization: shape({
-      serialNumber: string.isRequired,
-      name: string.isRequired,
-    }).isRequired,
-    serviceName: string.isRequired,
-    state: string.isRequired,
-    apiSpecificationType: string,
-    latestAccessRequest: object,
-  }),
+interface DirectoryServiceRowProps {
+  service: Service
+  selected: boolean
+  ownService: boolean
 }
 
 export default observer(DirectoryServiceRow)

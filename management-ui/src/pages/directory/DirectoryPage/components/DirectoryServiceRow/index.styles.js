@@ -1,8 +1,16 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import Table from '../../../../../components/Table'
+
+export const StyledTd = styled(Table.Td)`
+  ${(props) =>
+    props.color &&
+    css`
+      color: ${props.color};
+    `}
+`
 
 export const StyledTdAccess = styled(Table.Td)`
   width: 18rem;
