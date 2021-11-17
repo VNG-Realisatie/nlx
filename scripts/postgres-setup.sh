@@ -1,9 +1,6 @@
 #!/bin/sh
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-    CREATE DATABASE nlx_management_test;
-    CREATE DATABASE nlx_directory_registration_test;
-    CREATE DATABASE nlx_directory_inspection_test;
     CREATE DATABASE nlx_management_org_a;
     CREATE DATABASE nlx_management_org_b;
     CREATE DATABASE nlx_txlog_a;
