@@ -317,3 +317,609 @@ func (mr *MockUnsafeDirectoryServerMockRecorder) mustEmbedUnimplementedDirectory
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryServer", reflect.TypeOf((*MockUnsafeDirectoryServer)(nil).mustEmbedUnimplementedDirectoryServer))
 }
+
+// MockDirectoryRegistrationClient is a mock of DirectoryRegistrationClient interface.
+type MockDirectoryRegistrationClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockDirectoryRegistrationClientMockRecorder
+}
+
+// MockDirectoryRegistrationClientMockRecorder is the mock recorder for MockDirectoryRegistrationClient.
+type MockDirectoryRegistrationClientMockRecorder struct {
+	mock *MockDirectoryRegistrationClient
+}
+
+// NewMockDirectoryRegistrationClient creates a new mock instance.
+func NewMockDirectoryRegistrationClient(ctrl *gomock.Controller) *MockDirectoryRegistrationClient {
+	mock := &MockDirectoryRegistrationClient{ctrl: ctrl}
+	mock.recorder = &MockDirectoryRegistrationClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDirectoryRegistrationClient) EXPECT() *MockDirectoryRegistrationClientMockRecorder {
+	return m.recorder
+}
+
+// ClearOrganizationInway mocks base method.
+func (m *MockDirectoryRegistrationClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearOrganizationInway indicates an expected call of ClearOrganizationInway.
+func (mr *MockDirectoryRegistrationClientMockRecorder) ClearOrganizationInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryRegistrationClient)(nil).ClearOrganizationInway), varargs...)
+}
+
+// GetOrganizationInway mocks base method.
+func (m *MockDirectoryRegistrationClient) GetOrganizationInway(ctx context.Context, in *directoryapi.GetOrganizationInwayRequest, opts ...grpc.CallOption) (*directoryapi.GetOrganizationInwayResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrganizationInway", varargs...)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInway indicates an expected call of GetOrganizationInway.
+func (mr *MockDirectoryRegistrationClientMockRecorder) GetOrganizationInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryRegistrationClient)(nil).GetOrganizationInway), varargs...)
+}
+
+// ListInOutwayStatistics mocks base method.
+func (m *MockDirectoryRegistrationClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListInOutwayStatistics", varargs...)
+	ret0, _ := ret[0].(*directoryapi.ListInOutwayStatisticsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInOutwayStatistics indicates an expected call of ListInOutwayStatistics.
+func (mr *MockDirectoryRegistrationClientMockRecorder) ListInOutwayStatistics(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInOutwayStatistics", reflect.TypeOf((*MockDirectoryRegistrationClient)(nil).ListInOutwayStatistics), varargs...)
+}
+
+// ListOrganizations mocks base method.
+func (m *MockDirectoryRegistrationClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListOrganizationsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOrganizations", varargs...)
+	ret0, _ := ret[0].(*directoryapi.ListOrganizationsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrganizations indicates an expected call of ListOrganizations.
+func (mr *MockDirectoryRegistrationClientMockRecorder) ListOrganizations(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryRegistrationClient)(nil).ListOrganizations), varargs...)
+}
+
+// ListServices mocks base method.
+func (m *MockDirectoryRegistrationClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListServices", varargs...)
+	ret0, _ := ret[0].(*directoryapi.ListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockDirectoryRegistrationClientMockRecorder) ListServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryRegistrationClient)(nil).ListServices), varargs...)
+}
+
+// RegisterInway mocks base method.
+func (m *MockDirectoryRegistrationClient) RegisterInway(ctx context.Context, in *directoryapi.RegisterInwayRequest, opts ...grpc.CallOption) (*directoryapi.RegisterInwayResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RegisterInway", varargs...)
+	ret0, _ := ret[0].(*directoryapi.RegisterInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterInway indicates an expected call of RegisterInway.
+func (mr *MockDirectoryRegistrationClientMockRecorder) RegisterInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockDirectoryRegistrationClient)(nil).RegisterInway), varargs...)
+}
+
+// MockDirectoryRegistrationServer is a mock of DirectoryRegistrationServer interface.
+type MockDirectoryRegistrationServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockDirectoryRegistrationServerMockRecorder
+}
+
+// MockDirectoryRegistrationServerMockRecorder is the mock recorder for MockDirectoryRegistrationServer.
+type MockDirectoryRegistrationServerMockRecorder struct {
+	mock *MockDirectoryRegistrationServer
+}
+
+// NewMockDirectoryRegistrationServer creates a new mock instance.
+func NewMockDirectoryRegistrationServer(ctrl *gomock.Controller) *MockDirectoryRegistrationServer {
+	mock := &MockDirectoryRegistrationServer{ctrl: ctrl}
+	mock.recorder = &MockDirectoryRegistrationServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDirectoryRegistrationServer) EXPECT() *MockDirectoryRegistrationServerMockRecorder {
+	return m.recorder
+}
+
+// ClearOrganizationInway mocks base method.
+func (m *MockDirectoryRegistrationServer) ClearOrganizationInway(arg0 context.Context, arg1 *emptypb.Empty) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearOrganizationInway indicates an expected call of ClearOrganizationInway.
+func (mr *MockDirectoryRegistrationServerMockRecorder) ClearOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).ClearOrganizationInway), arg0, arg1)
+}
+
+// GetOrganizationInway mocks base method.
+func (m *MockDirectoryRegistrationServer) GetOrganizationInway(arg0 context.Context, arg1 *directoryapi.GetOrganizationInwayRequest) (*directoryapi.GetOrganizationInwayResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationInway", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInway indicates an expected call of GetOrganizationInway.
+func (mr *MockDirectoryRegistrationServerMockRecorder) GetOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).GetOrganizationInway), arg0, arg1)
+}
+
+// ListInOutwayStatistics mocks base method.
+func (m *MockDirectoryRegistrationServer) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.ListInOutwayStatisticsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListInOutwayStatistics", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.ListInOutwayStatisticsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInOutwayStatistics indicates an expected call of ListInOutwayStatistics.
+func (mr *MockDirectoryRegistrationServerMockRecorder) ListInOutwayStatistics(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInOutwayStatistics", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).ListInOutwayStatistics), arg0, arg1)
+}
+
+// ListOrganizations mocks base method.
+func (m *MockDirectoryRegistrationServer) ListOrganizations(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.ListOrganizationsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOrganizations", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.ListOrganizationsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrganizations indicates an expected call of ListOrganizations.
+func (mr *MockDirectoryRegistrationServerMockRecorder) ListOrganizations(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).ListOrganizations), arg0, arg1)
+}
+
+// ListServices mocks base method.
+func (m *MockDirectoryRegistrationServer) ListServices(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.ListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.ListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockDirectoryRegistrationServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).ListServices), arg0, arg1)
+}
+
+// RegisterInway mocks base method.
+func (m *MockDirectoryRegistrationServer) RegisterInway(arg0 context.Context, arg1 *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterInway", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.RegisterInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterInway indicates an expected call of RegisterInway.
+func (mr *MockDirectoryRegistrationServerMockRecorder) RegisterInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).RegisterInway), arg0, arg1)
+}
+
+// mustEmbedUnimplementedDirectoryRegistrationServer mocks base method.
+func (m *MockDirectoryRegistrationServer) mustEmbedUnimplementedDirectoryRegistrationServer() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "mustEmbedUnimplementedDirectoryRegistrationServer")
+}
+
+// mustEmbedUnimplementedDirectoryRegistrationServer indicates an expected call of mustEmbedUnimplementedDirectoryRegistrationServer.
+func (mr *MockDirectoryRegistrationServerMockRecorder) mustEmbedUnimplementedDirectoryRegistrationServer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryRegistrationServer", reflect.TypeOf((*MockDirectoryRegistrationServer)(nil).mustEmbedUnimplementedDirectoryRegistrationServer))
+}
+
+// MockUnsafeDirectoryRegistrationServer is a mock of UnsafeDirectoryRegistrationServer interface.
+type MockUnsafeDirectoryRegistrationServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockUnsafeDirectoryRegistrationServerMockRecorder
+}
+
+// MockUnsafeDirectoryRegistrationServerMockRecorder is the mock recorder for MockUnsafeDirectoryRegistrationServer.
+type MockUnsafeDirectoryRegistrationServerMockRecorder struct {
+	mock *MockUnsafeDirectoryRegistrationServer
+}
+
+// NewMockUnsafeDirectoryRegistrationServer creates a new mock instance.
+func NewMockUnsafeDirectoryRegistrationServer(ctrl *gomock.Controller) *MockUnsafeDirectoryRegistrationServer {
+	mock := &MockUnsafeDirectoryRegistrationServer{ctrl: ctrl}
+	mock.recorder = &MockUnsafeDirectoryRegistrationServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUnsafeDirectoryRegistrationServer) EXPECT() *MockUnsafeDirectoryRegistrationServerMockRecorder {
+	return m.recorder
+}
+
+// mustEmbedUnimplementedDirectoryRegistrationServer mocks base method.
+func (m *MockUnsafeDirectoryRegistrationServer) mustEmbedUnimplementedDirectoryRegistrationServer() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "mustEmbedUnimplementedDirectoryRegistrationServer")
+}
+
+// mustEmbedUnimplementedDirectoryRegistrationServer indicates an expected call of mustEmbedUnimplementedDirectoryRegistrationServer.
+func (mr *MockUnsafeDirectoryRegistrationServerMockRecorder) mustEmbedUnimplementedDirectoryRegistrationServer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryRegistrationServer", reflect.TypeOf((*MockUnsafeDirectoryRegistrationServer)(nil).mustEmbedUnimplementedDirectoryRegistrationServer))
+}
+
+// MockDirectoryInspectionClient is a mock of DirectoryInspectionClient interface.
+type MockDirectoryInspectionClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockDirectoryInspectionClientMockRecorder
+}
+
+// MockDirectoryInspectionClientMockRecorder is the mock recorder for MockDirectoryInspectionClient.
+type MockDirectoryInspectionClientMockRecorder struct {
+	mock *MockDirectoryInspectionClient
+}
+
+// NewMockDirectoryInspectionClient creates a new mock instance.
+func NewMockDirectoryInspectionClient(ctrl *gomock.Controller) *MockDirectoryInspectionClient {
+	mock := &MockDirectoryInspectionClient{ctrl: ctrl}
+	mock.recorder = &MockDirectoryInspectionClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDirectoryInspectionClient) EXPECT() *MockDirectoryInspectionClientMockRecorder {
+	return m.recorder
+}
+
+// ClearOrganizationInway mocks base method.
+func (m *MockDirectoryInspectionClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearOrganizationInway indicates an expected call of ClearOrganizationInway.
+func (mr *MockDirectoryInspectionClientMockRecorder) ClearOrganizationInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).ClearOrganizationInway), varargs...)
+}
+
+// GetOrganizationInway mocks base method.
+func (m *MockDirectoryInspectionClient) GetOrganizationInway(ctx context.Context, in *directoryapi.GetOrganizationInwayRequest, opts ...grpc.CallOption) (*directoryapi.GetOrganizationInwayResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrganizationInway", varargs...)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInway indicates an expected call of GetOrganizationInway.
+func (mr *MockDirectoryInspectionClientMockRecorder) GetOrganizationInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).GetOrganizationInway), varargs...)
+}
+
+// ListInOutwayStatistics mocks base method.
+func (m *MockDirectoryInspectionClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListInOutwayStatistics", varargs...)
+	ret0, _ := ret[0].(*directoryapi.ListInOutwayStatisticsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInOutwayStatistics indicates an expected call of ListInOutwayStatistics.
+func (mr *MockDirectoryInspectionClientMockRecorder) ListInOutwayStatistics(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInOutwayStatistics", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).ListInOutwayStatistics), varargs...)
+}
+
+// ListOrganizations mocks base method.
+func (m *MockDirectoryInspectionClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListOrganizationsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOrganizations", varargs...)
+	ret0, _ := ret[0].(*directoryapi.ListOrganizationsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrganizations indicates an expected call of ListOrganizations.
+func (mr *MockDirectoryInspectionClientMockRecorder) ListOrganizations(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).ListOrganizations), varargs...)
+}
+
+// ListServices mocks base method.
+func (m *MockDirectoryInspectionClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListServices", varargs...)
+	ret0, _ := ret[0].(*directoryapi.ListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockDirectoryInspectionClientMockRecorder) ListServices(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).ListServices), varargs...)
+}
+
+// RegisterInway mocks base method.
+func (m *MockDirectoryInspectionClient) RegisterInway(ctx context.Context, in *directoryapi.RegisterInwayRequest, opts ...grpc.CallOption) (*directoryapi.RegisterInwayResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RegisterInway", varargs...)
+	ret0, _ := ret[0].(*directoryapi.RegisterInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterInway indicates an expected call of RegisterInway.
+func (mr *MockDirectoryInspectionClientMockRecorder) RegisterInway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockDirectoryInspectionClient)(nil).RegisterInway), varargs...)
+}
+
+// MockDirectoryInspectionServer is a mock of DirectoryInspectionServer interface.
+type MockDirectoryInspectionServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockDirectoryInspectionServerMockRecorder
+}
+
+// MockDirectoryInspectionServerMockRecorder is the mock recorder for MockDirectoryInspectionServer.
+type MockDirectoryInspectionServerMockRecorder struct {
+	mock *MockDirectoryInspectionServer
+}
+
+// NewMockDirectoryInspectionServer creates a new mock instance.
+func NewMockDirectoryInspectionServer(ctrl *gomock.Controller) *MockDirectoryInspectionServer {
+	mock := &MockDirectoryInspectionServer{ctrl: ctrl}
+	mock.recorder = &MockDirectoryInspectionServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDirectoryInspectionServer) EXPECT() *MockDirectoryInspectionServerMockRecorder {
+	return m.recorder
+}
+
+// ClearOrganizationInway mocks base method.
+func (m *MockDirectoryInspectionServer) ClearOrganizationInway(arg0 context.Context, arg1 *emptypb.Empty) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearOrganizationInway", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearOrganizationInway indicates an expected call of ClearOrganizationInway.
+func (mr *MockDirectoryInspectionServerMockRecorder) ClearOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).ClearOrganizationInway), arg0, arg1)
+}
+
+// GetOrganizationInway mocks base method.
+func (m *MockDirectoryInspectionServer) GetOrganizationInway(arg0 context.Context, arg1 *directoryapi.GetOrganizationInwayRequest) (*directoryapi.GetOrganizationInwayResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationInway", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInway indicates an expected call of GetOrganizationInway.
+func (mr *MockDirectoryInspectionServerMockRecorder) GetOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).GetOrganizationInway), arg0, arg1)
+}
+
+// ListInOutwayStatistics mocks base method.
+func (m *MockDirectoryInspectionServer) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.ListInOutwayStatisticsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListInOutwayStatistics", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.ListInOutwayStatisticsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInOutwayStatistics indicates an expected call of ListInOutwayStatistics.
+func (mr *MockDirectoryInspectionServerMockRecorder) ListInOutwayStatistics(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInOutwayStatistics", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).ListInOutwayStatistics), arg0, arg1)
+}
+
+// ListOrganizations mocks base method.
+func (m *MockDirectoryInspectionServer) ListOrganizations(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.ListOrganizationsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOrganizations", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.ListOrganizationsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrganizations indicates an expected call of ListOrganizations.
+func (mr *MockDirectoryInspectionServerMockRecorder) ListOrganizations(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).ListOrganizations), arg0, arg1)
+}
+
+// ListServices mocks base method.
+func (m *MockDirectoryInspectionServer) ListServices(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.ListServicesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.ListServicesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListServices indicates an expected call of ListServices.
+func (mr *MockDirectoryInspectionServerMockRecorder) ListServices(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).ListServices), arg0, arg1)
+}
+
+// RegisterInway mocks base method.
+func (m *MockDirectoryInspectionServer) RegisterInway(arg0 context.Context, arg1 *directoryapi.RegisterInwayRequest) (*directoryapi.RegisterInwayResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterInway", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.RegisterInwayResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RegisterInway indicates an expected call of RegisterInway.
+func (mr *MockDirectoryInspectionServerMockRecorder) RegisterInway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).RegisterInway), arg0, arg1)
+}
+
+// mustEmbedUnimplementedDirectoryInspectionServer mocks base method.
+func (m *MockDirectoryInspectionServer) mustEmbedUnimplementedDirectoryInspectionServer() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "mustEmbedUnimplementedDirectoryInspectionServer")
+}
+
+// mustEmbedUnimplementedDirectoryInspectionServer indicates an expected call of mustEmbedUnimplementedDirectoryInspectionServer.
+func (mr *MockDirectoryInspectionServerMockRecorder) mustEmbedUnimplementedDirectoryInspectionServer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryInspectionServer", reflect.TypeOf((*MockDirectoryInspectionServer)(nil).mustEmbedUnimplementedDirectoryInspectionServer))
+}
+
+// MockUnsafeDirectoryInspectionServer is a mock of UnsafeDirectoryInspectionServer interface.
+type MockUnsafeDirectoryInspectionServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockUnsafeDirectoryInspectionServerMockRecorder
+}
+
+// MockUnsafeDirectoryInspectionServerMockRecorder is the mock recorder for MockUnsafeDirectoryInspectionServer.
+type MockUnsafeDirectoryInspectionServerMockRecorder struct {
+	mock *MockUnsafeDirectoryInspectionServer
+}
+
+// NewMockUnsafeDirectoryInspectionServer creates a new mock instance.
+func NewMockUnsafeDirectoryInspectionServer(ctrl *gomock.Controller) *MockUnsafeDirectoryInspectionServer {
+	mock := &MockUnsafeDirectoryInspectionServer{ctrl: ctrl}
+	mock.recorder = &MockUnsafeDirectoryInspectionServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUnsafeDirectoryInspectionServer) EXPECT() *MockUnsafeDirectoryInspectionServerMockRecorder {
+	return m.recorder
+}
+
+// mustEmbedUnimplementedDirectoryInspectionServer mocks base method.
+func (m *MockUnsafeDirectoryInspectionServer) mustEmbedUnimplementedDirectoryInspectionServer() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "mustEmbedUnimplementedDirectoryInspectionServer")
+}
+
+// mustEmbedUnimplementedDirectoryInspectionServer indicates an expected call of mustEmbedUnimplementedDirectoryInspectionServer.
+func (mr *MockUnsafeDirectoryInspectionServerMockRecorder) mustEmbedUnimplementedDirectoryInspectionServer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedDirectoryInspectionServer", reflect.TypeOf((*MockUnsafeDirectoryInspectionServer)(nil).mustEmbedUnimplementedDirectoryInspectionServer))
+}

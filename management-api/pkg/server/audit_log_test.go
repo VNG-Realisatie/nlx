@@ -149,7 +149,7 @@ func TestListAuditLogs(t *testing.T) {
 			},
 			nil,
 		},
-		"with_a_single_log_created_via_the_browser_with_metadata": {
+		"with_a_single_log_created_via_the_browser_with_order_metadata": {
 			[]*auditlog.Record{
 				{
 					ID:         1,
@@ -179,6 +179,40 @@ func TestListAuditLogs(t *testing.T) {
 						Data: &api.AuditLogRecordMetadata{
 							Delegatee: "00000000000000000001",
 							Reference: "test-reference",
+						},
+					},
+				},
+			},
+			nil,
+		},
+		"with_a_single_log_created_via_the_browser_with_inway_metadata": {
+			[]*auditlog.Record{
+				{
+					ID:         1,
+					Username:   "Jane Doe",
+					ActionType: auditlog.InwayDelete,
+					UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
+					CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+					Data: &auditlog.RecordData{
+						InwayName: newStringPointer("my-inway"),
+					},
+				},
+			},
+			nil,
+			&emptypb.Empty{},
+			&api.ListAuditLogsResponse{
+				AuditLogs: []*api.AuditLogRecord{
+					{
+						Id:              1,
+						User:            "Jane Doe",
+						Action:          api.AuditLogRecord_inwayDelete,
+						OperatingSystem: "Mac OS X",
+						Browser:         "Safari",
+						Client:          "NLX Management",
+						Services:        []*api.AuditLogRecord_Service{},
+						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+						Data: &api.AuditLogRecordMetadata{
+							InwayName: "my-inway",
 						},
 					},
 				},

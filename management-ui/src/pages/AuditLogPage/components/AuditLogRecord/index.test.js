@@ -19,6 +19,7 @@ import {
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
   ACTION_ORDER_OUTGOING_REVOKE,
+  ACTION_INWAY_DELETE,
 } from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
@@ -195,6 +196,16 @@ test.concurrent.each([
     },
     'revoke.svg',
     'John Doe has revoked the outgoing order for 00000000000000000001 with reference 0123456AB',
+  ],
+  [
+    {
+      action: ACTION_INWAY_DELETE,
+      data: {
+        inwayName: 'my-inway',
+      },
+    },
+    'cog.svg',
+    'John Doe has removed the inway my-inway',
   ],
   [
     { action: 'unknown action' },

@@ -20,6 +20,7 @@ import {
   ACTION_SERVICE_CREATE,
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
+  ACTION_INWAY_DELETE,
 } from '../../../../stores/models/AuditLogModel'
 import iconForActionType from './icon-for-action-type'
 import {
@@ -96,6 +97,8 @@ const AuditLogRecord = ({
 
   const dataDelegatee = data.delegatee
   const dataReference = data.reference
+
+  const dataInwayName = data.inwayName
 
   const organizationSerialNumber = organization.serialNumber
   const organizationName = organization.name
@@ -190,6 +193,11 @@ const AuditLogRecord = ({
           <strong>{{ user }}</strong> has revoked the outgoing order for{' '}
           {{ dataDelegatee }} with reference {{ dataReference }}
         </Trans>
+      ) : action === ACTION_INWAY_DELETE ? (
+        <Trans values={{ user, dataInwayName }}>
+          <strong>{{ user }}</strong> has removed the inway{' '}
+          <strong>{{ dataInwayName }}</strong>
+        </Trans>
       ) : (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has performed unknown action{' '}
@@ -221,6 +229,7 @@ AuditLogRecord.propTypes = {
     delegatee: string,
     delegator: string,
     reference: string,
+    inwayName: string,
   }),
 }
 

@@ -19,18 +19,13 @@ import { exists, mapValues } from '../runtime';
  * @interface ProtobufAny
  */
 export interface ProtobufAny {
+    [key: string]: object | any;
     /**
      * 
      * @type {string}
      * @memberof ProtobufAny
      */
-    typeUrl?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProtobufAny
-     */
-    value?: string;
+    type?: string;
 }
 
 export function ProtobufAnyFromJSON(json: any): ProtobufAny {
@@ -43,8 +38,8 @@ export function ProtobufAnyFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'typeUrl': !exists(json, 'typeUrl') ? undefined : json['typeUrl'],
-        'value': !exists(json, 'value') ? undefined : json['value'],
+            ...json,
+        'type': !exists(json, '@type') ? undefined : json['@type'],
     };
 }
 
@@ -57,8 +52,8 @@ export function ProtobufAnyToJSON(value?: ProtobufAny | null): any {
     }
     return {
         
-        'typeUrl': value.typeUrl,
-        'value': value.value,
+            ...value,
+        '@type': value.type,
     };
 }
 

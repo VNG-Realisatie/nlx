@@ -6,6 +6,7 @@ package server_test
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"testing"
 
@@ -14,9 +15,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -212,32 +215,85 @@ func TestUpdateInway(t *testing.T) {
 }
 
 func TestDeleteInway(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
+	tests := map[string]struct {
+		request       *api.DeleteInwayRequest
+		ctx           context.Context
+		setup         func(*common_tls.CertificateBundle, serviceMocks)
+		expectedError error
+	}{
+		"failed_to_retrieve_user_info_from_context": {
+			ctx: context.Background(),
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+			expectedError: status.Error(codes.Internal, "could not retrieve user info to create audit log"),
+		},
+		"failed_to_create_audit_log": {
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.al.EXPECT().
+					InwayDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-inway").
+					Return(fmt.Errorf("error"))
+			},
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+			expectedError: status.Error(codes.Internal, "failed to write to auditlog"),
+		},
+		"failed_to_delete_inway_from_database": {
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.db.EXPECT().
+					DeleteInway(gomock.Any(), "my-inway").
+					Return(fmt.Errorf("error"))
 
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
+				mocks.al.EXPECT().
+					InwayDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-inway")
+			},
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+			expectedError: status.Error(codes.Internal, "database error"),
+		},
+		"happy_flow": {
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
+			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					DeleteInway(gomock.Any(), "my-inway")
 
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().DeleteInway(ctx, "inway42.test")
-
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-	)
-
-	deleteRequest := &api.DeleteInwayRequest{
-		Name: "inway42.test",
+				mocks.al.
+					EXPECT().
+					InwayDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-inway")
+			},
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+		},
 	}
 
-	_, err := service.DeleteInway(ctx, deleteRequest)
-	if err != nil {
-		t.Error("could not delete inway", err)
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			service, bundle, mocks := newService(t)
+
+			if tt.setup != nil {
+				tt.setup(bundle, mocks)
+			}
+
+			_, err := service.DeleteInway(tt.ctx, tt.request)
+			assert.Equal(t, tt.expectedError, err)
+		})
 	}
 }
 

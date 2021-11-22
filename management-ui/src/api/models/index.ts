@@ -1,6 +1,7 @@
 export * from './AuditLogRecordActionType';
 export * from './AuthorizationSettingsAuthorization';
 export * from './DirectoryServiceState';
+export * from './InlineObject';
 export * from './ManagementAccessGrant';
 export * from './ManagementAccessProof';
 export * from './ManagementAccessRequestState';
@@ -42,7 +43,6 @@ export * from './ManagementRetrieveClaimForOrderResponse';
 export * from './ManagementServiceStatistics';
 export * from './ManagementSettings';
 export * from './ManagementSynchronizeOrdersResponse';
-export * from './ManagementUpdateServiceRequest';
 export * from './ManagementUpdateServiceResponse';
 export * from './ManagementUpdateSettingsRequest';
 export * from './ProtobufAny';

@@ -33,6 +33,7 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 	auditlog.OrganizationSettingsUpdate:  api.AuditLogRecord_organizationSettingsUpdate,
 	auditlog.OrderCreate:                 api.AuditLogRecord_orderCreate,
 	auditlog.OrderOutgoingRevoke:         api.AuditLogRecord_orderOutgoingRevoke,
+	auditlog.InwayDelete:                 api.AuditLogRecord_inwayDelete,
 }
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
@@ -137,6 +138,10 @@ func convertAuditLogMetadataFromDatabaseToModel(data *auditlog.RecordData) *api.
 
 		if data.Reference != nil {
 			metadata.Reference = *data.Reference
+		}
+
+		if data.InwayName != nil {
+			metadata.InwayName = *data.InwayName
 		}
 	}
 

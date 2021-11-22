@@ -22,6 +22,8 @@ type PostgresLogger struct {
 type recordMetadata struct {
 	Delegatee *string `json:"delegatee,omitempty"`
 	Reference *string `json:"reference,omitempty"`
+
+	InwayName *string `json:"inwayName,omitempty"`
 }
 
 func NewPostgresLogger(configDatabase database.ConfigDatabase, logger *zap.Logger) Logger {
@@ -65,6 +67,7 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) ([]*Record
 			convertedRecord.Data = &RecordData{
 				Delegatee: data.Delegatee,
 				Reference: data.Reference,
+				InwayName: data.InwayName,
 			}
 		}
 
@@ -314,6 +317,32 @@ func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userNam
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
+
+	return err
+}
+
+func (a *PostgresLogger) InwayDelete(ctx context.Context, userName, userAgent, inwayName string) error {
+	metaData := &recordMetadata{
+		InwayName: &inwayName,
+	}
+
+	data, err := json.Marshal(metaData)
+	if err != nil {
+		return err
+	}
+
+	record := &database.AuditLog{
+		UserAgent:  userAgent,
+		UserName:   userName,
+		ActionType: database.InwayDelete,
+
+		Data: sql.NullString{
+			Valid:  true,
+			String: string(data),
+		},
+	}
+
+	_, err = a.database.CreateAuditLogRecord(ctx, record)
 
 	return err
 }

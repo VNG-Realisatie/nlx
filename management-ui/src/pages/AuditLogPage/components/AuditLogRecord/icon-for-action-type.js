@@ -18,6 +18,7 @@ import {
   ACTION_SERVICE_CREATE,
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
+  ACTION_INWAY_DELETE,
 } from '../../../../stores/models/AuditLogModel'
 import {
   IconCheck,
@@ -59,6 +60,7 @@ const iconForActionType = (actionType) => {
     case ACTION_ORGANIZATION_SETTINGS_UPDATE:
     case ACTION_INSIGHT_CONFIGURATION_UPDATE:
     case ACTION_ORDER_CREATE:
+    case ACTION_INWAY_DELETE:
       return IconSettings
 
     default:

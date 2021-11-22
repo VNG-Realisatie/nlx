@@ -27,6 +27,7 @@ const (
 	OrderCreate                 AuditLogActionType = "order_create"
 	OrderOutgoingRevoke         AuditLogActionType = "order_outgoing_revoke"
 	OrganizationSettingsUpdate  AuditLogActionType = "organization_settings_update"
+	InwayDelete                 AuditLogActionType = "inway_delete"
 )
 
 type AuditLog struct {

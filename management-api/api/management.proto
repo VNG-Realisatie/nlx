@@ -472,6 +472,7 @@ message AuditLogRecord {
     orderCreate = 13;
     orderOutgoingRevoke = 14;
     orderIncomingRevoke = 15;
+    inwayDelete = 16;
   }
 
   message Service {
@@ -495,6 +496,8 @@ message AuditLogRecordMetadata {
   string delegatee = 1;
   string delegator = 2;
   string reference = 3;
+
+  string inwayName = 4;
 }
 
 message ListAuditLogsResponse {

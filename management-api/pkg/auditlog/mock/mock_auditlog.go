@@ -78,6 +78,20 @@ func (mr *MockLoggerMockRecorder) IncomingAccessRequestReject(ctx, userName, use
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncomingAccessRequestReject", reflect.TypeOf((*MockLogger)(nil).IncomingAccessRequestReject), ctx, userName, userAgent, organizationSerialNumber, organizationName, service)
 }
 
+// InwayDelete mocks base method.
+func (m *MockLogger) InwayDelete(ctx context.Context, userName, userAgent, inwayName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InwayDelete", ctx, userName, userAgent, inwayName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// InwayDelete indicates an expected call of InwayDelete.
+func (mr *MockLoggerMockRecorder) InwayDelete(ctx, userName, userAgent, inwayName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InwayDelete", reflect.TypeOf((*MockLogger)(nil).InwayDelete), ctx, userName, userAgent, inwayName)
+}
+
 // ListAll mocks base method.
 func (m *MockLogger) ListAll(ctx context.Context) ([]*auditlog.Record, error) {
 	m.ctrl.T.Helper()

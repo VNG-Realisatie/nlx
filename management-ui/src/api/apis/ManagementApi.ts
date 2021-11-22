@@ -15,6 +15,9 @@
 
 import * as runtime from '../runtime';
 import {
+    InlineObject,
+    InlineObjectFromJSON,
+    InlineObjectToJSON,
     ManagementAccessGrant,
     ManagementAccessGrantFromJSON,
     ManagementAccessGrantToJSON,
@@ -84,9 +87,6 @@ import {
     ManagementSynchronizeOrdersResponse,
     ManagementSynchronizeOrdersResponseFromJSON,
     ManagementSynchronizeOrdersResponseToJSON,
-    ManagementUpdateServiceRequest,
-    ManagementUpdateServiceRequestFromJSON,
-    ManagementUpdateServiceRequestToJSON,
     ManagementUpdateServiceResponse,
     ManagementUpdateServiceResponseFromJSON,
     ManagementUpdateServiceResponseToJSON,
@@ -179,9 +179,9 @@ export interface ManagementUpdateInwayRequest {
     body: ManagementInway;
 }
 
-export interface ManagementUpdateServiceOperationRequest {
+export interface ManagementUpdateServiceRequest {
     name: string;
-    body: ManagementUpdateServiceRequest;
+    body: InlineObject;
 }
 
 export interface ManagementUpdateSettingsOperationRequest {
@@ -1005,7 +1005,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateServiceRaw(requestParameters: ManagementUpdateServiceOperationRequest): Promise<runtime.ApiResponse<ManagementUpdateServiceResponse>> {
+    async managementUpdateServiceRaw(requestParameters: ManagementUpdateServiceRequest): Promise<runtime.ApiResponse<ManagementUpdateServiceResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementUpdateService.');
         }
@@ -1025,7 +1025,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementUpdateServiceRequestToJSON(requestParameters.body),
+            body: InlineObjectToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementUpdateServiceResponseFromJSON(jsonValue));
@@ -1033,7 +1033,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateService(requestParameters: ManagementUpdateServiceOperationRequest): Promise<ManagementUpdateServiceResponse> {
+    async managementUpdateService(requestParameters: ManagementUpdateServiceRequest): Promise<ManagementUpdateServiceResponse> {
         const response = await this.managementUpdateServiceRaw(requestParameters);
         return await response.value();
     }

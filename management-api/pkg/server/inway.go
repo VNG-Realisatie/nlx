@@ -143,7 +143,20 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
-	err := s.configDatabase.DeleteInway(ctx, req.Name)
+	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	if err != nil {
+		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
+	}
+
+	err = s.auditLogger.InwayDelete(ctx, userInfo.username, userInfo.userAgent, req.Name)
+	if err != nil {
+		s.logger.Error("failed to write auditlog", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "failed to write to auditlog")
+	}
+
+	err = s.configDatabase.DeleteInway(ctx, req.Name)
 	if err != nil {
 		logger.Error("error deleting inway in DB", zap.Error(err))
 		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")

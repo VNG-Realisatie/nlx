@@ -23,6 +23,8 @@ type RecordData struct {
 	Delegator *string
 	Delegatee *string
 	Reference *string
+
+	InwayName *string
 }
 
 type RecordServiceOrganization struct {
@@ -51,6 +53,7 @@ const (
 	OrderCreate                 ActionType = "order_create"
 	OrderOutgoingRevoke         ActionType = "order_outgoing_revoke"
 	OrganizationSettingsUpdate  ActionType = "organization_settings_update"
+	InwayDelete                 ActionType = "inway_delete"
 )
 
 type Logger interface {
@@ -69,4 +72,5 @@ type Logger interface {
 	ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error
 	ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error
 	OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error
+	InwayDelete(ctx context.Context, userName, userAgent, inwayName string) error
 }
