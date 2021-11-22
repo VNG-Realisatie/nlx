@@ -91,8 +91,6 @@ func (i *Inway) SetServiceEndpoints(endpoints []*plugins.Service) error {
 		i.services[endPoint.Name] = endPoint
 	}
 
-	i.monitoringService.SetReady()
-
 	return nil
 }
 
@@ -131,6 +129,8 @@ func (i *Inway) retrieveAndUpdateConfig() error {
 	i.logger.Debug("fetched settings from management client", zap.Any("organization inway", settings.OrganizationInway), zap.Bool("i.isOrganizationInway", i.isOrganizationInway))
 
 	i.logger.Info("retrieved config successfully")
+
+	i.monitoringService.SetReady()
 
 	return err
 }
