@@ -26,7 +26,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/sessions v1.2.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0
 	github.com/huandu/xstrings v1.3.2
 	github.com/jackc/pgtype v1.8.1
 	github.com/jessevdk/go-flags v1.5.0
