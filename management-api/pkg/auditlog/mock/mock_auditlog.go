@@ -177,6 +177,20 @@ func (mr *MockLoggerMockRecorder) OrderOutgoingRevoke(ctx, userName, userAgent, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrderOutgoingRevoke", reflect.TypeOf((*MockLogger)(nil).OrderOutgoingRevoke), ctx, userName, userAgent, delegatee, reference)
 }
 
+// OrderOutgoingUpdate mocks base method.
+func (m *MockLogger) OrderOutgoingUpdate(ctx context.Context, userName, userAgent, delegatee, orderReference string, services []auditlog.RecordService) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OrderOutgoingUpdate", ctx, userName, userAgent, delegatee, orderReference, services)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// OrderOutgoingUpdate indicates an expected call of OrderOutgoingUpdate.
+func (mr *MockLoggerMockRecorder) OrderOutgoingUpdate(ctx, userName, userAgent, delegatee, orderReference, services interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrderOutgoingUpdate", reflect.TypeOf((*MockLogger)(nil).OrderOutgoingUpdate), ctx, userName, userAgent, delegatee, orderReference, services)
+}
+
 // OrganizationSettingsUpdate mocks base method.
 func (m *MockLogger) OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error {
 	m.ctrl.T.Helper()

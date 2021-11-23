@@ -280,6 +280,41 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 	return err
 }
 
+func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, userAgent, delegatee string, orderReference string, services []RecordService) error {
+	updateLog := &recordMetadata{
+		Delegatee: &delegatee,
+		Reference: &orderReference,
+	}
+
+	data, err := json.Marshal(updateLog)
+	if err != nil {
+		return err
+	}
+
+	record := &database.AuditLog{
+		UserAgent:  userAgent,
+		UserName:   userName,
+		Services:   make([]database.AuditLogService, len(services)),
+		Delegatee:  delegatee,
+		Data: sql.NullString{String: string(data), Valid: true},
+		ActionType: database.OrderOutgoingUpdate,
+	}
+
+	for i, service := range services {
+		record.Services[i] = database.AuditLogService{
+			Organization: database.AuditLogServiceOrganization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			},
+			Service: service.Service,
+		}
+	}
+
+	_, err = a.database.CreateAuditLogRecord(ctx, record)
+
+	return err
+}
+
 func (a *PostgresLogger) OrderOutgoingRevoke(ctx context.Context, userName, userAgent, delegatee, reference string) error {
 	revokeLog := &recordMetadata{
 		Delegatee: &delegatee,

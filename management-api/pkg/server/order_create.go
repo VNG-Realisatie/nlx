@@ -23,12 +23,12 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateOutgoingOrder")
 
-	order := convertOrder(request)
+	order := convertOutgoingOrder(request)
 
-	if err := validateOrder(order); err != nil {
+	if err := validateOutgoingOrder(order); err != nil {
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outgoing order: %s", err))
 	}
 
@@ -70,7 +70,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 	return &emptypb.Empty{}, nil
 }
 
-func convertOrder(request *api.CreateOutgoingOrderRequest) *database.OutgoingOrder {
+func convertOutgoingOrder(request *api.OutgoingOrderRequest) *database.OutgoingOrder {
 	services := make([]database.OutgoingOrderService, len(request.Services))
 
 	for i, service := range request.Services {
@@ -108,7 +108,7 @@ func validateOrganizationSerialNumber(value interface{}) error {
 	return err
 }
 
-func validateOrder(order *database.OutgoingOrder) error {
+func validateOutgoingOrder(order *database.OutgoingOrder) error {
 	serviceNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 	organizationNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
 

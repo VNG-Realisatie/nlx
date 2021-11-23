@@ -51,6 +51,7 @@ const (
 	ServiceUpdate               ActionType = "service_update"
 	ServiceDelete               ActionType = "service_delete"
 	OrderCreate                 ActionType = "order_create"
+	OrderOutgoingUpdate         ActionType = "order_outgoing_update"
 	OrderOutgoingRevoke         ActionType = "order_outgoing_revoke"
 	OrganizationSettingsUpdate  ActionType = "organization_settings_update"
 	InwayDelete                 ActionType = "inway_delete"
@@ -67,6 +68,7 @@ type Logger interface {
 	AccessGrantRevoke(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, serviceName string) error
 	OutgoingAccessRequestCreate(ctx context.Context, userName, userAgent, organizationSerialNumber, service string) error
 	OrderCreate(ctx context.Context, userName, userAgent, delegatee string, services []RecordService) error
+	OrderOutgoingUpdate(ctx context.Context, userName, userAgent, delegatee string, orderReference string, services []RecordService) error
 	OrderOutgoingRevoke(ctx context.Context, userName, userAgent, delegatee, reference string) error
 	ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error
 	ServiceUpdate(ctx context.Context, userName, userAgent, serviceName string) error

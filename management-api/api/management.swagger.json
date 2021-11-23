@@ -618,7 +618,37 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/managementCreateOutgoingOrderRequest"
+              "$ref": "#/definitions/managementOutgoingOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Management"
+        ]
+      },
+      "put": {
+        "operationId": "Management_UpdateOutgoingOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/managementOutgoingOrderRequest"
             }
           }
         ],
@@ -1249,37 +1279,6 @@
         }
       }
     },
-    "managementCreateOutgoingOrderRequest": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "publicKeyPEM": {
-          "type": "string"
-        },
-        "delegatee": {
-          "type": "string"
-        },
-        "validFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOrderService"
-          }
-        }
-      }
-    },
     "managementCreateServiceRequest": {
       "type": "object",
       "properties": {
@@ -1828,6 +1827,37 @@
         "revokedAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "managementOutgoingOrderRequest": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "publicKeyPEM": {
+          "type": "string"
+        },
+        "delegatee": {
+          "type": "string"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementOrderService"
+          }
         }
       }
     },

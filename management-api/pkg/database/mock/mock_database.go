@@ -730,6 +730,20 @@ func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, id, state, referenceID, err)
 }
 
+// UpdateOutgoingOrder mocks base method.
+func (m *MockConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order *database.OutgoingOrder) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", ctx, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateOutgoingOrder indicates an expected call of UpdateOutgoingOrder.
+func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingOrder(ctx, order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingOrder", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingOrder), ctx, order)
+}
+
 // UpdateService mocks base method.
 func (m *MockConfigDatabase) UpdateService(ctx context.Context, service *database.Service) error {
 	m.ctrl.T.Helper()

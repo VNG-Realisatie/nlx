@@ -26,7 +26,7 @@ import (
 )
 
 //nolint:funlen // this is a test method
-func TestCreateOutgoingOrder(t *testing.T) {
+func TestUpdateOutgoingOrder(t *testing.T) {
 	validFrom := time.Now().UTC()
 	validUntil := time.Now().Add(1 * time.Hour).UTC()
 
@@ -42,7 +42,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		return api.OutgoingOrderRequest{
 			Reference:    "a-reference",
 			Description:  "a-description",
-			Delegatee:    "00000000000000000001",
+			Delegatee: "00000000000000000001",
 			PublicKeyPEM: testPublicKeyPEM,
 			ValidFrom:    timestamppb.New(validFrom),
 			ValidUntil:   timestamppb.New(validUntil),
@@ -71,13 +71,13 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: cannot be blank."),
 		},
-		"when_providing_a_reference_which_is_too_long": {
+		"when_providing_an_empty_delegatee": {
 			request: func() *api.OutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
-				request.Reference = "reference-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdea"
+				request.Delegatee = ""
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: the length must be between 1 and 100."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: organization serial number must be in a valid format: cannot be empty."),
 		},
 		"when_providing_an_empty_description": {
 			request: func() *api.OutgoingOrderRequest {
@@ -94,14 +94,6 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				return &request
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: the length must be between 1 and 100."),
-		},
-		"when_providing_an_invalid_delegatee": {
-			request: func() *api.OutgoingOrderRequest {
-				request := validOutgoingOrderRequest()
-				request.Delegatee = "00000000000000000000000001_too_long"
-				return &request
-			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: organization serial number must be in a valid format: too long, max 20 bytes."),
 		},
 		"when_providing_an_end_date_which_is_before_the_start_date": {
 			request: func() *api.OutgoingOrderRequest {
@@ -140,11 +132,12 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: PublicKeyPEM: expect public key as pem."),
 		},
-		"when_a_record_with_the_same_reference_for_the_same_organization_already_exists": {
+		"when_updating_the_order_fails": {
+			wantErr: status.Error(codes.Internal, "failed to update outgoing order"),
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
@@ -156,53 +149,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
-					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
+					UpdateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
 						Reference:    "a-reference",
 						Description:  "a-description",
+						Delegatee: "00000000000000000001",
 						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "00000000000000000001",
-						ValidFrom:    validFrom,
-						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
-								},
-								Service: "a-service",
-							},
-						},
-					}).
-					Return(database.ErrDuplicateOutgoingOrder)
-			},
-			request: func() *api.OutgoingOrderRequest {
-				request := validOutgoingOrderRequest()
-				return &request
-			}(),
-			wantErr: status.Error(codes.InvalidArgument, "an order with reference a-reference for 00000000000000000001 already exist"),
-		},
-		"when_creating_the_order_fails": {
-			wantErr: status.Error(codes.Internal, "failed to create outgoing order"),
-			setup: func(mocks serviceMocks) {
-				mocks.al.
-					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
-						{
-							Organization: auditlog.RecordServiceOrganization{
-								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
-							},
-							Service: "a-service",
-						},
-					})
-
-				mocks.db.
-					EXPECT().
-					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
-						Reference:    "a-reference",
-						Description:  "a-description",
-						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "00000000000000000001",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
@@ -222,11 +173,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				return &request
 			}(),
 		},
-		"when_creating_audit_log_Fails": {
+		"when_updating_audit_log_fails": {
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
@@ -247,11 +198,11 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
+					UpdateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
 						Reference:    "a-reference",
 						Description:  "a-description",
+						Delegatee: "00000000000000000001",
 						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "00000000000000000001",
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
 						Services: []database.OutgoingOrderService{
@@ -268,7 +219,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
@@ -300,7 +251,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			}))
 
-			response, err := service.CreateOutgoingOrder(ctx, tt.request)
+			response, err := service.UpdateOutgoingOrder(ctx, tt.request)
 
 			if tt.wantErr == nil {
 				assert.IsType(t, &emptypb.Empty{}, response)

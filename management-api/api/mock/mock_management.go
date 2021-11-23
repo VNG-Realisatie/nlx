@@ -79,7 +79,7 @@ func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interfac
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -618,6 +618,26 @@ func (mr *MockManagementClientMockRecorder) UpdateInway(ctx, in interface{}, opt
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInway", reflect.TypeOf((*MockManagementClient)(nil).UpdateInway), varargs...)
 }
 
+// UpdateOutgoingOrder mocks base method.
+func (m *MockManagementClient) UpdateOutgoingOrder(ctx context.Context, in *api.OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateOutgoingOrder indicates an expected call of UpdateOutgoingOrder.
+func (mr *MockManagementClientMockRecorder) UpdateOutgoingOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingOrder", reflect.TypeOf((*MockManagementClient)(nil).UpdateOutgoingOrder), varargs...)
+}
+
 // UpdateService mocks base method.
 func (m *MockManagementClient) UpdateService(ctx context.Context, in *api.UpdateServiceRequest, opts ...grpc.CallOption) (*api.UpdateServiceResponse, error) {
 	m.ctrl.T.Helper()
@@ -712,7 +732,7 @@ func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 inter
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockManagementServer) CreateOutgoingOrder(arg0 context.Context, arg1 *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) CreateOutgoingOrder(arg0 context.Context, arg1 *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOutgoingOrder", arg0, arg1)
 	ret0, _ := ret[0].(*emptypb.Empty)
@@ -1114,6 +1134,21 @@ func (m *MockManagementServer) UpdateInway(arg0 context.Context, arg1 *api.Updat
 func (mr *MockManagementServerMockRecorder) UpdateInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInway", reflect.TypeOf((*MockManagementServer)(nil).UpdateInway), arg0, arg1)
+}
+
+// UpdateOutgoingOrder mocks base method.
+func (m *MockManagementServer) UpdateOutgoingOrder(arg0 context.Context, arg1 *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateOutgoingOrder indicates an expected call of UpdateOutgoingOrder.
+func (mr *MockManagementServerMockRecorder) UpdateOutgoingOrder(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingOrder", reflect.TypeOf((*MockManagementServer)(nil).UpdateOutgoingOrder), arg0, arg1)
 }
 
 // UpdateService mocks base method.

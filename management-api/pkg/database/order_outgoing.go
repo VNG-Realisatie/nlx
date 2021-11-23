@@ -137,6 +137,62 @@ func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.C
 	return orders, nil
 }
 
+func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error {
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+
+	duplicateDelegateWithReferenceSQLError := "duplicate key value violates unique constraint \"idx_outgoing_orders_delegatee_reference\""
+
+	// Update (whitelisted) fields in the outgoing order table for the modified order
+	if err := dbWithTx.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Select([]string{"description", "public_key_pem", "valid_from", "valid_until"}).
+		Save(order).Error; err != nil {
+		if strings.Contains(err.Error(), duplicateDelegateWithReferenceSQLError) {
+			return ErrDuplicateOutgoingOrder
+		}
+
+		return err
+	}
+
+	// Delete all services for the updated order (note that we are in a transaction)
+	err := dbWithTx.DB.
+		WithContext(ctx).
+		Omit(clause.Associations).
+		Where("outgoing_order_id = ?", order.ID).
+		Delete(&OutgoingOrderService{}).
+		Error
+	if err != nil {
+		return err
+	}
+
+	// Add all services to the order
+	orderServices := []OutgoingOrderService{}
+
+	for _, service := range order.Services {
+		orderServices = append(orderServices, OutgoingOrderService{
+			OutgoingOrderID: order.ID,
+			Organization: OutgoingOrderServiceOrganization{
+				SerialNumber: service.Organization.SerialNumber,
+				Name:         service.Organization.Name,
+			},
+			Service: service.Service,
+		})
+	}
+
+	if err := dbWithTx.DB.
+		WithContext(ctx).
+		Model(OutgoingOrderService{}).
+		Create(orderServices).Error; err != nil {
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
 // nolint dupl: function is not duplicated, difference between incoming and outgoing orders
 func (db *PostgresConfigDatabase) RevokeOutgoingOrderByReference(ctx context.Context, delegatee, reference string, revokedAt time.Time) error {
 	outgoingOrder := &OutgoingOrder{}
