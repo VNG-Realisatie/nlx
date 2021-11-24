@@ -1,3 +1,24 @@
+# [0.119.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.118.1...v0.119.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* **directory:** add correct service names in the grpc files for backward compatibility ([fbc7672](https://gitlab.com/commonground/nlx/nlx/commit/fbc7672ca14046c0b4df52b6818caabe09a9bae0))
+* **inway:** correctly set inway as ready ([340055f](https://gitlab.com/commonground/nlx/nlx/commit/340055f225b15b8a77adb9897dc85f1604bc6f38))
+* **management:** eslint issues from new eslint config ([08851ac](https://gitlab.com/commonground/nlx/nlx/commit/08851ac5437ed334e6902f300c54697f273eafa5))
+* **management:** update delete inway popup copy ([99a5979](https://gitlab.com/commonground/nlx/nlx/commit/99a597935f7a0d81e992415a613f2643b24bd789))
+* **management:** use stam+t for third person singular verb in Dutch ([9f876d6](https://gitlab.com/commonground/nlx/nlx/commit/9f876d6efd090b98892d829ee9b67d43b6c64650))
+
+
+### Features
+
+* **management:** add inway delete to auditlog ([880f977](https://gitlab.com/commonground/nlx/nlx/commit/880f977f2f43bd95d8f49de08c07579c43ed1b0f))
+* **management:** add remove inway button to management ui ([4533fc5](https://gitlab.com/commonground/nlx/nlx/commit/4533fc5f307a8bf7b7f9ce65ac1ebd4ea59b55a8))
+* **management:** add remove inway button to management ui ([f965d2e](https://gitlab.com/commonground/nlx/nlx/commit/f965d2eaebcf0a291c6f89116afb3f5bb2566b86))
+* **management:** implement deletion of inway in management UI and handle inway reregister ([8d170c3](https://gitlab.com/commonground/nlx/nlx/commit/8d170c3db5bc2b95e2b13a9b672164b7d1977aac))
+* **management:** implement deletion of inway in management UI and handle inway reregister ([9557e7e](https://gitlab.com/commonground/nlx/nlx/commit/9557e7ec13ed9f1872e23ab8615132a7b4e0fec0))
+* **management:** show clearly which services are offered by own organization ([f3f6546](https://gitlab.com/commonground/nlx/nlx/commit/f3f654695942b977c909c8e4d422ab1796a18a84))
+
 ## [0.118.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.118.0...v0.118.1) (2021-11-09)
 
 
