@@ -8,6 +8,7 @@ package storage_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -47,7 +48,7 @@ func TestRegisterOutwayVersion(t *testing.T) {
 			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
-			err := repo.RegisterOutwayVersion(context.Background(), tt.args.version)
+			err := repo.RegisterOutwayVersion(context.Background(), tt.args.version, time.Now())
 			require.Equal(t, tt.wantErr, err)
 
 			assertVersionInRepository(t, repo, nlxversion.Version{

@@ -7,6 +7,7 @@ package directory_mock
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 
@@ -170,17 +171,17 @@ func (mr *MockRepositoryMockRecorder) RegisterInway(arg0 interface{}) *gomock.Ca
 }
 
 // RegisterOutwayVersion mocks base method.
-func (m *MockRepository) RegisterOutwayVersion(ctx context.Context, version nlxversion.Version) error {
+func (m *MockRepository) RegisterOutwayVersion(ctx context.Context, version nlxversion.Version, announcedAt time.Time) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterOutwayVersion", ctx, version)
+	ret := m.ctrl.Call(m, "RegisterOutwayVersion", ctx, version, announcedAt)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RegisterOutwayVersion indicates an expected call of RegisterOutwayVersion.
-func (mr *MockRepositoryMockRecorder) RegisterOutwayVersion(ctx, version interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) RegisterOutwayVersion(ctx, version, announcedAt interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutwayVersion", reflect.TypeOf((*MockRepository)(nil).RegisterOutwayVersion), ctx, version)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutwayVersion", reflect.TypeOf((*MockRepository)(nil).RegisterOutwayVersion), ctx, version, announcedAt)
 }
 
 // RegisterService mocks base method.

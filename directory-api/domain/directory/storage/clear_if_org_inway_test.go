@@ -17,8 +17,8 @@ func TestClearIfSetAsOrganizationInway(t *testing.T) {
 
 	var (
 		testOrgSerialNumber = "01234567890123456789"
-		testInwayAddrNotOrg = "https://fixture-inway-address-two.com"
-		testInwayAddrOrg    = "https://fixture-inway-address-one.com"
+		testInwayAddrNotOrg = "fixture-inway-address-two.com"
+		testInwayAddrOrg    = "fixture-inway-address-one.com"
 	)
 
 	tests := map[string]struct {

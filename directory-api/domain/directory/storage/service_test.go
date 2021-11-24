@@ -156,8 +156,12 @@ func TestListServices(t *testing.T) {
 					},
 					Inways: []*domain.NewServiceInwayArgs{
 						{
-							Address: "https://fixture-inway-address-one.com",
-							State:   domain.InwayUP,
+							Address: "fixture-inway-address-one.com",
+							State:   domain.InwayDOWN,
+						},
+						{
+							Address: "fixture-inway-address-two.com",
+							State:   domain.InwayDOWN,
 						},
 					},
 				},
@@ -172,7 +176,7 @@ func TestListServices(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			db, close := new(t, tt.loadFixtures)
+			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
 			want := make([]*domain.Service, len(tt.want))
@@ -183,7 +187,7 @@ func TestListServices(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			got, err := db.ListServices(context.Background(), tt.args.organizationSerialNumber)
+			got, err := repo.ListServices(context.Background(), tt.args.organizationSerialNumber)
 			require.Equal(t, tt.wantErr, err)
 
 			if tt.wantErr == nil {

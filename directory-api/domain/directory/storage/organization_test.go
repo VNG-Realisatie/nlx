@@ -7,6 +7,7 @@ package storage_test
 
 import (
 	"context"
+	"log"
 	"testing"
 	"time"
 
@@ -328,6 +329,7 @@ func TestListOrganizations(t *testing.T) {
 			require.Equal(t, tt.wantErr, err)
 
 			if tt.wantErr == nil {
+				log.Printf("%v#", got)
 				assert.EqualValues(t, want, got)
 			}
 		})

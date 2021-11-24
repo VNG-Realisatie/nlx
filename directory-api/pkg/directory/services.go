@@ -5,6 +5,7 @@ package directory
 
 import (
 	"context"
+	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -19,7 +20,7 @@ import (
 )
 
 func registerOutwayVersion(ctx context.Context, logger *zap.Logger, db storage.Repository, version nlxversion.Version) {
-	err := db.RegisterOutwayVersion(ctx, version)
+	err := db.RegisterOutwayVersion(ctx, version, time.Now())
 	if err != nil {
 		logger.Error("failed to register outway version", zap.Error(err))
 	}
