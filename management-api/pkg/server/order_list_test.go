@@ -51,12 +51,13 @@ func TestListOutgoingOrders(t *testing.T) {
 					ListOutgoingOrders(gomock.Any()).
 					Return([]*database.OutgoingOrder{
 						{
-							Reference:   "reference",
-							Description: "description",
-							Delegatee:   "10000000000000000001",
-							ValidFrom:   validFrom,
-							ValidUntil:  validUntil,
-							RevokedAt:   sql.NullTime{},
+							Reference:    "reference",
+							Description:  "description",
+							Delegatee:    "10000000000000000001",
+							PublicKeyPEM: "public_key",
+							ValidFrom:    validFrom,
+							ValidUntil:   validUntil,
+							RevokedAt:    sql.NullTime{},
 							Services: []database.OutgoingOrderService{
 								{
 									Service: "service-a",
@@ -72,11 +73,12 @@ func TestListOutgoingOrders(t *testing.T) {
 			wantResponse: &api.ListOutgoingOrdersResponse{
 				Orders: []*api.OutgoingOrder{
 					{
-						Reference:   "reference",
-						Description: "description",
-						Delegatee:   "10000000000000000001",
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
+						Reference:    "reference",
+						Description:  "description",
+						Delegatee:    "10000000000000000001",
+						PublicKeyPem: "public_key",
+						ValidFrom:    timestamppb.New(validFrom),
+						ValidUntil:   timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",

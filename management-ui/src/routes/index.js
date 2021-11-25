@@ -16,6 +16,7 @@ import SettingsPage from '../pages/SettingsPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import OrdersPage from '../pages/orders/OrdersPage'
 import AddOrderPage from '../pages/orders/AddOrderPage'
+import EditOrderPage from '../pages/orders/EditOrderPage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
 const Routes = ({ authorizationPage }) => (
@@ -50,6 +51,10 @@ const Routes = ({ authorizationPage }) => (
     <AuthenticatedRoute path="/orders/add-order" component={AddOrderPage} />
 
     <Redirect exact path="/orders" to="/orders/outgoing" />
+    <AuthenticatedRoute
+      path="/orders/outgoing/:delegatee/:reference/edit"
+      component={EditOrderPage}
+    />
     <AuthenticatedRoute
       path="/orders/:type(outgoing|incoming)"
       component={OrdersPage}

@@ -54,7 +54,10 @@ test('display order details', async () => {
     <Router history={history}>
       <Route path="/:delegatee/:reference">
         <StoreProvider rootStore={rootStore}>
-          <OrderDetailPage order={orderStore.outgoingOrders[0]} />
+          <OrderDetailPage
+            order={orderStore.outgoingOrders[0]}
+            parentUrl={'/orders/outgoing'}
+          />
         </StoreProvider>
       </Route>
     </Router>,
@@ -66,11 +69,11 @@ test('display order details', async () => {
   const orderModel = orderStore.outgoingOrders[0]
   jest.spyOn(orderModel, 'revoke')
 
-  const revokeButton = await screen.findByText('Revoke')
+  const revokeButton = await screen.findByText(/Revoke/)
   fireEvent.click(revokeButton)
 
   const confirmModal = screen.getByRole('dialog')
-  const okButton = within(confirmModal).getByText('Revoke')
+  const okButton = within(confirmModal).getByText(/Revoke/)
 
   managementApiClient.managementRevokeOutgoingOrder = jest
     .fn()
@@ -79,8 +82,8 @@ test('display order details', async () => {
   fireEvent.click(okButton)
   await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(1))
 
-  expect(screen.getByText('Order is revoked')).toBeInTheDocument()
-  expect(screen.getByText('Revoked on date')).toBeInTheDocument()
+  expect(screen.getByText(/Order is revoked/)).toBeInTheDocument()
+  expect(screen.getByText(/Revoked on date/)).toBeInTheDocument()
 
   fireEvent.click(screen.getByTestId('close-button'))
 

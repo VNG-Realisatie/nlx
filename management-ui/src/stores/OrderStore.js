@@ -76,6 +76,19 @@ class OrderStore {
     this._isLoading = false
   }).bind(this)
 
+  updateOutgoing = flow(function* updateOutgoing(order) {
+    try {
+      yield this._managementApiClient.managementUpdateOutgoingOrder({
+        body: order,
+      })
+    } catch (error) {
+      this._isLoading = false
+      throw new Error(error.message)
+    }
+
+    this._isLoading = false
+  })
+
   getOutgoing = (delegatee, reference) => {
     return this._outgoingOrders.get(getOutgoingKey(delegatee, reference))
   }

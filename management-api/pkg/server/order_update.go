@@ -2,10 +2,13 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
+	"go.nlx.io/nlx/management-api/pkg/database"
+
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -39,6 +42,18 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		})
 	}
 
+	orderInDB, err := s.configDatabase.GetOutgoingOrderByReference(ctx, order.Reference)
+	if err != nil {
+		s.logger.Error("failed to fetch order in database", zap.Error(err))
+
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, status.Error(codes.NotFound, "could not find outgoing order in management database")
+		}
+		return nil, status.Error(codes.Internal, "failed to fetch outgoing order in management database")
+	}
+
+	order.ID = orderInDB.ID
+
 	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, order.Reference, services)
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
@@ -54,4 +69,3 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 
 	return &emptypb.Empty{}, nil
 }
-

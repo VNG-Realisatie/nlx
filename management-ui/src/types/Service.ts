@@ -7,6 +7,7 @@ interface Service {
     serialNumber: string
     name: string
   }
+  service: string
   serviceName: string
   state: string
   apiSpecificationType?: string

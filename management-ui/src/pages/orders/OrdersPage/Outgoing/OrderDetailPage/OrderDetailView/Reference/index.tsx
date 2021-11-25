@@ -3,12 +3,11 @@
 //
 
 import React from 'react'
-import { string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { IconBarcode } from '../../../../../../../icons'
 import { StyledContainer, StyledLabel } from './index.styles'
 
-const Reference = ({ value }) => {
+const Reference: React.FC<{ value: string | null }> = ({ value }) => {
   const { t } = useTranslation()
   return (
     <StyledContainer>
@@ -17,10 +16,6 @@ const Reference = ({ value }) => {
       <StyledLabel>{value}</StyledLabel>
     </StyledContainer>
   )
-}
-
-Reference.propTypes = {
-  value: string.isRequired,
 }
 
 export default Reference

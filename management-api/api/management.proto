@@ -544,6 +544,7 @@ message OutgoingOrder {
   google.protobuf.Timestamp validUntil = 6;
   repeated OrderService services = 7;
   google.protobuf.Timestamp revokedAt = 8;
+  string publicKeyPem = 9;
 }
 
 message ListOutgoingOrdersResponse {

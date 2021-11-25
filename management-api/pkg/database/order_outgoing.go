@@ -145,12 +145,12 @@ func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order
 
 	duplicateDelegateWithReferenceSQLError := "duplicate key value violates unique constraint \"idx_outgoing_orders_delegatee_reference\""
 
-	// Update (whitelisted) fields in the outgoing order table for the modified order
+	// Update the outgoing order table for the modified order, uses order.ID as pk
 	if err := dbWithTx.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
-		Select([]string{"description", "public_key_pem", "valid_from", "valid_until"}).
-		Save(order).Error; err != nil {
+		Model(&order).
+		Updates(order).Error; err != nil {
 		if strings.Contains(err.Error(), duplicateDelegateWithReferenceSQLError) {
 			return ErrDuplicateOutgoingOrder
 		}

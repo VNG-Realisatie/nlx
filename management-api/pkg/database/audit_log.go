@@ -25,7 +25,7 @@ const (
 	ServiceUpdate               AuditLogActionType = "service_update"
 	ServiceDelete               AuditLogActionType = "service_delete"
 	OrderCreate                 AuditLogActionType = "order_create"
-	OrderOutgoingUpdate                 AuditLogActionType = "order_outgoing_update"
+	OrderOutgoingUpdate         AuditLogActionType = "order_outgoing_update"
 	OrderOutgoingRevoke         AuditLogActionType = "order_outgoing_revoke"
 	OrganizationSettingsUpdate  AuditLogActionType = "organization_settings_update"
 	InwayDelete                 AuditLogActionType = "inway_delete"
@@ -38,9 +38,9 @@ type AuditLog struct {
 	UserAgent  string
 	Delegatee  string
 
-	Data       sql.NullString
-	Services   []AuditLogService
-	CreatedAt  time.Time
+	Data      sql.NullString
+	Services  []AuditLogService
+	CreatedAt time.Time
 }
 
 func (a *AuditLog) TableName() string {

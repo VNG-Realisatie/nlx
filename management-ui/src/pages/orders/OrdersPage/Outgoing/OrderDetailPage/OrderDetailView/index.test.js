@@ -31,7 +31,7 @@ test('display order details', () => {
 
   expect(screen.getByTestId('status')).toHaveTextContent(
     // eslint-disable-next-line no-useless-concat
-    'up.svg' + 'Order is active' + 'Revoke',
+    'state-up.svg' + 'Order is active',
   )
   expect(screen.getByTestId('start-end-date')).toHaveTextContent(
     // eslint-disable-next-line no-useless-concat

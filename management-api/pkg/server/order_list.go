@@ -33,13 +33,14 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 
 	for i, order := range orders {
 		outgoingOrders[i] = &api.OutgoingOrder{
-			Reference:   order.Reference,
-			Description: order.Description,
-			Delegatee:   order.Delegatee,
-			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
-			ValidFrom:   timestamppb.New(order.ValidFrom),
-			ValidUntil:  timestamppb.New(order.ValidUntil),
-			Services:    convertOutgoingOrderServices(order.Services),
+			Reference:    order.Reference,
+			PublicKeyPem: order.PublicKeyPEM,
+			Description:  order.Description,
+			Delegatee:    order.Delegatee,
+			RevokedAt:    convert.SQLToProtoTimestamp(order.RevokedAt),
+			ValidFrom:    timestamppb.New(order.ValidFrom),
+			ValidUntil:   timestamppb.New(order.ValidUntil),
+			Services:     convertOutgoingOrderServices(order.Services),
 		}
 	}
 

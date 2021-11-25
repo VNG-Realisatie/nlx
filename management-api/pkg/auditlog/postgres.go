@@ -280,7 +280,7 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 	return err
 }
 
-func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, userAgent, delegatee string, orderReference string, services []RecordService) error {
+func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, userAgent, delegatee, orderReference string, services []RecordService) error {
 	updateLog := &recordMetadata{
 		Delegatee: &delegatee,
 		Reference: &orderReference,
@@ -296,7 +296,7 @@ func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, user
 		UserName:   userName,
 		Services:   make([]database.AuditLogService, len(services)),
 		Delegatee:  delegatee,
-		Data: sql.NullString{String: string(data), Valid: true},
+		Data:       sql.NullString{String: string(data), Valid: true},
 		ActionType: database.OrderOutgoingUpdate,
 	}
 

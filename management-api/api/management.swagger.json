@@ -1827,6 +1827,9 @@
         "revokedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "publicKeyPem": {
+          "type": "string"
         }
       }
     },

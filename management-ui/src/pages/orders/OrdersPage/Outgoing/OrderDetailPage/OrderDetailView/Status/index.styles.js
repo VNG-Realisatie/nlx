@@ -21,6 +21,5 @@ export const StateDetail = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 50px;
   font-weight: normal;
 `

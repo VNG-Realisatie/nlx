@@ -7,6 +7,7 @@ class OutgoingOrderModel {
   _description = null
   _delegatee = null
   _reference = null
+  _publicKeyPem = null
   _services = null
   _revokedAt = null
   _validFrom = null
@@ -21,6 +22,10 @@ class OutgoingOrderModel {
 
   get description() {
     return this._description
+  }
+
+  get publicKeyPem() {
+    return this._publicKeyPem
   }
 
   get delegatee() {
@@ -66,6 +71,10 @@ class OutgoingOrderModel {
 
     if (orderData.delegatee) {
       this._delegatee = orderData.delegatee
+    }
+
+    if (orderData.publicKeyPem) {
+      this._publicKeyPem = orderData.publicKeyPem
     }
 
     if (orderData.services) {

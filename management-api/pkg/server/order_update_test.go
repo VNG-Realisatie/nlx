@@ -42,7 +42,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		return api.OutgoingOrderRequest{
 			Reference:    "a-reference",
 			Description:  "a-description",
-			Delegatee: "00000000000000000001",
+			Delegatee:    "00000000000000000001",
 			PublicKeyPEM: testPublicKeyPEM,
 			ValidFrom:    timestamppb.New(validFrom),
 			ValidUntil:   timestamppb.New(validUntil),
@@ -149,10 +149,32 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 
 				mocks.db.
 					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID:           0,
+						Reference:    "a-reference",
+						Description:  "a-description",
+						Delegatee:    "00000000000000000001",
+						PublicKeyPEM: testPublicKeyPEM,
+						ValidFrom:    validFrom,
+						ValidUntil:   validUntil,
+						Services: []database.OutgoingOrderService{
+							{
+								Organization: database.OutgoingOrderServiceOrganization{
+									SerialNumber: "10000000000000000001",
+									Name:         "a-organization",
+								},
+								Service: "a-service",
+							},
+						},
+					}, nil)
+
+				mocks.db.
+					EXPECT().
 					UpdateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
 						Reference:    "a-reference",
 						Description:  "a-description",
-						Delegatee: "00000000000000000001",
+						Delegatee:    "00000000000000000001",
 						PublicKeyPEM: testPublicKeyPEM,
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
@@ -175,6 +197,28 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		},
 		"when_updating_audit_log_fails": {
 			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID:           0,
+						Reference:    "a-reference",
+						Description:  "a-description",
+						Delegatee:    "00000000000000000001",
+						PublicKeyPEM: testPublicKeyPEM,
+						ValidFrom:    validFrom,
+						ValidUntil:   validUntil,
+						Services: []database.OutgoingOrderService{
+							{
+								Organization: database.OutgoingOrderServiceOrganization{
+									SerialNumber: "10000000000000000001",
+									Name:         "a-organization",
+								},
+								Service: "a-service",
+							},
+						},
+					}, nil)
+
 				mocks.al.
 					EXPECT().
 					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
@@ -201,7 +245,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 					UpdateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
 						Reference:    "a-reference",
 						Description:  "a-description",
-						Delegatee: "00000000000000000001",
+						Delegatee:    "00000000000000000001",
 						PublicKeyPEM: testPublicKeyPEM,
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
@@ -216,6 +260,28 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 						},
 					}).
 					Return(nil)
+
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID:           0,
+						Reference:    "a-reference",
+						Description:  "a-description",
+						Delegatee:    "00000000000000000001",
+						PublicKeyPEM: testPublicKeyPEM,
+						ValidFrom:    validFrom,
+						ValidUntil:   validUntil,
+						Services: []database.OutgoingOrderService{
+							{
+								Organization: database.OutgoingOrderServiceOrganization{
+									SerialNumber: "10000000000000000001",
+									Name:         "a-organization",
+								},
+								Service: "a-service",
+							},
+						},
+					}, nil)
 
 				mocks.al.
 					EXPECT().
@@ -236,6 +302,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		},
 	}
 
+	//nolint:dupl // this is a test method
 	for name, tt := range tests {
 		tt := tt
 

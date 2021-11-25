@@ -68,6 +68,12 @@ export interface ManagementOutgoingOrder {
      * @memberof ManagementOutgoingOrder
      */
     revokedAt?: Date;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementOutgoingOrder
+     */
+    publicKeyPem?: string;
 }
 
 export function ManagementOutgoingOrderFromJSON(json: any): ManagementOutgoingOrder {
@@ -87,6 +93,7 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
         'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
+        'publicKeyPem': !exists(json, 'publicKeyPem') ? undefined : json['publicKeyPem'],
     };
 }
 
@@ -106,6 +113,7 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
         'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'publicKeyPem': value.publicKeyPem,
     };
 }
 
