@@ -37,7 +37,7 @@
     "@commonground/eslint-config-cra-standard-prettier": "6.1.0",
     "@fontsource/source-sans-pro": "4.5.1",
     "@openapitools/openapi-generator-cli": "2.4.18",
-    "@testing-library/jest-dom": "5.15.0",
+    "@testing-library/jest-dom": "5.15.1",
     "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
     "@testing-library/user-event": "13.5.0",
