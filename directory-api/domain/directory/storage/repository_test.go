@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go.nlx.io/nlx/common/nlxversion"
 	pgadapter_test_setup "go.nlx.io/nlx/directory-api/adapters/storage/postgres/test_setup"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
@@ -157,42 +156,51 @@ func loadFixtures(repo storage.Repository) error {
 		}
 	}
 
-	newOutwayVersionsArgs := []struct {
-		announcedAt time.Time
-		version     nlxversion.Version
-	}{
+	newOutwaysArgs := []*domain.NewOutwayArgs{
 		{
-			announcedAt: time.Now(),
-			version: nlxversion.Version{
-				Component: "outway",
-				Version:   "1.0.0",
-			},
+			Name:         "fixture-outway-name-one",
+			Organization: organizationsModels[0],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
 		},
 		{
-			announcedAt: time.Now(),
-			version: nlxversion.Version{
-				Component: "outway",
-				Version:   "1.0.0",
-			},
+			Name:         "fixture-outway-name-two",
+			Organization: organizationsModels[1],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
 		},
 		{
-			announcedAt: time.Now(),
-			version: nlxversion.Version{
-				Component: "outway",
-				Version:   "2.0.0",
-			},
+			Name:         "fixture-outway-name-three",
+			Organization: organizationsModels[1],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
 		},
 		{
-			announcedAt: time.Now().Add(25 * -time.Hour),
-			version: nlxversion.Version{
-				Component: "outway",
-				Version:   "1.0.0",
-			},
+			Name:         "fixture-outway-name-four",
+			Organization: organizationsModels[1],
+			NlxVersion:   "2.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+		},
+		{
+			Name:         "fixture-outway-name-five",
+			Organization: organizationsModels[3],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
 		},
 	}
 
-	for _, args := range newOutwayVersionsArgs {
-		err := repo.RegisterOutwayVersion(context.Background(), args.version, args.announcedAt)
+	for _, args := range newOutwaysArgs {
+		outway, err := domain.NewOutway(args)
+		if err != nil {
+			return err
+		}
+
+		err = repo.RegisterOutway(outway)
 		if err != nil {
 			return err
 		}
@@ -216,6 +224,15 @@ func assertInwayInRepository(t *testing.T, repo storage.Repository, iw *domain.I
 	require.NoError(t, err)
 
 	assert.Equal(t, iw, inwayFromRepo)
+}
+
+func assertOutwayInRepository(t *testing.T, repo storage.Repository, ow *domain.Outway) {
+	require.NotNil(t, ow)
+
+	outwayFromRepo, err := repo.GetOutway(ow.Name(), ow.Organization().SerialNumber())
+	require.NoError(t, err)
+
+	assert.Equal(t, ow, outwayFromRepo)
 }
 
 func assertServiceInRepository(t *testing.T, repo storage.Repository, s *domain.Service) {

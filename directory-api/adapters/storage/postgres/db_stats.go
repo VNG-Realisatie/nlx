@@ -51,7 +51,6 @@ func prepareSelectVersionStatisticsStatement(db *sqlx.DB) (*sqlx.Stmt, error) {
 		,      version
 		,      COUNT(*) AS amount
 		FROM   directory.outways
-		WHERE  announced > now() - interval '1 days'
 		GROUP BY version
 		UNION
 		SELECT 'inway' AS type

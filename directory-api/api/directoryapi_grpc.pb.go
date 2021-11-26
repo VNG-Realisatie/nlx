@@ -26,6 +26,8 @@ type DirectoryClient interface {
 	ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
 	ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
+	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error)
+	ListParticipants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListParticipantsResponse, error)
 }
 
 type directoryClient struct {
@@ -90,6 +92,24 @@ func (c *directoryClient) ListInOutwayStatistics(ctx context.Context, in *emptyp
 	return out, nil
 }
 
+func (c *directoryClient) RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error) {
+	out := new(RegisterOutwayResponse)
+	err := c.cc.Invoke(ctx, "/directoryapi.Directory/RegisterOutway", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *directoryClient) ListParticipants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListParticipantsResponse, error) {
+	out := new(ListParticipantsResponse)
+	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ListParticipants", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DirectoryServer is the server API for Directory service.
 // All implementations must embed UnimplementedDirectoryServer
 // for forward compatibility
@@ -100,6 +120,8 @@ type DirectoryServer interface {
 	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
 	ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error)
+	RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error)
+	ListParticipants(context.Context, *emptypb.Empty) (*ListParticipantsResponse, error)
 	mustEmbedUnimplementedDirectoryServer()
 }
 
@@ -124,6 +146,12 @@ func (UnimplementedDirectoryServer) GetOrganizationInway(context.Context, *GetOr
 }
 func (UnimplementedDirectoryServer) ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInOutwayStatistics not implemented")
+}
+func (UnimplementedDirectoryServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterOutway not implemented")
+}
+func (UnimplementedDirectoryServer) ListParticipants(context.Context, *emptypb.Empty) (*ListParticipantsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListParticipants not implemented")
 }
 func (UnimplementedDirectoryServer) mustEmbedUnimplementedDirectoryServer() {}
 
@@ -246,6 +274,42 @@ func _Directory_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Directory_RegisterOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterOutwayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryServer).RegisterOutway(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/directoryapi.Directory/RegisterOutway",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryServer).RegisterOutway(ctx, req.(*RegisterOutwayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Directory_ListParticipants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryServer).ListParticipants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/directoryapi.Directory/ListParticipants",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryServer).ListParticipants(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Directory_ServiceDesc is the grpc.ServiceDesc for Directory service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -276,6 +340,14 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListInOutwayStatistics",
 			Handler:    _Directory_ListInOutwayStatistics_Handler,
+		},
+		{
+			MethodName: "RegisterOutway",
+			Handler:    _Directory_RegisterOutway_Handler,
+		},
+		{
+			MethodName: "ListParticipants",
+			Handler:    _Directory_ListParticipants_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

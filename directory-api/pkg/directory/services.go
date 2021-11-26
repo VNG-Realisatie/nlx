@@ -5,38 +5,18 @@ package directory
 
 import (
 	"context"
-	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.nlx.io/nlx/common/nlxversion"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
-
-func registerOutwayVersion(ctx context.Context, logger *zap.Logger, db storage.Repository, version nlxversion.Version) {
-	err := db.RegisterOutwayVersion(ctx, version, time.Now())
-	if err != nil {
-		logger.Error("failed to register outway version", zap.Error(err))
-	}
-}
 
 func (h *DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListServicesResponse, error) {
 	h.logger.Info("rpc request ListServices()")
-
-	// do not log requests coming from grpc-gateway
-	md, ok := metadata.FromIncomingContext(ctx)
-	if ok {
-		if _, ok := md["grpcgateway-internal"]; !ok {
-			version := nlxversion.NewFromGRPCContext(ctx)
-			go registerOutwayVersion(ctx, h.logger, h.repository, version)
-		}
-	}
 
 	organization, err := h.getOrganizationInformationFromRequest(ctx)
 	if err != nil {

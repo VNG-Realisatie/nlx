@@ -5,6 +5,8 @@ package outway
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -13,12 +15,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
@@ -38,6 +37,7 @@ type Organization struct {
 }
 
 type Outway struct {
+	name                string
 	ctx                 context.Context
 	wg                  *sync.WaitGroup
 	organization        *Organization // the organization running this outway
@@ -53,6 +53,20 @@ type Outway struct {
 	servicesHTTP        map[string]HTTPService
 	servicesDirectory   map[string]*directoryapi.ListServicesResponse_Service
 	plugins             []plugins.Plugin
+}
+
+type NewOutwayArgs struct {
+	Name              string
+	Ctx               context.Context
+	Logger            *zap.Logger
+	Txlogger          transactionlog.TransactionLogger
+	ManagementClient  api.ManagementClient
+	MonitoringAddress string
+	OrgCert           *common_tls.CertificateBundle
+	DirectoryClient   directoryapi.DirectoryClient
+	AuthServiceURL    string
+	AuthCAPath        string
+	UseAsHTTPProxy    bool
 }
 
 func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) error {
@@ -94,30 +108,9 @@ func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string)
 	return nil
 }
 
-func (o *Outway) startDirectoryInspector(directoryAddress string) error {
-	directoryDialCredentials := credentials.NewTLS(o.orgCert.TLSConfig())
-	directoryDialOptions := []grpc.DialOption{
-		grpc.WithTransportCredentials(directoryDialCredentials),
-	}
-
-	ctx := context.TODO()
-
-	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(ctx, "outway"), 1*time.Minute) //nolint:gomnd // This is clearer then specifying a constant
-	defer directoryConnCtxCancel()
-
-	directoryConn, err := grpc.DialContext(
-		directoryConnCtx, directoryAddress, directoryDialOptions...)
-	if err != nil {
-		o.logger.Fatal("failed to setup connection to directory service", zap.Error(err))
-	}
-
-	o.directoryClient = directoryapi.NewDirectoryClient(directoryConn)
-	o.logger.Info(
-		"directory client setup complete",
-		zap.String("directory-address", directoryAddress))
-
+func (o *Outway) startDirectoryInspector() error {
 	// update service for the first time
-	err = o.updateServiceList()
+	err := o.updateServiceList()
 	if err != nil {
 		o.logger.Error("failed to update the service list from directory on startup.", zap.Error(err))
 		return err
@@ -128,18 +121,8 @@ func (o *Outway) startDirectoryInspector(directoryAddress string) error {
 	return nil
 }
 
-func NewOutway(
-	ctx context.Context,
-	logger *zap.Logger,
-	logdb *sqlx.DB,
-	managementClient api.ManagementClient,
-	monitoringAddress string,
-	orgCert *common_tls.CertificateBundle,
-	directoryAddress,
-	authServiceURL,
-	authCAPath string,
-	useAsHTTPProxy bool) (*Outway, error) {
-	cert := orgCert.Certificate()
+func NewOutway(args *NewOutwayArgs) (*Outway, error) {
+	cert := args.OrgCert.Certificate()
 
 	if len(cert.Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
@@ -154,64 +137,69 @@ func NewOutway(
 	organizationSerialNumber := cert.Subject.SerialNumber
 
 	o := &Outway{
-		ctx: ctx,
+		ctx: args.Ctx,
 		wg:  &sync.WaitGroup{},
-		logger: logger.With(
+		logger: args.Logger.With(
 			zap.String("outway-organization-name", organizationName),
 			zap.String("outway-organization-serialnumber", organizationSerialNumber)),
+		txlogger: args.Txlogger,
 		organization: &Organization{
 			serialNumber: cert.Subject.SerialNumber,
 			name:         organizationName,
 		},
-
-		orgCert: orgCert,
+		orgCert: args.OrgCert,
 
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 	}
 
-	if useAsHTTPProxy {
+	if args.UseAsHTTPProxy {
 		o.requestHTTPHandler = o.handleHTTPRequestAsProxy
 		o.forwardingHTTPProxy = newForwardingProxy()
 	} else {
 		o.requestHTTPHandler = o.handleHTTPRequest
 	}
 
-	err = o.configureAuthorizationPlugin(authCAPath, authServiceURL)
+	err = o.configureAuthorizationPlugin(args.AuthCAPath, args.AuthServiceURL)
 	if err != nil {
 		return nil, err
 	}
 
-	o.monitorService, err = monitoring.NewMonitoringService(monitoringAddress, logger)
+	o.monitorService, err = monitoring.NewMonitoringService(args.MonitoringAddress, args.Logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create monitoring service")
 	}
 
-	// setup transactionlog
-	if logdb == nil {
-		logger.Info("logging to transaction log disabled")
-
-		o.txlogger = transactionlog.NewDiscardTransactionLogger()
-	} else {
-		o.txlogger, err = transactionlog.NewPostgresTransactionLogger(logger, logdb, transactionlog.DirectionOut)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to setup transactionlog")
-		}
-		logger.Info("transaction logger created")
-	}
-
 	o.plugins = []plugins.Plugin{
-		plugins.NewDelegationPlugin(managementClient),
+		plugins.NewDelegationPlugin(args.ManagementClient),
 		plugins.NewLogRecordPlugin(o.organization.serialNumber, o.txlogger),
 		plugins.NewStripHeadersPlugin(o.organization.serialNumber),
 	}
 
-	err = o.startDirectoryInspector(directoryAddress)
-	if err != nil {
-		return nil, err
+	if args.Name != "" {
+		o.name = args.Name
+	} else {
+		o.name = getFingerPrint(args.OrgCert.Certificate().Raw)
 	}
 
+	if args.DirectoryClient == nil {
+		return nil, errors.New("directory client must be not nil")
+	}
+
+	o.directoryClient = args.DirectoryClient
+
 	return o, nil
+}
+
+func (o *Outway) Run() error {
+	go o.announceToDirectory(context.Background())
+
+	err := o.startDirectoryInspector()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func newForwardingProxy() *httputil.ReverseProxy {
@@ -468,4 +456,15 @@ func (o *Outway) getService(organizationSerialNumber, service string) HTTPServic
 	}
 
 	return httpService
+}
+
+func getFingerPrint(rawCert []byte) string {
+	rawSum := sha256.Sum256(rawCert)
+	bytes := make([]byte, sha256.Size)
+
+	for i, b := range rawSum {
+		bytes[i] = b
+	}
+
+	return base64.URLEncoding.EncodeToString(bytes)
 }

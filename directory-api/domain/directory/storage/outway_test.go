@@ -6,17 +6,16 @@
 package storage_test
 
 import (
-	"context"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/common/nlxversion"
-	"go.nlx.io/nlx/directory-api/domain/directory/storage"
+	"go.nlx.io/nlx/directory-api/domain"
 )
 
-func TestRegisterOutwayVersion(t *testing.T) {
+func TestRegisterOutway(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
@@ -25,15 +24,17 @@ func TestRegisterOutwayVersion(t *testing.T) {
 
 	tests := map[string]struct {
 		loadFixtures bool
-		args         args
+		args         *domain.NewOutwayArgs
 		wantErr      error
 	}{
 		"happy_flow": {
 			loadFixtures: false,
-			args: args{
-				version: nlxversion.Version{
-					Version: "1.0.0",
-				},
+			args: &domain.NewOutwayArgs{
+				Name:         "fixture-outway-name-one",
+				Organization: createNewOrganization(t, "org-a", "00000000000000000001"),
+				NlxVersion:   "1.0.0",
+				CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+				UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
 			},
 			wantErr: nil,
 		},
@@ -48,28 +49,12 @@ func TestRegisterOutwayVersion(t *testing.T) {
 			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
-			err := repo.RegisterOutwayVersion(context.Background(), tt.args.version, time.Now())
+			outway, _ := domain.NewOutway(tt.args)
+
+			err := repo.RegisterOutway(outway)
 			require.Equal(t, tt.wantErr, err)
 
-			assertVersionInRepository(t, repo, nlxversion.Version{
-				Version:   tt.args.version.Version,
-				Component: "outway",
-			})
+			assertOutwayInRepository(t, repo, outway)
 		})
 	}
-}
-
-func assertVersionInRepository(t *testing.T, r storage.Repository, version nlxversion.Version) {
-	statistics, err := r.ListVersionStatistics(context.Background())
-	require.NoError(t, err)
-
-	var result = false
-
-	for _, statistic := range statistics {
-		if statistic.Version() == version.Version && string(statistic.GatewayType()) == version.Component {
-			result = true
-		}
-	}
-
-	require.True(t, result)
 }

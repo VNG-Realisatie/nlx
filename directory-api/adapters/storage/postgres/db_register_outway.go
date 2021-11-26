@@ -9,40 +9,33 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"go.nlx.io/nlx/directory-api/domain"
-	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
-func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
+func (r *PostgreSQLRepository) RegisterOutway(model *domain.Outway) error {
 	type registerParams struct {
 		OrganizationName         string    `db:"organization_name"`
 		OrganizationSerialNumber string    `db:"organization_serial_number"`
-		Name                     string    `db:"inway_name"`
-		Address                  string    `db:"inway_address"`
-		NlxVersion               string    `db:"inway_version"`
-		CreatedAt                time.Time `db:"inway_created_at"`
-		UpdatedAt                time.Time `db:"inway_updated_at"`
+		Name                     string    `db:"outway_name"`
+		NlxVersion               string    `db:"outway_version"`
+		CreatedAt                time.Time `db:"outway_created_at"`
+		UpdatedAt                time.Time `db:"outway_updated_at"`
 	}
 
 	organization := model.Organization()
 
-	_, err := r.registerInwayStmt.Exec(&registerParams{
+	_, err := r.registerOutwayStmt.Exec(&registerParams{
 		OrganizationName:         organization.Name(),
 		OrganizationSerialNumber: organization.SerialNumber(),
 		Name:                     model.Name(),
-		Address:                  model.Address(),
 		NlxVersion:               model.NlxVersion(),
 		CreatedAt:                model.CreatedAt(),
 		UpdatedAt:                model.UpdatedAt(),
 	})
 
-	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
-		return storage.ErrDuplicateAddress
-	}
-
 	return err
 }
 
-func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+func prepareRegisterOutwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
 		with organization as (
 			insert into directory.organizations
@@ -55,13 +48,12 @@ func prepareRegisterInwayStmt(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 			      			    name 		  = excluded.name
 						returning id
 		)
-		insert into directory.inways
-		    		(name, organization_id, address, version, created_at, updated_at)
-			 select :inway_name, organization.id, :inway_address, nullif(:inway_version, ''), :inway_created_at, :inway_updated_at
+		insert into directory.outways
+		    		(name, organization_id, version, created_at, updated_at)
+			 select :outway_name, organization.id, nullif(:outway_version, ''), :outway_created_at, :outway_updated_at
 			   from organization
 	   	on conflict (name, organization_id) do update set
 	      			              name = 	excluded.name,
-	      			              address = excluded.address,
 								  version = excluded.version,
 								  updated_at = excluded.updated_at;
 	`

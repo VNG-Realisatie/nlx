@@ -27,10 +27,12 @@ type PostgreSQLRepository struct {
 	setOrganizationInwayStmt           *sqlx.NamedStmt
 	clearOrganizationInwayStmt         *sqlx.NamedStmt
 	selectOrganizationInwayAddressStmt *sqlx.NamedStmt
-	registerOutwayStmt                 *sqlx.NamedStmt
 	selectVersionStatisticsStmt        *sqlx.Stmt
 	selectServicesStmt                 *sqlx.Stmt
 	selectOrganizationsStmt            *sqlx.Stmt
+	registerOutwayStmt                 *sqlx.NamedStmt
+	getOutwayStmt                      *sqlx.NamedStmt
+	selectParticipantsStmt             *sqlx.Stmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -83,11 +85,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select organization inway address statement: %s", err)
 	}
 
-	registerOutwayStmt, err := prepareRegisterOutwayStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create register outway prepared statement: %s", err)
-	}
-
 	selectVersionStatisticsStmt, err := prepareSelectVersionStatisticsStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create select version statistics prepared statement: %s", err)
@@ -103,6 +100,21 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select organizations statement: %s", err)
 	}
 
+	registerOutwayStmt, err := prepareRegisterOutwayStmt(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare register outway statement: %s", err)
+	}
+
+	getOutwayStmt, err := prepareGetOutwayStmt(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare get outway statement: %s", err)
+	}
+
+	selectParticipantsStmt, err := prepareSelectParticipantsStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select participants statement: %s", err)
+	}
+
 	return &PostgreSQLRepository{
 		logger:                             logger.Named("postgres repository"),
 		db:                                 db,
@@ -114,10 +126,12 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		setOrganizationInwayStmt:           setOrganizationInwayStmt,
 		clearOrganizationInwayStmt:         clearOrganizationInwayStmt,
 		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
-		registerOutwayStmt:                 registerOutwayStmt,
 		selectVersionStatisticsStmt:        selectVersionStatisticsStmt,
 		selectServicesStmt:                 selectServicesStatement,
 		selectOrganizationsStmt:            selectOrganizationsStmt,
+		registerOutwayStmt:                 registerOutwayStmt,
+		getOutwayStmt:                      getOutwayStmt,
+		selectParticipantsStmt:             selectParticipantsStmt,
 	}, nil
 }
 

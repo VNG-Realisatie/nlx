@@ -66,6 +66,28 @@
         ]
       }
     },
+    "/api/directory/participants": {
+      "get": {
+        "operationId": "Directory_ListParticipants",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiListParticipantsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/api/stats": {
       "get": {
         "operationId": "Directory_ListInOutwayStatistics",
@@ -99,21 +121,6 @@
       ],
       "default": "UNKNOWN"
     },
-    "ListInOutwayStatisticsResponseStatistics": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "$ref": "#/definitions/ListInOutwayStatisticsResponseStatisticsType"
-        },
-        "version": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
     "ListInOutwayStatisticsResponseStatisticsType": {
       "type": "string",
       "enum": [
@@ -121,6 +128,38 @@
         "OUTWAY"
       ],
       "default": "INWAY"
+    },
+    "ListParticipantsResponseParticipant": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "$ref": "#/definitions/directoryapiOrganization"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "statistics": {
+          "$ref": "#/definitions/ListParticipantsResponseParticipantStatistics"
+        }
+      }
+    },
+    "ListParticipantsResponseParticipantStatistics": {
+      "type": "object",
+      "properties": {
+        "inways": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "outways": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "services": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
     "ListServicesResponseCosts": {
       "type": "object",
@@ -234,8 +273,23 @@
         "versions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ListInOutwayStatisticsResponseStatistics"
+            "$ref": "#/definitions/directoryapiListInOutwayStatisticsResponseStatistics"
           }
+        }
+      }
+    },
+    "directoryapiListInOutwayStatisticsResponseStatistics": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/ListInOutwayStatisticsResponseStatisticsType"
+        },
+        "version": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -246,6 +300,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/directoryapiOrganization"
+          }
+        }
+      }
+    },
+    "directoryapiListParticipantsResponse": {
+      "type": "object",
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListParticipantsResponseParticipant"
           }
         }
       }
@@ -273,6 +338,14 @@
       }
     },
     "directoryapiRegisterInwayResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiRegisterOutwayResponse": {
       "type": "object",
       "properties": {
         "error": {

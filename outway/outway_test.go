@@ -4,7 +4,6 @@
 package outway
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -53,61 +52,70 @@ func TestNewOutwayExeception(t *testing.T) {
 		filepath.Join(pkiDir, "ca-root.pem"),
 	)
 
-	tests := []struct {
-		description              string
-		cert                     *common_tls.CertificateBundle
-		monitoringServiceAddress string
-		authServiceURL           string
-		authCAPath               string
-		expectedErrorMessage     string
+	tests := map[string]struct {
+		args    *NewOutwayArgs
+		wantErr string
 	}{
-		{
-			"certificate without organization",
-			certOrg,
-			"localhost:8080",
-			"",
-			"",
-			"cannot obtain organization name from self cert",
+		"certificate without organization": {
+			args: &NewOutwayArgs{
+				Logger:            zap.NewNop(),
+				OrgCert:           certOrg,
+				MonitoringAddress: "localhost:8080",
+				AuthServiceURL:    "",
+				AuthCAPath:        "",
+			},
+			wantErr: "cannot obtain organization name from self cert",
 		},
-		{
-			"certificate without organization serial number",
-			certWithoutSerialNumber,
-			"localhost:8080",
-			"",
-			"",
-			"validation error for subject serial number from cert: cannot be empty",
+		"certificate without organization serial number": {
+			args: &NewOutwayArgs{
+				Logger:            zap.NewNop(),
+				OrgCert:           certWithoutSerialNumber,
+				MonitoringAddress: "localhost:8080",
+				AuthServiceURL:    "",
+				AuthCAPath:        "",
+			},
+			wantErr: "validation error for subject serial number from cert: cannot be empty",
 		},
-		{
-			"authorization service URL set but no CA for authorization provided",
-			cert,
-			"localhost:8080",
-			"http://auth.nlx.io",
-			"",
-			"authorization service URL set but no CA for authorization provided",
+		"authorization service URL set but no CA for authorization provided": {
+			args: &NewOutwayArgs{
+				Logger:            zap.NewNop(),
+				OrgCert:           cert,
+				MonitoringAddress: "localhost:8080",
+				AuthServiceURL:    "http://auth.nlx.io",
+				AuthCAPath:        "",
+			},
+			wantErr: "authorization service URL set but no CA for authorization provided",
 		},
-		{
-			"authorization service URL is not 'https'",
-			cert,
-			"localhost:8080",
-			"http://auth.nlx.io",
-			"/path/to",
-			"scheme of authorization service URL is not 'https'",
+		"authorization service URL is not 'https'": {
+			args: &NewOutwayArgs{
+				Logger:            zap.NewNop(),
+				OrgCert:           cert,
+				MonitoringAddress: "localhost:8080",
+				AuthServiceURL:    "http://auth.nlx.io",
+				AuthCAPath:        "/path/to",
+			},
+			wantErr: "scheme of authorization service URL is not 'https'",
 		},
-		{
-			"invalid monitioring service address",
-			cert,
-			"",
-			"",
-			"",
-			"unable to create monitoring service: address required",
+		"invalid monitioring service address": {
+			args: &NewOutwayArgs{
+				Logger:            zap.NewNop(),
+				OrgCert:           cert,
+				MonitoringAddress: "",
+				AuthServiceURL:    "",
+				AuthCAPath:        "",
+			},
+			wantErr: "unable to create monitoring service: address required",
 		},
 	}
 
-	logger := zap.NewNop()
-	// Test exceptions during outway creation
-	for _, test := range tests {
-		_, err := NewOutway(context.Background(), logger, nil, nil, test.monitoringServiceAddress, test.cert, "", test.authServiceURL, test.authCAPath, false)
-		assert.EqualError(t, err, test.expectedErrorMessage)
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			_, err := NewOutway(tt.args)
+
+			assert.EqualError(t, err, tt.wantErr)
+		})
 	}
 }
 

@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 package directoryapi;
 
@@ -24,6 +25,12 @@ service Directory {
 	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
 		option (google.api.http).get = "/api/stats";
 	}
+
+	rpc RegisterOutway (RegisterOutwayRequest) returns (RegisterOutwayResponse);
+
+	rpc ListParticipants (google.protobuf.Empty) returns (ListParticipantsResponse) {
+		option (google.api.http).get = "/api/directory/participants";
+	};
 }
 
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
@@ -139,4 +146,29 @@ message ListInOutwayStatisticsResponse {
 	}
 
 	repeated Statistics versions = 1;
+}
+
+message RegisterOutwayRequest {
+	string name = 1;
+}
+
+message RegisterOutwayResponse {
+	string error = 1;
+}
+
+message ListParticipantsResponse {
+	message Participant {
+		Organization organization = 1;
+		google.protobuf.Timestamp createdAt = 2;
+
+		message Statistics {
+			uint32 inways = 1;
+			uint32 outways = 2;
+			uint32 services = 3;
+		}
+
+		Statistics statistics = 3;
+	}
+
+	repeated Participant participants = 1;
 }

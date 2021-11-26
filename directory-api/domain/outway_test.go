@@ -8,57 +8,32 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
 //nolint:funlen // this is a test
-func TestNewInway(t *testing.T) {
+func TestNewOutway(t *testing.T) {
 	now := time.Now()
 
 	tests := map[string]struct {
-		inwayArgs   *domain.NewInwayArgs
+		outwayArgs  *domain.NewOutwayArgs
 		expectedErr string
 	}{
 		"invalid_name": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "#*%",
 				Organization: createNewOrganization(t),
-				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
 			},
 			expectedErr: "Name: must be in a valid format.",
 		},
-		"without_address": {
-			inwayArgs: &domain.NewInwayArgs{
-				Name:         "name",
-				Organization: createNewOrganization(t),
-				Address:      "",
-				NlxVersion:   "0.0.0",
-				CreatedAt:    now,
-				UpdatedAt:    now,
-			},
-			expectedErr: "Address: cannot be blank.",
-		},
-		"invalid_address": {
-			inwayArgs: &domain.NewInwayArgs{
-				Name:         "name",
-				Organization: createNewOrganization(t),
-				Address:      "foo::bar",
-				NlxVersion:   "0.0.0",
-				CreatedAt:    now,
-				UpdatedAt:    now,
-			},
-			expectedErr: "Address: must be a valid dial string.",
-		},
 		"invalid_version": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
 				NlxVersion:   "invalid",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -66,10 +41,9 @@ func TestNewInway(t *testing.T) {
 			expectedErr: "NlxVersion: must be a valid semantic version.",
 		},
 		"without_organization": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "name",
 				Organization: nil,
-				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -77,10 +51,9 @@ func TestNewInway(t *testing.T) {
 			expectedErr: "Organization: is required.",
 		},
 		"empty_name": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "",
 				Organization: createNewOrganization(t),
-				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -88,10 +61,9 @@ func TestNewInway(t *testing.T) {
 			expectedErr: "",
 		},
 		"created_at_in_future": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now.Add(1 * time.Hour),
 				UpdatedAt:    now,
@@ -99,10 +71,9 @@ func TestNewInway(t *testing.T) {
 			expectedErr: "CreatedAt: must not be in the future.",
 		},
 		"updated_at_in_future": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now.Add(1 * time.Hour),
@@ -110,10 +81,9 @@ func TestNewInway(t *testing.T) {
 			expectedErr: "UpdatedAt: must not be in the future.",
 		},
 		"happy_flow": {
-			inwayArgs: &domain.NewInwayArgs{
+			outwayArgs: &domain.NewOutwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -126,7 +96,7 @@ func TestNewInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := domain.NewInway(tt.inwayArgs)
+			result, err := domain.NewOutway(tt.outwayArgs)
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)
@@ -135,22 +105,10 @@ func TestNewInway(t *testing.T) {
 				assert.NotNil(t, result)
 				assert.Nil(t, err)
 
-				assert.Equal(t, tt.inwayArgs.Name, result.Name())
-				assert.Equal(t, tt.inwayArgs.Organization.Name(), result.Organization().Name())
-				assert.Equal(t, tt.inwayArgs.Address, result.Address())
-				assert.Equal(t, tt.inwayArgs.NlxVersion, result.NlxVersion())
+				assert.Equal(t, tt.outwayArgs.Name, result.Name())
+				assert.Equal(t, tt.outwayArgs.Organization.Name(), result.Organization().Name())
+				assert.Equal(t, tt.outwayArgs.NlxVersion, result.NlxVersion())
 			}
 		})
 	}
-}
-
-const testOrganizationName = "my-organization-name"
-
-const testOrganizationSerialNumber = "01234567890123456789"
-
-func createNewOrganization(t *testing.T) *domain.Organization {
-	model, err := domain.NewOrganization(testOrganizationName, testOrganizationSerialNumber)
-	require.NoError(t, err)
-
-	return model
 }

@@ -7,11 +7,9 @@ package directory_mock
 import (
 	context "context"
 	reflect "reflect"
-	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 
-	nlxversion "go.nlx.io/nlx/common/nlxversion"
 	domain "go.nlx.io/nlx/directory-api/domain"
 )
 
@@ -96,6 +94,21 @@ func (mr *MockRepositoryMockRecorder) GetOrganizationInwayAddress(ctx, organizat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockRepository)(nil).GetOrganizationInwayAddress), ctx, organizationSerialNumber)
 }
 
+// GetOutway mocks base method.
+func (m *MockRepository) GetOutway(name, organizationSerialNumber string) (*domain.Outway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOutway", name, organizationSerialNumber)
+	ret0, _ := ret[0].(*domain.Outway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOutway indicates an expected call of GetOutway.
+func (mr *MockRepositoryMockRecorder) GetOutway(name, organizationSerialNumber interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutway", reflect.TypeOf((*MockRepository)(nil).GetOutway), name, organizationSerialNumber)
+}
+
 // GetService mocks base method.
 func (m *MockRepository) GetService(id uint) (*domain.Service, error) {
 	m.ctrl.T.Helper()
@@ -124,6 +137,21 @@ func (m *MockRepository) ListOrganizations(ctx context.Context) ([]*domain.Organ
 func (mr *MockRepositoryMockRecorder) ListOrganizations(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizations", reflect.TypeOf((*MockRepository)(nil).ListOrganizations), ctx)
+}
+
+// ListParticipants mocks base method.
+func (m *MockRepository) ListParticipants(ctx context.Context) ([]*domain.Participant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListParticipants", ctx)
+	ret0, _ := ret[0].([]*domain.Participant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListParticipants indicates an expected call of ListParticipants.
+func (mr *MockRepositoryMockRecorder) ListParticipants(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListParticipants", reflect.TypeOf((*MockRepository)(nil).ListParticipants), ctx)
 }
 
 // ListServices mocks base method.
@@ -170,18 +198,18 @@ func (mr *MockRepositoryMockRecorder) RegisterInway(arg0 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterInway", reflect.TypeOf((*MockRepository)(nil).RegisterInway), arg0)
 }
 
-// RegisterOutwayVersion mocks base method.
-func (m *MockRepository) RegisterOutwayVersion(ctx context.Context, version nlxversion.Version, announcedAt time.Time) error {
+// RegisterOutway mocks base method.
+func (m *MockRepository) RegisterOutway(arg0 *domain.Outway) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterOutwayVersion", ctx, version, announcedAt)
+	ret := m.ctrl.Call(m, "RegisterOutway", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// RegisterOutwayVersion indicates an expected call of RegisterOutwayVersion.
-func (mr *MockRepositoryMockRecorder) RegisterOutwayVersion(ctx, version, announcedAt interface{}) *gomock.Call {
+// RegisterOutway indicates an expected call of RegisterOutway.
+func (mr *MockRepositoryMockRecorder) RegisterOutway(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutwayVersion", reflect.TypeOf((*MockRepository)(nil).RegisterOutwayVersion), ctx, version, announcedAt)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutway", reflect.TypeOf((*MockRepository)(nil).RegisterOutway), arg0)
 }
 
 // RegisterService mocks base method.

@@ -44,7 +44,7 @@ func TestListVersionStatistics(t *testing.T) {
 				{
 					GatewayType: "outway",
 					Version:     "1.0.0",
-					Amount:      2,
+					Amount:      4,
 				},
 			},
 			wantErr: nil,
