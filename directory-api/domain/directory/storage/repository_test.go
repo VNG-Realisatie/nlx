@@ -206,6 +206,56 @@ func loadFixtures(repo storage.Repository) error {
 		}
 	}
 
+	newOutwaysArgs := []*domain.NewOutwayArgs{
+		{
+			Name:         "fixture-inway-name-one",
+			Organization: organizationsModels[0],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+		},
+		{
+			Name:         "fixture-inway-name-two",
+			Organization: organizationsModels[1],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+		},
+		{
+			Name:         "fixture-inway-name-three",
+			Organization: organizationsModels[1],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+		},
+		{
+			Name:         "fixture-inway-name-four",
+			Organization: organizationsModels[1],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+		},
+		{
+			Name:         "fixture-inway-name-five",
+			Organization: organizationsModels[3],
+			NlxVersion:   "1.0.0",
+			CreatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:    time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+		},
+	}
+
+	for _, args := range newOutwaysArgs {
+		outway, err := domain.NewOutway(args)
+		if err != nil {
+			return err
+		}
+
+		err = repo.RegisterOutway(outway)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
