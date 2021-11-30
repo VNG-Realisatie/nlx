@@ -5,7 +5,7 @@ import React from 'react'
 import { bool } from 'prop-types'
 import { PrimaryNavigation } from '@commonground/design-system'
 import { useLocation } from 'react-router-dom'
-import { IconHome } from '../../icons'
+import { IconHome, IconParticipants } from '../../icons'
 import { Container } from '../Grid'
 import NavLink from '../NavLink'
 
@@ -20,6 +20,8 @@ const Header = ({ homepage }) => {
   const { pathname } = useLocation()
 
   const HomeIcon = () => <StyledIcon as={IconHome} />
+
+  const ParticipantsIcon = () => <StyledIcon as={IconParticipants} />
 
   return (
     <>
@@ -38,7 +40,13 @@ const Header = ({ homepage }) => {
             {
               name: 'Home',
               to: '/',
+              exact: true,
               Icon: HomeIcon,
+            },
+            {
+              name: 'Deelnemers',
+              to: '/participants',
+              Icon: ParticipantsIcon,
             },
             {
               name: 'Docs',

@@ -46,8 +46,10 @@ const DirectoryTable = ({
   return filteredServices.length ? (
     <>
       <SearchSummary
-        totalServices={services.length}
-        totalFilteredServices={filteredServices.length}
+        totalItems={services.length}
+        totalFilteredItems={filteredServices.length}
+        itemDescription="beschikbare service"
+        itemPluralDescription="beschikbare services"
       />
       <Table withLinks role="grid" data-testid="directory-services">
         <Table.Thead>

@@ -2,29 +2,32 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { number } from 'prop-types'
+import { number, string } from 'prop-types'
 import { Text } from './index.styles'
 
 const SearchSummary = (props) => {
-  const { totalServices, totalFilteredServices } = props
+  const {
+    totalItems,
+    totalFilteredItems,
+    itemDescription,
+    itemPluralDescription,
+  } = props
 
   return (
     <Text>
-      {`${
-        totalFilteredServices !== totalServices
-          ? `${totalFilteredServices} van `
-          : ''
-      }
-      ${totalServices} beschikbare service${
-        totalServices > 1 ? 's' : ''
+      {`${totalFilteredItems !== totalItems ? `${totalFilteredItems} van ` : ''}
+      ${totalItems} ${
+        totalItems > 1 ? itemPluralDescription : itemDescription
       }`.toUpperCase()}
     </Text>
   )
 }
 
 SearchSummary.propTypes = {
-  totalServices: number.isRequired,
-  totalFilteredServices: number.isRequired,
+  totalItems: number.isRequired,
+  totalFilteredItems: number.isRequired,
+  itemDescription: string.isRequired,
+  itemPluralDescription: string.isRequired,
 }
 
 export default SearchSummary

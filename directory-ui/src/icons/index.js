@@ -7,6 +7,7 @@ import { Icon } from '@commonground/design-system'
 import { ReactComponent as IconChevronRight } from './chevron-right.svg'
 import { ReactComponent as IconExternalLink } from './external-link.svg'
 import { ReactComponent as IconHome } from './home.svg'
+import { ReactComponent as IconParticipants } from './participants.svg'
 import { ReactComponent as IconMail } from './mail.svg'
 import { ReactComponent as IconStateDegraded } from './state-degraded.svg'
 import { ReactComponent as IconStateDown } from './state-down.svg'
@@ -18,6 +19,7 @@ export {
   IconChevronRight,
   IconExternalLink,
   IconHome,
+  IconParticipants,
   IconMail,
   IconStateDegraded,
   IconStateDown,

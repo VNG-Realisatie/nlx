@@ -8,6 +8,7 @@ import { GlobalStyles, DomainNavigation } from '@commonground/design-system'
 import VersionLogger from './components/VersionLogger'
 import Header from './components/Header'
 import ServiceOverviewPage from './pages/services/ServicesPage'
+import ParticipantsPage from './pages/participants'
 import theme from './theme'
 import '@fontsource/source-sans-pro/latin.css'
 
@@ -24,6 +25,7 @@ const App: React.FC = () => (
         <Header />
 
         <Switch>
+          <Route exact path="/participants" component={ParticipantsPage} />
           <Route
             exact
             path="/:organizationSerialNumber?/:serviceName?"
