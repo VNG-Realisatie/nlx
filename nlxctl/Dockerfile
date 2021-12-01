@@ -15,7 +15,6 @@ RUN go mod download
 COPY nlxctl                                         /go/src/go.nlx.io/nlx/nlxctl
 COPY management-api                                 /go/src/go.nlx.io/nlx/management-api
 COPY common                                         /go/src/go.nlx.io/nlx/common
-COPY directory-registration-api                     /go/src/go.nlx.io/nlx/directory-registration-api
 
 WORKDIR /go/src/go.nlx.io/nlx/nlxctl
 

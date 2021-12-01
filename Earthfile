@@ -7,8 +7,6 @@ all:
     BUILD +mocks
 
 proto:
-    BUILD +proto-directory-inspection-api
-    BUILD +proto-directory-registration-api
     BUILD +proto-directory-api
     BUILD +proto-management-api
     BUILD +proto-inway-test
@@ -16,48 +14,10 @@ proto:
 mocks:
     BUILD +mocks-management-api
     BUILD +mocks-common
-    BUILD +mocks-directory-inspection-api
-    BUILD +mocks-directory-registration-api
     BUILD +mocks-directory-api
 
 deps:
     COPY go.mod go.sum /src/
-
-proto-directory-inspection-api:
-    FROM +deps
-    COPY ./directory-inspection-api/inspectionapi/*.proto /src
-
-    RUN mkdir -p /dist || true && \
-        protoc \
-            -I. \
-            -I/protobuf/include \
-            -I/protobuf/googleapis \
-            --go_out=/dist --go_opt=paths=source_relative \
-            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
-            --grpc-gateway_out=/dist \
-            --openapiv2_out=/dist --openapiv2_opt=json_names_for_fields=false \
-            ./inspectionapi.proto
-    RUN goimports -w -local "go.nlx.io" /dist/
-
-    SAVE ARTIFACT /dist/* AS LOCAL ./directory-inspection-api/inspectionapi/
-
-proto-directory-registration-api:
-    FROM +deps
-    COPY ./directory-registration-api/registrationapi/*.proto /src
-
-    RUN mkdir -p /dist || true && \
-        protoc \
-            -I. \
-            -I/protobuf/include \
-            -I/protobuf/googleapis \
-            --go_out=/dist --go_opt=paths=source_relative \
-            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
-            --grpc-gateway_out=/dist \
-            --openapiv2_out=/dist \
-            ./registrationapi.proto
-    RUN goimports -w -local "go.nlx.io" /dist/
-
-    SAVE ARTIFACT /dist/* AS LOCAL ./directory-registration-api/registrationapi/
 
 proto-directory-api:
     FROM +deps
@@ -131,8 +91,6 @@ mocks-management-api:
     FROM +deps
     COPY ./management-api /src/management-api
     COPY ./common /src/common
-    COPY ./directory-inspection-api /src/directory-inspection-api
-    COPY ./directory-registration-api /src/directory-registration-api
     COPY ./directory-api /src/directory-api
 
     RUN mkdir -p /dist || true
@@ -166,36 +124,6 @@ mocks-common:
     RUN mockgen -source ./transactionlog/logger.go -destination /dist/mock_logger.go
     RUN goimports -w -local "go.nlx.io" /dist/
     SAVE ARTIFACT /dist/mock_logger.go AS LOCAL ./common/transactionlog/mock/mock_logger.go
-
-mocks-directory-inspection-api:
-    FROM +deps
-    COPY ./directory-inspection-api /src/directory-inspection-api
-
-    RUN mkdir -p /dist || true
-    WORKDIR /src/directory-inspection-api
-
-    RUN mockgen -source inspectionapi/inspectionapi_grpc.pb.go -package=mock -destination /dist/inspectionapi/mock/mock_directory_inspection_api.go
-    RUN mockgen -source pkg/database/database.go -package=mock -destination /dist/pkg/database/mock/mock_database.go
-
-    RUN goimports -w -local "go.nlx.io" /dist/
-
-    SAVE ARTIFACT /dist/inspectionapi/mock/mock_directory_inspection_api.go AS LOCAL ./directory-inspection-api/inspectionapi/mock/mock_directory_inspection_api.go
-    SAVE ARTIFACT /dist/pkg/database/mock/mock_database.go AS LOCAL ./directory-inspection-api/pkg/database/mock/mock_database.go
-
-mocks-directory-registration-api:
-    FROM +deps
-    COPY ./directory-registration-api /src/directory-registration-api
-
-    RUN mkdir -p /dist || true
-    WORKDIR /src/directory-registration-api
-
-    RUN mockgen -source registrationapi/registrationapi_grpc.pb.go -destination /dist/registrationapi/mock/mock_directory_registration_api.go
-
-    RUN mockgen -source domain/directory/repository.go -package=directory_mock -destination /dist/domain/directory/mock/repository.go
-    RUN goimports -w -local "go.nlx.io" /dist/
-
-    SAVE ARTIFACT /dist/registrationapi/mock/mock_directory_registration_api.go AS LOCAL ./directory-registration-api/registrationapi/mock/mock_directory_registration_api.go
-    SAVE ARTIFACT /dist/domain/directory/mock/repository.go AS LOCAL ./directory-registration-api/domain/directory/mock/repository.go
 
 mocks-directory-api:
     FROM +deps

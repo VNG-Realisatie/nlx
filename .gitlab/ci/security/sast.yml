@@ -21,9 +21,8 @@ container_scanning:
       ca-certportal
       ca-cfssl-unsafe
       directory-db
-      directory-inspection-api
+      directory-api
       directory-monitor
-      directory-registration-api
       directory-ui
       docs
       inway

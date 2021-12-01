@@ -81,10 +81,8 @@ linters:
   # - gochecknoglobals
   # - lll
 
-run:
-  skip-dirs:
-    - directory-inspection-api/inspectionapi
-    - directory-registration-api/registrationapi
+# run:
+#   skip-dirs:
 issues:
   exclude-rules:
     - text: "weak cryptographic primitive"

@@ -20,6 +20,6 @@ Only the version and timestamp are stored, no other identifying information is r
 
 ### Directory
 
-The directory-inspection-api has a `/stats` endpoint that lists all known versions:
+The directory-api has a `/stats` endpoint that lists all known versions:
 - Inways are registered and the numbers represent the real amount of inways and their versions
 - Outways are unregistered and the amount represent the versions that called ListServices over the past 24 hours.

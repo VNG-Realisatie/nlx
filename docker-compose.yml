@@ -51,30 +51,6 @@ services:
         - ${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_LATEST_TAG}
         - ${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_BRANCH_TAG}
         - ${IMAGE_PREFIX}nlxio/directory-db:acc-latest
-  directory-inspection-api:
-    image: "${IMAGE_PREFIX}nlxio/directory-inspection-api:${IMAGE_TAG}"
-    build:
-      context: .
-      dockerfile: directory-inspection-api/Dockerfile
-      args:
-        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
-        GIT_TAG_NAME: "${GIT_TAG_NAME}"
-      cache_from:
-        - ${IMAGE_PREFIX}nlxio/directory-inspection-api:${DOCKER_CACHE_LATEST_TAG}
-        - ${IMAGE_PREFIX}nlxio/directory-inspection-api:${DOCKER_CACHE_BRANCH_TAG}
-        - ${IMAGE_PREFIX}nlxio/directory-inspection-api:acc-latest
-  directory-registration-api:
-    image: "${IMAGE_PREFIX}nlxio/directory-registration-api:${IMAGE_TAG}"
-    build:
-      context: .
-      dockerfile: directory-registration-api/Dockerfile
-      args:
-        GIT_COMMIT_HASH: "${GIT_COMMIT_HASH}"
-        GIT_TAG_NAME: "${GIT_TAG_NAME}"
-      cache_from:
-        - ${IMAGE_PREFIX}nlxio/directory-registration-api:${DOCKER_CACHE_LATEST_TAG}
-        - ${IMAGE_PREFIX}nlxio/directory-registration-api:${DOCKER_CACHE_BRANCH_TAG}
-        - ${IMAGE_PREFIX}nlxio/directory-registration-api:acc-latest
   directory-api:
     image: "${IMAGE_PREFIX}nlxio/directory-api:${IMAGE_TAG}"
     build:

@@ -16,7 +16,6 @@ require (
 	github.com/fgrosse/zaptest v1.1.0
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/render v1.0.1
-	github.com/go-errors/errors v1.4.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-testfixtures/testfixtures/v3 v3.6.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
