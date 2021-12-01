@@ -34,6 +34,8 @@ const FiltersParticipant = ({ onQueryChanged, queryValue, ...props }) => {
         return options[1]
       case /prod/.test(environment):
         return options[2]
+      case /directory.nlx.io/.test(environment):
+        return options[0]
     }
   }
 
