@@ -4,6 +4,7 @@
 import React from 'react'
 import { arrayOf, func, shape, string } from 'prop-types'
 import { Formik } from 'formik'
+import { toJS } from 'mobx'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import {
@@ -22,23 +23,24 @@ const serviceMapper = (services) =>
     label: `${service.organization.name} (${service.organization.serialNumber}) - ${service.service}`,
   }))
 
+const serviceId = (service) =>
+  `${service.organization.serialNumber}__${service.service}`
+
 const EditOrderForm = ({ order, services, onSubmitHandler }) => {
   const { t } = useTranslation()
+
+  const selectableServices = serviceMapper(services)
+  const orderServiceIds = toJS(order.services).map(serviceId)
+  const initiallySelectedServices = toJS(selectableServices)
+    .filter((s) => orderServiceIds.includes(serviceId(s.value)))
+    .map((s) => s.value)
 
   const initialValues = {
     description: order.description,
     publicKeyPEM: order.publicKeyPem,
     validFrom: new Date(order.validFrom).toISOString().split('T')[0],
     validUntil: new Date(order.validUntil).toISOString().split('T')[0],
-    services: [
-      {
-        organisation: {
-          name: 'Organization-B',
-          serialNumber: '12345678901234567891',
-        },
-        service: 'tester',
-      },
-    ],
+    services: initiallySelectedServices,
   }
 
   const validationSchema = Yup.object().shape({
@@ -62,8 +64,6 @@ const EditOrderForm = ({ order, services, onSubmitHandler }) => {
       )
       .min(1, t('This field is required')),
   })
-
-  const selectableServices = serviceMapper(services)
 
   const handleSubmit = (values) => {
     onSubmitHandler(values)
