@@ -1089,7 +1089,8 @@
         "orderCreate",
         "orderOutgoingRevoke",
         "orderIncomingRevoke",
-        "inwayDelete"
+        "inwayDelete",
+        "orderOutgoingUpdate"
       ],
       "default": "loginSuccess"
     },

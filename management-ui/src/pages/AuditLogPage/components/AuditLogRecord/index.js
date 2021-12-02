@@ -14,6 +14,7 @@ import {
   ACTION_LOGOUT,
   ACTION_ORDER_CREATE,
   ACTION_ORDER_OUTGOING_REVOKE,
+  ACTION_ORDER_OUTGOING_UPDATE,
   ACTION_ORGANIZATION_SETTINGS_UPDATE,
   ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
   ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
@@ -197,6 +198,11 @@ const AuditLogRecord = ({
         <Trans values={{ user, dataInwayName }}>
           <strong>{{ user }}</strong> has removed the inway{' '}
           <strong>{{ dataInwayName }}</strong>
+        </Trans>
+      ) : action === ACTION_ORDER_OUTGOING_UPDATE ? (
+        <Trans values={{ user, servicesList, delegatee, action }}>
+          <strong>{{ user }}</strong> updated the order for {{ delegatee }}
+          the services {{ servicesList }}
         </Trans>
       ) : (
         <Trans values={{ user, action }}>

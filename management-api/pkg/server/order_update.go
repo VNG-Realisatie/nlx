@@ -49,6 +49,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, "could not find outgoing order in management database")
 		}
+
 		return nil, status.Error(codes.Internal, "failed to fetch outgoing order in management database")
 	}
 

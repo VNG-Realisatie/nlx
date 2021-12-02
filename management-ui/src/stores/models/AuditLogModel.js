@@ -23,6 +23,7 @@ export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
 export const ACTION_ORDER_CREATE = 'orderCreate'
 export const ACTION_ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke'
 export const ACTION_INWAY_DELETE = 'inwayDelete'
+export const ACTION_ORDER_OUTGOING_UPDATE = 'orderOutgoingUpdate'
 
 class AuditLogModel {
   id = null

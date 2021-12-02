@@ -59,12 +59,6 @@ var options struct {
 	cmd.TLSOptions
 }
 
-const (
-	ConnMaxLifetime = 5 * time.Minute
-	MaxOpenConns    = 100
-	MaxIdleConns    = 100
-)
-
 // nolint:funlen,gocyclo // this is the main function
 func main() {
 	parseOptions()

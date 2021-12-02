@@ -33,7 +33,8 @@ export enum AuditLogRecordActionType {
     ORDERCREATE = 'orderCreate',
     ORDEROUTGOINGREVOKE = 'orderOutgoingRevoke',
     ORDERINCOMINGREVOKE = 'orderIncomingRevoke',
-    INWAYDELETE = 'inwayDelete'
+    INWAYDELETE = 'inwayDelete',
+    ORDEROUTGOINGUPDATE = 'orderOutgoingUpdate'
 }
 
 export function AuditLogRecordActionTypeFromJSON(json: any): AuditLogRecordActionType {
