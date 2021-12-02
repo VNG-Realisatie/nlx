@@ -195,6 +195,19 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				return &request
 			}(),
 		},
+		"when_the_order_is_not_found": {
+			wantErr: status.Error(codes.NotFound, "could not find outgoing order in management database"),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(nil, database.ErrNotFound)
+			},
+			request: func() *api.OutgoingOrderRequest {
+				request := validOutgoingOrderRequest()
+				return &request
+			}(),
+		},
 		"when_updating_audit_log_fails": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
