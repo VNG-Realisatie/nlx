@@ -29,7 +29,7 @@ type requestBody struct {
 
 //nolint:funlen // this is a test
 func TestRoute_RequestCertificate(t *testing.T) {
-	csrData, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-nlx-test.csr"))
+	csrData, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-without-serial-number.csr"))
 	assert.NoError(t, err)
 
 	tests := map[string]struct {

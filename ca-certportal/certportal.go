@@ -39,13 +39,19 @@ func RequestCertificate(certificateSigningRequest string, createSigner CreateSig
 		signReq.Hosts = []string{csr.Subject.CommonName}
 	}
 
-	serialNumber, err := serialNumberGenerator()
-	if err != nil {
-		return nil, ErrFailedToGenerateSerialNumber
+	signReq.Subject = &signer.Subject{
+		SerialNumber: csr.Subject.SerialNumber,
 	}
 
-	signReq.Subject = &signer.Subject{
-		SerialNumber: serialNumber,
+	if signReq.Subject.SerialNumber == "" {
+		var serialNumber string
+
+		serialNumber, err = serialNumberGenerator()
+		if err != nil {
+			return nil, ErrFailedToGenerateSerialNumber
+		}
+
+		signReq.Subject.SerialNumber = serialNumber
 	}
 
 	s, err := createSigner()

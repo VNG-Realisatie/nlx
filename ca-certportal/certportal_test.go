@@ -32,7 +32,19 @@ func TestRequestCertificate(t *testing.T) {
 			csr:     string(getKey()),
 			wantErr: certportal.ErrFailedToParseCSR,
 		},
-		"when_providing_a_csr_without_san": {
+		"when_the_signer_returns_an_error": {
+			csr: string(getCsrWithoutSerialNumber()),
+			setup: func(m certportalMocks) {
+				m.signer.EXPECT().Sign(signer.SignRequest{
+					Request: string(getCsrWithoutSerialNumber()),
+					Subject: &signer.Subject{
+						SerialNumber: "serial number",
+					},
+				}).Return(nil, fmt.Errorf("arbitrary error"))
+			},
+			wantErr: certportal.ErrFailedToSignCSR,
+		},
+		"happy_flow_csr_without_san": {
 			csr: string(getCsrWithoutSAN()),
 			setup: func(m certportalMocks) {
 				m.signer.EXPECT().Sign(signer.SignRequest{
@@ -45,23 +57,23 @@ func TestRequestCertificate(t *testing.T) {
 			},
 			wantResult: []byte("test_cert"),
 		},
-		"when_the_signer_returns_an_error": {
+		"happy_flow_existing_serial_number": {
 			csr: string(getCsr()),
 			setup: func(m certportalMocks) {
 				m.signer.EXPECT().Sign(signer.SignRequest{
 					Request: string(getCsr()),
 					Subject: &signer.Subject{
-						SerialNumber: "serial number",
+						SerialNumber: "00000000000000000001",
 					},
-				}).Return(nil, fmt.Errorf("arbitrary error"))
+				}).Return([]byte("test_cert"), nil)
 			},
-			wantErr: certportal.ErrFailedToSignCSR,
+			wantResult: []byte("test_cert"),
 		},
 		"happy_flow": {
-			csr: string(getCsr()),
+			csr: string(getCsrWithoutSerialNumber()),
 			setup: func(m certportalMocks) {
 				m.signer.EXPECT().Sign(signer.SignRequest{
-					Request: string(getCsr()),
+					Request: string(getCsrWithoutSerialNumber()),
 					Subject: &signer.Subject{
 						SerialNumber: "serial number",
 					},
@@ -116,6 +128,17 @@ func getCsr() []byte {
 	var pkiDir = filepath.Join("..", "testing", "pki")
 
 	csr, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-nlx-test.csr"))
+	if err != nil {
+		panic(err)
+	}
+
+	return csr
+}
+
+func getCsrWithoutSerialNumber() []byte {
+	var pkiDir = filepath.Join("..", "testing", "pki")
+
+	csr, err := ioutil.ReadFile(filepath.Join(pkiDir, "org-without-serial-number.csr"))
 	if err != nil {
 		panic(err)
 	}
