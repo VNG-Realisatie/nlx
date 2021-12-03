@@ -37,6 +37,15 @@ It should include information about the API we will provide or consume.
 In order to request or own certificate, we need to generate a key and Certificate Signing Request (CSR).
 We can create these using [openssl](https://www.openssl.org/).
 
+**Note**: If you wish to choose your own organization serial number or keep the serial number when generating a CSR, you need to add the following lines to your openssl config:
+
+```toml
+[ req_distinguished_name ]
+serialNumber = Serial Number
+```
+
+Generate CSR:
+
 ```bash
 openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
 ```
@@ -46,11 +55,12 @@ Answer the questions accordingly:
 - **Country Name**, enter any value
 - **State**, enter any value
 - **Locality Name**, enter any value
-- **Organization Name**, please enter a URL-friendly value with a maximum length of 100 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness yet.
+- **Organization Name**, please enter a URL-friendly value with a maximum length of 100 characters.
   A good value could be: `my-organization`.
 - **Organization Unit Name**, enter any value
 - **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your inway, e.g. `inway.my-organization.nl` or `nlx.my-organization.nl`. For an outway this FQDN does not have to be resolvable. It is possible to use the inway certificate for the outway and NLX Management.
 - **Email Address**, enter any value
+- **Serial Number** (optional), enter a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness. 
 - **A challenge password**, leave empty
 
 Now openssl wil generate two files:

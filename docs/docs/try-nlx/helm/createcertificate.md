@@ -94,6 +94,13 @@ internal   True    ??
 
 Traffic between organizations takes place via an external certificate. For the NLX demo environment, you can easily create a certificate with the certificate portal.
 
+**Note**: If you wish to choose your own organization serial number or keep the serial number when generating a CSR, you need to add the following lines to your openssl config:
+
+```toml
+[ req_distinguished_name ]
+serialNumber = Serial Number
+```
+
 Generate a private key and certificate request for the organization by running:
 
 ```
@@ -113,6 +120,7 @@ You now have to answer a series of questions. Below is an example of the answers
   (host name where your inway can be reached), for example:
   inway.mijn.organisatie.nl
 - Email Address []: <skip>
+- Serial Number []: (optional), a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness  
 - A challenge password []: <skip>
 ```
 
