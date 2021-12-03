@@ -37,6 +37,8 @@ const EditOrderForm = ({ order, services, onSubmitHandler }) => {
 
   const initialValues = {
     description: order.description,
+    reference: order.reference,
+    delegatee: order.delegatee,
     publicKeyPEM: order.publicKeyPem,
     validFrom: new Date(order.validFrom).toISOString().split('T')[0],
     validUntil: new Date(order.validUntil).toISOString().split('T')[0],
@@ -78,6 +80,8 @@ const EditOrderForm = ({ order, services, onSubmitHandler }) => {
           ...values,
           validFrom: new Date(values.validFrom),
           validUntil: new Date(values.validUntil),
+          reference: undefined,
+          delegatee: undefined,
         })
       }}
     >
@@ -87,6 +91,20 @@ const EditOrderForm = ({ order, services, onSubmitHandler }) => {
             <FieldLabel
               label={t('Order description')}
               small={t('For your own reference')}
+            />
+          </TextInput>
+
+          <TextInput name="reference" size="l" disabled>
+            <FieldLabel
+              label={t('Reference')}
+              small={t('This identifier is sent with each request')}
+            />
+          </TextInput>
+
+          <TextInput name="delegatee" size="l" disabled>
+            <FieldLabel
+              label={t('Delegated organization')}
+              small={t('Serial number of the delegatee')}
             />
           </TextInput>
 
