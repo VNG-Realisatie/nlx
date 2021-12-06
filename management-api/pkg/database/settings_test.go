@@ -13,31 +13,37 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func TestPutOrganizationInway(t *testing.T) {
+func TestUpdateSettings(t *testing.T) {
 	t.Parallel()
 
 	setup(t)
 
 	tests := map[string]struct {
 		loadFixtures bool
-		inwayID      *uint
-		expected     *database.Settings
+		settings     func() *domain.Settings
 		expectedErr  error
 	}{
 		"non_existing_inway": {
 			loadFixtures: true,
-			inwayID:      newUint(9999999),
-			expected:     nil,
-			expectedErr:  database.ErrInwayNotFound,
+			settings: func() *domain.Settings {
+				settings, err := domain.NewSettings("does-not-exist", "mock@email.com")
+				require.NoError(t, err)
+
+				return settings
+			},
+			expectedErr: database.ErrInwayNotFound,
 		},
 		"happy_flow": {
 			loadFixtures: true,
-			inwayID:      newUint(1),
-			expected: &database.Settings{
-				InwayID: newUint(1),
+			settings: func() *domain.Settings {
+				settings, err := domain.NewSettings("fixture-inway", "mock@email.com")
+				require.NoError(t, err)
+
+				return settings
 			},
 			expectedErr: nil,
 		},
@@ -52,11 +58,15 @@ func TestPutOrganizationInway(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			actual, err := configDb.PutOrganizationInway(context.Background(), tt.inwayID)
+			settings := tt.settings()
+			err := configDb.UpdateSettings(context.Background(), settings)
 			require.ErrorIs(t, err, tt.expectedErr)
 
 			if tt.expectedErr == nil {
-				require.Equal(t, tt.expected.InwayID, actual.InwayID)
+				settingsInDB, err := configDb.GetSettings(context.Background())
+				require.NoError(t, err)
+				require.Equal(t, settings.OrganizationInwayName(), settingsInDB.OrganizationInwayName())
+				require.Equal(t, settings.OrganizationEmailAddress(), settingsInDB.OrganizationEmailAddress())
 			}
 		})
 	}

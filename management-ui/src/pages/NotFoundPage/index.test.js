@@ -12,6 +12,11 @@ jest.mock(
   () => () => null,
 )
 
+jest.mock(
+  '../../components/PageTemplate/OrganizationEmailAddressCheck',
+  () => () => null,
+)
+
 test('renders a 404 page', () => {
   const { getByText } = renderWithProviders(
     <Router>

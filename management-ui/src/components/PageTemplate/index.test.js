@@ -11,6 +11,7 @@ import PageTemplate from './index'
 
 jest.mock('../OrganizationName', () => () => <span>test</span>)
 jest.mock('./OrganizationInwayCheck', () => () => null)
+jest.mock('./OrganizationEmailAddressCheck', () => () => null)
 
 test('PageTemplate', () => {
   const rootStore = new RootStore({})

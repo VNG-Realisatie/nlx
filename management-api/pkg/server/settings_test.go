@@ -5,18 +5,22 @@ package server_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -28,14 +32,12 @@ import (
 )
 
 func TestManagementService_GetSettings(t *testing.T) {
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
 		db               func(ctrl *gomock.Controller) database.ConfigDatabase
 		expectedResponse *api.Settings
 		expectedError    error
 	}{
-		{
-			name: "when the database call fails",
+		"when_the_database_call_fails": {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
 				db.EXPECT().GetSettings(gomock.Any()).Return(nil, errors.New("arbitrary error"))
@@ -46,30 +48,28 @@ func TestManagementService_GetSettings(t *testing.T) {
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
-		{
-			name: "happy flow",
+		"happy flow": {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().GetSettings(gomock.Any()).Return(&database.Settings{
-					Inway: &database.Inway{
-						ID:   1,
-						Name: "inway-name",
-					},
-				}, nil)
+				settings, err := domain.NewSettings("inway-name", "mock@email.com")
+				require.NoError(t, err)
+				db.EXPECT().GetSettings(gomock.Any()).Return(settings, nil)
 
 				return db
 			},
 
 			expectedResponse: &api.Settings{
-				OrganizationInway: "inway-name",
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
 			},
 			expectedError: nil,
 		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
+
+		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -87,8 +87,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 
 //nolint:funlen // alot of scenario's to test
 func TestManagementService_UpdateSettings(t *testing.T) {
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
 		db               func(ctrl *gomock.Controller) database.ConfigDatabase
 		directoryClient  func(ctrl *gomock.Controller) directory.Client
 		auditLog         func(ctrl *gomock.Controller) auditlog.Logger
@@ -97,156 +96,16 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
-		{
-			name: "when_the_getinway_database_call_fails",
+		"when_writing_audit_log_fails": {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-
-				db.EXPECT().
-					GetInway(gomock.Any(), "inway-name").
-					Return(nil, errors.New("random error"))
-
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-
-				return directoryClient
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-
-				return auditLogger
-			},
-			req: &api.UpdateSettingsRequest{
-				OrganizationInway: "inway-name",
-			},
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "database error"),
-		},
-		{
-			name: "when_put_organization_inwayfails",
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().
-					GetInway(gomock.Any(), "inway-name").
-					Return(&database.Inway{
-						ID:          42,
-						SelfAddress: "inway.localhost",
-					}, nil)
-				db.EXPECT().
-					PutOrganizationInway(gomock.Any(), createUintPointer(42)).
-					Return(nil, errors.New("arbitrary error"))
-
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-
-				return directoryClient
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().
-					OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl").
-					Return(nil)
-
-				return auditLogger
-			},
-			req: &api.UpdateSettingsRequest{
-				OrganizationInway: "inway-name",
-			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "database error"),
-		},
-		{
-			name: "when_the_inway_is_empty_and_the_directory_call_fails",
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().
-					ClearOrganizationInway(gomock.Any(), &emptypb.Empty{}).
-					Return(nil, errors.New("arbitrary error"))
-
-				return directoryClient
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-
-				return auditLogger
-			},
-			req: &api.UpdateSettingsRequest{
-				OrganizationInway: "",
-			},
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "database error"),
-		},
-		{
-			name: "when_the_updatesettings_database_call_fails",
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-
-				db.EXPECT().
-					GetInway(gomock.Any(), "inway-name").
-					Return(&database.Inway{
-						SelfAddress: "inway.localhost",
-					}, nil)
-
-				db.EXPECT().PutOrganizationInway(
-					gomock.Any(), gomock.Any(),
-				).Return(nil, errors.New("arbitrary error"))
-
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-				return directoryClient
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
-				return auditLogger
-			},
-			req: &api.UpdateSettingsRequest{
-				OrganizationInway: "inway-name",
-			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "database error"),
-		},
-		{
-			name: "happy_flow",
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-
-				db.EXPECT().
-					GetInway(gomock.Any(), "inway-name").
-					Return(&database.Inway{
-						ID:          1,
-						SelfAddress: "inway.localhost",
-					}, nil)
-
-				db.EXPECT().PutOrganizationInway(gomock.Any(), createUintPointer(1)).Return(&database.Settings{}, nil)
-
-				return db
+				return mock_database.NewMockConfigDatabase(ctrl)
 			},
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				return mock_directory.NewMockClient(ctrl)
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
 				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl").Return(fmt.Errorf("arbitrary error"))
 				return auditLogger
 			},
 			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
@@ -254,22 +113,64 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			req: &api.UpdateSettingsRequest{
-				OrganizationInway: "inway-name",
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: &emptypb.Empty{},
-			expectedError:    nil,
+			expectedResponse: nil,
+			expectedError:    status.Error(codes.Internal, "could not create audit log"),
 		},
-		{
-			name: "happy flow with empty inway name",
+		"when_update_settings_database_call_fails": {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().PutOrganizationInway(gomock.Any(), nil).Return(&database.Settings{}, nil)
+				settings, err := domain.NewSettings("inway-name", "mock@email.com")
+				require.NoError(t, err)
+
+				db.EXPECT().UpdateSettings(
+					gomock.Any(), settings,
+				).Return(errors.New("arbitrary error"))
 
 				return db
 			},
 			directoryClient: func(ctrl *gomock.Controller) directory.Client {
 				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().ClearOrganizationInway(gomock.Any(), gomock.Any()).Return(&emptypb.Empty{}, nil)
+				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
+					EmailAddress: "mock@email.com",
+				}).Return(&emptypb.Empty{}, nil)
+				return directoryClient
+			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				return auditLogger
+			},
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
+			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
+			expectedResponse: nil,
+			expectedError:    status.Error(codes.Internal, "database error"),
+		},
+		"inway_does_not_exist": {
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+
+				settings, err := domain.NewSettings("inway-name", "mock@email.com")
+				require.NoError(t, err)
+
+				db.EXPECT().UpdateSettings(gomock.Any(), settings).Return(database.ErrInwayNotFound)
+
+				return db
+			},
+			directoryClient: func(ctrl *gomock.Controller) directory.Client {
+				directoryClient := mock_directory.NewMockClient(ctrl)
+				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
+					EmailAddress: "mock@email.com",
+				}).Return(&emptypb.Empty{}, nil)
+
 				return directoryClient
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
@@ -282,16 +183,82 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				"grpcgateway-user-agent": "nlxctl",
 			})),
 			req: &api.UpdateSettingsRequest{
-				OrganizationInway: "",
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
+			},
+			expectedResponse: nil,
+			expectedError:    status.Error(codes.InvalidArgument, "inway not found"),
+		},
+		"call_to_directory_fails": {
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+				return db
+			},
+			directoryClient: func(ctrl *gomock.Controller) directory.Client {
+				directoryClient := mock_directory.NewMockClient(ctrl)
+				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
+					EmailAddress: "mock@email.com",
+				}).Return(nil, fmt.Errorf("arbitrary error"))
+
+				return directoryClient
+			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				return auditLogger
+			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
+			},
+			expectedResponse: nil,
+			expectedError:    status.Error(codes.Internal, "nlx directory unreachable"),
+		},
+		"happy_flow": {
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				db := mock_database.NewMockConfigDatabase(ctrl)
+
+				settings, err := domain.NewSettings("inway-name", "mock@email.com")
+				require.NoError(t, err)
+
+				db.EXPECT().UpdateSettings(gomock.Any(), settings).Return(nil)
+
+				return db
+			},
+			directoryClient: func(ctrl *gomock.Controller) directory.Client {
+				directoryClient := mock_directory.NewMockClient(ctrl)
+				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
+					EmailAddress: "mock@email.com",
+				}).Return(&emptypb.Empty{}, nil)
+
+				return directoryClient
+			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				auditLogger := mock_auditlog.NewMockLogger(ctrl)
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				return auditLogger
+			},
+			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
+				"username":               "Jane Doe",
+				"grpcgateway-user-agent": "nlxctl",
+			})),
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
 			},
 			expectedResponse: &emptypb.Empty{},
 			expectedError:    nil,
 		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
+
+		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -304,8 +271,4 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			assert.Equal(t, tt.expectedError, err)
 		})
 	}
-}
-
-func createUintPointer(x uint) *uint {
-	return &x
 }

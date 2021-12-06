@@ -25,6 +25,12 @@ export interface ManagementSettings {
      * @memberof ManagementSettings
      */
     organizationInway?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementSettings
+     */
+    organizationEmailAddress?: string;
 }
 
 export function ManagementSettingsFromJSON(json: any): ManagementSettings {
@@ -38,6 +44,7 @@ export function ManagementSettingsFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'organizationInway': !exists(json, 'organizationInway') ? undefined : json['organizationInway'],
+        'organizationEmailAddress': !exists(json, 'organizationEmailAddress') ? undefined : json['organizationEmailAddress'],
     };
 }
 
@@ -51,6 +58,7 @@ export function ManagementSettingsToJSON(value?: ManagementSettings | null): any
     return {
         
         'organizationInway': value.organizationInway,
+        'organizationEmailAddress': value.organizationEmailAddress,
     };
 }
 

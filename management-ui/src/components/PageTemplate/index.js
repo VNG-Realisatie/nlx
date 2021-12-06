@@ -8,6 +8,7 @@ import PrimaryNavigation from '../PrimaryNavigation'
 import Header from './Header'
 import HeaderWithBackNavigation from './HeaderWithBackNavigation'
 import OrganizationInwayCheck from './OrganizationInwayCheck'
+import OrganizationEmailAddressCheck from './OrganizationEmailAddressCheck'
 import { Page, SkipToContent, MainWrapper, Main } from './index.styles'
 
 const contentId = 'content'
@@ -20,6 +21,7 @@ const PageTemplate = ({ children }) => {
       <PrimaryNavigation />
       <MainWrapper id={contentId}>
         <OrganizationInwayCheck />
+        <OrganizationEmailAddressCheck />
         <Main>{children}</Main>
       </MainWrapper>
     </Page>

@@ -452,10 +452,12 @@ message RequestAccessToServiceRequest {
 
 message Settings {
   string organizationInway = 1;
+  string organizationEmailAddress = 2;
 }
 
 message UpdateSettingsRequest{
   string organizationInway = 1;
+  string organizationEmailAddress = 2;
 }
 
 message AuditLogRecord {

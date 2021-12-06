@@ -9,6 +9,7 @@ export const AUTH_BASIC_AUTH = 'auth-basic-auth'
 class ApplicationStore {
   authStrategy = AUTH_OIDC
   isOrganizationInwaySet = null
+  isOrganizationEmailAddressSet = null
   error = ''
 
   constructor({ managementApiClient }) {
@@ -27,6 +28,18 @@ class ApplicationStore {
       Object.prototype.hasOwnProperty.call(entries, 'isOrganizationInwaySet')
     ) {
       this.isOrganizationInwaySet = !!entries.isOrganizationInwaySet
+    }
+  }
+
+  updateOrganizationEmailAddress(entries) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        entries,
+        'isOrganizationEmailAddressSet',
+      )
+    ) {
+      this.isOrganizationEmailAddressSet =
+        !!entries.isOrganizationEmailAddressSet
     }
   }
 

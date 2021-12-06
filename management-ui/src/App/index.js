@@ -30,6 +30,10 @@ const App = ({ children, ...props }) => {
       applicationStore.updateOrganizationInway({
         isOrganizationInwaySet: !!settings.organizationInway,
       })
+
+      applicationStore.updateOrganizationEmailAddress({
+        isOrganizationEmailAddressSet: !!settings.organizationEmailAddress,
+      })
     }
 
     fetch()

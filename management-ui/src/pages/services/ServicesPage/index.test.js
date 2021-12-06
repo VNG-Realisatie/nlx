@@ -15,6 +15,10 @@ jest.mock(
   '../../../components/PageTemplate/OrganizationInwayCheck',
   () => () => null,
 )
+jest.mock(
+  '../../../components/PageTemplate/OrganizationEmailAddressCheck',
+  () => () => null,
+)
 jest.mock('./ServicesPageView', () => () => (
   <p data-testid="services-list">mock-services</p>
 ))

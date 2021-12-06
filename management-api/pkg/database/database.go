@@ -59,8 +59,8 @@ type ConfigDatabase interface {
 	RevokeAccessProof(ctx context.Context, id uint, revokedAt time.Time) (*AccessProof, error)
 	GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error)
 
-	GetSettings(ctx context.Context) (*Settings, error)
-	PutOrganizationInway(ctx context.Context, inwayID *uint) (*Settings, error)
+	GetSettings(ctx context.Context) (*domain.Settings, error)
+	UpdateSettings(ctx context.Context, settings *domain.Settings) error
 
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
 	ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error)

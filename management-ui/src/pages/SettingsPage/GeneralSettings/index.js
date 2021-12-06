@@ -29,6 +29,10 @@ const GeneralSettings = () => {
         isOrganizationInwaySet: !!values.organizationInway,
       })
 
+      applicationStore.updateOrganizationEmailAddress({
+        isOrganizationEmailAddressSet: !!values.organizationEmailAddress,
+      })
+
       showToast({
         body: t('Successfully updated the settings'),
         variant: 'success',

@@ -198,6 +198,26 @@ func (mr *MockDirectoryClientMockRecorder) RegisterOutway(ctx, in interface{}, o
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutway", reflect.TypeOf((*MockDirectoryClient)(nil).RegisterOutway), varargs...)
 }
 
+// SetOrganizationContactDetails mocks base method.
+func (m *MockDirectoryClient) SetOrganizationContactDetails(ctx context.Context, in *directoryapi.SetOrganizationContactDetailsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SetOrganizationContactDetails", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetOrganizationContactDetails indicates an expected call of SetOrganizationContactDetails.
+func (mr *MockDirectoryClientMockRecorder) SetOrganizationContactDetails(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationContactDetails", reflect.TypeOf((*MockDirectoryClient)(nil).SetOrganizationContactDetails), varargs...)
+}
+
 // MockDirectoryServer is a mock of DirectoryServer interface.
 type MockDirectoryServer struct {
 	ctrl     *gomock.Controller
@@ -339,6 +359,21 @@ func (m *MockDirectoryServer) RegisterOutway(arg0 context.Context, arg1 *directo
 func (mr *MockDirectoryServerMockRecorder) RegisterOutway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterOutway", reflect.TypeOf((*MockDirectoryServer)(nil).RegisterOutway), arg0, arg1)
+}
+
+// SetOrganizationContactDetails mocks base method.
+func (m *MockDirectoryServer) SetOrganizationContactDetails(arg0 context.Context, arg1 *directoryapi.SetOrganizationContactDetailsRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetOrganizationContactDetails", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetOrganizationContactDetails indicates an expected call of SetOrganizationContactDetails.
+func (mr *MockDirectoryServerMockRecorder) SetOrganizationContactDetails(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationContactDetails", reflect.TypeOf((*MockDirectoryServer)(nil).SetOrganizationContactDetails), arg0, arg1)
 }
 
 // mustEmbedUnimplementedDirectoryServer mocks base method.

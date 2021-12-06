@@ -394,10 +394,10 @@ func (mr *MockConfigDatabaseMockRecorder) GetService(ctx, name interface{}) *gom
 }
 
 // GetSettings mocks base method.
-func (m *MockConfigDatabase) GetSettings(ctx context.Context) (*database.Settings, error) {
+func (m *MockConfigDatabase) GetSettings(ctx context.Context) (*domain.Settings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSettings", ctx)
-	ret0, _ := ret[0].(*database.Settings)
+	ret0, _ := ret[0].(*domain.Settings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -556,21 +556,6 @@ func (m *MockConfigDatabase) ListServices(ctx context.Context) ([]*database.Serv
 func (mr *MockConfigDatabaseMockRecorder) ListServices(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListServices", reflect.TypeOf((*MockConfigDatabase)(nil).ListServices), ctx)
-}
-
-// PutOrganizationInway mocks base method.
-func (m *MockConfigDatabase) PutOrganizationInway(ctx context.Context, inwayID *uint) (*database.Settings, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PutOrganizationInway", ctx, inwayID)
-	ret0, _ := ret[0].(*database.Settings)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PutOrganizationInway indicates an expected call of PutOrganizationInway.
-func (mr *MockConfigDatabaseMockRecorder) PutOrganizationInway(ctx, inwayID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutOrganizationInway", reflect.TypeOf((*MockConfigDatabase)(nil).PutOrganizationInway), ctx, inwayID)
 }
 
 // RegisterInway mocks base method.
@@ -770,6 +755,20 @@ func (m *MockConfigDatabase) UpdateServiceWithInways(ctx context.Context, servic
 func (mr *MockConfigDatabaseMockRecorder) UpdateServiceWithInways(ctx, service, inwayNames interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateServiceWithInways", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateServiceWithInways), ctx, service, inwayNames)
+}
+
+// UpdateSettings mocks base method.
+func (m *MockConfigDatabase) UpdateSettings(ctx context.Context, settings *domain.Settings) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSettings", ctx, settings)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateSettings indicates an expected call of UpdateSettings.
+func (mr *MockConfigDatabaseMockRecorder) UpdateSettings(ctx, settings interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateSettings), ctx, settings)
 }
 
 // VerifyUserCredentials mocks base method.

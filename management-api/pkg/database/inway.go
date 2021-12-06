@@ -66,7 +66,7 @@ func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) 
 		return err
 	}
 
-	if settings != nil && settings.Inway != nil && settings.Inway.ID == inway.ID {
+	if settings != nil && settings.OrganizationInwayName() != "" && settings.OrganizationInwayName() == name {
 		err = tx.
 			WithContext(ctx).
 			Omit(clause.Associations).

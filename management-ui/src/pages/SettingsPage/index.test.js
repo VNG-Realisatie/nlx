@@ -15,6 +15,10 @@ jest.mock(
   '../../components/PageTemplate/OrganizationInwayCheck',
   () => () => null,
 )
+jest.mock(
+  '../../components/PageTemplate/OrganizationEmailAddressCheck',
+  () => () => null,
+)
 
 jest.mock('./GeneralSettings', () => () => (
   <div data-testid="general-settings" />

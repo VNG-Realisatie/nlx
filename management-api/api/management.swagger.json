@@ -1921,6 +1921,9 @@
       "properties": {
         "organizationInway": {
           "type": "string"
+        },
+        "organizationEmailAddress": {
+          "type": "string"
         }
       }
     },
@@ -1983,6 +1986,9 @@
       "type": "object",
       "properties": {
         "organizationInway": {
+          "type": "string"
+        },
+        "organizationEmailAddress": {
           "type": "string"
         }
       }

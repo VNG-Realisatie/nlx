@@ -27,6 +27,7 @@ type PostgreSQLRepository struct {
 	setOrganizationInwayStmt           *sqlx.NamedStmt
 	clearOrganizationInwayStmt         *sqlx.NamedStmt
 	selectOrganizationInwayAddressStmt *sqlx.NamedStmt
+	setOrganizationEmailAddressStmt    *sqlx.NamedStmt
 	selectVersionStatisticsStmt        *sqlx.Stmt
 	selectServicesStmt                 *sqlx.Stmt
 	selectOrganizationsStmt            *sqlx.Stmt
@@ -115,6 +116,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select participants statement: %s", err)
 	}
 
+	setOrganizationEmailAddressStmt, err := prepareSetOrganizationEmailStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare set organization email statement: %s", err)
+	}
+
 	return &PostgreSQLRepository{
 		logger:                             logger.Named("postgres repository"),
 		db:                                 db,
@@ -124,6 +130,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		getServiceStmt:                     getServiceStmt,
 		selectInwayByAddressStmt:           selectInwayByAddressStmt,
 		setOrganizationInwayStmt:           setOrganizationInwayStmt,
+		setOrganizationEmailAddressStmt:    setOrganizationEmailAddressStmt,
 		clearOrganizationInwayStmt:         clearOrganizationInwayStmt,
 		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
 		selectVersionStatisticsStmt:        selectVersionStatisticsStmt,

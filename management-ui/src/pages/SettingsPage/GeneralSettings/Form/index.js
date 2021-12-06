@@ -12,6 +12,7 @@ import {
   Legend,
   Select,
   FieldLabel,
+  TextInput,
 } from '@commonground/design-system'
 import { observer } from 'mobx-react'
 import FormikFocusError from '../../../../components/FormikFocusError'
@@ -25,6 +26,7 @@ import {
 
 const DEFAULT_INITIAL_VALUES = {
   organizationInway: '',
+  organizationEmailAddress: '',
 }
 
 const Form = ({ initialValues, onSubmitHandler, ...props }) => {
@@ -41,7 +43,7 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
     inwayStore.fetchInways()
   }, [inwayStore])
 
-  const validateOrganizationInwayAndSubmit = async (values) => {
+  const validateAndSubmit = async (values) => {
     if (values.organizationInway) {
       onSubmitHandler(values)
       return
@@ -54,6 +56,7 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
 
   const validationSchema = Yup.object().shape({
     organizationInway: Yup.string(),
+    organizationEmailAddress: Yup.string(),
   })
 
   const selectInwayOptions = inwayStore.inways.map((inway) => ({
@@ -72,7 +75,7 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
           ...initialValues,
         }}
         validationSchema={validationSchema}
-        onSubmit={validateOrganizationInwayAndSubmit}
+        onSubmit={validateAndSubmit}
       >
         {({ handleSubmit }) => (
           <StyledForm onSubmit={handleSubmit} data-testid="form" {...props}>
@@ -98,6 +101,14 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
                   />
                 </Select>
               )}
+              <TextInput name="organizationEmailAddress" size="l">
+                <FieldLabel
+                  label={t('Organization email address')}
+                  small={t(
+                    'This email address will be used to send updates and other information to.',
+                  )}
+                />
+              </TextInput>
             </Fieldset>
 
             <Fieldset>
@@ -118,6 +129,7 @@ Form.propTypes = {
   onSubmitHandler: func,
   initialValues: shape({
     organizationInway: string,
+    organizationEmailAddress: string,
   }),
 }
 

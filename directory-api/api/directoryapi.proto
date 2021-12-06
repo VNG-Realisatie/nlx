@@ -10,7 +10,10 @@ option go_package = ".;directoryapi";
 
 service Directory {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+
 	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
+
+	rpc SetOrganizationContactDetails (SetOrganizationContactDetailsRequest) returns (google.protobuf.Empty);
 
 	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {
 		option (google.api.http).get = "/api/directory/list-services";
@@ -36,6 +39,7 @@ service Directory {
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
 service DirectoryRegistration {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+
 	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
 
 	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {}
@@ -50,6 +54,7 @@ service DirectoryRegistration {
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
 service DirectoryInspection {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+
 	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
 
 	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {}
@@ -171,4 +176,8 @@ message ListParticipantsResponse {
 	}
 
 	repeated Participant participants = 1;
+}
+
+message SetOrganizationContactDetailsRequest {
+	string email_address = 1;
 }

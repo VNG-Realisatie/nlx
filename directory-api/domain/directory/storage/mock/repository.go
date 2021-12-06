@@ -226,6 +226,20 @@ func (mr *MockRepositoryMockRecorder) RegisterService(arg0 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterService", reflect.TypeOf((*MockRepository)(nil).RegisterService), arg0)
 }
 
+// SetOrganizationEmailAddress mocks base method.
+func (m *MockRepository) SetOrganizationEmailAddress(ctx context.Context, organization *domain.Organization, emailAddress string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetOrganizationEmailAddress", ctx, organization, emailAddress)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetOrganizationEmailAddress indicates an expected call of SetOrganizationEmailAddress.
+func (mr *MockRepositoryMockRecorder) SetOrganizationEmailAddress(ctx, organization, emailAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrganizationEmailAddress", reflect.TypeOf((*MockRepository)(nil).SetOrganizationEmailAddress), ctx, organization, emailAddress)
+}
+
 // SetOrganizationInway mocks base method.
 func (m *MockRepository) SetOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error {
 	m.ctrl.T.Helper()

@@ -32,12 +32,19 @@ test('changing organization inway', async () => {
 
   const organizationInwayInput = await findByLabelText(/Organization inway/)
   await selectEvent.select(organizationInwayInput, /inway-a/)
+
+  const organizationEmailAddressInput = await findByLabelText(
+    /Organization email address/,
+  )
+  await userEvent.type(organizationEmailAddressInput, 'my@organization.com')
+
   const submitButton = getByText('Save settings')
   userEvent.click(submitButton)
 
-  await waitFor(() =>
+  await waitFor(() => {
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
       organizationInway: 'inway-a',
-    }),
-  )
+      organizationEmailAddress: 'my@organization.com',
+    })
+  })
 })

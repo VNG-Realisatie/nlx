@@ -16,6 +16,11 @@ jest.mock(
   () => () => null,
 )
 
+jest.mock(
+  '../../../components/PageTemplate/OrganizationEmailAddressCheck',
+  () => () => null,
+)
+
 // eslint-disable-next-line react/prop-types
 jest.mock('../../../components/ServiceForm', () => ({ onSubmitHandler }) => (
   <form
