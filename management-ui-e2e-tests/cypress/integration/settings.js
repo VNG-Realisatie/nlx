@@ -11,6 +11,10 @@ describe('Settings', () => {
 
   it('Not specifying the organization inway', () => {
     cy.get('#organizationInway').click()
+    cy.get('.ReactSelect__menu-list').findByText(Cypress.env('INWAY_NAME')).click()
+    cy.findByText('Instellingen opslaan').click()
+
+    cy.get('#organizationInway').click()
     cy.get('.ReactSelect__menu-list').findByText(/Geen/).click()
     cy.findByText('Instellingen opslaan').click()
 

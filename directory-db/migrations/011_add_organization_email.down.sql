@@ -1,5 +1,5 @@
 begin transaction;
 
-alter table directory.organizations add column created_at timestamp with time zone default now() not null;
+alter table directory.organizations drop column email_address;
 
 commit;

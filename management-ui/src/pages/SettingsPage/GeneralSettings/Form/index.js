@@ -44,19 +44,24 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
   }, [inwayStore])
 
   const validateAndSubmit = async (values) => {
-    if (values.organizationInway) {
-      onSubmitHandler(values)
+    // Check if organization inway gets removed
+    if (!values.organizationInway && initialValues.organizationInway) {
+      if (await confirmModal()) {
+        onSubmitHandler(values)
+      }
+
       return
     }
 
-    if (await confirmModal()) {
-      onSubmitHandler(values)
-    }
+    onSubmitHandler(values)
+    return
   }
 
   const validationSchema = Yup.object().shape({
     organizationInway: Yup.string(),
-    organizationEmailAddress: Yup.string(),
+    organizationEmailAddress: Yup.string().email(
+      t('Please enter a valid email address'),
+    ),
   })
 
   const selectInwayOptions = inwayStore.inways.map((inway) => ({
@@ -105,7 +110,7 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
                 <FieldLabel
                   label={t('Organization email address')}
                   small={t(
-                    'This email address will be used to send updates and other information to.',
+                    'This email address will receive important updates about NLX.',
                   )}
                 />
               </TextInput>

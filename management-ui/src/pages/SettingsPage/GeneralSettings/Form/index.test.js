@@ -11,6 +11,8 @@ import { RootStore, StoreProvider } from '../../../../stores'
 import { ManagementApi } from '../../../../api'
 import Form from './index'
 
+jest.mock('../../../../components/FormikFocusError', () => () => <></>)
+
 test('changing organization inway', async () => {
   const managementApiClient = new ManagementApi()
 

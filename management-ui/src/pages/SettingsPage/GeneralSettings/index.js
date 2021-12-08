@@ -25,6 +25,9 @@ const GeneralSettings = () => {
     try {
       await applicationStore.updateGeneralSettings(values)
 
+      settings.organizationInway = values.organizationInway
+      settings.organizationEmailAddress = values.organizationEmailAddress
+
       applicationStore.updateOrganizationInway({
         isOrganizationInwaySet: !!values.organizationInway,
       })

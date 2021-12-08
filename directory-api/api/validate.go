@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
 package directoryapi
 
 import (
@@ -9,6 +12,6 @@ import (
 func (request *SetOrganizationContactDetailsRequest) Validate() error {
 	return validation.ValidateStruct(
 		request,
-		validation.Field(&request.EmailAddress, validation.Required, is.Email),
+		validation.Field(&request.EmailAddress, is.Email),
 	)
 }
