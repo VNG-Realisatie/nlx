@@ -36,6 +36,7 @@ var serveOpts struct {
 	DirectoryInspectionAddress   string
 	DirectoryRegistrationAddress string
 	DirectoryAddress             string
+	TXLogAddress                 string
 	TransactionLogDSN            string
 	EnableBasicAuth              bool
 
@@ -53,6 +54,7 @@ func init() {
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryInspectionAddress, "directory-inspection-address", "", "", "Address of the directory inspection API")
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryRegistrationAddress, "directory-registration-address", "", "", "Address of the directory registration API")
 	serveCommand.Flags().StringVarP(&serveOpts.DirectoryAddress, "directory-address", "", "", "Address of the directory API")
+	serveCommand.Flags().StringVarP(&serveOpts.TXLogAddress, "txlog-address", "", "", "Address of the TXLog API")
 	serveCommand.Flags().BoolVarP(&serveOpts.EnableBasicAuth, "enable-basic-auth", "", false, "Enable HTTP basic authentication and disable OIDC")
 	serveCommand.Flags().StringVarP(&serveOpts.LogOptions.LogType, "log-type", "", "live", "Set the logging config. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.")
 	serveCommand.Flags().StringVarP(&serveOpts.LogOptions.LogLevel, "log-level", "", "", "Override the default loglevel as set by --log-type.")
@@ -199,6 +201,7 @@ var serveCommand = &cobra.Command{
 			cert,
 			orgCert,
 			serveOpts.DirectoryAddress,
+			serveOpts.TXLogAddress,
 			authenticator,
 			auditLogger,
 		)

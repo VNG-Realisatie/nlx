@@ -5,16 +5,22 @@ WORKDIR /src
 all:
     BUILD +proto
     BUILD +mocks
+    BUILD +sqlc
 
 proto:
     BUILD +proto-directory-api
     BUILD +proto-management-api
+    BUILD +proto-txlog-api
     BUILD +proto-inway-test
 
 mocks:
     BUILD +mocks-management-api
+    BUILD +mocks-txlog-api
     BUILD +mocks-common
     BUILD +mocks-directory-api
+
+sqlc:
+    BUILD +sqlc-txlog-api
 
 deps:
     COPY go.mod go.sum /src/
@@ -71,6 +77,24 @@ proto-management-api:
     SAVE ARTIFACT /dist/*.* AS LOCAL ./management-api/api/
     SAVE ARTIFACT /dist/external/*.* AS LOCAL ./management-api/api/external/
 
+proto-txlog-api:
+    FROM +deps
+    COPY ./txlog-api/api/*.proto /src/
+
+    RUN mkdir -p /dist || true && \
+        protoc \
+            -I. \
+            -I/protobuf/include \
+            -I/protobuf/googleapis \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
+            --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
+            --openapiv2_out=/dist \
+            ./txlog.proto
+    RUN goimports -w -local "go.nlx.io" /dist/
+
+    SAVE ARTIFACT /dist/*.* AS LOCAL ./txlog-api/api/
+
 proto-inway-test:
     FROM +deps
     COPY ./inway/grpcproxy/test/*.proto /src
@@ -92,6 +116,7 @@ mocks-management-api:
     COPY ./management-api /src/management-api
     COPY ./common /src/common
     COPY ./directory-api /src/directory-api
+    COPY ./txlog-api /src/txlog-api
 
     RUN mkdir -p /dist || true
     WORKDIR /src/management-api
@@ -100,6 +125,7 @@ mocks-management-api:
     RUN mockgen -source api/external/external_grpc.pb.go -destination /dist/management-api/api/external/mock/mock_external.go
     RUN mockgen -source pkg/database/database.go -destination /dist/management-api/pkg/database/mock/mock_database.go
     RUN mockgen -destination /dist/management-api/pkg/directory/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/directory Client
+    RUN mockgen -destination /dist/management-api/pkg/txlog/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/txlog Client
     RUN mockgen -destination /dist/management-api/pkg/management/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/management Client
     RUN mockgen -source pkg/auditlog/logger.go -destination /dist/management-api/pkg/auditlog/mock/mock_auditlog.go
     RUN mockgen -source pkg/txlogdb/database.go -destination /dist/management-api/pkg/txlogdb/mock/mock_database.go
@@ -110,6 +136,7 @@ mocks-management-api:
     SAVE ARTIFACT /dist/management-api/api/external/mock/*.go AS LOCAL ./management-api/api/external/mock/
     SAVE ARTIFACT /dist/management-api/pkg/database/mock/*.go AS LOCAL ./management-api/pkg/database/mock/
     SAVE ARTIFACT /dist/management-api/pkg/directory/mock/*.go AS LOCAL ./management-api/pkg/directory/mock/
+    SAVE ARTIFACT /dist/management-api/pkg/txlog/mock/*.go AS LOCAL ./management-api/pkg/txlog/mock/
     SAVE ARTIFACT /dist/management-api/pkg/management/mock/*.go AS LOCAL ./management-api/pkg/management/mock/
     SAVE ARTIFACT /dist/management-api/pkg/auditlog/mock/*.go AS LOCAL ./management-api/pkg/auditlog/mock/
     SAVE ARTIFACT /dist/management-api/pkg/txlogdb/mock/*.go AS LOCAL ./management-api/pkg/txlogdb/mock/
@@ -139,3 +166,31 @@ mocks-directory-api:
 
     SAVE ARTIFACT /dist/api/mock/mock_directory_api.go AS LOCAL ./directory-api/api/mock/mock_directory_api.go
     SAVE ARTIFACT /dist/domain/directory/storage/mock/repository.go AS LOCAL ./directory-api/domain/directory/storage/mock/repository.go
+
+mocks-txlog-api:
+    FROM +deps
+    COPY ./txlog-api /src/txlog-api
+
+    RUN mkdir -p /dist || true
+    WORKDIR /src/txlog-api
+
+    RUN mockgen -source api/txlog_grpc.pb.go -package=mock -destination /dist/api/mock/mock_txlog.go
+    RUN mockgen -source domain/txlog/storage/repository.go -package=txlog_mock -destination /dist/domain/txlog/storage/mock/repository.go
+
+    RUN goimports -w -local "go.nlx.io" /dist/
+
+    SAVE ARTIFACT /dist/api/mock/mock_txlog.go AS LOCAL ./txlog-api/api/mock/mock_txlog.go
+    SAVE ARTIFACT /dist/domain/txlog/storage/mock/repository.go AS LOCAL ./txlog-api/domain/txlog/storage/mock/repository.go
+
+sqlc-txlog-api:
+    FROM +deps
+    COPY ./txlog-api/adapters/storage/postgres/queries /src/txlog-api/adapters/storage/postgres/queries
+    COPY ./txlog-db/migrations /src/txlog-db/migrations
+
+    WORKDIR /src/txlog-api/adapters/storage/postgres/queries
+
+    RUN /usr/bin/sqlc generate
+
+    RUN goimports -w -local "go.nlx.io" /src/
+
+    SAVE ARTIFACT /src/txlog-api/adapters/storage/postgres/queries/* AS LOCAL ./txlog-api/adapters/storage/postgres/queries/

@@ -17,17 +17,20 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/txlog"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
 type ManagementService struct {
 	api.UnimplementedDirectoryServer
 	api.UnimplementedManagementServer
+	api.UnimplementedTXLogServer
 	external.UnimplementedAccessRequestServiceServer
 	external.UnimplementedDelegationServiceServer
 
 	logger                     *zap.Logger
 	directoryClient            directory.Client
+	txlogClient                txlog.Client
 	orgCert                    *tls.CertificateBundle
 	configDatabase             database.ConfigDatabase
 	txlogDatabase              txlogdb.TxlogDatabase
@@ -35,11 +38,12 @@ type ManagementService struct {
 	createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
 }
 
-func NewManagementService(logger *zap.Logger, directoryClient directory.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
+func NewManagementService(logger *zap.Logger, directoryClient directory.Client, txlogClient txlog.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
 	return &ManagementService{
 		logger:                     logger,
 		orgCert:                    orgCert,
 		directoryClient:            directoryClient,
+		txlogClient:                txlogClient,
 		configDatabase:             configDatabase,
 		txlogDatabase:              txlogDatabase,
 		auditLogger:                auditLogger,

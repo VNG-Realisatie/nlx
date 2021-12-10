@@ -104,6 +104,7 @@ func TestRegisterInway(t *testing.T) {
 				logger,
 				mock_directory.NewMockClient(mockCtrl),
 				nil,
+				nil,
 				mockDatabase,
 				nil,
 				mock_auditlog.NewMockLogger(mockCtrl),
@@ -132,6 +133,7 @@ func TestGetInway(t *testing.T) {
 	service := server.NewManagementService(
 		logger,
 		mock_directory.NewMockClient(mockCtrl),
+		nil,
 		nil,
 		mockDatabase,
 		nil,
@@ -190,6 +192,7 @@ func TestUpdateInway(t *testing.T) {
 	service := server.NewManagementService(
 		logger,
 		mock_directory.NewMockClient(mockCtrl),
+		nil,
 		nil,
 		mockDatabase,
 		nil,
@@ -332,6 +335,7 @@ func TestListInways(t *testing.T) {
 	service := server.NewManagementService(
 		logger,
 		mock_directory.NewMockClient(mockCtrl),
+		nil,
 		nil,
 		mockDatabase,
 		nil,

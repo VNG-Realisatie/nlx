@@ -10,6 +10,9 @@
     },
     {
       "name": "Directory"
+    },
+    {
+      "name": "TXLog"
     }
   ],
   "consumes": [
@@ -1068,6 +1071,28 @@
           "Management"
         ]
       }
+    },
+    "/api/v1/txlog/records": {
+      "get": {
+        "operationId": "TXLog_ListRecords",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementTXLogListRecordsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TXLog"
+        ]
+      }
     }
   },
   "definitions": {
@@ -1935,6 +1960,82 @@
           "items": {
             "$ref": "#/definitions/managementIncomingOrder"
           }
+        }
+      }
+    },
+    "managementTXLogDirection": {
+      "type": "string",
+      "enum": [
+        "IN",
+        "OUT"
+      ],
+      "default": "IN"
+    },
+    "managementTXLogListRecordsResponse": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/managementTXLogRecord"
+          }
+        }
+      }
+    },
+    "managementTXLogOrder": {
+      "type": "object",
+      "properties": {
+        "delegator": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        }
+      }
+    },
+    "managementTXLogOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        }
+      }
+    },
+    "managementTXLogRecord": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/managementTXLogOrganization"
+        },
+        "destination": {
+          "$ref": "#/definitions/managementTXLogOrganization"
+        },
+        "direction": {
+          "$ref": "#/definitions/managementTXLogDirection"
+        },
+        "service": {
+          "$ref": "#/definitions/managementTXLogService"
+        },
+        "data": {
+          "type": "string"
+        },
+        "order": {
+          "$ref": "#/definitions/managementTXLogOrder"
+        },
+        "TransactionID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "managementTXLogService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
         }
       }
     },

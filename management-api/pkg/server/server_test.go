@@ -23,6 +23,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/management"
 	mock_management "go.nlx.io/nlx/management-api/pkg/management/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	mock_txlog "go.nlx.io/nlx/management-api/pkg/txlog/mock"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
@@ -62,6 +63,7 @@ type serviceMocks struct {
 	db *mock_database.MockConfigDatabase
 	al *mock_auditlog.MockLogger
 	dc *mock_directory.MockClient
+	tx *mock_txlog.MockClient
 	mc *mock_management.MockClient
 }
 
@@ -75,6 +77,7 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 
 	mocks := serviceMocks{
 		dc: mock_directory.NewMockClient(ctrl),
+		tx: mock_txlog.NewMockClient(ctrl),
 		al: mock_auditlog.NewMockLogger(ctrl),
 		db: mock_database.NewMockConfigDatabase(ctrl),
 		mc: mock_management.NewMockClient(ctrl),
@@ -88,6 +91,7 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 	s := server.NewManagementService(
 		logger,
 		mocks.dc,
+		mocks.tx,
 		bundle,
 		mocks.db,
 		nil,

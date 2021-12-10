@@ -48,6 +48,7 @@ func TestIsFinanceEnabled(t *testing.T) {
 				nil,
 				nil,
 				nil,
+				nil,
 				tt.db,
 				nil,
 				management.NewClient,
@@ -139,6 +140,7 @@ func TestDownloadFinanceExport(t *testing.T) {
 
 			service := NewManagementService(
 				zap.NewNop(),
+				nil,
 				nil,
 				bundle,
 				db,

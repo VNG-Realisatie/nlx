@@ -1,0 +1,20 @@
+version: "1"
+packages:
+  - name: "queries"
+    path: "./"
+    queries: "./queries.sql"
+    schema: "../../../../../txlog-db/migrations"
+    engine: "postgresql"
+    emit_prepared_queries: true
+    emit_interface: false
+    emit_exact_table_names: false
+    emit_empty_slices: true
+    emit_exported_queries: false
+    emit_json_tags: false
+    emit_result_struct_pointers: true
+    emit_params_struct_pointers: true
+    emit_methods_with_db_argument: false
+    json_tags_case_style: "camel"
+    output_db_file_name: "db.go"
+    output_models_file_name: "models.go"
+    output_querier_file_name: "querier.go"

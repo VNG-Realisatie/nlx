@@ -32,6 +32,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	"go.nlx.io/nlx/management-api/pkg/txlog"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
@@ -46,6 +47,7 @@ type API struct {
 	httpServer      *http.Server
 	authenticator   Authenticator
 	directoryClient directory.Client
+	txlogClient     txlog.Client
 	configDatabase  database.ConfigDatabase
 }
 
@@ -56,7 +58,7 @@ type Authenticator interface {
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, cert, orgCert *common_tls.CertificateBundle, directoryAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
+func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, cert, orgCert *common_tls.CertificateBundle, directoryAddress, txLogAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
 	if db == nil {
 		return nil, errors.New("database is not configured")
 	}
@@ -78,9 +80,18 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 		logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
+	var txlogClient txlog.Client
+	if txLogAddress != "" {
+		txlogClient, err = txlog.NewClient(context.TODO(), txLogAddress, cert)
+		if err != nil {
+			logger.Fatal("failed to setup txlog client", zap.Error(err))
+		}
+	}
+
 	managementService := server.NewManagementService(
 		logger,
 		directoryClient,
+		txlogClient,
 		orgCert,
 		db,
 		txlogDB,
@@ -101,7 +112,13 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 
 	directoryService := server.NewDirectoryService(logger, e, directoryClient, db)
 
+	txlogService := server.NewTXLogService(logger, txlogClient)
+
 	api.RegisterDirectoryServer(grpcServer, directoryService)
+
+	if txLogAddress != "" {
+		api.RegisterTXLogServer(grpcServer, txlogService)
+	}
 
 	mux := runtime.NewServeMux(
 		// Change the default behavior of marshaling to JSON
@@ -131,6 +148,7 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 		mux:             mux,
 		authenticator:   authenticator,
 		directoryClient: directoryClient,
+		txlogClient:     txlogClient,
 		configDatabase:  db,
 	}
 

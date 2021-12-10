@@ -47,6 +47,7 @@ func TestCreateService(t *testing.T) {
 		logger,
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
+		nil,
 		mockDatabase,
 		nil,
 		auditLogger,

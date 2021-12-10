@@ -27,6 +27,7 @@ var tests = []struct {
 	orgCert              certFiles
 	db                   database.ConfigDatabase
 	directoryAddress     string
+	txlogAddress         string
 	expectedErrorMessage string
 }{
 	{
@@ -42,7 +43,8 @@ var tests = []struct {
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		&mock_database.MockConfigDatabase{},
-		"",
+		"directory.test:8443",
+		"txlog.test:8443",
 		"cannot obtain organization name from self cert",
 	},
 	{
@@ -58,7 +60,8 @@ var tests = []struct {
 			filepath.Join(pkiDir, "ca-root.pem"),
 		},
 		nil,
-		"",
+		"directory.test:8443",
+		"txlog.test:8443",
 		"database is not configured",
 	},
 	{
@@ -75,6 +78,7 @@ var tests = []struct {
 		},
 		&mock_database.MockConfigDatabase{},
 		"",
+		"txlog.test:8443",
 		"directory address is not configured",
 	},
 	{
@@ -91,6 +95,7 @@ var tests = []struct {
 		},
 		&mock_database.MockConfigDatabase{},
 		"directory.test:8443",
+		"txlog.test:8443",
 		"",
 	},
 }
@@ -118,6 +123,7 @@ func TestNewAPI(t *testing.T) {
 				cert,
 				orgCert,
 				test.directoryAddress,
+				test.txlogAddress,
 				&oidc.Authenticator{},
 				mock_auditlog.NewMockLogger(mockCtrl),
 			)

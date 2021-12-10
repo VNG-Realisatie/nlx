@@ -1,0 +1,147 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "txlog.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "TXLog"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/records": {
+      "get": {
+        "operationId": "TXLog_ListRecords",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/txlogListRecordsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TXLog"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "txlogDirection": {
+      "type": "string",
+      "enum": [
+        "IN",
+        "OUT"
+      ],
+      "default": "IN"
+    },
+    "txlogListRecordsResponse": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/txlogRecord"
+          }
+        }
+      }
+    },
+    "txlogOrder": {
+      "type": "object",
+      "properties": {
+        "delegator": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        }
+      }
+    },
+    "txlogOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        }
+      }
+    },
+    "txlogRecord": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/txlogOrganization"
+        },
+        "destination": {
+          "$ref": "#/definitions/txlogOrganization"
+        },
+        "direction": {
+          "$ref": "#/definitions/txlogDirection"
+        },
+        "service": {
+          "$ref": "#/definitions/txlogService"
+        },
+        "data": {
+          "type": "string"
+        },
+        "order": {
+          "$ref": "#/definitions/txlogOrder"
+        },
+        "TransactionID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "txlogService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

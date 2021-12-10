@@ -70,6 +70,7 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     management-api.organization-a.nlx.local
 127.0.0.1     inway.organization-a.nlx.local
 127.0.0.1     management.organization-a.nlx.local
+127.0.0.1     txlog-api.organization-a.nlx.local
 
 127.0.0.1     management-api.organization-b.nlx.local
 127.0.0.1     inway.organization-b.nlx.local
@@ -81,6 +82,7 @@ Update the `/etc/hosts` file on your system:
 ::1           management-api.organization-a.nlx.local
 ::1           inway.organization-a.nlx.local
 ::1           management.organization-a.nlx.local
+::1           txlog-api.organization-a.nlx.local
 
 ::1           management-api.organization-b.nlx.local
 ::1           inway.organization-b.nlx.local

@@ -567,3 +567,45 @@ message IncomingOrder {
 message ListIncomingOrdersResponse {
   repeated IncomingOrder orders = 1;
 }
+
+service TXLog {
+  rpc ListRecords (google.protobuf.Empty) returns (TXLogListRecordsResponse) {
+    option (google.api.http) = {get: "/api/v1/txlog/records"};
+  }
+}
+
+enum TXLogDirection {
+  IN = 0;
+  OUT = 1;
+}
+
+message TXLogOrganization {
+  string serialNumber = 1;
+}
+
+message TXLogService {
+  string name = 1;
+}
+
+message TXLogOrder {
+  string delegator = 1;
+  string reference = 2;
+}
+
+message TXLogRecord {
+  TXLogOrganization source = 1;
+  TXLogOrganization destination = 2;
+  
+  TXLogDirection direction = 3;
+  TXLogService service = 4;
+  string data = 5;
+  TXLogOrder order = 6;
+
+  string TransactionID = 7;
+  
+  google.protobuf.Timestamp createdAt = 9;
+}
+
+message TXLogListRecordsResponse {
+  repeated TXLogRecord records = 1;
+}

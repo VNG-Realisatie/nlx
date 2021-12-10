@@ -1452,6 +1452,24 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 
 }
 
+func request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshaler, client TXLogClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq emptypb.Empty
+	var metadata runtime.ServerMetadata
+
+	msg, err := client.ListRecords(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshaler, server TXLogServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq emptypb.Empty
+	var metadata runtime.ServerMetadata
+
+	msg, err := server.ListRecords(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 // RegisterManagementHandlerServer registers the http handlers for service Management to "mux".
 // UnaryRPC     :call ManagementServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -2269,6 +2287,38 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		}
 
 		forward_Directory_RequestAccessToService_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	return nil
+}
+
+// RegisterTXLogHandlerServer registers the http handlers for service TXLog to "mux".
+// UnaryRPC     :call TXLogServer directly.
+// StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterTXLogHandlerFromEndpoint instead.
+func RegisterTXLogHandlerServer(ctx context.Context, mux *runtime.ServeMux, server TXLogServer) error {
+
+	mux.Handle("GET", pattern_TXLog_ListRecords_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.TXLog/ListRecords", runtime.WithHTTPPathPattern("/api/v1/txlog/records"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_TXLog_ListRecords_0(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_TXLog_ListRecords_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -3203,4 +3253,73 @@ var (
 	forward_Directory_GetOrganizationService_0 = runtime.ForwardResponseMessage
 
 	forward_Directory_RequestAccessToService_0 = runtime.ForwardResponseMessage
+)
+
+// RegisterTXLogHandlerFromEndpoint is same as RegisterTXLogHandler but
+// automatically dials to "endpoint" and closes the connection when "ctx" gets done.
+func RegisterTXLogHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+	conn, err := grpc.Dial(endpoint, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+			return
+		}
+		go func() {
+			<-ctx.Done()
+			if cerr := conn.Close(); cerr != nil {
+				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+			}
+		}()
+	}()
+
+	return RegisterTXLogHandler(ctx, mux, conn)
+}
+
+// RegisterTXLogHandler registers the http handlers for service TXLog to "mux".
+// The handlers forward requests to the grpc endpoint over "conn".
+func RegisterTXLogHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterTXLogHandlerClient(ctx, mux, NewTXLogClient(conn))
+}
+
+// RegisterTXLogHandlerClient registers the http handlers for service TXLog
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "TXLogClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "TXLogClient"
+// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
+// "TXLogClient" to call the correct interceptors.
+func RegisterTXLogHandlerClient(ctx context.Context, mux *runtime.ServeMux, client TXLogClient) error {
+
+	mux.Handle("GET", pattern_TXLog_ListRecords_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.TXLog/ListRecords", runtime.WithHTTPPathPattern("/api/v1/txlog/records"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_TXLog_ListRecords_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_TXLog_ListRecords_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	return nil
+}
+
+var (
+	pattern_TXLog_ListRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "txlog", "records"}, ""))
+)
+
+var (
+	forward_TXLog_ListRecords_0 = runtime.ForwardResponseMessage
 )
