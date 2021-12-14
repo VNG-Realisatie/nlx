@@ -10,7 +10,7 @@ import './i18n'
 import { RootStore, StoreProvider } from './stores'
 import { UserContextProvider } from './user-context'
 import App from './App'
-import { Configuration, DirectoryApi, ManagementApi } from './api'
+import { Configuration, DirectoryApi, ManagementApi, TXLogApi } from './api'
 import Routes from './routes'
 import UserRepositoryOIDC from './domain/user-repository-oidc'
 import UserRepositoryBasicAuth from './domain/user-repository-basic-auth'
@@ -30,9 +30,16 @@ const managementApiClient = new ManagementApi(
   }),
 )
 
+const txLogApiClient = new TXLogApi(
+  new Configuration({
+    basePath: '',
+  }),
+)
+
 const rootStore = new RootStore({
   directoryApiClient,
   managementApiClient,
+  txLogApiClient,
 })
 
 const getAuthStrategy = async () => {

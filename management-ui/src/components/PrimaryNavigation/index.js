@@ -59,7 +59,15 @@ const PrimaryNavigation = () => {
 
         <StyledLink to="/audit-log" aria-label={t('Audit log page')}>
           <StyledIcon as={IconTimeLine} size="x-large" />
-          {t('Logs')}
+          {t('Audit logs')}
+        </StyledLink>
+
+        <StyledLink
+          to="/transaction-log"
+          aria-label={t('Transaction log page')}
+        >
+          <StyledIcon as={IconTimeLine} size="x-large" />
+          {t('Transaction logs')}
         </StyledLink>
       </section>
 

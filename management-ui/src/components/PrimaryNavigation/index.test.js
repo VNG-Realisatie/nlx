@@ -31,6 +31,9 @@ test('PrimaryNavigation', () => {
   const linkAuditLog = getByLabelText('Audit log page')
   expect(linkAuditLog.getAttribute('href')).toBe('/audit-log')
 
+  const linkTransactionLog = getByLabelText('Transaction log page')
+  expect(linkTransactionLog.getAttribute('href')).toBe('/transaction-log')
+
   const linkSettings = getByLabelText('Settings page')
   expect(linkSettings.getAttribute('href')).toBe('/settings')
 

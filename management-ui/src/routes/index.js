@@ -12,6 +12,7 @@ import DirectoryPage from '../pages/directory/DirectoryPage'
 import EditServicePage from '../pages/services/EditServicePage'
 import FinancePage from '../pages/FinancePage'
 import AuditLogPage from '../pages/AuditLogPage'
+import TransactionLogPage from '../pages/TransactionLogPage'
 import SettingsPage from '../pages/SettingsPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import OrdersPage from '../pages/orders/OrdersPage'
@@ -47,6 +48,8 @@ const AllRoutes = ({ authorizationPageElement }) => (
             <Route path="/finances" element={<FinancePage />} />
 
             <Route path="/audit-log" element={<AuditLogPage />} />
+
+            <Route path="/transaction-log" element={<TransactionLogPage />} />
 
             <Route path="/settings/*" element={<SettingsPage />} />
 

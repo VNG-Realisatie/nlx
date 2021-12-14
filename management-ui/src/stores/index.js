@@ -14,6 +14,7 @@ import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 import InwayStore from './InwayStore'
 import FinanceStore from './FinanceStore'
 import AuditLogStore from './AuditLogStore'
+import TransactionLogStore from './TransactionLogStore'
 import OrderStore from './OrderStore'
 import OutwayStore from './OutwayStore'
 
@@ -26,7 +27,11 @@ if (process.env.NODE_ENV !== 'test') {
 export const storesContext = createContext(null)
 
 export class RootStore {
-  constructor({ directoryApiClient, managementApiClient } = {}) {
+  constructor({
+    directoryApiClient,
+    managementApiClient,
+    txLogApiClient,
+  } = {}) {
     this.applicationStore = new ApplicationStore({
       rootStore: this,
       managementApiClient,
@@ -60,6 +65,9 @@ export class RootStore {
     })
     this.auditLogStore = new AuditLogStore({
       managementApiClient,
+    })
+    this.transactionLogStore = new TransactionLogStore({
+      txLogApiClient,
     })
     this.financeStore = new FinanceStore({
       managementApiClient,

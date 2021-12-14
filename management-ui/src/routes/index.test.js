@@ -28,6 +28,9 @@ jest.mock('../pages/services/AddServicePage', () => () => (
 jest.mock('../pages/AuditLogPage', () => () => (
   <div data-testid="audit-log-page" />
 ))
+jest.mock('../pages/TransactionLogPage', () => () => (
+  <div data-testid="transaction-log-page" />
+))
 jest.mock('../pages/FinancePage', () => () => (
   <div data-testid="finances-page" />
 ))
@@ -123,6 +126,18 @@ test('the /audit-log route renders the AuditLogPage', () => {
     </MemoryRouter>,
   )
   expect(screen.getByTestId('audit-log-page')).toBeInTheDocument()
+})
+
+test('the /transaction-log route renders the TransactionLogPage', () => {
+  const history = createMemoryHistory({ initialEntries: ['/transaction-log'] })
+  const { getByTestId } = renderWithProviders(
+    <Router history={history}>
+      <UserContextProvider user={{ id: '42' }}>
+        <Routes />
+      </UserContextProvider>
+    </Router>,
+  )
+  expect(getByTestId('transaction-log-page')).toBeInTheDocument()
 })
 
 test('the /finances route renders the FinancePage', () => {

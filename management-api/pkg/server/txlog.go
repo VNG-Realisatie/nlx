@@ -30,8 +30,8 @@ func NewTXLogService(logger *zap.Logger, txlogClient txlog.Client) *TXLogService
 	}
 }
 
-// ListServices returns all services known to the txlog except those with the same organization
-func (s TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
+// ListRecords returns transaction log records
+func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
 	resp, err := s.txlogClient.ListRecords(ctx, &emptypb.Empty{})

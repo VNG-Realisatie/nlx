@@ -45,6 +45,14 @@ export const useInwayStore = () => {
   return inwayStore
 }
 
+export const useTransactionLogStore = () => {
+  const { transactionLogStore } = useStores()
+  if (!transactionLogStore.isInitiallyFetched) {
+    transactionLogStore.fetchAll()
+  }
+  return transactionLogStore
+}
+
 export const useOutwayStore = () => {
   const { outwayStore } = useStores()
   return outwayStore
