@@ -1,14 +1,13 @@
 FROM alpine:3.15.0 AS build
-ARG MIGRATE_VERSION="4.7.0"
-ARG MIGATE_CHECKSUM="976e351a7f5afb5f13d2020123c450cb56bb66e6a0542efe563a89dbabc3fbdc"
+ARG MIGRATE_VERSION="4.15.1"
+ARG MIGATE_CHECKSUM="17e997ed5fe08d54b53ec0d7f364715e14bfb90566aa6455b51ba8f88a039bda"
 
 RUN wget -O /tmp/migrate.linux-amd64.tar.gz https://github.com/golang-migrate/migrate/releases/download/v${MIGRATE_VERSION}/migrate.linux-amd64.tar.gz && \
+    echo "${MIGATE_CHECKSUM}  /tmp/migrate.linux-amd64.tar.gz" | sha256sum -c && \
     tar zxf /tmp/migrate.linux-amd64.tar.gz && \
-    echo "${MIGATE_CHECKSUM}  migrate.linux-amd64" | sha256sum -c && \
-    mv migrate.linux-amd64 /usr/local/bin/migrate && \
+    mv migrate /usr/local/bin/migrate && \
     chmod 0755 /usr/local/bin/migrate && \
     /usr/local/bin/migrate -version
-
 
 FROM alpine:3.15.0
 COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
