@@ -77,7 +77,7 @@ After adding the service, you should see the service in the services page and in
 Now let's try to fetch some data from our inway using our outway using `curl`:
 
 ```bash
-curl http://localhost/{{ my-certificate-subject-serial-number }}/SwaggerPetStore/v2/pet/20002085
+curl http://localhost:8081/{{ my-certificate-subject-serial-number }}/SwaggerPetStore/v2/pet/20002085
 ```
 
 The response of the `curl` command should look similar to the following output (where `ORGANIZATION_NAME`/`PUBLIC_KEY_FINGERPRINT` are derived from the certificate generated in [step 3](./retrieve-a-demo-certificate)).
@@ -100,7 +100,7 @@ In order to request access, follow these steps:
 Let's try to fetch the data again.
 
 ```bash
-curl http://localhost/my-organization/SwaggerPetStore/v2/pet/20002085
+curl http://localhost:8081/my-organization/SwaggerPetStore/v2/pet/20002085
 ```
 
 The response of the `curl` command should look similar to the following output.
