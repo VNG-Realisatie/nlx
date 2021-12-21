@@ -13,8 +13,9 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
-	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
 )
 
 type PostgreSQLRepository struct {

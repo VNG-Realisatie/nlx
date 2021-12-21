@@ -112,11 +112,10 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 
 	directoryService := server.NewDirectoryService(logger, e, directoryClient, db)
 
-	txlogService := server.NewTXLogService(logger, txlogClient)
-
 	api.RegisterDirectoryServer(grpcServer, directoryService)
 
 	if txLogAddress != "" {
+		txlogService := server.NewTXLogService(logger, txlogClient)
 		api.RegisterTXLogServer(grpcServer, txlogService)
 	}
 

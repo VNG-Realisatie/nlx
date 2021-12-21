@@ -23,6 +23,7 @@ export * from './ManagementIncomingOrder';
 export * from './ManagementInway';
 export * from './ManagementInwayService';
 export * from './ManagementIsFinanceEnabledResponse';
+export * from './ManagementIsTXLogEnabledResponse';
 export * from './ManagementListAccessGrantsForServiceResponse';
 export * from './ManagementListAuditLogsResponse';
 export * from './ManagementListIncomingAccessRequestsResponse';

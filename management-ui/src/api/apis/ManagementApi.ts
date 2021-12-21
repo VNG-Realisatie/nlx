@@ -45,6 +45,9 @@ import {
     ManagementIsFinanceEnabledResponse,
     ManagementIsFinanceEnabledResponseFromJSON,
     ManagementIsFinanceEnabledResponseToJSON,
+    ManagementIsTXLogEnabledResponse,
+    ManagementIsTXLogEnabledResponseFromJSON,
+    ManagementIsTXLogEnabledResponseToJSON,
     ManagementListAccessGrantsForServiceResponse,
     ManagementListAccessGrantsForServiceResponseFromJSON,
     ManagementListAccessGrantsForServiceResponseToJSON,
@@ -527,6 +530,30 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementIsFinanceEnabled(): Promise<ManagementIsFinanceEnabledResponse> {
         const response = await this.managementIsFinanceEnabledRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementIsTXLogEnabledRaw(): Promise<runtime.ApiResponse<ManagementIsTXLogEnabledResponse>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/txlog/enabled`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementIsTXLogEnabledResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async managementIsTXLogEnabled(): Promise<ManagementIsTXLogEnabledResponse> {
+        const response = await this.managementIsTXLogEnabledRaw();
         return await response.value();
     }
 

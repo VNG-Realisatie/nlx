@@ -38,20 +38,6 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 	return m.recorder
 }
 
-// Enabled mocks base method.
-func (m *MockClient) Enabled() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Enabled")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// Enabled indicates an expected call of Enabled.
-func (mr *MockClientMockRecorder) Enabled() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Enabled", reflect.TypeOf((*MockClient)(nil).Enabled))
-}
-
 // ListRecords mocks base method.
 func (m *MockClient) ListRecords(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()

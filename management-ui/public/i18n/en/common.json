@@ -263,6 +263,7 @@
   "Transaction log page": "Transaction log page",
   "Transaction logs": "Transaction logs",
   "Transaction logs of your inway and outways": "The latest 100 transaction logs of your inways and outways",
+  "txlog_configure": "To view transaction logs you need to configure the transaction log api.",
   "Type": "Type",
   "Unknown": "Unknown",
   "Up": "Up",

@@ -18,10 +18,49 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	mock_txlog "go.nlx.io/nlx/management-api/pkg/txlog/mock"
 	txlogapi "go.nlx.io/nlx/txlog-api/api"
 )
+
+func TestIsTXLogEnabled(t *testing.T) {
+	tests := map[string]struct {
+		client  txlogapi.TXLogClient
+		enabled bool
+	}{
+		"returns_false_when_txlog_client_is_nil": {
+			client:  nil,
+			enabled: false,
+		},
+
+		"returns_true_when_txlog_client_is_not_nil": {
+			client:  mock_txlog.NewMockClient(nil),
+			enabled: true,
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			service := server.NewManagementService(
+				nil,
+				nil,
+				tt.client,
+				nil,
+				nil,
+				nil,
+				nil,
+				management.NewClient,
+			)
+
+			response, err := service.IsTXLogEnabled(context.Background(), nil)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.enabled, response.Enabled)
+		})
+	}
+}
 
 func TestTXLogListRecords(t *testing.T) {
 	now := time.Now()

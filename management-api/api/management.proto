@@ -15,6 +15,9 @@ service Management {
   rpc IsFinanceEnabled (google.protobuf.Empty) returns (IsFinanceEnabledResponse) {
     option (google.api.http) = {get: "/api/v1/finance/enabled"};
   }
+  rpc IsTXLogEnabled (google.protobuf.Empty) returns (IsTXLogEnabledResponse) {
+    option (google.api.http) = {get: "/api/v1/txlog/enabled"};
+  }
   rpc DownloadFinanceExport (google.protobuf.Empty) returns (DownloadFinanceExportResponse) {
     option (google.api.http) = {get: "/api/v1/finance/export"};
   }
@@ -117,6 +120,10 @@ message SynchronizeOrdersResponse {
 }
 
 message IsFinanceEnabledResponse {
+  bool enabled = 1;
+}
+
+message IsTXLogEnabledResponse {
   bool enabled = 1;
 }
 

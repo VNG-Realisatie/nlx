@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { TXLogApi } from '../../api'
+import { TXLogApi, ManagementApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
 import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
@@ -12,6 +12,12 @@ import { DIRECTION_IN } from '../../stores/models/TransactionLogModel'
 import TransactionLogPage from './index'
 
 test('fetching the transaction logs', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
+    enabled: true,
+  })
+
   const txLogApiClient = new TXLogApi()
 
   txLogApiClient.tXLogListRecords = jest.fn().mockResolvedValue({
@@ -32,6 +38,7 @@ test('fetching the transaction logs', async () => {
 
   const store = new RootStore({
     txLogApiClient: txLogApiClient,
+    managementApiClient: managementApiClient,
   })
 
   const { getByRole, findAllByTestId } = renderWithProviders(
@@ -51,6 +58,12 @@ test('fetching the transaction logs', async () => {
 })
 
 test('failed to load transaction logs', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
+    enabled: true,
+  })
+
   const txLogApiClient = new TXLogApi()
 
   txLogApiClient.managementListTransactionRecords = jest
@@ -58,7 +71,8 @@ test('failed to load transaction logs', async () => {
     .mockRejectedValue(Error('arbitrary error'))
 
   const store = new RootStore({
-    managementApiClient: txLogApiClient,
+    txLogApiClient: txLogApiClient,
+    managementApiClient: managementApiClient,
   })
 
   const { queryByRole, getByTestId, findByText } = renderWithProviders(
@@ -81,4 +95,51 @@ test('failed to load transaction logs', async () => {
     await findByText(/^Failed to load the transaction logs$/),
   ).toBeInTheDocument()
   expect(await findByText(/^something went wrong$/)).toBeInTheDocument()
+})
+
+test('it shows a message when txlog is disabled', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
+    enabled: false,
+  })
+
+  const txLogApiClient = new TXLogApi()
+
+  txLogApiClient.tXLogListRecords = jest.fn().mockResolvedValue({
+    records: [
+      {
+        source: {
+          serialNumber: '00000000000000000001',
+        },
+        destination: {
+          serialNumber: '00000000000000000002',
+        },
+        direction: DIRECTION_IN,
+        serviceName: 'my-service',
+        createdAt: new Date(),
+      },
+    ],
+  })
+
+  const store = new RootStore({
+    txLogApiClient: txLogApiClient,
+    managementApiClient: managementApiClient,
+  })
+
+  const { getByText, queryByRole } = renderWithProviders(
+    <MemoryRouter>
+      <UserContextProvider user={{}}>
+        <StoreProvider rootStore={store}>
+          <TransactionLogPage />
+        </StoreProvider>
+      </UserContextProvider>
+    </MemoryRouter>,
+  )
+
+  await waitFor(() => {
+    expect(queryByRole('progressbar')).not.toBeInTheDocument()
+  })
+
+  expect(await getByText('Configure the transaction log')).toBeInTheDocument()
 })

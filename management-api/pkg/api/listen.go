@@ -63,7 +63,7 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 		return err
 	}
 
-	if a.txlogClient.Enabled() {
+	if a.txlogClient != nil {
 		err = api.RegisterTXLogHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 		if err != nil {
 			return err

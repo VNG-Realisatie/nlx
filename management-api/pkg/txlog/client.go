@@ -25,12 +25,10 @@ var (
 
 type Client interface {
 	txlogapi.TXLogClient
-	Enabled() bool
 }
 
 type client struct {
 	txlogapi.TXLogClient
-	enabled bool
 }
 
 func NewClient(ctx context.Context, txlogAddress string, cert *common_tls.CertificateBundle) (Client, error) {
@@ -50,14 +48,9 @@ func NewClient(ctx context.Context, txlogAddress string, cert *common_tls.Certif
 
 	c := &client{
 		txlogapi.NewTXLogClient(txlogConn),
-		true,
 	}
 
 	return c, nil
-}
-
-func (tx *client) Enabled() bool {
-	return tx.enabled
 }
 
 func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {

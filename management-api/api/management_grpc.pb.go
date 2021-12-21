@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ManagementClient interface {
 	SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error)
 	IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error)
+	IsTXLogEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error)
 	DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error)
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
 	GetService(ctx context.Context, in *GetServiceRequest, opts ...grpc.CallOption) (*GetServiceResponse, error)
@@ -74,6 +75,15 @@ func (c *managementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Em
 func (c *managementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error) {
 	out := new(IsFinanceEnabledResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/IsFinanceEnabled", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) IsTXLogEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error) {
+	out := new(IsTXLogEnabledResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/IsTXLogEnabled", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -356,6 +366,7 @@ func (c *managementClient) ListIncomingOrders(ctx context.Context, in *emptypb.E
 type ManagementServer interface {
 	SynchronizeOrders(context.Context, *emptypb.Empty) (*SynchronizeOrdersResponse, error)
 	IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error)
+	IsTXLogEnabled(context.Context, *emptypb.Empty) (*IsTXLogEnabledResponse, error)
 	DownloadFinanceExport(context.Context, *emptypb.Empty) (*DownloadFinanceExportResponse, error)
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
 	GetService(context.Context, *GetServiceRequest) (*GetServiceResponse, error)
@@ -398,6 +409,9 @@ func (UnimplementedManagementServer) SynchronizeOrders(context.Context, *emptypb
 }
 func (UnimplementedManagementServer) IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFinanceEnabled not implemented")
+}
+func (UnimplementedManagementServer) IsTXLogEnabled(context.Context, *emptypb.Empty) (*IsTXLogEnabledResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsTXLogEnabled not implemented")
 }
 func (UnimplementedManagementServer) DownloadFinanceExport(context.Context, *emptypb.Empty) (*DownloadFinanceExportResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadFinanceExport not implemented")
@@ -534,6 +548,24 @@ func _Management_IsFinanceEnabled_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServer).IsFinanceEnabled(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_IsTXLogEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).IsTXLogEnabled(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/IsTXLogEnabled",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).IsTXLogEnabled(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1092,6 +1124,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IsFinanceEnabled",
 			Handler:    _Management_IsFinanceEnabled_Handler,
+		},
+		{
+			MethodName: "IsTXLogEnabled",
+			Handler:    _Management_IsTXLogEnabled_Handler,
 		},
 		{
 			MethodName: "DownloadFinanceExport",

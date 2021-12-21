@@ -66,7 +66,7 @@ const FinancePage = () => {
           <Button
             as="a"
             variant="link"
-            href="https://docs.nlx.io/use-nlx/enable-pricing"
+            href="https://docs.nlx.io/nlx-in-production/enable-pricing"
           >
             {t('To NLX Docs')} <StyledIconExternalLink />
           </Button>

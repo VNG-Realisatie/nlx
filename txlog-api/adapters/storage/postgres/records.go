@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/tabbed/pqtype"
+
 	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/txlog-api/domain"
 )

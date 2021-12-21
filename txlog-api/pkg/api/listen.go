@@ -22,7 +22,7 @@ func (a *API) ListenAndServe(address, addressPlain string) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	g, ctx := errgroup.WithContext(context.Background())
+	g, ctx := errgroup.WithContext(ctx)
 
 	listen, err := net.Listen("tcp", address)
 	if err != nil {

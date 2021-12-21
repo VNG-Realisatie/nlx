@@ -103,7 +103,7 @@ func main() {
 	}
 
 	go func() {
-		err := server.ListenAndServe(options.ListenAddress, options.ListenAddressPlain)
+		err = server.ListenAndServe(options.ListenAddress, options.ListenAddressPlain)
 		if err != nil {
 			logger.Fatal("could not listen and serve", zap.Error(err))
 		}

@@ -22,16 +22,19 @@ func TestNewAPI(t *testing.T) {
 	var pkiDir = filepath.Join("..", "..", "..", "testing", "pki")
 
 	var tests = map[string]struct {
+		logger  *zap.Logger
 		cert    *certFiles
 		storage storage.Repository
 		wantErr error
 	}{
 		"when_no_certs": {
+			logger:  zap.NewNop(),
 			cert:    nil,
 			storage: &mock_storage.MockRepository{},
 			wantErr: errors.New("cert is required"),
 		},
 		"when_no_storage": {
+			logger: zap.NewNop(),
 			cert: &certFiles{
 				filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 				filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -40,7 +43,18 @@ func TestNewAPI(t *testing.T) {
 			storage: nil,
 			wantErr: errors.New("storage is required"),
 		},
+		"when_no_logger": {
+			logger: nil,
+			cert: &certFiles{
+				filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
+				filepath.Join(pkiDir, "org-nlx-test-key.pem"),
+				filepath.Join(pkiDir, "ca-root.pem"),
+			},
+			storage: &mock_storage.MockRepository{},
+			wantErr: errors.New("logger is required"),
+		},
 		"happy_flow": {
+			logger: zap.NewNop(),
 			cert: &certFiles{
 				filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
 				filepath.Join(pkiDir, "org-nlx-test-key.pem"),
@@ -50,8 +64,6 @@ func TestNewAPI(t *testing.T) {
 			wantErr: nil,
 		},
 	}
-
-	logger := zap.NewNop()
 
 	// Test exceptions during management-api creation
 	for name, tt := range tests {
@@ -69,7 +81,7 @@ func TestNewAPI(t *testing.T) {
 			}
 
 			_, err := NewAPI(
-				logger,
+				tt.logger,
 				cert,
 				tt.storage,
 			)

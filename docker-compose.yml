@@ -163,3 +163,12 @@ services:
         - ${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_LATEST_TAG}
         - ${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_BRANCH_TAG}
         - ${IMAGE_PREFIX}nlxio/txlog-db:acc-latest
+  txlog-api:
+    image: "${IMAGE_PREFIX}nlxio/txlog-api:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: txlog-api/Dockerfile
+      cache_from:
+        - ${IMAGE_PREFIX}nlxio/txlog-api:${DOCKER_CACHE_LATEST_TAG}
+        - ${IMAGE_PREFIX}nlxio/txlog-api:${DOCKER_CACHE_BRANCH_TAG}
+        - ${IMAGE_PREFIX}nlxio/txlog-api:acc-latest

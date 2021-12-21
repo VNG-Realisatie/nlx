@@ -3,13 +3,14 @@
 //
 import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
 import PageTemplate from '../../components/PageTemplate'
 import LoadingMessage from '../../components/LoadingMessage'
 import useTransactionLogStore from '../../hooks/use-stores'
 import Table from '../../components/Table'
 import TransactionLogRow from './TransactionLogRow'
+import { Centered } from './index.styles'
 
 const TransactionLogPage = () => {
   const { t } = useTranslation()
@@ -45,7 +46,7 @@ const TransactionLogPage = () => {
         >
           {error}
         </Alert>
-      ) : (
+      ) : transactionLogStore.isEnabled ? (
         <Table withLinks data-testid="transaction-log-list" role="grid">
           <thead>
             <Table.TrHead>
@@ -61,6 +62,20 @@ const TransactionLogPage = () => {
             ))}
           </tbody>
         </Table>
+      ) : (
+        <Centered>
+          <h3>
+            <small>{t('Configure the transaction log')}</small>
+          </h3>
+          <p>
+            <small>
+              <Trans i18nKey="txlog_configure">
+                To view the transaction logs, you need to configure the
+                transaction log api.
+              </Trans>
+            </small>
+          </p>
+        </Centered>
       )}
     </PageTemplate>
   )

@@ -278,6 +278,26 @@ func (mr *MockManagementClientMockRecorder) IsFinanceEnabled(ctx, in interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsFinanceEnabled), varargs...)
 }
 
+// IsTXLogEnabled mocks base method.
+func (m *MockManagementClient) IsTXLogEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.IsTXLogEnabledResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "IsTXLogEnabled", varargs...)
+	ret0, _ := ret[0].(*api.IsTXLogEnabledResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsTXLogEnabled indicates an expected call of IsTXLogEnabled.
+func (mr *MockManagementClientMockRecorder) IsTXLogEnabled(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsTXLogEnabled", reflect.TypeOf((*MockManagementClient)(nil).IsTXLogEnabled), varargs...)
+}
+
 // ListAccessGrantsForService mocks base method.
 func (m *MockManagementClient) ListAccessGrantsForService(ctx context.Context, in *api.ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*api.ListAccessGrantsForServiceResponse, error) {
 	m.ctrl.T.Helper()
@@ -879,6 +899,21 @@ func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *empt
 func (mr *MockManagementServerMockRecorder) IsFinanceEnabled(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFinanceEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsFinanceEnabled), arg0, arg1)
+}
+
+// IsTXLogEnabled mocks base method.
+func (m *MockManagementServer) IsTXLogEnabled(arg0 context.Context, arg1 *emptypb.Empty) (*api.IsTXLogEnabledResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsTXLogEnabled", arg0, arg1)
+	ret0, _ := ret[0].(*api.IsTXLogEnabledResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsTXLogEnabled indicates an expected call of IsTXLogEnabled.
+func (mr *MockManagementServerMockRecorder) IsTXLogEnabled(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsTXLogEnabled", reflect.TypeOf((*MockManagementServer)(nil).IsTXLogEnabled), arg0, arg1)
 }
 
 // ListAccessGrantsForService mocks base method.

@@ -68,6 +68,7 @@ export class RootStore {
     })
     this.transactionLogStore = new TransactionLogStore({
       txLogApiClient,
+      managementApiClient,
     })
     this.financeStore = new FinanceStore({
       managementApiClient,
