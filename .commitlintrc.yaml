@@ -31,4 +31,4 @@ rules:
       - inway
       - management
       - outway
-      - txlog-db
+      - txlog
