@@ -121,7 +121,7 @@ The value after `serialNumber=` in the Subject's CN field is the primary way to 
 
 All required certificates are available now. So far, we have:
 
-- downloaded the CA root certificate.
-- generated our own certificate, so we are allowed to communicate with the API's on the NLX network.
+- Downloaded the CA root certificate and stored it in the `~/nlx-setup` folder as `root.crt`.
+- Generated our own certificate and private key and stored them in the `~/nlx-setup` folder as `org.crt`(certificate) and `org.key`(private key), so we are allowed to communicate with the API's on the NLX network.
 
 Now let's [get up and running](./getting-up-and-running) to make sure you have all software installed to get started.
