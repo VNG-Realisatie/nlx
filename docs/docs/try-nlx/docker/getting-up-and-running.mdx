@@ -28,6 +28,12 @@ Set the hostname of the Inway (where `my-organization.nl:8443` should be replace
 export INWAY_SELF_ADDRESS="my-organization.nl:8443"
 ```
 
+The NLX components will print warning messages when the private keys file permissions are too lenient, to prevent these warning messages we need to set the proper permissions.
+
+```bash
+chmod 600 ../org.key ./pki/certs/management-api.try-me.nlx.local-key.pem
+```
+
 Then, start all components by running:
 
 ```bash
