@@ -84,6 +84,7 @@ The following table lists the configurable parameters of the nlx-management Char
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
 | `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | yes |
 | `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
+| `config.txlogAPIAddress` | Address of the transaction log API | `false` | no |
 | `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | no |
 | `config.enableBasicAuth` | Enable HTTP basic authentication and disable OIDC | `false` | no |
 | `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` | no |

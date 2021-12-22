@@ -54,6 +54,8 @@ spec:
               value: "0.0.0.0:8080"
             - name: CONFIG_LISTEN_ADDRESS
               value: "0.0.0.0:8443"
+            - name: TXLOG_ADDRESS
+              value: {{ .Values.config.txlogAPIAddress}}
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
             - name: POSTGRES_PORT

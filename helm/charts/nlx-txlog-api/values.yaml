@@ -15,18 +15,18 @@ image:
   repository: nlxio/txlog-api
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 config:
-  logType: life
+  logType: live
   logLevel: info
 txlogdb:
-  hostname: ""
-  database: ""
+  hostname: postgres
+  database: postgres
   port: 5432
   username: ""
   password: ""
@@ -54,8 +54,8 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 1001
 
 securityContext: {}
   # capabilities:
@@ -66,8 +66,13 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
+  https:
+    type: ClusterIP
+    port: 8443
+  http: 
+    type: ClusterIP
+    port: 8080
+
 
 ingress:
   enabled: false

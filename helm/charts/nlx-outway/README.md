@@ -76,13 +76,13 @@ The following table lists the configurable parameters of the nlx-outway Chart an
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | no |
 
-### NLX Management parameters
+### NLX Outway parameters
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
-| `config.directoryHostname` | Address of the NLX Directory where the Inway will register its services. | `""` | no |
+| `config.directoryHostname` | Used to retrieve information about services from the directory. | `""` | no |
 | `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. This field is deprecated use config.directoryHostname instead. | `""` | no |
 | `config.name` | Unique identifier of this outway. | `""` | yes |
 | `config.authorizationService.enabled` | If `true`, the outway will use the authorization service | `false` | no |

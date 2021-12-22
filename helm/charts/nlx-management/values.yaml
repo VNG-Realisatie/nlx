@@ -28,6 +28,7 @@ config:
   directoryRegistrationHostname: ""
   sessionCookieSecure: false
   enableBasicAuth: false
+  txlogAPIAddress: ""
 
   oidc:
     clientID: nlx-management

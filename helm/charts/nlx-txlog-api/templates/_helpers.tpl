@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "txlog-api.name" -}}
+{{- define "nlx-txlog-api.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "txlog-api.fullname" -}}
+{{- define "nlx-txlog-api.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "txlog-api.chart" -}}
+{{- define "nlx-txlog-api.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "txlog-api.labels" -}}
-helm.sh/chart: {{ include "txlog-api.chart" . }}
-{{ include "txlog-api.selectorLabels" . }}
+{{- define "nlx-txlog-api.labels" -}}
+helm.sh/chart: {{ include "nlx-txlog-api.chart" . }}
+{{ include "nlx-txlog-api.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,24 +45,24 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "txlog-api.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "txlog-api.name" . }}
+{{- define "nlx-txlog-api.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "nlx-txlog-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "txlog-api.serviceAccountName" -}}
+{{- define "nlx-txlog-api.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "txlog-api.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "nlx-txlog-api.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
 {{/*
-Return the image name for the txlog-api
+Return the image name for the nlx-txlog-api
 */}}
 {{- define "nlx-txlog-api.image" -}}
 {{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
@@ -75,6 +75,6 @@ Return the image name for the txlog-api
 {{/*
 Return the secret name of the PostgreSQL username/password
 */}}
-{{- define "nlx-tlx-api.txlogdb.secret" -}}
-{{- default (printf "%s-postgresql" (include "nlx-tlx-api.fullname" .)) .Values.txlogdb.existingSecret.name -}}
+{{- define "nlx-txlog-api.txlogdb.secret" -}}
+{{- default (printf "%s-postgresql" (include "nlx-txlog-api.fullname" .)) .Values.txlogdb.existingSecret.name -}}
 {{- end -}}
