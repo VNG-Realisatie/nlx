@@ -1,3 +1,27 @@
+# [0.120.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.119.0...v0.120.0) (2021-12-22)
+
+
+### Bug Fixes
+
+* add frontend validation to organization email field and remove required field ([ec5fa95](https://gitlab.com/commonground/nlx/nlx/commit/ec5fa955d895c5f9f7b2b22aa102009d24443a57))
+* **directory:** add directory.nlx.io as Demo environment to environments menu ([010febf](https://gitlab.com/commonground/nlx/nlx/commit/010febf2da60620360c67e1e17b5c1aaa2b543c2))
+* **management:** corrected typo in settings page ([47e905c](https://gitlab.com/commonground/nlx/nlx/commit/47e905cfafa15a3d8a99fd354d9a3436967abc19))
+* **management:** preselect selected services when editing an order ([c4dbfbc](https://gitlab.com/commonground/nlx/nlx/commit/c4dbfbc1f1f4c463fd912cb111c17a14ab8aea35))
+* **management:** show non-editable fields in edit order form ([25f4925](https://gitlab.com/commonground/nlx/nlx/commit/25f4925e5dd635fa8db51121bfd4e208f18674ae))
+* **txlog-db:** update migrate version in txlog-db image ([4ec4b96](https://gitlab.com/commonground/nlx/nlx/commit/4ec4b96ebbb671dfa554a7888f18893361ea5c6f))
+
+
+### Features
+
+* **ca-certportal:** use existing serial number when csr contains the serial number ([3ffea7d](https://gitlab.com/commonground/nlx/nlx/commit/3ffea7d1bc50caa5bcf60ee6205f240e64ca3df9))
+* **directory:** add participant data to the directory ui ([227559f](https://gitlab.com/commonground/nlx/nlx/commit/227559ff71384a09199398288bb5c10a528c282f))
+* **directory:** register outway ([14c21ef](https://gitlab.com/commonground/nlx/nlx/commit/14c21eff6637eaf0c13ddcd56afff00fa55ffcce))
+* **directory:** register outway ([6ee4289](https://gitlab.com/commonground/nlx/nlx/commit/6ee4289f6ad1a73591e1c1adb6a7881e1e356a03))
+* **management:** add organization email to settings ([6e4bffd](https://gitlab.com/commonground/nlx/nlx/commit/6e4bffde6a131088781b7562d58d93f69a5292dc))
+* **management:** allow changing existing orders in management API ([fd7baf9](https://gitlab.com/commonground/nlx/nlx/commit/fd7baf925e2204c2392465edbb131c73b4d8baaf))
+* **management:** make it possible to edit orders in ui ([e575f1f](https://gitlab.com/commonground/nlx/nlx/commit/e575f1f114f6f3b72d32c8469ad2dd0189cb18f9))
+* **management:** show order update in audit log ([41c4132](https://gitlab.com/commonground/nlx/nlx/commit/41c4132f6e53b3bd082b37bd94b607a281e3c7e0))
+
 # [0.119.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.118.1...v0.119.0) (2021-11-24)
 
 
