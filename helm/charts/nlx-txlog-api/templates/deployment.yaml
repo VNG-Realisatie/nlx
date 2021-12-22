@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "txlog-api.fullname" . }}
+  labels:
+    {{- include "txlog-api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "txlog-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "txlog-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "txlog-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-txlog-api.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          env:
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8443
+            - name: LISTEN_ADDRESS_PLAIN
+              value: 0.0.00:8080
+            - name: TLS_ROOT_CERT
+              value: /config/root-internal.pem
+            - name: TLS_CERT
+              value: /certificate/tls.crt
+            - name: TLS_KEY
+              value: /certificate/tls.key
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-txlog-api.transactionLog.secret" . }}
+                  key: {{ .Values.txlogdb.existingSecret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-txlog-api.transactionLog.secret" . }}
+                  key: {{ .Values.txlogdb.existingSecret.passwordKey }}
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.txlogdb.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port is required" .Values.txlogdb.port | quote }}
+            - name: PGSSLMODE
+              value: {{ .Values.txlogdb.sslMode }}
+            - name: POSTGRES_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.txlogdb.database }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.txlogdb.connectTimeout | quote }}
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
+          volumeMounts:
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
+              readOnly: true
+          {{- else }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: certificate
+          secret:
+            secretName: {{ default (printf "%s-tls" (include "nlx-txlog-api.fullname" .)) .Values.tls.existingSecret }}
+            defaultMode: 0640
+        - name: config
+            configMap:
+              name: {{ template "nlx-txlog-api.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
