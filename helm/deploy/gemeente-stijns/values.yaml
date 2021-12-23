@@ -258,9 +258,6 @@ managementAPI:
 nlx-outway:
   config:
     directoryHostname: shared-nlx-directory-api
-    authorizationService:
-      enabled: true
-      url: https://gemeente-stijns-auth-service
     managementAPI:
       address: gemeente-stijns-nlx-management-api:443
   transactionLog:
@@ -367,10 +364,6 @@ dex:
       create: false
   rbac:
     create: false
-
-auth-service:
-  tls:
-    existingSecret: gemeente-stijns-organization-tls
 
 parkeerrechten-api:
   enabled: false
