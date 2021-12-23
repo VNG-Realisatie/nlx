@@ -69,43 +69,39 @@ type NewOutwayArgs struct {
 	UseAsHTTPProxy    bool
 }
 
-func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) error {
+func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) (*plugins.AuthorizationPlugin, error) {
 	if authServiceURL == "" {
-		return nil
+		return nil, nil
 	}
 
 	if authCAPath == "" {
-		return fmt.Errorf("authorization service URL set but no CA for authorization provided")
+		return nil, fmt.Errorf("authorization service URL set but no CA for authorization provided")
 	}
 
 	authURL, err := url.Parse(authServiceURL)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if authURL.Scheme != "https" {
-		return errors.New("scheme of authorization service URL is not 'https'")
+		return nil, errors.New("scheme of authorization service URL is not 'https'")
 	}
 
 	ca, _, err := common_tls.NewCertPoolFromFile(authCAPath)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
 	tlsConfig.RootCAs = ca
 
-	o.plugins = append([]plugins.Plugin{
-		plugins.NewAuthorizationPlugin(
-			ca,
-			fmt.Sprintf("%s/auth", authServiceURL),
-			http.Client{
-				Transport: createHTTPTransport(tlsConfig),
-			},
-		),
-	}, o.plugins...)
-
-	return nil
+	return plugins.NewAuthorizationPlugin(
+		ca,
+		fmt.Sprintf("%s/auth", authServiceURL),
+		http.Client{
+			Transport: createHTTPTransport(tlsConfig),
+		},
+	), nil
 }
 
 func (o *Outway) startDirectoryInspector() error {
@@ -160,7 +156,7 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 		o.requestHTTPHandler = o.handleHTTPRequest
 	}
 
-	err = o.configureAuthorizationPlugin(args.AuthCAPath, args.AuthServiceURL)
+	authorizationPlugin, err := o.configureAuthorizationPlugin(args.AuthCAPath, args.AuthServiceURL)
 	if err != nil {
 		return nil, err
 	}
@@ -174,6 +170,10 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 		plugins.NewDelegationPlugin(args.ManagementClient),
 		plugins.NewLogRecordPlugin(o.organization.serialNumber, o.txlogger),
 		plugins.NewStripHeadersPlugin(o.organization.serialNumber),
+	}
+
+	if authorizationPlugin != nil {
+		o.plugins = append(o.plugins, authorizationPlugin)
 	}
 
 	if args.Name != "" {
