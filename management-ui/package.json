@@ -51,7 +51,7 @@
     "i18next-parser": "5.3.0",
     "jest-fetch-mock": "3.0.3",
     "js-cookie": "3.0.1",
-    "mobx": "6.3.9",
+    "mobx": "6.3.10",
     "mobx-react": "7.2.1",
     "react": "17.0.2",
     "react-app-polyfill": "3.0.0",
