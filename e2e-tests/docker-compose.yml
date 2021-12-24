@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  chrome:
+    image: selenium/standalone-chrome:4.1.1
+    shm_size: 2gb
+    network_mode: host
+    environment:
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=8

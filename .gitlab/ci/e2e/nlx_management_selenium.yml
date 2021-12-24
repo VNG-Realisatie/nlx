@@ -1,0 +1,42 @@
+NLX Management - E2E-tests - Selenium:
+  extends: .node-base
+  stage: E2E tests
+  variables:
+    E2E_PARALLEL_COUNT: 5
+    E2E_CONFIG_FILE: "ci"
+    E2E_SELENIUM_URL: "http://hub.browserstack.com/wd/hub"
+    E2E_GEMEENTE_STIJNS_MANAGEMENT_BASIC_AUTH: "false"
+    E2E_GEMEENTE_STIJNS_MANAGEMENT_USERNAME: "admin@example.com"
+    E2E_GEMEENTE_STIJNS_MANAGEMENT_PASSWORD: "password"
+    E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME: "gemeente-stijns-nlx-inway"
+    E2E_RVRD_MANAGEMENT_BASIC_AUTH: "false"
+    E2E_RVRD_MANAGEMENT_USERNAME: "admin@example.com"
+    E2E_RVRD_MANAGEMENT_PASSWORD: "password"
+    E2E_RVRD_DEFAULT_INWAY_NAME: "rvrd-nlx-inway"
+    E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_BASIC_AUTH: "true"
+    E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_USERNAME: "admin@example.com"
+    E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_PASSWORD: "password"
+    E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME: ""
+  script:
+    - apk --no-cache add bash curl
+    - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
+    - export E2E_GEMEENTE_STIJNS_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.gemeentestijns.nl" || echo "https://nlx-management-gemeente-stijns-$CI_ENV_URL")
+    - export E2E_RVRD_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.rvrd.nl" || echo "https://nlx-management-rvrd-$CI_ENV_URL")
+    - export E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.vergunningsoftware.nl" || echo "https://nlx-management-vgs-bv-$CI_ENV_URL")
+    - cd e2e-tests/
+    - install_npm_dependencies
+    - wait_for_http "${E2E_GEMEENTE_STIJNS_MANAGEMENT_URL}"
+    - wait_for_http "${E2E_RVRD_MANAGEMENT_URL}"
+    - wait_for_http "${E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL}"
+    - start_section test "Running tests"
+    - npm run test
+    - stop_section test
+  artifacts:
+    when: always
+    paths:
+      - e2e-tests/reports
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
