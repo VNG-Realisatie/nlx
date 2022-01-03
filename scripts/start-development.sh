@@ -1,6 +1,9 @@
 #!/bin/bash
 # Run this script from the root folder of the git repository with the following command: ./scripts/start-development.sh
 
+# Make sure permissions for pki files are ok
+sh ./pki/fix-permissions.sh
+
 # Start docker-compose
 docker-compose -f docker-compose.dev.yml up -d --remove-orphans
 
