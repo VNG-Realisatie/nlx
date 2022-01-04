@@ -3,7 +3,7 @@ id: security
 title: Security
 ---
 
-The main security mechanism is based on [TLS client authentication](https://blog.cloudflare.com/introducing-tls-client-auth/). The nodes in the NLX network trust a [Certificate autority](https://en.wikipedia.org/wiki/Certificate_authority) to sign certificates of organizations. Outway and inway nodes identify themselves by using their signed certificate. All traffic between the outway and inway is therefore  also encrypted using TLS.
+The main security mechanism is based on [TLS client authentication](https://blog.cloudflare.com/introducing-tls-client-auth/). The nodes in the NLX network trust a [Certificate authority](https://en.wikipedia.org/wiki/Certificate_authority) to sign certificates of organizations. Outway and inway nodes identify themselves by using their signed certificate. All traffic between the outway and inway is therefore  also encrypted using TLS.
 
 NLX serves as a data-exchange layer between applications and services and it therefore only provides an authentication mechanism on *organizational level*. This means that authentication and authorization on *user level* is the responsibility of the application. A service is able to implement authorization on *organizational level* when required.
 
