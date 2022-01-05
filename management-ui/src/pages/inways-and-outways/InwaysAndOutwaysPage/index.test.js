@@ -1,37 +1,30 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-
 import React from 'react'
-import { Router } from 'react-router-dom'
-import { createMemoryHistory } from 'history'
+import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
-import Routes from '../../../routes'
+import InwaysAndOutwaysPage from './index'
 
 jest.mock('../../../components/PageTemplate')
-jest.mock('./Inways', () => () => <p data-testid="inways-list">mock inways</p>)
 
 function renderPage(rootStore) {
-  const history = createMemoryHistory({
-    initialEntries: ['/inways-and-outways'],
-  })
-
   return renderWithProviders(
-    <Router history={history}>
+    <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <Routes />
+          <InwaysAndOutwaysPage />
         </StoreProvider>
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 }
 
-test('the InwaysAndOutwaysPage page', async () => {
+test('the InwaysAndOutwaysPage', async () => {
   const managementApiClient = new ManagementApi()
   managementApiClient.managementListInways = jest.fn().mockResolvedValue({
     inways: [
@@ -67,20 +60,16 @@ test('the InwaysAndOutwaysPage page', async () => {
   renderPage(rootStore)
 
   const showInwaysButton = screen.getByLabelText('Show Inways')
-  expect(showInwaysButton.getAttribute('href')).toBe(
-    '/inways-and-outways/inways',
-  )
+  expect(showInwaysButton.getAttribute('href')).toBe('/inways')
 
   const showOutwaysButton = screen.getByLabelText('Show Outways')
-  expect(showOutwaysButton.getAttribute('href')).toBe(
-    '/inways-and-outways/outways',
-  )
+  expect(showOutwaysButton.getAttribute('href')).toBe('/outways')
 
   expect(screen.getByRole('progressbar')).toBeInTheDocument()
   expect(() => screen.getByTestId('inways-list')).toThrow()
 
   await waitFor(() =>
-    expect(screen.getByTestId('inways-list')).toHaveTextContent('mock inways'),
+    expect(screen.getByTestId('inways-list')).toBeInTheDocument(),
   )
 
   fireEvent.click(showOutwaysButton)

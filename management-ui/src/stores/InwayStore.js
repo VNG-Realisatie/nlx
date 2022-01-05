@@ -55,6 +55,7 @@ class InwayStore {
     return this._updateFromServer(inwayData)
   }).bind(this)
 
+  // TODO: rename to getByName to be consistent with the outwaystore
   getInway = ({ name }) => {
     return this.inways.find((inway) => inway.name === name)
   }

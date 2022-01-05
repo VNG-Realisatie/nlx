@@ -4,10 +4,10 @@
 import React from 'react'
 import { screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { renderWithProviders } from '../../../../test-utils'
-import OutwayModel from '../../../../stores/models/OutwayModel'
-import { RootStore, StoreProvider } from '../../../../stores'
-import { ManagementApi } from '../../../../api'
+import { renderWithProviders } from '../../../../../../test-utils'
+import OutwayModel from '../../../../../../stores/models/OutwayModel'
+import { RootStore, StoreProvider } from '../../../../../../stores'
+import { ManagementApi } from '../../../../../../api'
 import Outways from './index'
 
 const render = (outways) => {

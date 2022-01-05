@@ -3,7 +3,7 @@
 //
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
@@ -13,7 +13,7 @@ import OrderForm from './components/OrderForm'
 const AddOrderPage = () => {
   const { t } = useTranslation()
   const { create } = useOrderStore()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [error, setError] = useState(null)
   const { directoryServicesStore } = useStores()
 
@@ -34,7 +34,7 @@ const AddOrderPage = () => {
   const submitOrder = async (formData) => {
     try {
       await create(formData)
-      history.push(`/orders?lastAction=added`)
+      navigate(`/orders?lastAction=added`)
     } catch (err) {
       window.scrollTo(0, 0)
       setError(err.message)

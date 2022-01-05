@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../../../test-utils'
 import ServiceRow from './index'
 
@@ -13,11 +14,13 @@ test('service row should render expected data', () => {
     incomingAccessRequestCount: 0,
   }
   const { queryByTestId, queryByText, rerender } = renderWithProviders(
-    <table>
-      <tbody>
-        <ServiceRow service={service} />
-      </tbody>
-    </table>,
+    <MemoryRouter>
+      <table>
+        <tbody>
+          <ServiceRow service={service} />
+        </tbody>
+      </table>
+    </MemoryRouter>,
   )
 
   expect(queryByText('Service name')).toBeInTheDocument()
@@ -29,11 +32,13 @@ test('service row should render expected data', () => {
   })
 
   rerender(
-    <table>
-      <tbody>
-        <ServiceRow service={serviceWithIncomingAccessRequest} />
-      </tbody>
-    </table>,
+    <MemoryRouter>
+      <table>
+        <tbody>
+          <ServiceRow service={serviceWithIncomingAccessRequest} />
+        </tbody>
+      </table>
+    </MemoryRouter>,
   )
 
   expect(queryByText('requestWithCount')).toBeInTheDocument()

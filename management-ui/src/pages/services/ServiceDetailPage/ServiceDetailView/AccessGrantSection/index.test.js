@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { act, waitForElementToBeRemoved } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import {
   fireEvent,
   renderWithProviders,
@@ -109,7 +110,9 @@ test('polling with access grant section expanded', async () => {
 
   const { getByText, queryByText, findByText } = renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
-      <AccessGrantSection service={service} />
+      <MemoryRouter>
+        <AccessGrantSection service={service} />
+      </MemoryRouter>
     </StoreProvider>,
   )
 

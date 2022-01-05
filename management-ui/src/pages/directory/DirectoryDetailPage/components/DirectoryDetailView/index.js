@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { func, number, object, shape, string } from 'prop-types'
+import { instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import {
   Alert,
@@ -17,6 +17,7 @@ import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessSta
 import { SectionGroup } from '../../../../../components/DetailView'
 import usePolling from '../../../../../hooks/use-polling'
 import CostsSection from '../../../../../components/CostsSection'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 import StacktraceDrawer from './StacktraceDrawer'
 import ExternalLinkSection from './ExternalLinkSection'
 import AccessSection from './AccessSection'
@@ -136,19 +137,7 @@ const DirectoryDetailView = ({ service }) => {
 }
 
 DirectoryDetailView.propTypes = {
-  service: shape({
-    organization: shape({
-      serialNumber: string.isRequired,
-      name: string.isRequired,
-    }).isRequired,
-    latestAccessRequest: object,
-    latestAccessProof: object,
-    requestAccess: func.isRequired,
-    retryRequestAccess: func.isRequired,
-    oneTimeCosts: number,
-    monthlyCosts: number,
-    requestCosts: number,
-  }),
+  service: instanceOf(DirectoryServiceModel),
 }
 
 export default observer(withDrawerStack(DirectoryDetailView))

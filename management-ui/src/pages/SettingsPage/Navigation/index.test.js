@@ -2,19 +2,18 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Router } from 'react-router-dom'
-import { createMemoryHistory } from 'history'
+import { MemoryRouter } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
 import Navigation from './index'
 
 test('Settings Navigation', () => {
-  const history = createMemoryHistory({ initialEntries: ['/settings'] })
-  const { getByLabelText } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter>
       <Navigation />
-    </Router>,
+    </MemoryRouter>,
   )
 
-  const linkHome = getByLabelText('General settings')
-  expect(linkHome.getAttribute('href')).toBe('/settings/general')
+  const linkHome = screen.getByLabelText('General settings')
+  expect(linkHome.getAttribute('href')).toBe('/general')
 })

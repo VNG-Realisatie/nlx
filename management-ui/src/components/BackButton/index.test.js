@@ -3,17 +3,16 @@
 //
 
 import React from 'react'
-import { StaticRouter as Router } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import BackButton from './index'
 
 test('renders without crashing', () => {
   expect(() =>
     renderWithProviders(
-      <Router>
-        {' '}
+      <MemoryRouter>
         <BackButton to="/link" />
-      </Router>,
+      </MemoryRouter>,
     ),
   ).not.toThrow()
 })

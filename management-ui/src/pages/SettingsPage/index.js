@@ -3,7 +3,7 @@
 //
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Redirect, Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Navigate, Routes, Route } from 'react-router-dom'
 import PageTemplate from '../../components/PageTemplate'
 import GeneralSettings from './GeneralSettings'
 import Navigation from './Navigation'
@@ -11,7 +11,6 @@ import { Wrapper, SettingsNav, Content } from './index.styles'
 
 const SettingsPage = () => {
   const { t } = useTranslation()
-  const { path } = useRouteMatch('/settings')
 
   return (
     <PageTemplate>
@@ -22,11 +21,10 @@ const SettingsPage = () => {
           <Navigation />
         </SettingsNav>
         <Content>
-          <Switch>
-            <Redirect exact path={path} to={`${path}/general`} />
-
-            <Route path={`${path}/general`} component={GeneralSettings} />
-          </Switch>
+          <Routes>
+            <Route index element={<Navigate to="general" />} />
+            <Route path="general" element={<GeneralSettings />} />
+          </Routes>
         </Content>
       </Wrapper>
     </PageTemplate>

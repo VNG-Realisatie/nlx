@@ -4,9 +4,9 @@
 import React from 'react'
 import { arrayOf, instanceOf, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import Table from '../../../../components/Table'
-import EmptyContentMessage from '../../../../components/EmptyContentMessage'
-import InwayModel from '../../../../stores/models/InwayModel'
+import Table from '../../../../../../components/Table'
+import EmptyContentMessage from '../../../../../../components/EmptyContentMessage'
+import InwayModel from '../../../../../../stores/models/InwayModel'
 import InwayRow from './InwayRow'
 
 const Inways = ({ inways, selectedInwayName }) => {

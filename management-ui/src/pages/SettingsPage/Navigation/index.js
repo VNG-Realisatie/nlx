@@ -3,15 +3,14 @@
 //
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useRouteMatch } from 'react-router-dom'
 import { StyledLink, StyledNav } from './index.styles'
 
 const Navigation = () => {
   const { t } = useTranslation()
-  const { path } = useRouteMatch('/settings')
+
   return (
     <StyledNav>
-      <StyledLink to={`${path}/general`} aria-label={t('General settings')}>
+      <StyledLink to={`general`} aria-label={t('General settings')}>
         {t('General')}
       </StyledLink>
     </StyledNav>

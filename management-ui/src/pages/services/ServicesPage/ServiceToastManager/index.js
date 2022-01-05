@@ -4,7 +4,7 @@
 import { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ToasterContext } from '@commonground/design-system'
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom'
+import { useNavigate, useLocation, useMatch } from 'react-router-dom'
 
 import serviceActions from '../serviceActions'
 
@@ -27,9 +27,9 @@ const getToastMessageForAction = (action, t) => {
 const ServiceToastManager = () => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
-  const serviceDetailPageMatch = useRouteMatch('/services/:serviceName')
+  const serviceDetailPageMatch = useMatch('/services/:serviceName')
   const location = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!serviceDetailPageMatch) return
@@ -38,7 +38,8 @@ const ServiceToastManager = () => {
     const lastAction = searchParams.get('lastAction')
     if (!lastAction) return
 
-    const { serviceName, url } = serviceDetailPageMatch.params
+    const { serviceName } = serviceDetailPageMatch.params
+    const url = serviceDetailPageMatch.pathname
 
     showToast({
       title: serviceName,
@@ -47,8 +48,10 @@ const ServiceToastManager = () => {
       delay: lastAction === serviceActions.REMOVED ? 0 : 250,
     })
 
-    history.replace(lastAction === serviceActions.REMOVED ? '/services' : url)
-  }, [history, location.search, serviceDetailPageMatch, showToast, t])
+    navigate(lastAction === serviceActions.REMOVED ? '/services' : url, {
+      replace: true,
+    })
+  }, [location.search, serviceDetailPageMatch, showToast, t, navigate])
 
   return null
 }

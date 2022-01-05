@@ -2,80 +2,105 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../test-utils'
-import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
+import OutgoingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from '../../../../../stores/models/OutgoingAccessRequestModel'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
+import { RootStore } from '../../../../../stores'
+import { ManagementApi } from '../../../../../api'
 import DirectoryDetailView from './index'
 
 jest.mock('../../../../../components/Modal')
 
 test('can request access', async () => {
-  const service = {
-    id: 'Test Organization/Test Service',
-    organization: {
-      serialNumber: '00000000000000000001',
-      name: 'Test Organization',
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  const serviceModel = new DirectoryServiceModel({
+    directoryServicesStore: rootStore.directoryServicesStore,
+    serviceData: {
+      id: 'Test Organization/Test Service',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Test Organization',
+      },
+      serviceName: 'Test Service',
+      state: 'degraded',
+      apiSpecificationType: 'API',
+      latestAccessRequest: null,
     },
-    serviceName: 'Test Service',
-    state: 'degraded',
-    apiSpecificationType: 'API',
-    latestAccessRequest: null,
-    requestAccess: jest.fn(),
-    retryRequestAccess: () => {},
-  }
+  })
 
-  const { findByText, findByRole } = renderWithProviders(
-    <DirectoryDetailView service={service} />,
-  )
+  jest.spyOn(serviceModel, 'requestAccess').mockResolvedValue()
 
-  const requestAccessButton = await findByText('Request access')
+  renderWithProviders(<DirectoryDetailView service={serviceModel} />)
+
+  const requestAccessButton = await screen.findByText('Request access')
   fireEvent.click(requestAccessButton)
 
-  const dialog = await findByRole('dialog')
+  const dialog = await screen.findByRole('dialog')
   const okButton = within(dialog).getByText('Send')
 
   fireEvent.click(okButton)
-  await waitFor(() => expect(service.requestAccess).toHaveBeenCalled())
+  await waitFor(() => expect(serviceModel.requestAccess).toHaveBeenCalled())
 })
 
 test('display stacktrace when requesting access failed', () => {
-  const service = {
-    id: 'my-service',
-    organization: {
-      serialNumber: '00000000000000000001',
-      name: 'Test Organization',
-    },
-    serviceName: 'Test Service',
-    latestAccessRequest: {
-      id: 'my-latest-access-request',
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  const serviceModel = new DirectoryServiceModel({
+    directoryServicesStore: rootStore.directoryServicesStore,
+    serviceData: {
+      id: 'my-service',
       organization: {
-        serialNumber: '00000000000000000002',
-        name: 'organization',
+        serialNumber: '00000000000000000001',
+        name: 'Test Organization',
       },
-      serviceName: 'service',
-      state: ACCESS_REQUEST_STATES.FAILED,
-      createdAt: new Date('2020-06-30T08:31:41.106Z'),
-      updatedAt: new Date('2020-06-30T08:31:41.106Z'),
-      errorDetails: {
-        cause: 'Something went wrong',
-        stackTrace: ['Go main panic'],
-      },
+      serviceName: 'Test Service',
     },
-    requestAccess: () => {},
-    retryRequestAccess: () => {},
-  }
+    latestAccessRequest: new OutgoingAccessRequestModel({
+      outgoingAccessRequestStore: rootStore.outgoingAccessRequestStore,
+      accessRequestData: {
+        id: 'my-latest-access-request',
+        organization: {
+          serialNumber: '00000000000000000002',
+          name: 'organization',
+        },
+        serviceName: 'service',
+        state: ACCESS_REQUEST_STATES.FAILED,
+        createdAt: new Date('2020-06-30T08:31:41.106Z'),
+        updatedAt: new Date('2020-06-30T08:31:41.106Z'),
+        errorDetails: {
+          cause: 'Something went wrong',
+          stackTrace: ['Go main panic'],
+        },
+      },
+    }),
+  })
 
-  const { getAllByText, getByText, getByTestId } = renderWithProviders(
-    <DirectoryDetailView service={service} />,
-  )
+  renderWithProviders(<DirectoryDetailView service={serviceModel} />)
 
-  const failedMessages = getAllByText('Request could not be sent')
-  const stacktraceButton = getByText('Show stacktrace')
+  const failedMessages = screen.getAllByText('Request could not be sent')
+  const stacktraceButton = screen.getByText('Show stacktrace')
 
   expect(failedMessages).toHaveLength(2)
 
   fireEvent.click(stacktraceButton)
 
-  expect(getByTestId('stacktrace')).toBeVisible()
-  expect(getByText('Go main panic')).toBeInTheDocument()
+  expect(screen.getByTestId('stacktrace')).toBeVisible()
+  expect(screen.getByText('Go main panic')).toBeInTheDocument()
 })

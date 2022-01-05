@@ -3,8 +3,8 @@
 //
 
 import styled from 'styled-components'
-import Table from '../../../../../components/Table'
-import { IconInway } from '../../../../../icons'
+import Table from '../../../../../../../components/Table'
+import { IconInway } from '../../../../../../../icons'
 
 export const StyledIconTd = styled(Table.Td)`
   width: 3rem;

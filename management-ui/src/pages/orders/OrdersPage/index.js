@@ -10,7 +10,14 @@ import {
   ToasterContext,
   Spinner,
 } from '@commonground/design-system'
-import { Link, useLocation, useHistory, useParams } from 'react-router-dom'
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  Route,
+  Navigate,
+  Routes,
+} from 'react-router-dom'
 import { useOrderStore } from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -23,8 +30,7 @@ const OrdersPage = () => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const location = useLocation()
-  const params = useParams()
-  const history = useHistory()
+  const navigate = useNavigate()
   const orderStore = useOrderStore()
   const [error, setError] = useState()
   const [isRefreshLoading, setRefreshLoading] = useState(false)
@@ -53,8 +59,8 @@ const OrdersPage = () => {
       variant: 'success',
     })
 
-    history.replace('/orders')
-  }, [location.search, history, showToast, t])
+    navigate('/orders', { replace: true })
+  }, [location.search, showToast, t, navigate])
 
   const updateIncomingOrders = async () => {
     setRefreshLoading(true)
@@ -86,7 +92,7 @@ const OrdersPage = () => {
         <Button
           as={StyledButton}
           aria-label={t('Issued')}
-          to="/orders/outgoing"
+          to="outgoing"
           variant="secondary"
         >
           {t('Issued')} ({orderStore.outgoingOrders.length})
@@ -95,7 +101,7 @@ const OrdersPage = () => {
           as={StyledButton}
           aria-label={t('Received')}
           variant="secondary"
-          to="/orders/incoming"
+          to="incoming"
         >
           {t('Received')} ({orderStore.incomingOrders.length})
         </Button>
@@ -109,7 +115,7 @@ const OrdersPage = () => {
           {isRefreshLoading ? <Spinner /> : <IconRefresh inline />}
           {t('Update overview')}
         </Button>
-        <Button as={Link} to="/orders/add-order" aria-label={t('Add order')}>
+        <Button as={Link} to="add-order" aria-label={t('Add order')}>
           <IconPlus inline />
           {t('Add order')}
         </Button>
@@ -125,11 +131,19 @@ const OrdersPage = () => {
         >
           {error}
         </Alert>
-      ) : params.type === 'outgoing' ? (
-        <Outgoing orders={orderStore.outgoingOrders} />
-      ) : params.type === 'incoming' ? (
-        <Incoming orders={orderStore.incomingOrders} />
-      ) : null}
+      ) : (
+        <Routes>
+          <Route index element={<Navigate to="outgoing" />} />
+          <Route
+            path="outgoing/*"
+            element={<Outgoing orders={orderStore.outgoingOrders} />}
+          />
+          <Route
+            path="incoming/*"
+            element={<Incoming orders={orderStore.incomingOrders} />}
+          />
+        </Routes>
+      )}
     </PageTemplate>
   )
 }

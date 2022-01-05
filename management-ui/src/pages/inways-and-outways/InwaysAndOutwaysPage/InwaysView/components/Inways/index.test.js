@@ -4,8 +4,8 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { screen } from '@testing-library/react'
-import { renderWithProviders } from '../../../../test-utils'
-import InwayModel from '../../../../stores/models/InwayModel'
+import { renderWithProviders } from '../../../../../../test-utils'
+import InwayModel from '../../../../../../stores/models/InwayModel'
 import Inways from './index'
 
 test('no inways', () => {

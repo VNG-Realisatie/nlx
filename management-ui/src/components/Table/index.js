@@ -4,7 +4,7 @@
 
 import React, { createContext, useContext } from 'react'
 import { bool, node, string } from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   StyledChevron,
   StyledTable,
@@ -19,11 +19,11 @@ import {
 const TableContext = createContext(false)
 
 const Tr = ({ children, to, name, ...props }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const withLinks = useContext(TableContext)
 
   if (withLinks) {
-    const handlePress = () => (to ? history.push(to) : null)
+    const handlePress = () => (to ? navigate(to) : null)
 
     return (
       <TrAsLink

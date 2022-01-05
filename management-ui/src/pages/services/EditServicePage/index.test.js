@@ -2,8 +2,13 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { act, fireEvent } from '@testing-library/react'
-import { Route, Router, StaticRouter } from 'react-router-dom'
+import { act, fireEvent, screen } from '@testing-library/react'
+import {
+  Route,
+  Routes,
+  unstable_HistoryRouter as HistoryRouter,
+  MemoryRouter,
+} from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
@@ -47,20 +52,20 @@ describe('the EditServicePage', () => {
     })
 
     const userContext = { user: { id: '42' } }
-    const { findByRole, getByLabelText } = renderWithProviders(
-      <StaticRouter location="/services/mock-service/edit-service">
-        <Route path="/services/:name/edit-service">
-          <UserContext.Provider value={userContext}>
-            <StoreProvider rootStore={rootStore}>
-              <EditServicePage />
-            </StoreProvider>
-          </UserContext.Provider>
-        </Route>
-      </StaticRouter>,
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/mock-service/edit-service']}>
+        <UserContext.Provider value={userContext}>
+          <StoreProvider rootStore={rootStore}>
+            <Routes>
+              <Route path=":name/edit-service" element={<EditServicePage />} />
+            </Routes>
+          </StoreProvider>
+        </UserContext.Provider>
+      </MemoryRouter>,
     )
 
-    expect(await findByRole('progressbar')).toBeTruthy()
-    const linkBack = getByLabelText(/Back/)
+    expect(await screen.findByRole('progressbar')).toBeTruthy()
+    const linkBack = screen.getByLabelText(/Back/)
     expect(linkBack.getAttribute('href')).toBe('/services/mock-service')
   })
 
@@ -75,18 +80,22 @@ describe('the EditServicePage', () => {
     })
 
     const userContext = { user: { id: '42' } }
-    const { findByRole, queryByRole } = renderWithProviders(
-      <StaticRouter>
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
-            <EditServicePage />
+            <Routes>
+              <Route path=":name/edit-service" element={<EditServicePage />} />
+            </Routes>
           </StoreProvider>
         </UserContext.Provider>
-      </StaticRouter>,
+      </MemoryRouter>,
     )
 
-    expect(await findByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert').textContent).toBe('Failed to load the service')
+    expect(await screen.findByRole('alert')).toBeTruthy()
+    expect(screen.queryByRole('alert').textContent).toBe(
+      'Failed to load the service',
+    )
   })
 
   it('after the service has been fetched', async () => {
@@ -102,19 +111,19 @@ describe('the EditServicePage', () => {
     await rootStore.servicesStore.fetchAll()
 
     const userContext = { user: { id: '42' } }
-    const { findByTestId } = renderWithProviders(
-      <StaticRouter location="/services/mock-service/edit-service">
-        <Route path="/services/:name/edit-service">
-          <UserContext.Provider value={userContext}>
-            <StoreProvider rootStore={rootStore}>
-              <EditServicePage />
-            </StoreProvider>
-          </UserContext.Provider>
-        </Route>
-      </StaticRouter>,
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/mock-service/edit-service']}>
+        <UserContext.Provider value={userContext}>
+          <StoreProvider rootStore={rootStore}>
+            <Routes>
+              <Route path=":name/edit-service" element={<EditServicePage />} />
+            </Routes>
+          </StoreProvider>
+        </UserContext.Provider>
+      </MemoryRouter>,
     )
 
-    expect(await findByTestId('form')).toBeTruthy()
+    expect(await screen.findByTestId('form')).toBeTruthy()
   })
 
   it('successfully submitting the form', async () => {
@@ -133,20 +142,21 @@ describe('the EditServicePage', () => {
     await rootStore.servicesStore.fetchAll()
 
     const history = createMemoryHistory({
-      initialEntries: ['/services/mock-service/edit-service'],
+      initialEntries: ['/mock-service/edit-service'],
     })
 
-    const { findByTestId } = renderWithProviders(
-      <Router history={history}>
+    renderWithProviders(
+      <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
-          <Route path="/services/:name/edit-service">
-            <EditServicePage />
-          </Route>
+          <Routes>
+            <Route path="/:name/edit-service" element={<EditServicePage />} />
+            <Route path="*" element={null} />
+          </Routes>
         </StoreProvider>
-      </Router>,
+      </HistoryRouter>,
     )
 
-    const editServiceForm = await findByTestId('form')
+    const editServiceForm = await screen.findByTestId('form')
     await act(async () => {
       fireEvent.submit(editServiceForm)
     })
@@ -158,12 +168,14 @@ describe('the EditServicePage', () => {
 
   it('re-submitting the form when the previous submission went wrong', async () => {
     const managementApiClient = new ManagementApi()
+
     managementApiClient.managementUpdateService = jest
       .fn()
       .mockResolvedValue({
         name: 'mock-service',
       })
       .mockRejectedValueOnce(new Error('arbitrary error'))
+
     managementApiClient.managementListServices = jest.fn().mockResolvedValue({
       services: [{ name: 'mock-service' }],
     })
@@ -175,28 +187,29 @@ describe('the EditServicePage', () => {
     await rootStore.servicesStore.fetchAll()
 
     const history = createMemoryHistory({
-      initialEntries: ['/services/mock-service/edit-service'],
+      initialEntries: ['/mock-service/edit-service'],
     })
 
-    const { findByTestId, queryByRole } = renderWithProviders(
-      <Router history={history}>
+    renderWithProviders(
+      <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
-          <Route path="/services/:name/edit-service">
-            <EditServicePage />
-          </Route>
+          <Routes>
+            <Route path=":name/edit-service" element={<EditServicePage />} />
+            <Route path="*" element={null} />
+          </Routes>
         </StoreProvider>
-      </Router>,
+      </HistoryRouter>,
     )
 
-    const editServiceForm = await findByTestId('form')
+    const editServiceForm = await screen.findByTestId('form')
 
     await act(async () => {
       await fireEvent.submit(editServiceForm)
     })
 
     expect(managementApiClient.managementUpdateService).toHaveBeenCalledTimes(1)
-    expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert')).toHaveTextContent(
+    expect(screen.queryByRole('alert')).toBeTruthy()
+    expect(screen.queryByRole('alert')).toHaveTextContent(
       'Failed to update the service',
     )
 
@@ -226,28 +239,24 @@ describe('the EditServicePage', () => {
 
     await rootStore.servicesStore.fetchAll()
 
-    const history = createMemoryHistory({
-      initialEntries: ['/services/mock-service/edit-service'],
-    })
-
-    const { findByTestId, queryByRole } = renderWithProviders(
-      <Router history={history}>
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <StoreProvider rootStore={rootStore}>
-          <Route path="/services/:name/edit-service">
-            <EditServicePage />
-          </Route>
+          <Routes>
+            <Route path=":name/edit-service" element={<EditServicePage />} />
+          </Routes>
         </StoreProvider>
-      </Router>,
+      </MemoryRouter>,
     )
 
-    const editServiceForm = await findByTestId('form')
+    const editServiceForm = await screen.findByTestId('form')
 
     await act(async () => {
       fireEvent.submit(editServiceForm)
     })
 
-    expect(queryByRole('alert')).toBeTruthy()
-    expect(queryByRole('alert')).toHaveTextContent(
+    expect(screen.queryByRole('alert')).toBeTruthy()
+    expect(screen.queryByRole('alert')).toHaveTextContent(
       'Failed to update the service',
     )
   })

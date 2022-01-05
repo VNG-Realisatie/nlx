@@ -4,12 +4,10 @@
 
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Button } from '@commonground/design-system'
-import { Route, useParams } from 'react-router-dom'
+import { Button } from '@commonground/design-system'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
-import InwayDetailPage from '../InwayDetailPage'
-import LoadingMessage from '../../../components/LoadingMessage'
 import { useInwayStore, useOutwayStore } from '../../../hooks/use-stores'
 import {
   ActionsBar,
@@ -17,14 +15,13 @@ import {
   StyledIconInway,
   StyledIconOutway,
 } from './index.styles'
-import Inways from './Inways'
-import Outways from './Outways'
+import InwaysView from './InwaysView'
+import OutwaysView from './OutwaysView'
 
 const InwaysAndOutwaysPage = () => {
   const { t } = useTranslation()
   const inwayStore = useInwayStore()
   const outwayStore = useOutwayStore()
-  const params = useParams()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +46,7 @@ const InwaysAndOutwaysPage = () => {
           as={ActionsBarButton}
           aria-label={t('Show Inways')}
           variant="secondary"
-          to="/inways-and-outways/inways"
+          to="inways"
         >
           <StyledIconInway /> {t('Inways')} ({inwayStore.inways.length})
         </Button>
@@ -57,54 +54,17 @@ const InwaysAndOutwaysPage = () => {
           as={ActionsBarButton}
           aria-label={t('Show Outways')}
           variant="secondary"
-          to="/inways-and-outways/outways"
+          to="outways"
         >
           <StyledIconOutway /> {t('Outways')} ({outwayStore.outways.length})
         </Button>
       </ActionsBar>
 
-      {params.type === 'inways' ? (
-        inwayStore.isFetching ? (
-          <LoadingMessage />
-        ) : inwayStore.error ? (
-          <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the inways')}
-          </Alert>
-        ) : (
-          <Inways inways={inwayStore.inways} selectedInwayName={params.name} />
-        )
-      ) : params.type === 'outways' ? (
-        outwayStore.isFetching ? (
-          <LoadingMessage />
-        ) : outwayStore.error ? (
-          <Alert variant="error" data-testid="error-message">
-            {t('Failed to load the outways')}
-          </Alert>
-        ) : (
-          <Outways
-            outways={outwayStore.outways}
-            selectedOutwayName={params.name}
-          />
-        )
-      ) : null}
-
-      <Route
-        path="/inways-and-outways/inways/:name"
-        render={({ match }) => {
-          const inway = inwayStore.getInway({ name: match.params.name })
-
-          if (inway) {
-            inway.fetch()
-          }
-
-          return (
-            <InwayDetailPage
-              parentUrl="/inways-and-outways/inways"
-              inway={inway}
-            />
-          )
-        }}
-      />
+      <Routes>
+        <Route index element={<Navigate to="inways" />} />
+        <Route path="inways/*" element={<InwaysView />} />
+        <Route path="outways/*" element={<OutwaysView />} />
+      </Routes>
     </PageTemplate>
   )
 }

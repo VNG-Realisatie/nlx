@@ -4,17 +4,13 @@
 import React from 'react'
 import { arrayOf, instanceOf, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Route } from 'react-router-dom'
-import Table from '../../../../components/Table'
-import EmptyContentMessage from '../../../../components/EmptyContentMessage'
-import OutwayModel from '../../../../stores/models/OutwayModel'
-import OutwayDetailPage from '../../OutwayDetailPage'
-import { useOutwayStore } from '../../../../hooks/use-stores'
+import Table from '../../../../../../components/Table'
+import EmptyContentMessage from '../../../../../../components/EmptyContentMessage'
+import OutwayModel from '../../../../../../stores/models/OutwayModel'
 import OutwayRow from './OutwayRow'
 
 const Outways = ({ outways, selectedOutwayName }) => {
   const { t } = useTranslation()
-  const outwayStore = useOutwayStore()
 
   return outways.length === 0 ? (
     <EmptyContentMessage>
@@ -40,20 +36,6 @@ const Outways = ({ outways, selectedOutwayName }) => {
           ))}
         </tbody>
       </Table>
-
-      <Route
-        path="/inways-and-outways/outways/:name"
-        render={({ match }) => {
-          const outway = outwayStore.getByName(match.params.name)
-
-          return (
-            <OutwayDetailPage
-              parentUrl="/inways-and-outways/outways"
-              outway={outway}
-            />
-          )
-        }}
-      />
     </>
   )
 }

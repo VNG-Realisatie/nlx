@@ -14,9 +14,10 @@ export const useApplicationStore = () => {
 export const useDirectoryServiceStore = () => {
   const { directoryServicesStore } = useStores()
 
-  if (!directoryServicesStore.isInitiallyFetched) {
-    directoryServicesStore.fetchAll()
-  }
+  // TODO: can be removed?
+  // if (!directoryServicesStore.isInitiallyFetched) {
+  //   directoryServicesStore.fetchAll()
+  // }
   return directoryServicesStore
 }
 

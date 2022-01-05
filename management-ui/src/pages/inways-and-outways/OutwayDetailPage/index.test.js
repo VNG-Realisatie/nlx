@@ -2,9 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, StaticRouter as Router } from 'react-router-dom'
+import { Route, MemoryRouter, Routes } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
-import OutwayModel from '../../../stores/models/OutwayModel'
+import { ManagementApi } from '../../../api'
+import { RootStore, StoreProvider } from '../../../stores'
 import OutwayDetailPage from './index'
 
 /* eslint-disable react/prop-types */
@@ -13,37 +15,53 @@ jest.mock('./OutwayDetailPageView', () => ({ outway }) => (
 ))
 /* eslint-enable react/prop-types */
 
-test('display outway details', () => {
-  const outwayModel = new OutwayModel({
-    outwayData: {
-      name: 'forty-two',
-    },
+test('display outway details', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'my-outway',
+      },
+    ],
   })
 
-  const { getByTestId } = renderWithProviders(
-    <Router location="/inways-and-outways/forty-two">
-      <Route path="/inways-and-outways/:name">
-        <OutwayDetailPage outway={outwayModel} />
-      </Route>
-    </Router>,
+  const rootStore = new RootStore({ managementApiClient })
+  await rootStore.outwayStore.fetchAll()
+
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/my-outway']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":name" element={<OutwayDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
   )
 
-  expect(getByTestId('outway-details')).toHaveTextContent('forty-two')
+  expect(await screen.findByTestId('outway-details')).toHaveTextContent(
+    'my-outway',
+  )
 })
 
 test('display a non-existing outway', async () => {
-  const { findByTestId } = renderWithProviders(
-    <Router location="/inways-and-outways/forty-two">
-      <Route path="/inways-and-outways/:name">
-        <OutwayDetailPage outway={null} />
-      </Route>
-    </Router>,
+  const managementApiClient = new ManagementApi()
+  const rootStore = new RootStore({ managementApiClient })
+
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/my-outway']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":name" element={<OutwayDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
   )
 
-  const message = await findByTestId('error-message')
+  const message = await screen.findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the details for this outway')
 
-  const closeButton = await findByTestId('close-button')
+  const closeButton = await screen.findByTestId('close-button')
   expect(closeButton).toBeTruthy()
 })

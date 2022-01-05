@@ -2,8 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { MemoryRouter, Router } from 'react-router-dom'
-import { createMemoryHistory } from 'history'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { renderWithAllProviders, waitFor } from '../../../test-utils'
 import { INTERVAL } from '../../../hooks/use-polling'
 import { UserContextProvider } from '../../../user-context'
@@ -31,19 +30,20 @@ test('fetching all services', async () => {
     services: [{ name: 'my-first-service' }],
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/services'] })
   const store = new RootStore({
     managementApiClient,
   })
 
   const { getByRole, getByTestId, getByLabelText } = renderWithAllProviders(
-    <Router history={history}>
+    <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
-          <ServicesPage />
+          <Routes>
+            <Route path="*" element={<ServicesPage />} />
+          </Routes>
         </StoreProvider>
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(getByRole('progressbar')).toBeInTheDocument()
@@ -73,7 +73,9 @@ test('failed to load services', async () => {
     <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
-          <ServicesPage />
+          <Routes>
+            <Route path="*" element={<ServicesPage />} />
+          </Routes>
         </StoreProvider>
       </UserContextProvider>
     </MemoryRouter>,
@@ -98,19 +100,20 @@ test('service statistics should be polled', () => {
       services: [],
     })
 
-  const history = createMemoryHistory({ initialEntries: ['/services'] })
   const rootStore = new RootStore({
     managementApiClient,
   })
 
   renderWithAllProviders(
-    <Router history={history}>
+    <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
-          <ServicesPage />
+          <Routes>
+            <Route path="*" element={<ServicesPage />} />
+          </Routes>
         </StoreProvider>
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   jest.advanceTimersByTime(INTERVAL * 2)

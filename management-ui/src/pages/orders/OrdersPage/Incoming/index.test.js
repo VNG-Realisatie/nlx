@@ -3,7 +3,11 @@
 //
 import React from 'react'
 import { fireEvent, within } from '@testing-library/react'
-import { Router } from 'react-router-dom'
+import {
+  Routes,
+  Route,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { RootStore, StoreProvider } from '../../../../stores'
 import {
@@ -46,11 +50,13 @@ test('displays an order row for each order', () => {
   const history = createMemoryHistory()
 
   const { getAllByText } = renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <StoreProvider rootStore={rootStore}>
-        <Incoming orders={orders} />
+        <Routes>
+          <Route path="*" element={<Incoming orders={orders} />} />
+        </Routes>
       </StoreProvider>
-    </Router>,
+    </HistoryRouter>,
   )
   expect(getAllByText('description')).toHaveLength(2)
 })
@@ -166,11 +172,13 @@ test('content should render expected data', () => {
   const history = createMemoryHistory({})
 
   const { container } = renderWithAllProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <StoreProvider rootStore={rootStore}>
-        <Incoming orders={orders} />
+        <Routes>
+          <Route path="*" element={<Incoming orders={orders} />} />
+        </Routes>
       </StoreProvider>
-    </Router>,
+    </HistoryRouter>,
   )
 
   const firstOrderEl = container.querySelectorAll('tbody tr')[0]

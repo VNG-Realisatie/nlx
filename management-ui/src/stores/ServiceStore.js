@@ -25,25 +25,27 @@ class ServiceStore {
   }
 
   fetch = flow(function* fetch({ name }) {
-    const serviceData = yield this._managementApiClient.managementGetService({
-      name,
-    })
-
-    let service = this.getService(name)
-    if (!service) {
-      service = new ServiceModel({
-        servicesStore: this,
-        serviceData,
+    try {
+      const serviceData = yield this._managementApiClient.managementGetService({
+        name,
       })
-      this.services.push(service)
-    } else {
-      service.update(serviceData)
-    }
 
-    yield Promise.all([
-      this.rootStore.incomingAccessRequestsStore.fetchForService(service),
-      this.rootStore.accessGrantStore.fetchForService(service),
-    ])
+      let service = this.getService(name)
+      if (!service) {
+        service = new ServiceModel({
+          servicesStore: this,
+          serviceData,
+        })
+        this.services.push(service)
+      } else {
+        service.update(serviceData)
+      }
+
+      yield Promise.all([
+        this.rootStore.incomingAccessRequestsStore.fetchForService(service),
+        this.rootStore.accessGrantStore.fetchForService(service),
+      ])
+    } catch (err) {}
   }).bind(this)
 
   fetchAll = flow(function* fetchAll() {
@@ -93,6 +95,7 @@ class ServiceStore {
     })
   }).bind(this)
 
+  // TODO: rename to getByName to be consistent with outways store
   getService = (serviceName) => {
     return this.services.find((service) => service.name === serviceName)
   }

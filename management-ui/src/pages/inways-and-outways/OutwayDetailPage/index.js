@@ -2,18 +2,20 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { instanceOf, string } from 'prop-types'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import OutwayModel from '../../../stores/models/OutwayModel'
+import { useOutwayStore } from '../../../hooks/use-stores'
 import OutwayDetailPageView from './OutwayDetailPageView'
 
-const OutwayDetailPage = ({ parentUrl, outway }) => {
+const OutwayDetailPage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
-  const history = useHistory()
-  const close = () => history.push(parentUrl)
+  const navigate = useNavigate()
+  const outwayStore = useOutwayStore()
+
+  const close = () => navigate('/inways-and-outways/outways')
+  const outway = outwayStore.getByName(name)
 
   return (
     <Drawer noMask closeHandler={close} data-testid="outway-detail-page">
@@ -35,15 +37,6 @@ const OutwayDetailPage = ({ parentUrl, outway }) => {
       </Drawer.Content>
     </Drawer>
   )
-}
-
-OutwayDetailPage.propTypes = {
-  parentUrl: string,
-  outway: instanceOf(OutwayModel),
-}
-
-OutwayDetailPage.defaultProps = {
-  parentUrl: '/inways-and-outways',
 }
 
 export default OutwayDetailPage

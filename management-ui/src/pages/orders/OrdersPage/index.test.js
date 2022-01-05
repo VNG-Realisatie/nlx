@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, Router } from 'react-router-dom'
-import { createMemoryHistory } from 'history'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { waitFor, fireEvent, screen } from '@testing-library/react'
+import { createMemoryHistory } from 'history'
 import { renderWithAllProviders } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
@@ -16,18 +16,16 @@ const createOrdersPage = (managementApiClient) => {
     managementApiClient,
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/orders/outgoing'] })
+  const history = createMemoryHistory()
 
   renderWithAllProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
-          <Route path="/orders/:type(outgoing|incoming)">
-            <OrdersPage />
-          </Route>
+          <OrdersPage />
         </StoreProvider>
       </UserContextProvider>
-    </Router>,
+    </HistoryRouter>,
   )
 
   return { history }
@@ -64,7 +62,7 @@ test('rendering the orders page', async () => {
   expect(ordersOverview).toBeInTheDocument()
 
   const linkAddOrder = screen.getByLabelText(/Add order/)
-  expect(linkAddOrder.getAttribute('href')).toBe('/orders/add-order')
+  expect(linkAddOrder.getAttribute('href')).toBe('/add-order')
 })
 
 test('no outgoing orders present', async () => {
@@ -125,7 +123,7 @@ test('no incoming orders present', async () => {
     "You haven't received any orders yet",
   )
 
-  expect(history.location.pathname).toEqual('/orders/incoming')
+  expect(history.location.pathname).toEqual('/incoming')
 
   expect(emptyView).toBeInTheDocument()
 })

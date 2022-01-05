@@ -2,8 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { StaticRouter as Router } from 'react-router-dom'
-
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
@@ -24,11 +23,11 @@ test('providing services but no organization inway', async () => {
   })
 
   const { findByText } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck />
       </StoreProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(
@@ -53,11 +52,11 @@ test('having outgoing orders but no organization inway', async () => {
   })
 
   const { findByText } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck />
       </StoreProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(
@@ -85,11 +84,11 @@ test('organization inway is set with services and outgoing orders present', () =
   })
 
   const { queryByText } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OrganizationInwayCheck />
       </StoreProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(

@@ -2,13 +2,13 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { string, node } from 'prop-types'
 import UserContext from '../user-context'
 
 const LoginRoutePath = '/login'
 
-const AuthenticatedRoute = ({ unauthenticatedPath, children, ...props }) => {
+const AuthenticatedRoute = ({ unauthenticatedPath, children }) => {
   const { isReady, user } = useContext(UserContext)
 
   if (!isReady) {
@@ -16,10 +16,10 @@ const AuthenticatedRoute = ({ unauthenticatedPath, children, ...props }) => {
   }
 
   if (user) {
-    return <Route {...props}>{children}</Route>
+    return children
   }
 
-  return <Redirect to={unauthenticatedPath} />
+  return <Navigate to={unauthenticatedPath} />
 }
 
 AuthenticatedRoute.propTypes = {

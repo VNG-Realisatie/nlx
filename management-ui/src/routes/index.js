@@ -2,8 +2,8 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { elementType } from 'prop-types'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { element } from 'prop-types'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import LoginOIDCPage from '../pages/LoginOIDCPage'
 import ServicesPage from '../pages/services/ServicesPage'
 import InwaysAndOutwaysPage from '../pages/inways-and-outways/InwaysAndOutwaysPage'
@@ -19,63 +19,60 @@ import AddOrderPage from '../pages/orders/AddOrderPage'
 import EditOrderPage from '../pages/orders/EditOrderPage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
-const Routes = ({ authorizationPage }) => (
-  <Switch>
-    <Redirect exact path="/" to="/inways-and-outways" />
-    <Route path={LoginRoutePath} component={authorizationPage} />
+const AllRoutes = ({ authorizationPageElement }) => (
+  <Routes>
+    <Route index element={<Navigate to="/inways-and-outways" />} />
 
-    <Redirect
-      exact
-      path="/inways-and-outways"
-      to="/inways-and-outways/inways"
-    />
-    <AuthenticatedRoute
-      path="/inways-and-outways/:type(inways|outways)?/:name?"
-      component={InwaysAndOutwaysPage}
-    />
-    <AuthenticatedRoute
-      path="/services/add-service"
-      component={AddServicePage}
-    />
-    <AuthenticatedRoute
-      path="/services/:name/edit-service"
-      component={EditServicePage}
-    />
-    <AuthenticatedRoute path="/services/:name?" component={ServicesPage} />
-    <AuthenticatedRoute
-      path="/directory/:organization?/:name?"
-      component={DirectoryPage}
-    />
-    <AuthenticatedRoute path="/finances" component={FinancePage} />
-    <AuthenticatedRoute path="/audit-log" component={AuditLogPage} />
-    <AuthenticatedRoute path="/orders/add-order" component={AddOrderPage} />
+    <Route path={LoginRoutePath} element={authorizationPageElement} />
 
-    <Redirect exact path="/orders" to="/orders/outgoing" />
-    <AuthenticatedRoute
-      path="/orders/outgoing/:delegatee/:reference/edit"
-      component={EditOrderPage}
-    />
-    <AuthenticatedRoute
-      path="/orders/:type(outgoing|incoming)"
-      component={OrdersPage}
-    />
-    <AuthenticatedRoute
-      path="/orders/outgoing/:delegatee/:reference"
-      component={OrdersPage}
-    />
+    <Route
+      path="*"
+      element={
+        <AuthenticatedRoute>
+          <Routes>
+            <Route
+              path="/inways-and-outways/*"
+              element={<InwaysAndOutwaysPage />}
+            />
 
-    <AuthenticatedRoute path="/settings" component={SettingsPage} />
+            <Route path="/services/add-service" element={<AddServicePage />} />
+            <Route
+              path="/services/:name/edit-service"
+              element={<EditServicePage />}
+            />
+            <Route path="/services/*" element={<ServicesPage />} />
 
-    <AuthenticatedRoute path="*" component={NotFoundPage} />
-  </Switch>
+            <Route path="/directory/*" element={<DirectoryPage />} />
+
+            <Route path="/finances" element={<FinancePage />} />
+
+            <Route path="/audit-log" element={<AuditLogPage />} />
+
+            <Route path="/settings/*" element={<SettingsPage />} />
+
+            <Route path="/orders/add-order" element={<AddOrderPage />} />
+
+            <Route
+              path="/orders/outgoing/:delegatee/:reference/edit"
+              element={<EditOrderPage />}
+            />
+
+            <Route path="/orders/*" element={<OrdersPage />} />
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </AuthenticatedRoute>
+      }
+    />
+  </Routes>
 )
 
-Routes.propTypes = {
-  authorizationPage: elementType,
+AllRoutes.propTypes = {
+  authorizationPageElement: element,
 }
 
-Routes.defaultProps = {
-  authorizationPage: LoginOIDCPage,
+AllRoutes.defaultProps = {
+  authorizationPage: <LoginOIDCPage />,
 }
 
-export default Routes
+export default AllRoutes

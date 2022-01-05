@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Router } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { renderWithAllProviders, act } from '../../../../test-utils'
 import ServiceAddedToastManager from './index'
@@ -17,11 +17,11 @@ afterEach(() => {
 })
 
 test('navigating to the new service when it has just been added', async () => {
-  const history = createMemoryHistory()
+  const history = createMemoryHistory({ initialEntries: ['/'] })
   const { queryByRole } = renderWithAllProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <ServiceAddedToastManager />
-    </Router>,
+    </HistoryRouter>,
   )
 
   expect(queryByRole('alert')).toBeNull()
@@ -41,9 +41,9 @@ test('navigating to the new service when it has just been added', async () => {
 test('navigating to the new service when it has just been edited', async () => {
   const history = createMemoryHistory()
   const { queryByRole } = renderWithAllProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <ServiceAddedToastManager />
-    </Router>,
+    </HistoryRouter>,
   )
 
   expect(queryByRole('alert')).toBeNull()
@@ -63,9 +63,9 @@ test('navigating to the new service when it has just been edited', async () => {
 test('navigating to the new service when it has just been removed', async () => {
   const history = createMemoryHistory()
   const { queryByRole } = renderWithAllProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <ServiceAddedToastManager />
-    </Router>,
+    </HistoryRouter>,
   )
 
   expect(queryByRole('alert')).toBeNull()

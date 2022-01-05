@@ -20,24 +20,26 @@ class DirectoryServicesStore {
   }
 
   fetch = flow(function* fetch(organizationSerialNumber, serviceName) {
-    const serviceData =
-      yield this._directoryApiClient.directoryGetOrganizationService({
+    try {
+      const serviceData =
+        yield this._directoryApiClient.directoryGetOrganizationService({
+          organizationSerialNumber,
+          serviceName,
+        })
+
+      let directoryService = this.getService(
         organizationSerialNumber,
         serviceName,
-      })
+      )
 
-    let directoryService = this.getService(
-      organizationSerialNumber,
-      serviceName,
-    )
+      if (!directoryService) {
+        directoryService = this._updateFromServer(serviceData)
+        this.services.push(directoryService)
+        return directoryService
+      }
 
-    if (!directoryService) {
-      directoryService = this._updateFromServer(serviceData)
-      this.services.push(directoryService)
-      return directoryService
-    }
-
-    return this._updateFromServer(serviceData)
+      return this._updateFromServer(serviceData)
+    } catch (err) {}
   })
 
   fetchAll = flow(function* fetchAll() {

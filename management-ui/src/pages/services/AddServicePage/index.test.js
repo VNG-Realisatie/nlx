@@ -3,7 +3,12 @@
 //
 import React from 'react'
 import { act, fireEvent } from '@testing-library/react'
-import { Router } from 'react-router-dom'
+import {
+  MemoryRouter,
+  Routes,
+  Route,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
@@ -39,11 +44,11 @@ describe('the AddServicePage', () => {
     const managementApiClient = new ManagementApi()
     const store = new RootStore({ managementApiClient })
     const { getByTestId, queryByRole, getByLabelText } = renderWithProviders(
-      <Router history={createMemoryHistory()}>
+      <MemoryRouter>
         <StoreProvider rootStore={store}>
           <AddServicePage />
         </StoreProvider>
-      </Router>,
+      </MemoryRouter>,
     )
 
     const linkBack = getByLabelText(/Back/)
@@ -64,11 +69,13 @@ describe('the AddServicePage', () => {
 
     const history = createMemoryHistory()
     const { findByTestId } = renderWithProviders(
-      <Router history={history}>
+      <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
-          <AddServicePage />
+          <Routes>
+            <Route path="*" element={<AddServicePage />} />
+          </Routes>
         </StoreProvider>
-      </Router>,
+      </HistoryRouter>,
     )
 
     const addComponentForm = await findByTestId('form')
@@ -98,11 +105,13 @@ describe('the AddServicePage', () => {
 
     const history = createMemoryHistory()
     const { findByTestId, queryByRole } = renderWithProviders(
-      <Router history={history}>
+      <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
-          <AddServicePage />
+          <Routes>
+            <Route path="*" element={<AddServicePage />} />
+          </Routes>
         </StoreProvider>
-      </Router>,
+      </HistoryRouter>,
     )
 
     const addComponentForm = await findByTestId('form')
@@ -141,13 +150,12 @@ describe('the AddServicePage', () => {
       managementApiClient,
     })
 
-    const history = createMemoryHistory()
     const { findByTestId, queryByRole } = renderWithProviders(
-      <Router history={history}>
+      <MemoryRouter>
         <StoreProvider rootStore={rootStore}>
           <AddServicePage />
         </StoreProvider>
-      </Router>,
+      </MemoryRouter>,
     )
 
     const addComponentForm = await findByTestId('form')

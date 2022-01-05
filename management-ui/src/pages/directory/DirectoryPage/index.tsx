@@ -3,7 +3,7 @@
 //
 import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import { Route, useParams } from 'react-router-dom'
+import { Route, Routes, useParams } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -17,7 +17,7 @@ import DirectoryPageView from './components/DirectoryPageView'
 const DirectoryPage = () => {
   const [subjectSerialNumber, setSubjectSerialNumber] = useState('')
   const { t } = useTranslation()
-  const { services, getService, isInitiallyFetched, error } =
+  const { services, isInitiallyFetched, error, fetchAll } =
     useDirectoryServiceStore()
   const { name } = useParams<{ name: string }>()
 
@@ -27,8 +27,11 @@ const DirectoryPage = () => {
       const organizationSubjectSerialNumber = env.organizationSerialNumber
       setSubjectSerialNumber(organizationSubjectSerialNumber)
     }
+
+    fetchAll()
+
     loadEnv().catch(console.warn)
-  })
+  }, [fetchAll])
 
   const DirectoryCount = () => {
     if (isInitiallyFetched && !error) {
@@ -41,6 +44,7 @@ const DirectoryPage = () => {
     if (!isInitiallyFetched || !subjectSerialNumber) {
       return <LoadingMessage />
     }
+
     if (error) {
       return (
         <Alert variant="error" data-testid="error-message">
@@ -53,24 +57,15 @@ const DirectoryPage = () => {
         <DirectoryPageView
           managementSubjectSerialNumber={subjectSerialNumber}
           services={services}
-          selectedServiceName={name}
+          selectedServiceName={name || ''}
         />
-        <Route
-          exact
-          path="/directory/:organizationSerialNumber/:serviceName"
-          render={({ match }) => {
-            const service = getService(
-              match.params.organizationSerialNumber,
-              match.params.serviceName,
-            )
 
-            if (service) {
-              service.fetch()
-            }
-
-            return services.length && <DirectoryDetailPage service={service} />
-          }}
-        />
+        <Routes>
+          <Route
+            path=":organizationSerialNumber/:serviceName"
+            element={<DirectoryDetailPage />}
+          />
+        </Routes>
       </>
     )
   }

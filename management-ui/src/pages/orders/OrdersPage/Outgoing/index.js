@@ -5,9 +5,8 @@ import React from 'react'
 import { arrayOf, instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Table from '../../../../components/Table'
-import { useOrderStore } from '../../../../hooks/use-stores'
 import OutgoingOrderModel from '../../../../stores/models/OutgoingOrderModel'
 import OrderRow from './OrderRow'
 import { Wrapper, CellServices, Centered } from './index.styles'
@@ -15,8 +14,6 @@ import OrderDetailPage from './OrderDetailPage'
 
 const Outgoing = ({ orders }) => {
   const { t } = useTranslation()
-
-  const { getOutgoing } = useOrderStore()
 
   return orders.length ? (
     <>
@@ -40,17 +37,9 @@ const Outgoing = ({ orders }) => {
           </tbody>
         </Table>
       </Wrapper>
-      <Route
-        path="/orders/outgoing/:delegatee/:reference"
-        render={({ match }) => {
-          const order = getOutgoing(
-            match.params.delegatee,
-            match.params.reference,
-          )
-
-          return <OrderDetailPage order={order} />
-        }}
-      />
+      <Routes>
+        <Route path=":delegatee/:reference" element={<OrderDetailPage />} />
+      </Routes>
     </>
   ) : (
     <Centered>

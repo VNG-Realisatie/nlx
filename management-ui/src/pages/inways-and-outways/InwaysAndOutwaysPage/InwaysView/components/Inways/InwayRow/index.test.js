@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { renderWithProviders } from '../../../../../test-utils'
-
-import InwayModel from '../../../../../stores/models/InwayModel'
+import { MemoryRouter } from 'react-router-dom'
+import { renderWithProviders } from '../../../../../../../test-utils'
+import InwayModel from '../../../../../../../stores/models/InwayModel'
 import InwayRow from './index'
 
 test('rendering the InwayRow', () => {
@@ -26,11 +26,13 @@ test('rendering the InwayRow', () => {
   })
 
   const { getByText, getByTestId } = renderWithProviders(
-    <table>
-      <tbody>
-        <InwayRow inway={inwayModel} />
-      </tbody>
-    </table>,
+    <MemoryRouter>
+      <table>
+        <tbody>
+          <InwayRow inway={inwayModel} />
+        </tbody>
+      </table>
+    </MemoryRouter>,
   )
 
   expect(getByText('inway-name')).toBeInTheDocument()

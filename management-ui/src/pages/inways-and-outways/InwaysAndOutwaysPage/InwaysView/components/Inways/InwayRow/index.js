@@ -3,8 +3,8 @@
 //
 import React from 'react'
 import { instanceOf } from 'prop-types'
-import Table from '../../../../../components/Table'
-import InwayModel from '../../../../../stores/models/InwayModel'
+import Table from '../../../../../../../components/Table'
+import InwayModel from '../../../../../../../stores/models/InwayModel'
 import { StyledInwayIcon, StyledIconTd } from './index.styles'
 
 const InwayRow = ({ inway, ...props }) => (

@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { configure } from 'mobx'
 import { act, fireEvent, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../test-utils'
@@ -32,11 +33,13 @@ const buildServiceModel = () => {
 
 const renderComponent = ({ service }) => {
   return renderWithProviders(
-    <table>
-      <tbody>
-        <DirectoryServiceRow service={service} />
-      </tbody>
-    </table>,
+    <MemoryRouter>
+      <table>
+        <tbody>
+          <DirectoryServiceRow service={service} />
+        </tbody>
+      </table>
+    </MemoryRouter>,
   )
 }
 

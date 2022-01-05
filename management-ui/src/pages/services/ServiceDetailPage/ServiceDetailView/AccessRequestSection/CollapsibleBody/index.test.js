@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { fireEvent, within, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithAllProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
   STATES,
@@ -35,10 +36,12 @@ test('approving an incoming access request', async () => {
 
   const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithAllProviders(
-    <CollapsibleBody
-      accessRequests={[accessRequest]}
-      onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}
-    />,
+    <MemoryRouter>
+      <CollapsibleBody
+        accessRequests={[accessRequest]}
+        onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}
+      />
+    </MemoryRouter>,
   )
 
   fireEvent.click(getByTitle('Approve'))
@@ -71,10 +74,12 @@ test('rejecting an incoming access request', async () => {
 
   const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithAllProviders(
-    <CollapsibleBody
-      accessRequests={[accessRequest]}
-      onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}
-    />,
+    <MemoryRouter>
+      <CollapsibleBody
+        accessRequests={[accessRequest]}
+        onApproveOrRejectCallbackHandler={onApproveOrRejectHandler}
+      />
+    </MemoryRouter>,
   )
 
   fireEvent.click(getByTitle('Reject'))

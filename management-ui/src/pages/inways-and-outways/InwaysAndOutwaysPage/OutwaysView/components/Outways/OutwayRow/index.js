@@ -3,13 +3,13 @@
 //
 import React from 'react'
 import { instanceOf } from 'prop-types'
-import Table from '../../../../../components/Table'
-import OutwayModel from '../../../../../stores/models/OutwayModel'
+import Table from '../../../../../../../components/Table'
+import OutwayModel from '../../../../../../../stores/models/OutwayModel'
 import { StyledIconTd, StyledOutwayIcon } from './index.styles'
 
 const OutwayRow = ({ outway, ...props }) => (
   <Table.Tr
-    to={`/inways-and-outways/outways/${outway.name}`}
+    to={outway.name}
     name={outway.name}
     data-testid="outway-row"
     {...props}

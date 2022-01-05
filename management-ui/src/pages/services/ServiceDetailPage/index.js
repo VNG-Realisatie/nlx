@@ -1,27 +1,33 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext } from 'react'
-import { string, shape } from 'prop-types'
-import { useParams, useHistory } from 'react-router-dom'
+import React, { useContext, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { observer } from 'mobx-react'
 import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { useServiceStore } from '../../../hooks/use-stores'
 import serviceActions from '../ServicesPage/serviceActions'
 import ServiceDetailView from './ServiceDetailView'
 
-const ServiceDetailPage = ({ parentUrl, service }) => {
+const ServiceDetailPage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
-  const history = useHistory()
-  const { removeService } = useServiceStore()
+  const navigate = useNavigate()
+  const serviceStore = useServiceStore()
 
-  const close = () => history.push(parentUrl)
+  useEffect(() => {
+    serviceStore.fetch({ name })
+  }, [name, serviceStore])
+
+  const close = () => navigate('/services')
+  const service = serviceStore.getService(name)
+
   const handleRemove = async () => {
     try {
-      await removeService(service.name)
-      history.push(`/services/${name}?lastAction=${serviceActions.REMOVED}`)
+      await serviceStore.removeService(service.name)
+      navigate(`../${name}?lastAction=${serviceActions.REMOVED}`)
     } catch (err) {
       showToast({
         title: t('Failed to remove the service'),
@@ -53,15 +59,4 @@ const ServiceDetailPage = ({ parentUrl, service }) => {
   )
 }
 
-ServiceDetailPage.propTypes = {
-  parentUrl: string,
-  service: shape({
-    name: string.isRequired,
-  }),
-}
-
-ServiceDetailPage.defaultProps = {
-  parentUrl: '/services',
-}
-
-export default ServiceDetailPage
+export default observer(ServiceDetailPage)

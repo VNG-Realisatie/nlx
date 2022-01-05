@@ -4,7 +4,7 @@
 import React from 'react'
 import { act, fireEvent } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
 import { RootStore, StoreProvider } from '../../stores'
@@ -31,11 +31,11 @@ test('user is authenticated', async () => {
   const logout = jest.fn()
 
   const { getByText } = renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <UserContextProvider user={{ id: '42' }}>
         <LoginBasicAuthPage logout={logout} />
       </UserContextProvider>
-    </Router>,
+    </HistoryRouter>,
   )
 
   const logOutButton = getByText('Log out')
@@ -95,7 +95,7 @@ test('when authentication succeeds', async () => {
   const rootStore = new RootStore({})
 
   const { getByLabelText, getByText } = renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <StoreProvider rootStore={rootStore}>
         <UserContextProvider fetchAuthenticatedUser={fetchUser}>
           <LoginBasicAuthPage
@@ -104,7 +104,7 @@ test('when authentication succeeds', async () => {
           />
         </UserContextProvider>
       </StoreProvider>
-    </Router>,
+    </HistoryRouter>,
   )
 
   const emailInput = getByLabelText('Email address')

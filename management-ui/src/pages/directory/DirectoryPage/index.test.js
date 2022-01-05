@@ -3,9 +3,15 @@
 //
 
 import React from 'react'
-import { MemoryRouter, Router } from 'react-router-dom'
+import {
+  MemoryRouter,
+  Routes,
+  Route,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import { configure } from 'mobx'
+import { screen, waitFor } from '@testing-library/react'
 import { act, renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
@@ -29,24 +35,20 @@ jest.mock('./components/DirectoryPageView', () => ({ services }) => {
 })
 /* eslint-enable react/prop-types */
 
-/* eslint-disable react/prop-types */
-jest.mock('../DirectoryDetailPage', () => ({ service }) => (
-  <div data-testid="mock-directory-service">{service.serviceName}</div>
-))
-/* eslint-enable react/prop-types */
-
 jest.mock('../../../domain/environment-repository', () => ({
   getCurrent: async () => ({
     organizationSerialNumber: '12345678901234567890',
   }),
 }))
 
-const renderDirectory = (store) =>
+const renderDirectoryPage = (store) =>
   renderWithProviders(
     <StoreProvider rootStore={store}>
       <UserContextProvider user={{}}>
         <MemoryRouter>
-          <DirectoryPage />
+          <Routes>
+            <Route path="*" element={<DirectoryPage />} />
+          </Routes>
         </MemoryRouter>
       </UserContextProvider>
     </StoreProvider>,
@@ -69,17 +71,20 @@ test('listing all services', async () => {
   })
   const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
 
-  const { getByRole, getByTestId, findByTestId, queryByTestId, queryByRole } =
-    renderDirectory(rootStore)
+  renderDirectoryPage(rootStore)
 
-  expect(fetchAllSpy).toHaveBeenCalled()
-  expect(getByRole('progressbar')).toBeInTheDocument()
-  expect(queryByTestId('mock-directory-services')).not.toBeInTheDocument()
+  expect(fetchAllSpy).toHaveBeenCalledTimes(1)
+  expect(screen.getByRole('progressbar')).toBeInTheDocument()
+  expect(
+    screen.queryByTestId('mock-directory-services'),
+  ).not.toBeInTheDocument()
 
-  expect(await findByTestId('mock-directory-services')).toBeInTheDocument()
-  expect(queryByRole('progressbar')).not.toBeInTheDocument()
+  expect(
+    await screen.findByTestId('mock-directory-services'),
+  ).toBeInTheDocument()
+  expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   expect(rootStore.directoryServicesStore.isInitiallyFetched).toEqual(true)
-  expect(getByTestId('mock-directory-service-0')).toHaveTextContent(
+  expect(screen.getByTestId('mock-directory-service-0')).toHaveTextContent(
     'Test Service',
   )
 })
@@ -94,10 +99,12 @@ test('no services', async () => {
     directoryApiClient,
   })
 
-  const { findByTestId, getByTestId } = renderDirectory(rootStore)
+  renderDirectoryPage(rootStore)
 
-  expect(await findByTestId('mock-directory-services')).toBeInTheDocument()
-  expect(() => getByTestId('mock-directory-service-0')).toThrow()
+  expect(
+    await screen.findByTestId('mock-directory-services'),
+  ).toBeInTheDocument()
+  expect(() => screen.getByTestId('mock-directory-service-0')).toThrow()
 })
 
 test('failed to load services', async () => {
@@ -109,12 +116,12 @@ test('failed to load services', async () => {
     },
   })
 
-  const { findByTestId, getByTestId } = renderDirectory(rootStore)
+  renderDirectoryPage(rootStore)
 
-  expect(await findByTestId('error-message')).toHaveTextContent(
+  expect(await screen.findByTestId('error-message')).toHaveTextContent(
     /^Failed to load the directory$/,
   )
-  expect(() => getByTestId('mock-directory-services')).toThrow()
+  expect(() => screen.getByTestId('mock-directory-services')).toThrow()
 
   global.console.error.mockRestore()
 })
@@ -145,27 +152,31 @@ test('navigating to the detail page should re-fetch the directory model', async 
     directoryApiClient,
   })
 
-  const history = createMemoryHistory({ initialEntries: ['/directory'] })
+  const history = createMemoryHistory()
 
-  await act(async () => {
-    renderWithProviders(
-      <StoreProvider rootStore={rootStore}>
-        <UserContextProvider user={{}}>
-          <Router history={history}>
-            <DirectoryPage />
-          </Router>
-        </UserContextProvider>
-      </StoreProvider>,
-    )
+  renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <UserContextProvider user={{}}>
+        <HistoryRouter history={history}>
+          <Routes>
+            <Route path="*" element={<DirectoryPage />} />
+          </Routes>
+        </HistoryRouter>
+      </UserContextProvider>
+    </StoreProvider>,
+  )
+
+  jest.spyOn(rootStore.directoryServicesStore, 'fetch')
+
+  act(() => {
+    history.push('/00000000000000000001/bar')
   })
 
-  const serviceModel = rootStore.directoryServicesStore.getService(
-    '00000000000000000001',
-    'bar',
-  )
-  jest.spyOn(serviceModel, 'fetch').mockResolvedValue({})
-
-  history.push('/directory/00000000000000000001/bar')
-
-  expect(serviceModel.fetch).toHaveBeenCalledTimes(1)
+  await waitFor(() => {
+    expect(rootStore.directoryServicesStore.fetch).toHaveBeenNthCalledWith(
+      1,
+      '00000000000000000001',
+      'bar',
+    )
+  })
 })

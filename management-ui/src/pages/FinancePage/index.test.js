@@ -2,8 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { StaticRouter } from 'react-router-dom'
-
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
 import { ManagementApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
@@ -25,11 +24,11 @@ test('it shows a message when finance is disabled', async () => {
   await rootStore.financeStore.fetch()
 
   const { getByText } = renderWithProviders(
-    <StaticRouter>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <FinancePage />
       </StoreProvider>
-    </StaticRouter>,
+    </MemoryRouter>,
   )
 
   expect(await getByText('Configure the transaction log')).toBeInTheDocument()
@@ -49,11 +48,11 @@ test('it shows download link when finance is enabled', async () => {
   await rootStore.financeStore.fetch()
 
   const { getByText } = renderWithProviders(
-    <StaticRouter>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <FinancePage />
       </StoreProvider>
-    </StaticRouter>,
+    </MemoryRouter>,
   )
 
   expect(await getByText('Export report')).toBeInTheDocument()

@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { act, waitForElementToBeRemoved } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import {
   fireEvent,
   renderWithProviders,
@@ -111,10 +112,12 @@ test('polling with access request section expanded', async () => {
 
   const { getByText, queryByText, findByText } = renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
-      <AccessRequestsSection
-        service={service}
-        onApproveOrRejectCallbackHandler={() => {}}
-      />
+      <MemoryRouter>
+        <AccessRequestsSection
+          service={service}
+          onApproveOrRejectCallbackHandler={() => {}}
+        />
+      </MemoryRouter>
     </StoreProvider>,
   )
 

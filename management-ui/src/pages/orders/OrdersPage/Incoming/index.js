@@ -5,9 +5,8 @@ import React from 'react'
 import { arrayOf, instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Table from '../../../../components/Table'
-import { useOrderStore } from '../../../../hooks/use-stores'
 import IncomingOrderModel from '../../../../stores/models/IncomingOrderModel'
 import OrderRow from './OrderRow'
 import { Wrapper, CellServices, Centered } from './index.styles'
@@ -15,7 +14,6 @@ import OrderDetailPage from './OrderDetailPage'
 
 const Incoming = ({ orders }) => {
   const { t } = useTranslation()
-  const { getIncoming } = useOrderStore()
 
   return orders.length ? (
     <>
@@ -39,17 +37,13 @@ const Incoming = ({ orders }) => {
           </tbody>
         </Table>
       </Wrapper>
-      <Route
-        path="/orders/incoming/:delegator/:reference"
-        render={({ match }) => {
-          const order = getIncoming(
-            match.params.delegator,
-            match.params.reference,
-          )
 
-          return <OrderDetailPage order={order} />
-        }}
-      />
+      <Routes>
+        <Route
+          path="/orders/incoming/:delegator/:reference"
+          element={<OrderDetailPage />}
+        />
+      </Routes>
     </>
   ) : (
     <Centered>

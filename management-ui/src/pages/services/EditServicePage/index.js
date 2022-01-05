@@ -5,8 +5,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from '@commonground/design-system'
-import { useHistory, useParams } from 'react-router-dom'
-
+import { useNavigate, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import serviceActions from '../ServicesPage/serviceActions'
 import ServiceForm from '../../../components/ServiceForm'
@@ -20,7 +19,7 @@ const EditServicePage = () => {
   const { t } = useTranslation()
   const { error, isInitiallyFetched, getService, update } = useServiceStore()
   const [updateError, setUpdatedError] = useState(null)
-  const history = useHistory()
+  const navigate = useNavigate()
   const [service, setService] = useState(null)
 
   useEffect(() => {
@@ -33,9 +32,8 @@ const EditServicePage = () => {
     try {
       setUpdatedError(null)
       await update(formData)
-      history.push(
-        `/services/${service.name}?lastAction=${serviceActions.EDITED}`,
-      )
+
+      navigate(`/services/${service.name}?lastAction=${serviceActions.EDITED}`)
     } catch (err) {
       window.scrollTo(0, 0)
       setUpdatedError(err.message)

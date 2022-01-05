@@ -2,20 +2,21 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { instanceOf, string } from 'prop-types'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import IncomingOrderModel from '../../../../../stores/models/IncomingOrderModel'
+import { useOrderStore } from '../../../../../hooks/use-stores'
 import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 
-const OrderDetailPage = ({ parentUrl, order }) => {
+const OrderDetailPage = () => {
   const { delegator, reference } = useParams()
   const { t } = useTranslation()
-  const history = useHistory()
+  const navigate = useNavigate()
+  const orderStore = useOrderStore()
 
-  const close = () => history.push(parentUrl)
+  const order = orderStore.getIncoming(delegator, reference)
+  const close = () => navigate('/orders/incoming')
 
   return (
     <Drawer noMask closeHandler={close}>
@@ -46,15 +47,6 @@ const OrderDetailPage = ({ parentUrl, order }) => {
       </Drawer.Content>
     </Drawer>
   )
-}
-
-OrderDetailPage.propTypes = {
-  parentUrl: string,
-  order: instanceOf(IncomingOrderModel),
-}
-
-OrderDetailPage.defaultProps = {
-  parentUrl: '/orders/incoming',
 }
 
 export default OrderDetailPage

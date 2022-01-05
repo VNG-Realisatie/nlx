@@ -2,7 +2,12 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, Router, StaticRouter } from 'react-router-dom'
+import {
+  Route,
+  Routes,
+  MemoryRouter,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
 import { fireEvent, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
 import { createMemoryHistory } from 'history'
@@ -47,20 +52,17 @@ test('display order details', async () => {
   await orderStore.fetchOutgoing()
 
   const history = createMemoryHistory({
-    initialEntries: ['/delegatee/reference'],
+    initialEntries: ['/01234567890123456789/my-reference'],
   })
 
   renderWithAllProviders(
-    <Router history={history}>
-      <Route path="/:delegatee/:reference">
-        <StoreProvider rootStore={rootStore}>
-          <OrderDetailPage
-            order={orderStore.outgoingOrders[0]}
-            parentUrl={'/orders/outgoing'}
-          />
-        </StoreProvider>
-      </Route>
-    </Router>,
+    <HistoryRouter history={history}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":delegatee/:reference" element={<OrderDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </HistoryRouter>,
   )
 
   expect(screen.getByText('Issued to delegatee')).toBeInTheDocument()
@@ -96,21 +98,21 @@ test('display error for a non-existing order', async () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
 
-  const { findByTestId, getByText } = renderWithAllProviders(
-    <StaticRouter location="/delegatee/reference">
-      <Route path="/:delegatee/:reference">
-        <StoreProvider rootStore={rootStore}>
-          <OrderDetailPage revokeHandler={() => {}} />
-        </StoreProvider>
-      </Route>
-    </StaticRouter>,
+  renderWithAllProviders(
+    <MemoryRouter initialEntries={['/delegatee/reference']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":delegatee/:reference" element={<OrderDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
   )
-  const message = await findByTestId('error-message')
+  const message = await screen.findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the order for delegatee')
 
-  expect(getByText('Order not found')).toBeInTheDocument()
+  expect(screen.getByText('Order not found')).toBeInTheDocument()
 
-  const closeButton = await findByTestId('close-button')
+  const closeButton = await screen.findByTestId('close-button')
   expect(closeButton).toBeTruthy()
 })

@@ -2,9 +2,10 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { screen } from '@testing-library/react'
-import { renderWithProviders } from '../../../../../test-utils'
-import OutwayModel from '../../../../../stores/models/OutwayModel'
+import { renderWithProviders } from '../../../../../../../test-utils'
+import OutwayModel from '../../../../../../../stores/models/OutwayModel'
 import OutwayRow from './index'
 
 test('rendering the OutwayRow', () => {
@@ -16,11 +17,13 @@ test('rendering the OutwayRow', () => {
   })
 
   renderWithProviders(
-    <table>
-      <tbody>
-        <OutwayRow outway={outwayModel} />
-      </tbody>
-    </table>,
+    <MemoryRouter>
+      <table>
+        <tbody>
+          <OutwayRow outway={outwayModel} />
+        </tbody>
+      </table>
+    </MemoryRouter>,
   )
 
   expect(screen.getByText('outway-name')).toBeInTheDocument()

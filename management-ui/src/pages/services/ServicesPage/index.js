@@ -4,7 +4,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Button } from '@commonground/design-system'
-import { Link, Route, useParams } from 'react-router-dom'
+import { Link, Route, Routes, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import usePolling from '../../../hooks/use-polling'
 import PageTemplate from '../../../components/PageTemplate'
@@ -19,8 +19,7 @@ import { StyledActionsBar } from './index.styles'
 
 const ServicesPage = () => {
   const { t } = useTranslation()
-  const { isInitiallyFetched, services, error, getService, fetchStats } =
-    useServiceStore()
+  const { isInitiallyFetched, services, error, fetchStats } = useServiceStore()
   const { name } = useParams()
 
   usePolling(fetchStats)
@@ -55,22 +54,10 @@ const ServicesPage = () => {
       ) : (
         <>
           <ServicesPageView services={services} selectedServiceName={name} />
-          <Route
-            path="/services/:name"
-            render={({ match }) => {
-              const service = getService(match.params.name)
 
-              if (service) {
-                service.fetch()
-              }
-
-              return (
-                services.length && (
-                  <ServiceDetailPage parentUrl="/services" service={service} />
-                )
-              )
-            }}
-          />
+          <Routes>
+            <Route path=":name" element={<ServiceDetailPage />} />
+          </Routes>
         </>
       )}
     </PageTemplate>

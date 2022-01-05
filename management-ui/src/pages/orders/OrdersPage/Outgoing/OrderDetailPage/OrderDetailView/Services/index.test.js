@@ -3,7 +3,7 @@
 //
 
 import React from 'react'
-import { Router } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../../../../../test-utils'
@@ -15,9 +15,9 @@ const createComponent = (services) => {
   })
 
   renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <Services services={services} />
-    </Router>,
+    </HistoryRouter>,
   )
 
   return {

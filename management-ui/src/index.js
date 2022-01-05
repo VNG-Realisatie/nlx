@@ -76,14 +76,14 @@ const getAuthStrategy = async () => {
     ? UserRepositoryBasicAuth.logout
     : UserRepositoryOIDC.logout
 
-  const authPage = isBasicAuth ? LoginBasicAuthPage : LoginOIDCPage
+  const authPage = isBasicAuth ? <LoginBasicAuthPage /> : <LoginOIDCPage />
 
   ReactDOM.render(
     <Router>
       <StoreProvider rootStore={rootStore}>
         <UserContextProvider fetchAuthenticatedUser={fetchUser} logout={logout}>
           <App>
-            <Routes authorizationPage={authPage} />
+            <Routes authorizationPageElement={authPage} />
           </App>
         </UserContextProvider>
       </StoreProvider>

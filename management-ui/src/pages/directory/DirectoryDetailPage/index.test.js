@@ -2,67 +2,84 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { observable } from 'mobx'
-import { Route, StaticRouter as Router } from 'react-router-dom'
+import { Route, Routes, MemoryRouter } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
+import { DirectoryApi } from '../../../api'
+import { RootStore, StoreProvider } from '../../../stores'
 import DirectoryDetailPage from './index'
 
 jest.mock('./components/DirectoryDetailView', () => () => (
   <div data-testid="directory-service-details" />
 ))
 
-let service
+test('display directory service details', async () => {
+  const directoryApiClient = new DirectoryApi()
 
-beforeEach(() => {
-  service = observable({
-    id: 'Test Organization/Test Service',
-    organization: {
-      serialNumber: '00000000000000000001',
-      name: 'Test Organization',
-    },
-    serviceName: 'Test Service',
-    state: 'degraded',
-    apiSpecificationType: 'API',
-    latestAccessRequest: null,
-    fetch: jest.fn(),
-    requestAccess: jest.fn(),
-    retryRequestAccess: jest.fn(),
-  })
-})
+  directoryApiClient.directoryGetOrganizationService = jest
+    .fn()
+    .mockResolvedValue({
+      id: 'Test Organization/Test Service',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Test Organization',
+      },
+      serviceName: 'Test Service',
+      state: 'degraded',
+      apiSpecificationType: 'API',
+      latestAccessRequest: null,
+    })
 
-test('display directory service details', () => {
-  const { getByTestId, getByText } = renderWithProviders(
-    // Router & Route still required for hooks
-    // Note not they, but the service data is tested
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={service} />
-      </Route>
-    </Router>,
+  const rootStore = new RootStore({ directoryApiClient })
+
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/00000000000000000001/Test Service']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route
+            path=":organizationSerialNumber/:serviceName"
+            element={<DirectoryDetailPage />}
+          />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
   )
 
-  expect(getByText('Test Organization')).toBeInTheDocument()
-  expect(getByText('Test Service')).toBeInTheDocument()
-  expect(getByText('state-degraded.svg')).toBeInTheDocument()
-  expect(getByTestId('directory-service-details')).toBeInTheDocument()
+  expect(await screen.findByText('Test Organization')).toBeInTheDocument()
+  expect(screen.getByText('Test Service')).toBeInTheDocument()
+  expect(screen.getByText('state-degraded.svg')).toBeInTheDocument()
+  expect(screen.getByTestId('directory-service-details')).toBeInTheDocument()
 })
 
 test('service does not exist', () => {
-  const { getByTestId, getByText, queryByText } = renderWithProviders(
-    <Router location="/directory/organization/service">
-      <Route path="/directory/:organizationName/:serviceName">
-        <DirectoryDetailPage service={undefined} />
-      </Route>
-    </Router>,
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryGetOrganizationService = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+
+  const rootStore = new RootStore({ directoryApiClient })
+
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/00000000000000000001/Test Service']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route
+            path=":organizationSerialNumber/:serviceName"
+            element={<DirectoryDetailPage />}
+          />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
   )
 
-  const message = getByTestId('error-message')
+  const message = screen.getByTestId('error-message')
   expect(message).toBeInTheDocument()
   expect(message.textContent).toBe('Failed to load the service')
 
-  expect(getByText('service')).toBeInTheDocument()
-  expect(queryByText('organization')).toBeNull()
+  expect(screen.getByText('Test Service')).toBeInTheDocument()
+  expect(screen.queryByText('organization')).toBeNull()
 
-  const closeButton = getByTestId('close-button')
+  const closeButton = screen.getByTestId('close-button')
   expect(closeButton).toBeInTheDocument()
 })

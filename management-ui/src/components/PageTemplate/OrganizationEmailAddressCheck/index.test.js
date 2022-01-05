@@ -2,8 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { StaticRouter as Router } from 'react-router-dom'
-
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
@@ -21,11 +20,11 @@ test('no organization email address', async () => {
   })
 
   const { findByText } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OrganizationEmailAddressCheck />
       </StoreProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(
@@ -45,11 +44,11 @@ test('organization email address is set', () => {
   })
 
   const { queryByText } = renderWithProviders(
-    <Router>
+    <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OrganizationEmailAddressCheck />
       </StoreProvider>
-    </Router>,
+    </MemoryRouter>,
   )
 
   expect(

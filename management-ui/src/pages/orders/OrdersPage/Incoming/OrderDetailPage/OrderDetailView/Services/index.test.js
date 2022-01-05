@@ -3,21 +3,21 @@
 //
 
 import React from 'react'
-import { Router } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../../../../../test-utils'
 import Services from './index'
 
-const createComponent = (services) => {
+const renderServices = (services) => {
   const history = createMemoryHistory({
     initialEntries: ['/'],
   })
 
   renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <Services services={services} />
-    </Router>,
+    </HistoryRouter>,
   )
 
   return {
@@ -26,7 +26,7 @@ const createComponent = (services) => {
 }
 
 test('no services available', async () => {
-  createComponent([])
+  renderServices([])
 
   fireEvent.click(screen.getByText('Requestable services'))
 
@@ -36,7 +36,7 @@ test('no services available', async () => {
 })
 
 test('listing the services', async () => {
-  const { history } = createComponent([
+  const { history } = renderServices([
     {
       service: 'My Service',
       organization: {

@@ -4,7 +4,6 @@
 import React from 'react'
 import { string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-
 import DefaultAvatar from './default-avatar.svg'
 import { Figure } from './index.styles'
 

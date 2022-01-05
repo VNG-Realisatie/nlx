@@ -2,7 +2,12 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Router } from 'react-router-dom'
+// NOTE: about unstable_*: https://github.com/remix-run/react-router/issues/8264#issuecomment-1003781044
+import {
+  MemoryRouter,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../test-utils'
 import { UserContextProvider } from '../user-context'
@@ -35,163 +40,142 @@ jest.mock('../pages/orders/AddOrderPage', () => () => (
 
 test('when not authenticated it redirects to /login when navigating to /', async () => {
   const history = createMemoryHistory()
+
   const fetchUser = () => {
     throw new Error('not authenticated')
   }
   renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <UserContextProvider fetchAuthenticatedUser={fetchUser}>
-        <Routes />
+        <Routes authorizationPageElement={<div>hoi</div>} />
       </UserContextProvider>
-    </Router>,
+    </HistoryRouter>,
   )
+
   expect(history.location.pathname).toEqual('/login')
 })
 
-test('redirects to /inways-and-outways/inways when navigating to /', async () => {
+test('redirects to /inways-and-outways when navigating to /', async () => {
   const history = createMemoryHistory()
-  renderWithProviders(
-    <Router history={history}>
-      <UserContextProvider user={{ id: '42' }}>
-        <Routes />
-      </UserContextProvider>
-    </Router>,
-  )
-  expect(history.location.pathname).toEqual('/inways-and-outways/inways')
-})
 
-test('redirects to /inways-and-outways/inways when navigating to /inways-and-outways', async () => {
-  const history = createMemoryHistory()
   renderWithProviders(
-    <Router history={history}>
+    <HistoryRouter history={history}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes authorizationPageElement={<div>Please login</div>} />
       </UserContextProvider>
-    </Router>,
+    </HistoryRouter>,
   )
-  expect(history.location.pathname).toEqual('/inways-and-outways/inways')
+
+  expect(history.location.pathname).toEqual('/inways-and-outways')
 })
 
 test('the /login route renders the LoginOIDCPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/login'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/login']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes authorizationPageElement={<div>my-login-page</div>} />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('login-page')).toBeInTheDocument()
+
+  expect(screen.getByText('my-login-page')).toBeInTheDocument()
 })
 
 test('the /services route renders the ServicesPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/services'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/services']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('services-page')).toBeInTheDocument()
+  expect(screen.getByTestId('services-page')).toBeInTheDocument()
 })
 
 test('the /services/add-service route renders the AddServicePage', () => {
-  const history = createMemoryHistory({
-    initialEntries: ['/services/add-service'],
-  })
   const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+    <MemoryRouter initialEntries={['/services/add-service']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
   expect(getByTestId('add-service-page')).toBeInTheDocument()
 })
 
 test('the /inways-and-outways route renders the OverviewPage', () => {
-  const history = createMemoryHistory({
-    initialEntries: ['/inways-and-outways'],
-  })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/inways-and-outways']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('inways-and-outways-page')).toBeInTheDocument()
+  expect(screen.getByTestId('inways-and-outways-page')).toBeInTheDocument()
 })
 
 test('the /audit-log route renders the AuditLogPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/audit-log'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/audit-log']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('audit-log-page')).toBeInTheDocument()
+  expect(screen.getByTestId('audit-log-page')).toBeInTheDocument()
 })
 
 test('the /finances route renders the FinancePage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/finances'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/finances']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('finances-page')).toBeInTheDocument()
+  expect(screen.getByTestId('finances-page')).toBeInTheDocument()
 })
 
 test('the /orders route redirects to /orders/outgoing', () => {
-  const history = createMemoryHistory({ initialEntries: ['/orders'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/orders']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('orders-page')).toBeInTheDocument()
+  expect(screen.getByTestId('orders-page')).toBeInTheDocument()
 })
 
 test('the /orders/outgoing route renders the OrdersPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/orders/outgoing'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/orders/outgoing']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('orders-page')).toBeInTheDocument()
+  expect(screen.getByTestId('orders-page')).toBeInTheDocument()
 })
 
 test('the /orders/incoming route renders the OrdersPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/orders/incoming'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/orders/incoming']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('orders-page')).toBeInTheDocument()
+  expect(screen.getByTestId('orders-page')).toBeInTheDocument()
 })
 
 test('the /orders/add route renders the AddOrderPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/orders/add-order'] })
   const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+    <MemoryRouter initialEntries={['/orders/add-order']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
   expect(getByTestId('add-order-page')).toBeInTheDocument()
 })

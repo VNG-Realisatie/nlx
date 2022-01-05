@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
 import useStores, { useOrderStore } from '../../../hooks/use-stores'
@@ -36,7 +36,7 @@ const EditOrderPage: React.FC = () => {
   const [updateError, setUpdatedError] = useState<string | null>(null)
   const [serviceNames, setServiceNames] = useState(null)
   const [order, setOrder] = useState<OrderWithStringDates | null>(null)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -91,7 +91,7 @@ const EditOrderPage: React.FC = () => {
         delegatee,
         reference,
       })
-      history.push(redirectUrl)
+      navigate(redirectUrl)
       // eslint-disable-next-line
     } catch (err: any) {
       window.scrollTo(0, 0)

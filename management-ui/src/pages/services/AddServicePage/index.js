@@ -3,9 +3,8 @@
 //
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Alert } from '@commonground/design-system'
-
 import serviceActions from '../ServicesPage/serviceActions'
 import PageTemplate from '../../../components/PageTemplate'
 import ServiceForm from '../../../components/ServiceForm'
@@ -14,13 +13,13 @@ import { useServiceStore } from '../../../hooks/use-stores'
 const AddServicePage = () => {
   const { t } = useTranslation()
   const [error, setError] = useState(null)
-  const history = useHistory()
+  const navigate = useNavigate()
   const { create } = useServiceStore()
 
   const submitService = async (formData) => {
     try {
       const addedService = await create(formData)
-      history.push(
+      navigate(
         `/services/${addedService.name}?lastAction=${serviceActions.ADDED}`,
       )
     } catch (err) {

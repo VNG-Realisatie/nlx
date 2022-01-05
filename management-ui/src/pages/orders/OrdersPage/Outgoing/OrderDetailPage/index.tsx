@@ -2,31 +2,26 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import OutgoingOrderModel from '../../../../../stores/models/OutgoingOrderModel'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
+import { useOrderStore } from '../../../../../hooks/use-stores'
 import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 import EditRevoke from './EditRevoke'
 
-interface OrderDetailPageProps {
-  parentUrl: string
-  order: OutgoingOrderModel
-}
-
-const OrderDetailPage: React.FC<OrderDetailPageProps> = ({
-  parentUrl = '/orders/outgoing',
-  order,
-}) => {
+const OrderDetailPage: React.FC = () => {
   const { delegatee, reference } =
     useParams<{ delegatee: string; reference: string }>()
   const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
-  const history = useHistory()
+  const navigate = useNavigate()
+  const orderStore = useOrderStore()
 
-  const close = () => history.push(parentUrl)
+  const order = orderStore.getOutgoing(delegatee, reference)
+
+  const close = () => navigate('/orders/outgoing')
 
   const [ConfirmRevokeModal, confirmRevoke] = useConfirmationModal({
     okText: t('Revoke'),

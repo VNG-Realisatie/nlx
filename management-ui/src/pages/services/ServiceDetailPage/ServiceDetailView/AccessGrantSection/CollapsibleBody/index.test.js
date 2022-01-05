@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { waitFor, fireEvent, within } from '@testing-library/react'
 import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../../../../test-utils'
@@ -12,7 +13,9 @@ jest.mock('../../../../../../components/Modal')
 
 test('when no access grants are available', async () => {
   const { getByText } = renderWithAllProviders(
-    <CollapsibleBody accessGrants={[]} />,
+    <MemoryRouter>
+      <CollapsibleBody accessGrants={[]} />
+    </MemoryRouter>,
   )
   expect(
     getByText('There are no organizations with access'),
@@ -33,7 +36,9 @@ test('revoke access grant', async () => {
   })
 
   const { getByText, findByText, getByRole } = renderWithAllProviders(
-    <CollapsibleBody accessGrants={[accessGrant]} />,
+    <MemoryRouter>
+      <CollapsibleBody accessGrants={[accessGrant]} />
+    </MemoryRouter>,
   )
 
   const revokeSpy = jest.spyOn(accessGrant, 'revoke').mockResolvedValue()

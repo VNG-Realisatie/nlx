@@ -2,9 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, StaticRouter as Router } from 'react-router-dom'
+import { Route, Routes, MemoryRouter } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
+import { ManagementApi } from '../../../api'
 import InwayDetailPage from './index'
 
 /* eslint-disable react/prop-types */
@@ -13,41 +15,60 @@ jest.mock('./InwayDetailPageView', () => ({ inway }) => (
 ))
 /* eslint-enable react/prop-types */
 
-test('display inway details', () => {
-  const rootStore = new RootStore({})
+test('display inway details', async () => {
+  const managementApiClient = new ManagementApi()
 
-  const { getByTestId } = renderWithAllProviders(
+  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
+    inways: [
+      {
+        name: 'my-inway',
+        version: 'version',
+        hostname: 'hostname',
+        selfAddress: 'self-address',
+        services: [
+          {
+            name: 'service-1',
+          },
+        ],
+      },
+    ],
+  })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  await rootStore.inwayStore.fetchInways()
+
+  renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
-      <Router location="/inways-and-outways/inways/forty-two">
-        <Route path="/inways-and-outways/inways/:name">
-          <InwayDetailPage
-            inway={{ name: 'forty-two' }}
-            parentUrl="/inways-and-outways"
-          />
-        </Route>
-      </Router>
+      <MemoryRouter initialEntries={['/my-inway']}>
+        <Routes>
+          <Route path=":name" element={<InwayDetailPage />} />
+        </Routes>
+      </MemoryRouter>
     </StoreProvider>,
   )
-  expect(getByTestId('inway-details')).toHaveTextContent('forty-two')
+  expect(screen.getByTestId('inway-details')).toHaveTextContent('my-inway')
 })
 
 test('display a non-existing inway', async () => {
   const rootStore = new RootStore({})
 
-  const { findByTestId } = renderWithAllProviders(
+  renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
-      <Router location="/inways-and-outways/inways/forty-two">
-        <Route path="/inways-and-outways/inways/:name">
-          <InwayDetailPage inway={null} parentUrl="/inways-and-outways" />
-        </Route>
-      </Router>
+      <MemoryRouter initialEntries={['/my-inway']}>
+        <Routes>
+          <Route path=":name" element={<InwayDetailPage />} />
+        </Routes>
+      </MemoryRouter>
     </StoreProvider>,
   )
 
-  const message = await findByTestId('error-message')
+  const message = await screen.findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the details for this inway')
 
-  const closeButton = await findByTestId('close-button')
+  const closeButton = await screen.findByTestId('close-button')
   expect(closeButton).toBeTruthy()
 })

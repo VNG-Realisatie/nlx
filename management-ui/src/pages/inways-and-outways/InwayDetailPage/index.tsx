@@ -2,35 +2,28 @@
 // Licensed under the EUPL
 //
 import React, { useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Alert, Drawer, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import Inway from '../../../types/Inway'
 import { useInwayStore, useApplicationStore } from '../../../hooks/use-stores'
 import InwayDetailPageView from './InwayDetailPageView'
 
-interface InwayDetailPageProps {
-  parentUrl: string
-  inway: Inway
-}
-
-const InwayDetailPage: React.FC<InwayDetailPageProps> = ({
-  parentUrl = '/inways-and-outways',
-  inway,
-}) => {
+const InwayDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>()
   const { t } = useTranslation()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { removeInway } = useInwayStore()
   const applicationStore = useApplicationStore()
+  const inwayStore = useInwayStore()
   const { showToast } = useContext(ToasterContext)
-  const close = () => history.push(parentUrl)
+
+  const close = () => navigate('/inways-and-outways/inways')
+  const inway = inwayStore.getInway({ name })
 
   const handleRemoveInway = async () => {
     try {
       await removeInway(inway.name)
 
-      // Close the editing side panel
       close()
 
       // Update isOrganizationInwaySet if needed, to trigger the warning banner

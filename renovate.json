@@ -25,6 +25,7 @@
   "ignoreDeps": [],
   "packageRules": [
     {
+      "groupName": "directory-ui is still using react-router v5, which uses an older version of history",
       "packageNames": ["history"],
       "managers": ["npm"],
       "allowedVersions": "<5.0.0"

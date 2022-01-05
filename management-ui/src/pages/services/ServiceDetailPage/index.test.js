@@ -2,8 +2,13 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Route, Router, StaticRouter } from 'react-router-dom'
-import { act, fireEvent } from '@testing-library/react'
+import {
+  Route,
+  Routes,
+  MemoryRouter,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
+import { act, fireEvent, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../test-utils'
@@ -20,63 +25,83 @@ jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
   </div>
 ))
 
-let fetchIncomingAccessRequests
-let fetchAccessGrants
-
-beforeEach(() => {
-  fetchIncomingAccessRequests = jest.fn()
-  fetchAccessGrants = jest.fn()
-})
-
-test('display service details', () => {
+test('display service details', async () => {
   const managementApiClient = new ManagementApi()
-  const rootStore = new RootStore({ managementApiClient })
-  const { getByTestId, getByText } = renderWithAllProviders(
-    <StaticRouter location="/services/forty-two">
-      <Route path="/services/:name">
-        <StoreProvider rootStore={rootStore}>
-          <ServiceDetailPage
-            service={{
-              name: 'forty-two',
-              fetchIncomingAccessRequests,
-              fetchAccessGrants,
-            }}
-          />
-        </StoreProvider>
-      </Route>
-    </StaticRouter>,
-  )
 
-  expect(getByTestId('service-details')).toBeInTheDocument()
-  expect(getByText('forty-two')).toBeInTheDocument()
-})
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+    name: 'my-service',
+  })
 
-test('fetching a non-existing component', async () => {
-  const managementApiClient = new ManagementApi()
+  managementApiClient.managementListIncomingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({ accessRequests: [] })
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({ accessGrants: [] })
+
   const rootStore = new RootStore({ managementApiClient })
 
-  const { findByTestId, getByText } = renderWithAllProviders(
-    <StaticRouter location="/services/forty-two">
-      <Route path="/services/:name">
-        <StoreProvider rootStore={rootStore}>
-          <ServiceDetailPage />
-        </StoreProvider>
-      </Route>
-    </StaticRouter>,
+  renderWithAllProviders(
+    <MemoryRouter initialEntries={['/my-service']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":name" element={<ServiceDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
   )
-  const message = await findByTestId('error-message')
+
+  expect(await screen.findByTestId('service-details')).toBeInTheDocument()
+  expect(screen.getByText('my-service')).toBeInTheDocument()
+})
+
+test('fetching a non-existing service', async () => {
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementGetService = jest
+    .fn()
+    .mockRejectedValue(new Error('arbitrary error'))
+
+  const rootStore = new RootStore({ managementApiClient })
+
+  renderWithAllProviders(
+    <MemoryRouter initialEntries={['/my-service']}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":name" element={<ServiceDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </MemoryRouter>,
+  )
+
+  const message = await screen.findByTestId('error-message')
   expect(message).toBeTruthy()
   expect(message.textContent).toBe('Failed to load the service')
 
-  expect(getByText('forty-two')).toBeInTheDocument()
+  expect(screen.getByText('my-service')).toBeInTheDocument()
 
-  const closeButton = await findByTestId('close-button')
+  const closeButton = await screen.findByTestId('close-button')
   expect(closeButton).toBeTruthy()
 })
 
 test('removing the service', async () => {
   configure({ safeDescriptors: false })
+
   const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
+    name: 'my-service',
+  })
+
+  managementApiClient.managementListIncomingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({ accessRequests: [] })
+
+  managementApiClient.managementListAccessGrantsForService = jest
+    .fn()
+    .mockResolvedValue({ accessGrants: [] })
+
   managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
 
   const rootStore = new RootStore({
@@ -85,30 +110,24 @@ test('removing the service', async () => {
   jest.spyOn(rootStore.servicesStore, 'removeService')
 
   const history = createMemoryHistory({
-    initialEntries: ['/services/dummy-service'],
+    initialEntries: ['/my-service'],
   })
 
-  const { findByText } = renderWithAllProviders(
-    <Router history={history}>
-      <Route path="/services/:name">
-        <StoreProvider rootStore={rootStore}>
-          <ServiceDetailPage
-            service={{
-              name: 'dummy-service',
-              fetchIncomingAccessRequests,
-              fetchAccessGrants,
-            }}
-          />
-        </StoreProvider>
-      </Route>
-    </Router>,
+  renderWithAllProviders(
+    <HistoryRouter history={history}>
+      <StoreProvider rootStore={rootStore}>
+        <Routes>
+          <Route path=":name" element={<ServiceDetailPage />} />
+        </Routes>
+      </StoreProvider>
+    </HistoryRouter>,
   )
 
-  const removeButton = await findByText('Remove service')
+  const removeButton = await screen.findByText('Remove service')
   fireEvent.click(removeButton)
 
   expect(rootStore.servicesStore.removeService).toHaveBeenCalledTimes(1)
   await act(async () => {})
-  expect(history.location.pathname).toEqual('/services/dummy-service')
+  expect(history.location.pathname).toEqual('/my-service')
   expect(history.location.search).toEqual('?lastAction=removed')
 })
