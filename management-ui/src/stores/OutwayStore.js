@@ -24,7 +24,7 @@ class OutwayStore {
     return this._outways
   }
 
-  fetchAll = flow(function* fetchInways() {
+  fetchAll = flow(function* fetchAll() {
     if (this._isFetching) {
       return
     }
