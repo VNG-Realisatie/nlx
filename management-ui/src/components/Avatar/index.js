@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { memo } from 'react'
 import { string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import DefaultAvatar from './default-avatar.svg'
@@ -25,4 +25,4 @@ Avatar.propTypes = {
   alt: string,
 }
 
-export default Avatar
+export default memo(Avatar)
