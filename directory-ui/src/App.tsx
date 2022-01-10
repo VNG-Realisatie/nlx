@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { Switch, BrowserRouter as Router, Route } from 'react-router-dom'
+import { Routes, BrowserRouter, Route } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { GlobalStyles, DomainNavigation } from '@commonground/design-system'
 import VersionLogger from './components/VersionLogger'
@@ -16,7 +16,7 @@ const App: React.FC = () => (
   <>
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      <Router>
+      <BrowserRouter>
         <DomainNavigation
           activeDomain="NLX"
           gitLabLink="https://gitlab.com/commonground/nlx/nlx"
@@ -24,15 +24,11 @@ const App: React.FC = () => (
 
         <Header />
 
-        <Switch>
-          <Route exact path="/participants" component={ParticipantsPage} />
-          <Route
-            exact
-            path="/:organizationSerialNumber?/:serviceName?"
-            component={ServiceOverviewPage}
-          />
-        </Switch>
-      </Router>
+        <Routes>
+          <Route path="/participants" element={<ParticipantsPage />} />
+          <Route path="*" element={<ServiceOverviewPage />} />
+        </Routes>
+      </BrowserRouter>
       <VersionLogger />
     </ThemeProvider>
   </>

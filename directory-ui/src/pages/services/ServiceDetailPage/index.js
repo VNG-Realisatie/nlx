@@ -1,20 +1,42 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
-import { number, shape, string } from 'prop-types'
-import { useHistory, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
+import getServices from '../ServicesPage/get-services'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 import { StyledDrawer } from './index.styles'
 
-const ServiceDetailPage = ({ service, parentUrl }) => {
-  const history = useHistory()
+const ServiceDetailPage = () => {
+  const navigate = useNavigate()
   const { serviceName } = useParams()
+  const location = useLocation()
+  const [service, setService] = useState()
+
+  useEffect(() => {
+    const loadService = async () => {
+      const services = await getServices()
+
+      const activeService = services.find(
+        (service) => service.name === serviceName,
+      )
+
+      setService(activeService)
+    }
+    loadService()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const navigateToParentUrl = () => {
-    history.push(parentUrl)
+    const urlParams = new URLSearchParams(location.search)
+    const query = urlParams.get('q')
+    if (query) {
+      navigate(`/?q=${encodeURIComponent(query)}`)
+    } else {
+      navigate(`/`)
+    }
   }
 
   return (
@@ -45,28 +67,6 @@ const ServiceDetailPage = ({ service, parentUrl }) => {
       </Drawer.Content>
     </StyledDrawer>
   )
-}
-
-ServiceDetailPage.propTypes = {
-  service: shape({
-    apiType: string,
-    contactEmailAddress: string,
-    documentationUrl: string,
-    name: string.isRequired,
-    organization: shape({
-      name: string.isRequired,
-      serialNumber: string.isRequired,
-    }).isRequired,
-    status: string.isRequired,
-    oneTimeCosts: number,
-    monthlyCosts: number,
-    requestCosts: number,
-  }),
-  parentUrl: string,
-}
-
-ServiceDetailPage.defaultProps = {
-  parentUrl: '/directory',
 }
 
 export default ServiceDetailPage

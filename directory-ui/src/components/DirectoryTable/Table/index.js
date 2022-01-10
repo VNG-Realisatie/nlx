@@ -4,7 +4,7 @@
 import React, { createContext, useContext } from 'react'
 import { bool, node, string } from 'prop-types'
 import { Icon } from '@commonground/design-system'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { IconChevronRight } from '../../../icons'
 import {
   StyledTable,
@@ -22,11 +22,11 @@ import {
 const TableContext = createContext(false)
 
 const Tr = ({ children, to, name, ...props }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const withLinks = useContext(TableContext)
 
   if (withLinks) {
-    const handlePress = () => to && history.push(to)
+    const handlePress = () => to && navigate(to)
 
     return (
       <TrAsLink

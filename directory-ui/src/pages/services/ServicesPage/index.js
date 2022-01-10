@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react'
 import debounce from '@commonground/design-system/dist/utils/debounce'
 import { object } from 'prop-types'
-import { Route, useParams } from 'react-router-dom'
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import Spinner from '../../../components/Spinner'
 import ErrorMessage from '../../../components/ErrorMessage'
 import { Container } from '../../../components/Grid'
@@ -18,7 +18,8 @@ import Filters from '../../../components/Filters'
 import DirectoryDetailPage from '../ServiceDetailPage'
 import getServices from './get-services'
 
-const ServicesPage = ({ location, history }) => {
+const ServicesPage = ({ location }) => {
+  const navigate = useNavigate()
   const urlParams = new URLSearchParams(location.search)
   const serviceName = useParams()?.serviceName
 
@@ -34,7 +35,7 @@ const ServicesPage = ({ location, history }) => {
 
   const searchOnChangeDebouncable = (query) => {
     setState({ ...state, debouncedQuery: query })
-    history.push(query ? `?q=${encodeURIComponent(query)}` : '')
+    navigate(query ? `?q=${encodeURIComponent(query)}` : '')
   }
 
   const searchOnChangeDebounced = debounce(searchOnChangeDebouncable, 100)
@@ -102,22 +103,12 @@ const ServicesPage = ({ location, history }) => {
             filterByOnlineServices={!displayOfflineServices}
           />
 
-          <Route
-            path="/:organizationSerialNumber/:serviceName"
-            render={() => {
-              const selectedService = services.find(
-                (service) => service.name === serviceName,
-              )
-              return (
-                <DirectoryDetailPage
-                  service={selectedService}
-                  parentUrl={
-                    state.debouncedQuery && `/?q=${state?.debouncedQuery}`
-                  }
-                />
-              )
-            }}
-          />
+          <Routes>
+            <Route
+              path="/:organizationSerialNumber/:serviceName"
+              element={<DirectoryDetailPage />}
+            />
+          </Routes>
         </Container>
       </Section>
 

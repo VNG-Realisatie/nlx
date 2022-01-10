@@ -40,7 +40,6 @@ const Header = ({ homepage }) => {
             {
               name: 'Home',
               to: '/',
-              exact: true,
               Icon: HomeIcon,
             },
             {

@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import ParticipantRow from './index'
 
@@ -19,11 +20,13 @@ const participantData = {
 
 const renderComponent = ({ participant }) => {
   return renderWithProviders(
-    <table>
-      <tbody>
-        <ParticipantRow participant={participant} />
-      </tbody>
-    </table>,
+    <MemoryRouter>
+      <table>
+        <tbody>
+          <ParticipantRow participant={participant} />
+        </tbody>
+      </table>
+    </MemoryRouter>,
   )
 }
 

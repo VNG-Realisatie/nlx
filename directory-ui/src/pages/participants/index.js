@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from 'react'
 import debounce from '@commonground/design-system/dist/utils/debounce'
-import { object } from 'prop-types'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Spinner from '../../components/Spinner'
 import ErrorMessage from '../../components/ErrorMessage'
 import { Container } from '../../components/Grid'
@@ -16,20 +16,21 @@ import ParticipantsTable from '../../components/ParticipantTable'
 import FiltersParticipant from '../../components/FiltersParticipant'
 import getParticipants from './get-participants'
 
-const ParticipantsPage = ({ location, history }) => {
-  const urlParams = new URLSearchParams(location.search)
+const ParticipantsPage = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [state, setState] = useState({
     loading: true,
     error: null,
     participants: [],
-    query: urlParams.get('q') || '',
-    debouncedQuery: urlParams.get('q') || '',
+    query: new URLSearchParams(location.search).get('q') || '',
+    debouncedQuery: new URLSearchParams(location.search).get('q') || '',
   })
 
   const searchOnChangeDebouncable = (query) => {
     setState({ ...state, debouncedQuery: query })
-    history.push(query ? `?q=${encodeURIComponent(query)}` : '')
+    navigate(query ? `?q=${encodeURIComponent(query)}` : '')
   }
 
   const searchOnChangeDebounced = debounce(searchOnChangeDebouncable, 100)
@@ -90,16 +91,6 @@ const ParticipantsPage = ({ location, history }) => {
       <Footer />
     </>
   )
-}
-
-ParticipantsPage.propTypes = {
-  location: object,
-  history: object,
-}
-
-ParticipantsPage.defaultProps = {
-  location: window.location,
-  history: window.history,
 }
 
 export default ParticipantsPage
