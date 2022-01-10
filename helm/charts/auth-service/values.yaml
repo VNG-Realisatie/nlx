@@ -13,6 +13,9 @@ image:
 
 replicaCount: 1
 
+config:
+  csvFile: ""
+
 tls:
   certificatePEM: ""
   keyPEM: ""
@@ -38,11 +41,3 @@ podSecurityContext:
 service:
   type: ClusterIP
   port: 443
-
-resources: {}
-
-nodeSelector: {}
-
-affinity: {}
-
-tolerations: []

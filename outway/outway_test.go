@@ -56,9 +56,9 @@ func TestNewOutwayExeception(t *testing.T) {
 	)
 
 	tests := map[string]struct {
-		args                *NewOutwayArgs
-		expectedError       error
-		expectedPluginCount int
+		args            *NewOutwayArgs
+		wantError       error
+		wantPluginCount int
 	}{
 		"certificate_without_organization": {
 			args: &NewOutwayArgs{
@@ -68,7 +68,7 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
 			},
-			expectedError: fmt.Errorf("cannot obtain organization name from self cert"),
+			wantError: fmt.Errorf("cannot obtain organization name from self cert"),
 		},
 		"certificate_without_organization_serial_number": {
 			args: &NewOutwayArgs{
@@ -78,7 +78,7 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
 			},
-			expectedError: fmt.Errorf("validation error for subject serial number from cert: cannot be empty"),
+			wantError: fmt.Errorf("validation error for subject serial number from cert: cannot be empty"),
 		},
 		"authorization_service_URL_set_but_no_CA_for_authorization_provided": {
 			args: &NewOutwayArgs{
@@ -88,7 +88,7 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthServiceURL:    "http://auth.nlx.io",
 				AuthCAPath:        "",
 			},
-			expectedError: fmt.Errorf("authorization service URL set but no CA for authorization provided"),
+			wantError: fmt.Errorf("authorization service URL set but no CA for authorization provided"),
 		},
 		"authorization_service_URL_is_not_'https'": {
 			args: &NewOutwayArgs{
@@ -98,7 +98,7 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthServiceURL:    "http://auth.nlx.io",
 				AuthCAPath:        "/path/to",
 			},
-			expectedError: fmt.Errorf("scheme of authorization service URL is not 'https'"),
+			wantError: fmt.Errorf("scheme of authorization service URL is not 'https'"),
 		},
 		"invalid_monitioring_service_address": {
 			args: &NewOutwayArgs{
@@ -108,7 +108,7 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
 			},
-			expectedError: fmt.Errorf("unable to create monitoring service: address required"),
+			wantError: fmt.Errorf("unable to create monitoring service: address required"),
 		},
 		"directory_client_must_be_not_nil": {
 			args: &NewOutwayArgs{
@@ -118,7 +118,7 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthServiceURL:    "https://auth.nlx.io",
 				AuthCAPath:        "../testing/pki/ca-root.pem",
 			},
-			expectedError: fmt.Errorf("directory client must be not nil"),
+			wantError: fmt.Errorf("directory client must be not nil"),
 		},
 		"happy_flow_with_authorization_plugin": {
 			args: &NewOutwayArgs{
@@ -129,8 +129,8 @@ func TestNewOutwayExeception(t *testing.T) {
 				AuthCAPath:        "../testing/pki/ca-root.pem",
 				DirectoryClient:   mockdirectory.NewMockDirectoryClient(gomock.NewController(t)),
 			},
-			expectedError:       nil,
-			expectedPluginCount: 4,
+			wantError:       nil,
+			wantPluginCount: 4,
 		},
 		"happy_flow": {
 			args: &NewOutwayArgs{
@@ -139,8 +139,8 @@ func TestNewOutwayExeception(t *testing.T) {
 				MonitoringAddress: "localhost:8080",
 				DirectoryClient:   mockdirectory.NewMockDirectoryClient(gomock.NewController(t)),
 			},
-			expectedError:       nil,
-			expectedPluginCount: 3,
+			wantError:       nil,
+			wantPluginCount: 3,
 		},
 	}
 
@@ -149,11 +149,11 @@ func TestNewOutwayExeception(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			outway, err := NewOutway(tt.args)
-			if tt.expectedError != nil {
-				assert.Equal(t, tt.expectedError.Error(), err.Error())
+			if tt.wantError != nil {
+				assert.Equal(t, tt.wantError.Error(), err.Error())
 			} else {
 				assert.NotNil(t, outway)
-				assert.Equal(t, tt.expectedPluginCount, len(outway.plugins))
+				assert.Equal(t, tt.wantPluginCount, len(outway.plugins))
 			}
 		})
 	}

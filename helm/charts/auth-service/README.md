@@ -1,7 +1,7 @@
 # auth-service 
 
-This is the Chart for the NLX auth-service. The auth-service  can be used by an Outway 
-to authorize all requests for a service, before routing the request to the targeted API in the NLX network.
+This is the Chart for the NLX auth-service. The auth-service can be used by an Outway 
+to authorize requests for a service, before routing the request to the targeted API in the NLX network.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This chart is created for internal use only.
 
 ## Parameters
 
-The following table lists the configurable parameters of the nlx-auth-service Chart and its default values.
+The following table lists the configurable parameters of the auth-service Chart and its default values.
 
 ### Global parameters
 
@@ -28,6 +28,12 @@ The following table lists the configurable parameters of the nlx-auth-service Ch
 | --------- | ----------- | ------- | -------- |
 | `nameOverride` | Override deployment name | `""` | no | 
 | `fullnameOverride` | Override full deployment name | `""` | no |
+
+### Authservice parameters
+
+| Parameter | Description | Default | Required (yes/no) |
+| --------- | ----------- | ------- | -------- |
+| `config.csv` | The content of the csv containing the users. The auth-service image contains a default users.csv  | `""` | no |
 
 ### Deployment parameters
 
