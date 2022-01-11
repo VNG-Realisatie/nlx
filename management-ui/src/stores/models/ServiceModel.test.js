@@ -149,7 +149,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
 
   const rootStore = new RootStore({ managementApiClient })
   await rootStore.servicesStore.fetchAll()
-  const serviceModel = rootStore.servicesStore.getService('service-a')
+  const serviceModel = rootStore.servicesStore.getByName('service-a')
 
   expect(serviceModel.incomingAccessRequests).toHaveLength(0)
   expect(serviceModel.incomingAccessRequestCount).toBe(1)

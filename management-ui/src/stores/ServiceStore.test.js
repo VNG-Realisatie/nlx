@@ -46,7 +46,7 @@ test('fetch and getting a single service', async () => {
   ).toHaveBeenCalled()
   expect(rootStore.accessGrantStore.fetchForService).toHaveBeenCalled()
 
-  expect(serviceStore.getService('Service A').name).toEqual('Service A')
+  expect(serviceStore.getByName('Service A').name).toEqual('Service A')
 })
 
 test('fetching services', async () => {
@@ -123,7 +123,7 @@ test('removing a service', async () => {
   const serviceStore = rootStore.servicesStore
 
   await serviceStore.fetchAll()
-  expect(serviceStore.getService('Service A')).toBeInstanceOf(ServiceModel)
+  expect(serviceStore.getByName('Service A')).toBeInstanceOf(ServiceModel)
 
   await serviceStore.removeService('Service A')
   expect(managementApiClient.managementDeleteService).toHaveBeenCalledWith({
@@ -151,12 +151,12 @@ test('fetching statistics', async () => {
 
   await serviceStore.fetchAll()
 
-  expect(serviceStore.getService('Service').incomingAccessRequestCount).toBe(0)
+  expect(serviceStore.getByName('Service').incomingAccessRequestCount).toBe(0)
 
   await serviceStore.fetchStats()
 
   expect(
     managementApiClient.managementGetStatisticsOfServices,
   ).toHaveBeenCalledTimes(1)
-  expect(serviceStore.getService('Service').incomingAccessRequestCount).toBe(1)
+  expect(serviceStore.getByName('Service').incomingAccessRequestCount).toBe(1)
 })

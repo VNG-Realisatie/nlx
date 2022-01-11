@@ -22,7 +22,7 @@ const ServiceDetailPage = () => {
   }, [name, serviceStore])
 
   const close = () => navigate('/services')
-  const service = serviceStore.getService(name)
+  const service = serviceStore.getByName(name)
 
   const handleRemove = async () => {
     try {

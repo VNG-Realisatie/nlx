@@ -56,7 +56,7 @@ test('polling with access grant section collapsed', async () => {
   const { getByTestId, findByTestId } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessGrantSection
-        service={rootStore.servicesStore.getService('service-a')}
+        service={rootStore.servicesStore.getByName('service-a')}
       />
     </StoreProvider>,
   )
@@ -106,7 +106,7 @@ test('polling with access grant section expanded', async () => {
   await act(async () => {
     await rootStore.servicesStore.fetch({ name: 'service-a' })
   })
-  const service = rootStore.servicesStore.getService('service-a')
+  const service = rootStore.servicesStore.getByName('service-a')
 
   const { getByText, queryByText, findByText } = renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>

@@ -30,7 +30,7 @@ class ServiceStore {
         name,
       })
 
-      let service = this.getService(name)
+      let service = this.getByName(name)
       if (!service) {
         service = new ServiceModel({
           servicesStore: this,
@@ -82,7 +82,7 @@ class ServiceStore {
     if (stats.length < 1) return
 
     stats.forEach((statistic) => {
-      const service = this.getService(statistic.name)
+      const service = this.getByName(statistic.name)
       if (
         service &&
         service.incomingAccessRequestCount !==
@@ -95,9 +95,8 @@ class ServiceStore {
     })
   }).bind(this)
 
-  // TODO: rename to getByName to be consistent with outways store
-  getService = (serviceName) => {
-    return this.services.find((service) => service.name === serviceName)
+  getByName = (name) => {
+    return this.services.find((service) => service.name === name)
   }
 
   create = flow(function* create({
@@ -161,7 +160,7 @@ class ServiceStore {
         throw new Error('Name required to update service')
       }
 
-      const service = this.getService(name)
+      const service = this.getByName(name)
 
       if (!service) {
         throw new Error('Can not edit a service that does not exist')
@@ -193,7 +192,7 @@ class ServiceStore {
   }).bind(this)
 
   removeService = flow(function* removeService(name) {
-    const service = this.getService(name)
+    const service = this.getByName(name)
     const index = this.services.indexOf(service)
 
     yield this._managementApiClient.managementDeleteService({

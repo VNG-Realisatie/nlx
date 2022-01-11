@@ -186,7 +186,7 @@ describe('have the access grants been changed for a service', () => {
       })
 
     await servicesStore.fetch({ name: 'service-a' })
-    const service = servicesStore.getService('service-a')
+    const service = servicesStore.getByName('service-a')
 
     expect(await accessGrantStore.haveChangedForService(service)).toEqual(true)
   })
@@ -202,7 +202,7 @@ describe('have the access grants been changed for a service', () => {
       })
 
     await servicesStore.fetch({ name: 'service-a' })
-    const service = servicesStore.getService('service-a')
+    const service = servicesStore.getByName('service-a')
 
     expect(await accessGrantStore.haveChangedForService(service)).toEqual(true)
   })
@@ -215,7 +215,7 @@ describe('have the access grants been changed for a service', () => {
       })
 
     await servicesStore.fetch({ name: 'service-a' })
-    const service = servicesStore.getService('service-a')
+    const service = servicesStore.getByName('service-a')
 
     expect(await accessGrantStore.haveChangedForService(service)).toEqual(false)
   })

@@ -17,21 +17,21 @@ import { StyledUpdatedError } from './index.styles'
 const EditServicePage = () => {
   const { name } = useParams()
   const { t } = useTranslation()
-  const { error, isInitiallyFetched, getService, update } = useServiceStore()
+  const serviceStore = useServiceStore()
   const [updateError, setUpdatedError] = useState(null)
   const navigate = useNavigate()
   const [service, setService] = useState(null)
 
   useEffect(() => {
-    if (isInitiallyFetched) {
-      setService(getService(name))
+    if (serviceStore.isInitiallyFetched) {
+      setService(serviceStore.getByName(name))
     }
-  }, [isInitiallyFetched]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [serviceStore.isInitiallyFetched]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const submitService = async (formData) => {
     try {
       setUpdatedError(null)
-      await update(formData)
+      await serviceStore.update(formData)
 
       navigate(`/services/${service.name}?lastAction=${serviceActions.EDITED}`)
     } catch (err) {
@@ -47,9 +47,9 @@ const EditServicePage = () => {
         title={t('Edit service')}
       />
 
-      {!isInitiallyFetched ? (
+      {!serviceStore.isInitiallyFetched ? (
         <LoadingMessage />
-      ) : error ? (
+      ) : serviceStore.error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the service', { name })}
         </Alert>

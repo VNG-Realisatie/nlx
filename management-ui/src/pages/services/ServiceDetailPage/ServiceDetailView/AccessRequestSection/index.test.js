@@ -51,7 +51,7 @@ test('polling with access request section collapsed', async () => {
   const { getByTestId, findByTestId } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <AccessRequestsSection
-        service={rootStore.servicesStore.getService('service-a')}
+        service={rootStore.servicesStore.getByName('service-a')}
         onApproveOrRejectCallbackHandler={() => {}}
       />
     </StoreProvider>,
@@ -108,7 +108,7 @@ test('polling with access request section expanded', async () => {
   await act(async () => {
     await rootStore.servicesStore.fetch({ name: 'service-a' })
   })
-  const service = rootStore.servicesStore.getService('service-a')
+  const service = rootStore.servicesStore.getByName('service-a')
 
   const { getByText, queryByText, findByText } = renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
