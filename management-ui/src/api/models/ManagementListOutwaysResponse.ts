@@ -18,7 +18,7 @@ import {
     ManagementOutwayFromJSON,
     ManagementOutwayFromJSONTyped,
     ManagementOutwayToJSON,
-} from './';
+} from './ManagementOutway';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListOutwaysResponseToJSON(value?: ManagementListOutway
         'outways': value.outways === undefined ? undefined : ((value.outways as Array<any>).map(ManagementOutwayToJSON)),
     };
 }
-
 

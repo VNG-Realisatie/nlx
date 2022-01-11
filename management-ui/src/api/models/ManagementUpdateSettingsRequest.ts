@@ -62,4 +62,3 @@ export function ManagementUpdateSettingsRequestToJSON(value?: ManagementUpdateSe
     };
 }
 
-

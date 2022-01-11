@@ -18,7 +18,7 @@ import {
     ManagementInwayServiceFromJSON,
     ManagementInwayServiceFromJSONTyped,
     ManagementInwayServiceToJSON,
-} from './';
+} from './ManagementInwayService';
 
 /**
  * 
@@ -100,5 +100,4 @@ export function ManagementInwayToJSON(value?: ManagementInway | null): any {
         'ipAddress': value.ipAddress,
     };
 }
-
 

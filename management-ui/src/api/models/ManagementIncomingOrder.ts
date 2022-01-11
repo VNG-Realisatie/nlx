@@ -18,7 +18,7 @@ import {
     ManagementOrderServiceFromJSON,
     ManagementOrderServiceFromJSONTyped,
     ManagementOrderServiceToJSON,
-} from './';
+} from './ManagementOrderService';
 
 /**
  * 
@@ -108,5 +108,4 @@ export function ManagementIncomingOrderToJSON(value?: ManagementIncomingOrder | 
         'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
     };
 }
-
 

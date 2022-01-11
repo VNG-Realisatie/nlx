@@ -18,23 +18,23 @@
  * @enum {string}
  */
 export enum AuditLogRecordActionType {
-    LOGINSUCCESS = 'loginSuccess',
-    LOGINFAIL = 'loginFail',
+    LOGIN_SUCCESS = 'loginSuccess',
+    LOGIN_FAIL = 'loginFail',
     LOGOUT = 'logout',
-    INCOMINGACCESSREQUESTACCEPT = 'incomingAccessRequestAccept',
-    INCOMINGACCESSREQUESTREJECT = 'incomingAccessRequestReject',
-    ACCESSGRANTREVOKE = 'accessGrantRevoke',
-    OUTGOINGACCESSREQUESTCREATE = 'outgoingAccessRequestCreate',
-    OUTGOINGACCESSREQUESTFAIL = 'outgoingAccessRequestFail',
-    SERVICECREATE = 'serviceCreate',
-    SERVICEUPDATE = 'serviceUpdate',
-    SERVICEDELETE = 'serviceDelete',
-    ORGANIZATIONSETTINGSUPDATE = 'organizationSettingsUpdate',
-    ORDERCREATE = 'orderCreate',
-    ORDEROUTGOINGREVOKE = 'orderOutgoingRevoke',
-    ORDERINCOMINGREVOKE = 'orderIncomingRevoke',
-    INWAYDELETE = 'inwayDelete',
-    ORDEROUTGOINGUPDATE = 'orderOutgoingUpdate'
+    INCOMING_ACCESS_REQUEST_ACCEPT = 'incomingAccessRequestAccept',
+    INCOMING_ACCESS_REQUEST_REJECT = 'incomingAccessRequestReject',
+    ACCESS_GRANT_REVOKE = 'accessGrantRevoke',
+    OUTGOING_ACCESS_REQUEST_CREATE = 'outgoingAccessRequestCreate',
+    OUTGOING_ACCESS_REQUEST_FAIL = 'outgoingAccessRequestFail',
+    SERVICE_CREATE = 'serviceCreate',
+    SERVICE_UPDATE = 'serviceUpdate',
+    SERVICE_DELETE = 'serviceDelete',
+    ORGANIZATION_SETTINGS_UPDATE = 'organizationSettingsUpdate',
+    ORDER_CREATE = 'orderCreate',
+    ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke',
+    ORDER_INCOMING_REVOKE = 'orderIncomingRevoke',
+    INWAY_DELETE = 'inwayDelete',
+    ORDER_OUTGOING_UPDATE = 'orderOutgoingUpdate'
 }
 
 export function AuditLogRecordActionTypeFromJSON(json: any): AuditLogRecordActionType {

@@ -18,7 +18,7 @@ import {
     ManagementDirectoryServiceFromJSON,
     ManagementDirectoryServiceFromJSONTyped,
     ManagementDirectoryServiceToJSON,
-} from './';
+} from './ManagementDirectoryService';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementDirectoryListServicesResponseToJSON(value?: Management
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementDirectoryServiceToJSON)),
     };
 }
-
 

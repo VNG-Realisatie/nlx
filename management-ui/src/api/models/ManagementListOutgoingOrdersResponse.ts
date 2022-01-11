@@ -18,7 +18,7 @@ import {
     ManagementOutgoingOrderFromJSON,
     ManagementOutgoingOrderFromJSONTyped,
     ManagementOutgoingOrderToJSON,
-} from './';
+} from './ManagementOutgoingOrder';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListOutgoingOrdersResponseToJSON(value?: ManagementLis
         'orders': value.orders === undefined ? undefined : ((value.orders as Array<any>).map(ManagementOutgoingOrderToJSON)),
     };
 }
-
 

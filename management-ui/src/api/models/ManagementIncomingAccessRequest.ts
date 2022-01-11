@@ -18,11 +18,13 @@ import {
     ManagementAccessRequestStateFromJSON,
     ManagementAccessRequestStateFromJSONTyped,
     ManagementAccessRequestStateToJSON,
+} from './ManagementAccessRequestState';
+import {
     ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
-} from './';
+} from './ManagementOrganization';
 
 /**
  * 
@@ -104,5 +106,4 @@ export function ManagementIncomingAccessRequestToJSON(value?: ManagementIncoming
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
     };
 }
-
 

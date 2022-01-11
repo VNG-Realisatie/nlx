@@ -18,7 +18,7 @@ import {
     ServiceAuthorizationSettingsFromJSON,
     ServiceAuthorizationSettingsFromJSONTyped,
     ServiceAuthorizationSettingsToJSON,
-} from './';
+} from './ServiceAuthorizationSettings';
 
 /**
  * 
@@ -156,5 +156,4 @@ export function ManagementListServicesResponseServiceToJSON(value?: ManagementLi
         'requestCosts': value.requestCosts,
     };
 }
-
 

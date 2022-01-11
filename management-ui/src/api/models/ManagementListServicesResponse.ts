@@ -18,7 +18,7 @@ import {
     ManagementListServicesResponseServiceFromJSON,
     ManagementListServicesResponseServiceFromJSONTyped,
     ManagementListServicesResponseServiceToJSON,
-} from './';
+} from './ManagementListServicesResponseService';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListServicesResponseToJSON(value?: ManagementListServi
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementListServicesResponseServiceToJSON)),
     };
 }
-
 

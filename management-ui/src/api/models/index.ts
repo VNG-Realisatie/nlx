@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 export * from './AuditLogRecordActionType';
 export * from './AuthorizationSettingsAuthorization';
 export * from './DirectoryServiceState';

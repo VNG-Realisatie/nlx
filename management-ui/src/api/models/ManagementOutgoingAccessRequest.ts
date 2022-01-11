@@ -18,15 +18,19 @@ import {
     ManagementAccessRequestStateFromJSON,
     ManagementAccessRequestStateFromJSONTyped,
     ManagementAccessRequestStateToJSON,
+} from './ManagementAccessRequestState';
+import {
     ManagementErrorDetails,
     ManagementErrorDetailsFromJSON,
     ManagementErrorDetailsFromJSONTyped,
     ManagementErrorDetailsToJSON,
+} from './ManagementErrorDetails';
+import {
     ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
-} from './';
+} from './ManagementOrganization';
 
 /**
  * 
@@ -116,5 +120,4 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
         'errorDetails': ManagementErrorDetailsToJSON(value.errorDetails),
     };
 }
-
 

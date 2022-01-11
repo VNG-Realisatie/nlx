@@ -18,15 +18,19 @@ import {
     AuditLogRecordActionTypeFromJSON,
     AuditLogRecordActionTypeFromJSONTyped,
     AuditLogRecordActionTypeToJSON,
+} from './AuditLogRecordActionType';
+import {
     ManagementAuditLogRecordMetadata,
     ManagementAuditLogRecordMetadataFromJSON,
     ManagementAuditLogRecordMetadataFromJSONTyped,
     ManagementAuditLogRecordMetadataToJSON,
+} from './ManagementAuditLogRecordMetadata';
+import {
     ManagementAuditLogRecordService,
     ManagementAuditLogRecordServiceFromJSON,
     ManagementAuditLogRecordServiceFromJSONTyped,
     ManagementAuditLogRecordServiceToJSON,
-} from './';
+} from './ManagementAuditLogRecordService';
 
 /**
  * 
@@ -140,5 +144,4 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         'data': ManagementAuditLogRecordMetadataToJSON(value.data),
     };
 }
-
 

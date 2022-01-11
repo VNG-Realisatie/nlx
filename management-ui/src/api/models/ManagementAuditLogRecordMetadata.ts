@@ -78,4 +78,3 @@ export function ManagementAuditLogRecordMetadataToJSON(value?: ManagementAuditLo
     };
 }
 
-

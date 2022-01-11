@@ -18,7 +18,7 @@ import {
     ManagementInwayFromJSON,
     ManagementInwayFromJSONTyped,
     ManagementInwayToJSON,
-} from './';
+} from './ManagementInway';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListInwaysResponseToJSON(value?: ManagementListInwaysR
         'inways': value.inways === undefined ? undefined : ((value.inways as Array<any>).map(ManagementInwayToJSON)),
     };
 }
-
 

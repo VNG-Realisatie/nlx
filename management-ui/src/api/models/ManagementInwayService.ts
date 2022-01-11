@@ -54,4 +54,3 @@ export function ManagementInwayServiceToJSON(value?: ManagementInwayService | nu
     };
 }
 
-

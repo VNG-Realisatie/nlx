@@ -78,4 +78,3 @@ export function ManagementOutwayToJSON(value?: ManagementOutway | null): any {
     };
 }
 
-

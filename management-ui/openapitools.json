@@ -2,9 +2,9 @@
   "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
   "spaces": 2,
   "generator-cli": {
-    "version": "4.3.1",
+    "version": "5.3.1",
     "generators": {
-      "mangement-api": {
+      "management-api": {
         "generatorName": "typescript-fetch",
         "output": "#{cwd}/src/api",
         "glob": "../management-api/api/management.swagger.json",

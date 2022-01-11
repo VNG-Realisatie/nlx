@@ -62,4 +62,3 @@ export function ManagementSettingsToJSON(value?: ManagementSettings | null): any
     };
 }
 
-

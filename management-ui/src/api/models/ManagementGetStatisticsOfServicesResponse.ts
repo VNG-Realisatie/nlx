@@ -18,7 +18,7 @@ import {
     ManagementServiceStatisticsFromJSON,
     ManagementServiceStatisticsFromJSONTyped,
     ManagementServiceStatisticsToJSON,
-} from './';
+} from './ManagementServiceStatistics';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementGetStatisticsOfServicesResponseToJSON(value?: Manageme
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementServiceStatisticsToJSON)),
     };
 }
-
 

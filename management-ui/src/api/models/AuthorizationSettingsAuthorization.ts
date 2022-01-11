@@ -18,7 +18,7 @@ import {
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
-} from './';
+} from './ManagementOrganization';
 
 /**
  * 
@@ -76,5 +76,4 @@ export function AuthorizationSettingsAuthorizationToJSON(value?: AuthorizationSe
         'publicKeyPEM': value.publicKeyPEM,
     };
 }
-
 

@@ -18,7 +18,7 @@ import {
     ManagementAuditLogRecordFromJSON,
     ManagementAuditLogRecordFromJSONTyped,
     ManagementAuditLogRecordToJSON,
-} from './';
+} from './ManagementAuditLogRecord';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListAuditLogsResponseToJSON(value?: ManagementListAudi
         'auditLogs': value.auditLogs === undefined ? undefined : ((value.auditLogs as Array<any>).map(ManagementAuditLogRecordToJSON)),
     };
 }
-
 

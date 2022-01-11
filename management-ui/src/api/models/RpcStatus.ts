@@ -18,7 +18,7 @@ import {
     ProtobufAnyFromJSON,
     ProtobufAnyFromJSONTyped,
     ProtobufAnyToJSON,
-} from './';
+} from './ProtobufAny';
 
 /**
  * 
@@ -76,5 +76,4 @@ export function RpcStatusToJSON(value?: RpcStatus | null): any {
         'details': value.details === undefined ? undefined : ((value.details as Array<any>).map(ProtobufAnyToJSON)),
     };
 }
-
 

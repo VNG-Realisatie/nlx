@@ -18,7 +18,7 @@ import {
     ManagementIncomingAccessRequestFromJSON,
     ManagementIncomingAccessRequestFromJSONTyped,
     ManagementIncomingAccessRequestToJSON,
-} from './';
+} from './ManagementIncomingAccessRequest';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListIncomingAccessRequestsResponseToJSON(value?: Manag
         'accessRequests': value.accessRequests === undefined ? undefined : ((value.accessRequests as Array<any>).map(ManagementIncomingAccessRequestToJSON)),
     };
 }
-
 

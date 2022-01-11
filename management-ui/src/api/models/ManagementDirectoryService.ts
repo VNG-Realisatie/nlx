@@ -18,19 +18,25 @@ import {
     DirectoryServiceStateFromJSON,
     DirectoryServiceStateFromJSONTyped,
     DirectoryServiceStateToJSON,
+} from './DirectoryServiceState';
+import {
     ManagementAccessProof,
     ManagementAccessProofFromJSON,
     ManagementAccessProofFromJSONTyped,
     ManagementAccessProofToJSON,
+} from './ManagementAccessProof';
+import {
     ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
+} from './ManagementOrganization';
+import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestFromJSONTyped,
     ManagementOutgoingAccessRequestToJSON,
-} from './';
+} from './ManagementOutgoingAccessRequest';
 
 /**
  * 
@@ -152,5 +158,4 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
         'requestCosts': value.requestCosts,
     };
 }
-
 

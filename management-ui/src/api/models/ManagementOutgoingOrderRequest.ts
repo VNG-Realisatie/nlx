@@ -18,7 +18,7 @@ import {
     ManagementOrderServiceFromJSON,
     ManagementOrderServiceFromJSONTyped,
     ManagementOrderServiceToJSON,
-} from './';
+} from './ManagementOrderService';
 
 /**
  * 
@@ -108,5 +108,4 @@ export function ManagementOutgoingOrderRequestToJSON(value?: ManagementOutgoingO
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
     };
 }
-
 

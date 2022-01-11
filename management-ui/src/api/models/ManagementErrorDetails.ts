@@ -18,7 +18,7 @@ import {
     ManagementErrorCodeFromJSON,
     ManagementErrorCodeFromJSONTyped,
     ManagementErrorCodeToJSON,
-} from './';
+} from './ManagementErrorCode';
 
 /**
  * 
@@ -76,5 +76,4 @@ export function ManagementErrorDetailsToJSON(value?: ManagementErrorDetails | nu
         'stackTrace': value.stackTrace,
     };
 }
-
 

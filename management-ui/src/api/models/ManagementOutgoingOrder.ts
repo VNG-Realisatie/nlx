@@ -18,7 +18,7 @@ import {
     ManagementOrderServiceFromJSON,
     ManagementOrderServiceFromJSONTyped,
     ManagementOrderServiceToJSON,
-} from './';
+} from './ManagementOrderService';
 
 /**
  * 
@@ -116,5 +116,4 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         'publicKeyPem': value.publicKeyPem,
     };
 }
-
 

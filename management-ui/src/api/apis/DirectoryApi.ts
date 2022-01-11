@@ -46,7 +46,7 @@ export class DirectoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async directoryGetOrganizationServiceRaw(requestParameters: DirectoryGetOrganizationServiceRequest): Promise<runtime.ApiResponse<ManagementDirectoryService>> {
+    async directoryGetOrganizationServiceRaw(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementDirectoryService>> {
         if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
             throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling directoryGetOrganizationService.');
         }
@@ -55,7 +55,7 @@ export class DirectoryApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling directoryGetOrganizationService.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -64,22 +64,22 @@ export class DirectoryApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementDirectoryServiceFromJSON(jsonValue));
     }
 
     /**
      */
-    async directoryGetOrganizationService(requestParameters: DirectoryGetOrganizationServiceRequest): Promise<ManagementDirectoryService> {
-        const response = await this.directoryGetOrganizationServiceRaw(requestParameters);
+    async directoryGetOrganizationService(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit): Promise<ManagementDirectoryService> {
+        const response = await this.directoryGetOrganizationServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async directoryListServicesRaw(): Promise<runtime.ApiResponse<ManagementDirectoryListServicesResponse>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async directoryListServicesRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementDirectoryListServicesResponse>> {
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -88,21 +88,21 @@ export class DirectoryApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementDirectoryListServicesResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async directoryListServices(): Promise<ManagementDirectoryListServicesResponse> {
-        const response = await this.directoryListServicesRaw();
+    async directoryListServices(initOverrides?: RequestInit): Promise<ManagementDirectoryListServicesResponse> {
+        const response = await this.directoryListServicesRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async directoryRequestAccessToServiceRaw(requestParameters: DirectoryRequestAccessToServiceRequest): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
+    async directoryRequestAccessToServiceRaw(requestParameters: DirectoryRequestAccessToServiceRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
         if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
             throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling directoryRequestAccessToService.');
         }
@@ -111,7 +111,7 @@ export class DirectoryApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling directoryRequestAccessToService.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -120,15 +120,15 @@ export class DirectoryApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementOutgoingAccessRequestFromJSON(jsonValue));
     }
 
     /**
      */
-    async directoryRequestAccessToService(requestParameters: DirectoryRequestAccessToServiceRequest): Promise<ManagementOutgoingAccessRequest> {
-        const response = await this.directoryRequestAccessToServiceRaw(requestParameters);
+    async directoryRequestAccessToService(requestParameters: DirectoryRequestAccessToServiceRequest, initOverrides?: RequestInit): Promise<ManagementOutgoingAccessRequest> {
+        const response = await this.directoryRequestAccessToServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

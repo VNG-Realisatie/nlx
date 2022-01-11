@@ -18,7 +18,7 @@ import {
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
-} from './';
+} from './ManagementOrganization';
 
 /**
  * 
@@ -108,5 +108,4 @@ export function ManagementAccessGrantToJSON(value?: ManagementAccessGrant | null
         'accessRequestId': value.accessRequestId,
     };
 }
-
 

@@ -18,7 +18,7 @@ import {
     AuthorizationSettingsAuthorizationFromJSON,
     AuthorizationSettingsAuthorizationFromJSONTyped,
     AuthorizationSettingsAuthorizationToJSON,
-} from './';
+} from './AuthorizationSettingsAuthorization';
 
 /**
  * 
@@ -68,5 +68,4 @@ export function ServiceAuthorizationSettingsToJSON(value?: ServiceAuthorizationS
         'authorizations': value.authorizations === undefined ? undefined : ((value.authorizations as Array<any>).map(AuthorizationSettingsAuthorizationToJSON)),
     };
 }
-
 

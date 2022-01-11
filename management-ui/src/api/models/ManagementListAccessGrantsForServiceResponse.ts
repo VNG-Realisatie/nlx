@@ -18,7 +18,7 @@ import {
     ManagementAccessGrantFromJSON,
     ManagementAccessGrantFromJSONTyped,
     ManagementAccessGrantToJSON,
-} from './';
+} from './ManagementAccessGrant';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementListAccessGrantsForServiceResponseToJSON(value?: Manag
         'accessGrants': value.accessGrants === undefined ? undefined : ((value.accessGrants as Array<any>).map(ManagementAccessGrantToJSON)),
     };
 }
-
 

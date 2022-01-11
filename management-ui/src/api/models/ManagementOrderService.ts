@@ -18,7 +18,7 @@ import {
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
-} from './';
+} from './ManagementOrganization';
 
 /**
  * 
@@ -68,5 +68,4 @@ export function ManagementOrderServiceToJSON(value?: ManagementOrderService | nu
         'service': value.service,
     };
 }
-
 
