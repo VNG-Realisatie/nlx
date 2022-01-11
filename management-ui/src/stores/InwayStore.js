@@ -44,7 +44,7 @@ class InwayStore {
     const inwayData = yield this._managementApiClient.managementGetInway({
       name,
     })
-    let inway = this.getInway({ name })
+    let inway = this.getByName(name)
 
     if (!inway) {
       inway = this._updateFromServer(inwayData)
@@ -55,13 +55,12 @@ class InwayStore {
     return this._updateFromServer(inwayData)
   }).bind(this)
 
-  // TODO: rename to getByName to be consistent with the outwaystore
-  getInway = ({ name }) => {
+  getByName = (name) => {
     return this.inways.find((inway) => inway.name === name)
   }
 
   removeInway = flow(function* removeInway(name) {
-    const inway = this.getInway(name)
+    const inway = this.getByName(name)
     const index = this.inways.indexOf(inway)
 
     yield this._managementApiClient.managementDeleteInway({
@@ -73,9 +72,7 @@ class InwayStore {
   }).bind(this)
 
   _updateFromServer(inwayData) {
-    const cachedInway = this.getInway({
-      name: inwayData.name,
-    })
+    const cachedInway = this.getByName(inwayData.name)
 
     if (cachedInway) {
       cachedInway.with(inwayData)

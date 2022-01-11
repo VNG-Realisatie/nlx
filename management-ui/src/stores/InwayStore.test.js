@@ -89,9 +89,9 @@ test('getting an inway', async () => {
 
   await inwayStore.fetchInways()
 
-  let selectedInway = inwayStore.getInway({ name: 'non-existing-inway-name' })
+  let selectedInway = inwayStore.getByName('non-existing-inway-name')
   expect(selectedInway).toBeUndefined()
 
-  selectedInway = inwayStore.getInway({ name: 'Inway A' })
+  selectedInway = inwayStore.getByName('Inway A')
   expect(selectedInway.name).toEqual('Inway A')
 })

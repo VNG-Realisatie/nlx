@@ -18,7 +18,7 @@ const InwayDetailPage: React.FC = () => {
   const { showToast } = useContext(ToasterContext)
 
   const close = () => navigate('/inways-and-outways/inways')
-  const inway = inwayStore.getInway({ name })
+  const inway = inwayStore.getByName(name)
 
   const handleRemoveInway = async () => {
     try {
