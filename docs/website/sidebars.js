@@ -51,6 +51,7 @@ module.exports = {
             'try-nlx/helm/nlx-outway',
             'try-nlx/helm/sample-api',
             'try-nlx/helm/access-api',
+            'try-nlx/helm/transaction-log',
             'try-nlx/helm/finish',
           ],
         },
@@ -64,7 +65,6 @@ module.exports = {
       items: [
         'nlx-in-production/introduction',
         'nlx-in-production/request-a-production-cert',
-        'nlx-in-production/enable-transaction-logs',
         'nlx-in-production/enable-pricing',
         'nlx-in-production/setup-authorization',
         'nlx-in-production/new-releases',

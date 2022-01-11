@@ -129,15 +129,14 @@ test('the /audit-log route renders the AuditLogPage', () => {
 })
 
 test('the /transaction-log route renders the TransactionLogPage', () => {
-  const history = createMemoryHistory({ initialEntries: ['/transaction-log'] })
-  const { getByTestId } = renderWithProviders(
-    <Router history={history}>
+  renderWithProviders(
+    <MemoryRouter initialEntries={['/transaction-log']}>
       <UserContextProvider user={{ id: '42' }}>
         <Routes />
       </UserContextProvider>
-    </Router>,
+    </MemoryRouter>,
   )
-  expect(getByTestId('transaction-log-page')).toBeInTheDocument()
+  expect(screen.getByTestId('transaction-log-page')).toBeInTheDocument()
 })
 
 test('the /finances route renders the FinancePage', () => {

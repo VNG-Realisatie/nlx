@@ -125,9 +125,14 @@ The response of the `curl` command should look similar to the following output.
 
 Congratulations, you have successfully provided an API on the NLX network! 🎉
 
+## Transaction log
+
+The inway and the Outway are able to log metadata of the requests they process in the transaction log. The transaction log is a optional feature that is enabled in this guide. You can view the transaction log in NLX Management. Open a browser, navigate to http://localhost:8080 and log in. Now click on the `Transactie logs` button in the menu. You should now see several entries for the request you just made.
+
 ## In sum
 
 You have provided your API to the NLX network. In this part, you have:
 
 - Created a service for the demo API
 - Used your outway to consume your own inway API.
+- Viewed the transaction logs in NLX Management

@@ -1,0 +1,14 @@
+txlogdb:
+  hostname: postgres
+  database: txlog
+  port: 5432
+  username: postgres
+  password: <postgres-password>
+  sslMode: disable
+tls: 
+  rootCertificatePEM: | 
+    -----BEGIN CERTIFICATE-----
+      <file: ca.crt>
+    -----END CERTIFICATE-----
+  existingSecret: txlog-api-internal-tls
+  

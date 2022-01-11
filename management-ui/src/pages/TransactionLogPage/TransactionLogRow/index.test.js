@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import { DIRECTION_IN } from '../../../stores/models/TransactionLogModel'
 import TransactionLogRow from './index'
@@ -22,7 +23,9 @@ test('transaction row should render expected data', () => {
   const { queryByText, rerender } = renderWithProviders(
     <table>
       <tbody>
-        <TransactionLogRow transactionLog={transactionLogRecord} />
+        <MemoryRouter>
+          <TransactionLogRow transactionLog={transactionLogRecord} />
+        </MemoryRouter>
       </tbody>
     </table>,
   )
@@ -40,7 +43,9 @@ test('transaction row should render expected data', () => {
   rerender(
     <table>
       <tbody>
-        <TransactionLogRow transactionLog={transactionLogWithOrder} />
+        <MemoryRouter>
+          <TransactionLogRow transactionLog={transactionLogWithOrder} />
+        </MemoryRouter>
       </tbody>
     </table>,
   )

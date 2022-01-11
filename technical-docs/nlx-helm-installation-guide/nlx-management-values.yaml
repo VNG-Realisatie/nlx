@@ -6,6 +6,7 @@ image:
 config:
   directoryHostname: directory-api.demo.nlx.io
   enableBasicAuth: true
+ #txlogAPIAddress:  txlog-api-nlx-txlog-api:8443
  
 ingress:
   enabled: true
