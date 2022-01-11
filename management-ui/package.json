@@ -36,7 +36,7 @@
     "@commonground/design-system": "19.0.10",
     "@commonground/eslint-config-cra-standard-prettier": "6.1.2",
     "@fontsource/source-sans-pro": "4.5.1",
-    "@openapitools/openapi-generator-cli": "2.4.23",
+    "@openapitools/openapi-generator-cli": "2.4.24",
     "@testing-library/jest-dom": "5.16.1",
     "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
