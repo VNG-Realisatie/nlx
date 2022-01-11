@@ -9,7 +9,7 @@
     "@commonground/eslint-config": "5.0.1",
     "@testing-library/cypress": "8.0.2",
     "axe-core": "4.3.5",
-    "cypress": "9.2.0",
+    "cypress": "9.2.1",
     "cypress-axe": "0.14.0"
   }
 }
