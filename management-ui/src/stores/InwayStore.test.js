@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import { ManagementApi } from '../api'
 import InwayModel from '../stores/models/InwayModel'
 import InwayStore from './InwayStore'
@@ -94,4 +95,44 @@ test('getting an inway', async () => {
 
   selectedInway = inwayStore.getByName('Inway A')
   expect(selectedInway.name).toEqual('Inway A')
+})
+
+test('removing an inway', async () => {
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListInways = jest
+    .fn()
+    .mockResolvedValueOnce({
+      inways: [{ name: 'Inway A' }, { name: 'Inway B' }, { name: 'Inway C' }],
+    })
+    .mockResolvedValue({
+      inways: [{ name: 'Inway A' }, { name: 'Inway C' }],
+    })
+
+  managementApiClient.managementDeleteInway = jest.fn().mockResolvedValue({})
+
+  const inwayStore = new InwayStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  await inwayStore.fetchInways()
+  jest.spyOn(inwayStore, 'fetchInways')
+
+  expect(inwayStore.getByName('Inway A')).toBeDefined()
+  expect(inwayStore.getByName('Inway B')).toBeDefined()
+  expect(inwayStore.getByName('Inway C')).toBeDefined()
+
+  await inwayStore.removeInway('Inway B')
+
+  expect(managementApiClient.managementDeleteInway).toHaveBeenCalledWith({
+    name: 'Inway B',
+  })
+
+  expect(inwayStore.fetchInways).toHaveBeenCalledTimes(1)
+  expect(inwayStore.getByName('Inway A')).toBeDefined()
+  expect(inwayStore.getByName('Inway B')).toBeUndefined()
+  expect(inwayStore.getByName('Inway C')).toBeDefined()
 })
