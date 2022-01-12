@@ -4,6 +4,6 @@ dependencies:
   version: 2.13.0
 - name: parkeerrechten-admin
   repository: file://../../charts/parkeerrechten-admin
-  version: 0.120.0
-digest: sha256:52790c65b69520885112ff87843344a713e6bf1e04764b28726eda83c5c9790a
-generated: "2021-12-22T12:05:54.210851113Z"
+  version: 0.121.0
+digest: sha256:818b885e63c47c8d1819683566d46d39f92217437ee8261e2fdf229ea30f7930
+generated: "2022-01-12T12:36:00.434300174Z"

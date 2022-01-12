@@ -1,3 +1,23 @@
+# [0.121.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.120.0...v0.121.0) (2022-01-12)
+
+
+### Bug Fixes
+
+* downgrade Node v17.x to v16.x to prevent OpenSSL issues ([dbb046e](https://gitlab.com/commonground/nlx/nlx/commit/dbb046eba15ba22d6c84e6f7ca7b592203eec2ee)), closes [/github.com/reactjs/reactjs.org/issues/4073#issuecomment-1010758303](https://gitlab.com//github.com/reactjs/reactjs.org/issues/4073/issues/issuecomment-1010758303)
+* **outway:** correctly add authorization plugin ([763bab4](https://gitlab.com/commonground/nlx/nlx/commit/763bab4ce8691d0e812d38d88a3875ea30f276f1))
+
+
+### Features
+
+* **management:** add transactionlog to the user interface ([805269d](https://gitlab.com/commonground/nlx/nlx/commit/805269d660aad1f557ec82e9d66b89571fd8780b))
+* **management:** show message when transaction log api is disabled ([74f9993](https://gitlab.com/commonground/nlx/nlx/commit/74f999389ab61c2c7e20e301e4fd93a8e4be6934))
+* **txlog:** add txlog api and add txlog client to management api ([2941495](https://gitlab.com/commonground/nlx/nlx/commit/2941495b5069d6096ee89140b271e5c99a83a439))
+
+
+### Performance Improvements
+
+* **management:** prevent useless rerender of the Avatar component ([e6f7c1f](https://gitlab.com/commonground/nlx/nlx/commit/e6f7c1f84e2f386965907224c6b7001cbd512f32))
+
 # [0.120.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.119.0...v0.120.0) (2021-12-22)
 
 
