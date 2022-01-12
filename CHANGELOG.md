@@ -1,3 +1,10 @@
+## [0.121.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.121.0...v0.121.1) (2022-01-12)
+
+
+### Bug Fixes
+
+* **management:** set txlog basic auth headers ([3591a05](https://gitlab.com/commonground/nlx/nlx/commit/3591a052ad8d0a6c1f133df42b3a14fca61c66e8))
+
 # [0.121.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.120.0...v0.121.0) (2022-01-12)
 
 
