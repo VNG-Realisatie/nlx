@@ -72,6 +72,9 @@ const getAuthStrategy = async () => {
       directoryApiClient.configuration.configuration.headers = {
         Authorization: `Basic ${credentials}`,
       }
+      txLogApiClient.configuration.configuration.headers = {
+        Authorization: `Basic ${credentials}`,
+      }
     }
   }
 
