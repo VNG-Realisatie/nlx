@@ -19,7 +19,7 @@ This feature is not intended as part of an automatic system where legally bindin
 
 ## Setup the transaction-log database
 
-Before you can use the finance page make sure to enable the transaction logs. If you followed the [Try NLX guide for Docker](../try-nlx/docker/introduction.md) the transaction log is enabled by default. If you followed the [Try NLX guide for Helm](../try-nlx/helm/introduction) make sure you executed the step [Setup the Transaction Log](../try-nlx/helm/transaction-log).
+Before you can use the finance page make sure to enable the [transaction logs](./transaction-log). If you followed the [Try NLX guide for Docker](../try-nlx/docker/introduction.md) the transaction log is enabled by default. If you followed the [Try NLX guide for Helm](../try-nlx/helm/introduction) make sure you executed the step [Setup the Transaction Log](../try-nlx/helm/transaction-log).
 
 Currently, we only support one database for all transaction logs.
 

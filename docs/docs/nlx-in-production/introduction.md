@@ -19,7 +19,7 @@ Below are the most common strategies to deploy NLX to a production like environm
 
 1. **Helm charts**  
    We use these ourselves to deploy the demo, pre-prod and prod environment and are confident that it will cover most demands of most users.  
-   The [charts are located in the NLX repository](https://gitlab.com/commonground/nlx/nlx/-/tree/master/helm).
+   The [charts are located in the NLX repository](https://gitlab.com/commonground/nlx/nlx/-/tree/master/helm). We recommend that you follow our [Try NLX Helm guide](../try-nlx/helm/introduction) first.
 1. **Docker containers**  
    When you deploy every component in a separate container, we feel you will be able to size these according to your needs.
    The [Docker images are available from Docker Hub](https://hub.docker.com/u/nlxio).

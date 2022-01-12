@@ -65,7 +65,6 @@ module.exports = {
       items: [
         'nlx-in-production/introduction',
         'nlx-in-production/request-a-production-cert',
-        'nlx-in-production/enable-pricing',
         'nlx-in-production/setup-authorization',
         'nlx-in-production/new-releases',
       ],
@@ -78,7 +77,9 @@ module.exports = {
       items: [
         'reference-information/organization-identification',
         'reference-information/data-validation',
+        'reference-information/transaction-log',
         'reference-information/transaction-log-headers',
+        'reference-information/enable-pricing',
         'reference-information/monitoring',
         'reference-information/outway-as-proxy',
         'reference-information/environment-variables',
