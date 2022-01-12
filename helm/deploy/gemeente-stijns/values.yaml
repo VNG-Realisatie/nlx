@@ -304,6 +304,7 @@ nlx-inway:
 nlx-management:
   config:
     directoryHostname: shared-nlx-directory-api
+    txlogAPIAddress: gemeente-stijns-nlx-txlog-api:8443
     oidc:
       clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
       discoveryURL: http://dex.gemeente-stijns.nlx.minikube
