@@ -60,7 +60,7 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 				},
 				ServiceName:          "fixture-service-name",
 				ReferenceID:          1,
-				State:                database.OutgoingAccessRequestCreated,
+				State:                database.OutgoingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
 				PublicKeyPEM:         fixturePublicKeyPEM,

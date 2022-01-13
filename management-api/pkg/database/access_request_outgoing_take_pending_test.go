@@ -23,7 +23,7 @@ func TestTakePendingOutgoingAccessRequest(t *testing.T) {
 
 	setup(t)
 
-	fixtureTime := getFixtureTime(t)
+	fixtureTime := getCustomFixtureTime(t, "2021-01-03T01:02:03Z")
 
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
@@ -48,12 +48,12 @@ func TestTakePendingOutgoingAccessRequest(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			want: &database.OutgoingAccessRequest{
-				ID: 1,
+				ID: 5,
 				Organization: database.Organization{
 					SerialNumber: "00000000000000000001",
 					Name:         "fixture-organization-name",
 				},
-				ServiceName:          "fixture-service-name",
+				ServiceName:          "fixture-service-name-b",
 				ReferenceID:          1,
 				State:                database.OutgoingAccessRequestCreated,
 				CreatedAt:            fixtureTime,

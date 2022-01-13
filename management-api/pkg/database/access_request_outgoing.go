@@ -196,12 +196,13 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 		WithContext(ctx).
 		Table("nlx_management.access_requests_outgoing").
 		Where(
-			"id = (SELECT id FROM nlx_management.access_requests_outgoing WHERE state IN ? AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) ORDER BY updated_at ASC LIMIT 1)",
+			"id = (SELECT id FROM nlx_management.access_requests_outgoing WHERE state IN ? AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) ORDER BY CASE WHEN state = ? THEN 1 ELSE 2 END, updated_at ASC LIMIT 1)",
 			[]string{
 				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestApproved),
 				string(OutgoingAccessRequestReceived),
 			},
+			string(OutgoingAccessRequestCreated),
 		).
 		Updates(map[string]interface{}{
 			"lock_id":         lockID,

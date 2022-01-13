@@ -64,7 +64,7 @@ func TestGetAccessProofForOutgoingAccessRequest(t *testing.T) {
 					},
 					ServiceName:          "fixture-service-name",
 					ReferenceID:          1,
-					State:                database.OutgoingAccessRequestCreated,
+					State:                database.OutgoingAccessRequestReceived,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 					PublicKeyPEM:         fixturePublicKeyPEM,
 					CreatedAt:            fixtureTime,
