@@ -8,7 +8,9 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: txlog-db
-          image: docker.io/nlxio/txlog-db
+          # Version should be updated to the most recent version upon deployment, this is just an example.
+          # We use git tags to release a new version so you can get the most recent version by looking at the latest tag https://gitlab.com/commonground/nlx/nlx
+          image: docker.io/nlxio/txlog-db:v0.121.1
           imagePullPolicy: IfNotPresent
           command:
             - /usr/local/bin/upgrade-db.sh
