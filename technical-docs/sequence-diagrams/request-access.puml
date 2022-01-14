@@ -1,0 +1,67 @@
+@startuml
+title: Request access to a service
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "Organization A"
+actor "User" as userOrgA
+participant "NLX Management" as managementUIOrgA
+participant "Management API" as managementAPIOrgA
+database "Management database" as managementDatabaseOrgA
+end box
+
+box "Organization B"
+actor "User" as userOrgB
+participant "Inway" as inwayOrgB
+participant "NLX Management" as managementUIOrgB
+participant "Management API" as managementAPIOrgB
+database "Management database" as managementDatabaseOrgB
+end box
+
+userOrgA -> managementUIOrgA: Request access to service X
+managementUIOrgA -> managementAPIOrgA: Request access to service X
+managementAPIOrgA -> managementDatabaseOrgA: Store outgoing access request with state 'created'
+managementAPIOrgA -> managementUIOrgA: Access request created
+managementUIOrgA -> userOrgA: Show message 'access request created'
+    loop synchronization process access request state 'created'
+        managementAPIOrgA -> managementDatabaseOrgA: Get access requests with the state 'created'
+        managementAPIOrgA -> inwayOrgB: Request access
+        inwayOrgB -> managementAPIOrgB: Request access
+        managementAPIOrgB -> managementDatabaseOrgB: Check if an active incoming access request already exists
+        alt incoming access request exists 
+        managementDatabaseOrgB -> managementAPIOrgB: Return incoming access request
+        else no active access request
+        managementAPIOrgB -> managementDatabaseOrgB: Create incoming access request
+        end
+        managementAPIOrgB -> inwayOrgB: Access request received
+        inwayOrgB -> managementAPIOrgA: Access request received
+        managementAPIOrgA -> managementDatabaseOrgA: Set outgoing access request state to 'received'
+    end
+userOrgB -> managementUIOrgB: Approve access request
+managementUIOrgB -> managementAPIOrgB: Approve access request
+managementAPIOrgB -> managementDatabaseOrgB: Set access request state to approved
+managementAPIOrgB -> managementDatabaseOrgB: Create access grant
+managementAPIOrgB -> managementUIOrgB: Access request approved
+managementUIOrgB -> userOrgB: Show organization A has access to service X
+    loop synchronization process access request state 'received'
+        managementAPIOrgA -> managementDatabaseOrgA: Get access requests with the state 'received'
+        managementAPIOrgA -> inwayOrgB: Get access request state
+        inwayOrgB -> managementAPIOrgB: Get access request state
+        managementAPIOrgB -> managementDatabaseOrgB: get access request state
+        managementAPIOrgB -> inwayOrgB: Access request approved
+        inwayOrgB -> managementAPIOrgA: Access request approved
+        managementAPIOrgA -> managementDatabaseOrgA: Update outgoing access request set state to 'approved'
+    end
+    loop synchronization process access request state 'approved'
+        managementAPIOrgA -> managementDatabaseOrgA: Get access requests with the state 'approved'
+        managementAPIOrgA -> inwayOrgB: Sync access proof
+        inwayOrgB -> managementAPIOrgB: Sync access proof
+        managementAPIOrgB -> managementDatabaseOrgB: Get access proof for organization A and service X
+        managementDatabaseOrgB -> managementAPIOrgB: Return access proof
+        managementAPIOrgB -> inwayOrgB: Return access proof
+        inwayOrgB -> managementAPIOrgA: Return access proof
+        managementAPIOrgA -> managementDatabaseOrgA: Store access proof for outgoing access request
+    end 
+@enduml
