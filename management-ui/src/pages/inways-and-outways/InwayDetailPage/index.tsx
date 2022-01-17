@@ -42,19 +42,6 @@ const InwayDetailPage: React.FC = () => {
     }
   }
 
-  const Content = () => {
-    if (inway) {
-      return (
-        <InwayDetailPageView inway={inway} removeHandler={handleRemoveInway} />
-      )
-    }
-    return (
-      <Alert variant="error" data-testid="error-message">
-        {t('Failed to load the details for this inway', { name })}
-      </Alert>
-    )
-  }
-
   return (
     <Drawer noMask closeHandler={close}>
       <Drawer.Header
@@ -65,7 +52,16 @@ const InwayDetailPage: React.FC = () => {
       />
 
       <Drawer.Content>
-        <Content />
+        {inway ? (
+          <InwayDetailPageView
+            inway={inway}
+            removeHandler={handleRemoveInway}
+          />
+        ) : (
+          <Alert variant="error" data-testid="error-message">
+            {t('Failed to load the details for this inway', { name })}
+          </Alert>
+        )}
       </Drawer.Content>
     </Drawer>
   )
