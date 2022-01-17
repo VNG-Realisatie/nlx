@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { useInwayStore, useApplicationStore } from '../../../hooks/use-stores'
 import InwayDetailPageView from './InwayDetailPageView'
 
-const InwayDetailPage: React.FC = () => {
-  const { name } = useParams<{ name: string }>()
+const InwayDetailPage = () => {
+  const { name } = useParams()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { removeInway } = useInwayStore()
@@ -32,11 +32,10 @@ const InwayDetailPage: React.FC = () => {
         isOrganizationInwaySet: !!settings.organizationInway,
       })
     } catch (err) {
-      const e = err as { message: string }
-      console.warn(e)
+      console.warn(err)
       showToast({
         title: t('Failed to remove the inway'),
-        body: e.message,
+        body: err.message,
         variant: 'error',
       })
     }
