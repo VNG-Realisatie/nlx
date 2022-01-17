@@ -9,12 +9,6 @@ import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import InwayDetailPage from './index'
 
-/* eslint-disable react/prop-types */
-jest.mock('./InwayDetailPageView', () => ({ inway }) => (
-  <div data-testid="inway-details">{inway.name}</div>
-))
-/* eslint-enable react/prop-types */
-
 test('display inway details', async () => {
   const managementApiClient = new ManagementApi()
 
@@ -49,7 +43,8 @@ test('display inway details', async () => {
       </MemoryRouter>
     </StoreProvider>,
   )
-  expect(screen.getByTestId('inway-details')).toHaveTextContent('my-inway')
+
+  expect(screen.getByTestId('inway-specs')).toBeInTheDocument()
 })
 
 test('display a non-existing inway', async () => {
