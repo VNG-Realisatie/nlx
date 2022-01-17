@@ -5,6 +5,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Collapsible } from '@commonground/design-system'
+import { func, instanceOf } from 'prop-types'
 import Table from '../../../../components/Table'
 import Amount from '../../../../components/Amount'
 import {
@@ -12,26 +13,16 @@ import {
   StyledCollapsibleBody,
   SectionGroup,
 } from '../../../../components/DetailView'
-
 import { IconServices } from '../../../../icons'
 import {
   StyledActionsBar,
   StyledRemoveButton,
 } from '../../../services/ServiceDetailPage/ServiceDetailView/index.styles'
 import { useConfirmationModal } from '../../../../components/ConfirmationModal'
-import Inway from '../../../../types/Inway'
+import InwayModel from '../../../../stores/models/InwayModel'
 import { SubHeader, StyledIconInway, StyledSpecList } from './index.styles'
 
-interface InwayDetailsProps {
-  inway: Inway
-  removeHandler: () => void
-}
-
-// Note: if inway- & outway details are interchangable, we can rename this to GatewayDetails
-const InwayDetails: React.FC<InwayDetailsProps> = ({
-  inway,
-  removeHandler,
-}) => {
+const InwayDetailPageView = ({ inway, removeHandler }) => {
   const { t } = useTranslation()
   const { ipAddress, hostname, selfAddress, version, services } = inway
 
@@ -105,4 +96,9 @@ const InwayDetails: React.FC<InwayDetailsProps> = ({
   )
 }
 
-export default observer(InwayDetails)
+InwayDetailPageView.propTypes = {
+  inway: instanceOf(InwayModel),
+  removeHandler: func,
+}
+
+export default observer(InwayDetailPageView)
