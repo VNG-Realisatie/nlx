@@ -14,6 +14,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/scheduler"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -39,16 +40,8 @@ func getApprovedAccessRequests() map[string]testCase {
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
 					Return("", errors.New("arbitrary error"))
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
+			wantErr: errors.New("arbitrary error"),
 		},
 		"when_getting_the_access_proof_fails": {
 			setupMocks: func(mocks schedulerMocks) {
@@ -67,21 +60,14 @@ func getApprovedAccessRequests() map[string]testCase {
 					GetAccessProof(gomock.Any(), &external.GetAccessProofRequest{
 						ServiceName: "service",
 					}).
-					Return(nil, errors.New("random error"))
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
+					Return(nil, errors.New("arbitrary error"))
 
 				mocks.management.
 					EXPECT().
 					Close()
 
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
+			wantErr: errors.New("arbitrary error"),
 		},
 		"when_parsing_the_access_proof_fails": {
 			setupMocks: func(mocks schedulerMocks) {
@@ -107,19 +93,11 @@ func getApprovedAccessRequests() map[string]testCase {
 						},
 					}, nil)
 
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
-
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
+			wantErr: scheduler.ErrInvalidTimeStamp,
 		},
 
 		"when_database_getting_access_proof_errors": {
@@ -147,21 +125,13 @@ func getApprovedAccessRequests() map[string]testCase {
 				mocks.db.
 					EXPECT().
 					GetAccessProofForOutgoingAccessRequest(gomock.Any(), uint(1)).
-					Return(nil, errors.New("random error"))
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
+					Return(nil, errors.New("arbitrary error"))
 
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
+			wantErr: errors.New("arbitrary error"),
 		},
 		"when_database_create_access_proof_errors": {
 			setupMocks: func(mocks schedulerMocks) {
@@ -197,21 +167,13 @@ func getApprovedAccessRequests() map[string]testCase {
 				mocks.db.
 					EXPECT().
 					CreateAccessProof(gomock.Any(), accessRequest).
-					Return(nil, errors.New("random error"))
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
+					Return(nil, errors.New("arbitrary error"))
 
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
+			wantErr: errors.New("arbitrary error"),
 		},
 		"when_database_revoke_access_proof_errors": {
 			setupMocks: func(mocks schedulerMocks) {
@@ -257,19 +219,11 @@ func getApprovedAccessRequests() map[string]testCase {
 					RevokeAccessProof(gomock.Any(), uint(2), t.AsTime()).
 					Return(nil, errors.New("arbitrary error"))
 
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
-					Return(nil)
-
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
+			wantErr: errors.New("arbitrary error"),
 		},
 		"successfully_revokes_an_access_grant_when_its_revoked": {
 			setupMocks: func(mocks schedulerMocks) {
@@ -314,6 +268,11 @@ func getApprovedAccessRequests() map[string]testCase {
 					EXPECT().
 					RevokeAccessProof(gomock.Any(), uint(2), t.AsTime()).
 					Return(nil, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
+					Return(nil)
 
 				mocks.management.
 					EXPECT().
@@ -366,6 +325,11 @@ func getApprovedAccessRequests() map[string]testCase {
 						State:       database.OutgoingAccessRequestApproved,
 					}).
 					Return(nil, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
+					Return(nil)
 
 				mocks.management.
 					EXPECT().

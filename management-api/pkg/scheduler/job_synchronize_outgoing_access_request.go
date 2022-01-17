@@ -24,6 +24,8 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
+var ErrInvalidTimeStamp = fmt.Errorf("invalid timestamp")
+
 type CreateManagementClientFunc func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error)
 
 type SynchronizeOutgoingAccessRequestJob struct {
@@ -68,9 +70,10 @@ func (job *SynchronizeOutgoingAccessRequestJob) Run(ctx context.Context) error {
 
 func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	var (
-		err         error
-		referenceID uint
-		newState    database.OutgoingAccessRequestState
+		err          error
+		referenceID  uint
+		newState     database.OutgoingAccessRequestState
+		errorDetails *diagnostics.ErrorDetails
 	)
 
 	switch request.State {
@@ -82,9 +85,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 
 	case database.OutgoingAccessRequestApproved:
 		err = job.syncAccessProof(ctx, request)
-		if err == nil {
-			return nil
-		}
+		newState = request.State
 
 	default:
 		return fmt.Errorf("invalid state '%s' for pending access request", request.State)
@@ -95,7 +96,14 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, request.Organization.SerialNumber, request.ServiceName)
 		}
 
-		errorDetails := diagnostics.ParseError(err)
+		// Return err to prevent the state of the outgoing access to be set to failed.
+		// If the state of the outgoing access request is set failed it will no longer be picked up by the scheduler.
+		if request.State == database.OutgoingAccessRequestApproved || request.State == database.OutgoingAccessRequestReceived {
+			return err
+		}
+
+		newState = database.OutgoingAccessRequestFailed
+		errorDetails = diagnostics.ParseError(err)
 
 		st, ok := status.FromError(err)
 		if ok {
@@ -103,14 +111,6 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 				errorDetails = errorDetails.WithCode(diagnostics.NoInwaySelectedError)
 			}
 		}
-
-		return job.configDatabase.UpdateOutgoingAccessRequestState(
-			ctx,
-			request.ID,
-			database.OutgoingAccessRequestFailed,
-			referenceID,
-			errorDetails,
-		)
 	}
 
 	return job.configDatabase.UpdateOutgoingAccessRequestState(
@@ -118,7 +118,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 		request.ID,
 		newState,
 		referenceID,
-		nil,
+		errorDetails,
 	)
 }
 
@@ -166,10 +166,6 @@ func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx contex
 func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
 	remoteProof, err := job.retrieveAccessProof(ctx, outgoingAccessRequest.Organization.SerialNumber, outgoingAccessRequest.ServiceName)
 	if err != nil {
-		if errors.Is(err, server.ErrServiceDoesNotExist) {
-			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, outgoingAccessRequest.Organization.SerialNumber, outgoingAccessRequest.ServiceName)
-		}
-
 		return err
 	}
 
@@ -231,7 +227,7 @@ func parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, erro
 	if accessProof.CreatedAt != nil {
 		err := accessProof.CreatedAt.CheckValid()
 		if err != nil {
-			return nil, err
+			return nil, ErrInvalidTimeStamp
 		}
 
 		createdAt = accessProof.CreatedAt.AsTime()

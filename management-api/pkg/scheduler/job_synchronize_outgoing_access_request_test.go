@@ -86,7 +86,12 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 					},
 				)
 				err := job.Run(context.Background())
-				require.Equal(t, tt.wantErr, err)
+
+				if tt.wantErr != nil {
+					require.EqualError(t, err, tt.wantErr.Error())
+				} else {
+					require.Nil(t, err)
+				}
 			})
 		}
 	}

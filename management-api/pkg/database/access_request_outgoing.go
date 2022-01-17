@@ -149,8 +149,6 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 	}
 
 	outgoingAccessRequest.State = state
-	outgoingAccessRequest.LockID = nil
-	outgoingAccessRequest.LockExpiresAt = sql.NullTime{}
 
 	if schedulerErr != nil {
 		outgoingAccessRequest.ErrorCode = int(schedulerErr.Code)
@@ -167,10 +165,8 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 		Omit(clause.Associations).
 		Select(
 			"state",
-			"lock_id",
-			"updated_at",
 			"reference_id",
-			"lock_expires_at",
+			"updated_at",
 			"error_code",
 			"error_cause",
 			"error_stack_trace",
@@ -196,7 +192,16 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 		WithContext(ctx).
 		Table("nlx_management.access_requests_outgoing").
 		Where(
-			"id = (SELECT id FROM nlx_management.access_requests_outgoing WHERE state IN ? AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) ORDER BY CASE WHEN state = ? THEN 1 ELSE 2 END, updated_at ASC LIMIT 1)",
+			`id = (
+				SELECT 
+					access_requests_outgoing.id FROM nlx_management.access_requests_outgoing 
+				LEFT JOIN 
+					nlx_management.access_proofs ON (nlx_management.access_proofs.access_request_outgoing_id = nlx_management.access_requests_outgoing.id) 
+				WHERE 
+					(state IN ? OR (nlx_management.access_proofs.id IS NOT NULL AND nlx_management.access_proofs.revoked_at IS NULL)) AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) 
+				ORDER BY 
+					state = ? THEN 1 ELSE 2 END,updated_at ASC LIMIT 1
+				)`,
 			[]string{
 				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestApproved),

@@ -28,7 +28,6 @@ const (
 
 type scheduler struct {
 	logger                              *zap.Logger
-	requests                            chan *database.OutgoingAccessRequest
 	synchronizeOutgoingAccessRequestJob *SynchronizeOutgoingAccessRequestJob
 }
 
@@ -43,7 +42,6 @@ func NewOutgoingAccessRequestScheduler(logger *zap.Logger, directoryClient direc
 
 	return &scheduler{
 		logger:                              logger,
-		requests:                            make(chan *database.OutgoingAccessRequest),
 		synchronizeOutgoingAccessRequestJob: job,
 	}
 }

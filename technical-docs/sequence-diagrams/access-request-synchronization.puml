@@ -64,7 +64,7 @@ loop Run every 1.5 seconds
                 inwayOrgB -> managementAPIOrgA: Error service no longer exists
                 managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
             end
-        else get access request state succeeds fails 
+        else get access request state fails 
             managementAPIOrgA -> managementDatabaseOrgA: Update state of outgoing access request to failed
         end
     else state approved
@@ -94,7 +94,7 @@ loop Run every 1.5 seconds
                 inwayOrgB -> managementAPIOrgA: Error service no longer exists
                 managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
             end
-        else retrieve access proof succeeds
+        else retrieve access proof fails
             managementAPIOrgA -> managementDatabaseOrgA: Update state of outgoing access request to failed
         end
     end
