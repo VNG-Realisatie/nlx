@@ -30,15 +30,15 @@ class InwayModel {
 
     this.inwayStore = store
     this.name = inway.name
-    this.with(inway)
+    this.update(inway)
   }
 
   fetch = flow(function* fetch() {
     const inway = yield this.inwayStore.fetch({ name: this.name })
-    this.with(inway)
+    this.update(inway)
   }).bind(this)
 
-  with = function (inway) {
+  update = function (inway) {
     this.name = inway.name || ''
     this.ipAddress = inway.ipAddress || ''
     this.hostname = inway.hostname || ''
