@@ -2,9 +2,8 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, text } from 'prop-types'
+import { shape, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-
 import {
   DetailHeading,
   DetailBody,
@@ -40,7 +39,7 @@ const ContactSection = ({ service }) => {
 
 ContactSection.propTypes = {
   service: shape({
-    publicSupportContact: text,
+    publicSupportContact: string,
   }),
 }
 

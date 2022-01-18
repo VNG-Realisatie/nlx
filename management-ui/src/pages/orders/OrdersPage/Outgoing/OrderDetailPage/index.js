@@ -11,9 +11,8 @@ import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 import EditRevoke from './EditRevoke'
 
-const OrderDetailPage: React.FC = () => {
-  const { delegatee, reference } =
-    useParams<{ delegatee: string; reference: string }>()
+const OrderDetailPage = () => {
+  const { delegatee, reference } = useParams()
   const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -32,7 +31,7 @@ const OrderDetailPage: React.FC = () => {
     if (await confirmRevoke()) {
       try {
         await order.revoke()
-      } catch (err: any) { // eslint-disable-line
+      } catch (err) {
         showToast({
           title: t('Failed to revoke the order'),
           body: err.message,
