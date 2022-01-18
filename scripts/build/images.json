@@ -1,0 +1,316 @@
+{
+    "images" : [
+        {
+            "image": "${IMAGE_PREFIX}nlxio/auth-service",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/auth-service:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/auth-service:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/auth-service:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "auth-service/Dockerfile",
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/auth-service:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/auth-service:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/auth-service:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/ca-certportal",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/ca-certportal:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "ca-certportal/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/ca-certportal:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/ca-certportal:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/ca-certportal:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": "ca-cfssl-unsafe",
+                "dockerfile": "ca-cfssl-unsafe/Dockerfile",
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/docs",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/docs:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": "docs",
+                "dockerfile": "docs/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/docs:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/docs:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/docs:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/directory-db",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/directory-db:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "directory-db/Dockerfile",
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-db:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/directory-api",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/directory-api:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/directory-api:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/directory-api:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "directory-api/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/directory-api:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-api:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-api:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/directory-monitor",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/directory-monitor:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "directory-monitor/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/directory-monitor:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-monitor:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-monitor:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/directory-ui",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/directory-ui:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": "directory-ui",
+                "dockerfile": "directory-ui/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/directory-ui:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-ui:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/directory-ui:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/inway",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/inway:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "inway/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/inway:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/inway:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/inway:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/management-api",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/management-api:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "management-api/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/management-api:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/management-api:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/management-api:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/management-ui",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/management-ui:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "management-ui/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/management-ui:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/management-ui:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/management-ui:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/nlxctl",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/nlxctl:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "nlxctl/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/nlxctl:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/nlxctl:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/nlxctl:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/outway",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/outway:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "outway/Dockerfile",
+                "args": [            
+                    "GIT_COMMIT_HASH=${GIT_COMMIT_HASH}",
+                    "GIT_TAG_NAME=${GIT_TAG_NAME}"
+                ],
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/outway:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/outway:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/outway:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/apps-overview",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/apps-overview:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/apps-overview:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/apps-overview:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": "apps-overview",
+                "dockerfile": "apps-overview/Dockerfile",
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/apps-overview:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/apps-overview:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/apps-overview:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/txlog-db",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/txlog-db:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "txlog-db/Dockerfile",
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/txlog-db:acc-latest"
+                ]
+            }
+        },
+        {
+            "image": "${IMAGE_PREFIX}nlxio/txlog-api",
+            "tags": [
+                "${IMAGE_PREFIX}nlxio/txlog-api:${IMAGE_TAG_1}",
+                "${IMAGE_PREFIX}nlxio/txlog-api:${IMAGE_TAG_2}",
+                "${IMAGE_PREFIX}nlxio/txlog-api:${IMAGE_TAG_3}"
+            ],
+            "build": {
+                "context": ".",
+                "dockerfile": "txlog-api/Dockerfile",
+                "cache_from": [
+                    "${IMAGE_PREFIX}nlxio/txlog-api:${DOCKER_CACHE_LATEST_TAG}",
+                    "${IMAGE_PREFIX}nlxio/txlog-api:${DOCKER_CACHE_BRANCH_TAG}",
+                    "${IMAGE_PREFIX}nlxio/txlog-api:acc-latest"
+                ]
+            }
+        }
+    ]
+}

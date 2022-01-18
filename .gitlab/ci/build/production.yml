@@ -6,22 +6,15 @@ Build production:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
+    - export JQ_BIN_PATH="./jq"
     - export IMAGE_PREFIX=""
-    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
-    - export DOCKER_CACHE_LATEST_TAG="acc-latest"
-    - export COMPOSE_DOCKER_CLI_BUILD=1
-    - export DOCKER_BUILDKIT=1
+    - export IMAGE_TAG_1="${GIT_TAG_NAME}"
+    - export IMAGE_TAG_2="latest"
+    - export IMAGE_TAG_3="${CI_COMMIT_REF_SLUG}"
   script:
-    - docker-compose version
-    - export IMAGE_TAG="${GIT_TAG_NAME}"
-    - time docker-compose build --parallel
-    - time docker-compose push
-    - export IMAGE_TAG="latest"
-    - time docker-compose build --parallel
-    - time docker-compose push
-    - export IMAGE_TAG="${DOCKER_CACHE_BRANCH_TAG}"
-    - time docker-compose build --parallel
-    - time docker-compose push
+    - docker version
+    - ./scripts/install-jq.sh
+    - ./scripts/build/build.sh
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:

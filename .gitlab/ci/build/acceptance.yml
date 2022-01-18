@@ -6,25 +6,18 @@ Build acceptance:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
+    - export JQ_BIN_PATH="./jq"
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
-    - export IMAGE_TAG="${GIT_TAG_NAME}"
-    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
-    - export DOCKER_CACHE_LATEST_TAG="review-latest"
-    - export COMPOSE_DOCKER_CLI_BUILD=1
-    - export DOCKER_BUILDKIT=1
+    - export IMAGE_TAG_1="${GIT_TAG_NAME}"
+    - export IMAGE_TAG_2="acc-latest"
+    - export IMAGE_TAG_3="${CI_COMMIT_REF_SLUG}"
   script:
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
-    - echo -n "${IMAGE_TAG}" > ci_build_image_tag.txt
-    - echo -n "${IMAGE_TAG}" > ci_build_image_version.txt
-    - docker-compose version
-    - time docker-compose build --parallel
-    - time docker-compose push
-    - export IMAGE_TAG="acc-latest"
-    - time docker-compose build --parallel
-    - time docker-compose push
-    - export IMAGE_TAG="${DOCKER_CACHE_BRANCH_TAG}"
-    - time docker-compose build --parallel
-    - time docker-compose push
+    - echo -n "${IMAGE_TAG_1}" > ci_build_image_tag.txt
+    - echo -n "${IMAGE_TAG_1}" > ci_build_image_version.txt
+    - docker version
+    - ./scripts/install-jq.sh
+    - ./scripts/build/build.sh
   artifacts:
     paths:
       - ci_build_image_registry.txt
