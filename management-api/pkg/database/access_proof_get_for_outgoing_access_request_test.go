@@ -69,6 +69,7 @@ func TestGetAccessProofForOutgoingAccessRequest(t *testing.T) {
 					PublicKeyPEM:         fixturePublicKeyPEM,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
+					SynchronizeAt:        fixtureTime,
 				},
 				CreatedAt: fixtureTime,
 				RevokedAt: sql.NullTime{},

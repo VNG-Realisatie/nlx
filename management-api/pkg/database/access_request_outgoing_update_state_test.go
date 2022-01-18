@@ -9,6 +9,7 @@ import (
 	"context"
 	"database/sql"
 	"testing"
+	"time"
 
 	"github.com/lib/pq"
 
@@ -80,7 +81,7 @@ func TestUpdateOutgoingAccessRequestState(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			err := configDb.UpdateOutgoingAccessRequestState(context.Background(), tt.args.accessRequestID, tt.args.state, tt.args.referenceID, tt.args.schedulerErr)
+			err := configDb.UpdateOutgoingAccessRequestState(context.Background(), tt.args.accessRequestID, tt.args.state, tt.args.referenceID, tt.args.schedulerErr, time.Now())
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {

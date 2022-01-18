@@ -29,11 +29,8 @@ func getCreatedAccessRequests() map[string]testCase {
 
 	return map[string]testCase{
 		"when_getting_the_organization_management_client_fails": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -42,20 +39,13 @@ func getCreatedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any()).
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestFailed, uint(0), gomock.Any(), gomock.Any()).
 					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
 		"when_service_has_been_deleted": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -78,18 +68,11 @@ func getCreatedAccessRequests() map[string]testCase {
 					EXPECT().
 					Close().
 					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
 		"happy_flow": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -108,17 +91,13 @@ func getCreatedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestReceived, uint(2), nil).
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestReceived, uint(2), nil, gomock.Any()).
 					Return(nil)
 
 				mocks.management.
 					EXPECT().
 					Close().
 					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
 	}

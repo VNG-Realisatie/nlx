@@ -9,6 +9,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"strings"
+	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -246,7 +247,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		return nil, status.Error(codes.AlreadyExists, "access request is not in a sendable state")
 	}
 
-	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest.ID, database.OutgoingAccessRequestCreated, 0, nil)
+	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest.ID, database.OutgoingAccessRequestCreated, 0, nil, time.Now())
 	if err != nil {
 		s.logger.Error("access request cannot be updated", zap.Uint("id", accessRequest.ID), zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")

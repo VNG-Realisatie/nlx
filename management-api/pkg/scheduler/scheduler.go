@@ -18,9 +18,10 @@ import (
 )
 
 const (
-	maxRetries     = 3
-	maxConcurrency = 4
-	pollInterval   = 1500 * time.Millisecond
+	maxRetries              = 3
+	pollInterval            = 1 * time.Second
+	maxConcurrency          = 50
+	synchronizationInterval = 30 * time.Second
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
@@ -48,8 +49,8 @@ func NewOutgoingAccessRequestScheduler(logger *zap.Logger, directoryClient direc
 
 func (s *scheduler) Run(ctx context.Context) {
 	wg := &sync.WaitGroup{}
-	sem := semaphore.NewWeighted(int64(maxConcurrency))
 	ticker := time.NewTicker(pollInterval)
+	sem := semaphore.NewWeighted(int64(maxConcurrency))
 
 	defer ticker.Stop()
 
@@ -59,27 +60,45 @@ schedulingLoop:
 		case <-ctx.Done():
 			break schedulingLoop
 		case <-ticker.C:
-			go func() {
-				if !sem.TryAcquire(1) {
-					return
-				}
+			requests, err := s.synchronizeOutgoingAccessRequestJob.configDatabase.TakePendingOutgoingAccessRequests(ctx)
+			if err != nil {
+				return
+			}
 
-				wg.Add(1)
+			for _, request := range requests {
+				requestToSync := request
+				go func() {
+					jobCtx, cancel := context.WithTimeout(ctx, jobTimeout)
+					defer cancel()
 
-				defer sem.Release(1)
-				defer wg.Done()
+					if !sem.TryAcquire(1) {
+						s.unlockOutgoingAccessRequest(jobCtx, requestToSync)
+						return
+					}
 
-				jobCtx, cancel := context.WithTimeout(ctx, jobTimeout)
+					defer sem.Release(1)
 
-				defer cancel()
+					wg.Add(1)
+					defer wg.Done()
 
-				err := s.synchronizeOutgoingAccessRequestJob.Run(jobCtx)
-				if err != nil {
-					s.logger.Error("failed to schedule pending request", zap.Error(err))
-				}
-			}()
+					err := s.synchronizeOutgoingAccessRequestJob.Synchronize(jobCtx, requestToSync)
+					if err != nil {
+						s.logger.Error("failed to schedule pending request", zap.Error(err))
+						return
+					}
+
+					s.unlockOutgoingAccessRequest(jobCtx, requestToSync)
+				}()
+			}
 		}
 	}
 
 	wg.Wait()
+}
+
+func (s *scheduler) unlockOutgoingAccessRequest(ctx context.Context, request *database.OutgoingAccessRequest) {
+	err := s.synchronizeOutgoingAccessRequestJob.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
+	if err != nil {
+		s.logger.Error("failed to unlock pending request", zap.Error(err))
+	}
 }

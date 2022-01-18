@@ -6,7 +6,6 @@ package scheduler_test
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -23,45 +22,12 @@ import (
 
 type testCase struct {
 	setupMocks func(schedulerMocks)
+	request    *database.OutgoingAccessRequest
 	wantErr    error
-}
-
-func getGenericTests() map[string]testCase {
-	return map[string]testCase{
-		"when_taking_a_pending_access_request_errors": {
-			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(nil, errors.New("arbitrary error"))
-			},
-			wantErr: errors.New("arbitrary error"),
-		},
-		"when_there_is_no_pending_access_request_available": {
-			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(nil, nil)
-			},
-		},
-		"when_the_status_of_the_access_request_is_unknown": {
-			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(&database.OutgoingAccessRequest{
-						State: "unknown state",
-					}, nil)
-			},
-			wantErr: errors.New("invalid state 'unknown state' for pending access request"),
-		},
-	}
 }
 
 func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 	testGroups := []map[string]testCase{
-		getGenericTests(),
 		getCreatedAccessRequests(),
 		getReceivedAccessRequests(),
 		getApprovedAccessRequests(),
@@ -85,7 +51,7 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 						return mocks.management, nil
 					},
 				)
-				err := job.Run(context.Background())
+				err := job.Synchronize(context.Background(), tt.request)
 
 				if tt.wantErr != nil {
 					require.EqualError(t, err, tt.wantErr.Error())

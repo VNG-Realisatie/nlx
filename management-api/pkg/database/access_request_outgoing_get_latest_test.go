@@ -68,6 +68,7 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 				UpdatedAt:            fixtureTime,
 				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+				SynchronizeAt:        fixtureTime,
 			},
 			wantErr: nil,
 		},

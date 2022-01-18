@@ -46,41 +46,30 @@ func NewSynchronizeOutgoingAccessRequestJob(ctx context.Context, directoryClient
 	}
 }
 
-func (job *SynchronizeOutgoingAccessRequestJob) Run(ctx context.Context) error {
-	request, err := job.configDatabase.TakePendingOutgoingAccessRequest(ctx)
-	if err != nil {
-		return err
-	}
-
-	if request == nil {
-		return nil
-	}
-
-	jobCtx, cancel := context.WithTimeout(ctx, jobTimeout)
-
-	defer cancel()
-
-	err = job.synchronize(jobCtx, request)
-	if err != nil {
-		return err
-	}
-
-	return job.configDatabase.UnlockOutgoingAccessRequest(ctx, request)
-}
-
-func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context, request *database.OutgoingAccessRequest) error {
+//nolint:gocyclo // the scheduler is complex but will be refactored in the future
+func (job *SynchronizeOutgoingAccessRequestJob) Synchronize(ctx context.Context, request *database.OutgoingAccessRequest) error {
 	var (
-		err          error
-		referenceID  uint
-		newState     database.OutgoingAccessRequestState
-		errorDetails *diagnostics.ErrorDetails
+		err           error
+		referenceID   uint
+		newState      database.OutgoingAccessRequestState
+		errorDetails  *diagnostics.ErrorDetails
+		synchronizeAt time.Time
 	)
+
+	synchronizeAt = time.Now().Add(synchronizationInterval)
 
 	switch request.State {
 	case database.OutgoingAccessRequestCreated:
 		newState, referenceID, err = job.sendAccessRequest(ctx, request)
 
 	case database.OutgoingAccessRequestReceived:
+		newState, err = job.getAccessRequestState(ctx, request)
+		// if the new state is approved we want to sync this access request immediately to get the accessgrant
+		if newState == database.OutgoingAccessRequestApproved {
+			synchronizeAt = time.Now()
+		}
+
+	case database.OutgoingAccessRequestFailed:
 		newState, err = job.getAccessRequestState(ctx, request)
 
 	case database.OutgoingAccessRequestApproved:
@@ -119,6 +108,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) synchronize(ctx context.Context,
 		newState,
 		referenceID,
 		errorDetails,
+		synchronizeAt,
 	)
 }
 

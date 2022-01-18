@@ -51,6 +51,7 @@ type OutgoingAccessRequest struct {
 	ErrorStackTrace      pq.StringArray `gorm:"type:text[]"`
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
+	SynchronizeAt        time.Time
 }
 
 func (*OutgoingAccessRequest) TableName() string {
@@ -131,7 +132,7 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 	return accessRequest, nil
 }
 
-func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState, referenceID uint, schedulerErr *diagnostics.ErrorDetails) error {
+func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState, referenceID uint, schedulerErr *diagnostics.ErrorDetails, synchronizeAt time.Time) error {
 	outgoingAccessRequest := &OutgoingAccessRequest{}
 
 	if err := db.DB.
@@ -149,6 +150,7 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 	}
 
 	outgoingAccessRequest.State = state
+	outgoingAccessRequest.SynchronizeAt = synchronizeAt
 
 	if schedulerErr != nil {
 		outgoingAccessRequest.ErrorCode = int(schedulerErr.Code)
@@ -170,6 +172,7 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 			"error_code",
 			"error_cause",
 			"error_stack_trace",
+			"synchronize_at",
 		).
 		Save(outgoingAccessRequest).Error
 }
@@ -182,7 +185,7 @@ func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Conte
 		Error
 }
 
-func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.Context) (*OutgoingAccessRequest, error) {
+func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error) {
 	lockID, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
@@ -192,22 +195,25 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 		WithContext(ctx).
 		Table("nlx_management.access_requests_outgoing").
 		Where(
-			`id = (
+			`id IN (
 				SELECT 
 					access_requests_outgoing.id FROM nlx_management.access_requests_outgoing 
 				LEFT JOIN 
 					nlx_management.access_proofs ON (nlx_management.access_proofs.access_request_outgoing_id = nlx_management.access_requests_outgoing.id) 
 				WHERE 
-					(state IN ? OR (nlx_management.access_proofs.id IS NOT NULL AND nlx_management.access_proofs.revoked_at IS NULL)) AND (lock_expires_at IS NULL OR NOW() > lock_expires_at) 
-				ORDER BY 
-					state = ? THEN 1 ELSE 2 END,updated_at ASC LIMIT 1
+					(state IN ? OR (nlx_management.access_proofs.id IS NOT NULL AND nlx_management.access_proofs.revoked_at IS NULL)) 
+				AND 
+					(lock_expires_at IS NULL OR NOW() > lock_expires_at)
+				AND 
+					(access_requests_outgoing.synchronize_at < NOW())
+				ORDER BY
+					updated_at ASC
 				)`,
 			[]string{
 				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestApproved),
 				string(OutgoingAccessRequestReceived),
 			},
-			string(OutgoingAccessRequestCreated),
 		).
 		Updates(map[string]interface{}{
 			"lock_id":         lockID,
@@ -217,27 +223,24 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequest(ctx context.C
 		return nil, err
 	}
 
+	requests := []*OutgoingAccessRequest{}
 	if result.RowsAffected > 0 {
-		request := &OutgoingAccessRequest{}
-
 		if err := db.DB.
 			WithContext(ctx).
 			Table("nlx_management.access_requests_outgoing").
+			Find(&requests).
 			Where("lock_id = ?", lockID).
-			First(request).
 			Error; err != nil {
 			return nil, err
 		}
-
-		return request, nil
 	}
 
-	return nil, nil
+	return requests, nil
 }
 
 func (db *PostgresConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, outgoingAccessRequest *OutgoingAccessRequest) error {
 	return db.DB.
 		WithContext(ctx).
 		Model(&outgoingAccessRequest).
-		Updates(map[string]interface{}{"lock_expires_at": nil}).Error
+		Updates(map[string]interface{}{"lock_expires_at": nil, "lock_id": nil}).Error
 }

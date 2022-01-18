@@ -294,8 +294,8 @@ func TestSendAccessRequest(t *testing.T) {
 
 			updateMock := mocks.db.
 				EXPECT().
-				UpdateOutgoingAccessRequestState(ctx, uint(test.request.AccessRequestID), database.OutgoingAccessRequestCreated, uint(0), nil).
-				Do(func(_ context.Context, _ uint, state database.OutgoingAccessRequestState, _ uint, errorDetails *diagnostics.ErrorDetails) error {
+				UpdateOutgoingAccessRequestState(ctx, uint(test.request.AccessRequestID), database.OutgoingAccessRequestCreated, uint(0), nil, gomock.Any()).
+				Do(func(_ context.Context, _ uint, state database.OutgoingAccessRequestState, _ uint, errorDetails *diagnostics.ErrorDetails, synchronizeAt time.Time) error {
 					test.accessRequest.State = state
 					return nil
 				})

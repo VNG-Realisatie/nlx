@@ -30,11 +30,8 @@ func getApprovedAccessRequests() map[string]testCase {
 
 	return map[string]testCase{
 		"when_getting_the_organization_inway_proxy_address_fails": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -44,11 +41,8 @@ func getApprovedAccessRequests() map[string]testCase {
 			wantErr: errors.New("arbitrary error"),
 		},
 		"when_getting_the_access_proof_fails": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -70,12 +64,8 @@ func getApprovedAccessRequests() map[string]testCase {
 			wantErr: errors.New("arbitrary error"),
 		},
 		"when_parsing_the_access_proof_fails": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
@@ -101,12 +91,8 @@ func getApprovedAccessRequests() map[string]testCase {
 		},
 
 		"when_database_getting_access_proof_errors": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
@@ -134,12 +120,8 @@ func getApprovedAccessRequests() map[string]testCase {
 			wantErr: errors.New("arbitrary error"),
 		},
 		"when_database_create_access_proof_errors": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
-
 				mocks.directory.
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
@@ -176,14 +158,10 @@ func getApprovedAccessRequests() map[string]testCase {
 			wantErr: errors.New("arbitrary error"),
 		},
 		"when_database_revoke_access_proof_errors": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
 				ts := timestamppb.Now()
 				t := timestamppb.New(ts.AsTime())
-
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -226,14 +204,10 @@ func getApprovedAccessRequests() map[string]testCase {
 			wantErr: errors.New("arbitrary error"),
 		},
 		"successfully_revokes_an_access_grant_when_its_revoked": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
 				ts := timestamppb.Now()
 				t := timestamppb.New(ts.AsTime())
-
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -271,24 +245,17 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil, gomock.Any()).
 					Return(nil)
 
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
 		"successfully_creates_an_access_proof_when_its_found": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -328,24 +295,17 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil).
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil, gomock.Any()).
 					Return(nil)
 
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
 		"successfully_delete_an_access_proof_when_the_corresponding_service_no_longer_exists": {
+			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {
-				mocks.db.
-					EXPECT().
-					TakePendingOutgoingAccessRequest(gomock.Any()).
-					Return(accessRequest, nil)
 
 				mocks.directory.
 					EXPECT().
@@ -367,10 +327,6 @@ func getApprovedAccessRequests() map[string]testCase {
 				mocks.management.
 					EXPECT().
 					Close()
-
-				mocks.db.
-					EXPECT().
-					UnlockOutgoingAccessRequest(gomock.Any(), accessRequest)
 			},
 		},
 	}

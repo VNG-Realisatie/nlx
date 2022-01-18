@@ -38,6 +38,8 @@ Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   this.testName =
     pickle.name.replace(/\W/g, "-") + "-" + time.replace(/:|T/g, "-");
 
+  console.log(`starting ${this.testName}`);
+
   const task_id = parseInt(process.env.TASK_ID || "0");
   const caps = config.capabilities[task_id];
   caps["browserstack.user"] = username;
@@ -65,4 +67,5 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
     }
   }
   await this.driver?.quit();
+  console.log(`done with ${this.testName}`);
 });
