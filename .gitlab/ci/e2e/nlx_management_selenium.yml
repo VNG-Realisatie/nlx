@@ -23,6 +23,7 @@ NLX Management - E2E-tests - Selenium:
     - export E2E_GEMEENTE_STIJNS_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.gemeentestijns.nl" || echo "https://nlx-management-gemeente-stijns-$CI_ENV_URL")
     - export E2E_RVRD_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.rvrd.nl" || echo "https://nlx-management-rvrd-$CI_ENV_URL")
     - export E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.vergunningsoftware.nl" || echo "https://nlx-management-vgs-bv-$CI_ENV_URL")
+    - export E2E_BUILD_NAME=$(git rev-parse HEAD)
     - cd e2e-tests/
     - install_npm_dependencies
     - wait_for_http "${E2E_GEMEENTE_STIJNS_MANAGEMENT_URL}"
