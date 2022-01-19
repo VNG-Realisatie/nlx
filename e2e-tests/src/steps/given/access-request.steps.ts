@@ -100,7 +100,7 @@ Given(
       await serviceProvider.apiClients.management?.managementCreateService({
         body: {
           name: uniqueServiceName,
-          endpointURL: "http://example.com",
+          endpointURL: "https://postman-echo.com",
           inways: [serviceProvider.defaultInwayName],
           internal: false,
         },

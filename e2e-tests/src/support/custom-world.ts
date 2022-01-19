@@ -1,10 +1,23 @@
 import { ManagementApi } from "../../../management-ui/src/api";
+import { organizations } from "../utils/organizations";
 import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
 import * as messages from "@cucumber/messages";
 import webdriver from "selenium-webdriver";
 import dayjs from "dayjs";
 import fs from "fs/promises";
 import { Buffer } from "buffer";
+
+interface OrganizationContext {
+  httpResponse: Response | undefined;
+}
+
+interface OrganizationsContext {
+  [key: string]: OrganizationContext;
+}
+
+interface ScenarioContext {
+  organizations: OrganizationsContext;
+}
 
 export interface CustomWorld extends World {
   id: string;
@@ -14,11 +27,22 @@ export interface CustomWorld extends World {
   driver: webdriver.ThenableWebDriver;
   managementApi: ManagementApi;
   snapshot(): Promise<void>;
+  scenarioContext: ScenarioContext;
 }
 
 export class CustomWorld extends World implements CustomWorld {
   constructor(options: IWorldOptions) {
     super(options);
+
+    this.scenarioContext = {
+      organizations: {},
+    };
+
+    Object.keys(organizations).forEach((organizationName) => {
+      this.scenarioContext.organizations[organizationName] = {
+        httpResponse: undefined,
+      };
+    });
   }
   debug = false;
 

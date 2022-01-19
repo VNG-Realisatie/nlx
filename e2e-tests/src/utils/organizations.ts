@@ -4,6 +4,10 @@ import { strict as assert } from "assert";
 export interface Organization {
   serialNumber: string;
   defaultInwayName: string;
+  defaultOutway: {
+    name: string;
+    address: string;
+  };
   management: {
     basicAuth: boolean;
     url: string;
@@ -36,6 +40,13 @@ export const organizations: Organizations = {
     serialNumber: "12345678901234567890",
     defaultInwayName:
       process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME || "Inway-01",
+    defaultOutway: {
+      name:
+        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a",
+      address:
+        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_ADDRESS ||
+        "http://127.0.0.1:7917",
+    },
     management: {
       basicAuth: convertToBool(
         process.env.E2E_GEMEENTE_STIJNS_MANAGEMENT_BASIC_AUTH,
@@ -58,6 +69,10 @@ export const organizations: Organizations = {
   RvRD: {
     serialNumber: "12345678901234567891",
     defaultInwayName: process.env.E2E_RVRD_DEFAULT_INWAY_NAME || "Inway-01",
+    defaultOutway: {
+      name: process.env.E2E_RVRD_DEFAULT_OUTWAY_NAME || "",
+      address: process.env.E2E_RVRD_DEFAULT_OUTWAY_ADDRESS || "",
+    },
     management: {
       basicAuth: convertToBool(
         process.env.E2E_RVRD_MANAGEMENT_BASIC_AUTH,
@@ -78,6 +93,11 @@ export const organizations: Organizations = {
     serialNumber: "12345678901234567892",
     defaultInwayName:
       process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "Inway-01",
+    defaultOutway: {
+      name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_NAME || "",
+      address:
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_ADDRESS || "",
+    },
     management: {
       basicAuth: convertToBool(
         process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_BASIC_AUTH,
