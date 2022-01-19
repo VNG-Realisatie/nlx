@@ -30,7 +30,7 @@ NLX Management - E2E-tests - Selenium:
     - wait_for_http "${E2E_RVRD_MANAGEMENT_URL}"
     - wait_for_http "${E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL}"
     - start_section test "Running tests"
-    - npm run test
+    - npm test
     - stop_section test
   artifacts:
     when: always

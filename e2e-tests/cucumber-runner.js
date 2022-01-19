@@ -20,10 +20,31 @@ if (os.platform() == "win32") {
   command = process.argv.shift();
 }
 
-for (var i in config.capabilities) {
-  var env = Object.create(process.env);
+const spawnSubProcess = (options) =>
+  new Promise((resolve, reject) => {
+    const p = child_process.spawn(command, process.argv, options);
+    p.stdout.pipe(process.stdout);
+    p.stderr.pipe(process.stderr);
+
+    p.on("close", (code) => {
+      if (code > 0) {
+        reject(code);
+      } else {
+        resolve(code);
+      }
+    });
+  });
+
+const subProcesses = config.capabilities.map((capability, i) => {
+  const env = Object.create(process.env);
   env.TASK_ID = i.toString();
-  var p = child_process.spawn(command, process.argv, { env: env });
-  p.stdout.pipe(process.stdout);
-  p.stderr.pipe(process.stderr);
-}
+  return spawnSubProcess({ env });
+});
+
+Promise.all(subProcesses)
+  .then(() => {
+    process.exit();
+  })
+  .catch(() => {
+    process.exit(1);
+  });
