@@ -3,7 +3,7 @@ Feature: Order
 
     Scenario: Create an order
         Given "Gemeente Stijns" is logged into NLX management
-        And "Gemeente Stijns" has access to "basis-register-fictieve-kentekens" of "RvRD"
+            And "Gemeente Stijns" has access to "basis-register-fictieve-kentekens" of "RvRD"
         When "Gemeente Stijns" creates an order with reference "order-ref-1" for "Vergunningsoftware BV" including the service "basis-register-fictieve-kentekens" of "RvRD"
         Then an order of "Gemeente Stijns" with reference "order-ref-1" for "Vergunningsoftware BV" with service "basis-register-fictieve-kentekens" of "RvRD" is created
 
