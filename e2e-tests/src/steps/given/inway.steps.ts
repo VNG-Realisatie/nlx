@@ -19,3 +19,16 @@ Given(
     );
   }
 );
+
+Given(
+  "{string} has set its default Inway as organization Inway",
+  async function (this: CustomWorld, orgName: string) {
+    const org = getOrgByName(orgName);
+
+    await org.apiClients.management?.managementUpdateSettings({
+      body: {
+        organizationInway: org.defaultInwayName,
+      },
+    });
+  }
+);
