@@ -3,7 +3,10 @@ import { getOrgByName } from "../../utils/organizations";
 import { When } from "@cucumber/cucumber";
 import { By } from "selenium-webdriver";
 import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { strict as assert } from "assert";
+
+dayjs.extend(localizedFormat);
 
 const randomPublicKeyPEM = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e
@@ -48,13 +51,13 @@ When(
     await driver
       .findElement(By.name("publicKeyPEM"))
       .sendKeys(randomPublicKeyPEM);
+
     const today = dayjs();
-    await driver
-      .findElement(By.name("validFrom"))
-      .sendKeys(today.format("DD-MM-YYYY"));
-    await driver
-      .findElement(By.name("validUntil"))
-      .sendKeys(today.add(1, "month").format("DD-MM-YYYY"));
+    const validFrom = today.format("L");
+    const validUntil = today.add(1, "month").format("L");
+
+    await driver.findElement(By.name("validFrom")).sendKeys(validFrom);
+    await driver.findElement(By.name("validUntil")).sendKeys(validUntil);
 
     await driver.findElement(By.className("ReactSelect__control")).click();
 
