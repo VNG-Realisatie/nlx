@@ -2,6 +2,11 @@
 ## Chart ##
 ###########
 
+outway:
+  ingress:
+    enabled: true
+    host: outway-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
 ################
 ## Sub-charts ##
 ################

@@ -51,6 +51,17 @@ managementAPI:
     inways:
       - gemeente-stijns-nlx-inway
 
+outway:
+  ingress:
+    enabled: true
+    host: outway.acc.gemeentestijns.nl
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - secretName: gemeentestijns-nlx-outway-ingress-tls
+        hosts:
+          - outway.acc.gemeentestijns.nl
+
 ################
 ## Sub-charts ##
 ################
