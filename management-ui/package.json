@@ -33,7 +33,7 @@
     "resetMocks": false
   },
   "devDependencies": {
-    "@commonground/design-system": "21.0.0",
+    "@commonground/design-system": "21.0.1",
     "@commonground/eslint-config-cra-standard-prettier": "6.1.2",
     "@fontsource/source-sans-pro": "4.5.1",
     "@openapitools/openapi-generator-cli": "2.4.25",
