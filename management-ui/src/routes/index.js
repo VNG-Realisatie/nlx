@@ -18,6 +18,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 import OrdersPage from '../pages/orders/OrdersPage'
 import AddOrderPage from '../pages/orders/AddOrderPage'
 import EditOrderPage from '../pages/orders/EditOrderPage'
+import TermsOfService from '../pages/TermsOfServicePage'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
 
 const AllRoutes = ({ authorizationPageElement }) => (
@@ -25,6 +26,8 @@ const AllRoutes = ({ authorizationPageElement }) => (
     <Route index element={<Navigate to="/inways-and-outways" />} />
 
     <Route path={LoginRoutePath} element={authorizationPageElement} />
+
+    <Route path="/terms-of-service" element={<TermsOfService />} />
 
     <Route
       path="*"
