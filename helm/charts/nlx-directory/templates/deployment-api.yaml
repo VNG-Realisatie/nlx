@@ -76,6 +76,8 @@ spec:
               value: /certificate/tls.crt
             - name: TLS_DIRECTORY_KEY
               value: /certificate/tls.key
+            - name: TERMS_OF_SERVICE_URL
+              value: {{ .Values.config.termsOfServiceURL }}
             - name: LOG_TYPE
               value: {{ .Values.config.logType }}
             - name: LOG_LEVEL

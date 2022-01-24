@@ -1,4 +1,4 @@
-# nlx-directory 
+# nlx-directory
 
 NLX is an open source peer-to-peer system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API ecosystem with many organizations. the NLX directory provides a centralized overview of every participant in the NLX ecosystem. It is used by the NLX management API to identify which API's are available and at which address. It is only used for this insight. Once a connection (or even a access request to the API) is established, the directory has no role for that connection anymore.
 
@@ -22,8 +22,8 @@ $ helm install nlx-directory commonground/nlx-nlx-directory
 
 ## Upgrading the Chart
 
-Currently, our Helm charts use the same release version as the NLX release version. 
-To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md) 
+Currently, our Helm charts use the same release version as the NLX release version.
+To know what has changed for the Helm charts, look at the changes in our [CHANGELOG](https://gitlab.com/commonground/nlx/nlx/-/blob/master/CHANGELOG.md)
 that are prefixed with 'Helm'.
 
 ## Uninstalling the Chart
@@ -50,14 +50,24 @@ The following table lists the configurable parameters of the nlx-directory Chart
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `nameOverride` | Override deployment name | `""` | no | 
+| `nameOverride` | Override deployment name | `""` | no |
 | `fullnameOverride` | Override full deployment name | `""` | no |
+
+### NLX directory parameters
+
+| Parameter | Description                                                                                                                                        | Default | Required (yes/no) |
+| --------- |----------------------------------------------------------------------------------------------------------------------------------------------------| ------- | -------- |
+| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.    | `live` | no |
+| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType`                                              | `info` | no |
+| `config.monitorOfflineServiceTTL` | The offline Time to Live (TTL) for a service in seconds. If the offline time of a service exceeds the time to live, the service will be removed from the directory  | `86400` | no |
+| `config.resetDatabase` | If set to true, the directory database will be reset                                                                                               | `false` | no |
+| `config.termsOfServiceURL` | If a terms of service URL is specified, participants of this NLX network need to agree to the terms of service before they can use the network     | `""` | no |
 
 ### Deployment parameters
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no | 
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no |
 | `image.databaseRepository` | Image repository | `nlxio/directory-db` | no |
 | `image.apiRepository` | Image repository | `nlxio/directory-api` | no |
 | `image.monitorRepository` | Image repository | `nlxio/directory-monitor` | no |
@@ -72,7 +82,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | `tolerations` | Node tolerations for pod assignment | `[]` | no |
 | `serviceAccount.create` | If `true`, create a new service account | `true` | no |
 | `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | no |
-| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no | 
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no |
 | `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
 | `podSecuritiyContext.fsGroup` | Group ID under which the pod should be started | `1001` | no |
 
@@ -119,7 +129,7 @@ The following table lists the configurable parameters of the nlx-directory Chart
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
+Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
 
 ```console
 $ helm install nlx-directory -f values.yaml .

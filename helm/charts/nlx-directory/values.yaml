@@ -25,6 +25,7 @@ config:
   logLevel: info
   monitorOfflineServiceTTL: 86400  # 24 hours
   resetDatabase: false
+  termsOfServiceURL: ""
 
 postgresql:
   hostname: postgresql

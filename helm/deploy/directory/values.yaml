@@ -21,6 +21,8 @@ postgresql:
 ################
 nlx-directory:
   replicaCount: 3
+  config:
+    termsOfServiceURL: https://gitlab.com/commonground/nlx/terms-of-service/-/raw/main/v1.0.pdf
   postgresql:
     hostname: nlx-directory-postgresql
     database: nlx-directory
