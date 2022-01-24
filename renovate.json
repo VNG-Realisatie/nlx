@@ -6,9 +6,12 @@
     ":semanticCommitScopeDisabled",
     "schedule:nonOfficeHours"
   ],
-  "automerge": true,
+  "branchPrefix": "review/",
   "automergeType": "pr",
+  "gitLabIgnoreApprovals": true,
   "dependencyDashboard": true,
+  "automerge": true,
+  "rangeStrategy": "pin",
   "postUpdateOptions": [
     "gomodTidy"
   ],
@@ -16,11 +19,6 @@
     "fileMatch": [
       "^\\.gitlab/ci/.*\\.yml$"
     ]
-  },
-  "gomod": {
-    "major": {
-      "dependencyDashboardApproval": true
-    }
   },
   "ignoreDeps": [],
   "packageRules": [
