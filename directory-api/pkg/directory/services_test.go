@@ -152,7 +152,7 @@ func TestListServices(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t)
+			service, mocks := newService(t, "")
 
 			if tt.setup != nil {
 				tt.setup(mocks)

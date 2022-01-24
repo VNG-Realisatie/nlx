@@ -171,7 +171,7 @@ func TestRegisterInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t)
+			service, mocks := newService(t, "")
 
 			if tt.setup != nil {
 				tt.setup(mocks)
@@ -198,7 +198,7 @@ func testGetOrganizationInformationFromRequest(context.Context) (*tls.Organizati
 		SerialNumber: testOrganizationSerialNumber,
 	}, nil
 }
-func newService(t *testing.T) (*directory.DirectoryService, serviceMocks) {
+func newService(t *testing.T, termsOfServiceURL string) (*directory.DirectoryService, serviceMocks) {
 	ctrl := gomock.NewController(t)
 
 	t.Cleanup(func() {
@@ -212,6 +212,7 @@ func newService(t *testing.T) (*directory.DirectoryService, serviceMocks) {
 
 	service := directory.New(
 		zap.NewNop(),
+		termsOfServiceURL,
 		mocks.r,
 		nil,
 		testGetOrganizationInformationFromRequest,

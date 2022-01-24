@@ -34,6 +34,10 @@ service Directory {
 	rpc ListParticipants (google.protobuf.Empty) returns (ListParticipantsResponse) {
 		option (google.api.http).get = "/api/directory/participants";
 	};
+
+	rpc GetTermsOfService (google.protobuf.Empty) returns (GetTermsOfServiceResponse) {
+		option (google.api.http).get = "/api/directory/terms-of-service";
+	};
 }
 
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
@@ -180,4 +184,9 @@ message ListParticipantsResponse {
 
 message SetOrganizationContactDetailsRequest {
 	string email_address = 1;
+}
+
+message GetTermsOfServiceResponse {
+	bool enabled = 1;
+	string url = 2;
 }

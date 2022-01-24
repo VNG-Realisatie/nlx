@@ -88,6 +88,28 @@
         ]
       }
     },
+    "/api/directory/terms-of-service": {
+      "get": {
+        "operationId": "Directory_GetTermsOfService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiGetTermsOfServiceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/api/stats": {
       "get": {
         "operationId": "Directory_ListInOutwayStatistics",
@@ -252,6 +274,17 @@
       "type": "object",
       "properties": {
         "address": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiGetTermsOfServiceResponse": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "url": {
           "type": "string"
         }
       }

@@ -24,14 +24,16 @@ type DirectoryService struct {
 	logger                                *zap.Logger
 	repository                            storage.Repository
 	httpClient                            *http.Client
+	termsOfServiceURL                     string
 	getOrganizationInformationFromRequest func(ctx context.Context) (*tls.OrganizationInformation, error)
 }
 
-func New(logger *zap.Logger, repository storage.Repository, httpClient *http.Client, getOrganisationInformationFromRequest func(ctx context.Context) (*tls.OrganizationInformation, error)) *DirectoryService {
+func New(logger *zap.Logger, termsOfServiceURL string, repository storage.Repository, httpClient *http.Client, getOrganisationInformationFromRequest func(ctx context.Context) (*tls.OrganizationInformation, error)) *DirectoryService {
 	s := &DirectoryService{
 		logger:                                logger,
 		repository:                            repository,
 		httpClient:                            httpClient,
+		termsOfServiceURL:                     termsOfServiceURL,
 		getOrganizationInformationFromRequest: getOrganisationInformationFromRequest,
 	}
 

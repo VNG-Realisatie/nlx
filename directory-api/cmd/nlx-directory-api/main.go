@@ -31,6 +31,8 @@ var options struct {
 	DirectoryCertFile  string `long:"tls-directory-cert" env:"TLS_DIRECTORY_CERT" description:"Absolute or relative path to the Directory cert .pem"`
 	DirectoryKeyFile   string `long:"tls-directory-key" env:"TLS_DIRECTORY_KEY" description:"Absolute or relative path to the Directory key .pem"`
 
+	TermsOfServiceURL string `long:"terms-of-service-url" env:"TERMS_OF_SERVICE_URL" description:"optional link to the terms of service"`
+
 	PostgresDSN string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
 	logoptions.LogOptions
@@ -103,6 +105,7 @@ func main() {
 	httpClient := nlxhttp.NewHTTPClient(certificate)
 	directoryService := directory.New(
 		logger,
+		options.TermsOfServiceURL,
 		storage,
 		httpClient,
 		common_tls.GetOrganizationInfoFromRequest,
@@ -110,7 +113,16 @@ func main() {
 
 	httpServer := http.NewServer(db, certificate, logger)
 
-	server, err := NewServer(logger, options.ListenAddress, options.ListenAddressPlain, certificate, directoryService, directoryService, directoryService, httpServer)
+	server, err := NewServer(&NewServerArgs{
+		Logger:                       logger,
+		Address:                      options.ListenAddress,
+		AddressPlain:                 options.ListenAddressPlain,
+		Certificate:                  certificate,
+		DirectoryService:             directoryService,
+		DirectoryRegistrationService: directoryService,
+		DirectoryInspectionService:   directoryService,
+		HTTPServer:                   httpServer,
+	})
 	if err != nil {
 		logger.Fatal("could not start server", zap.Error(err))
 	}

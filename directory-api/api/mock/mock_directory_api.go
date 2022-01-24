@@ -78,6 +78,26 @@ func (mr *MockDirectoryClientMockRecorder) GetOrganizationInway(ctx, in interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryClient)(nil).GetOrganizationInway), varargs...)
 }
 
+// GetTermsOfService mocks base method.
+func (m *MockDirectoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.GetTermsOfServiceResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetTermsOfService", varargs...)
+	ret0, _ := ret[0].(*directoryapi.GetTermsOfServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTermsOfService indicates an expected call of GetTermsOfService.
+func (mr *MockDirectoryClientMockRecorder) GetTermsOfService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfService", reflect.TypeOf((*MockDirectoryClient)(nil).GetTermsOfService), varargs...)
+}
+
 // ListInOutwayStatistics mocks base method.
 func (m *MockDirectoryClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
 	m.ctrl.T.Helper()
@@ -269,6 +289,21 @@ func (m *MockDirectoryServer) GetOrganizationInway(arg0 context.Context, arg1 *d
 func (mr *MockDirectoryServerMockRecorder) GetOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryServer)(nil).GetOrganizationInway), arg0, arg1)
+}
+
+// GetTermsOfService mocks base method.
+func (m *MockDirectoryServer) GetTermsOfService(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.GetTermsOfServiceResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTermsOfService", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.GetTermsOfServiceResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTermsOfService indicates an expected call of GetTermsOfService.
+func (mr *MockDirectoryServerMockRecorder) GetTermsOfService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfService", reflect.TypeOf((*MockDirectoryServer)(nil).GetTermsOfService), arg0, arg1)
 }
 
 // ListInOutwayStatistics mocks base method.

@@ -35,6 +35,17 @@ type Server struct {
 	httpsServer *http.Server
 }
 
+type NewServerArgs struct {
+	Logger                       *zap.Logger
+	Address                      string
+	AddressPlain                 string
+	Certificate                  *common_tls.CertificateBundle
+	DirectoryService             directoryapi.DirectoryServer
+	DirectoryRegistrationService directoryapi.DirectoryRegistrationServer
+	DirectoryInspectionService   directoryapi.DirectoryInspectionServer
+	HTTPServer                   *directory_http.Server
+}
+
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer
 // and all other connections to otherHandler.
 func newGRPCSplitterHandlerFunc(
@@ -52,16 +63,9 @@ func newGRPCSplitterHandlerFunc(
 }
 
 func NewServer(
-	logger *zap.Logger,
-	address,
-	addressPlain string,
-	certificate *common_tls.CertificateBundle,
-	directoryService directoryapi.DirectoryServer,
-	directoryRegistrationService directoryapi.DirectoryRegistrationServer,
-	directoryInspectionService directoryapi.DirectoryInspectionServer,
-	httpServer *directory_http.Server) (*Server, error) {
+	args *NewServerArgs) (*Server, error) {
 	server := &Server{}
-
+	logger := args.Logger
 	// setup zap connection for global grpc logging
 	grpc_zap.ReplaceGrpcLogger(logger)
 
@@ -88,11 +92,11 @@ func NewServer(
 
 	// start grpc server and attach directory service
 	grpcServer := grpc.NewServer(opts...)
-	directoryapi.RegisterDirectoryServer(grpcServer, directoryService)
-	directoryapi.RegisterDirectoryRegistrationServer(grpcServer, directoryRegistrationService)
-	directoryapi.RegisterDirectoryInspectionServer(grpcServer, directoryInspectionService)
+	directoryapi.RegisterDirectoryServer(grpcServer, args.DirectoryService)
+	directoryapi.RegisterDirectoryRegistrationServer(grpcServer, args.DirectoryRegistrationService)
+	directoryapi.RegisterDirectoryInspectionServer(grpcServer, args.DirectoryInspectionService)
 
-	tlsConfig := certificate.TLSConfig()
+	tlsConfig := args.Certificate.TLSConfig()
 	tlsConfig.InsecureSkipVerify = true //nolint:gosec // local connection; hostname won't match
 
 	gatewayDialOptions, gatewayMux := setupGateway(tlsConfig)
@@ -100,32 +104,32 @@ func NewServer(
 	err := directoryapi.RegisterDirectoryHandlerFromEndpoint(
 		context.Background(),
 		gatewayMux,
-		address,
+		args.Address,
 		gatewayDialOptions,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	httpServer.Mount("/", gatewayMux)
+	args.HTTPServer.Mount("/", gatewayMux)
 
 	// Start HTTPS server
 	// let server handle connections on the TLS Listener
-	tlsConfig = certificate.TLSConfig(certificate.WithTLSClientAuth())
+	tlsConfig = args.Certificate.TLSConfig(args.Certificate.WithTLSClientAuth())
 	tlsConfig.NextProtos = []string{"h2"}
 
 	server.httpsServer = &http.Server{
-		Addr:      address,
+		Addr:      args.Address,
 		TLSConfig: tlsConfig,
-		Handler:   newGRPCSplitterHandlerFunc(grpcServer, httpServer),
+		Handler:   newGRPCSplitterHandlerFunc(grpcServer, args.HTTPServer),
 	}
 
 	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
 	server.httpServer = &http.Server{
-		Addr: addressPlain,
+		Addr: args.AddressPlain,
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			logger.Info("Incoming request", zap.Int("proto", r.ProtoMajor), zap.String("path", r.URL.Path))
-			httpServer.ServeHTTP(w, r)
+			args.HTTPServer.ServeHTTP(w, r)
 		}),
 	}
 
