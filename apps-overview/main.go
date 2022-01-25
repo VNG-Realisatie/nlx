@@ -54,6 +54,8 @@ func templateForSubdomain(subdomain string) string {
 	switch subdomain {
 	case "review":
 		templateFilePath = path.Join("templates", "sites-review.html")
+	case "acc":
+		templateFilePath = path.Join("templates", "sites-acc.html")
 	default:
 		templateFilePath = path.Join("templates", "sites.html")
 	}

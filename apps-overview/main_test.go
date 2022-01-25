@@ -17,7 +17,7 @@ func TestTemplateForSubdomain(t *testing.T) {
 		},
 		"acc": {
 			Subdomain:        "acc",
-			ExpectedTemplate: "templates/sites.html",
+			ExpectedTemplate: "templates/sites-acc.html",
 		},
 		"pre-prod": {
 			Subdomain:        "pre-prod",
