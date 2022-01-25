@@ -58,9 +58,7 @@ outway:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     tls:
-      - secretName: gemeentestijns-nlx-outway-ingress-tls
-        hosts:
-          - outway.acc.gemeentestijns.nl
+      secretName: gemeentestijns-nlx-outway-ingress-tls
 
 ################
 ## Sub-charts ##
