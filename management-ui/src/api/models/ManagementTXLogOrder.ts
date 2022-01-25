@@ -62,4 +62,3 @@ export function ManagementTXLogOrderToJSON(value?: ManagementTXLogOrder | null):
     };
 }
 
-

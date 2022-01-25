@@ -36,6 +36,20 @@ func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
 	return m.recorder
 }
 
+// AcceptTermsOfService mocks base method.
+func (m *MockLogger) AcceptTermsOfService(ctx context.Context, userName, userAgent string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AcceptTermsOfService", ctx, userName, userAgent)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AcceptTermsOfService indicates an expected call of AcceptTermsOfService.
+func (mr *MockLoggerMockRecorder) AcceptTermsOfService(ctx, userName, userAgent interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcceptTermsOfService", reflect.TypeOf((*MockLogger)(nil).AcceptTermsOfService), ctx, userName, userAgent)
+}
+
 // AccessGrantRevoke mocks base method.
 func (m *MockLogger) AccessGrantRevoke(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, serviceName string) error {
 	m.ctrl.T.Helper()

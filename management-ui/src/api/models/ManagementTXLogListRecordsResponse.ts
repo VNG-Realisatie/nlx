@@ -18,7 +18,7 @@ import {
     ManagementTXLogRecordFromJSON,
     ManagementTXLogRecordFromJSONTyped,
     ManagementTXLogRecordToJSON,
-} from './';
+} from './ManagementTXLogRecord';
 
 /**
  * 
@@ -60,5 +60,4 @@ export function ManagementTXLogListRecordsResponseToJSON(value?: ManagementTXLog
         'records': value.records === undefined ? undefined : ((value.records as Array<any>).map(ManagementTXLogRecordToJSON)),
     };
 }
-
 

@@ -55,6 +55,7 @@ const (
 	OrderOutgoingRevoke         ActionType = "order_outgoing_revoke"
 	OrganizationSettingsUpdate  ActionType = "organization_settings_update"
 	InwayDelete                 ActionType = "inway_delete"
+	AcceptTermsOfService        ActionType = "accept_terms_of_service"
 )
 
 type Logger interface {
@@ -75,4 +76,5 @@ type Logger interface {
 	ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error
 	OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error
 	InwayDelete(ctx context.Context, userName, userAgent, inwayName string) error
+	AcceptTermsOfService(ctx context.Context, userName, userAgent string) error
 }

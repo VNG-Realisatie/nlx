@@ -381,3 +381,13 @@ func (a *PostgresLogger) InwayDelete(ctx context.Context, userName, userAgent, i
 
 	return err
 }
+
+func (a *PostgresLogger) AcceptTermsOfService(ctx context.Context, userName, userAgent string) error {
+	_, err := a.database.CreateAuditLogRecord(ctx, &database.AuditLog{
+		UserAgent:  userAgent,
+		UserName:   userName,
+		ActionType: database.AcceptTermsOfService,
+	})
+
+	return err
+}

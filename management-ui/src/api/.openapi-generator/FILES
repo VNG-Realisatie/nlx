@@ -1,5 +1,6 @@
 apis/DirectoryApi.ts
 apis/ManagementApi.ts
+apis/TXLogApi.ts
 apis/index.ts
 index.ts
 models/AuditLogRecordActionType.ts
@@ -22,11 +23,13 @@ models/ManagementErrorCode.ts
 models/ManagementErrorDetails.ts
 models/ManagementGetServiceResponse.ts
 models/ManagementGetStatisticsOfServicesResponse.ts
+models/ManagementGetTermsOfServiceStatusResponse.ts
 models/ManagementIncomingAccessRequest.ts
 models/ManagementIncomingOrder.ts
 models/ManagementInway.ts
 models/ManagementInwayService.ts
 models/ManagementIsFinanceEnabledResponse.ts
+models/ManagementIsTXLogEnabledResponse.ts
 models/ManagementListAccessGrantsForServiceResponse.ts
 models/ManagementListAuditLogsResponse.ts
 models/ManagementListIncomingAccessRequestsResponse.ts
@@ -47,6 +50,12 @@ models/ManagementRetrieveClaimForOrderResponse.ts
 models/ManagementServiceStatistics.ts
 models/ManagementSettings.ts
 models/ManagementSynchronizeOrdersResponse.ts
+models/ManagementTXLogDirection.ts
+models/ManagementTXLogListRecordsResponse.ts
+models/ManagementTXLogOrder.ts
+models/ManagementTXLogOrganization.ts
+models/ManagementTXLogRecord.ts
+models/ManagementTXLogService.ts
 models/ManagementUpdateServiceResponse.ts
 models/ManagementUpdateSettingsRequest.ts
 models/ProtobufAny.ts

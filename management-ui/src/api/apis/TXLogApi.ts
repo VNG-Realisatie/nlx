@@ -30,8 +30,8 @@ export class TXLogApi extends runtime.BaseAPI {
 
     /**
      */
-    async tXLogListRecordsRaw(): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async tXLogListRecordsRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -40,15 +40,15 @@ export class TXLogApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementTXLogListRecordsResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async tXLogListRecords(): Promise<ManagementTXLogListRecordsResponse> {
-        const response = await this.tXLogListRecordsRaw();
+    async tXLogListRecords(initOverrides?: RequestInit): Promise<ManagementTXLogListRecordsResponse> {
+        const response = await this.tXLogListRecordsRaw(initOverrides);
         return await response.value();
     }
 

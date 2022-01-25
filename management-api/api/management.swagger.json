@@ -1072,6 +1072,48 @@
         ]
       }
     },
+    "/api/v1/terms-of-service": {
+      "get": {
+        "operationId": "Management_GetTermsOfServiceStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/managementGetTermsOfServiceStatusResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      },
+      "post": {
+        "operationId": "Management_AcceptTermsOfService",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Management"
+        ]
+      }
+    },
     "/api/v1/txlog/enabled": {
       "get": {
         "operationId": "Management_IsTXLogEnabled",
@@ -1553,6 +1595,14 @@
           "items": {
             "$ref": "#/definitions/managementServiceStatistics"
           }
+        }
+      }
+    },
+    "managementGetTermsOfServiceStatusResponse": {
+      "type": "object",
+      "properties": {
+        "accepted": {
+          "type": "boolean"
         }
       }
     },

@@ -20,6 +20,7 @@ export * from './ManagementErrorCode';
 export * from './ManagementErrorDetails';
 export * from './ManagementGetServiceResponse';
 export * from './ManagementGetStatisticsOfServicesResponse';
+export * from './ManagementGetTermsOfServiceStatusResponse';
 export * from './ManagementIncomingAccessRequest';
 export * from './ManagementIncomingOrder';
 export * from './ManagementInway';

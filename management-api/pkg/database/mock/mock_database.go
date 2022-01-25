@@ -39,6 +39,20 @@ func (m *MockConfigDatabase) EXPECT() *MockConfigDatabaseMockRecorder {
 	return m.recorder
 }
 
+// AcceptTermsOfService mocks base method.
+func (m *MockConfigDatabase) AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AcceptTermsOfService", ctx, username, createdAt)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AcceptTermsOfService indicates an expected call of AcceptTermsOfService.
+func (mr *MockConfigDatabaseMockRecorder) AcceptTermsOfService(ctx, username, createdAt interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcceptTermsOfService", reflect.TypeOf((*MockConfigDatabase)(nil).AcceptTermsOfService), ctx, username, createdAt)
+}
+
 // CreateAccessGrant mocks base method.
 func (m *MockConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *database.IncomingAccessRequest) (*database.AccessGrant, error) {
 	m.ctrl.T.Helper()
@@ -406,6 +420,21 @@ func (m *MockConfigDatabase) GetSettings(ctx context.Context) (*domain.Settings,
 func (mr *MockConfigDatabaseMockRecorder) GetSettings(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSettings", reflect.TypeOf((*MockConfigDatabase)(nil).GetSettings), ctx)
+}
+
+// GetTermsOfServiceStatus mocks base method.
+func (m *MockConfigDatabase) GetTermsOfServiceStatus(ctx context.Context) (*domain.TermsOfServiceStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTermsOfServiceStatus", ctx)
+	ret0, _ := ret[0].(*domain.TermsOfServiceStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTermsOfServiceStatus indicates an expected call of GetTermsOfServiceStatus.
+func (mr *MockConfigDatabaseMockRecorder) GetTermsOfServiceStatus(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfServiceStatus", reflect.TypeOf((*MockConfigDatabase)(nil).GetTermsOfServiceStatus), ctx)
 }
 
 // GetUser mocks base method.

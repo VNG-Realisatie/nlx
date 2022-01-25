@@ -38,6 +38,26 @@ func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 	return m.recorder
 }
 
+// AcceptTermsOfService mocks base method.
+func (m *MockManagementClient) AcceptTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "AcceptTermsOfService", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AcceptTermsOfService indicates an expected call of AcceptTermsOfService.
+func (mr *MockManagementClientMockRecorder) AcceptTermsOfService(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcceptTermsOfService", reflect.TypeOf((*MockManagementClient)(nil).AcceptTermsOfService), varargs...)
+}
+
 // ApproveIncomingAccessRequest mocks base method.
 func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context, in *api.ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
@@ -256,6 +276,26 @@ func (mr *MockManagementClientMockRecorder) GetStatisticsOfServices(ctx, in inte
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementClient)(nil).GetStatisticsOfServices), varargs...)
+}
+
+// GetTermsOfServiceStatus mocks base method.
+func (m *MockManagementClient) GetTermsOfServiceStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.GetTermsOfServiceStatusResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetTermsOfServiceStatus", varargs...)
+	ret0, _ := ret[0].(*api.GetTermsOfServiceStatusResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTermsOfServiceStatus indicates an expected call of GetTermsOfServiceStatus.
+func (mr *MockManagementClientMockRecorder) GetTermsOfServiceStatus(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfServiceStatus", reflect.TypeOf((*MockManagementClient)(nil).GetTermsOfServiceStatus), varargs...)
 }
 
 // IsFinanceEnabled mocks base method.
@@ -721,6 +761,21 @@ func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 	return m.recorder
 }
 
+// AcceptTermsOfService mocks base method.
+func (m *MockManagementServer) AcceptTermsOfService(arg0 context.Context, arg1 *emptypb.Empty) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AcceptTermsOfService", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AcceptTermsOfService indicates an expected call of AcceptTermsOfService.
+func (mr *MockManagementServerMockRecorder) AcceptTermsOfService(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcceptTermsOfService", reflect.TypeOf((*MockManagementServer)(nil).AcceptTermsOfService), arg0, arg1)
+}
+
 // ApproveIncomingAccessRequest mocks base method.
 func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context, arg1 *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
@@ -884,6 +939,21 @@ func (m *MockManagementServer) GetStatisticsOfServices(arg0 context.Context, arg
 func (mr *MockManagementServerMockRecorder) GetStatisticsOfServices(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatisticsOfServices", reflect.TypeOf((*MockManagementServer)(nil).GetStatisticsOfServices), arg0, arg1)
+}
+
+// GetTermsOfServiceStatus mocks base method.
+func (m *MockManagementServer) GetTermsOfServiceStatus(arg0 context.Context, arg1 *emptypb.Empty) (*api.GetTermsOfServiceStatusResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTermsOfServiceStatus", arg0, arg1)
+	ret0, _ := ret[0].(*api.GetTermsOfServiceStatusResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTermsOfServiceStatus indicates an expected call of GetTermsOfServiceStatus.
+func (mr *MockManagementServerMockRecorder) GetTermsOfServiceStatus(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfServiceStatus", reflect.TypeOf((*MockManagementServer)(nil).GetTermsOfServiceStatus), arg0, arg1)
 }
 
 // IsFinanceEnabled mocks base method.

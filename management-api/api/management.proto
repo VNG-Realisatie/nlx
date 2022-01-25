@@ -108,6 +108,12 @@ service Management {
   rpc ListIncomingOrders (google.protobuf.Empty) returns (ListIncomingOrdersResponse) {
     option (google.api.http) = {get: "/api/v1/orders/incoming"};
   }
+  rpc GetTermsOfServiceStatus (google.protobuf.Empty) returns (GetTermsOfServiceStatusResponse) {
+    option (google.api.http) = {get: "/api/v1/terms-of-service"};
+  }
+  rpc AcceptTermsOfService (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/api/v1/terms-of-service"};
+  }
 }
 
 message Organization {
@@ -602,17 +608,21 @@ message TXLogOrder {
 message TXLogRecord {
   TXLogOrganization source = 1;
   TXLogOrganization destination = 2;
-  
+
   TXLogDirection direction = 3;
   TXLogService service = 4;
   string data = 5;
   TXLogOrder order = 6;
 
   string TransactionID = 7;
-  
+
   google.protobuf.Timestamp createdAt = 9;
 }
 
 message TXLogListRecordsResponse {
   repeated TXLogRecord records = 1;
+}
+
+message GetTermsOfServiceStatusResponse {
+  bool accepted = 1;
 }

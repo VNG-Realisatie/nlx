@@ -54,4 +54,3 @@ export function ManagementIsTXLogEnabledResponseToJSON(value?: ManagementIsTXLog
     };
 }
 
-

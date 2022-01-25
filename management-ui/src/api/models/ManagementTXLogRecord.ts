@@ -18,19 +18,25 @@ import {
     ManagementTXLogDirectionFromJSON,
     ManagementTXLogDirectionFromJSONTyped,
     ManagementTXLogDirectionToJSON,
+} from './ManagementTXLogDirection';
+import {
     ManagementTXLogOrder,
     ManagementTXLogOrderFromJSON,
     ManagementTXLogOrderFromJSONTyped,
     ManagementTXLogOrderToJSON,
+} from './ManagementTXLogOrder';
+import {
     ManagementTXLogOrganization,
     ManagementTXLogOrganizationFromJSON,
     ManagementTXLogOrganizationFromJSONTyped,
     ManagementTXLogOrganizationToJSON,
+} from './ManagementTXLogOrganization';
+import {
     ManagementTXLogService,
     ManagementTXLogServiceFromJSON,
     ManagementTXLogServiceFromJSONTyped,
     ManagementTXLogServiceToJSON,
-} from './';
+} from './ManagementTXLogService';
 
 /**
  * 
@@ -128,5 +134,4 @@ export function ManagementTXLogRecordToJSON(value?: ManagementTXLogRecord | null
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }
-
 

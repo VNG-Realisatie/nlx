@@ -54,4 +54,3 @@ export function ManagementTXLogServiceToJSON(value?: ManagementTXLogService | nu
     };
 }
 
-
