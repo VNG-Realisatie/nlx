@@ -3,9 +3,9 @@
 //
 
 import React from 'react'
-import { arrayOf, instanceOf, node, shape, string } from 'prop-types'
+import { arrayOf, instanceOf, node, string } from 'prop-types'
 import { Trans, useTranslation } from 'react-i18next'
-import {
+import AuditLogModel, {
   ACTION_ACCESS_GRANT_REVOKE,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
@@ -52,43 +52,32 @@ Template.propTypes = {
   meta: arrayOf(string),
 }
 
-const AuditLogRecord = ({
-  action,
-  user,
-  createdAt,
-  services,
-  delegatee,
-  operatingSystem,
-  browser,
-  client,
-  data,
-  ...props
-}) => {
+const AuditLogRecord = ({ model, ...props }) => {
   const { t } = useTranslation()
-  const dateTimeString = t('Audit log created at', { date: createdAt })
+  const dateTimeString = t('Audit log created at', { date: model.createdAt })
 
   const meta = [dateTimeString]
 
-  if (operatingSystem) {
-    meta.push(operatingSystem)
+  if (model.operatingSystem) {
+    meta.push(model.operatingSystem)
   }
 
-  if (browser) {
-    meta.push(browser)
+  if (model.browser) {
+    meta.push(model.browser)
   }
 
-  if (client) {
-    meta.push(client)
+  if (model.client) {
+    meta.push(model.client)
   }
 
   let organization = {}
   let service = ''
   let servicesList = ''
 
-  if (services && services.length) {
-    organization = services[0].organization
-    service = services[0].service
-    servicesList = services
+  if (model.services && model.services.length) {
+    organization = model.services[0].organization
+    service = model.services[0].service
+    servicesList = model.services
       .map(
         (service) =>
           `${service.service} (${service.organization.name} (${service.organization.serialNumber}))`,
@@ -96,13 +85,17 @@ const AuditLogRecord = ({
       .join(', ')
   }
 
-  const dataDelegatee = data.delegatee
-  const dataReference = data.reference
+  const dataDelegatee = model.data.delegatee
+  const dataReference = model.data.reference
 
-  const dataInwayName = data.inwayName
+  const dataInwayName = model.data.inwayName
 
   const organizationSerialNumber = organization.serialNumber
   const organizationName = organization.name
+
+  const user = model.user
+  const action = model.action
+  const delegatee = model.delegatee
 
   return (
     <Template action={action} dateTime={dateTimeString} meta={meta} {...props}>
@@ -215,32 +208,7 @@ const AuditLogRecord = ({
 }
 
 AuditLogRecord.propTypes = {
-  action: string,
-  user: string,
-  createdAt: instanceOf(Date),
-  delegatee: string,
-  services: arrayOf(
-    shape({
-      service: string,
-      organization: shape({
-        serialNumber: string,
-        name: string,
-      }),
-    }),
-  ),
-  operatingSystem: string,
-  browser: string,
-  client: string,
-  data: shape({
-    delegatee: string,
-    delegator: string,
-    reference: string,
-    inwayName: string,
-  }),
-}
-
-AuditLogRecord.defaultProps = {
-  data: {},
+  model: instanceOf(AuditLogModel).isRequired,
 }
 
 export default AuditLogRecord

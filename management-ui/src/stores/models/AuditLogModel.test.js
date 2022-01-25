@@ -40,7 +40,6 @@ test('creating AuditLog instance', () => {
   expect(auditLog.data).toStrictEqual({
     delegatee: 'Kadaster',
     reference: '030394AB',
-
     inwayName: 'my-inway',
   })
 })

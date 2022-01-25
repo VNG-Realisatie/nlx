@@ -515,7 +515,6 @@ message AuditLogRecordMetadata {
   string delegatee = 1;
   string delegator = 2;
   string reference = 3;
-
   string inwayName = 4;
 }
 

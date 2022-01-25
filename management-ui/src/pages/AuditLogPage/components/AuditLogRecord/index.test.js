@@ -3,8 +3,9 @@
 //
 
 import React from 'react'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
-import {
+import AuditLogModel, {
   ACTION_ACCESS_GRANT_REVOKE,
   ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
   ACTION_INCOMING_ACCESS_REQUEST_REJECT,
@@ -23,12 +24,30 @@ import {
 } from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
+const createModel = (data) => {
+  const result = new AuditLogModel({ auditLogData: data })
+  result.user = 'John Doe'
+  return result
+}
+
 test.concurrent.each([
-  [{ action: ACTION_LOGIN_SUCCESS }, 'shut-down.svg', 'John Doe has logged in'],
-  [{ action: ACTION_LOGIN_FAIL }, 'shut-down.svg', 'Failed login attempt'],
-  [{ action: ACTION_LOGOUT }, 'shut-down.svg', 'John Doe has logged out'],
   [
-    {
+    createModel({ action: ACTION_LOGIN_SUCCESS }),
+    'shut-down.svg',
+    'John Doe has logged in',
+  ],
+  [
+    createModel({ action: ACTION_LOGIN_FAIL }),
+    'shut-down.svg',
+    'Failed login attempt',
+  ],
+  [
+    createModel({ action: ACTION_LOGOUT }),
+    'shut-down.svg',
+    'John Doe has logged out',
+  ],
+  [
+    createModel({
       action: ACTION_INCOMING_ACCESS_REQUEST_ACCEPT,
       services: [
         {
@@ -39,12 +58,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'check.svg',
     'John Doe has approved the access request from Gemeente Stijns (00000000000000000001) for Kadaster',
   ],
   [
-    {
+    createModel({
       action: ACTION_INCOMING_ACCESS_REQUEST_REJECT,
       services: [
         {
@@ -55,12 +74,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'close.svg',
     'John Doe has rejected the access request from 00000000000000000001 for Kadaster',
   ],
   [
-    {
+    createModel({
       action: ACTION_ACCESS_GRANT_REVOKE,
       services: [
         {
@@ -71,12 +90,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'revoke.svg',
     'John Doe has revoked access for Kadaster from Gemeente Stijns',
   ],
   [
-    {
+    createModel({
       action: ACTION_OUTGOING_ACCESS_REQUEST_CREATE,
       services: [
         {
@@ -87,12 +106,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'key.svg',
     'John Doe has requested access to Kadaster from 00000000000000000001',
   ],
   [
-    {
+    createModel({
       action: ACTION_OUTGOING_ACCESS_REQUEST_FAIL,
       services: [
         {
@@ -103,12 +122,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'key.svg',
     'John Doe failed to request access to Kadaster from Gemeente Stijns (00000000000000000001)',
   ],
   [
-    {
+    createModel({
       action: ACTION_SERVICE_CREATE,
       services: [
         {
@@ -119,12 +138,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'services.svg',
     'John Doe has created the service Kadaster',
   ],
   [
-    {
+    createModel({
       action: ACTION_SERVICE_UPDATE,
       services: [
         {
@@ -135,12 +154,12 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'services.svg',
     'John Doe has updated the service Kadaster',
   ],
   [
-    {
+    createModel({
       action: ACTION_SERVICE_DELETE,
       services: [
         {
@@ -151,19 +170,19 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'services.svg',
     'John Doe has removed the service Kadaster',
   ],
   [
-    {
+    createModel({
       action: ACTION_ORGANIZATION_SETTINGS_UPDATE,
-    },
+    }),
     'cog.svg',
     'John Doe updated the organization settings',
   ],
   [
-    {
+    createModel({
       action: ACTION_ORDER_CREATE,
       delegatee: 'Vergunningsoftware BV',
       services: [
@@ -182,57 +201,53 @@ test.concurrent.each([
           },
         },
       ],
-    },
+    }),
     'cog.svg',
     'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD (00000000000000000002)), vakantieverhuur (Gemeente Amsterdam (00000000000000000003))',
   ],
   [
-    {
+    createModel({
       action: ACTION_ORDER_OUTGOING_REVOKE,
       data: {
         delegatee: '00000000000000000001',
         reference: '0123456AB',
       },
-    },
+    }),
     'revoke.svg',
     'John Doe has revoked the outgoing order for 00000000000000000001 with reference 0123456AB',
   ],
   [
-    {
+    createModel({
       action: ACTION_INWAY_DELETE,
       data: {
         inwayName: 'my-inway',
       },
-    },
+    }),
     'cog.svg',
     'John Doe has removed the inway my-inway',
   ],
   [
-    { action: 'unknown action' },
+    createModel({ action: 'unknown action' }),
     'error-warning.svg',
     "John Doe has performed unknown action 'unknown action'",
   ],
-])(
-  'AuditLogRecord message for %j',
-  (auditLog, expectedIcon, expectedMessage) => {
-    const { getByTestId, getByRole } = renderWithProviders(
-      <AuditLogRecord {...auditLog} user="John Doe" />,
-    )
-    expect(getByRole('img')).toHaveTextContent(expectedIcon)
-    expect(getByTestId('message')).toHaveTextContent(expectedMessage)
-  },
-)
+])('AuditLogRecord message for %j', (model, expectedIcon, expectedMessage) => {
+  renderWithProviders(<AuditLogRecord model={model} />)
+  expect(screen.getByRole('img')).toHaveTextContent(expectedIcon)
+  expect(screen.getByTestId('message')).toHaveTextContent(expectedMessage)
+})
 
 test('meta information', () => {
-  const { getByTestId } = renderWithProviders(
-    <AuditLogRecord
-      createdAt={new Date('2021-02-15T12:59:02.898590Z')}
-      operatingSystem="Mac OS X"
-      browser="Safari"
-      client="NLX Management"
-    />,
-  )
-  expect(getByTestId('meta')).toHaveTextContent(
+  const model = new AuditLogModel({
+    auditLogData: {
+      createdAt: new Date('2021-02-15T12:59:02.898590Z'),
+      operatingSystem: 'Mac OS X',
+      browser: 'Safari',
+      client: 'NLX Management',
+    },
+  })
+  renderWithProviders(<AuditLogRecord model={model} />)
+  expect(screen.getByTestId('meta')).toHaveTextContent(
     'Audit log created at • Mac OS X • Safari • NLX Management',
   )
 })

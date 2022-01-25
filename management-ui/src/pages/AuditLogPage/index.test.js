@@ -4,6 +4,7 @@
 
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { ManagementApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
 import { renderWithProviders, waitFor } from '../../test-utils'
@@ -27,7 +28,7 @@ test('fetching the audit logs', async () => {
     managementApiClient,
   })
 
-  const { getByRole, findAllByTestId } = renderWithProviders(
+  renderWithProviders(
     <MemoryRouter>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={store}>
@@ -37,9 +38,9 @@ test('fetching the audit logs', async () => {
     </MemoryRouter>,
   )
 
-  expect(getByRole('progressbar')).toBeInTheDocument()
+  expect(screen.getByRole('progressbar')).toBeInTheDocument()
 
-  const auditLogElements = await findAllByTestId('audit-log-record')
+  const auditLogElements = await screen.findAllByTestId('audit-log-record')
   expect(auditLogElements).toHaveLength(1)
 })
 

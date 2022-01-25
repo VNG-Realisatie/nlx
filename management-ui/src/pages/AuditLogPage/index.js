@@ -50,7 +50,7 @@ const AuditLogPage = () => {
             <AuditLogRecord
               data-testid="audit-log-record"
               key={auditLog.id}
-              {...auditLog}
+              model={auditLog}
             />
           ))}
         </>

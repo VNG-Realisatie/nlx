@@ -84,7 +84,11 @@ class AuditLogModel {
     }
 
     if (auditLogData.data) {
-      this.data = auditLogData.data
+      this.data = {
+        delegatee: auditLogData.data.delegatee,
+        reference: auditLogData.data.reference,
+        inwayName: auditLogData.data.inwayName,
+      }
     }
   }
 }
