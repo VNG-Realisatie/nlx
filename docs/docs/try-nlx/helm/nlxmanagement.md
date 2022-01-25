@@ -59,3 +59,7 @@ Open NLX management and log in with the following data (or with the data you hav
 
 email: admin@example.com
 password: password
+
+## Accepting the Terms of Service (ToS)
+
+You will have to accept the Terms of Service before you can make use of the NLX network. You can do so by logging in to NLX Management. Please review the terms carefully before accepting them.
