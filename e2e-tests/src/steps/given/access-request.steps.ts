@@ -109,18 +109,24 @@ Given(
 
     // request access to new service
     const createAccessRequestResponse =
-      await serviceConsumer.apiClients.management?.managementCreateAccessRequest({
-        body: {
-          organizationSerialNumber: serviceProvider.serialNumber,
-          serviceName: uniqueServiceName,
-        },
-      });
+      await serviceConsumer.apiClients.management?.managementCreateAccessRequest(
+        {
+          body: {
+            organizationSerialNumber: serviceProvider.serialNumber,
+            serviceName: uniqueServiceName,
+          },
+        }
+      );
     assert.equal(createAccessRequestResponse?.serviceName, uniqueServiceName);
 
     // wait until the other organization has received our access request
     await pWaitFor.default(
       async () =>
-        await isIncomingAccessRequestPresent(uniqueServiceName, serviceConsumer, serviceProvider),
+        await isIncomingAccessRequestPresent(
+          uniqueServiceName,
+          serviceConsumer,
+          serviceProvider
+        ),
       {
         interval: 200,
         timeout: 1000 * 30,
@@ -145,7 +151,10 @@ Given(
     // wait until the other organization has retrieved the approval of the access request
     await pWaitFor.default(
       async () =>
-        await isAccessRequestApprovedForService(uniqueServiceName, serviceConsumer),
+        await isAccessRequestApprovedForService(
+          uniqueServiceName,
+          serviceConsumer
+        ),
       {
         interval: 200,
         timeout: 1000 * 35, // TODO: we dont know how long it takes until an approval is being synced to the other organization
