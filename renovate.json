@@ -6,7 +6,7 @@
     ":semanticCommitScopeDisabled",
     "schedule:nonOfficeHours"
   ],
-  "branchPrefix": "review/",
+  "branchPrefix": "review/renovate-",
   "automergeType": "pr",
   "gitLabIgnoreApprovals": true,
   "dependencyDashboard": true,
