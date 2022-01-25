@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { Alert } from '@commonground/design-system'
 import { Form } from 'formik'
 import NLXManagementLogo from '../../components/NLXManagementLogo'
-import { IconExternalLink, IconOrganization } from '../../icons'
 import nlxPattern from './nlx-pattern.svg'
 
 export const StyledNLXManagementLogo = styled(NLXManagementLogo)`
@@ -48,20 +47,4 @@ export const StyledForm = styled(Form)`
     justify-self: flex-end;
     width: fit-content;
   }
-`
-
-export const StyledIconExternalLink = styled(IconExternalLink)`
-  margin-left: ${(p) => p.theme.tokens.spacing02};
-`
-
-export const StyledOrganization = styled.p`
-  border-top: 1px ${(p) => p.theme.tokens.colorPaletteGray700} solid;
-  border-bottom: 1px ${(p) => p.theme.tokens.colorPaletteGray700} solid;
-  padding: ${(p) => p.theme.tokens.spacing07} 0;
-  margin: ${(p) => p.theme.tokens.spacing08} 0
-    ${(p) => p.theme.tokens.spacing09};
-`
-
-export const StyledIconOrganization = styled(IconOrganization)`
-  fill: ${(p) => p.theme.tokens.colorPaletteGray500};
 `

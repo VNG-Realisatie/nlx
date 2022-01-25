@@ -42,8 +42,6 @@ export const StyledIconExternalLink = styled(IconExternalLink)`
 `
 
 export const StyledOrganization = styled.p`
-  border-top: 1px ${(p) => p.theme.tokens.colorPaletteGray700} solid;
-  border-bottom: 1px ${(p) => p.theme.tokens.colorPaletteGray700} solid;
   padding: ${(p) => p.theme.tokens.spacing07} 0;
   margin: ${(p) => p.theme.tokens.spacing08} 0
     ${(p) => p.theme.tokens.spacing09};
