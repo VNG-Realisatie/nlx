@@ -123,7 +123,7 @@ Given(
         await isIncomingAccessRequestPresent(uniqueServiceName, serviceConsumer, serviceProvider),
       {
         interval: 200,
-        timeout: 6500,
+        timeout: 1000 * 30,
       }
     );
 

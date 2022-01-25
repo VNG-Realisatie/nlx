@@ -19,9 +19,9 @@ import (
 
 const (
 	maxRetries              = 3
-	pollInterval            = 1 * time.Second
+	pollInterval            = 1500 * time.Millisecond
 	maxConcurrency          = 50
-	synchronizationInterval = 30 * time.Second
+	synchronizationInterval = 15 * time.Second
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
