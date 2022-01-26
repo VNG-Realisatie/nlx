@@ -46,7 +46,6 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 	}
 }
 
-// ListServices returns all services known to the directory except those with the same organization
 func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
@@ -76,7 +75,6 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 	return &api.DirectoryListServicesResponse{Services: services}, nil
 }
 
-// GetOrganizationService returns a specific service of and organization
 func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
 	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
@@ -117,7 +115,6 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	return nil, status.Error(codes.NotFound, "service not found")
 }
 
-// RequestAccessToService records an access request and sends it to the organization
 func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
 	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
