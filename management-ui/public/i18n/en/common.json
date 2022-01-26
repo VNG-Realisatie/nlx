@@ -1,6 +1,7 @@
 {
   "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organizationName}} ({{organizationSerialNumber}})</6>": "<0>{{user}}</0> failed to request access to <3>{{service}}</3> from <6>{{organizationName}} ({{organizationSerialNumber}})</6>",
   "<0>{{user}}</0> gave {{dataDelegatee}} the order to consume the services {{servicesList}}": "<0>{{user}}</0> gave {{dataDelegatee}} the order to consume the services {{servicesList}}",
+  "<0>{{user}}</0> has accepted the Terms of Service": "<0>{{user}}</0> has accepted the Terms of Service",
   "<0>{{user}}</0> has approved the access request from <3>{{organizationName}} ({{organizationSerialNumber}})</3> for <6>{{service}}</6>": "<0>{{user}}</0> has approved the access request from <3>{{organizationName}} ({{organizationSerialNumber}})</3> for <6>{{service}}</6>",
   "<0>{{user}}</0> has created the service <3>{{service}}</3>": "<0>{{user}}</0> has created the service <3>{{service}}</3>",
   "<0>{{user}}</0> has logged in": "<0>{{user}}</0> has logged in",

@@ -24,6 +24,7 @@ export const ACTION_ORDER_CREATE = 'orderCreate'
 export const ACTION_ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke'
 export const ACTION_INWAY_DELETE = 'inwayDelete'
 export const ACTION_ORDER_OUTGOING_UPDATE = 'orderOutgoingUpdate'
+export const ACTION_ACCEPT_TERMS_OF_SERVICE = 'acceptTermsOfService'
 
 class AuditLogModel {
   id = null

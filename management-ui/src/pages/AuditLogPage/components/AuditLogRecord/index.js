@@ -22,6 +22,7 @@ import AuditLogModel, {
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
   ACTION_INWAY_DELETE,
+  ACTION_ACCEPT_TERMS_OF_SERVICE,
 } from '../../../../stores/models/AuditLogModel'
 import iconForActionType from './icon-for-action-type'
 import {
@@ -195,6 +196,10 @@ const AuditLogRecord = ({ model, ...props }) => {
         <Trans values={{ user, servicesList, dataDelegatee, action }}>
           <strong>{{ user }}</strong> updated the order for {{ dataDelegatee }}{' '}
           the services {{ servicesList }}
+        </Trans>
+      ) : action === ACTION_ACCEPT_TERMS_OF_SERVICE ? (
+        <Trans values={{ user, action }}>
+          <strong>{{ user }}</strong> has accepted the Terms of Service
         </Trans>
       ) : (
         <Trans values={{ user, action }}>

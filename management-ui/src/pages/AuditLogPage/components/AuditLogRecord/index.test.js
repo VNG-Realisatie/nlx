@@ -21,6 +21,7 @@ import AuditLogModel, {
   ACTION_SERVICE_UPDATE,
   ACTION_ORDER_OUTGOING_REVOKE,
   ACTION_INWAY_DELETE,
+  ACTION_ACCEPT_TERMS_OF_SERVICE,
 } from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
@@ -227,6 +228,13 @@ test.concurrent.each([
     }),
     'cog.svg',
     'John Doe has removed the inway my-inway',
+  ],
+  [
+    createModel({
+      action: ACTION_ACCEPT_TERMS_OF_SERVICE,
+    }),
+    'cog.svg',
+    'John Doe has accepted the Terms of Service',
   ],
   [
     createModel({ action: 'unknown action' }),
