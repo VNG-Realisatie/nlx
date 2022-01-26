@@ -95,7 +95,6 @@ const AuditLogRecord = ({ model, ...props }) => {
 
   const user = model.user
   const action = model.action
-  const delegatee = model.delegatee
 
   return (
     <Template action={action} dateTime={dateTimeString} meta={meta} {...props}>
@@ -178,9 +177,9 @@ const AuditLogRecord = ({ model, ...props }) => {
           <strong>{{ user }}</strong> updated the organization settings
         </Trans>
       ) : action === ACTION_ORDER_CREATE ? (
-        <Trans values={{ user, servicesList, delegatee, action }}>
-          <strong>{{ user }}</strong> gave {{ delegatee }} the order to consume
-          the services {{ servicesList }}
+        <Trans values={{ user, servicesList, dataDelegatee, action }}>
+          <strong>{{ user }}</strong> gave {{ dataDelegatee }} the order to
+          consume the services {{ servicesList }}
         </Trans>
       ) : action === ACTION_ORDER_OUTGOING_REVOKE ? (
         <Trans values={{ user, dataDelegatee, dataReference }}>
@@ -193,8 +192,8 @@ const AuditLogRecord = ({ model, ...props }) => {
           <strong>{{ dataInwayName }}</strong>
         </Trans>
       ) : action === ACTION_ORDER_OUTGOING_UPDATE ? (
-        <Trans values={{ user, servicesList, delegatee, action }}>
-          <strong>{{ user }}</strong> updated the order for {{ delegatee }}
+        <Trans values={{ user, servicesList, dataDelegatee, action }}>
+          <strong>{{ user }}</strong> updated the order for {{ dataDelegatee }}{' '}
           the services {{ servicesList }}
         </Trans>
       ) : (

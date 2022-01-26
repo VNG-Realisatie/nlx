@@ -59,10 +59,6 @@ class AuditLogModel {
       this.user = auditLogData.user
     }
 
-    if (auditLogData.delegatee) {
-      this.delegatee = auditLogData.delegatee
-    }
-
     if (auditLogData.createdAt) {
       this.createdAt = new Date(auditLogData.createdAt)
     }

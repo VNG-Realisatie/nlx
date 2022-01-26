@@ -37,10 +37,13 @@ func TestListAuditLogRecords(t *testing.T) {
 					UserName:   "fixture-user-name",
 					ActionType: database.LoginSuccess,
 					UserAgent:  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36",
-					Delegatee:  "fixture-delegatee",
 					Data: sql.NullString{
-						String: "{}",
-						Valid:  true,
+						String: marshallMetadata(t, &recordMetadata{
+							Delegatee: "fixture-delegatee",
+							InwayName: "fixture-inway-name",
+							Reference: "fixture-reference",
+						}),
+						Valid: true,
 					},
 					Services: []database.AuditLogService{
 						{

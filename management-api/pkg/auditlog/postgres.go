@@ -22,7 +22,6 @@ type PostgresLogger struct {
 type recordMetadata struct {
 	Delegatee *string `json:"delegatee,omitempty"`
 	Reference *string `json:"reference,omitempty"`
-
 	InwayName *string `json:"inwayName,omitempty"`
 }
 
@@ -52,7 +51,6 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) ([]*Record
 			ActionType: ActionType(record.ActionType),
 			Username:   record.UserName,
 			UserAgent:  record.UserAgent,
-			Delegatee:  record.Delegatee,
 			Services:   make([]RecordService, len(record.Services)),
 			CreatedAt:  record.CreatedAt,
 		}
@@ -257,11 +255,20 @@ func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent,
 }
 
 func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, delegatee string, services []RecordService) error {
+	createLog := &recordMetadata{
+		Delegatee: &delegatee,
+	}
+
+	data, err := json.Marshal(createLog)
+	if err != nil {
+		return err
+	}
+
 	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		UserName:   userName,
 		Services:   make([]database.AuditLogService, len(services)),
-		Delegatee:  delegatee,
+		Data:       sql.NullString{String: string(data), Valid: true},
 		ActionType: database.OrderCreate,
 	}
 
@@ -275,7 +282,7 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 		}
 	}
 
-	_, err := a.database.CreateAuditLogRecord(ctx, record)
+	_, err = a.database.CreateAuditLogRecord(ctx, record)
 
 	return err
 }
@@ -295,7 +302,6 @@ func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, user
 		UserAgent:  userAgent,
 		UserName:   userName,
 		Services:   make([]database.AuditLogService, len(services)),
-		Delegatee:  delegatee,
 		Data:       sql.NullString{String: string(data), Valid: true},
 		ActionType: database.OrderOutgoingUpdate,
 	}
@@ -327,11 +333,9 @@ func (a *PostgresLogger) OrderOutgoingRevoke(ctx context.Context, userName, user
 	}
 
 	record := &database.AuditLog{
-		UserAgent: userAgent,
-
+		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.OrderOutgoingRevoke,
-
 		Data: sql.NullString{
 			Valid:  true,
 			String: string(data),
@@ -345,8 +349,7 @@ func (a *PostgresLogger) OrderOutgoingRevoke(ctx context.Context, userName, user
 
 func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error {
 	record := &database.AuditLog{
-		UserAgent: userAgent,
-
+		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.OrganizationSettingsUpdate,
 	}
@@ -370,7 +373,6 @@ func (a *PostgresLogger) InwayDelete(ctx context.Context, userName, userAgent, i
 		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.InwayDelete,
-
 		Data: sql.NullString{
 			Valid:  true,
 			String: string(data),

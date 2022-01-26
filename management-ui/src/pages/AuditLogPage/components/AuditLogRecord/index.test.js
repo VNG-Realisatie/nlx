@@ -184,7 +184,6 @@ test.concurrent.each([
   [
     createModel({
       action: ACTION_ORDER_CREATE,
-      delegatee: 'Vergunningsoftware BV',
       services: [
         {
           service: 'fictieve-kentekens',
@@ -201,6 +200,9 @@ test.concurrent.each([
           },
         },
       ],
+      data: {
+        delegatee: 'Vergunningsoftware BV',
+      },
     }),
     'cog.svg',
     'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD (00000000000000000002)), vakantieverhuur (Gemeente Amsterdam (00000000000000000003))',

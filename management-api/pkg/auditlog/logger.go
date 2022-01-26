@@ -13,7 +13,6 @@ type Record struct {
 	Username   string
 	ActionType ActionType
 	UserAgent  string
-	Delegatee  string
 	Services   []RecordService
 	CreatedAt  time.Time
 	Data       *RecordData
@@ -23,7 +22,6 @@ type RecordData struct {
 	Delegator *string
 	Delegatee *string
 	Reference *string
-
 	InwayName *string
 }
 

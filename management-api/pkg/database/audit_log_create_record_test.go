@@ -8,6 +8,7 @@ package database_test
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -17,6 +18,20 @@ import (
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
+
+type recordMetadata struct {
+	Delegatee string `json:"delegatee,omitempty"`
+	InwayName string `json:"inwayName,omitempty"`
+	Reference string `json:"reference,omitempty"`
+}
+
+func marshallMetadata(t *testing.T, metadata *recordMetadata) string {
+	data, err := json.Marshal(metadata)
+
+	require.NoError(t, err)
+
+	return string(data)
+}
 
 func TestCreateAuditLogRecord(t *testing.T) {
 	t.Parallel()
@@ -42,8 +57,14 @@ func TestCreateAuditLogRecord(t *testing.T) {
 					UserName:   "test-username",
 					ActionType: database.IncomingAccessRequestAccept,
 					UserAgent:  "test-user-agent",
-					Delegatee:  "fixture-organization-name",
-					Data:       sql.NullString{},
+					Data: sql.NullString{
+						String: marshallMetadata(t, &recordMetadata{
+							Delegatee: "fixture-delegatee",
+							InwayName: "fixture-inway-name",
+							Reference: "fixture-reference",
+						}),
+						Valid: true,
+					},
 					Services: []database.AuditLogService{
 						{
 							AuditLogID: 1,
@@ -63,8 +84,14 @@ func TestCreateAuditLogRecord(t *testing.T) {
 				UserName:   "test-username",
 				ActionType: database.IncomingAccessRequestAccept,
 				UserAgent:  "test-user-agent",
-				Delegatee:  "fixture-organization-name",
-				Data:       sql.NullString{},
+				Data: sql.NullString{
+					String: marshallMetadata(t, &recordMetadata{
+						Delegatee: "fixture-delegatee",
+						InwayName: "fixture-inway-name",
+						Reference: "fixture-reference",
+					}),
+					Valid: true,
+				},
 				Services: []database.AuditLogService{
 					{
 						AuditLogID: 1,

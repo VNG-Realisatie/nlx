@@ -37,7 +37,6 @@ type AuditLog struct {
 	UserName   string
 	ActionType AuditLogActionType
 	UserAgent  string
-	Delegatee  string
 
 	Data      sql.NullString
 	Services  []AuditLogService
