@@ -13,7 +13,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/auth-service:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/auth-service:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/auth-service:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/auth-service:acc-latest"
                 ]
             }
         },
@@ -34,7 +34,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/ca-certportal:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/ca-certportal:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/ca-certportal:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/ca-certportal:acc-latest"
                 ]
             }
         },
@@ -51,7 +51,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/ca-cfssl-unsafe:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/ca-cfssl-unsafe:acc-latest"
                 ]
             }
         },
@@ -72,7 +72,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/docs:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/docs:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/docs:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/docs:acc-latest"
                 ]
             }
         },
@@ -89,7 +89,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/directory-db:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/directory-db:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/directory-db:acc-latest"
                 ]
             }
         },
@@ -110,7 +110,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/directory-api:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/directory-api:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/directory-api:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/directory-api:acc-latest"
                 ]
             }
         },
@@ -131,7 +131,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/directory-monitor:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/directory-monitor:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/directory-monitor:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/directory-monitor:acc-latest"
                 ]
             }
         },
@@ -152,7 +152,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/directory-ui:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/directory-ui:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/directory-ui:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/directory-ui:acc-latest"
                 ]
             }
         },
@@ -173,7 +173,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/inway:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/inway:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/inway:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/inway:acc-latest"
                 ]
             }
         },
@@ -194,7 +194,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/management-api:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/management-api:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/management-api:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/management-api:acc-latest"
                 ]
             }
         },
@@ -215,7 +215,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/management-ui:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/management-ui:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/management-ui:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/management-ui:acc-latest"
                 ]
             }
         },
@@ -236,7 +236,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/nlxctl:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/nlxctl:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/nlxctl:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/nlxctl:acc-latest"
                 ]
             }
         },
@@ -257,7 +257,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/outway:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/outway:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/outway:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/outway:acc-latest"
                 ]
             }
         },
@@ -274,7 +274,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/apps-overview:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/apps-overview:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/apps-overview:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/apps-overview:acc-latest"
                 ]
             }
         },
@@ -291,7 +291,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/txlog-db:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/txlog-db:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/txlog-db:acc-latest"
                 ]
             }
         },
@@ -308,7 +308,7 @@
                 "cache_from": [
                     "${IMAGE_PREFIX}nlxio/txlog-api:${DOCKER_CACHE_LATEST_TAG}",
                     "${IMAGE_PREFIX}nlxio/txlog-api:${DOCKER_CACHE_BRANCH_TAG}",
-                    "${IMAGE_PREFIX}nlxio/txlog-api:acc-latest"
+                    "registry.gitlab.com/commonground/nlx/nlx/nlxio/txlog-api:acc-latest"
                 ]
             }
         }
