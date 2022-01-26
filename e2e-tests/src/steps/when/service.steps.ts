@@ -20,7 +20,7 @@ When(
       .findElement(By.name("endpointURL"))
       .sendKeys("http://example.com");
     await driver
-      .findElement(By.xpath(`//input[@value = '${org.defaultInwayName}']`))
+      .findElement(By.xpath(`//input[@value = '${org.defaultInway.name}']`))
       .click();
     await driver.findElement(By.xpath("//button[@type='submit']")).click();
     await driver.findElement(By.linkText("Service toevoegen"));

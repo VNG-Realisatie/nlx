@@ -3,7 +3,10 @@ import { strict as assert } from "assert";
 
 export interface Organization {
   serialNumber: string;
-  defaultInwayName: string;
+  defaultInway: {
+    name: string;
+    address: string;
+  };
   defaultOutway: {
     name: string;
     address: string;
@@ -38,8 +41,12 @@ const convertToBool = (
 export const organizations: Organizations = {
   "Gemeente Stijns": {
     serialNumber: "12345678901234567890",
-    defaultInwayName:
-      process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME || "Inway-01",
+    defaultInway: {
+      name: process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME || "Inway-01",
+      address:
+        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_ADDRESS ||
+        "inway.organization-a.nlx.local:7913",
+    },
     defaultOutway: {
       name:
         process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a",
@@ -68,7 +75,12 @@ export const organizations: Organizations = {
   },
   RvRD: {
     serialNumber: "12345678901234567891",
-    defaultInwayName: process.env.E2E_RVRD_DEFAULT_INWAY_NAME || "Inway-01",
+    defaultInway: {
+      name: process.env.E2E_RVRD_DEFAULT_INWAY_NAME || "Inway-01",
+      address:
+        process.env.E2E_RVRD_DEFAULT_INWAY_ADDRESS ||
+        "inway.organization-b.nlx.local:7923",
+    },
     defaultOutway: {
       name: process.env.E2E_RVRD_DEFAULT_OUTWAY_NAME || "",
       address: process.env.E2E_RVRD_DEFAULT_OUTWAY_ADDRESS || "",
@@ -91,8 +103,13 @@ export const organizations: Organizations = {
   },
   "Vergunningsoftware BV": {
     serialNumber: "12345678901234567892",
-    defaultInwayName:
-      process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "Inway-01",
+    defaultInway: {
+      name:
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "Inway-01",
+      address:
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_ADDRESS ||
+        "inway.organization-c.nlx.local:7933",
+    },
     defaultOutway: {
       name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_NAME || "",
       address:

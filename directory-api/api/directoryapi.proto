@@ -23,7 +23,9 @@ service Directory {
 		option (google.api.http).get = "/api/directory/list-organizations";
 	}
 
-	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
+	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {
+		option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway";
+	}
 
 	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
 		option (google.api.http).get = "/api/stats";

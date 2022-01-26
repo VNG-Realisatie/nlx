@@ -93,15 +93,12 @@ Given(
 
     const uniqueServiceName = `${serviceName}-${this.id}`;
 
-    // create the service for second org
-    await authenticate(this, serviceProviderOrgName);
-
     const createServiceResponse =
       await serviceProvider.apiClients.management?.managementCreateService({
         body: {
           name: uniqueServiceName,
           endpointURL: "https://postman-echo.com",
-          inways: [serviceProvider.defaultInwayName],
+          inways: [serviceProvider.defaultInway.name],
           internal: false,
         },
       });

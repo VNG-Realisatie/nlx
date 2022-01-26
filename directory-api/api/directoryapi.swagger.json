@@ -66,6 +66,36 @@
         ]
       }
     },
+    "/api/directory/organizations/{organizationSerialNumber}/inway": {
+      "get": {
+        "operationId": "Directory_GetOrganizationInway",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiGetOrganizationInwayResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationSerialNumber",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/api/directory/participants": {
       "get": {
         "operationId": "Directory_ListParticipants",
