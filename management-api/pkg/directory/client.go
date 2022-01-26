@@ -5,6 +5,7 @@ package directory
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"strconv"
@@ -70,6 +71,10 @@ func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizat
 }
 
 func computeInwayProxyAddress(address string) (string, error) {
+	if address == "" {
+		return "", errors.New("empty inway address provided")
+	}
+
 	host, port, err := net.SplitHostPort(address)
 	if err != nil {
 		return "", fmt.Errorf("invalid format for inway address: %w", err)

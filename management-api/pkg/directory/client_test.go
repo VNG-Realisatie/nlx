@@ -11,24 +11,24 @@ import (
 
 func TestComputeInwayProxyAddress(t *testing.T) {
 	tests := map[string]struct {
-		input string
-		want  string
-		err   string
+		input   string
+		want    string
+		wantErr string
 	}{
 		"empty_address": {
-			"",
-			"",
-			"invalid format for inway address: missing port in address",
+			input:   "",
+			want:    "",
+			wantErr: "empty inway address provided",
 		},
 		"without_port": {
-			"localhost",
-			"",
-			"invalid format for inway address: address localhost: missing port in address",
+			input:   "localhost",
+			want:    "",
+			wantErr: "invalid format for inway address: address localhost: missing port in address",
 		},
 		"happy_flow": {
-			"localhost:8000",
-			"localhost:8001",
-			"invalid format for inway address: missing port in address",
+			input:   "localhost:8000",
+			want:    "localhost:8001",
+			wantErr: "",
 		},
 	}
 
@@ -36,12 +36,13 @@ func TestComputeInwayProxyAddress(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			actual, err := computeInwayProxyAddress(tt.input)
-			if err != nil {
-				assert.EqualError(t, err, tt.err)
+			got, err := computeInwayProxyAddress(tt.input)
+
+			if tt.wantErr != "" {
+				assert.EqualError(t, err, tt.wantErr)
 			}
 
-			assert.Equal(t, tt.want, actual)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
