@@ -419,10 +419,18 @@ service Directory {
   rpc RequestAccessToService (RequestAccessToServiceRequest) returns (OutgoingAccessRequest) {
     option (google.api.http) = {post: "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"};
   }
+  rpc GetTermsOfService (google.protobuf.Empty) returns (GetTermsOfServiceResponse) {
+      option (google.api.http) = {get: "/api/v1/directory/terms-of-service"};
+  }
 }
 
 message DirectoryListServicesResponse {
   repeated DirectoryService services = 1;
+}
+
+message GetTermsOfServiceResponse {
+    bool enabled = 1;
+    string url = 2;
 }
 
 message GetOrganizationServiceRequest {

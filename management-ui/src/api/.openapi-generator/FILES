@@ -23,6 +23,7 @@ models/ManagementErrorCode.ts
 models/ManagementErrorDetails.ts
 models/ManagementGetServiceResponse.ts
 models/ManagementGetStatisticsOfServicesResponse.ts
+models/ManagementGetTermsOfServiceResponse.ts
 models/ManagementGetTermsOfServiceStatusResponse.ts
 models/ManagementIncomingAccessRequest.ts
 models/ManagementIncomingOrder.ts

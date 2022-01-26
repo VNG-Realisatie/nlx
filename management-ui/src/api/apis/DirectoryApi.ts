@@ -21,6 +21,9 @@ import {
     ManagementDirectoryService,
     ManagementDirectoryServiceFromJSON,
     ManagementDirectoryServiceToJSON,
+    ManagementGetTermsOfServiceResponse,
+    ManagementGetTermsOfServiceResponseFromJSON,
+    ManagementGetTermsOfServiceResponseToJSON,
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
@@ -73,6 +76,30 @@ export class DirectoryApi extends runtime.BaseAPI {
      */
     async directoryGetOrganizationService(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit): Promise<ManagementDirectoryService> {
         const response = await this.directoryGetOrganizationServiceRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async directoryGetTermsOfServiceRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementGetTermsOfServiceResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/directory/terms-of-service`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementGetTermsOfServiceResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async directoryGetTermsOfService(initOverrides?: RequestInit): Promise<ManagementGetTermsOfServiceResponse> {
+        const response = await this.directoryGetTermsOfServiceRaw(initOverrides);
         return await response.value();
     }
 

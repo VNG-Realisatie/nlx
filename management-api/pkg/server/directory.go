@@ -6,9 +6,8 @@ package server
 import (
 	"context"
 
-	"github.com/golang/protobuf/ptypes/timestamp"
-
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -150,6 +149,21 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 	logger.Debug("send access request to inway")
 
 	return response, nil
+}
+
+func (s DirectoryService) GetTermsOfService(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
+	s.logger.Info("rpc request GetTermsOfService")
+
+	response, err := s.directoryClient.GetTermsOfService(ctx, &emptypb.Empty{})
+	if err != nil {
+		s.logger.Debug("unable to get terms of service from directory", zap.Error(err))
+		return nil, status.Error(codes.Internal, "unable to get terms of service from directory")
+	}
+
+	return &api.GetTermsOfServiceResponse{
+		Enabled: response.Enabled,
+		Url:     response.Url,
+	}, nil
 }
 
 func DetermineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {

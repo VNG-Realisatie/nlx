@@ -1337,6 +1337,7 @@ type DirectoryClient interface {
 	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error)
 	GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*DirectoryService, error)
 	RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error)
+	GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
 }
 
 type directoryClient struct {
@@ -1374,6 +1375,15 @@ func (c *directoryClient) RequestAccessToService(ctx context.Context, in *Reques
 	return out, nil
 }
 
+func (c *directoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
+	out := new(GetTermsOfServiceResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Directory/GetTermsOfService", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DirectoryServer is the server API for Directory service.
 // All implementations must embed UnimplementedDirectoryServer
 // for forward compatibility
@@ -1381,6 +1391,7 @@ type DirectoryServer interface {
 	ListServices(context.Context, *emptypb.Empty) (*DirectoryListServicesResponse, error)
 	GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*DirectoryService, error)
 	RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*OutgoingAccessRequest, error)
+	GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error)
 	mustEmbedUnimplementedDirectoryServer()
 }
 
@@ -1396,6 +1407,9 @@ func (UnimplementedDirectoryServer) GetOrganizationService(context.Context, *Get
 }
 func (UnimplementedDirectoryServer) RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*OutgoingAccessRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToService not implemented")
+}
+func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfService not implemented")
 }
 func (UnimplementedDirectoryServer) mustEmbedUnimplementedDirectoryServer() {}
 
@@ -1464,6 +1478,24 @@ func _Directory_RequestAccessToService_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryServer).GetTermsOfService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Directory/GetTermsOfService",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryServer).GetTermsOfService(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Directory_ServiceDesc is the grpc.ServiceDesc for Directory service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1482,6 +1514,10 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RequestAccessToService",
 			Handler:    _Directory_RequestAccessToService_Handler,
+		},
+		{
+			MethodName: "GetTermsOfService",
+			Handler:    _Directory_GetTermsOfService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
