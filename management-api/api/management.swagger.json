@@ -1201,7 +1201,8 @@
         "orderOutgoingRevoke",
         "orderIncomingRevoke",
         "inwayDelete",
-        "orderOutgoingUpdate"
+        "orderOutgoingUpdate",
+        "acceptTermsOfService"
       ],
       "default": "loginSuccess"
     },

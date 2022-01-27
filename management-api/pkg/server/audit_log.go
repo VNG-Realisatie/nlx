@@ -35,6 +35,7 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 	auditlog.OrderOutgoingRevoke:         api.AuditLogRecord_orderOutgoingRevoke,
 	auditlog.InwayDelete:                 api.AuditLogRecord_inwayDelete,
 	auditlog.OrderOutgoingUpdate:         api.AuditLogRecord_orderOutgoingUpdate,
+	auditlog.AcceptTermsOfService:        api.AuditLogRecord_acceptTermsOfService,
 }
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {

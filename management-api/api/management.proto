@@ -500,6 +500,7 @@ message AuditLogRecord {
     orderIncomingRevoke = 15;
     inwayDelete = 16;
     orderOutgoingUpdate = 17;
+    acceptTermsOfService = 18;
   }
 
   message Service {
