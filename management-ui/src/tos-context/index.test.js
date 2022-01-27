@@ -6,7 +6,7 @@ import React from 'react'
 import { act, render } from '@testing-library/react'
 import { renderWithProviders } from '../test-utils'
 import { RootStore, StoreProvider } from '../stores'
-import { DirectoryApi } from '../api'
+import { DirectoryApi, ManagementApi } from '../api'
 import { ToSContextProvider } from './index'
 import ToSContext from './index'
 
@@ -35,6 +35,44 @@ describe('ToSContext', () => {
       )
       expect(
         directoryApiClient.directoryGetTermsOfService,
+      ).toHaveBeenCalledTimes(1)
+    })
+
+    it('should fetch the terms of service status if enabled', async () => {
+      const directoryApiClient = new DirectoryApi()
+
+      directoryApiClient.directoryGetTermsOfService = jest
+        .fn()
+        .mockResolvedValue({
+          url: 'https://example.com',
+          enabled: true,
+        })
+
+      const managementApiClient = new ManagementApi()
+
+      managementApiClient.managementGetTermsOfServiceStatus = jest
+        .fn()
+        .mockResolvedValue({
+          accepted: true,
+        })
+
+      const store = new RootStore({
+        directoryApiClient,
+        managementApiClient,
+      })
+
+      await act(async () =>
+        renderWithProviders(
+          <StoreProvider rootStore={store}>
+            <ToSContextProvider />
+          </StoreProvider>,
+        ),
+      )
+      expect(
+        directoryApiClient.directoryGetTermsOfService,
+      ).toHaveBeenCalledTimes(1)
+      expect(
+        managementApiClient.managementGetTermsOfServiceStatus,
       ).toHaveBeenCalledTimes(1)
     })
 

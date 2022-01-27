@@ -128,3 +128,21 @@ test('the Terms of Service', async () => {
     url: 'http://example.com',
   })
 })
+
+test('the Terms of Service status', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementGetTermsOfServiceStatus = jest
+    .fn()
+    .mockResolvedValue({
+      accepted: true,
+    })
+
+  const applicationStore = new ApplicationStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  expect(await applicationStore.getTermsOfServiceStatus()).toEqual({
+    accepted: true,
+  })
+})

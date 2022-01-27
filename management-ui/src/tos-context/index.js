@@ -20,8 +20,14 @@ const ToSContextProvider = ({ children, tos: defaultTos }) => {
         try {
           const tos = await stores.applicationStore.getTermsOfService()
 
+          let tosAccepted = false
+          if (tos.enabled) {
+            tosAccepted =
+              await stores.applicationStore.getTermsOfServiceStatus()
+          }
+
           if (componentIsMounted) {
-            setTos(tos)
+            setTos({ ...tos, enabled: tosAccepted })
           }
         } catch (err) {
           setTos(null)
@@ -64,6 +70,7 @@ ToSContextProvider.propTypes = {
   tos: shape({
     url: string,
     enabled: bool,
+    accepted: bool,
   }),
 }
 
