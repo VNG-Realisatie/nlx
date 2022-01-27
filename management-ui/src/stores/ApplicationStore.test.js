@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import { ManagementApi } from '../api'
+import { DirectoryApi, ManagementApi } from '../api'
 import ApplicationStore, { AUTH_OIDC } from './ApplicationStore'
 
 test('initializing the store', () => {
@@ -109,5 +109,22 @@ describe('the general settings', () => {
         expect(applicationStore.error).toEqual('arbitrary error')
       })
     })
+  })
+})
+
+test('the Terms of Service', async () => {
+  const directoryApiClient = new DirectoryApi()
+  directoryApiClient.directoryGetTermsOfService = jest.fn().mockResolvedValue({
+    enabled: true,
+    url: 'http://example.com',
+  })
+  const applicationStore = new ApplicationStore({
+    rootStore: {},
+    directoryApiClient,
+  })
+
+  expect(await applicationStore.getTermsOfService()).toEqual({
+    enabled: true,
+    url: 'http://example.com',
   })
 })

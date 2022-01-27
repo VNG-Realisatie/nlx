@@ -12,11 +12,12 @@ class ApplicationStore {
   isOrganizationEmailAddressSet = null
   error = ''
 
-  constructor({ managementApiClient }) {
+  constructor({ managementApiClient, directoryApiClient }) {
     makeAutoObservable(this)
 
     this.error = ''
     this._managementApiClient = managementApiClient
+    this._directoryApiClient = directoryApiClient
   }
 
   setBasicAuthStrategy() {
@@ -52,6 +53,10 @@ class ApplicationStore {
       throw new Error(e)
     }
   }).bind(this)
+
+  async getTermsOfService() {
+    return this._directoryApiClient.directoryGetTermsOfService()
+  }
 
   async updateGeneralSettings(settings) {
     try {

@@ -35,6 +35,7 @@ export class RootStore {
     this.applicationStore = new ApplicationStore({
       rootStore: this,
       managementApiClient,
+      directoryApiClient,
     })
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
