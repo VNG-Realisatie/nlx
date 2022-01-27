@@ -146,3 +146,17 @@ test('the Terms of Service status', async () => {
     accepted: true,
   })
 })
+
+test('accepting the Terms of Service', async () => {
+  const managementApiClient = new ManagementApi()
+  managementApiClient.managementAcceptTermsOfService = jest
+    .fn()
+    .mockResolvedValue({})
+
+  const applicationStore = new ApplicationStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  expect(await applicationStore.acceptTermsOfService()).toEqual({})
+})

@@ -27,7 +27,7 @@ const ToSContextProvider = ({ children, tos: defaultTos }) => {
           }
 
           if (componentIsMounted) {
-            setTos({ ...tos, enabled: tosAccepted })
+            setTos({ ...tos, accepted: tosAccepted.accepted })
           }
         } catch (err) {
           setTos(null)
@@ -53,11 +53,15 @@ const ToSContextProvider = ({ children, tos: defaultTos }) => {
     [],
   )
 
+  const accept = async () =>
+    await stores.applicationStore.acceptTermsOfService()
+
   return (
     <ToSContext.Provider
       value={{
         tos: tos,
         isReady: isReady,
+        accept: accept,
       }}
     >
       {children}

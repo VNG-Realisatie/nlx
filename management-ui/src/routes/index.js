@@ -29,55 +29,65 @@ const AllRoutes = ({ authorizationPageElement, tos }) => (
 
     <Route path={LoginRoutePath} element={authorizationPageElement} />
 
-    <Route path="/terms-of-service" element={<TermsOfService />} />
-
     <Route
       path="*"
       element={
         <AuthenticatedRoute>
           <ToSContextProvider tos={tos}>
-            <TermsOfServiceAcceptedRoute>
-              <Routes>
-                <Route
-                  path="/inways-and-outways/*"
-                  element={<InwaysAndOutwaysPage />}
-                />
+            <Routes>
+              <Route path="/terms-of-service" element={<TermsOfService />} />
 
-                <Route
-                  path="/services/add-service"
-                  element={<AddServicePage />}
-                />
-                <Route
-                  path="/services/:name/edit-service"
-                  element={<EditServicePage />}
-                />
-                <Route path="/services/*" element={<ServicesPage />} />
+              <Route
+                path="*"
+                element={
+                  <TermsOfServiceAcceptedRoute>
+                    <Routes>
+                      <Route
+                        path="/inways-and-outways/*"
+                        element={<InwaysAndOutwaysPage />}
+                      />
 
-                <Route path="/directory/*" element={<DirectoryPage />} />
+                      <Route
+                        path="/services/add-service"
+                        element={<AddServicePage />}
+                      />
+                      <Route
+                        path="/services/:name/edit-service"
+                        element={<EditServicePage />}
+                      />
+                      <Route path="/services/*" element={<ServicesPage />} />
 
-                <Route path="/finances" element={<FinancePage />} />
+                      <Route path="/directory/*" element={<DirectoryPage />} />
 
-                <Route path="/audit-log" element={<AuditLogPage />} />
+                      <Route path="/finances" element={<FinancePage />} />
 
-                <Route
-                  path="/transaction-log"
-                  element={<TransactionLogPage />}
-                />
+                      <Route path="/audit-log" element={<AuditLogPage />} />
 
-                <Route path="/settings/*" element={<SettingsPage />} />
+                      <Route
+                        path="/transaction-log"
+                        element={<TransactionLogPage />}
+                      />
 
-                <Route path="/orders/add-order" element={<AddOrderPage />} />
+                      <Route path="/settings/*" element={<SettingsPage />} />
 
-                <Route
-                  path="/orders/outgoing/:delegatee/:reference/edit"
-                  element={<EditOrderPage />}
-                />
+                      <Route
+                        path="/orders/add-order"
+                        element={<AddOrderPage />}
+                      />
 
-                <Route path="/orders/*" element={<OrdersPage />} />
+                      <Route
+                        path="/orders/outgoing/:delegatee/:reference/edit"
+                        element={<EditOrderPage />}
+                      />
 
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </TermsOfServiceAcceptedRoute>
+                      <Route path="/orders/*" element={<OrdersPage />} />
+
+                      <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
+                  </TermsOfServiceAcceptedRoute>
+                }
+              />
+            </Routes>
           </ToSContextProvider>
         </AuthenticatedRoute>
       }

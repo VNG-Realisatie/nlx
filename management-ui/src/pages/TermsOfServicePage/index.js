@@ -1,9 +1,11 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 //
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@commonground/design-system'
+import { useNavigate } from 'react-router-dom'
+import ToSContext from '../../tos-context'
 import {
   Content,
   StyledIconExternalLink,
@@ -14,20 +16,17 @@ import {
 
 const TermsOfServicePage = () => {
   const { t } = useTranslation()
-  const [termsOfServiceUrl, setTermsAndServiceUrl] = useState()
+  const navigate = useNavigate()
+  const tosContext = useContext(ToSContext)
 
-  useEffect(() => {
-    const fetchUrl = async () => {
-      const url = await Promise.resolve(
-        'https://directory.nlx.io/Gebruiksvoorwaarden_NLX_maart_2020.pdf',
-      )
-      setTermsAndServiceUrl(url)
-    }
+  const tos = tosContext.tos
 
-    fetchUrl()
-  }, [])
+  const handleAcceptToS = async () => {
+    await tosContext.accept()
+    navigate('/')
+  }
 
-  return (
+  return !tos ? null : (
     <Wrapper>
       <StyledSidebar>
         <StyledNLXManagementLogo />
@@ -38,14 +37,16 @@ const TermsOfServicePage = () => {
         <p>{t('Terms of Service - paragraph 2 of 4')}</p>
         <p>{t('Terms of Service - paragraph 3 of 4')}</p>
         <p>
-          <a href={termsOfServiceUrl}>
-            {termsOfServiceUrl}
+          <a href={tos.url}>
+            {tos.url}
             <StyledIconExternalLink />
           </a>
         </p>
         <p>{t('Terms of Service - paragraph 4 of 4')}</p>
         <p>
-          <Button type="button">{t('Confirm agreement')}</Button>
+          <Button type="button" onClick={handleAcceptToS}>
+            {t('Confirm agreement')}
+          </Button>
         </p>
       </Content>
     </Wrapper>

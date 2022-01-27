@@ -62,6 +62,10 @@ class ApplicationStore {
     return this._managementApiClient.managementGetTermsOfServiceStatus()
   }
 
+  async acceptTermsOfService() {
+    return this._managementApiClient.managementAcceptTermsOfService()
+  }
+
   async updateGeneralSettings(settings) {
     try {
       const response = await this._managementApiClient.managementUpdateSettings(
