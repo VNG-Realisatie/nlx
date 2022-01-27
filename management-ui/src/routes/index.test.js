@@ -7,7 +7,7 @@ import {
   MemoryRouter,
   unstable_HistoryRouter as HistoryRouter,
 } from 'react-router-dom'
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../test-utils'
 import { UserContextProvider } from '../user-context'
@@ -58,13 +58,34 @@ test('when not authenticated it redirects to /login when navigating to /', async
   expect(history.location.pathname).toEqual('/login')
 })
 
+test('when authenticated and not accepted the ToS', async () => {
+  const history = createMemoryHistory()
+
+  await act(async () => {
+    renderWithProviders(
+      <HistoryRouter history={history}>
+        <UserContextProvider user={{ id: '42' }}>
+          <Routes
+            tos={{ enabled: true, url: 'https://example.com', accepted: false }}
+          />
+        </UserContextProvider>
+      </HistoryRouter>,
+    )
+  })
+
+  expect(history.location.pathname).toEqual('/terms-of-service')
+})
+
 test('redirects to /inways-and-outways when navigating to /', async () => {
   const history = createMemoryHistory()
 
   renderWithProviders(
     <HistoryRouter history={history}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes authorizationPageElement={<div>Please login</div>} />
+        <Routes
+          authorizationPageElement={<div>Please login</div>}
+          tos={{ enabled: false }}
+        />
       </UserContextProvider>
     </HistoryRouter>,
   )
@@ -88,7 +109,7 @@ test('the /services route renders the ServicesPage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/services']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -99,7 +120,7 @@ test('the /services/add-service route renders the AddServicePage', () => {
   const { getByTestId } = renderWithProviders(
     <MemoryRouter initialEntries={['/services/add-service']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -110,7 +131,7 @@ test('the /inways-and-outways route renders the OverviewPage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/inways-and-outways']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -121,7 +142,7 @@ test('the /audit-log route renders the AuditLogPage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/audit-log']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -132,7 +153,7 @@ test('the /transaction-log route renders the TransactionLogPage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/transaction-log']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -143,7 +164,7 @@ test('the /finances route renders the FinancePage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/finances']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -154,7 +175,7 @@ test('the /orders route redirects to /orders/outgoing', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/orders']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -165,7 +186,7 @@ test('the /orders/outgoing route renders the OrdersPage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/orders/outgoing']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -176,7 +197,7 @@ test('the /orders/incoming route renders the OrdersPage', () => {
   renderWithProviders(
     <MemoryRouter initialEntries={['/orders/incoming']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )
@@ -187,7 +208,7 @@ test('the /orders/add route renders the AddOrderPage', () => {
   const { getByTestId } = renderWithProviders(
     <MemoryRouter initialEntries={['/orders/add-order']}>
       <UserContextProvider user={{ id: '42' }}>
-        <Routes />
+        <Routes tos={{ enabled: false }} />
       </UserContextProvider>
     </MemoryRouter>,
   )

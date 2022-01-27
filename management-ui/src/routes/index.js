@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { element } from 'prop-types'
+import { bool, element, shape, string } from 'prop-types'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import LoginOIDCPage from '../pages/LoginOIDCPage'
 import ServicesPage from '../pages/services/ServicesPage'
@@ -19,9 +19,11 @@ import OrdersPage from '../pages/orders/OrdersPage'
 import AddOrderPage from '../pages/orders/AddOrderPage'
 import EditOrderPage from '../pages/orders/EditOrderPage'
 import TermsOfService from '../pages/TermsOfServicePage'
+import { ToSContextProvider } from '../tos-context'
 import AuthenticatedRoute, { LoginRoutePath } from './authenticated-route'
+import TermsOfServiceAcceptedRoute from './terms-of-service-accepted-route'
 
-const AllRoutes = ({ authorizationPageElement }) => (
+const AllRoutes = ({ authorizationPageElement, tos }) => (
   <Routes>
     <Route index element={<Navigate to="/inways-and-outways" />} />
 
@@ -33,40 +35,50 @@ const AllRoutes = ({ authorizationPageElement }) => (
       path="*"
       element={
         <AuthenticatedRoute>
-          <Routes>
-            <Route
-              path="/inways-and-outways/*"
-              element={<InwaysAndOutwaysPage />}
-            />
+          <ToSContextProvider tos={tos}>
+            <TermsOfServiceAcceptedRoute>
+              <Routes>
+                <Route
+                  path="/inways-and-outways/*"
+                  element={<InwaysAndOutwaysPage />}
+                />
 
-            <Route path="/services/add-service" element={<AddServicePage />} />
-            <Route
-              path="/services/:name/edit-service"
-              element={<EditServicePage />}
-            />
-            <Route path="/services/*" element={<ServicesPage />} />
+                <Route
+                  path="/services/add-service"
+                  element={<AddServicePage />}
+                />
+                <Route
+                  path="/services/:name/edit-service"
+                  element={<EditServicePage />}
+                />
+                <Route path="/services/*" element={<ServicesPage />} />
 
-            <Route path="/directory/*" element={<DirectoryPage />} />
+                <Route path="/directory/*" element={<DirectoryPage />} />
 
-            <Route path="/finances" element={<FinancePage />} />
+                <Route path="/finances" element={<FinancePage />} />
 
-            <Route path="/audit-log" element={<AuditLogPage />} />
+                <Route path="/audit-log" element={<AuditLogPage />} />
 
-            <Route path="/transaction-log" element={<TransactionLogPage />} />
+                <Route
+                  path="/transaction-log"
+                  element={<TransactionLogPage />}
+                />
 
-            <Route path="/settings/*" element={<SettingsPage />} />
+                <Route path="/settings/*" element={<SettingsPage />} />
 
-            <Route path="/orders/add-order" element={<AddOrderPage />} />
+                <Route path="/orders/add-order" element={<AddOrderPage />} />
 
-            <Route
-              path="/orders/outgoing/:delegatee/:reference/edit"
-              element={<EditOrderPage />}
-            />
+                <Route
+                  path="/orders/outgoing/:delegatee/:reference/edit"
+                  element={<EditOrderPage />}
+                />
 
-            <Route path="/orders/*" element={<OrdersPage />} />
+                <Route path="/orders/*" element={<OrdersPage />} />
 
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </TermsOfServiceAcceptedRoute>
+          </ToSContextProvider>
         </AuthenticatedRoute>
       }
     />
@@ -75,6 +87,11 @@ const AllRoutes = ({ authorizationPageElement }) => (
 
 AllRoutes.propTypes = {
   authorizationPageElement: element,
+  tos: shape({
+    enabled: bool,
+    url: string,
+    accepted: bool,
+  }),
 }
 
 AllRoutes.defaultProps = {
