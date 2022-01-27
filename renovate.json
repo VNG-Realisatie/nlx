@@ -6,11 +6,9 @@
     ":semanticCommitScopeDisabled",
     "schedule:nonOfficeHours"
   ],
-  "branchPrefix": "review/renovate-",
   "automergeType": "pr",
   "gitLabIgnoreApprovals": true,
   "dependencyDashboard": true,
-  "automerge": true,
   "rangeStrategy": "pin",
   "postUpdateOptions": [
     "gomodTidy"
@@ -22,6 +20,11 @@
   },
   "ignoreDeps": [],
   "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    },
     {
       "groupName": "directory-ui is still using react-router v5, which uses an older version of history",
       "packageNames": ["history"],
