@@ -2,6 +2,9 @@
 ## Chart ##
 ###########
 
+postgresql:
+  storageSize: 256Mi
+
 outway:
   ingress:
     enabled: true
