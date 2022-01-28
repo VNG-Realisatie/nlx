@@ -35,29 +35,24 @@ func (db *PostgresConfigDatabase) AcceptTermsOfService(ctx context.Context, user
 	dbWithTx := &PostgresConfigDatabase{DB: tx}
 
 	var count int64
-	tos := dbWithTx.DB.
-		Debug().
+	if err := dbWithTx.DB.
 		WithContext(ctx).
 		Model(&TermsOfServiceStatus{}).
-		Count(&count)
-
-	if tos.Error != nil {
-		return false, tos.Error
+		Count(&count).Error; err != nil {
+		return false, err
 	}
 
 	if count > 0 {
 		return true, nil
 	}
 
-	create := dbWithTx.DB.
-		Debug().
+	if err := dbWithTx.DB.
 		WithContext(ctx).
 		Create(&TermsOfServiceStatus{
 			Username:  username,
 			CreatedAt: createdAt,
-		})
-	if create.Error != nil {
-		return false, create.Error
+		}).Error; err != nil {
+		return false, err
 	}
 
 	dbWithTx.DB.Commit()
