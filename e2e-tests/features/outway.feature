@@ -3,7 +3,9 @@ Feature: Outway
 
     Scenario: Access a service using an Outway
         Given "Gemeente Stijns" is logged into NLX management
+            And "Gemeente Stijns" has accepted the Terms of Service
             And "RvRD" is logged into NLX management
+            And "RvRD" has accepted the Terms of Service
             And "Gemeente Stijns" has the default Outway running
             And "RvRD" has set its default Inway as organization Inway
             And "Gemeente Stijns" has access to "basis-register-fictieve-kentekens" of "RvRD"

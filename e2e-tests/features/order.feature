@@ -3,7 +3,9 @@ Feature: Order
 
     Scenario: Create an order
         Given "Gemeente Stijns" is logged into NLX management
+            And "Gemeente Stijns" has accepted the Terms of Service
             And "RvRD" is logged into NLX management
+            And "RvRD" has accepted the Terms of Service
             And "RvRD" has set its default Inway as organization Inway
             And "Gemeente Stijns" has access to "basis-register-fictieve-kentekens" of "RvRD"
         When "Gemeente Stijns" creates an order with reference "order-ref-1" for "Vergunningsoftware BV" including the service "basis-register-fictieve-kentekens" of "RvRD"
