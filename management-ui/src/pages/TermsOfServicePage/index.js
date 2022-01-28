@@ -38,7 +38,7 @@ const TermsOfServicePage = () => {
         <p>{t('Terms of Service - paragraph 3 of 4')}</p>
         <p>
           <a href={tos.url}>
-            {tos.url}
+            {t('Terms of Service')}
             <StyledIconExternalLink />
           </a>
         </p>

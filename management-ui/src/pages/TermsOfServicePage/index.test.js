@@ -22,19 +22,19 @@ test('TermsOfService page', async () => {
 
   const history = createMemoryHistory()
 
+  const tos = { enabled: true, url: 'https://example.com', accepted: false }
+
   renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <HistoryRouter history={history}>
-        <ToSContextProvider
-          tos={{ enabled: true, url: 'https://example.com', accepted: false }}
-        >
+        <ToSContextProvider tos={tos}>
           <TermsOfServicePage />
         </ToSContextProvider>
       </HistoryRouter>
     </StoreProvider>,
   )
 
-  expect(await screen.findByText(/^Terms of Service$/)).toBeInTheDocument()
+  expect(await screen.getByRole('link')).toHaveAttribute('href', tos.url)
 
   const confirmButton = screen.getByText('Confirm agreement')
 
