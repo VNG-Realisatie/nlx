@@ -4,6 +4,7 @@ import { Before, After, setDefaultTimeout } from "@cucumber/cucumber";
 import { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 import webdriver from "selenium-webdriver";
 import { ulid } from "ulid";
+import dayjs from "dayjs";
 
 const config_file =
   "../../conf/" + (process.env.E2E_CONFIG_FILE || "default") + ".conf.js";
@@ -54,6 +55,17 @@ Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   });
 
   this.feature = pickle;
+
+  // In order to ensure we use the same locale as in the browser,
+  // we retrieve the browser its locale via Selenium and load the
+  // corresponding locale file for Dayjs.
+  const locale = (await this.driver.executeScript(
+    "return window.navigator.userLanguage || window.navigator.language;"
+  )) as string;
+
+  const dayjsLocale = mapBrowserLocaleToDayjs(locale);
+  require(`dayjs/locale/${dayjsLocale}`);
+  dayjs.locale(dayjsLocale);
 });
 
 After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
@@ -69,3 +81,13 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
   await this.driver?.quit();
   console.log(`done with ${this.testName}`);
 });
+
+const mapBrowserLocaleToDayjs = (input: string): string => {
+  switch (input) {
+    case "en-US":
+      return "en";
+
+    default:
+      return input.toLowerCase();
+  }
+};
