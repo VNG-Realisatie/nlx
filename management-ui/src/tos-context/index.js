@@ -17,20 +17,28 @@ const ToSContextProvider = ({ children, tos: defaultTos }) => {
   useEffect(
     () => {
       const fetchTos = async () => {
+        let tos = {}
         try {
-          const tos = await stores.applicationStore.getTermsOfService()
-
-          let tosAccepted = false
-          if (tos.enabled) {
-            tosAccepted =
-              await stores.applicationStore.getTermsOfServiceStatus()
+          tos = await stores.applicationStore.getTermsOfService()
+        } catch {
+          if (componentIsMounted) {
+            setTos({ enabled: false })
+            setReady(true)
           }
+          return
+        }
+
+        try {
+          const tosAccepted =
+            await stores.applicationStore.getTermsOfServiceStatus()
 
           if (componentIsMounted) {
             setTos({ ...tos, accepted: tosAccepted.accepted })
           }
         } catch (err) {
-          setTos(null)
+          if (componentIsMounted) {
+            setTos(null)
+          }
         }
 
         if (componentIsMounted) {
