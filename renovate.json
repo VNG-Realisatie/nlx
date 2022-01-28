@@ -8,7 +8,7 @@
   ],
   "automergeType": "pr",
   "automerge": true,
-  "dependencyDashboard": true,
+  "dependencyDashboard": false,
   "gitLabIgnoreApprovals": true,
   "rangeStrategy": "pin",
   "postUpdateOptions": [
