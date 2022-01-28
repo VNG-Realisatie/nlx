@@ -69,7 +69,7 @@ func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb
 
 	err = s.configDatabase.AcceptTermsOfService(ctx, userInfo.username, time.Now())
 	if err != nil {
-		logger.Error("error getting Terms of Service from DB", zap.Error(err))
+		logger.Error("error accepting Terms of Service from DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
