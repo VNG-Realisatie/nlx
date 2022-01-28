@@ -1377,14 +1377,14 @@ func (mr *MockDirectoryClientMockRecorder) GetOrganizationService(ctx, in interf
 }
 
 // GetTermsOfService mocks base method.
-func (m *MockDirectoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
+func (m *MockDirectoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.GetTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetTermsOfService", varargs...)
-	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
+	ret0, _ := ret[0].(*api.GetTermsOfServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1475,10 +1475,10 @@ func (mr *MockDirectoryServerMockRecorder) GetOrganizationService(arg0, arg1 int
 }
 
 // GetTermsOfService mocks base method.
-func (m *MockDirectoryServer) GetTermsOfService(arg0 context.Context, arg1 *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
+func (m *MockDirectoryServer) GetTermsOfService(arg0 context.Context, arg1 *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTermsOfService", arg0, arg1)
-	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
+	ret0, _ := ret[0].(*api.GetTermsOfServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

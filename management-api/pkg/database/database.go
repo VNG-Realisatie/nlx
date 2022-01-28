@@ -76,5 +76,5 @@ type ConfigDatabase interface {
 	SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error
 
 	GetTermsOfServiceStatus(ctx context.Context) (*domain.TermsOfServiceStatus, error)
-	AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) error
+	AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) (alreadyAccepted bool, error error)
 }

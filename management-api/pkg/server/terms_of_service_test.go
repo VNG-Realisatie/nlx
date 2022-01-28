@@ -6,7 +6,6 @@ package server_test
 import (
 	"context"
 	"errors"
-	"fmt"
 	"testing"
 	"time"
 
@@ -31,39 +30,12 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 		want    *emptypb.Empty
 		wantErr error
 	}{
-		"when_getting_terms_of_service_status_fails": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					GetTermsOfServiceStatus(ctx).
-					Return(nil, fmt.Errorf("arbitrary error"))
-			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			want:    nil,
-			wantErr: status.Errorf(codes.Internal, "database error"),
-		},
 		"when_accepting_terms_of_service_fails": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
-				mocks.al.
-					EXPECT().
-					AcceptTermsOfService(
-						gomock.Any(),
-						"Jane Doe",
-						"nlxctl",
-					)
-
-				mocks.db.
-					EXPECT().
-					GetTermsOfServiceStatus(ctx).
-					Return(nil, nil)
-
 				mocks.db.
 					EXPECT().
 					AcceptTermsOfService(ctx, "Jane Doe", gomock.Any()).
-					Return(errors.New("arbitrary error"))
+					Return(false, errors.New("arbitrary error"))
 			},
 			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
 				"username":               "Jane Doe",
@@ -76,8 +48,8 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					GetTermsOfServiceStatus(ctx).
-					Return(nil, nil)
+					AcceptTermsOfService(ctx, "Jane Doe", gomock.Any()).
+					Return(false, nil)
 
 				mocks.al.
 					EXPECT().
@@ -97,11 +69,6 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					GetTermsOfServiceStatus(ctx).
-					Return(nil, nil)
-
 				mocks.al.
 					EXPECT().
 					AcceptTermsOfService(
@@ -113,7 +80,7 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 				mocks.db.
 					EXPECT().
 					AcceptTermsOfService(ctx, "Jane Doe", gomock.Any()).
-					Return(nil)
+					Return(false, nil)
 			},
 			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
 				"username":               "Jane Doe",
@@ -124,17 +91,10 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 		},
 		"happy_flow_already_accepted": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
-				termsOfServiceStatus, err := domain.NewTermsOfServiceStatus(&domain.NewTermsOfServiceStatusArgs{
-					Username:  "Jane Doe",
-					CreatedAt: time.Now(),
-				})
-
-				require.Nil(t, err)
-
 				mocks.db.
 					EXPECT().
-					GetTermsOfServiceStatus(ctx).
-					Return(termsOfServiceStatus, nil)
+					AcceptTermsOfService(ctx, "Jane Doe", gomock.Any()).
+					Return(true, nil)
 			},
 			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
 				"username":               "Jane Doe",

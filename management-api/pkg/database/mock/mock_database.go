@@ -40,11 +40,12 @@ func (m *MockConfigDatabase) EXPECT() *MockConfigDatabaseMockRecorder {
 }
 
 // AcceptTermsOfService mocks base method.
-func (m *MockConfigDatabase) AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) error {
+func (m *MockConfigDatabase) AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AcceptTermsOfService", ctx, username, createdAt)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AcceptTermsOfService indicates an expected call of AcceptTermsOfService.

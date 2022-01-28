@@ -24,18 +24,45 @@ func (i *TermsOfServiceStatus) TableName() string {
 	return "nlx_management.terms_of_service"
 }
 
-func (db *PostgresConfigDatabase) AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) error {
+func (db *PostgresConfigDatabase) AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) (bool, error) {
 	if createdAt.After(time.Now()) {
-		return ErrInvalidDate
+		return false, ErrInvalidDate
 	}
 
-	return db.DB.
+	tx := db.DB.Begin()
+	defer tx.Rollback()
+
+	dbWithTx := &PostgresConfigDatabase{DB: tx}
+
+	var count int64
+	tos := dbWithTx.DB.
+		Debug().
 		WithContext(ctx).
-		Where("id IS NOT NULL").
-		FirstOrCreate(TermsOfServiceStatus{
+		Model(&TermsOfServiceStatus{}).
+		Count(&count)
+
+	if tos.Error != nil {
+		return false, tos.Error
+	}
+
+	if count > 0 {
+		return true, nil
+	}
+
+	create := dbWithTx.DB.
+		Debug().
+		WithContext(ctx).
+		Create(&TermsOfServiceStatus{
 			Username:  username,
 			CreatedAt: createdAt,
-		}).Error
+		})
+	if create.Error != nil {
+		return false, create.Error
+	}
+
+	dbWithTx.DB.Commit()
+
+	return false, nil
 }
 
 func (db *PostgresConfigDatabase) GetTermsOfServiceStatus(ctx context.Context) (*domain.TermsOfServiceStatus, error) {

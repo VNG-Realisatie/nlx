@@ -76,7 +76,7 @@ func TestAcceptTermsOfService(t *testing.T) {
 
 	setup(t)
 
-	fixtureTime := getCustomFixtureTime(t, "2021-01-04T01:02:03Z")
+	fixtureTime := getFixtureTime(t)
 
 	type args struct {
 		username  string
@@ -84,9 +84,10 @@ func TestAcceptTermsOfService(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		loadFixtures bool
-		args         *args
-		wantErr      error
+		loadFixtures        bool
+		args                *args
+		wantAlreadyAccepted bool
+		wantErr             error
 	}{
 		"when_created_at_in_future": {
 			loadFixtures: false,
@@ -94,7 +95,17 @@ func TestAcceptTermsOfService(t *testing.T) {
 				username:  "test-username",
 				createdAt: time.Now().Add(time.Hour),
 			},
-			wantErr: database.ErrInvalidDate,
+			wantAlreadyAccepted: false,
+			wantErr:             database.ErrInvalidDate,
+		},
+		"when_already_accepted": {
+			loadFixtures: true,
+			args: &args{
+				username:  "fixture-username",
+				createdAt: fixtureTime,
+			},
+			wantAlreadyAccepted: true,
+			wantErr:             nil,
 		},
 		"happy_flow": {
 			loadFixtures: false,
@@ -102,7 +113,8 @@ func TestAcceptTermsOfService(t *testing.T) {
 				username:  "test-username",
 				createdAt: fixtureTime,
 			},
-			wantErr: nil,
+			wantAlreadyAccepted: false,
+			wantErr:             nil,
 		},
 	}
 
@@ -115,8 +127,9 @@ func TestAcceptTermsOfService(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			err := configDb.AcceptTermsOfService(context.Background(), tt.args.username, tt.args.createdAt)
-			require.ErrorIs(t, err, tt.wantErr)
+			alreadyAccepted, err := configDb.AcceptTermsOfService(context.Background(), tt.args.username, tt.args.createdAt)
+			assert.ErrorIs(t, err, tt.wantErr)
+			assert.Equal(t, tt.wantAlreadyAccepted, alreadyAccepted)
 
 			model, err := domain.NewTermsOfServiceStatus(&domain.NewTermsOfServiceStatusArgs{
 				Username:  tt.args.username,
