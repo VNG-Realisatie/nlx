@@ -8,6 +8,8 @@ enableDemoRedirect: true
 ## Sub-charts ##
 ################
 nlx-directory:
+  config:
+    termsOfServiceURL: https://gitlab.com/commonground/nlx/terms-of-service/-/raw/main/v1.0.pdf
   ui:
     ingress:
       annotations:
@@ -21,5 +23,5 @@ nlx-directory:
 
   service:
     annotations:
-      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
     loadBalancerIP: 20.76.229.234
