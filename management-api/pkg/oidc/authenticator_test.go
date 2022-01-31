@@ -20,7 +20,7 @@ import (
 
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	"go.nlx.io/nlx/management-api/pkg/oidc/mock"
+	mock_authenticator "go.nlx.io/nlx/management-api/pkg/oidc/mock"
 )
 
 // client is a special client that does not follow redirects automatically
@@ -34,8 +34,8 @@ func TestOnlyAuthenticated(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
-	mockStore := mock.NewMockStore(ctrl)
+	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
+	mockStore := mock_authenticator.NewMockStore(ctrl)
 
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
@@ -196,8 +196,8 @@ func TestAuthenticateEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
-	mockStore := mock.NewMockStore(ctrl)
+	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
+	mockStore := mock_authenticator.NewMockStore(ctrl)
 	mockDB := mock_database.NewMockConfigDatabase(ctrl)
 
 	session := &sessions.Session{
@@ -241,8 +241,8 @@ func TestMeEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
-	mockStore := mock.NewMockStore(ctrl)
+	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
+	mockStore := mock_authenticator.NewMockStore(ctrl)
 
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
@@ -268,8 +268,8 @@ func TestCallbackEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
-	mockStore := mock.NewMockStore(ctrl)
+	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
+	mockStore := mock_authenticator.NewMockStore(ctrl)
 
 	auditLogger := mock_auditlog.NewMockLogger(ctrl)
 	auditLogger.EXPECT().LoginFail(gomock.Any(), "Go-http-client/1.1")
@@ -302,8 +302,8 @@ func TestLogoutEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock.NewMockOAuth2Config(ctrl)
-	mockStore := mock.NewMockStore(ctrl)
+	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
+	mockStore := mock_authenticator.NewMockStore(ctrl)
 
 	auditLogger := mock_auditlog.NewMockLogger(ctrl)
 	auditLogger.EXPECT().LogoutSuccess(gomock.Any(), "Jane Doe", "Go-http-client/1.1")

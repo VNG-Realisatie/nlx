@@ -12,7 +12,7 @@ replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 require (
 	github.com/DATA-DOG/go-txdb v0.1.5
 	github.com/cloudflare/cfssl v1.6.1
-	github.com/coreos/go-oidc v2.2.1+incompatible
+	github.com/coreos/go-oidc/v3 v3.1.0
 	github.com/fgrosse/zaptest v1.1.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/render v1.0.1
@@ -111,7 +111,6 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/pquerna/cachecontrol v0.0.0-20180517163645-1555304b9b35 // indirect
 	github.com/prometheus/client_golang v1.10.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.24.0 // indirect

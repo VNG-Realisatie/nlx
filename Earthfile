@@ -129,6 +129,7 @@ mocks-management-api:
     RUN mockgen -destination /dist/management-api/pkg/management/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/management Client
     RUN mockgen -source pkg/auditlog/logger.go -destination /dist/management-api/pkg/auditlog/mock/mock_auditlog.go
     RUN mockgen -source pkg/txlogdb/database.go -destination /dist/management-api/pkg/txlogdb/mock/mock_database.go
+    RUN mockgen -source pkg/oidc/authenticator.go -destination /dist/management-api/pkg/oidc/mock/mock_authenticator.go
 
     RUN goimports -w -local "go.nlx.io" /dist/
 
@@ -140,6 +141,7 @@ mocks-management-api:
     SAVE ARTIFACT /dist/management-api/pkg/management/mock/*.go AS LOCAL ./management-api/pkg/management/mock/
     SAVE ARTIFACT /dist/management-api/pkg/auditlog/mock/*.go AS LOCAL ./management-api/pkg/auditlog/mock/
     SAVE ARTIFACT /dist/management-api/pkg/txlogdb/mock/*.go AS LOCAL ./management-api/pkg/txlogdb/mock/
+    SAVE ARTIFACT /dist/management-api/pkg/oidc/mock/*.go AS LOCAL ./management-api/pkg/oidc/mock/
 
 mocks-common:
     FROM +deps
