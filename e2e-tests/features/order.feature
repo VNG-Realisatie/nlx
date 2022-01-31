@@ -13,57 +13,36 @@ Feature: Order
 
     @ignore
     Scenario: Use an order to access service
-        Given "Vergunningsoftware BV" has the parkeerrechten admin running
-            And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for the following services:
-                | Organisation      | Service                           |
-                | Gemeente Stijns   | parkeerrechten                    |
-                | RvRD              | basis-register-fictieve-kentekens |
-                | RvRD              | basis-register-fictieve-personen  |
-        When the parkeerrechten admin "Vergunningsoftware BV" adds a parkeerrecht for licence "KN958B" and validity year "2025" with as delegator "Gemeente Stijns" and using order reference "order-ref-1"
-        Then "Vergunningsoftware BV" see a entry in the parkeerrechten admin with license "KN958B" and validity year "2025"
+        Given "Vergunningsoftware BV" has the default Outway running
+            And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
+        When the default Outway of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives a successful response
 
     @ignore
     Scenario: Use an order to access service when order is revoked
-        Given "Vergunningsoftware BV" has the parkeerrechten admin running
-            And "Vergunningsoftware BV" has an revoked order with reference "order-ref-1" from "Gemeente Stijns" for the following services:
-                | Organisation      | Service                           |
-                | Gemeente Stijns   | parkeerrechten                    |
-                | RvRD              | basis-register-fictieve-kentekens |
-                | RvRD              | basis-register-fictieve-personen  |
-        When the parkeerrechten admin "Vergunningsoftware BV" adds a parkeerrecht for licence "KN958B" and validity year "2025" with as delegator "Gemeente Stijns" and using order reference "order-ref-1"
-        Then "Vergunningsoftware BV" gets an error when using the parkeerrechten admin
+        Given "Vergunningsoftware BV" has the default Outway running
+            And "Vergunningsoftware BV" has an revoked order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
+        When the default Outway of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives a error response
 
     @ignore
     Scenario: Use an order to access service when order is expired
-        Given "Vergunningsoftware BV" has the parkeerrechten admin running
-            And "Vergunningsoftware BV" has an expired order with reference "order-ref-1" from "Gemeente Stijns" for the following services:
-                | Organisation      | Service                           |
-                | Gemeente Stijns   | parkeerrechten                    |
-                | RvRD              | basis-register-fictieve-kentekens |
-                | RvRD              | basis-register-fictieve-personen  |
-        When the parkeerrechten admin "Vergunningsoftware BV" adds a parkeerrecht for licence "KN958B" and validity year "2025" with as delegator "Gemeente Stijns" and using order reference "order-ref-1"
-        Then "Vergunningsoftware BV" gets an error when using the parkeerrechten admin
+        Given "Vergunningsoftware BV" has the default Outway running
+            And "Vergunningsoftware BV" has an expired order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
+        When the default Outway of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives a error response
 
     @ignore
     Scenario: Use an order to access service when delegator has no access to service
-        Given "Vergunningsoftware BV" has the parkeerrechten admin running
-            And "Gemeente Stijns" has no access to service "basis-register-fictieve-kentekens" from organization "RvRD"
-            And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for the following services:
-                | Organisation      | Service                           |
-                | Gemeente Stijns   | parkeerrechten                    |
-                | RvRD              | basis-register-fictieve-kentekens |
-                | RvRD              | basis-register-fictieve-personen  |
-        When the parkeerrechten admin "Vergunningsoftware BV" adds a parkeerrecht for licence "KN958B" and validity year "2025" with as delegator "Gemeente Stijns" and using order reference "order-ref-1"
-        Then "Vergunningsoftware BV" gets an error when using the parkeerrechten admin
+        Given "Vergunningsoftware BV" has the default Outway running
+            And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
+            And "Gemeente Stijns" has no access to service "basis-register-fictieve-kentekens" of "RvRD"
+        When the default Outway of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives a error response
 
     @ignore
     Scenario: Revoke an order
         Given "Gemeente Stijns" is logged in to NLX management
-            And "Gemeente Stijns" has and order for "Vergunningsoftware BV" with as reference "order-ref-1" and the following services:
-                | Organisation      | Service                           |
-                | Gemeente Stijns   | parkeerrechten                    |
-                | RvRD              | basis-register-fictieve-kentekens |
-                | RvRD              | basis-register-fictieve-personen  |
-            And the parkeerrechten admin of "Vergunningsoftware BV" can retrieve the parkeerrechten using order reference "order-ref-1" and delegator "Gemeente Stijns"
-        When "Gemeente Stijns" revokes the order with reference "order-ref-1" for "Vergunningssoftware BV"
-        Then the parkeerrechten admin of "Vergunningssoftware BV" can no longer retrieve the parkeerrechtenusing order reference "order-ref-1" and delegator "Gemeente Stijns"
+            And "Gemeente Stijns" has an active order for "Vergunningsoftware BV" with as reference "order-ref-1" and the service "basis-register-fictieve-kentekens" of "RvRD"
+        When "Gemeente Stijns" revokes the order "order-ref-1" for "Vergunningsoftware BV"
+        Then the order "order-ref-1" for "Vergunningsoftware BV" is revoked
