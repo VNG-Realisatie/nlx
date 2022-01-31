@@ -6,7 +6,7 @@
     ":semanticCommitScopeDisabled",
     "schedule:nonOfficeHours"
   ],
-  "automergeType": "pr",
+  "automergeType": "branch",
   "automerge": true,
   "dependencyDashboard": false,
   "gitLabIgnoreApprovals": true,
