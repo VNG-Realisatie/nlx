@@ -28,7 +28,7 @@ const CollapsibleBody = ({
       showToast({
         title: t('Access request approved'),
         body: t('Organization has access to service', {
-          organizationName: accessRequest.organizationName,
+          organizationName: accessRequest.organization.name,
           serviceName: accessRequest.serviceName,
         }),
         variant: 'success',
