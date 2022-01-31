@@ -11,7 +11,7 @@ import (
 	"net/http"
 
 	"github.com/coreos/go-oidc"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/gorilla/sessions"
 	"go.uber.org/zap"

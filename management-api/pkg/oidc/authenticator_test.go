@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/fgrosse/zaptest"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/stretchr/testify/assert"

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"

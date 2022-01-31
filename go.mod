@@ -14,7 +14,7 @@ require (
 	github.com/cloudflare/cfssl v1.6.1
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/fgrosse/zaptest v1.1.0
-	github.com/go-chi/chi v4.1.2+incompatible
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/render v1.0.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-testfixtures/testfixtures/v3 v3.6.1
