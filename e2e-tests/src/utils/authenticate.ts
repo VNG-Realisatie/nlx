@@ -9,6 +9,15 @@ import { By } from "selenium-webdriver";
 import fetch from "cross-fetch";
 
 export const authenticate = async (world: CustomWorld, orgName: string) => {
+  console.log(
+    orgName,
+    " ",
+    world.scenarioContext.organizations[orgName].isLoggedIn
+  );
+  if (world.scenarioContext.organizations[orgName].isLoggedIn) {
+    return;
+  }
+
   const { driver } = world;
 
   const org = getOrgByName(orgName);
@@ -84,4 +93,11 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
       })
     );
   }
+
+  world.scenarioContext.organizations[orgName].isLoggedIn = true;
+  console.log(
+    orgName,
+    " ",
+    world.scenarioContext.organizations[orgName].isLoggedIn
+  );
 };

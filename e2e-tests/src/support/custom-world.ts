@@ -1,4 +1,3 @@
-import { ManagementApi } from "../../../management-ui/src/api";
 import { organizations } from "../utils/organizations";
 import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
 import * as messages from "@cucumber/messages";
@@ -9,6 +8,7 @@ import { Buffer } from "buffer";
 
 interface OrganizationContext {
   httpResponse: Response | undefined;
+  isLoggedIn: boolean;
 }
 
 interface OrganizationsContext {
@@ -25,7 +25,6 @@ export interface CustomWorld extends World {
   feature?: messages.Pickle;
   debug: boolean;
   driver: webdriver.ThenableWebDriver;
-  managementApi: ManagementApi;
   snapshot(): Promise<void>;
   scenarioContext: ScenarioContext;
 }
@@ -41,6 +40,7 @@ export class CustomWorld extends World implements CustomWorld {
     Object.keys(organizations).forEach((organizationName) => {
       this.scenarioContext.organizations[organizationName] = {
         httpResponse: undefined,
+        isLoggedIn: false,
       };
     });
   }
