@@ -10,7 +10,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/delegation"

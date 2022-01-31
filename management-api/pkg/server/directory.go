@@ -6,13 +6,13 @@ package server
 import (
 	"context"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
@@ -216,15 +216,8 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 }
 
 func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
-	createdAt, err := ptypes.TimestampProto(a.CreatedAt)
-	if err != nil {
-		return nil, err
-	}
-
-	updatedAt, err := ptypes.TimestampProto(a.UpdatedAt)
-	if err != nil {
-		return nil, err
-	}
+	createdAt := timestamppb.New(a.CreatedAt)
+	updatedAt := timestamppb.New(a.UpdatedAt)
 
 	var accessRequestState api.AccessRequestState
 
@@ -286,18 +279,12 @@ func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase da
 }
 
 func convertAccessProof(accessProof *database.AccessProof) (*api.AccessProof, error) {
-	createdAt, err := ptypes.TimestampProto(accessProof.CreatedAt)
-	if err != nil {
-		return nil, err
-	}
+	createdAt := timestamppb.New(accessProof.CreatedAt)
 
 	var revokedAt *timestamp.Timestamp
 
 	if accessProof.RevokedAt.Valid {
-		revokedAt, err = ptypes.TimestampProto(accessProof.RevokedAt.Time)
-		if err != nil {
-			return nil, err
-		}
+		revokedAt = timestamppb.New(accessProof.RevokedAt.Time)
 	}
 
 	return &api.AccessProof{
