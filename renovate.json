@@ -22,12 +22,6 @@
   "ignoreDeps": [],
   "packageRules": [
     {
-      "groupName": "directory-ui is still using react-router v5, which uses an older version of history",
-      "packageNames": ["history"],
-      "managers": ["npm"],
-      "allowedVersions": "<5.0.0"
-    },
-    {
       "groupName": "can be upgraded once the debug tooling is upgraded too, since the upgrade contains new rules that we violate. debug tooling: https://github.com/dequelabs/axe-core-npm/tree/develop/packages/react",
       "packageNames": ["axe-core"],
       "managers": ["npm"],
