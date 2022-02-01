@@ -48,6 +48,7 @@ E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_ADDRESS: ""
 sh ../scripts/start-development.sh
 (cd ../management-ui && npm start)
 (cd ../management-ui && npm run start:b)
+(cd ../management-ui && npm run start:c)
 ```
 
 ### 2. Start Selenium Hub

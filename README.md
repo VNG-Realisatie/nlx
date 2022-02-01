@@ -76,6 +76,10 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     inway.organization-b.nlx.local
 127.0.0.1     management.organization-b.nlx.local
 
+127.0.0.1     management-api.organization-c.nlx.local
+127.0.0.1     inway.organization-c.nlx.local
+127.0.0.1     management.organization-c.nlx.local
+
 ::1           dex.shared.nlx.local
 ::1           directory-api.shared.nlx.local
 

@@ -1,0 +1,18 @@
+{
+  "CN": "inway.organization-c.nlx.ocal",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "inway.organization-c.nlx.local",
+    "inway.organization-c.nlx.minikube"
+  ],
+  "serialnumber":"12345678901234567892",
+  "names": [
+    {
+      "O": "Vergunningsoftware BV",
+      "C": "NL"
+    }
+  ]
+}
