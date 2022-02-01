@@ -2,16 +2,17 @@ import { Organization, getOrgByName } from "./organizations";
 import { env } from "./env";
 import { ManagementInway } from "../../../management-ui/src/api/models";
 import { CustomWorld } from "../support/custom-world";
+import { default as logger } from "../debug";
 import pWaitFor from "p-wait-for";
 import fetch from "cross-fetch";
 import { strict as assert } from "assert";
+const debug = logger("e2e-tests:inway");
 
 const isInwayAddressInDirectory = async (
   org: Organization
 ): Promise<boolean> => {
-  const res = await fetch(
-    `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway`
-  );
+  const url = `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway`;
+  const res = await fetch(url);
 
   assert.equal(res.status >= 400, false);
 
@@ -43,14 +44,24 @@ export const hasDefaultInwayRunning = async (
   );
 };
 
-export const setDefaultInway = async (world: CustomWorld, orgName: string) => {
-  const org = getOrgByName(orgName);
+export const setDefaultInwayAsOrganizationInway = async (
+  world: CustomWorld,
+  organizationName: string
+) => {
+  debug(`setting default inway as organization inway for ${organizationName}`);
+  const org = getOrgByName(organizationName);
 
-  await org.apiClients.management?.managementUpdateSettings({
+  const response = await org.apiClients.management?.managementUpdateSettings({
     body: {
       organizationInway: org.defaultInway.name,
     },
   });
+
+  if (!response) {
+    throw new Error(
+      `unable to set organization Inway for ${organizationName}, did you for get to authenticate this organization?`
+    );
+  }
 
   // wait until the inway is set as organization inway in the directory
   await pWaitFor.default(async () => await isInwayAddressInDirectory(org), {

@@ -13,7 +13,8 @@ process.argv[2] = "features/**/*.feature";
 process.argv[3] = "--parallel";
 process.argv[4] = `${process.env.E2E_PARALLEL_COUNT || 8}`;
 process.argv[5] = "--tags";
-process.argv[6] = "not @ignore";
+// process.argv[6] = "not @ignore";
+process.argv[6] = "@current";
 
 // Check if os is windows
 if (os.platform() == "win32") {

@@ -111,20 +111,27 @@ export const organizations: Organizations = {
         "inway.organization-c.nlx.local:7933",
     },
     defaultOutway: {
-      name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_NAME || "",
+      name:
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_NAME ||
+        "outway-org-c",
       address:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_ADDRESS || "",
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_ADDRESS ||
+        "http://127.0.0.1:7937",
     },
     management: {
       basicAuth: convertToBool(
         process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_BASIC_AUTH,
-        false
+        true
       ),
-      url: process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL || "TODO",
+      url:
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL ||
+        "http://management.organization-c.nlx.local:3031",
       username:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_USERNAME || "TODO",
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_USERNAME ||
+        "admin@nlx.local",
       password:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_PASSWORD || "TODO",
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_PASSWORD ||
+        "development",
     },
     apiClients: {
       management: undefined,

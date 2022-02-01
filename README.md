@@ -91,6 +91,10 @@ Update the `/etc/hosts` file on your system:
 ::1           management-api.organization-b.nlx.local
 ::1           inway.organization-b.nlx.local
 ::1           management.organization-b.nlx.local
+
+::1           management-api.organization-c.nlx.local
+::1           inway.organization-c.nlx.local
+::1           management.organization-c.nlx.local
 ```
 </details>
 </br>

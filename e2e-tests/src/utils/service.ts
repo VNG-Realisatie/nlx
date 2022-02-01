@@ -5,8 +5,10 @@ import {
   ManagementDirectoryService,
   ManagementIncomingAccessRequest,
 } from "../../../management-ui/src/api/models";
+import { default as logger } from "../debug";
 import pWaitFor from "p-wait-for";
 import { strict as assert } from "assert";
+const debug = logger("e2e-tests:service");
 
 const isAccessRequestApprovedForService = async (
   uniqueServiceName: string,
@@ -85,6 +87,9 @@ export const getAccessToService = async (
   serviceName: string,
   serviceProviderOrgName: string
 ) => {
+  debug(
+    `${serviceConsumerOrgName} is requesting access to service ${serviceName} of ${serviceProviderOrgName}`
+  );
   await authenticate(world, serviceProviderOrgName);
   await authenticate(world, serviceConsumerOrgName);
 
@@ -154,5 +159,9 @@ export const getAccessToService = async (
       interval: 200,
       timeout: 1000 * 35, // TODO: we dont know how long it takes until an approval is being synced to the other organization
     }
+  );
+
+  debug(
+    `${serviceConsumerOrgName} has gotten access to service ${serviceName} of ${serviceProviderOrgName}`
   );
 };

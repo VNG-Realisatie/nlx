@@ -5,16 +5,17 @@ import {
   DirectoryApi,
   ManagementApi,
 } from "../../../management-ui/src/api";
+import { default as logger } from "../debug";
 import { By } from "selenium-webdriver";
 import fetch from "cross-fetch";
 
+const debug = logger("e2e-tests:authentication");
+
 export const authenticate = async (world: CustomWorld, orgName: string) => {
-  console.log(
-    orgName,
-    " ",
-    world.scenarioContext.organizations[orgName].isLoggedIn
-  );
-  if (world.scenarioContext.organizations[orgName].isLoggedIn) {
+  const orgIsLoggedIn = world.scenarioContext.organizations[orgName].isLoggedIn;
+
+  if (orgIsLoggedIn) {
+    debug(`organization '${orgName}' is logged in`);
     return;
   }
 
@@ -25,6 +26,7 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
   await driver.get(org.management.url);
 
   if (org.management.basicAuth) {
+    debug(`authenticating '${orgName}' using basic auth`);
     await driver.findElement(By.id("email")).sendKeys(org.management.username);
     await driver
       .findElement(By.id("current-password"))
@@ -57,6 +59,8 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
       })
     );
   } else {
+    debug(`authenticating '${orgName}' using oidc`);
+
     await driver
       .findElement(By.linkText("Inloggen met organisatieaccount"))
       .click();
@@ -95,9 +99,5 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
   }
 
   world.scenarioContext.organizations[orgName].isLoggedIn = true;
-  console.log(
-    orgName,
-    " ",
-    world.scenarioContext.organizations[orgName].isLoggedIn
-  );
+  debug(`authentication successful for '${orgName}'`);
 };
