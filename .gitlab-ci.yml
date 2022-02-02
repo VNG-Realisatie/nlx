@@ -1,6 +1,7 @@
 stages:
   - Tests
   - Build
+  - Push
   - Deploy
   - Redeploy
   - Security
@@ -8,4 +9,4 @@ stages:
   - Tools
   - external
 
-include: '.gitlab/ci/**.yml'
+include: ".gitlab/ci/**.yml"

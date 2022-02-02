@@ -1,4 +1,4 @@
-Build review:
+.build-review-base:
   stage: Build
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
@@ -6,28 +6,151 @@ Build review:
     - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_TAG_NAME=$(git describe --tags --abbrev=0)-review
     - export IMAGE_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
-    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
-    - export DOCKER_CACHE_LATEST_TAG="review-latest"
-    - export JQ_BIN_PATH="./jq"
     - export IMAGE_PREFIX="${IMAGE_REGISTRY}/"
-    - export IMAGE_TAG_1="${CI_COMMIT_SHORT_SHA}"
-    - export IMAGE_TAG_2="review-latest"
-    - export IMAGE_TAG_3="${CI_COMMIT_REF_SLUG}"
-  script:
     - echo -n "${IMAGE_REGISTRY}" > ci_build_image_registry.txt
-    - echo -n "${IMAGE_TAG_1}" > ci_build_image_tag.txt
+    - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
     - echo -n "${GIT_TAG_NAME}" > ci_build_image_version.txt
-    - df
-    - docker version
-    - ./scripts/install-jq.sh
-    - ./scripts/build/build.sh
-  artifacts:
-    paths:
-      - ci_build_image_registry.txt
-      - ci_build_image_tag.txt
-      - ci_build_image_version.txt
+  variables:
+    DOCKER_BUILDKIT: 1
+    BUILDKIT_INLINE_CACHE: 1
+  script:
+    - export IMG_COMMIT_HASH=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - export IMG_REVIEW_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
+    - export IMG_REF_SLUG=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
+    - "docker build ${CONTEXT}
+      -f ${DOCKERFILE}
+      --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
+      --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+      --build-arg GIT_TAG_NAME=${GIT_TAG_NAME}
+      -t ${IMG_COMMIT_HASH}
+      -t ${IMG_REVIEW_LATEST}
+      -t ${IMG_REF_SLUG}
+      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
+      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
+      --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
+    - docker push ${IMG_COMMIT_HASH}
+    - docker push ${IMG_REVIEW_LATEST}
+    - docker push ${IMG_REF_SLUG}
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg
     - shell
+
+Build review auth-service:
+  extends: .build-review-base
+  variables:
+    IMAGE: auth-service
+    CONTEXT: .
+    DOCKERFILE: auth-service/Dockerfile
+  # Only create artifacts once because these are the same for all build jobs
+  artifacts:
+    paths:
+      - ci_build_image_registry.txt
+      - ci_build_image_tag.txt
+      - ci_build_image_version.txt
+
+Build review ca-certportal:
+  extends: .build-review-base
+  variables:
+    IMAGE: ca-certportal
+    CONTEXT: .
+    DOCKERFILE: ca-certportal/Dockerfile
+
+Build review ca-cfssl-unsafe:
+  extends: .build-review-base
+  variables:
+    IMAGE: ca-cfssl-unsafe
+    CONTEXT: ca-cfssl-unsafe
+    DOCKERFILE: ca-cfssl-unsafe/Dockerfile
+
+Build review docs:
+  extends: .build-review-base
+  variables:
+    IMAGE: docs
+    CONTEXT: docs
+    DOCKERFILE: docs/Dockerfile
+
+Build review directory-db:
+  extends: .build-review-base
+  variables:
+    IMAGE: directory-db
+    CONTEXT: .
+    DOCKERFILE: directory-db/Dockerfile
+
+Build review directory-api:
+  extends: .build-review-base
+  variables:
+    IMAGE: directory-api
+    CONTEXT: .
+    DOCKERFILE: directory-api/Dockerfile
+
+Build review directory-monitor:
+  extends: .build-review-base
+  variables:
+    IMAGE: directory-monitor
+    CONTEXT: .
+    DOCKERFILE: directory-monitor/Dockerfile
+
+Build review directory-ui:
+  extends: .build-review-base
+  variables:
+    IMAGE: directory-ui
+    CONTEXT: directory-ui
+    DOCKERFILE: directory-ui/Dockerfile
+
+Build review inway:
+  extends: .build-review-base
+  variables:
+    IMAGE: inway
+    CONTEXT: .
+    DOCKERFILE: inway/Dockerfile
+
+Build review management-api:
+  extends: .build-review-base
+  variables:
+    IMAGE: management-api
+    CONTEXT: .
+    DOCKERFILE: management-api/Dockerfile
+
+Build review management-ui:
+  extends: .build-review-base
+  variables:
+    IMAGE: management-ui
+    CONTEXT: .
+    DOCKERFILE: management-ui/Dockerfile
+
+Build review nlxctl:
+  extends: .build-review-base
+  variables:
+    IMAGE: nlxctl
+    CONTEXT: .
+    DOCKERFILE: nlxctl/Dockerfile
+
+Build review outway:
+  extends: .build-review-base
+  variables:
+    IMAGE: outway
+    CONTEXT: .
+    DOCKERFILE: outway/Dockerfile
+
+Build review apps-overview:
+  extends: .build-review-base
+  variables:
+    IMAGE: apps-overview
+    CONTEXT: apps-overview
+    DOCKERFILE: apps-overview/Dockerfile
+
+Build review txlog-db:
+  extends: .build-review-base
+  variables:
+    IMAGE: txlog-db
+    CONTEXT: .
+    DOCKERFILE: txlog-db/Dockerfile
+
+Build review txlog-api:
+  extends: .build-review-base
+  variables:
+    IMAGE: txlog-api
+    CONTEXT: .
+    DOCKERFILE: txlog-api/Dockerfile

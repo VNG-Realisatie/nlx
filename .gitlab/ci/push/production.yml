@@ -1,0 +1,100 @@
+.push-production-base:
+  stage: Push
+  before_script:
+    - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
+    - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
+    - export GIT_TAG_NAME=$(git describe --tags)
+    - export IMAGE_PREFIX=""
+  variables:
+    DOCKER_BUILDKIT: 1
+  script:
+    - export IMG_GIT_TAG=${IMAGE_PREFIX}nlxio/${IMAGE}:${GIT_TAG_NAME}
+    - export IMG_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:latest
+    - docker pull ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME}
+    - docker tag ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME} ${IMG_GIT_TAG}
+    - docker tag ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME} ${IMG_LATEST}
+    - docker push ${IMG_GIT_TAG}
+    - docker push ${IMG_LATEST}
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+  tags:
+    - cg
+    - shell
+
+Push production auth-service:
+  extends: .push-production-base
+  variables:
+    IMAGE: auth-service
+
+Push production ca-certportal:
+  extends: .push-production-base
+  variables:
+    IMAGE: ca-certportal
+
+Push production ca-cfssl-unsafe:
+  extends: .push-production-base
+  variables:
+    IMAGE: ca-cfssl-unsafe
+
+Push production docs:
+  extends: .push-production-base
+  variables:
+    IMAGE: docs
+
+Push production directory-db:
+  extends: .push-production-base
+  variables:
+    IMAGE: directory-db
+
+Push production directory-api:
+  extends: .push-production-base
+  variables:
+    IMAGE: directory-api
+
+Push production directory-monitor:
+  extends: .push-production-base
+  variables:
+    IMAGE: directory-monitor
+
+Push production directory-ui:
+  extends: .push-production-base
+  variables:
+    IMAGE: directory-ui
+
+Push production inway:
+  extends: .push-production-base
+  variables:
+    IMAGE: inway
+
+Push production management-api:
+  extends: .push-production-base
+  variables:
+    IMAGE: management-api
+
+Push production management-ui:
+  extends: .push-production-base
+  variables:
+    IMAGE: management-ui
+
+Push production nlxctl:
+  extends: .push-production-base
+  variables:
+    IMAGE: nlxctl
+
+Push production outway:
+  extends: .push-production-base
+  variables:
+    IMAGE: outway
+
+Push production txlog-db:
+  extends: .push-production-base
+  variables:
+    IMAGE: txlog-db
+
+Push production txlog-api:
+  extends: .push-production-base
+  variables:
+    IMAGE: txlog-api

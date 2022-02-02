@@ -58,8 +58,6 @@ Deploy review:
     # Review jobs are only accepted for environments prefixed with review/*
     # see: https://gitlab.com/groups/commonground/nlx/-/clusters
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
-  dependencies:
-    - Build review
   artifacts:
     paths:
       - ci_environment_url.txt

@@ -43,8 +43,6 @@ Deploy acceptance:
       echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RvRD" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh
       echo "export CYPRESS_LOGIN_PASSWORD=password" >> e2e_environment.sh
-  dependencies:
-    - Build acceptance
   artifacts:
     paths:
       - e2e_environment.sh

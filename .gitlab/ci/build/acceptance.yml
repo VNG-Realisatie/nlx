@@ -1,30 +1,38 @@
-Build acceptance:
+.build-acceptance-base:
   stage: Build
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
-    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
-    - export DOCKER_CACHE_LATEST_TAG="review-latest"
-    - export JQ_BIN_PATH="./jq"
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
-    - export IMAGE_TAG_1="${GIT_TAG_NAME}"
-    - export IMAGE_TAG_2="acc-latest"
-    - export IMAGE_TAG_3="${CI_COMMIT_REF_SLUG}"
-  script:
+    - export REVIEW_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
-    - echo -n "${IMAGE_TAG_1}" > ci_build_image_tag.txt
-    - echo -n "${IMAGE_TAG_1}" > ci_build_image_version.txt
-    - docker version
-    - ./scripts/install-jq.sh
-    - ./scripts/build/build.sh
-  artifacts:
-    paths:
-      - ci_build_image_registry.txt
-      - ci_build_image_tag.txt
-      - ci_build_image_version.txt
+    - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
+    - echo -n "${GIT_TAG_NAME}" > ci_build_image_version.txt
+  variables:
+    DOCKER_BUILDKIT: 1
+    BUILDKIT_INLINE_CACHE: 1
+  script:
+    - export IMG_GIT_TAG=${IMAGE_PREFIX}nlxio/${IMAGE}:${GIT_TAG_NAME}
+    - export IMG_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:acc-latest
+    - export IMG_REF_SLUG=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
+    - "docker build ${CONTEXT}
+      -f ${DOCKERFILE}
+      --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
+      --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+      --build-arg GIT_TAG_NAME=${GIT_TAG_NAME}
+      -t ${IMG_GIT_TAG}
+      -t ${IMG_LATEST}
+      -t ${IMG_REF_SLUG}
+      --cache-from ${REVIEW_REGISTRY}/nlxio/${IMAGE}:review-latest
+      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
+      --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
+    - docker push ${IMG_GIT_TAG}
+    - docker push ${IMG_LATEST}
+    - docker push ${IMG_REF_SLUG}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
@@ -32,3 +40,121 @@ Build acceptance:
   tags:
     - cg
     - shell
+
+Build acceptance auth-service:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: auth-service
+    CONTEXT: .
+    DOCKERFILE: auth-service/Dockerfile
+  # Only create artifacts once because these are the same for all build jobs
+  artifacts:
+    paths:
+      - ci_build_image_registry.txt
+      - ci_build_image_tag.txt
+      - ci_build_image_version.txt
+
+Build acceptance ca-certportal:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: ca-certportal
+    CONTEXT: .
+    DOCKERFILE: ca-certportal/Dockerfile
+
+Build acceptance ca-cfssl-unsafe:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: ca-cfssl-unsafe
+    CONTEXT: ca-cfssl-unsafe
+    DOCKERFILE: ca-cfssl-unsafe/Dockerfile
+
+Build acceptance docs:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: docs
+    CONTEXT: docs
+    DOCKERFILE: docs/Dockerfile
+
+Build acceptance directory-db:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: directory-db
+    CONTEXT: .
+    DOCKERFILE: directory-db/Dockerfile
+
+Build acceptance directory-api:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: directory-api
+    CONTEXT: .
+    DOCKERFILE: directory-api/Dockerfile
+
+Build acceptance directory-monitor:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: directory-monitor
+    CONTEXT: .
+    DOCKERFILE: directory-monitor/Dockerfile
+
+Build acceptance directory-ui:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: directory-ui
+    CONTEXT: directory-ui
+    DOCKERFILE: directory-ui/Dockerfile
+
+Build acceptance inway:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: inway
+    CONTEXT: .
+    DOCKERFILE: inway/Dockerfile
+
+Build acceptance management-api:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: management-api
+    CONTEXT: .
+    DOCKERFILE: management-api/Dockerfile
+
+Build acceptance management-ui:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: management-ui
+    CONTEXT: .
+    DOCKERFILE: management-ui/Dockerfile
+
+Build acceptance nlxctl:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: nlxctl
+    CONTEXT: .
+    DOCKERFILE: nlxctl/Dockerfile
+
+Build acceptance outway:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: outway
+    CONTEXT: .
+    DOCKERFILE: outway/Dockerfile
+
+Build acceptance apps-overview:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: apps-overview
+    CONTEXT: apps-overview
+    DOCKERFILE: apps-overview/Dockerfile
+
+Build acceptance txlog-db:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: txlog-db
+    CONTEXT: .
+    DOCKERFILE: txlog-db/Dockerfile
+
+Build acceptance txlog-api:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: txlog-api
+    CONTEXT: .
+    DOCKERFILE: txlog-api/Dockerfile

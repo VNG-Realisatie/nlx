@@ -1,22 +1,26 @@
-Build production:
+.build-production-base:
   stage: Build
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags)
-    - export DOCKER_CACHE_BRANCH_TAG="${CI_COMMIT_REF_SLUG}"
-    - export DOCKER_CACHE_LATEST_TAG="acc-latest"
-    - export JQ_BIN_PATH="./jq"
-    - export IMAGE_PREFIX=""
-    - export IMAGE_TAG_1="${GIT_TAG_NAME}"
-    - export IMAGE_TAG_2="latest"
-    - export IMAGE_TAG_3="${CI_COMMIT_REF_SLUG}"
+  variables:
+    DOCKER_BUILDKIT: 1
+    BUILDKIT_INLINE_CACHE: 1
   script:
-    - docker version
-    - ./scripts/install-jq.sh
-    - ./scripts/build/build.sh
+    - export TEMP_IMG=${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME}
+    - "docker build ${CONTEXT}
+      -f ${DOCKERFILE}
+      --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
+      --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+      --build-arg GIT_TAG_NAME=${GIT_TAG_NAME}
+      -t ${TEMP_IMG}
+      --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
+    # Only push temp image to CI registry here
+    # In Push stage we know that all builds are succeeded before pushing to dockerhub
+    - docker push ${TEMP_IMG}
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
@@ -46,3 +50,115 @@ Trigger charts build:
   tags:
     - cg
     - shell
+
+Build production auth-service:
+  extends: .build-production-base
+  variables:
+    IMAGE: auth-service
+    CONTEXT: .
+    DOCKERFILE: auth-service/Dockerfile
+
+Build production ca-certportal:
+  extends: .build-production-base
+  variables:
+    IMAGE: ca-certportal
+    CONTEXT: .
+    DOCKERFILE: ca-certportal/Dockerfile
+
+Build production ca-cfssl-unsafe:
+  extends: .build-production-base
+  variables:
+    IMAGE: ca-cfssl-unsafe
+    CONTEXT: ca-cfssl-unsafe
+    DOCKERFILE: ca-cfssl-unsafe/Dockerfile
+
+Build production docs:
+  extends: .build-production-base
+  variables:
+    IMAGE: docs
+    CONTEXT: docs
+    DOCKERFILE: docs/Dockerfile
+
+Build production directory-db:
+  extends: .build-production-base
+  variables:
+    IMAGE: directory-db
+    CONTEXT: .
+    DOCKERFILE: directory-db/Dockerfile
+
+Build production directory-api:
+  extends: .build-production-base
+  variables:
+    IMAGE: directory-api
+    CONTEXT: .
+    DOCKERFILE: directory-api/Dockerfile
+
+Build production directory-monitor:
+  extends: .build-production-base
+  variables:
+    IMAGE: directory-monitor
+    CONTEXT: .
+    DOCKERFILE: directory-monitor/Dockerfile
+
+Build production directory-ui:
+  extends: .build-production-base
+  variables:
+    IMAGE: directory-ui
+    CONTEXT: directory-ui
+    DOCKERFILE: directory-ui/Dockerfile
+
+Build production inway:
+  extends: .build-production-base
+  variables:
+    IMAGE: inway
+    CONTEXT: .
+    DOCKERFILE: inway/Dockerfile
+
+Build production management-api:
+  extends: .build-production-base
+  variables:
+    IMAGE: management-api
+    CONTEXT: .
+    DOCKERFILE: management-api/Dockerfile
+
+Build production management-ui:
+  extends: .build-production-base
+  variables:
+    IMAGE: management-ui
+    CONTEXT: .
+    DOCKERFILE: management-ui/Dockerfile
+
+Build production nlxctl:
+  extends: .build-production-base
+  variables:
+    IMAGE: nlxctl
+    CONTEXT: .
+    DOCKERFILE: nlxctl/Dockerfile
+
+Build production outway:
+  extends: .build-production-base
+  variables:
+    IMAGE: outway
+    CONTEXT: .
+    DOCKERFILE: outway/Dockerfile
+
+Build production apps-overview:
+  extends: .build-production-base
+  variables:
+    IMAGE: apps-overview
+    CONTEXT: apps-overview
+    DOCKERFILE: apps-overview/Dockerfile
+
+Build production txlog-db:
+  extends: .build-production-base
+  variables:
+    IMAGE: txlog-db
+    CONTEXT: .
+    DOCKERFILE: txlog-db/Dockerfile
+
+Build production txlog-api:
+  extends: .build-production-base
+  variables:
+    IMAGE: txlog-api
+    CONTEXT: .
+    DOCKERFILE: txlog-api/Dockerfile

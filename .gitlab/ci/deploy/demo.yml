@@ -31,8 +31,6 @@ Deploy demo:
           --values ${CHART_DIRECTORY}/values-${CI_ENVIRONMENT_NAME}.yaml
         stop_section deploy_${CHART}
       done
-  dependencies:
-    - Build production
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
       when: manual
