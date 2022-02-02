@@ -63,7 +63,6 @@ func TestGetIncomingAccessRequest(t *testing.T) {
 				State:                database.IncomingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
-				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 			},
 			wantErr: nil,

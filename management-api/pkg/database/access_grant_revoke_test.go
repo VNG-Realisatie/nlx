@@ -99,7 +99,6 @@ func TestRevokeAccessGrant(t *testing.T) {
 					},
 					State:                database.IncomingAccessRequestRevoked,
 					CreatedAt:            fixtureTime,
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				},
 				CreatedAt: fixtureTime,

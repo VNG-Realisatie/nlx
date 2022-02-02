@@ -22,9 +22,10 @@ func getCreatedAccessRequests() map[string]testCase {
 		Organization: database.Organization{
 			SerialNumber: "00000000000000000001",
 		},
-		ServiceName: "service",
-		State:       database.OutgoingAccessRequestCreated,
-		ReferenceID: 2,
+		PublicKeyFingerprint: "public-key-fingerprint",
+		ReferenceID:          2,
+		ServiceName:          "service",
+		State:                database.OutgoingAccessRequestCreated,
 	}
 
 	return map[string]testCase{
@@ -55,7 +56,8 @@ func getCreatedAccessRequests() map[string]testCase {
 				mocks.management.
 					EXPECT().
 					RequestAccess(gomock.Any(), &external.RequestAccessRequest{
-						ServiceName: "service",
+						ServiceName:          "service",
+						PublicKeyFingerprint: "public-key-fingerprint",
 					}, gomock.Any()).
 					Return(nil, fmt.Errorf("mock grpc wrapper: %w", server.ErrServiceDoesNotExist))
 
@@ -82,7 +84,8 @@ func getCreatedAccessRequests() map[string]testCase {
 				mocks.management.
 					EXPECT().
 					RequestAccess(gomock.Any(), &external.RequestAccessRequest{
-						ServiceName: "service",
+						ServiceName:          "service",
+						PublicKeyFingerprint: "public-key-fingerprint",
 					}, gomock.Any()).
 					Return(&external.RequestAccessResponse{
 						ReferenceId:        2,

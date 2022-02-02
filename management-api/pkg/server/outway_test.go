@@ -64,14 +64,16 @@ func TestRegisterOutway(t *testing.T) {
 		"when_the_connection_context_does_not_contain_an_address": {
 			args: args{
 				database: &database.Outway{
-					Name:         "outway42.ip-context-required",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ip-context-required",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.ip-context-required",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ip-context-required",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: nil},
 			},
@@ -80,9 +82,10 @@ func TestRegisterOutway(t *testing.T) {
 		"when_providing_an_invalid_outway_name": {
 			args: args{
 				request: &api.RegisterOutwayRequest{
-					Name:         "",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
@@ -91,15 +94,17 @@ func TestRegisterOutway(t *testing.T) {
 		"happy_flow_ipv4": {
 			args: args{
 				database: &database.Outway{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					IPAddress:    mockIP(t, "127.1.1.1/32"),
-					Version:      "unknown",
+					Name:                 "outway42.basic",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					IPAddress:            mockIP(t, "127.1.1.1/32"),
+					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.basic",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
 			},
@@ -107,15 +112,17 @@ func TestRegisterOutway(t *testing.T) {
 		"happy_flow_ipv6": {
 			args: args{
 				database: &database.Outway{
-					Name:         "outway42.ipv6",
-					IPAddress:    mockIP(t, "::1/32"),
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ipv6",
+					IPAddress:            mockIP(t, "::1/32"),
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.ipv6",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ipv6",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
@@ -168,10 +175,11 @@ func TestListOutways(t *testing.T) {
 		{Name: "outway42.test"},
 		{Name: "outway43.test"},
 		{
-			Name:         "outway.test",
-			Version:      "1.0.0",
-			IPAddress:    mockIP(t, "127.1.1.1/32"),
-			PublicKeyPEM: "mock-public-key-pem",
+			Name:                 "outway.test",
+			Version:              "1.0.0",
+			IPAddress:            mockIP(t, "127.1.1.1/32"),
+			PublicKeyPEM:         "mock-public-key-pem",
+			PublicKeyFingerprint: "mock-public-key-fingerprint",
 		},
 	}
 
@@ -199,10 +207,11 @@ func TestListOutways(t *testing.T) {
 				Name: "outway43.test",
 			},
 			{
-				Name:         "outway.test",
-				IpAddress:    "127.1.1.1",
-				Version:      "1.0.0",
-				PublicKeyPEM: "mock-public-key-pem",
+				Name:                 "outway.test",
+				IpAddress:            "127.1.1.1",
+				Version:              "1.0.0",
+				PublicKeyPEM:         "mock-public-key-pem",
+				PublicKeyFingerprint: "mock-public-key-fingerprint",
 			},
 		},
 	}

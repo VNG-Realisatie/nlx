@@ -14,13 +14,14 @@ import (
 )
 
 type Outway struct {
-	ID           uint
-	Name         string
-	IPAddress    pgtype.Inet `gorm:"type:inet"`
-	PublicKeyPEM string
-	Version      string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID                   uint
+	Name                 string
+	IPAddress            pgtype.Inet `gorm:"type:inet"`
+	PublicKeyPEM         string
+	PublicKeyFingerprint string
+	Version              string
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
 }
 
 func (i *Outway) TableName() string {
@@ -33,7 +34,7 @@ func (db *PostgresConfigDatabase) RegisterOutway(ctx context.Context, outway *Ou
 		Omit(clause.Associations).
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "name"}},
-			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "public_key_pem"}),
+			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "public_key_pem", "public_key_fingerprint"}),
 		}).
 		Create(outway).Error
 }

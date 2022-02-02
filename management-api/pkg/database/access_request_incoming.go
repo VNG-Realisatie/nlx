@@ -32,7 +32,6 @@ type IncomingAccessRequest struct {
 	Organization         IncomingAccessRequestOrganization `gorm:"embedded;embeddedPrefix:organization_"`
 	State                IncomingAccessRequestState
 	AccessGrants         []AccessGrant
-	PublicKeyPEM         string
 	PublicKeyFingerprint string
 	Service              *Service
 	CreatedAt            time.Time
@@ -56,13 +55,13 @@ func (db *PostgresConfigDatabase) ListAllIncomingAccessRequests(ctx context.Cont
 	return accessRequests, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*IncomingAccessRequest, error) {
+func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*IncomingAccessRequest, error) {
 	accessRequest := &IncomingAccessRequest{}
 
 	if err := db.DB.
 		WithContext(ctx).
 		Preload("Service").
-		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_serial_number = ? AND s.name = ?", organizationSerialNumber, serviceName).
+		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_serial_number = ? AND access_requests_incoming.public_key_fingerprint = ? AND s.name = ?", organizationSerialNumber, publicKeyFingerprint, serviceName).
 		Order("created_at DESC").
 		First(&accessRequest).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

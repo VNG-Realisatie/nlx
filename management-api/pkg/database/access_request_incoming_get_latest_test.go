@@ -26,9 +26,6 @@ func TestGetLatestIncomingAccessRequest(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
-	fixturePublicKeyPEM, err := fixtureCertBundle.PublicKeyPEM()
-	require.NoError(t, err)
-
 	type args struct {
 		organizationSerialNumber string
 		serviceName              string
@@ -91,7 +88,6 @@ func TestGetLatestIncomingAccessRequest(t *testing.T) {
 				State:                database.IncomingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
-				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 			},
 			wantErr: nil,

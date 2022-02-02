@@ -49,7 +49,7 @@ func TestGetAccessProof(t *testing.T) {
 					Return(&database.Service{Name: "service"}, nil)
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service", "public-key-fingerprint").
 					Return(nil, errors.New("error"))
 
 				return ctx
@@ -67,7 +67,7 @@ func TestGetAccessProof(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service", "public-key-fingerprint").
 					Return(nil, database.ErrNotFound)
 
 				return ctx
@@ -98,7 +98,7 @@ func TestGetAccessProof(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
+					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service", "public-key-fingerprint").
 					Return(&database.AccessGrant{
 						CreatedAt:               now,
 						RevokedAt:               sql.NullTime{Time: now},
@@ -141,7 +141,8 @@ func TestGetAccessProof(t *testing.T) {
 			ctx := tt.setup(t, mocks.db, certBundle)
 
 			actual, err := service.GetAccessProof(ctx, &external.GetAccessProofRequest{
-				ServiceName: "service",
+				ServiceName:          "service",
+				PublicKeyFingerprint: "public-key-fingerprint",
 			})
 
 			assert.Equal(t, tt.wantErr, err)

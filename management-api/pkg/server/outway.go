@@ -54,8 +54,9 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 			IPNet:  ipAddress,
 			Status: pgtype.Present,
 		},
-		PublicKeyPEM: req.PublicKeyPEM,
-		Version:      req.Version,
+		PublicKeyPEM:         req.PublicKeyPEM,
+		PublicKeyFingerprint: req.PublicKeyFingerprint,
+		Version:              req.Version,
 	}
 
 	if err := s.configDatabase.RegisterOutway(ctx, model); err != nil {
@@ -97,9 +98,10 @@ func getCIDRFromTCPAddress(tcpAddress *net.TCPAddr) (*net.IPNet, error) {
 
 func convertFromDatabaseOutway(model *database.Outway) *api.Outway {
 	outway := &api.Outway{
-		Name:         model.Name,
-		PublicKeyPEM: model.PublicKeyPEM,
-		Version:      model.Version,
+		Name:                 model.Name,
+		PublicKeyPEM:         model.PublicKeyPEM,
+		PublicKeyFingerprint: model.PublicKeyFingerprint,
+		Version:              model.Version,
 	}
 
 	if model.IPAddress.Status == pgtype.Present {

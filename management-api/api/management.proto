@@ -225,12 +225,14 @@ message Outway {
   string ipAddress = 2;
   string publicKeyPEM = 3;
   string version = 4;
+  string publicKeyFingerprint = 5;
 }
 
 message RegisterOutwayRequest {
   string name = 1;
   string publicKeyPEM = 2;
   string version = 3;
+  string publicKeyFingerprint = 4;
 }
 
 message ListOutwaysRequest {}
@@ -372,6 +374,7 @@ message RejectIncomingAccessRequestRequest {
 message CreateAccessRequestRequest {
   string organizationSerialNumber = 1;
   string serviceName = 2;
+  string publicKeyFingerPrint = 3;
 }
 
 message SendAccessRequestRequest {

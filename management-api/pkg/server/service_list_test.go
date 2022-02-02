@@ -44,7 +44,7 @@ func TestListServices(t *testing.T) {
 		expectedResponse *api.ListServicesResponse
 		expectedError    error
 	}{
-		"happy flow for a specific inway": {
+		"happy_flow_for_a_specific_inway": {
 			request: &api.ListServicesRequest{
 				InwayName: "inway.mock",
 			},
@@ -89,7 +89,6 @@ func TestListServices(t *testing.T) {
 								Name: "my-service",
 							},
 							PublicKeyFingerprint: "mock-publickey-fingerprint",
-							PublicKeyPEM:         "mock-publickey-pem",
 						},
 					}}, nil)
 			},
@@ -107,7 +106,6 @@ func TestListServices(t *testing.T) {
 										SerialNumber: "0123456789012346789",
 									},
 									PublicKeyHash: "mock-publickey-fingerprint",
-									PublicKeyPEM:  "mock-publickey-pem",
 								},
 							},
 						},
@@ -116,7 +114,7 @@ func TestListServices(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		"happy flow for another specific inway": {
+		"happy_flow_for_another_specific_inway": {
 			request: &api.ListServicesRequest{
 				InwayName: "another-inway.mock",
 			},
@@ -162,7 +160,7 @@ func TestListServices(t *testing.T) {
 			},
 			expectedError: nil,
 		},
-		"happy flow without inway filter": {
+		"happy_flow_without_inway filter": {
 			request: &api.ListServicesRequest{},
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)

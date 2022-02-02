@@ -39,13 +39,13 @@ func createTimestamp(ti time.Time) *timestamppb.Timestamp {
 
 func TestCreateAccessRequest(t *testing.T) {
 	tests := map[string]struct {
-		setup   func(*testing.T, serviceMocks, *tls.CertificateBundle) context.Context
+		setup   func(*testing.T, serviceMocks) context.Context
 		request *api.CreateAccessRequestRequest
 		want    *api.OutgoingAccessRequest
 		wantErr error
 	}{
 		"without_an_active_access_request": {
-			setup: func(t *testing.T, mocks serviceMocks, certBundle *tls.CertificateBundle) context.Context {
+			setup: func(t *testing.T, mocks serviceMocks) context.Context {
 				ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
 					"username":               "Jane Doe",
 					"grpcgateway-user-agent": "nlxctl",
@@ -56,9 +56,6 @@ func TestCreateAccessRequest(t *testing.T) {
 					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "00000000000000000001", "test-service").
 					Return(nil)
 
-				publicKeyPEM, err := certBundle.PublicKeyPEM()
-				require.NoError(t, err)
-
 				mocks.db.
 					EXPECT().
 					CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
@@ -66,8 +63,7 @@ func TestCreateAccessRequest(t *testing.T) {
 							SerialNumber: "00000000000000000001",
 						},
 						ServiceName:          "test-service",
-						PublicKeyPEM:         publicKeyPEM,
-						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+						PublicKeyFingerprint: "public-key-fingerprint",
 						State:                database.OutgoingAccessRequestCreated,
 					}).
 					Return(&database.OutgoingAccessRequest{
@@ -77,8 +73,7 @@ func TestCreateAccessRequest(t *testing.T) {
 							Name:         "test-organization",
 						},
 						ServiceName:          "test-service",
-						PublicKeyPEM:         publicKeyPEM,
-						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+						PublicKeyFingerprint: "public-key-fingerprint",
 						State:                database.OutgoingAccessRequestCreated,
 						CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 						UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -89,6 +84,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "test-service",
+				PublicKeyFingerPrint:     "public-key-fingerprint",
 			},
 			want: &api.OutgoingAccessRequest{
 				Id: 1,
@@ -103,7 +99,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			},
 		},
 		"with_an_active_access_request": {
-			setup: func(t *testing.T, mocks serviceMocks, certBundle *tls.CertificateBundle) context.Context {
+			setup: func(t *testing.T, mocks serviceMocks) context.Context {
 				ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
 					"username":               "Jane Doe",
 					"grpcgateway-user-agent": "nlxctl",
@@ -114,9 +110,6 @@ func TestCreateAccessRequest(t *testing.T) {
 					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "00000000000000000001", "test-service").
 					Return(nil)
 
-				publicKeyPEM, err := certBundle.PublicKeyPEM()
-				require.NoError(t, err)
-
 				mocks.db.
 					EXPECT().
 					CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
@@ -124,8 +117,7 @@ func TestCreateAccessRequest(t *testing.T) {
 							SerialNumber: "00000000000000000001",
 						},
 						ServiceName:          "test-service",
-						PublicKeyPEM:         publicKeyPEM,
-						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+						PublicKeyFingerprint: "public-key-fingerprint",
 						State:                database.OutgoingAccessRequestCreated,
 					}).
 					Return(nil, database.ErrActiveAccessRequest)
@@ -135,6 +127,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "test-service",
+				PublicKeyFingerPrint:     "public-key-fingerprint",
 			},
 			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
 		},
@@ -146,8 +139,8 @@ func TestCreateAccessRequest(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, certBundle, mocks := newService(t)
-			ctx := tt.setup(t, mocks, certBundle)
+			service, _, mocks := newService(t)
+			ctx := tt.setup(t, mocks)
 
 			actual, err := service.CreateAccessRequest(ctx, tt.request)
 
@@ -602,7 +595,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
 					Return(nil, database.ErrNotFound)
 
 				db.
@@ -628,7 +621,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
 					Return(nil, database.ErrNotFound)
 
 				db.
@@ -649,9 +642,6 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
-				publicKeyPEM, err := certBundle.PublicKeyPEM()
-				require.NoError(t, err)
-
 				db.
 					EXPECT().
 					GetService(ctx, "service").
@@ -662,7 +652,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
 					Return(nil, database.ErrNotFound)
 
 				db.
@@ -674,8 +664,7 @@ func TestExternalRequestAccess(t *testing.T) {
 							Name:         certBundle.Certificate().Subject.Organization[0],
 						},
 						State:                database.IncomingAccessRequestReceived,
-						PublicKeyPEM:         publicKeyPEM,
-						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+						PublicKeyFingerprint: "public-key-fingerprint",
 					}).
 					Return(&database.IncomingAccessRequest{
 						ID: 42,
@@ -696,9 +685,6 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
-				publicKeyPEM, err := certBundle.PublicKeyPEM()
-				require.NoError(t, err)
-
 				db.
 					EXPECT().
 					GetService(ctx, "service").
@@ -709,7 +695,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
 					Return(&database.IncomingAccessRequest{
 						ID:        43,
 						ServiceID: 1,
@@ -718,7 +704,6 @@ func TestExternalRequestAccess(t *testing.T) {
 							Name:         certBundle.Certificate().Subject.Organization[0],
 						},
 						State:                database.IncomingAccessRequestApproved,
-						PublicKeyPEM:         publicKeyPEM,
 						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
 					}, nil)
 
@@ -739,7 +724,8 @@ func TestExternalRequestAccess(t *testing.T) {
 			ctx := tt.setup(t, mocks.db)
 
 			result, err := service.RequestAccess(ctx, &external.RequestAccessRequest{
-				ServiceName: "service",
+				ServiceName:          "service",
+				PublicKeyFingerprint: "public-key-fingerprint",
 			})
 
 			if tt.wantErr != nil {
@@ -788,7 +774,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, certBundle.Certificate().Subject.SerialNumber, "service").
+					GetLatestIncomingAccessRequest(ctx, certBundle.Certificate().Subject.SerialNumber, "service", "public-key-fingerprint").
 					Return(nil, errors.New("error"))
 
 				return ctx
@@ -823,6 +809,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 						ctx,
 						certBundle.Certificate().Subject.SerialNumber,
 						"service",
+						"public-key-fingerprint",
 					).
 					Return(&database.IncomingAccessRequest{
 						State: database.IncomingAccessRequestReceived,
@@ -846,7 +833,8 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 			ctx := tt.setup(t, mocks.db, certBundle)
 
 			actual, err := service.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
-				ServiceName: "service",
+				ServiceName:          "service",
+				PublicKeyFingerprint: "public-key-fingerprint",
 			})
 
 			assert.Equal(t, tt.wantErr, err)

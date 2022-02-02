@@ -64,7 +64,6 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 					State:                database.IncomingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				},
 				{
@@ -94,7 +93,6 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 					State:                database.IncomingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				},
 				{
@@ -124,7 +122,6 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 					State:                database.IncomingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				},
 			},

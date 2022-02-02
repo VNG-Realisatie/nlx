@@ -26,9 +26,6 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
-	fixturePublicKeyPEM, err := fixtureCertBundle.PublicKeyPEM()
-	require.NoError(t, err)
-
 	type args struct {
 		id uint
 	}
@@ -64,7 +61,6 @@ func TestGetOutgoingAccessRequest(t *testing.T) {
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
 				SynchronizeAt:        fixtureTime,
-				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 			},
 			wantErr: nil,

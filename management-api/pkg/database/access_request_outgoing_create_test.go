@@ -26,9 +26,6 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
-	fixturePublicKeyPEM, err := fixtureCertBundle.PublicKeyPEM()
-	require.NoError(t, err)
-
 	type args struct {
 		accessRequest *database.OutgoingAccessRequest
 	}
@@ -48,7 +45,6 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 						Name:         "fixture-organization-name",
 					},
 					ServiceName:          "fixture-service-name",
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 					State:                database.OutgoingAccessRequestCreated,
 					CreatedAt:            fixtureTime,
@@ -66,7 +62,6 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 						Name:         "my-org",
 					},
 					ServiceName:          "my-service",
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 					State:                database.OutgoingAccessRequestCreated,
 					CreatedAt:            fixtureTime,
@@ -80,7 +75,6 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 					Name:         "my-org",
 				},
 				ServiceName:          "my-service",
-				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				State:                database.OutgoingAccessRequestCreated,
 				CreatedAt:            fixtureTime,

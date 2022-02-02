@@ -121,7 +121,8 @@ func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Co
 	defer client.Close()
 
 	response, err := client.RequestAccess(ctx, &external.RequestAccessRequest{
-		ServiceName: request.ServiceName,
+		ServiceName:          request.ServiceName,
+		PublicKeyFingerprint: request.PublicKeyFingerprint,
 	}, grpc_retry.WithMax(maxRetries))
 	if err != nil {
 		return database.OutgoingAccessRequestFailed, 0, err
@@ -144,7 +145,8 @@ func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx contex
 	defer client.Close()
 
 	response, err := client.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
-		ServiceName: request.ServiceName,
+		ServiceName:          request.ServiceName,
+		PublicKeyFingerprint: request.PublicKeyFingerprint,
 	})
 	if err != nil {
 		return "", err
@@ -154,7 +156,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx contex
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Context, outgoingAccessRequest *database.OutgoingAccessRequest) error {
-	remoteProof, err := job.retrieveAccessProof(ctx, outgoingAccessRequest.Organization.SerialNumber, outgoingAccessRequest.ServiceName)
+	remoteProof, err := job.retrieveAccessProof(ctx, outgoingAccessRequest.Organization.SerialNumber, outgoingAccessRequest.ServiceName, outgoingAccessRequest.PublicKeyFingerprint)
 	if err != nil {
 		return err
 	}
@@ -193,7 +195,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Cont
 	return nil
 }
 
-func (job *SynchronizeOutgoingAccessRequestJob) retrieveAccessProof(ctx context.Context, organizationSerialNumber, serviceName string) (*database.AccessProof, error) {
+func (job *SynchronizeOutgoingAccessRequestJob) retrieveAccessProof(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*database.AccessProof, error) {
 	client, err := job.getOrganizationManagementClient(ctx, organizationSerialNumber)
 	if err != nil {
 		return nil, err
@@ -202,7 +204,8 @@ func (job *SynchronizeOutgoingAccessRequestJob) retrieveAccessProof(ctx context.
 	defer client.Close()
 
 	response, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
-		ServiceName: serviceName,
+		ServiceName:          serviceName,
+		PublicKeyFingerprint: publicKeyFingerprint,
 	})
 	if err != nil {
 		return nil, err

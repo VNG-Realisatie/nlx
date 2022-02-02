@@ -188,18 +188,12 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
-	publicKey, err := s.orgCert.PublicKeyPEM()
-	if err != nil {
-		return nil, status.Error(codes.Internal, "unable to parse public key")
-	}
-
 	ar := &database.OutgoingAccessRequest{
 		Organization: database.Organization{
 			SerialNumber: req.OrganizationSerialNumber,
 		},
 		ServiceName:          req.ServiceName,
-		PublicKeyPEM:         publicKey,
-		PublicKeyFingerprint: s.orgCert.PublicKeyFingerprint(),
+		PublicKeyFingerprint: req.PublicKeyFingerPrint,
 		State:                database.OutgoingAccessRequestCreated,
 	}
 
@@ -305,21 +299,25 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 		return nil, status.Error(codes.Internal, "failed to retrieve service")
 	}
 
+	if req.PublicKeyFingerprint == "" {
+		s.logger.Error("request missing public key fingerprint", zap.String("service-name", req.ServiceName), zap.Error(err))
+		return nil, status.Error(codes.InvalidArgument, "missing public key fingerprint")
+	}
+
 	request := &database.IncomingAccessRequest{
 		ServiceID: service.ID,
 		Organization: database.IncomingAccessRequestOrganization{
 			Name:         md.OrganizationName,
 			SerialNumber: md.OrganizationSerialNumber,
 		},
-		PublicKeyPEM:         md.PublicKeyPEM,
-		PublicKeyFingerprint: md.PublicKeyFingerprint,
+		PublicKeyFingerprint: req.PublicKeyFingerprint,
 		State:                database.IncomingAccessRequestReceived,
 	}
 
-	existingIncomingAccessRequest, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.GetServiceName())
+	existingIncomingAccessRequest, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.GetServiceName(), request.PublicKeyFingerprint)
 	if err != nil {
 		if !errIsNotFound(err) {
-			s.logger.Error("getting latest incoming access request failed", zap.String("organization-serial-number", md.OrganizationSerialNumber), zap.String("service-name", req.ServiceName), zap.Error(err))
+			s.logger.Error("getting latest incoming access request failed", zap.String("organization-serial-number", md.OrganizationSerialNumber), zap.String("service-name", req.ServiceName), zap.String("public-key-fingerprint", req.PublicKeyFingerprint), zap.Error(err))
 			return nil, status.Error(codes.Internal, "failed to create access request")
 		}
 	}
@@ -365,7 +363,7 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	request, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.ServiceName)
+	request, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.ServiceName, req.PublicKeyFingerprint)
 	if err != nil {
 		s.logger.Error("failed to retrieve latest outgoing access request", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to retrieve access request")

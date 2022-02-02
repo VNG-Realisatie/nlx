@@ -66,7 +66,6 @@ func TestGetAccessProofForOutgoingAccessRequest(t *testing.T) {
 					ReferenceID:          1,
 					State:                database.OutgoingAccessRequestReceived,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
-					PublicKeyPEM:         fixturePublicKeyPEM,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
 					SynchronizeAt:        fixtureTime,
