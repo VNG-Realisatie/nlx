@@ -11,7 +11,6 @@ Feature: Order
         When "Gemeente Stijns" creates an order with reference "order-ref-1" for "Vergunningsoftware BV" including the service "basis-register-fictieve-kentekens" of "RvRD"
         Then an order of "Gemeente Stijns" with reference "order-ref-1" for "Vergunningsoftware BV" with service "basis-register-fictieve-kentekens" of "RvRD" is created
 
-    @current
     Scenario: Use an order to access service
         Given "Vergunningsoftware BV" has the default Outway running
             And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
