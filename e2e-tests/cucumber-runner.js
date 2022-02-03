@@ -16,7 +16,7 @@ process.argv[5] = "--tags";
 process.argv[6] = "not @ignore";
 
 // Check if os is windows
-if (os.platform() == "win32") {
+if (os.platform() === "win32") {
   command = process.argv.shift();
 }
 
