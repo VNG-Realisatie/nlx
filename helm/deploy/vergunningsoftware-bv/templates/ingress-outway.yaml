@@ -1,0 +1,40 @@
+{{- if .Values.outway.ingress.enabled }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.Version }}
+apiVersion: networking.k8s.io/v1
+{{- else }}
+apiVersion: networking.k8s.io/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "vergunningsoftware-bv.fullname" . }}-ingress-outway
+  labels:
+    {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.outway.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.outway.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.outway.ingress.host }}
+      secretName: {{ .Values.outway.ingress.tls.secretName }}
+{{- end }}
+  rules:
+    - host: {{ .Values.outway.ingress.host }}
+      http:
+        paths:
+          - path: /
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name:  {{ include "vergunningsoftware-bv.fullname" . }}-nlx-outway
+                port:
+                  name: http
+          {{- else }}
+            backend:
+              serviceName: {{ include "vergunningsoftware-bv.fullname" . }}-nlx-outway
+              servicePort: http
+          {{- end }}
+{{- end }}

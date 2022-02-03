@@ -5,6 +5,11 @@
 postgresql:
   storageSize: 256Mi
 
+outway:
+  ingress:
+    enabled: true
+    host: nlx-outway-vgs-bv-{{DOMAIN_SUFFIX}}
+
 ################
 ## Sub-charts ##
 ################

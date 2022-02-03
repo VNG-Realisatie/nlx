@@ -38,6 +38,18 @@ global:
         fW8ljrrTdfPZShlgVPSJAjXDMgq/EMSHmuumLjfV
         -----END CERTIFICATE-----
 
+###########
+## Chart ##
+###########
+outway:
+  ingress:
+    enabled: true
+    host: outway.acc.vergunningsoftware.nl
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      secretName: vgs-bv-nlx-outway-ingress-tls
+
 ################
 ## Sub-charts ##
 ################
