@@ -76,18 +76,7 @@ func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req 
 
 	for _, accessRequest := range accessRequests {
 		if accessRequest.Service.Name == req.ServiceName {
-			responseAccessRequest, err := convertIncomingAccessRequest(accessRequest)
-			if err != nil {
-				s.logger.Error(
-					"converting incoming access request",
-					zap.Uint("id", accessRequest.ID),
-					zap.String("service", accessRequest.Service.Name),
-					zap.Error(err),
-				)
-
-				return nil, status.Error(codes.Internal, "converting incoming access request")
-			}
-
+			responseAccessRequest := convertIncomingAccessRequest(accessRequest)
 			filtered = append(filtered, responseAccessRequest)
 		}
 	}
@@ -223,12 +212,7 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 		return nil, err
 	}
 
-	response, err := convertOutgoingAccessRequest(request)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return convertOutgoingAccessRequest(request), nil
 }
 
 func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
@@ -253,20 +237,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	response, err := convertOutgoingAccessRequest(accessRequest)
-	if err != nil {
-		s.logger.Error(
-			"converting outgoing access request",
-			zap.Uint("id", accessRequest.ID),
-			zap.Any("organization", accessRequest.Organization),
-			zap.String("service", accessRequest.ServiceName),
-			zap.Error(err),
-		)
-
-		return nil, status.Error(codes.Internal, "converting outgoing access request")
-	}
-
-	return response, nil
+	return convertOutgoingAccessRequest(accessRequest), nil
 }
 
 func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetadata, error) {
@@ -410,7 +381,7 @@ func isIncomingAccessRequestStillActive(incomingAccessRequest *database.Incoming
 }
 
 // nolint:dupl // incoming access request looks like outgoing access request
-func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) (*api.IncomingAccessRequest, error) {
+func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) *api.IncomingAccessRequest {
 	return &api.IncomingAccessRequest{
 		Id: uint64(accessRequest.ID),
 		Organization: &api.Organization{
@@ -421,11 +392,11 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 		State:       incomingAccessRequestStateToProto(accessRequest.State),
 		CreatedAt:   timestamppb.New(accessRequest.CreatedAt),
 		UpdatedAt:   timestamppb.New(accessRequest.UpdatedAt),
-	}, nil
+	}
 }
 
 // nolint:dupl // outgoing access request looks like incoming access request
-func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
+func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) *api.OutgoingAccessRequest {
 	var details *api.ErrorDetails
 
 	if request.ErrorCause != "" {
@@ -453,5 +424,5 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) (*api
 		ErrorDetails: details,
 		CreatedAt:    timestamppb.New(request.CreatedAt),
 		UpdatedAt:    timestamppb.New(request.UpdatedAt),
-	}, nil
+	}
 }

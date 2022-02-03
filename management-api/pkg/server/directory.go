@@ -131,10 +131,7 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 		return nil, err
 	}
 
-	response, err := convertDirectoryAccessRequest(accessRequest)
-	if err != nil {
-		return nil, err
-	}
+	response := convertDirectoryAccessRequest(accessRequest)
 
 	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)
 	if err != nil {
@@ -215,7 +212,7 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 	return service
 }
 
-func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.OutgoingAccessRequest, error) {
+func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) *api.OutgoingAccessRequest {
 	createdAt := timestamppb.New(a.CreatedAt)
 	updatedAt := timestamppb.New(a.UpdatedAt)
 
@@ -235,7 +232,7 @@ func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) (*api.Outg
 		State:     accessRequestState,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,
-	}, nil
+	}
 }
 
 func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) (*api.OutgoingAccessRequest, *api.AccessProof, error) {
@@ -260,25 +257,19 @@ func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase da
 	var convertedAccessRequest *api.OutgoingAccessRequest
 
 	if latestAccessRequest != nil {
-		convertedAccessRequest, err = convertOutgoingAccessRequest(latestAccessRequest)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "error converting latest access request")
-		}
+		convertedAccessRequest = convertOutgoingAccessRequest(latestAccessRequest)
 	}
 
 	var convertedAccessProof *api.AccessProof
 
 	if latestAccessProof != nil {
-		convertedAccessProof, err = convertAccessProof(latestAccessProof)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "error converting latest access proof")
-		}
+		convertedAccessProof = convertAccessProof(latestAccessProof)
 	}
 
 	return convertedAccessRequest, convertedAccessProof, nil
 }
 
-func convertAccessProof(accessProof *database.AccessProof) (*api.AccessProof, error) {
+func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 	createdAt := timestamppb.New(accessProof.CreatedAt)
 
 	var revokedAt *timestamp.Timestamp
@@ -297,5 +288,5 @@ func convertAccessProof(accessProof *database.AccessProof) (*api.AccessProof, er
 		CreatedAt:       createdAt,
 		RevokedAt:       revokedAt,
 		AccessRequestId: uint64(accessProof.OutgoingAccessRequest.ID),
-	}, nil
+	}
 }
