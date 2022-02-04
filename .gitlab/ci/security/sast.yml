@@ -31,6 +31,7 @@ container_scanning:
       nlxctl
       outway
       txlog-db
+      txlog-api
       apps-overview
     REPORTS_DIRECTORY: /reports
     GIT_STRATEGY: clone
