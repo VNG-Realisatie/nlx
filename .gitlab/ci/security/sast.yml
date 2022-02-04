@@ -16,7 +16,6 @@ include:
 container_scanning:
   stage: Security
   variables:
-    IMAGE_REPOSITORY_BASE: nlxio
     IMAGE_SUFFIXES: >
       ca-certportal
       ca-cfssl-unsafe
@@ -49,7 +48,7 @@ container_scanning:
     - mkdir ${REPORTS_DIRECTORY}
     - |
       for IMAGE_SUFFIX in ${IMAGE_SUFFIXES}; do
-        export CI_APPLICATION_REPOSITORY="${IMAGE_REGISTRY}/${IMAGE_REPOSITORY_BASE}/${IMAGE_SUFFIX}"
+        export CI_APPLICATION_REPOSITORY="${IMAGE_REGISTRY}/${IMAGE_SUFFIX}"
         export ANALYZER_ARTIFACT_DIR="${REPORTS_DIRECTORY}/${IMAGE_SUFFIX}"
 
         SECTION_NAME="section_${IMAGE_SUFFIX}"

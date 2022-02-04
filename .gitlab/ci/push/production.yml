@@ -13,9 +13,9 @@
   script:
     - export IMG_GIT_TAG=${IMAGE_PREFIX}nlxio/${IMAGE}:${GIT_TAG_NAME}
     - export IMG_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:latest
-    - docker pull ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME}
-    - docker tag ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME} ${IMG_GIT_TAG}
-    - docker tag ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME} ${IMG_LATEST}
+    - docker pull ${CI_REGISTRY_IMAGE}/${IMAGE}:${GIT_TAG_NAME}
+    - docker tag ${CI_REGISTRY_IMAGE}/${IMAGE}:${GIT_TAG_NAME} ${IMG_GIT_TAG}
+    - docker tag ${CI_REGISTRY_IMAGE}/${IMAGE}:${GIT_TAG_NAME} ${IMG_LATEST}
     - docker push ${IMG_GIT_TAG}
     - docker push ${IMG_LATEST}
   rules:

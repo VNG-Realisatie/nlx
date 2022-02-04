@@ -14,9 +14,9 @@
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
   script:
-    - export IMG_COMMIT_HASH=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_SHORT_SHA}
-    - export IMG_REVIEW_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
-    - export IMG_REF_SLUG=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
+    - export IMG_COMMIT_HASH=${IMAGE_PREFIX}${IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - export IMG_REVIEW_LATEST=${IMAGE_PREFIX}${IMAGE}:review-latest
+    - export IMG_REF_SLUG=${IMAGE_PREFIX}${IMAGE}:${CI_COMMIT_REF_SLUG}
     - "docker build ${CONTEXT}
       -f ${DOCKERFILE}
       --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
@@ -25,9 +25,9 @@
       -t ${IMG_COMMIT_HASH}
       -t ${IMG_REVIEW_LATEST}
       -t ${IMG_REF_SLUG}
-      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
-      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
-      --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
+      --cache-from ${IMAGE_PREFIX}${IMAGE}:review-latest
+      --cache-from ${IMAGE_PREFIX}${IMAGE}:${CI_COMMIT_REF_SLUG}
+      --cache-from ${CI_REGISTRY_IMAGE}/${IMAGE}:acc-latest"
     - docker push ${IMG_COMMIT_HASH}
     - docker push ${IMG_REVIEW_LATEST}
     - docker push ${IMG_REF_SLUG}
