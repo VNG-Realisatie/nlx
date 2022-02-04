@@ -104,11 +104,9 @@ export const organizations: Organizations = {
   "Vergunningsoftware BV": {
     serialNumber: "12345678901234567892",
     defaultInway: {
-      name:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "Inway-01",
+      name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "",
       address:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_ADDRESS ||
-        "inway.organization-c.nlx.local:7933",
+        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_ADDRESS || "",
     },
     defaultOutway: {
       name:
