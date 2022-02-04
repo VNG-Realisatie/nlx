@@ -15,6 +15,10 @@ Deploy acceptance:
       export IMAGE_VERSION=$(cat ci_build_image_version.txt)
       echo -e -n "" > ci_environment_url.txt
     - |
+      echo "image registry: ${IMAGE_REGISTRY}"
+      echo "image tag: ${IMAGE_TAG}"
+      echo "image version: ${IMAGE_VERSION}"
+    - |
       start_section helm_repo "Update Helm repositories"
       helm repo add stable "https://charts.helm.sh/stable"
       helm repo update
