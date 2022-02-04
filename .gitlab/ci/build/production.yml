@@ -10,14 +10,14 @@
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
   script:
-    - export TEMP_IMG=${CI_REGISTRY_IMAGE}/${IMAGE}:${GIT_TAG_NAME}
+    - export TEMP_IMG=${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${GIT_TAG_NAME}
     - "docker build ${CONTEXT}
       -f ${DOCKERFILE}
       --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
       --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
       --build-arg GIT_TAG_NAME=${GIT_TAG_NAME}
       -t ${TEMP_IMG}
-      --cache-from ${CI_REGISTRY_IMAGE}/${IMAGE}:acc-latest"
+      --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
     # Only push temp image to CI registry here
     # In Push stage we know that all builds are succeeded before pushing to dockerhub
     - docker push ${TEMP_IMG}
