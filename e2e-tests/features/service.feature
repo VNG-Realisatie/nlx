@@ -2,10 +2,7 @@
 Feature: Service
 
     Scenario: Create a service
-        Given "Gemeente Stijns" is logged into NLX management
-            And "Gemeente Stijns" has accepted the Terms of Service
-            And "Gemeente Stijns" has the default Inway running
-            And "Gemeente Stijns" has set its default Inway as organization Inway
+        Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" create a service named "MyService" and exposed via the default Inway
         Then the service "MyService" of "Gemeente Stijns" is created
 

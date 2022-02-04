@@ -90,9 +90,6 @@ export const getAccessToService = async (
   debug(
     `${serviceConsumerOrgName} is requesting access to service ${serviceName} of ${serviceProviderOrgName}`
   );
-  await authenticate(world, serviceProviderOrgName);
-  await authenticate(world, serviceConsumerOrgName);
-
   const serviceProvider = getOrgByName(serviceProviderOrgName);
   const serviceConsumer = getOrgByName(serviceConsumerOrgName);
 

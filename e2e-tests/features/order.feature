@@ -2,17 +2,14 @@
 Feature: Order
 
     Scenario: Create an order
-        Given "Gemeente Stijns" is logged into NLX management
-            And "Gemeente Stijns" has accepted the Terms of Service
-            And "RvRD" is logged into NLX management
-            And "RvRD" has accepted the Terms of Service
-            And "RvRD" has set its default Inway as organization Inway
+        Given "Gemeente Stijns" is up and running
+            And "RvRD" is up and running
             And "Gemeente Stijns" has access to "basis-register-fictieve-kentekens" of "RvRD"
         When "Gemeente Stijns" creates an order with reference "order-ref-1" for "Vergunningsoftware BV" including the service "basis-register-fictieve-kentekens" of "RvRD"
         Then an order of "Gemeente Stijns" with reference "order-ref-1" for "Vergunningsoftware BV" with service "basis-register-fictieve-kentekens" of "RvRD" is created
 
     Scenario: Use an order to access service
-        Given "Vergunningsoftware BV" has the default Outway running
+        Given "Vergunningsoftware BV" is up and running
             And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
         When the default Outway of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" of "RvRD" via the order of "Gemeente Stijns" with reference "order-ref-1"
         Then "Vergunningsoftware BV" receives a successful response
