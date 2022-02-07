@@ -53,7 +53,7 @@ test('can request access', async () => {
   await waitFor(() => expect(serviceModel.requestAccess).toHaveBeenCalled())
 })
 
-test('display stacktrace when requesting access failed', () => {
+test('display error when requesting access failed', () => {
   configure({ safeDescriptors: false })
 
   const managementApiClient = new ManagementApi()
@@ -86,7 +86,6 @@ test('display stacktrace when requesting access failed', () => {
         updatedAt: new Date('2020-06-30T08:31:41.106Z'),
         errorDetails: {
           cause: 'Something went wrong',
-          stackTrace: ['Go main panic'],
         },
       },
     }),
@@ -94,13 +93,6 @@ test('display stacktrace when requesting access failed', () => {
 
   renderWithProviders(<DirectoryDetailView service={serviceModel} />)
 
-  const failedMessages = screen.getAllByText('Request could not be sent')
-  const stacktraceButton = screen.getByText('Show stacktrace')
-
-  expect(failedMessages).toHaveLength(2)
-
-  fireEvent.click(stacktraceButton)
-
-  expect(screen.getByTestId('stacktrace')).toBeVisible()
-  expect(screen.getByText('Go main panic')).toBeInTheDocument()
+  expect(screen.getByRole('alert')).toBeInTheDocument()
+  expect(screen.getByText('Something went wrong')).toBeInTheDocument()
 })

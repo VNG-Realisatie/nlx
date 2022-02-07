@@ -25,7 +25,6 @@ class OutgoingAccessRequestModel {
   updatedAt = null
   errorDetails = {
     cause: null,
-    stackTrace: null,
   }
 
   constructor({ accessRequestData, outgoingAccessRequestStore }) {
@@ -69,7 +68,6 @@ class OutgoingAccessRequestModel {
 
     if (accessRequestData.errorDetails) {
       this.errorDetails.cause = accessRequestData.errorDetails.cause
-      this.errorDetails.stackTrace = accessRequestData.errorDetails.stackTrace
     }
   }
 

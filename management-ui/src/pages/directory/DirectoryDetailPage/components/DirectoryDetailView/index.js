@@ -4,11 +4,7 @@
 import React from 'react'
 import { instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
-import {
-  Alert,
-  useDrawerStack,
-  withDrawerStack,
-} from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../../RequestAccessDetails'
@@ -18,18 +14,15 @@ import { SectionGroup } from '../../../../../components/DetailView'
 import usePolling from '../../../../../hooks/use-polling'
 import CostsSection from '../../../../../components/CostsSection'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
-import StacktraceDrawer from './StacktraceDrawer'
 import ExternalLinkSection from './ExternalLinkSection'
 import AccessSection from './AccessSection'
 import ContactSection from './ContactSection'
 import { StyledAlert } from './index.styles'
 
 const { FAILED } = ACCESS_REQUEST_STATES
-const stackTraceDrawerId = 'stacktrace'
 
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
-  const { showDrawer } = useDrawerStack()
   const {
     organization,
     serviceName,
@@ -75,10 +68,6 @@ const DirectoryDetailView = ({ service }) => {
     latestAccessProof,
   )
 
-  const showTrace = () => {
-    showDrawer(stackTraceDrawerId)
-  }
-
   return (
     <>
       {latestAccessRequest && latestAccessRequest.state === FAILED && (
@@ -91,13 +80,6 @@ const DirectoryDetailView = ({ service }) => {
               onClick={retryRequestAccess}
             >
               {t('Retry')}
-            </Alert.ActionButton>,
-
-            <Alert.ActionButton
-              key="show-trace-access-action-button"
-              onClick={showTrace}
-            >
-              {t('Show stacktrace')}
             </Alert.ActionButton>,
           ]}
         >
@@ -123,14 +105,6 @@ const DirectoryDetailView = ({ service }) => {
         />
       </SectionGroup>
 
-      {latestAccessRequest && latestAccessRequest.errorDetails && (
-        <StacktraceDrawer
-          id={stackTraceDrawerId}
-          parentId="directoryDetail"
-          stacktrace={latestAccessRequest.errorDetails.stackTrace}
-        />
-      )}
-
       <RequestConfirmationModal />
     </>
   )
@@ -140,4 +114,4 @@ DirectoryDetailView.propTypes = {
   service: instanceOf(DirectoryServiceModel),
 }
 
-export default observer(withDrawerStack(DirectoryDetailView))
+export default observer(DirectoryDetailView)
