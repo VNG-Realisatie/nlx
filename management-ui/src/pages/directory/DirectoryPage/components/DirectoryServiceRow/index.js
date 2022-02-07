@@ -4,6 +4,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
+import { instanceOf, bool } from 'prop-types'
 import Table from '../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../../RequestAccessDetails'
@@ -16,31 +17,19 @@ import getDirectoryServiceAccessUIState, {
 import StateIndicator from '../../../../../components/StateIndicator'
 import QuickAccessButton from '../QuickAccessButton'
 import AccessMessage from '../AccessMessage'
-import Service from '../../../../../types/Service'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 import { StyledTd, AccessMessageWrapper, StyledTdAccess } from './index.styles'
 
-const DirectoryServiceRow: React.FC<DirectoryServiceRowProps> = ({
-  service,
-  ownService,
-  ...props
-}) => {
+const DirectoryServiceRow = ({ service, ownService, ...props }) => {
   const { t } = useTranslation()
-  const {
-    organization,
-    serviceName,
-    state,
-    apiSpecificationType,
-    latestAccessRequest,
-    latestAccessProof,
-  } = service
 
   const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
     title: t('Request access'),
     okText: t('Send'),
     children: (
       <RequestAccessDetails
-        organization={organization}
-        serviceName={serviceName}
+        organization={service.organization}
+        serviceName={service.serviceName}
       />
     ),
   })
@@ -52,12 +41,12 @@ const DirectoryServiceRow: React.FC<DirectoryServiceRowProps> = ({
   }
 
   const displayState = getDirectoryServiceAccessUIState(
-    latestAccessRequest,
-    latestAccessProof,
+    service.latestAccessRequest,
+    service.latestAccessProof,
   )
 
-  const handleQuickAccessButtonClick = (evt: Event) => {
-    evt.stopPropagation()
+  const handleQuickAccessButtonClick = (event) => {
+    event.stopPropagation()
 
     if (displayState === SHOW_REQUEST_FAILED) {
       service.retryRequestAccess()
@@ -76,19 +65,19 @@ const DirectoryServiceRow: React.FC<DirectoryServiceRowProps> = ({
 
   return (
     <Table.Tr
-      to={`/directory/${organization.serialNumber}/${serviceName}`}
-      name={`${organization.name} - ${serviceName}`}
+      to={`/directory/${service.organization.serialNumber}/${service.serviceName}`}
+      name={`${service.organization.name} - ${service.serviceName}`}
       data-testid="directory-service-row"
       {...props}
     >
       <StyledTd color={ownService ? '#FFBC2C' : null}>
-        {organization.name}
+        {service.organization.name}
       </StyledTd>
-      <Table.Td>{serviceName}</Table.Td>
+      <Table.Td>{service.serviceName}</Table.Td>
       <Table.Td>
-        <StateIndicator state={state} showText={false} />
+        <StateIndicator state={service.state} showText={false} />
       </Table.Td>
-      <Table.Td>{apiSpecificationType}</Table.Td>
+      <Table.Td>{service.apiSpecificationType}</Table.Td>
       <StyledTdAccess>
         <AccessMessageWrapper>
           <AccessMessage displayState={displayState} />
@@ -103,10 +92,10 @@ const DirectoryServiceRow: React.FC<DirectoryServiceRowProps> = ({
   )
 }
 
-interface DirectoryServiceRowProps {
-  service: Service
-  selected: boolean
-  ownService: boolean
+DirectoryServiceRow.propTypes = {
+  service: instanceOf(DirectoryServiceModel),
+  selected: bool,
+  ownService: bool,
 }
 
 export default observer(DirectoryServiceRow)
