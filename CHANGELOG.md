@@ -1,3 +1,42 @@
+# [0.122.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.121.1...v0.122.0) (2022-02-07)
+
+
+### Bug Fixes
+
+* enable ToS for production only ([323131c](https://gitlab.com/commonground/nlx/nlx/commit/323131ca3beb84170dd805fde3659930ff737e63)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** add specific error message for empty inway address ([299495f](https://gitlab.com/commonground/nlx/nlx/commit/299495f09635a03f5a8ddc3dada4bc031ca9d368))
+* **management:** ensure audit log for accepting ToS can be handled ([60d3e91](https://gitlab.com/commonground/nlx/nlx/commit/60d3e91ee24fd711ac838d849c9c9f5c8722e84a)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** ensure ToS can only be accepted once ([411413a](https://gitlab.com/commonground/nlx/nlx/commit/411413a3ada7ba0dccc723d7ac4c90def98210f7))
+* **management:** prioritize OutgoingAccessRequests with state 'created' when syncing access requests ([1bd2eeb](https://gitlab.com/commonground/nlx/nlx/commit/1bd2eeb1410d9d31ba69f0ab149c03b811670d37)), closes [#1429](https://gitlab.com/commonground/nlx/nlx/issues/1429)
+* **management:** removed confusing horizontal lines on login page ([bbebd14](https://gitlab.com/commonground/nlx/nlx/commit/bbebd14adb83d49afcd24dff4149760aa0650481))
+* **management:** show org name in access grant toaster ([5c73924](https://gitlab.com/commonground/nlx/nlx/commit/5c73924f805ba3df27f2719f6f1aa5e287eb45dd))
+* **management:** sync access proofs even if the outgoing access request has the state failed ([4696e1d](https://gitlab.com/commonground/nlx/nlx/commit/4696e1d3b97b704d07c7ada7086edcd0cb09f0d3))
+
+
+### Features
+
+* **directory:** add terms of service flag to helm chart ([5c10fa9](https://gitlab.com/commonground/nlx/nlx/commit/5c10fa9c6cafc930a35941fe9c97ffe4ccab6934))
+* **directory:** add terms of service to the directory api ([7a44390](https://gitlab.com/commonground/nlx/nlx/commit/7a44390ed28f0da2d64b04d760d8774fa0a40061))
+* **management:** add terms of service status and accept routes in api ([fa6babe](https://gitlab.com/commonground/nlx/nlx/commit/fa6babe0e61ff10abe49a66ccab541d755fe688c))
+* **management:** add the Terms and Condition route ([af971d6](https://gitlab.com/commonground/nlx/nlx/commit/af971d62c62d803db6be66e59000e7b43324e52f)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** do not enforce accepting ToS when the directory is unavailable ([bb0aa52](https://gitlab.com/commonground/nlx/nlx/commit/bb0aa5204376ce97cbd442ce23dbec845c8b531d)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** enable accepting the ToS ([3b66d17](https://gitlab.com/commonground/nlx/nlx/commit/3b66d1792480d181d210298a0681b6c70015195f)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** enable retrieving the ToS using the ApplicationStore ([92b2c49](https://gitlab.com/commonground/nlx/nlx/commit/92b2c492fced7c04e8d41dae172719b5054f0ee0)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** fetch the terms of service status as part of the ToS context ([7b145a5](https://gitlab.com/commonground/nlx/nlx/commit/7b145a5e3569d1c91de999e21da2cb48ceee91c2)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** implement AuditLog for accepting Terms of Service ([333430e](https://gitlab.com/commonground/nlx/nlx/commit/333430e2ccd94570d9b40dd77052cb5b0c5df6bb)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** implement GetTermsOfService API call for the Management API ([6e5e8f4](https://gitlab.com/commonground/nlx/nlx/commit/6e5e8f45b6d22962e1580b8970060901314a339a)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** implement Terms of Service context provider ([dfef6a1](https://gitlab.com/commonground/nlx/nlx/commit/dfef6a111da5e84913c6346360ac1809d39c2baf)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** lower the interval for synchronizing access requests ([0ecd15e](https://gitlab.com/commonground/nlx/nlx/commit/0ecd15e08f381ae2391db9b16cf64bd63869b3ff))
+* **management:** only redirect to ToS when ToS is enabled for the directory ([4875fdd](https://gitlab.com/commonground/nlx/nlx/commit/4875fdd8e109cd1488312e46125188abab46ebcd)), closes [#1438](https://gitlab.com/commonground/nlx/nlx/issues/1438)
+* **management:** scheduler processes all outdated access requests ([b1d3c23](https://gitlab.com/commonground/nlx/nlx/commit/b1d3c2319311f2867c021742a4fd8f4c65138ec8))
+* **management:** update ToS link text ([154998c](https://gitlab.com/commonground/nlx/nlx/commit/154998c6e407556cb26c536c398a07ac0aac47c8))
+
+
+### Reverts
+
+* strip nlxio prefix from Docker images when not using Docker Hub ([75c4e14](https://gitlab.com/commonground/nlx/nlx/commit/75c4e1493a7384de8b11493d52af5a879f6fe946))
+* update dependency axe-core to v4.4.0 ([5820288](https://gitlab.com/commonground/nlx/nlx/commit/58202880e4f86b4f183d734c26692dfca5ab46e2))
+
 ## [0.121.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.121.0...v0.121.1) (2022-01-12)
 
 
