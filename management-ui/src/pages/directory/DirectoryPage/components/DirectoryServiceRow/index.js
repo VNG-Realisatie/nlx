@@ -4,6 +4,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { instanceOf, bool } from 'prop-types'
+import { useTheme } from 'styled-components'
 import Table from '../../../../../components/Table'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import StateIndicator from '../../../../../components/StateIndicator'
@@ -12,10 +13,14 @@ import DirectoryServiceModel from '../../../../../stores/models/DirectoryService
 import { StyledTd, AccessMessageWrapper, StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service, ownService, ...props }) => {
+  const theme = useTheme()
+
   const displayState = getDirectoryServiceAccessUIState(
     service.latestAccessRequest,
     service.latestAccessProof,
   )
+
+  const ownServiceColor = theme.tokens.colorBrand1
 
   return (
     <Table.Tr
@@ -24,7 +29,7 @@ const DirectoryServiceRow = ({ service, ownService, ...props }) => {
       data-testid="directory-service-row"
       {...props}
     >
-      <StyledTd color={ownService ? '#FFBC2C' : null}>
+      <StyledTd color={ownService ? ownServiceColor : null}>
         {service.organization.name}
       </StyledTd>
       <Table.Td>{service.serviceName}</Table.Td>
