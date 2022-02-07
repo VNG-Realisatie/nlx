@@ -64,14 +64,16 @@ func TestRegisterOutway(t *testing.T) {
 		"when_the_connection_context_does_not_contain_an_address": {
 			args: args{
 				database: &database.Outway{
-					Name:         "outway42.ip-context-required",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ip-context-required",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.ip-context-required",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ip-context-required",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: nil},
 			},
@@ -80,9 +82,10 @@ func TestRegisterOutway(t *testing.T) {
 		"when_providing_an_invalid_outway_name": {
 			args: args{
 				request: &api.RegisterOutwayRequest{
-					Name:         "",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
@@ -98,9 +101,10 @@ func TestRegisterOutway(t *testing.T) {
 					PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.basic",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
 			},
@@ -115,9 +119,10 @@ func TestRegisterOutway(t *testing.T) {
 					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.ipv6",
-					PublicKeyPEM: testPublicKeyPEM,
-					Version:      "unknown",
+					Name:                 "outway42.ipv6",
+					PublicKeyPEM:         testPublicKeyPEM,
+					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					Version:              "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
