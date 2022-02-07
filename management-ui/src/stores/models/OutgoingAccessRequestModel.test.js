@@ -18,6 +18,10 @@ beforeEach(() => {
     state: ACCESS_REQUEST_STATES.RECEIVED,
     createdAt: '2020-10-01',
     updatedAt: '2020-10-02',
+    errorDetails: {
+      cause: 'the cause of an error',
+      stackTrace: 'a stack trace of the error',
+    },
   }
 })
 
@@ -35,6 +39,10 @@ test('should properly construct object', () => {
   expect(accessRequest.state).toBe(accessRequestData.state)
   expect(accessRequest.createdAt).toEqual(new Date(accessRequestData.createdAt))
   expect(accessRequest.updatedAt).toEqual(new Date(accessRequestData.updatedAt))
+  expect(accessRequest.errorDetails.cause).toEqual('the cause of an error')
+  expect(accessRequest.errorDetails.stackTrace).toEqual(
+    'a stack trace of the error',
+  )
 })
 
 test('calling retry should pass instance to store', () => {

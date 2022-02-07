@@ -23,7 +23,10 @@ class OutgoingAccessRequestModel {
   state = ''
   createdAt = null
   updatedAt = null
-  errorDetails = null
+  errorDetails = {
+    cause: null,
+    stackTrace: null,
+  }
 
   constructor({ accessRequestData, outgoingAccessRequestStore }) {
     makeAutoObservable(this)
@@ -65,7 +68,8 @@ class OutgoingAccessRequestModel {
     }
 
     if (accessRequestData.errorDetails) {
-      this.errorDetails = accessRequestData.errorDetails
+      this.errorDetails.cause = accessRequestData.errorDetails.cause
+      this.errorDetails.stackTrace = accessRequestData.errorDetails.stackTrace
     }
   }
 
