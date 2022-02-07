@@ -3,65 +3,19 @@
 //
 import React from 'react'
 import { observer } from 'mobx-react'
-import { useTranslation } from 'react-i18next'
 import { instanceOf, bool } from 'prop-types'
 import Table from '../../../../../components/Table'
-import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
-import RequestAccessDetails from '../../../RequestAccessDetails'
-import getDirectoryServiceAccessUIState, {
-  SHOW_ACCESS_REVOKED,
-  SHOW_REQUEST_ACCESS,
-  SHOW_REQUEST_FAILED,
-  SHOW_REQUEST_REJECTED,
-} from '../../../directoryServiceAccessState'
+import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import StateIndicator from '../../../../../components/StateIndicator'
-import QuickAccessButton from '../QuickAccessButton'
 import AccessMessage from '../AccessMessage'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 import { StyledTd, AccessMessageWrapper, StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service, ownService, ...props }) => {
-  const { t } = useTranslation()
-
-  const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
-    title: t('Request access'),
-    okText: t('Send'),
-    children: (
-      <RequestAccessDetails
-        organization={service.organization}
-        serviceName={service.serviceName}
-      />
-    ),
-  })
-
-  const requestAccess = async () => {
-    if (await confirmRequest()) {
-      service.requestAccess()
-    }
-  }
-
   const displayState = getDirectoryServiceAccessUIState(
     service.latestAccessRequest,
     service.latestAccessProof,
   )
-
-  const handleQuickAccessButtonClick = (event) => {
-    event.stopPropagation()
-
-    if (displayState === SHOW_REQUEST_FAILED) {
-      service.retryRequestAccess()
-      return
-    }
-
-    requestAccess()
-  }
-
-  const showRequestAccessButton = [
-    SHOW_REQUEST_ACCESS,
-    SHOW_REQUEST_FAILED,
-    SHOW_REQUEST_REJECTED,
-    SHOW_ACCESS_REVOKED,
-  ].includes(displayState)
 
   return (
     <Table.Tr
@@ -81,13 +35,8 @@ const DirectoryServiceRow = ({ service, ownService, ...props }) => {
       <StyledTdAccess>
         <AccessMessageWrapper>
           <AccessMessage displayState={displayState} />
-          {showRequestAccessButton && (
-            <QuickAccessButton onClick={handleQuickAccessButtonClick} />
-          )}
         </AccessMessageWrapper>
       </StyledTdAccess>
-
-      <RequestConfirmationModal />
     </Table.Tr>
   )
 }
