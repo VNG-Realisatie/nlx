@@ -55,6 +55,7 @@ outway:
 ################
 nlx-management:
   config:
+    enableBasicAuth: true
     oidc:
       clientSecret: N6Gr4v8wZKlLuKrMSV1I
       discoveryURL: https://dex.acc.vergunningsoftware.nl
