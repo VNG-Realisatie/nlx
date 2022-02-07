@@ -24,6 +24,11 @@
     - cg
     - shell
 
+Push production apps-overview:
+  extends: .push-production-base
+  variables:
+    IMAGE: apps-overview
+
 Push production auth-service:
   extends: .push-production-base
   variables:
