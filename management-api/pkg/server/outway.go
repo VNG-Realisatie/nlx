@@ -7,6 +7,7 @@ package server
 import (
 	"context"
 	"fmt"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"net"
 
 	"github.com/jackc/pgtype"
@@ -42,6 +43,12 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outway: %s", err))
 	}
 
+	fingerPrint, err := common_tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPEM))
+	if err != nil {
+		logger.Error("unable to generate public key fingerprint", zap.Error(err))
+		return nil, status.Error(codes.InvalidArgument, "invalid public key")
+	}
+
 	ipAddress, err := getCIDRFromTCPAddress(addr)
 	if err != nil {
 		logger.Error("cannot get CIDR from TCP address", zap.Error(err), zap.Any("TCP address", addr))
@@ -55,7 +62,7 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 			Status: pgtype.Present,
 		},
 		PublicKeyPEM:         req.PublicKeyPEM,
-		PublicKeyFingerprint: req.PublicKeyFingerprint,
+		PublicKeyFingerprint: fingerPrint,
 		Version:              req.Version,
 	}
 

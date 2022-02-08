@@ -232,7 +232,6 @@ message RegisterOutwayRequest {
   string name = 1;
   string publicKeyPEM = 2;
   string version = 3;
-  string publicKeyFingerprint = 4;
 }
 
 message ListOutwaysRequest {}
