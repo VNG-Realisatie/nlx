@@ -41,6 +41,10 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /go/src/go.nlx.io/nlx/docs/website/build /usr/share/nginx/html
+
+# This is a workaround to https://github.com/moby/moby/issues/37965
+RUN true
+
 COPY --from=version /version.json /usr/share/nginx/html/
 
 USER appuser
