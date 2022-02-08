@@ -1,6 +1,6 @@
 dependencies:
 - name: dex
   repository: https://charts.helm.sh/stable
-  version: 2.13.0
-digest: sha256:4e8289f9cf2245294595b0f796ffb1725338e015940062a427483fdc28d7d26b
-generated: "2021-04-07T08:02:30.072206+02:00"
+  version: 2.15.2
+digest: sha256:7ad401f73598cc7650fc2b9cad9c18dfb4dd9807804bf6a875756f8b1c783d0f
+generated: "2022-02-08T00:43:25.281678425Z"
