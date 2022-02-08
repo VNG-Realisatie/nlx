@@ -113,12 +113,12 @@ func (db *PostgresConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, 
 	return accessRequest, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*OutgoingAccessRequest, error) {
+func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*OutgoingAccessRequest, error) {
 	accessRequest := &OutgoingAccessRequest{}
 
 	if err := db.DB.
 		WithContext(ctx).
-		Where("organization_serial_number = ? AND service_name = ?", organizationSerialNumber, serviceName).
+		Where("organization_serial_number = ? AND service_name = ? AND public_key_fingerprint = ?", organizationSerialNumber, serviceName, publicKeyFingerprint).
 		Order("created_at DESC").
 		First(accessRequest).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -129,6 +129,20 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 	}
 
 	return accessRequest, nil
+}
+
+func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequestsPerCertificate(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) ([]*OutgoingAccessRequest, error) {
+	accessRequests := []*OutgoingAccessRequest{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Find(accessRequests).
+		Where("organization_serial_number = ? AND service_name = ? AND public_key_fingerprint", organizationSerialNumber, serviceName, publicKeyFingerprint).
+		Order("created_at DESC").Error; err != nil {
+		return nil, err
+	}
+
+	return accessRequests, nil
 }
 
 func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState, referenceID uint, schedulerErr *diagnostics.ErrorDetails, synchronizeAt time.Time) error {

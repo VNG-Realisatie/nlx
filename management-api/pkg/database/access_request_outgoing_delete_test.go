@@ -24,6 +24,7 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 	type args struct {
 		organizationSerialNumber string
 		serviceName              string
+		publicKeyFingerprint     string
 	}
 
 	tests := map[string]struct {
@@ -36,6 +37,7 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 			args: args{
 				organizationSerialNumber: "arbitrary",
 				serviceName:              "arbitrary",
+				publicKeyFingerprint:     "public-key-fingerprint",
 			},
 			wantErr: nil,
 		},
@@ -44,6 +46,7 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 			args: args{
 				organizationSerialNumber: "00000000000000000001",
 				serviceName:              "fixture-service-name",
+				publicKeyFingerprint:     "public-key-fingerprint",
 			},
 			wantErr: nil,
 		},
@@ -62,13 +65,13 @@ func TestDeleteOutgoingAccessRequests(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				assertOutgoingAccessRequestDeleted(t, configDb, tt.args.organizationSerialNumber, tt.args.serviceName)
+				assertOutgoingAccessRequestDeleted(t, configDb, tt.args.organizationSerialNumber, tt.args.serviceName, tt.args.publicKeyFingerprint)
 			}
 		})
 	}
 }
 
-func assertOutgoingAccessRequestDeleted(t *testing.T, repo database.ConfigDatabase, organizationSerialNumber, serviceName string) {
-	_, err := repo.GetLatestOutgoingAccessRequest(context.Background(), organizationSerialNumber, serviceName)
+func assertOutgoingAccessRequestDeleted(t *testing.T, repo database.ConfigDatabase, organizationSerialNumber, serviceName, publicKeyFingerprint string) {
+	_, err := repo.GetLatestOutgoingAccessRequest(context.Background(), organizationSerialNumber, serviceName, publicKeyFingerprint)
 	require.Equal(t, err, database.ErrNotFound)
 }

@@ -1,7 +1,7 @@
 - id: 1
   name: fixture-outway-1
   ip_address: 127.0.0.1
-  public_key_pem: |+ 
+  public_key_pem: |+
     -----BEGIN PUBLIC KEY-----
     MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxahK/ruBG74MZ2/Z71ll
     WS1OMJy6xs9qpQY7YC7C+u59JoqNdoWToV6EZRfPYzh61BWsyKlqvkl11HhD6HVk
@@ -16,13 +16,14 @@
     O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
     P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
     -----END PUBLIC KEY-----
+  public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
   version: unknown
   created_at: 2021-01-02 01:02:03.000000+00
   updated_at: 2021-01-02 01:02:03.000000+00
 - id: 2
   name: fixture-outway-2
   ip_address: 127.0.0.2
-  public_key_pem: |+ 
+  public_key_pem: |+
     -----BEGIN PUBLIC KEY-----
     MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxahK/ruBG74MZ2/Z71ll
     WS1OMJy6xs9qpQY7YC7C+u59JoqNdoWToV6EZRfPYzh61BWsyKlqvkl11HhD6HVk
@@ -37,6 +38,7 @@
     O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
     P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
     -----END PUBLIC KEY-----
+  public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
   version: 1.2.3
   created_at: 2021-01-02 01:02:03.000000+00
   updated_at: 2021-01-02 01:02:03.000000+00

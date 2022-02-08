@@ -258,6 +258,21 @@ func (mr *MockConfigDatabaseMockRecorder) GetAccessProofForOutgoingAccessRequest
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProofForOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetAccessProofForOutgoingAccessRequest), ctx, accessRequestID)
 }
 
+// GetFingerprintOfPublicKeys mocks base method.
+func (m *MockConfigDatabase) GetFingerprintOfPublicKeys(ctx context.Context) ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFingerprintOfPublicKeys", ctx)
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFingerprintOfPublicKeys indicates an expected call of GetFingerprintOfPublicKeys.
+func (mr *MockConfigDatabaseMockRecorder) GetFingerprintOfPublicKeys(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFingerprintOfPublicKeys", reflect.TypeOf((*MockConfigDatabase)(nil).GetFingerprintOfPublicKeys), ctx)
+}
+
 // GetIncomingAccessRequest mocks base method.
 func (m *MockConfigDatabase) GetIncomingAccessRequest(ctx context.Context, id uint) (*database.IncomingAccessRequest, error) {
 	m.ctrl.T.Helper()
@@ -334,18 +349,18 @@ func (mr *MockConfigDatabaseMockRecorder) GetLatestIncomingAccessRequest(ctx, or
 }
 
 // GetLatestOutgoingAccessRequest mocks base method.
-func (m *MockConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*database.OutgoingAccessRequest, error) {
+func (m *MockConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*database.OutgoingAccessRequest, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLatestOutgoingAccessRequest", ctx, organizationSerialNumber, serviceName)
+	ret := m.ctrl.Call(m, "GetLatestOutgoingAccessRequest", ctx, organizationSerialNumber, serviceName, publicKeyFingerprint)
 	ret0, _ := ret[0].(*database.OutgoingAccessRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetLatestOutgoingAccessRequest indicates an expected call of GetLatestOutgoingAccessRequest.
-func (mr *MockConfigDatabaseMockRecorder) GetLatestOutgoingAccessRequest(ctx, organizationSerialNumber, serviceName interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) GetLatestOutgoingAccessRequest(ctx, organizationSerialNumber, serviceName, publicKeyFingerprint interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestOutgoingAccessRequest), ctx, organizationSerialNumber, serviceName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetLatestOutgoingAccessRequest), ctx, organizationSerialNumber, serviceName, publicKeyFingerprint)
 }
 
 // GetOutgoingAccessRequest mocks base method.

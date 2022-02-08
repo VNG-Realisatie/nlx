@@ -26,9 +26,6 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
-	fixturePublicKeyPEM, err := fixtureCertBundle.PublicKeyPEM()
-	require.NoError(t, err)
-
 	tests := map[string]struct {
 		loadFixtures bool
 		want         []*database.IncomingAccessRequest

@@ -7,7 +7,6 @@ package server
 import (
 	"context"
 	"fmt"
-	common_tls "go.nlx.io/nlx/common/tls"
 	"net"
 
 	"github.com/jackc/pgtype"
@@ -17,6 +16,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )

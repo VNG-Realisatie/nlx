@@ -149,8 +149,10 @@ func TestListDirectoryServices(t *testing.T) {
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
 	service := clientServices[0]
 
+	db.EXPECT().GetFingerprintOfPublicKeys(ctx).Return([]string{"public-key-fingerprint"}, nil)
+
 	db.EXPECT().
-		GetLatestOutgoingAccessRequest(ctx, service.Organization.SerialNumber, service.Name).
+		GetLatestOutgoingAccessRequest(ctx, service.Organization.SerialNumber, service.Name, "public-key-fingerprint").
 		Return(&database.OutgoingAccessRequest{
 			ID: 1,
 			Organization: database.Organization{
@@ -203,26 +205,14 @@ func TestListDirectoryServices(t *testing.T) {
 			OneTimeCosts:         1,
 			MonthlyCosts:         5,
 			RequestCosts:         250,
-			LatestAccessProof: &api.AccessProof{
-				Id: 1,
-				Organization: &api.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization-a",
-				},
-				ServiceName:     "test-service-1",
-				AccessRequestId: 1,
-				CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
-			},
-			LatestAccessRequest: &api.OutgoingAccessRequest{
-				Id: 1,
-				Organization: &api.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization-a",
-				},
-				ServiceName: "test-service-1",
-				State:       api.AccessRequestState_CREATED,
-				CreatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
-				UpdatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+			AccessStates: []*api.DirectoryService_AccessState{{
+				PublicKeyFingerprint: "public-key-fingerprint",
+				AccessRequest: &api.OutgoingAccessRequest{
+					Id:        1,
+					State:     api.AccessRequestState_CREATED,
+					CreatedAt: timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+					UpdatedAt: timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+				}},
 			},
 		},
 	}
@@ -249,8 +239,10 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:              "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetFingerprintOfPublicKeys(ctx).Return([]string{"public-key-fingerprint"}, nil)
+
 				db.EXPECT().
-					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service").
+					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service", "public-key-fingerprint").
 					Return(&database.OutgoingAccessRequest{
 						ID:          1,
 						ServiceName: "test-service",
@@ -299,26 +291,15 @@ func TestGetOrganizationService(t *testing.T) {
 					Name:         "test-organization",
 				},
 				ServiceName: "test-service",
-				LatestAccessRequest: &api.OutgoingAccessRequest{
-					Id: 1,
-					Organization: &api.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "test-organization",
+				AccessStates: []*api.DirectoryService_AccessState{{
+					PublicKeyFingerprint: "public-key-fingerprint",
+					AccessRequest: &api.OutgoingAccessRequest{
+						Id:        1,
+						State:     api.AccessRequestState_CREATED,
+						CreatedAt: timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+						UpdatedAt: timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 					},
-					ServiceName: "test-service",
-					State:       api.AccessRequestState_CREATED,
-					CreatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-					UpdatedAt:   timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				},
-				LatestAccessProof: &api.AccessProof{
-					Id:              1,
-					AccessRequestId: 1,
-					ServiceName:     "test-service",
-					Organization: &api.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "test-organization",
-					},
-					CreatedAt: timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 				},
 			},
 			nil,
@@ -330,9 +311,11 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:              "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetFingerprintOfPublicKeys(ctx).Return([]string{"public-key-fingerprint"}, nil)
+
 				db.
 					EXPECT().
-					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service").
+					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service", "public-key-fingerprint").
 					Return(nil, database.ErrNotFound)
 			},
 			func(directoryClient *mock_directory.MockClient) {
@@ -352,6 +335,9 @@ func TestGetOrganizationService(t *testing.T) {
 					Name:         "test-organization",
 				},
 				ServiceName: "test-service",
+				AccessStates: []*api.DirectoryService_AccessState{{
+					PublicKeyFingerprint: "public-key-fingerprint",
+				}},
 			},
 			nil,
 		},
@@ -376,9 +362,11 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:              "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetFingerprintOfPublicKeys(ctx).Return([]string{"public-key-fingerprint"}, nil)
+
 				db.
 					EXPECT().
-					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service").
+					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service", "public-key-fingerprint").
 					Return(nil, errors.New("arbitrary error"))
 			},
 
@@ -403,9 +391,11 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName:              "test-service",
 			},
 			func(db *mock_database.MockConfigDatabase) {
+				db.EXPECT().GetFingerprintOfPublicKeys(ctx).Return([]string{"public-key-fingerprint"}, nil)
+
 				db.
 					EXPECT().
-					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service").
+					GetLatestOutgoingAccessRequest(gomock.Any(), "00000000000000000001", "test-service", "public-key-fingerprint").
 					Return(&database.OutgoingAccessRequest{
 						ID: 1,
 						Organization: database.Organization{

@@ -6,7 +6,6 @@ package server
 import (
 	"context"
 
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -60,14 +59,13 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 	for i, service := range resp.Services {
 		convertedService := convertDirectoryService(service)
 
-		accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, convertedService.Organization.SerialNumber, convertedService.ServiceName)
+		accessRequestStates, err := getLatestAccessRequestStates(ctx, s.configDatabase, convertedService.Organization.SerialNumber, convertedService.ServiceName)
 		if err != nil {
-			s.logger.Error("error getting latest access request and access proof", zap.Error(err))
+			s.logger.Error("error getting latest access request states", zap.Error(err))
 			return nil, status.Errorf(codes.Internal, "database error")
 		}
 
-		convertedService.LatestAccessRequest = accessRequest
-		convertedService.LatestAccessProof = accessProof
+		convertedService.AccessStates = accessRequestStates
 
 		services[i] = convertedService
 	}
@@ -86,14 +84,13 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 
 	directoryService := convertDirectoryService(service)
 
-	accessRequest, accessProof, err := getLatestAccessRequestAndAccessGrant(ctx, s.configDatabase, directoryService.Organization.SerialNumber, directoryService.ServiceName)
+	accessRequestStates, err := getLatestAccessRequestStates(ctx, s.configDatabase, directoryService.Organization.SerialNumber, directoryService.ServiceName)
 	if err != nil {
-		s.logger.Error("error getting latest access request and access proof", zap.Error(err))
+		s.logger.Error("error getting latest access request states", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "database error")
 	}
 
-	directoryService.LatestAccessRequest = accessRequest
-	directoryService.LatestAccessProof = accessProof
+	directoryService.AccessStates = accessRequestStates
 
 	return directoryService, nil
 }
@@ -235,58 +232,40 @@ func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) *api.Outgo
 	}
 }
 
-func getLatestAccessRequestAndAccessGrant(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) (*api.OutgoingAccessRequest, *api.AccessProof, error) {
-	latestAccessRequest, errDatabase := configDatabase.GetLatestOutgoingAccessRequest(ctx, organizationSerialNumber, serviceName)
-	if errDatabase != nil {
-		if !errIsNotFound(errDatabase) {
-			return nil, nil, errors.Wrap(errDatabase, "error retrieving latest access request")
-		}
-	}
-
-	if errIsNotFound(errDatabase) {
-		return nil, nil, nil
-	}
-
-	latestAccessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(ctx, latestAccessRequest.ID)
+func getLatestAccessRequestStates(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
+	fingerPrints, err := configDatabase.GetFingerprintOfPublicKeys(ctx)
 	if err != nil {
-		if !errIsNotFound(err) {
-			return nil, nil, errors.Wrap(err, "error retrieving latest access proof")
+		return nil, err
+	}
+
+	accessRequestStates := make([]*api.DirectoryService_AccessState, len(fingerPrints))
+
+	for i, fingerprint := range fingerPrints {
+		accessRequestState := &api.DirectoryService_AccessState{
+			PublicKeyFingerprint: fingerprint,
+		}
+		accessRequestStates[i] = accessRequestState
+
+		outgoingAccessRequest, err := configDatabase.GetLatestOutgoingAccessRequest(ctx, organizationSerialNumber, serviceName, fingerprint)
+		if err != nil && !errors.Is(err, database.ErrNotFound) {
+			return nil, err
+		}
+
+		if outgoingAccessRequest == nil {
+			continue
+		}
+
+		accessRequestState.AccessRequest = convertDirectoryAccessRequest(outgoingAccessRequest)
+
+		accessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(ctx, outgoingAccessRequest.ID)
+		if err != nil && !errors.Is(err, database.ErrNotFound) {
+			return nil, err
+		}
+
+		if accessProof != nil && accessProof.RevokedAt.Valid {
+			accessRequestState.RevokedAt = timestamppb.New(accessProof.RevokedAt.Time)
 		}
 	}
 
-	var convertedAccessRequest *api.OutgoingAccessRequest
-
-	if latestAccessRequest != nil {
-		convertedAccessRequest = convertOutgoingAccessRequest(latestAccessRequest)
-	}
-
-	var convertedAccessProof *api.AccessProof
-
-	if latestAccessProof != nil {
-		convertedAccessProof = convertAccessProof(latestAccessProof)
-	}
-
-	return convertedAccessRequest, convertedAccessProof, nil
-}
-
-func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
-	createdAt := timestamppb.New(accessProof.CreatedAt)
-
-	var revokedAt *timestamp.Timestamp
-
-	if accessProof.RevokedAt.Valid {
-		revokedAt = timestamppb.New(accessProof.RevokedAt.Time)
-	}
-
-	return &api.AccessProof{
-		Id: uint64(accessProof.ID),
-		Organization: &api.Organization{
-			SerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
-			Name:         accessProof.OutgoingAccessRequest.Organization.Name,
-		},
-		ServiceName:     accessProof.OutgoingAccessRequest.ServiceName,
-		CreatedAt:       createdAt,
-		RevokedAt:       revokedAt,
-		AccessRequestId: uint64(accessProof.OutgoingAccessRequest.ID),
-	}
+	return accessRequestStates, nil
 }

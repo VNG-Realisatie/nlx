@@ -80,10 +80,9 @@ func TestRegisterOutway(t *testing.T) {
 		"when_providing_an_invalid_outway_name": {
 			args: args{
 				request: &api.RegisterOutwayRequest{
-					Name:                 "",
-					PublicKeyPEM:         testPublicKeyPEM,
-					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
-					Version:              "unknown",
+					Name:         "",
+					PublicKeyPEM: testPublicKeyPEM,
+					Version:      "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},

@@ -29,6 +29,7 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 	type args struct {
 		organizationSerialNumber string
 		serviceName              string
+		publicKeyFingerprint     string
 	}
 
 	tests := map[string]struct {
@@ -42,6 +43,7 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 			args: args{
 				organizationSerialNumber: "arbitrary",
 				serviceName:              "arbitrary",
+				publicKeyFingerprint:     "arbitrary",
 			},
 			want:    nil,
 			wantErr: database.ErrNotFound,
@@ -51,6 +53,7 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 			args: args{
 				organizationSerialNumber: "00000000000000000001",
 				serviceName:              "fixture-service-name",
+				publicKeyFingerprint:     "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
 			},
 			want: &database.OutgoingAccessRequest{
 				ID: 2,
@@ -79,7 +82,7 @@ func TestGetLatestOutgoingAccessRequest(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.GetLatestOutgoingAccessRequest(context.Background(), tt.args.organizationSerialNumber, tt.args.serviceName)
+			got, err := configDb.GetLatestOutgoingAccessRequest(context.Background(), tt.args.organizationSerialNumber, tt.args.serviceName, tt.args.publicKeyFingerprint)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {

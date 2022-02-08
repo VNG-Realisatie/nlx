@@ -34,8 +34,10 @@ type ConfigDatabase interface {
 	GetOutway(ctx context.Context, name string) (*Outway, error)
 	RegisterOutway(ctx context.Context, outway *Outway) error
 
+	GetFingerprintOfPublicKeys(ctx context.Context) ([]string, error)
+
 	GetOutgoingAccessRequest(ctx context.Context, id uint) (*OutgoingAccessRequest, error)
-	GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName string) (*OutgoingAccessRequest, error)
+	GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*OutgoingAccessRequest, error)
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
 	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails, synchronizeAt time.Time) error
 	DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error

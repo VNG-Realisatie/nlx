@@ -32,9 +32,6 @@ func TestRevokeAccessGrant(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
-	fixturePublicKeyPEM, err := fixtureCertBundle.PublicKeyPEM()
-	require.NoError(t, err)
-
 	type args struct {
 		accessGrantID uint
 		revokedAt     time.Time
