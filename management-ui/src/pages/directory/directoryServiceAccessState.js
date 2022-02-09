@@ -3,17 +3,15 @@
 //
 import { ACCESS_REQUEST_STATES } from '../../stores/models/OutgoingAccessRequestModel'
 
-const { CREATED, FAILED, RECEIVED, CANCELLED, REJECTED, APPROVED } =
-  ACCESS_REQUEST_STATES
+const { CREATED, FAILED, RECEIVED, REJECTED, APPROVED } = ACCESS_REQUEST_STATES
 
 export const SHOW_REQUEST_ACCESS = 0
 export const SHOW_HAS_ACCESS = 1
 export const SHOW_REQUEST_CREATED = 2
 export const SHOW_REQUEST_FAILED = 3
 export const SHOW_REQUEST_RECEIVED = 4
-export const SHOW_REQUEST_CANCELLED = 5
-export const SHOW_REQUEST_REJECTED = 6
-export const SHOW_ACCESS_REVOKED = 7
+export const SHOW_REQUEST_REJECTED = 5
+export const SHOW_ACCESS_REVOKED = 6
 
 export default function getDirectoryServiceAccessUIState(
   outgoingAccessRequest,
@@ -39,9 +37,6 @@ export default function getDirectoryServiceAccessUIState(
 
     case RECEIVED:
       return SHOW_REQUEST_RECEIVED
-
-    case CANCELLED:
-      return SHOW_REQUEST_CANCELLED
 
     case REJECTED:
       return SHOW_REQUEST_REJECTED

@@ -8,15 +8,13 @@ import getDirectoryServiceAccessState, {
   SHOW_ACCESS_REVOKED,
   SHOW_HAS_ACCESS,
   SHOW_REQUEST_ACCESS,
-  SHOW_REQUEST_CANCELLED,
   SHOW_REQUEST_CREATED,
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
 } from './directoryServiceAccessState'
 
-const { CREATED, FAILED, RECEIVED, CANCELLED, REJECTED, APPROVED } =
-  ACCESS_REQUEST_STATES
+const { CREATED, FAILED, RECEIVED, REJECTED, APPROVED } = ACCESS_REQUEST_STATES
 
 const createOutgoingAccessRequestInstance = (accessRequestData) => {
   return new OutgoingAccessRequestModel({
@@ -67,16 +65,6 @@ test('access request is approved', () => {
       }),
     ),
   ).toBe(SHOW_HAS_ACCESS)
-})
-
-test('access request is cancelled', () => {
-  expect(
-    getDirectoryServiceAccessState(
-      createOutgoingAccessRequestInstance({
-        state: CANCELLED,
-      }),
-    ),
-  ).toBe(SHOW_REQUEST_CANCELLED)
 })
 
 test('access request is rejected', () => {
