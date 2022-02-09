@@ -26,6 +26,7 @@
   tags:
     - cg
     - shell
+  retry: 1
 
 Trigger packaging build:
   stage: Build

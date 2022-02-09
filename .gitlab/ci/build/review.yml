@@ -36,6 +36,7 @@
   tags:
     - cg
     - shell
+  retry: 1
 
 Build review auth-service:
   extends: .build-review-base

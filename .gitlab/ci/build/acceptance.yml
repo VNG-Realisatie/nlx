@@ -40,6 +40,7 @@
   tags:
     - cg
     - shell
+  retry: 1
 
 Build acceptance auth-service:
   extends: .build-acceptance-base
