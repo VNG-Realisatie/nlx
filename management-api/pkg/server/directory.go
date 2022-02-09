@@ -5,6 +5,7 @@ package server
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/timestamp"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -225,47 +226,59 @@ func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) *api.Outgo
 	}
 
 	return &api.OutgoingAccessRequest{
-		Id:        uint64(a.ID),
-		State:     accessRequestState,
-		CreatedAt: createdAt,
-		UpdatedAt: updatedAt,
+		Id:                   uint64(a.ID),
+		PublicKeyFingerprint: a.PublicKeyFingerprint,
+		State:                accessRequestState,
+		CreatedAt:            createdAt,
+		UpdatedAt:            updatedAt,
 	}
 }
 
 func getLatestAccessRequestStates(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
-	fingerPrints, err := configDatabase.GetFingerprintOfPublicKeys(ctx)
+	outgoingAccessRequests, err := configDatabase.ListLatestOutgoingAccessRequests(ctx, organizationSerialNumber, serviceName)
 	if err != nil {
 		return nil, err
 	}
+	accessRequestStates := make([]*api.DirectoryService_AccessState, len(outgoingAccessRequests))
 
-	accessRequestStates := make([]*api.DirectoryService_AccessState, len(fingerPrints))
+	for i, outgoingAccessRequest := range outgoingAccessRequests {
 
-	for i, fingerprint := range fingerPrints {
 		accessRequestState := &api.DirectoryService_AccessState{
-			PublicKeyFingerprint: fingerprint,
+			AccessRequest: convertDirectoryAccessRequest(outgoingAccessRequest),
 		}
 		accessRequestStates[i] = accessRequestState
-
-		outgoingAccessRequest, err := configDatabase.GetLatestOutgoingAccessRequest(ctx, organizationSerialNumber, serviceName, fingerprint)
-		if err != nil && !errors.Is(err, database.ErrNotFound) {
-			return nil, err
-		}
-
-		if outgoingAccessRequest == nil {
-			continue
-		}
-
-		accessRequestState.AccessRequest = convertDirectoryAccessRequest(outgoingAccessRequest)
 
 		accessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(ctx, outgoingAccessRequest.ID)
 		if err != nil && !errors.Is(err, database.ErrNotFound) {
 			return nil, err
 		}
 
-		if accessProof != nil && accessProof.RevokedAt.Valid {
-			accessRequestState.RevokedAt = timestamppb.New(accessProof.RevokedAt.Time)
+		if accessProof != nil {
+			accessRequestState.AccessProof = convertAccessProof(accessProof)
 		}
 	}
 
 	return accessRequestStates, nil
+}
+
+func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
+	createdAt := timestamppb.New(accessProof.CreatedAt)
+
+	var revokedAt *timestamp.Timestamp
+
+	if accessProof.RevokedAt.Valid {
+		revokedAt = timestamppb.New(accessProof.RevokedAt.Time)
+	}
+
+	return &api.AccessProof{
+		Id: uint64(accessProof.ID),
+		Organization: &api.Organization{
+			SerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
+			Name:         accessProof.OutgoingAccessRequest.Organization.Name,
+		},
+		ServiceName:     accessProof.OutgoingAccessRequest.ServiceName,
+		CreatedAt:       createdAt,
+		RevokedAt:       revokedAt,
+		AccessRequestId: uint64(accessProof.OutgoingAccessRequest.ID),
+	}
 }

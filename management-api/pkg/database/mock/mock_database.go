@@ -543,6 +543,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListInways(ctx interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInways", reflect.TypeOf((*MockConfigDatabase)(nil).ListInways), ctx)
 }
 
+// ListLatestOutgoingAccessRequests mocks base method.
+func (m *MockConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*database.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListLatestOutgoingAccessRequests", ctx, organizationSerialNumber, serviceName)
+	ret0, _ := ret[0].([]*database.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListLatestOutgoingAccessRequests indicates an expected call of ListLatestOutgoingAccessRequests.
+func (mr *MockConfigDatabaseMockRecorder) ListLatestOutgoingAccessRequests(ctx, organizationSerialNumber, serviceName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLatestOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListLatestOutgoingAccessRequests), ctx, organizationSerialNumber, serviceName)
+}
+
 // ListOutgoingOrders mocks base method.
 func (m *MockConfigDatabase) ListOutgoingOrders(ctx context.Context) ([]*database.OutgoingOrder, error) {
 	m.ctrl.T.Helper()

@@ -62,6 +62,25 @@ func (request *OutgoingAccessRequest) IsSendable() bool {
 		request.State == OutgoingAccessRequestFailed
 }
 
+func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error) {
+	outgoingAccessRequests := &[]*OutgoingAccessRequest{}
+
+	if err := db.DB.
+		Raw(`
+			SELECT
+				distinct on (public_key_fingerprint, service_name, organization_serial_number) nlx_management.access_requests_outgoing.*
+			FROM
+				nlx_management.access_requests_outgoing
+			WHERE
+				organization_serial_number = ? AND service_name = ?
+			ORDER BY
+				organization_serial_number, public_key_fingerprint, service_name, created_at DESC;`, organizationSerialNumber, serviceName).Scan(outgoingAccessRequests).Error; err != nil {
+		return nil, err
+	}
+
+	return *outgoingAccessRequests, nil
+}
+
 func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
 	var count int64
 

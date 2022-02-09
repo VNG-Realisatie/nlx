@@ -341,6 +341,7 @@ message OutgoingAccessRequest {
   google.protobuf.Timestamp createdAt = 5;
   google.protobuf.Timestamp updatedAt = 6;
   ErrorDetails errorDetails = 7;
+  string publicKeyFingerprint = 8;
 }
 
 message IncomingAccessRequest {
@@ -456,9 +457,8 @@ message DirectoryService {
   }
 
   message AccessState {
-    string publicKeyFingerprint = 1;
-    OutgoingAccessRequest accessRequest = 2;
-    google.protobuf.Timestamp revokedAt = 3;
+    OutgoingAccessRequest accessRequest = 1;
+    AccessProof accessProof = 2;
   }
 
   string serviceName = 1;
@@ -467,10 +467,10 @@ message DirectoryService {
   string documentationURL = 4;
   string publicSupportContact = 5;
   State state = 6;
-  repeated AccessState accessStates = 7;
-  int32 oneTimeCosts = 8;
-  int32 monthlyCosts = 9;
-  int32 requestCosts = 10;
+  int32 oneTimeCosts = 7;
+  int32 monthlyCosts = 8;
+  int32 requestCosts = 9;
+  repeated AccessState accessStates = 10;
 }
 
 message RequestAccessToServiceRequest {

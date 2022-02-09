@@ -152,3 +152,34 @@
   created_at: 2021-01-03 01:02:03.000000+00
   updated_at: 2021-01-03 01:02:03.000000+00
   synchronize_at: 2021-01-02 01:02:03.000000+00
+
+- id: 6
+  organization_name: fixture-organization-name-two
+  organization_serial_number: "00000000000000000001"
+  service_name: fixture-service-name
+  state: received
+  public_key_fingerprint: h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
+  reference_id: 1
+  error_code: 0
+  error_cause:
+  error_stack_trace:
+  lock_id:
+  lock_expires_at:
+  public_key_pem: |+
+    -----BEGIN PUBLIC KEY-----
+    MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxahK/ruBG74MZ2/Z71ll
+    WS1OMJy6xs9qpQY7YC7C+u59JoqNdoWToV6EZRfPYzh61BWsyKlqvkl11HhD6HVk
+    WmdidYJtmoJqmFeWm02a6RkP4XbBiOCm9xxX/xlZRWubTCswaLkfmlI2IYxgpLIP
+    QuvO2nbor8YG4dS7u7u7yrtl1dOBD1utlMCzX5j8vG+BaHUqE1kBWIE5kg9ogeVf
+    wa/w30EPcD+5gdknn5uGoTFP/xi6WiZ+6MJli1CPjrHX0N73ZMSdgHK+4jk8Kdrz
+    Fou5sNtCl+CTdzhDhwYJxJv/McsgqPfXsOdk0T3QUcCqWsawJ8VblJYYwyj1WW7l
+    bJSygJjvOTG+C2+vbht3mKvimKpx/+8S/Zg+g7nen//SvFQhe2wI7Eaottgk/abU
+    6i3ntvSty4EyxFPnchKa7EXeFAsp4stO0Q5iTE4rEdDotwaWrmcN54UQr2ZOVPJ/
+    BGGG6SxeciX9jB9I1FHBngMyiXVDgMlgGa9Ke3y1V+Yaqh3LOp6JXnjXp50Ke0nc
+    CMa7tBd6GGJqV4hl3daYj7yyBWzB3E2d/u+gJx1e9mxqgA0V7nidh2CRelHtczhC
+    O5/DpYFGnjKm4YMkzSb7CxRDrL2OJeyvM3tKyRZES5eEiedMcpjvm5ULzZeCp2r3
+    P72Jy9qTigqNYoIHBYMpFzUCAwEAAQ==
+    -----END PUBLIC KEY-----
+  created_at: 2021-01-02 01:02:03.000000+00
+  updated_at: 2021-01-02 01:02:03.000000+00
+  synchronize_at: 2021-01-02 01:02:03.000000+00
