@@ -17,22 +17,13 @@ export const SHOW_ACCESS_REVOKED = 7
 
 export default function getDirectoryServiceAccessUIState(
   outgoingAccessRequest,
-  accessProof,
+  revokedAt,
 ) {
   if (!outgoingAccessRequest) {
     return SHOW_REQUEST_ACCESS
   }
 
-  const relatedAccessProof =
-    accessProof && accessProof.accessRequestId !== outgoingAccessRequest.id
-      ? null
-      : accessProof
-
-  if (relatedAccessProof && !relatedAccessProof.revokedAt) {
-    return SHOW_HAS_ACCESS
-  }
-
-  if (relatedAccessProof && relatedAccessProof.revokedAt) {
+  if (revokedAt) {
     return SHOW_ACCESS_REVOKED
   }
 
@@ -40,11 +31,13 @@ export default function getDirectoryServiceAccessUIState(
     case CREATED:
       return SHOW_REQUEST_CREATED
 
+    case APPROVED:
+      return SHOW_HAS_ACCESS
+
     case FAILED:
       return SHOW_REQUEST_FAILED
 
     case RECEIVED:
-    case APPROVED:
       return SHOW_REQUEST_RECEIVED
 
     case CANCELLED:

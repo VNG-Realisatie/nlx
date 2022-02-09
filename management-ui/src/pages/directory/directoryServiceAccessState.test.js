@@ -4,7 +4,6 @@
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../../stores/models/OutgoingAccessRequestModel'
-import AccessProofModel from '../../stores/models/AccessProofModel'
 import getDirectoryServiceAccessState, {
   SHOW_ACCESS_REVOKED,
   SHOW_HAS_ACCESS,
@@ -67,7 +66,7 @@ test('access request is approved', () => {
         state: APPROVED,
       }),
     ),
-  ).toBe(SHOW_REQUEST_RECEIVED)
+  ).toBe(SHOW_HAS_ACCESS)
 })
 
 test('access request is cancelled', () => {
@@ -75,7 +74,6 @@ test('access request is cancelled', () => {
     getDirectoryServiceAccessState(
       createOutgoingAccessRequestInstance({
         state: CANCELLED,
-        createdAt: '2020-10-01',
       }),
     ),
   ).toBe(SHOW_REQUEST_CANCELLED)
@@ -91,52 +89,15 @@ test('access request is rejected', () => {
   ).toBe(SHOW_REQUEST_REJECTED)
 })
 
-test('access request is approved and has an access proof', () => {
-  expect(
-    getDirectoryServiceAccessState(
-      createOutgoingAccessRequestInstance({
-        id: '42',
-        state: APPROVED,
-      }),
-      new AccessProofModel({
-        accessProofData: {
-          accessRequestId: '42',
-        },
-      }),
-    ),
-  ).toBe(SHOW_HAS_ACCESS)
-})
-
-test('access request is approved, but access proof has been revoked', () => {
+test('access request is approved, but revoked', () => {
   expect(
     getDirectoryServiceAccessState(
       new OutgoingAccessRequestModel({
         accessRequestData: {
-          id: '42',
           state: APPROVED,
-          createdAt: '2020-10-01',
         },
       }),
-      new AccessProofModel({
-        accessProofData: { revokedAt: '2020-10-02', accessRequestId: '42' },
-      }),
+      new Date('2020-10-02'),
     ),
   ).toBe(SHOW_ACCESS_REVOKED)
-})
-
-test('access request is received, and access proof from previous access request has been revoked', () => {
-  expect(
-    getDirectoryServiceAccessState(
-      new OutgoingAccessRequestModel({
-        accessRequestData: {
-          id: '42',
-          state: RECEIVED,
-          createdAt: '2020-10-01',
-        },
-      }),
-      new AccessProofModel({
-        accessProofData: { revokedAt: '2020-10-02', id: '43' },
-      }),
-    ),
-  ).toBe(SHOW_REQUEST_RECEIVED)
 })
