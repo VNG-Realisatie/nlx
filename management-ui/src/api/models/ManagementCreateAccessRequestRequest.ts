@@ -31,6 +31,12 @@ export interface ManagementCreateAccessRequestRequest {
      * @memberof ManagementCreateAccessRequestRequest
      */
     serviceName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementCreateAccessRequestRequest
+     */
+    publicKeyFingerPrint?: string;
 }
 
 export function ManagementCreateAccessRequestRequestFromJSON(json: any): ManagementCreateAccessRequestRequest {
@@ -45,6 +51,7 @@ export function ManagementCreateAccessRequestRequestFromJSONTyped(json: any, ign
         
         'organizationSerialNumber': !exists(json, 'organizationSerialNumber') ? undefined : json['organizationSerialNumber'],
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
+        'publicKeyFingerPrint': !exists(json, 'publicKeyFingerPrint') ? undefined : json['publicKeyFingerPrint'],
     };
 }
 
@@ -59,6 +66,7 @@ export function ManagementCreateAccessRequestRequestToJSON(value?: ManagementCre
         
         'organizationSerialNumber': value.organizationSerialNumber,
         'serviceName': value.serviceName,
+        'publicKeyFingerPrint': value.publicKeyFingerPrint,
     };
 }
 

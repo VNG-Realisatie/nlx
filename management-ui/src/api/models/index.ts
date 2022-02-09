@@ -2,10 +2,10 @@
 /* eslint-disable */
 export * from './AuditLogRecordActionType';
 export * from './AuthorizationSettingsAuthorization';
+export * from './DirectoryServiceAccessState';
 export * from './DirectoryServiceState';
 export * from './InlineObject';
 export * from './ManagementAccessGrant';
-export * from './ManagementAccessProof';
 export * from './ManagementAccessRequestState';
 export * from './ManagementAuditLogRecord';
 export * from './ManagementAuditLogRecordMetadata';

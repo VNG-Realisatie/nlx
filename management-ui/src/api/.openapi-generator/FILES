@@ -6,10 +6,10 @@ apis/index.ts
 index.ts
 models/AuditLogRecordActionType.ts
 models/AuthorizationSettingsAuthorization.ts
+models/DirectoryServiceAccessState.ts
 models/DirectoryServiceState.ts
 models/InlineObject.ts
 models/ManagementAccessGrant.ts
-models/ManagementAccessProof.ts
 models/ManagementAccessRequestState.ts
 models/ManagementAuditLogRecord.ts
 models/ManagementAuditLogRecordMetadata.ts
