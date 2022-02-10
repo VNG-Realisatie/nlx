@@ -196,15 +196,15 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequests(ctx context.
 		Table("nlx_management.access_requests_outgoing").
 		Where(
 			`id IN (
-				SELECT 
-					access_requests_outgoing.id FROM nlx_management.access_requests_outgoing 
-				LEFT JOIN 
-					nlx_management.access_proofs ON (nlx_management.access_proofs.access_request_outgoing_id = nlx_management.access_requests_outgoing.id) 
-				WHERE 
-					(state IN ? OR (nlx_management.access_proofs.id IS NOT NULL AND nlx_management.access_proofs.revoked_at IS NULL)) 
-				AND 
+				SELECT
+					access_requests_outgoing.id FROM nlx_management.access_requests_outgoing
+				LEFT JOIN
+					nlx_management.access_proofs ON (nlx_management.access_proofs.access_request_outgoing_id = nlx_management.access_requests_outgoing.id)
+				WHERE
+					(state IN ? OR (nlx_management.access_proofs.id IS NOT NULL AND nlx_management.access_proofs.revoked_at IS NULL))
+				AND
 					(lock_expires_at IS NULL OR NOW() > lock_expires_at)
-				AND 
+				AND
 					(access_requests_outgoing.synchronize_at < NOW())
 				ORDER BY
 					updated_at ASC
@@ -228,8 +228,8 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequests(ctx context.
 		if err := db.DB.
 			WithContext(ctx).
 			Table("nlx_management.access_requests_outgoing").
-			Find(&requests).
 			Where("lock_id = ?", lockID).
+			Find(&requests).
 			Error; err != nil {
 			return nil, err
 		}
