@@ -80,6 +80,12 @@ export interface ManagementOutgoingAccessRequest {
      * @memberof ManagementOutgoingAccessRequest
      */
     errorDetails?: ManagementErrorDetails;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementOutgoingAccessRequest
+     */
+    publicKeyFingerprint?: string;
 }
 
 export function ManagementOutgoingAccessRequestFromJSON(json: any): ManagementOutgoingAccessRequest {
@@ -99,6 +105,7 @@ export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDi
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'errorDetails': !exists(json, 'errorDetails') ? undefined : ManagementErrorDetailsFromJSON(json['errorDetails']),
+        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
     };
 }
 
@@ -118,6 +125,7 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'errorDetails': ManagementErrorDetailsToJSON(value.errorDetails),
+        'publicKeyFingerprint': value.publicKeyFingerprint,
     };
 }
 

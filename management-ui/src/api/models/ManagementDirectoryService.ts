@@ -76,12 +76,6 @@ export interface ManagementDirectoryService {
     state?: DirectoryServiceState;
     /**
      * 
-     * @type {Array<DirectoryServiceAccessState>}
-     * @memberof ManagementDirectoryService
-     */
-    accessStates?: Array<DirectoryServiceAccessState>;
-    /**
-     * 
      * @type {number}
      * @memberof ManagementDirectoryService
      */
@@ -98,6 +92,12 @@ export interface ManagementDirectoryService {
      * @memberof ManagementDirectoryService
      */
     requestCosts?: number;
+    /**
+     * 
+     * @type {Array<DirectoryServiceAccessState>}
+     * @memberof ManagementDirectoryService
+     */
+    accessStates?: Array<DirectoryServiceAccessState>;
 }
 
 export function ManagementDirectoryServiceFromJSON(json: any): ManagementDirectoryService {
@@ -116,10 +116,10 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
         'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
         'state': !exists(json, 'state') ? undefined : DirectoryServiceStateFromJSON(json['state']),
-        'accessStates': !exists(json, 'accessStates') ? undefined : ((json['accessStates'] as Array<any>).map(DirectoryServiceAccessStateFromJSON)),
         'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
         'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
         'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
+        'accessStates': !exists(json, 'accessStates') ? undefined : ((json['accessStates'] as Array<any>).map(DirectoryServiceAccessStateFromJSON)),
     };
 }
 
@@ -138,10 +138,10 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
         'documentationURL': value.documentationURL,
         'publicSupportContact': value.publicSupportContact,
         'state': DirectoryServiceStateToJSON(value.state),
-        'accessStates': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryServiceAccessStateToJSON)),
         'oneTimeCosts': value.oneTimeCosts,
         'monthlyCosts': value.monthlyCosts,
         'requestCosts': value.requestCosts,
+        'accessStates': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryServiceAccessStateToJSON)),
     };
 }
 

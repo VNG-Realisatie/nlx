@@ -14,6 +14,12 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ManagementAccessProof,
+    ManagementAccessProofFromJSON,
+    ManagementAccessProofFromJSONTyped,
+    ManagementAccessProofToJSON,
+} from './ManagementAccessProof';
+import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestFromJSONTyped,
@@ -28,22 +34,16 @@ import {
 export interface DirectoryServiceAccessState {
     /**
      * 
-     * @type {string}
-     * @memberof DirectoryServiceAccessState
-     */
-    publicKeyFingerprint?: string;
-    /**
-     * 
      * @type {ManagementOutgoingAccessRequest}
      * @memberof DirectoryServiceAccessState
      */
     accessRequest?: ManagementOutgoingAccessRequest;
     /**
      * 
-     * @type {Date}
+     * @type {ManagementAccessProof}
      * @memberof DirectoryServiceAccessState
      */
-    revokedAt?: Date;
+    accessProof?: ManagementAccessProof;
 }
 
 export function DirectoryServiceAccessStateFromJSON(json: any): DirectoryServiceAccessState {
@@ -56,9 +56,8 @@ export function DirectoryServiceAccessStateFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
         'accessRequest': !exists(json, 'accessRequest') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['accessRequest']),
-        'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
+        'accessProof': !exists(json, 'accessProof') ? undefined : ManagementAccessProofFromJSON(json['accessProof']),
     };
 }
 
@@ -71,9 +70,8 @@ export function DirectoryServiceAccessStateToJSON(value?: DirectoryServiceAccess
     }
     return {
         
-        'publicKeyFingerprint': value.publicKeyFingerprint,
         'accessRequest': ManagementOutgoingAccessRequestToJSON(value.accessRequest),
-        'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'accessProof': ManagementAccessProofToJSON(value.accessProof),
     };
 }
 
