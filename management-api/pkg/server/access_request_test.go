@@ -84,7 +84,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "test-service",
-				PublicKeyFingerPrint:     "public-key-fingerprint",
+				PublicKeyFingerprint:     "public-key-fingerprint",
 			},
 			want: &api.OutgoingAccessRequest{
 				Id: 1,
@@ -127,7 +127,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "test-service",
-				PublicKeyFingerPrint:     "public-key-fingerprint",
+				PublicKeyFingerprint:     "public-key-fingerprint",
 			},
 			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
 		},

@@ -193,7 +193,7 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 			SerialNumber: req.OrganizationSerialNumber,
 		},
 		ServiceName:          req.ServiceName,
-		PublicKeyFingerprint: req.PublicKeyFingerPrint,
+		PublicKeyFingerprint: req.PublicKeyFingerprint,
 		State:                database.OutgoingAccessRequestCreated,
 	}
 

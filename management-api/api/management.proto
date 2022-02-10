@@ -374,7 +374,7 @@ message RejectIncomingAccessRequestRequest {
 message CreateAccessRequestRequest {
   string organizationSerialNumber = 1;
   string serviceName = 2;
-  string publicKeyFingerPrint = 3;
+  string publicKeyFingerprint = 3;
 }
 
 message SendAccessRequestRequest {
