@@ -57,10 +57,11 @@ type databaseAction struct {
 }
 
 const (
-	dbNotificationChannel = "availabilities"
-	cleanupInterval       = 90 * time.Second
+	dbNotificationChannel              = "availabilities"
+	cleanupPostgresConnectionsInterval = 90 * time.Second
+	cleanupOfflineServicesInterval     = 5 * time.Minute
 
-	healthCheckInterval = 5 * time.Second
+	healthCheckInterval = 1 * time.Minute
 
 	postgresListenerReconnectTimeoutMin = 10 * time.Second
 	postgresListenerReconnectTimeoutMax = 1 * time.Minute
@@ -211,7 +212,7 @@ func (h *HealthChecker) runCleanUpServices(shutdown chan struct{}) {
 
 	for {
 		select {
-		case <-time.After(1 * time.Minute):
+		case <-time.After(cleanupOfflineServicesInterval):
 			h.logger.Debug("cleaning up offline services")
 
 			servicesRemoved, err := h.cleanUpServices()
@@ -243,7 +244,7 @@ func (h *HealthChecker) waitForNotification(l *pq.Listener, c <-chan struct{}) {
 			if n != nil {
 				h.onDatabaseNotification(n.Extra)
 			}
-		case <-time.After(cleanupInterval):
+		case <-time.After(cleanupPostgresConnectionsInterval):
 			// Check connection after 90 seconds without a notification
 			go func() {
 				if err := l.Ping(); err != nil {
