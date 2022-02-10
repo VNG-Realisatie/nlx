@@ -75,8 +75,4 @@ class OutgoingAccessRequestModel {
   }).bind(this)
 }
 
-export const createAccessRequestInstance = (requestData) => {
-  return new OutgoingAccessRequestModel({ accessRequestData: requestData })
-}
-
 export default OutgoingAccessRequestModel
