@@ -1,3 +1,18 @@
+# [0.123.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.122.0...v0.123.0) (2022-02-11)
+
+
+### Bug Fixes
+
+* **directory:** increase health check interval of the monitor ([78b08ca](https://gitlab.com/commonground/nlx/nlx/commit/78b08ca8a05f2d3b360f57d2de0cdecadc2914de))
+* **management:** ensure only unlocked access requests are being synced ([5e586d9](https://gitlab.com/commonground/nlx/nlx/commit/5e586d98dad04fd870bce275c0f018d9f22d3ad8))
+* **management:** typo in transaction logs of requests made in behalf of an other organization ([facb26a](https://gitlab.com/commonground/nlx/nlx/commit/facb26a8f4194d91d3f03da2b08537039c67c4b2))
+
+
+### Features
+
+* **management:** remove stacktrace drawer when showing a failed outgoing access request ([cc43af9](https://gitlab.com/commonground/nlx/nlx/commit/cc43af901e6c7a50e2c8cdd0fd40c79142894e42)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** remove the quick access button from the Directory page ([a0bee7a](https://gitlab.com/commonground/nlx/nlx/commit/a0bee7a391fa632dbd27e6e95e2c11f9b4e94bfe)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+
 # [0.122.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.121.1...v0.122.0) (2022-02-07)
 
 
