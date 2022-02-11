@@ -7,7 +7,7 @@
   variables:
     NPM_CACHE_DIR: ${CI_PROJECT_DIR}/.npm-cache
   cache:
-    key: "${CI_COMMIT_REF_SLUG}__${CI_JOB_NAME}"
+    key: "npm-cache-${CI_JOB_NAME}"
     paths:
       - ${NPM_CACHE_DIR}
   before_script:
