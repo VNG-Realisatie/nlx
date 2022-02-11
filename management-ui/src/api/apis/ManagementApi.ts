@@ -807,7 +807,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListServices(requestParameters: ManagementListServicesRequest, initOverrides?: RequestInit): Promise<ManagementListServicesResponse> {
+    async managementListServices(requestParameters: ManagementListServicesRequest = {}, initOverrides?: RequestInit): Promise<ManagementListServicesResponse> {
         const response = await this.managementListServicesRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -933,7 +933,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRetrieveClaimForOrder(requestParameters: ManagementRetrieveClaimForOrderRequest, initOverrides?: RequestInit): Promise<ManagementRetrieveClaimForOrderResponse> {
+    async managementRetrieveClaimForOrder(requestParameters: ManagementRetrieveClaimForOrderRequest = {}, initOverrides?: RequestInit): Promise<ManagementRetrieveClaimForOrderResponse> {
         const response = await this.managementRetrieveClaimForOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
