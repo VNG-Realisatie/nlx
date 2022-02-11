@@ -417,10 +417,11 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) *api.
 			SerialNumber: request.Organization.SerialNumber,
 			Name:         request.Organization.Name,
 		},
-		ServiceName:  request.ServiceName,
-		State:        outgoingAccessRequestStateToProto(request.State),
-		ErrorDetails: details,
-		CreatedAt:    timestamppb.New(request.CreatedAt),
-		UpdatedAt:    timestamppb.New(request.UpdatedAt),
+		ServiceName:          request.ServiceName,
+		State:                outgoingAccessRequestStateToProto(request.State),
+		ErrorDetails:         details,
+		CreatedAt:            timestamppb.New(request.CreatedAt),
+		UpdatedAt:            timestamppb.New(request.UpdatedAt),
+		PublicKeyFingerprint: request.PublicKeyFingerprint,
 	}
 }

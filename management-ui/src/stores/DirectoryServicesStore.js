@@ -20,26 +20,24 @@ class DirectoryServicesStore {
   }
 
   fetch = flow(function* fetch(organizationSerialNumber, serviceName) {
-    try {
-      const serviceData =
-        yield this._directoryApiClient.directoryGetOrganizationService({
-          organizationSerialNumber,
-          serviceName,
-        })
-
-      let directoryService = this.getService(
+    const serviceData =
+      yield this._directoryApiClient.directoryGetOrganizationService({
         organizationSerialNumber,
         serviceName,
-      )
+      })
 
-      if (!directoryService) {
-        directoryService = this._updateFromServer(serviceData)
-        this.services.push(directoryService)
-        return directoryService
-      }
+    let directoryService = this.getService(
+      organizationSerialNumber,
+      serviceName,
+    )
 
-      return this._updateFromServer(serviceData)
-    } catch (err) {}
+    if (!directoryService) {
+      directoryService = this._updateFromServer(serviceData)
+      this.services.push(directoryService)
+      return directoryService
+    }
+
+    return this._updateFromServer(serviceData)
   })
 
   fetchAll = flow(function* fetchAll() {
@@ -74,43 +72,55 @@ class DirectoryServicesStore {
     )
   }
 
-  async requestAccess(organizationSerialNumber, serviceName) {
+  async requestAccess(
+    organizationSerialNumber,
+    serviceName,
+    publicKeyFingerprint,
+  ) {
     return this._rootStore.outgoingAccessRequestStore.create(
       organizationSerialNumber,
       serviceName,
+      publicKeyFingerprint,
     )
   }
 
   _updateFromServer(serviceData) {
-    const latestAccessRequest =
-      this._rootStore.outgoingAccessRequestStore.updateFromServer(
-        serviceData.latestAccessRequest,
-      )
-    const latestAccessProof = this._rootStore.accessProofStore.updateFromServer(
-      serviceData.latestAccessProof,
-    )
-
     const cachedDirectoryService = this.getService(
       serviceData.organizationSerialNumber,
       serviceData.serviceName,
     )
 
+    let accessStates = []
+
+    if (serviceData.accessStates) {
+      accessStates = serviceData.accessStates.map((accessState) => {
+        return {
+          accessRequest:
+            this._rootStore.outgoingAccessRequestStore.updateFromServer(
+              accessState.accessRequest,
+            ),
+          accessProof: this._rootStore.accessProofStore.updateFromServer(
+            accessState.accessProof,
+          ),
+        }
+      })
+    }
+
     if (cachedDirectoryService) {
       return cachedDirectoryService.update({
         serviceData,
-        latestAccessRequest,
-        latestAccessProof,
+        accessStates,
       })
     }
 
     return new DirectoryServiceModel({
       directoryServicesStore: this,
       serviceData,
-      latestAccessProof,
-      latestAccessRequest,
+      accessStates,
     })
   }
 
+  // TODO: pass fingerprint
   get servicesWithAccess() {
     return this.services.filter((service) => service.hasAccess)
   }

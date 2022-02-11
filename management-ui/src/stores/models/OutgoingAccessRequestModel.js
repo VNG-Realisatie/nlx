@@ -22,6 +22,7 @@ class OutgoingAccessRequestModel {
   state = ''
   createdAt = null
   updatedAt = null
+  publicKeyFingerprint = ''
   errorDetails = {
     cause: null,
   }
@@ -63,6 +64,10 @@ class OutgoingAccessRequestModel {
 
     if (accessRequestData.updatedAt) {
       this.updatedAt = new Date(accessRequestData.updatedAt)
+    }
+
+    if (accessRequestData.publicKeyFingerprint) {
+      this.publicKeyFingerprint = accessRequestData.publicKeyFingerprint
     }
 
     if (accessRequestData.errorDetails) {

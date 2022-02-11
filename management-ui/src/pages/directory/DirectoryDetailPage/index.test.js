@@ -5,7 +5,7 @@ import React from 'react'
 import { Route, Routes, MemoryRouter } from 'react-router-dom'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
-import { DirectoryApi } from '../../../api'
+import { DirectoryApi, ManagementApi } from '../../../api'
 import { RootStore, StoreProvider } from '../../../stores'
 import DirectoryDetailPage from './index'
 
@@ -30,7 +30,16 @@ test('display directory service details', async () => {
       latestAccessRequest: null,
     })
 
-  const rootStore = new RootStore({ directoryApiClient })
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [],
+  })
+
+  const rootStore = new RootStore({
+    directoryApiClient,
+    managementApiClient,
+  })
 
   renderWithProviders(
     <MemoryRouter initialEntries={['/00000000000000000001/Test Service']}>
@@ -58,7 +67,16 @@ test('service does not exist', () => {
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
-  const rootStore = new RootStore({ directoryApiClient })
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [],
+  })
+
+  const rootStore = new RootStore({
+    directoryApiClient,
+    managementApiClient,
+  })
 
   renderWithProviders(
     <MemoryRouter initialEntries={['/00000000000000000001/Test Service']}>

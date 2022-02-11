@@ -1,9 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable } from 'mobx'
-
-import OutgoingAccessRequestModel from './OutgoingAccessRequestModel'
+import { flow, makeAutoObservable, observable } from 'mobx'
+import OutgoingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from './OutgoingAccessRequestModel'
 import AccessProofModel from './AccessProofModel'
 
 function throwErrorWhenNotInstanceOf(object, model) {
@@ -23,30 +24,24 @@ class DirectoryServiceModel {
   apiSpecificationType = ''
   documentationURL = ''
   publicSupportContact = ''
-  latestAccessRequest = null
-  latestAccessProof = null
   oneTimeCosts = 0
   monthlyCosts = 0
   requestCosts = 0
+  _accessStates = observable.map()
 
-  constructor({
-    directoryServicesStore,
-    serviceData,
-    latestAccessRequest,
-    latestAccessProof,
-  }) {
+  getAccessStateFor = (publicKeyFingerprint) => {
+    return this._accessStates.get(publicKeyFingerprint) || {}
+  }
+
+  constructor({ directoryServicesStore, serviceData, accessStates }) {
     makeAutoObservable(this)
 
     this.directoryServicesStore = directoryServicesStore
 
-    this.update({ serviceData, latestAccessRequest, latestAccessProof })
+    this.update({ serviceData, accessStates })
   }
 
-  update = ({
-    serviceData,
-    latestAccessRequest = null,
-    latestAccessProof = null,
-  }) => {
+  update = ({ serviceData, accessStates }) => {
     if (serviceData.serviceName) {
       this.serviceName = serviceData.serviceName
     }
@@ -84,11 +79,26 @@ class DirectoryServiceModel {
       this.organization.serialNumber = serviceData.organization.serialNumber
     }
 
-    throwErrorWhenNotInstanceOf(latestAccessRequest, OutgoingAccessRequestModel)
-    throwErrorWhenNotInstanceOf(latestAccessProof, AccessProofModel)
+    if (accessStates) {
+      if (!Array.isArray(accessStates)) {
+        throw new Error('invalid accessStates provided. expected array.')
+      }
 
-    this.latestAccessRequest = latestAccessRequest
-    this.latestAccessProof = latestAccessProof
+      this._accessStates.clear()
+
+      accessStates.forEach((accessState) => {
+        const accessRequest = accessState.accessRequest
+        const accessProof = accessState.accessProof
+
+        throwErrorWhenNotInstanceOf(accessRequest, OutgoingAccessRequestModel)
+        throwErrorWhenNotInstanceOf(accessProof, AccessProofModel)
+
+        this._accessStates.set(accessRequest.publicKeyFingerprint, {
+          accessRequest,
+          accessProof,
+        })
+      })
+    }
 
     return this
   }
@@ -100,27 +110,44 @@ class DirectoryServiceModel {
     )
   }
 
-  requestAccess = flow(function* requestAccess() {
+  requestAccess = flow(function* requestAccess(publicKeyFingerprint) {
     yield this.directoryServicesStore.requestAccess(
       this.organization.serialNumber,
       this.serviceName,
+      publicKeyFingerprint,
     )
   }).bind(this)
 
-  retryRequestAccess = flow(function* retryRequestAccess() {
-    if (!this.latestAccessRequest) {
+  retryRequestAccess = flow(function* retryRequestAccess(publicKeyFingerprint) {
+    const accessStateForFingerprint =
+      this._accessStates.get(publicKeyFingerprint)
+
+    if (
+      !accessStateForFingerprint ||
+      !accessStateForFingerprint.accessRequest
+    ) {
       return false
     }
 
-    yield this.latestAccessRequest.retry()
+    yield accessStateForFingerprint.accessRequest.retry()
   }).bind(this)
 
-  get hasAccess() {
+  hasAccess(publicKeyFingerprint) {
+    const accessStateForFingerprint =
+      this._accessStates.get(publicKeyFingerprint)
+
+    if (!accessStateForFingerprint) {
+      return false
+    }
+
+    const accessRequest = accessStateForFingerprint.accessRequest
+    const accessProof = accessStateForFingerprint.accessProof
+
     return !!(
-      this.latestAccessRequest &&
-      this.latestAccessProof &&
-      !this.latestAccessProof.revokedAt &&
-      this.latestAccessProof.accessRequestId === this.latestAccessRequest.id
+      accessRequest &&
+      accessRequest.state === ACCESS_REQUEST_STATES.APPROVED &&
+      accessProof &&
+      !accessProof.revokedAt
     )
   }
 }

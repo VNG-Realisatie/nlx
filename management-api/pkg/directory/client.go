@@ -67,7 +67,12 @@ func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizat
 		return "", err
 	}
 
-	return computeInwayProxyAddress(response.Address)
+	inwayProxyAddress, err := computeInwayProxyAddress(response.Address)
+	if err != nil {
+		return "", errors.New("no organization inway set")
+	}
+
+	return inwayProxyAddress, nil
 }
 
 func computeInwayProxyAddress(address string) (string, error) {

@@ -7,6 +7,7 @@ class OutwayModel {
   _name = ''
   _ipAddress = ''
   _publicKeyPEM = ''
+  _publicKeyFingerprint = ''
   _version = ''
 
   get name() {
@@ -19,6 +20,10 @@ class OutwayModel {
 
   get publicKeyPEM() {
     return this._publicKeyPEM
+  }
+
+  get publicKeyFingerprint() {
+    return this._publicKeyFingerprint
   }
 
   get version() {
@@ -42,6 +47,7 @@ class OutwayModel {
     this._name = outway.name
     this._ipAddress = outway.ipAddress
     this._publicKeyPEM = outway.publicKeyPEM
+    this._publicKeyFingerprint = outway.publicKeyFingerprint
     this._version = outway.version
   }
 }

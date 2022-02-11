@@ -21,13 +21,3 @@ export const StateDetail = styled.div`
   justify-content: center;
   min-height: 50px;
 `
-
-export const ErrorText = styled.span`
-  color: ${(p) => p.theme.tokens.colorError};
-
-  svg {
-    float: left;
-    margin-right: ${(p) => p.theme.tokens.spacing03};
-    fill: ${(p) => p.theme.tokens.colorError};
-  }
-`

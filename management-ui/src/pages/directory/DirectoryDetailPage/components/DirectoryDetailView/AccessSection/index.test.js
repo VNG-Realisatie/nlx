@@ -2,116 +2,160 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-
+import { screen } from '@testing-library/react'
 import { renderWithProviders, fireEvent } from '../../../../../../test-utils'
-import {
-  SHOW_REQUEST_ACCESS,
-  SHOW_HAS_ACCESS,
-  SHOW_REQUEST_CREATED,
-  SHOW_REQUEST_FAILED,
-  SHOW_REQUEST_RECEIVED,
-  SHOW_REQUEST_REJECTED,
-  SHOW_ACCESS_REVOKED,
-} from '../../../../directoryServiceAccessState'
+import OutgoingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from '../../../../../../stores/models/OutgoingAccessRequestModel'
+import AccessProofModel from '../../../../../../stores/models/AccessProofModel'
 import AccessSection from './index'
 
-test('Correctly renders when there is no access', () => {
+test('No access', () => {
   const requestAccessSpy = jest.fn()
-  const { getByText } = renderWithProviders(
+
+  renderWithProviders(
     <AccessSection
-      displayState={SHOW_REQUEST_ACCESS}
-      latestAccessRequest={null}
-      latestAccessProof={null}
-      requestAccess={requestAccessSpy}
+      accessRequest={null}
+      accessProof={null}
+      onRequestAccess={requestAccessSpy}
     />,
   )
 
-  expect(getByText('You have no access')).toBeInTheDocument()
+  expect(screen.getByText('You have no access')).toBeInTheDocument()
 
-  const button = getByText('Request access')
-  fireEvent.click(button)
-
+  fireEvent.click(screen.getByText('Request access'))
   expect(requestAccessSpy).toHaveBeenCalled()
 })
 
-test('Correctly renders the other states of access', () => {
-  // Only `updatedAt` is used by this component, based on displayState
-  const latestAccessRequest = {
-    id: 'id',
-    organization: {
-      serialNumber: '00000000000000000001',
-      name: 'foo',
+test('Request access failed', () => {
+  const retryRequestAccessSpy = jest.fn()
+
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.FAILED,
+      errorDetails: {
+        cause: 'cause of failed access request',
+      },
     },
-    serviceName: 'bar',
-    state: 'CREATED',
-    createdAt: new Date('2020-10-01T12:00:00Z'),
-    updatedAt: new Date('2020-10-02T12:00:00Z'),
-  }
+    outgoingAccessRequestStore: null,
+  })
 
-  const { getByText, rerender } = renderWithProviders(
+  renderWithProviders(
     <AccessSection
-      displayState={SHOW_REQUEST_CREATED}
-      latestAccessRequest={latestAccessRequest}
-      latestAccessProof={null}
-      requestAccess={jest.fn()}
+      accessRequest={accessRequest}
+      accessProof={null}
+      onRetryRequestAccess={retryRequestAccessSpy}
     />,
   )
-  expect(getByText('Sending request…')).toBeInTheDocument()
 
-  rerender(<AccessSection displayState={SHOW_REQUEST_FAILED} />)
-  expect(getByText('Request could not be sent')).toBeInTheDocument()
+  expect(screen.getByText('Request could not be sent')).toBeInTheDocument()
+  expect(screen.getByText('cause of failed access request')).toBeInTheDocument()
 
-  rerender(
+  fireEvent.click(screen.getByText('Retry'))
+  expect(retryRequestAccessSpy).toHaveBeenCalled()
+})
+
+test('Request access created', () => {
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.CREATED,
+    },
+    outgoingAccessRequestStore: null,
+  })
+
+  renderWithProviders(
+    <AccessSection accessRequest={accessRequest} accessProof={null} />,
+  )
+
+  expect(screen.getByText('Sending request…')).toBeInTheDocument()
+})
+
+test('Request access received', () => {
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.RECEIVED,
+    },
+    outgoingAccessRequestStore: null,
+  })
+
+  renderWithProviders(
+    <AccessSection accessRequest={accessRequest} accessProof={null} />,
+  )
+
+  expect(screen.getByText('Access requested')).toBeInTheDocument()
+})
+
+test('Has access', () => {
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.APPROVED,
+    },
+    outgoingAccessRequestStore: null,
+  })
+
+  const accessProof = new AccessProofModel({
+    accessProofData: {
+      revokedAt: null,
+    },
+  })
+
+  renderWithProviders(
+    <AccessSection accessRequest={accessRequest} accessProof={accessProof} />,
+  )
+
+  expect(screen.getByText('You have access')).toBeInTheDocument()
+})
+
+test('Access rejected', () => {
+  const requestAccessSpy = jest.fn()
+
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.REJECTED,
+    },
+    outgoingAccessRequestStore: null,
+  })
+
+  renderWithProviders(
     <AccessSection
-      latestAccessRequest={latestAccessRequest}
-      displayState={SHOW_REQUEST_RECEIVED}
+      accessRequest={accessRequest}
+      accessProof={null}
+      onRequestAccess={requestAccessSpy}
     />,
   )
-  expect(getByText('Access requested')).toBeInTheDocument()
 
-  rerender(
+  expect(screen.getByText('Access request rejected')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByText('Request access'))
+  expect(requestAccessSpy).toHaveBeenCalled()
+})
+
+test('Access revoked', () => {
+  const requestAccessSpy = jest.fn()
+
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.REJECTED,
+    },
+    outgoingAccessRequestStore: null,
+  })
+
+  const accessProof = new AccessProofModel({
+    accessProofData: {
+      revokedAt: new Date(),
+    },
+  })
+
+  renderWithProviders(
     <AccessSection
-      latestAccessRequest={latestAccessRequest}
-      displayState={SHOW_REQUEST_REJECTED}
+      accessRequest={accessRequest}
+      accessProof={accessProof}
+      onRequestAccess={requestAccessSpy}
     />,
   )
-  expect(getByText('Access request rejected')).toBeInTheDocument()
-  expect(getByText('Request access')).toBeInTheDocument()
 
-  // accessProof.createdAt required in this displayState
-  rerender(
-    <AccessSection
-      displayState={SHOW_HAS_ACCESS}
-      latestAccessRequest={latestAccessRequest}
-      latestAccessProof={{
-        id: 'id',
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'foo',
-        },
-        serviceName: 'bar',
-        createdAt: new Date('2020-10-02T12:01:00Z'),
-        revokedAt: null,
-      }}
-    />,
-  )
-  expect(getByText('You have access')).toBeInTheDocument()
+  expect(screen.getByText('Your access was revoked')).toBeInTheDocument()
 
-  rerender(
-    <AccessSection
-      displayState={SHOW_ACCESS_REVOKED}
-      latestAccessRequest={latestAccessRequest}
-      latestAccessProof={{
-        id: 'id',
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'foo',
-        },
-        serviceName: 'bar',
-        createdAt: new Date('2020-10-02T12:01:00Z'),
-        revokedAt: new Date('2020-10-03T12:01:00Z'),
-      }}
-    />,
-  )
-  expect(getByText('Your access was revoked')).toBeInTheDocument()
+  fireEvent.click(screen.getByText('Request access'))
+  expect(requestAccessSpy).toHaveBeenCalled()
 })

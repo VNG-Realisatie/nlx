@@ -15,7 +15,7 @@ import { screen, waitFor } from '@testing-library/react'
 import { act, renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
-import { DirectoryApi } from '../../../api'
+import { DirectoryApi, ManagementApi } from '../../../api'
 import DirectoryPage from './index'
 
 jest.mock('../../../components/PageTemplate')
@@ -148,8 +148,19 @@ test('navigating to the detail page should re-fetch the directory model', async 
     ],
   })
 
+  directoryApiClient.directoryGetOrganizationService = jest
+    .fn()
+    .mockResolvedValue({})
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [],
+  })
+
   const rootStore = new RootStore({
     directoryApiClient,
+    managementApiClient,
   })
 
   const history = createMemoryHistory()

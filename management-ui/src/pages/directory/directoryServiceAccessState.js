@@ -15,13 +15,13 @@ export const SHOW_ACCESS_REVOKED = 6
 
 export default function getDirectoryServiceAccessUIState(
   outgoingAccessRequest,
-  revokedAt,
+  accessProof,
 ) {
   if (!outgoingAccessRequest) {
     return SHOW_REQUEST_ACCESS
   }
 
-  if (revokedAt) {
+  if (accessProof && accessProof.revokedAt) {
     return SHOW_ACCESS_REVOKED
   }
 

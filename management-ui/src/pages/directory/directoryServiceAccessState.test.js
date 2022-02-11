@@ -4,6 +4,7 @@
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../../stores/models/OutgoingAccessRequestModel'
+import AccessProofModel from '../../stores/models/AccessProofModel'
 import getDirectoryServiceAccessState, {
   SHOW_ACCESS_REVOKED,
   SHOW_HAS_ACCESS,
@@ -85,7 +86,11 @@ test('access request is approved, but revoked', () => {
           state: APPROVED,
         },
       }),
-      new Date('2020-10-02'),
+      new AccessProofModel({
+        accessProofData: {
+          revokedAt: new Date('2020-10-02'),
+        },
+      }),
     ),
   ).toBe(SHOW_ACCESS_REVOKED)
 })

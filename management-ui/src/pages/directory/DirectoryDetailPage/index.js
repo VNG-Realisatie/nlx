@@ -12,7 +12,10 @@ import {
   useDrawerStack,
 } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import { useDirectoryServiceStore } from '../../../hooks/use-stores'
+import {
+  useDirectoryServiceStore,
+  useOutwayStore,
+} from '../../../hooks/use-stores'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 
@@ -22,17 +25,22 @@ const DirectoryDetailPage = () => {
   const { organizationSerialNumber, serviceName } = useParams()
   const { showDrawer } = useDrawerStack()
   const directoryServiceStore = useDirectoryServiceStore()
+  const outwayStore = useOutwayStore()
   const [service, setService] = useState(
     directoryServiceStore.getService(organizationSerialNumber, serviceName),
   )
 
   useEffect(() => {
     const fetch = async () => {
-      const result = await directoryServiceStore.fetch(
-        organizationSerialNumber,
-        serviceName,
-      )
-      setService(result)
+      await outwayStore.fetchAll()
+
+      try {
+        const result = await directoryServiceStore.fetch(
+          organizationSerialNumber,
+          serviceName,
+        )
+        setService(result)
+      } catch {}
     }
 
     fetch()
@@ -58,7 +66,10 @@ const DirectoryDetailPage = () => {
 
       <Drawer.Content>
         {service ? (
-          <DirectoryDetailView service={service} />
+          <DirectoryDetailView
+            service={service}
+            outways={outwayStore.outways}
+          />
         ) : (
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the service', {

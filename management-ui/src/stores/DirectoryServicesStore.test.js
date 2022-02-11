@@ -2,10 +2,9 @@
 // Licensed under the EUPL
 //
 import { configure } from 'mobx'
-import OutgoingAccessRequestModel from '../stores/models/OutgoingAccessRequestModel'
 import DirectoryServiceModel from '../stores/models/DirectoryServiceModel'
-import AccessProofModel from '../stores/models/AccessProofModel'
 import { DirectoryApi, ManagementApi } from '../api'
+import { ACCESS_REQUEST_STATES } from './models/OutgoingAccessRequestModel'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import { RootStore } from './index'
 
@@ -90,8 +89,17 @@ test('fetching a single service', async () => {
         name: 'Org A',
       },
       serviceName: 'Service A',
-      latestAccessRequest: { id: 'abc', state: 'CREATED' },
-      latestAccessProof: { id: 'abc' },
+      accessStates: [
+        {
+          accessRequest: {
+            id: 'abc',
+            state: ACCESS_REQUEST_STATES.APPROVED,
+            publicKeyFingerprint:
+              'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+          },
+          accessProof: { id: 'abc' },
+        },
+      ],
     })
 
   const rootStore = new RootStore({
@@ -108,8 +116,6 @@ test('fetching a single service', async () => {
 
   expect(directoryServicesStore.services).toHaveLength(1)
   expect(service).toBeInstanceOf(DirectoryServiceModel)
-  expect(service.latestAccessRequest).toBeNull()
-  expect(service.latestAccessProof).toBeNull()
 
   service = await directoryServicesStore.fetch(
     '00000000000000000001',
@@ -117,13 +123,16 @@ test('fetching a single service', async () => {
   )
 
   expect(service).toBeInstanceOf(DirectoryServiceModel)
-  expect(service.latestAccessRequest).toBeInstanceOf(OutgoingAccessRequestModel)
-  expect(service.latestAccessProof).toBeInstanceOf(AccessProofModel)
+  expect(
+    service.hasAccess('h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc='),
+  ).toEqual(true)
 })
 
 test('requesting access to a service in the directory', async () => {
   configure({ safeDescriptors: false })
+
   const managementApiClient = new ManagementApi()
+
   const rootStore = new RootStore({
     managementApiClient,
   })
@@ -143,10 +152,12 @@ test('requesting access to a service in the directory', async () => {
   await rootStore.directoryServicesStore.requestAccess(
     directoryService.organization.serialNumber,
     directoryService.serviceName,
+    'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
   )
 
   expect(rootStore.outgoingAccessRequestStore.create).toHaveBeenCalledWith(
     '00000000000000000001',
     'service',
+    'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
   )
 })

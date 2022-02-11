@@ -2,11 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { number, shape, func, string, instanceOf, object } from 'prop-types'
+import { func, instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
-import { Spinner, Button } from '@commonground/design-system'
+import { Spinner, Button, Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
-import {
+import getDirectoryServiceAccessUIState, {
   SHOW_REQUEST_ACCESS,
   SHOW_HAS_ACCESS,
   SHOW_REQUEST_CREATED,
@@ -15,25 +15,29 @@ import {
   SHOW_REQUEST_REJECTED,
   SHOW_ACCESS_REVOKED,
 } from '../../../../directoryServiceAccessState'
-import {
-  IconWarningCircleFill,
-  IconKey,
-  IconCheck,
-} from '../../../../../../icons'
+import { IconCheck } from '../../../../../../icons'
 import Switch from '../../../../../../components/Switch'
-import { Section, IconItem, StateDetail, ErrorText } from './index.styles'
+import OutgoingAccessRequestModel from '../../../../../../stores/models/OutgoingAccessRequestModel'
+import AccessProofModel from '../../../../../../stores/models/AccessProofModel'
+import { StyledAlert } from '../index.styles'
+import { Section, IconItem, StateDetail } from './index.styles'
 
 const AccessSection = ({
-  displayState,
-  latestAccessRequest,
-  latestAccessProof,
-  requestAccess,
+  accessRequest,
+  accessProof,
+  onRequestAccess,
+  onRetryRequestAccess,
 }) => {
   const { t } = useTranslation()
 
-  const onRequestAccessButtonClick = (evt) => {
-    evt.stopPropagation()
-    requestAccess()
+  const displayState = getDirectoryServiceAccessUIState(
+    accessRequest,
+    accessProof,
+  )
+
+  const onRequestAccessButtonClick = (event) => {
+    event.stopPropagation()
+    onRequestAccess()
   }
 
   return (
@@ -42,7 +46,6 @@ const AccessSection = ({
         <Switch.Case value={SHOW_REQUEST_ACCESS}>
           {() => (
             <>
-              <IconItem as={IconKey} />
               <StateDetail>{t('You have no access')}</StateDetail>
               <Button onClick={onRequestAccessButtonClick}>
                 {t('Request access')}
@@ -53,16 +56,20 @@ const AccessSection = ({
 
         <Switch.Case value={SHOW_REQUEST_FAILED}>
           {() => (
-            <>
-              <IconItem as={IconKey} />
-              <StateDetail>
-                <span>{t('Access request')}</span>
-                <ErrorText>
-                  <IconWarningCircleFill title={t('Error')} />
-                  {t('Request could not be sent')}
-                </ErrorText>
-              </StateDetail>
-            </>
+            <StyledAlert
+              variant="error"
+              title={t('Request could not be sent')}
+              actions={[
+                <Alert.ActionButton
+                  key="send-request-access-action-button"
+                  onClick={onRetryRequestAccess}
+                >
+                  {t('Retry')}
+                </Alert.ActionButton>,
+              ]}
+            >
+              {accessRequest.errorDetails.cause}
+            </StyledAlert>
           )}
         </Switch.Case>
 
@@ -80,12 +87,9 @@ const AccessSection = ({
         <Switch.Case value={SHOW_REQUEST_RECEIVED}>
           {() => (
             <>
-              <IconItem as={IconKey} />
               <StateDetail>
                 <span>{t('Access requested')}</span>
-                <small>
-                  {t('On date', { date: latestAccessRequest.updatedAt })}
-                </small>
+                <small>{t('On date', { date: accessRequest.updatedAt })}</small>
               </StateDetail>
             </>
           )}
@@ -99,7 +103,7 @@ const AccessSection = ({
                 <span>{t('You have access')}</span>
                 <small>
                   {t('Since datetime', {
-                    date: latestAccessProof.createdAt,
+                    date: accessProof.createdAt,
                   })}
                 </small>
               </StateDetail>
@@ -110,12 +114,11 @@ const AccessSection = ({
         <Switch.Case value={SHOW_REQUEST_REJECTED}>
           {() => (
             <>
-              <IconItem as={IconKey} />
               <StateDetail>
                 <span>{t('Access request rejected')}</span>
                 <small>
                   {t('On date', {
-                    date: latestAccessRequest.updatedAt,
+                    date: accessRequest.updatedAt,
                   })}
                 </small>
               </StateDetail>
@@ -129,12 +132,11 @@ const AccessSection = ({
         <Switch.Case value={SHOW_ACCESS_REVOKED}>
           {() => (
             <>
-              <IconItem as={IconKey} />
               <StateDetail>
                 <span>{t('Your access was revoked')}</span>
                 <small>
                   {t('On date', {
-                    date: latestAccessProof.revokedAt,
+                    date: accessProof.revokedAt,
                   })}
                 </small>
               </StateDetail>
@@ -151,31 +153,10 @@ const AccessSection = ({
 }
 
 AccessSection.propTypes = {
-  displayState: number,
-  latestAccessRequest: shape({
-    id: string,
-    organization: shape({
-      serialNumber: string.isRequired,
-      name: string.isRequired,
-    }).isRequired,
-    serviceName: string.isRequired,
-    state: string,
-    createdAt: instanceOf(Date),
-    updatedAt: instanceOf(Date),
-    errorDetails: object,
-    retry: func,
-  }),
-  latestAccessProof: shape({
-    id: string.isRequired,
-    organization: shape({
-      serialNumber: string.isRequired,
-      name: string.isRequired,
-    }).isRequired,
-    serviceName: string,
-    createdAt: instanceOf(Date),
-    updatedAt: instanceOf(Date),
-  }),
-  requestAccess: func,
+  accessRequest: instanceOf(OutgoingAccessRequestModel),
+  accessProof: instanceOf(AccessProofModel),
+  onRequestAccess: func,
+  onRetryRequestAccess: func,
 }
 
 export default observer(AccessSection)

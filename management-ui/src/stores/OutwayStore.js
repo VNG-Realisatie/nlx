@@ -24,6 +24,15 @@ class OutwayStore {
     return this._outways
   }
 
+  get publicKeyFingerprints() {
+    return this._outways
+      .map((outway) => outway.publicKeyFingerprint)
+      .filter(
+        (publicKeyFingerprint, i, array) =>
+          array.indexOf(publicKeyFingerprint) === i,
+      )
+  }
+
   fetchAll = flow(function* fetchAll() {
     if (this._isFetching) {
       return
@@ -60,6 +69,12 @@ class OutwayStore {
 
   getByName = (name) => {
     return this._outways.find((outway) => outway.name === name)
+  }
+
+  getByPublicKeyFingerprint = (publicKeyFingerprint) => {
+    return this._outways.filter(
+      (outway) => outway.publicKeyFingerprint === publicKeyFingerprint,
+    )
   }
 
   _updateFromServer(outwayData) {

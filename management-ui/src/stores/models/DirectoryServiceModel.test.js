@@ -27,22 +27,20 @@ test('initializing the model', () => {
   expect(errorSpy).not.toHaveBeenCalled()
   errorSpy.mockRestore()
 
-  expect(directoryService.latestAccessRequest).toBeNull()
-  expect(directoryService.latestAccessProof).toBeNull()
-
   expect(directoryService.organization.name).toEqual('Organization')
   expect(directoryService.organization.serialNumber).toEqual(
     '00000000000000000001',
   )
 
-  const latestAccessRequest = new OutgoingAccessRequestModel({
+  const accessRequest = new OutgoingAccessRequestModel({
     outgoingAccessRequestStore: {},
     accessRequestData: {
-      state: ACCESS_REQUEST_STATES.CREATED,
+      state: ACCESS_REQUEST_STATES.APPROVED,
+      publicKeyFingerprint: 'public-key-fingerprint',
     },
   })
 
-  const latestAccessProof = new AccessProofModel({
+  const accessProof = new AccessProofModel({
     accessProofData: {
       id: 'abc',
     },
@@ -50,13 +48,16 @@ test('initializing the model', () => {
 
   directoryService.update({
     serviceData: { state: 'down' },
-    latestAccessRequest,
-    latestAccessProof,
+    accessStates: [
+      {
+        accessRequest: accessRequest,
+        accessProof: accessProof,
+      },
+    ],
   })
 
   expect(directoryService.state).toBe('down')
-  expect(directoryService.latestAccessRequest).toEqual(latestAccessRequest)
-  expect(directoryService.latestAccessProof).toEqual(latestAccessProof)
+  expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(true)
 })
 
 test('updating the model with an invalid latest access request and access proof', () => {
@@ -75,13 +76,29 @@ test('updating the model with an invalid latest access request and access proof'
 
   expect(() =>
     directoryService.update({
-      latestAccessRequest: 'invalid',
+      accessStates: 'invalid',
     }),
   ).toThrow()
 
   expect(() =>
     directoryService.update({
-      latestAccessProof: 'invalid',
+      accessStates: [
+        {
+          accessRequest: 'invalid',
+          accessProof: new AccessProofModel({}),
+        },
+      ],
+    }),
+  ).toThrow()
+
+  expect(() =>
+    directoryService.update({
+      accessStates: [
+        {
+          accessRequest: new OutgoingAccessRequestModel({}),
+          accessProof: 'invalid',
+        },
+      ],
     }),
   ).toThrow()
 })
@@ -132,11 +149,12 @@ test('requesting access to a service', async () => {
     .spyOn(rootStore.directoryServicesStore, 'requestAccess')
     .mockResolvedValue(null)
 
-  await directoryService.requestAccess()
+  await directoryService.requestAccess('public-key-fingerprint')
 
   expect(rootStore.directoryServicesStore.requestAccess).toHaveBeenCalledWith(
     '00000000000000000001',
     'service',
+    'public-key-fingerprint',
   )
 })
 
@@ -150,7 +168,8 @@ describe('access to this service', () => {
       outgoingAccessRequestStore: {},
       accessRequestData: {
         id: 'access-request-id',
-        state: ACCESS_REQUEST_STATES.RECEIVED,
+        state: ACCESS_REQUEST_STATES.APPROVED,
+        publicKeyFingerprint: 'public-key-fingerprint',
       },
     })
 
@@ -172,19 +191,27 @@ describe('access to this service', () => {
         state: 'up',
         apiSpecificationType: 'API',
       },
-      latestAccessRequest: outgoingAccessRequest,
-      latestAccessProof: accessProof,
+      accessStates: [
+        {
+          accessRequest: outgoingAccessRequest,
+          accessProof: accessProof,
+        },
+      ],
     })
   })
 
   it('when there is an access request and valid proof', () => {
     directoryService.update({
       serviceData: {},
-      latestAccessRequest: outgoingAccessRequest,
-      latestAccessProof: accessProof,
+      accessStates: [
+        {
+          accessRequest: outgoingAccessRequest,
+          accessProof: accessProof,
+        },
+      ],
     })
 
-    expect(directoryService.hasAccess).toEqual(true)
+    expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(true)
   })
 
   it('when there is no proof for this service', () => {
@@ -194,21 +221,14 @@ describe('access to this service', () => {
 
     directoryService.update({
       serviceData: {},
-      latestAccessRequest: outgoingAccessRequest,
-      latestAccessProof: accessProof,
+      accessStates: [
+        {
+          accessRequest: outgoingAccessRequest,
+        },
+      ],
     })
 
-    expect(directoryService.hasAccess).toEqual(false)
-  })
-
-  it('when there is no outgoing access request', () => {
-    directoryService.update({
-      serviceData: {},
-      latestAccessRequest: undefined,
-      latestAccessProof: accessProof,
-    })
-
-    expect(directoryService.hasAccess).toEqual(false)
+    expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(false)
   })
 
   it('when the access proof has been revoked', () => {
@@ -218,10 +238,14 @@ describe('access to this service', () => {
 
     directoryService.update({
       serviceData: {},
-      latestAccessRequest: outgoingAccessRequest,
-      latestAccessProof: accessProof,
+      accessStates: [
+        {
+          accessRequest: outgoingAccessRequest,
+          accessProof: accessProof,
+        },
+      ],
     })
 
-    expect(directoryService.hasAccess).toEqual(false)
+    expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(false)
   })
 })
