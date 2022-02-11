@@ -10,9 +10,9 @@ RUN wget -O /tmp/migrate.linux-amd64.tar.gz https://github.com/golang-migrate/mi
     /usr/local/bin/migrate -version
 
 FROM alpine:3.15.0
-COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
+RUN apk add --update bash postgresql-client
 
-RUN apk --no-cache add bash postgresql-client
+COPY --from=build /usr/local/bin/migrate /usr/local/bin/migrate
 
 COPY directory-db/docker/reset-db.sh /usr/local/bin/reset-db.sh
 COPY directory-db/docker/upgrade-db.sh /usr/local/bin/upgrade-db.sh

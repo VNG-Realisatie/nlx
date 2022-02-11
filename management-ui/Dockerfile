@@ -1,7 +1,6 @@
 FROM node:16.14.0-alpine AS node-build
 
-RUN apk add --no-cache --update git jq
-RUN apk add --no-cache python3 make g++
+RUN apk add --update git jq python3 make g++
 
 ENV CI=true
 
