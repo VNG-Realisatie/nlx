@@ -1,5 +1,8 @@
 .build-acceptance-base:
   stage: Build
+  image: docker:20.10.12-git
+  services:
+    - docker:20.10.12-dind
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
@@ -15,6 +18,7 @@
   variables:
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
+    DOCKER_TLS_CERTDIR: "/certs"
   script:
     - export IMG_GIT_TAG=${IMAGE_PREFIX}nlxio/${IMAGE}:${GIT_TAG_NAME}
     - export IMG_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:acc-latest
@@ -38,9 +42,8 @@
       when: never
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
-    - cg
-    - shell
-  retry: 1
+    - docker
+    - linux
 
 Build acceptance auth-service:
   extends: .build-acceptance-base

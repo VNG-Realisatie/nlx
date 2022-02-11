@@ -1,5 +1,8 @@
 .build-review-base:
   stage: Build
+  image: docker:20.10.12-git
+  services:
+    - docker:20.10.12-dind
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
@@ -13,6 +16,7 @@
   variables:
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
+    DOCKER_TLS_CERTDIR: "/certs"
   script:
     - export IMG_COMMIT_HASH=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_SHORT_SHA}
     - export IMG_REVIEW_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
@@ -34,9 +38,8 @@
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
-    - cg
-    - shell
-  retry: 1
+    - docker
+    - linux
 
 Build review auth-service:
   extends: .build-review-base
