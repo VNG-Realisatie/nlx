@@ -1,6 +1,6 @@
 NLX Management - E2E-tests:
   extends: .node-base
-  image: cypress/base:16.13.2
+  image: cypress/base:17.3.0
   stage: E2E tests
   script:
     - source e2e_environment.sh
