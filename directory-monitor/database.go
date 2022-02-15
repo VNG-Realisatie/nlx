@@ -19,6 +19,7 @@ func InitDatabase(dsn string) (*sqlx.DB, error) {
 	}
 
 	db.SetConnMaxLifetime(dbConnectionMaxLifetime)
+	db.SetMaxOpenConns()
 	db.SetMaxIdleConns(dbMaxIdleConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
 

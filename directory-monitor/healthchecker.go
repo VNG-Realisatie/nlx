@@ -84,10 +84,8 @@ func New(logger *zap.Logger, certificate *common_tls.CertificateBundle) *HealthC
 }
 
 func (h *HealthChecker) Run(
-	logger *zap.Logger,
 	db *sqlx.DB,
 	postgresDNS string,
-	certificate *common_tls.CertificateBundle,
 	ttlOfflineService int,
 ) error {
 	var err error
@@ -160,19 +158,34 @@ func (h *HealthChecker) run(postgressDNS string) error {
 
 	err := listener.Listen(dbNotificationChannel)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	h.listener = listener
+
+	err = h.loadAvailabilities()
+	if err != nil {
+		return err
+	}
 
 	shutdownNotificationListener := make(chan struct{})
 	h.shutdownNotificationListener = shutdownNotificationListener
 
 	go h.waitForNotification(listener, shutdownNotificationListener)
 
+	shutdown := make(chan struct{})
+	h.shutdown = shutdown
+
+	go h.runCleanUpServices(shutdown)
+	h.runHealthChecker(shutdown)
+
+	return nil
+}
+
+func (h *HealthChecker) loadAvailabilities() error {
 	newAvailabilities := []*availability{}
 
-	err = h.stmtSelectAvailabilities.Select(&newAvailabilities)
+	err := h.stmtSelectAvailabilities.Select(&newAvailabilities)
 	if err != nil {
 		return err
 	}
@@ -182,12 +195,6 @@ func (h *HealthChecker) run(postgressDNS string) error {
 		h.availabilities[availability.ID] = availability
 	}
 	h.availabilitiesLock.Unlock()
-
-	shutdown := make(chan struct{})
-	h.shutdown = shutdown
-
-	go h.runCleanUpServices(shutdown)
-	h.runHealthChecker(shutdown)
 
 	return nil
 }

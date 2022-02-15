@@ -58,7 +58,7 @@ func main() {
 	healthChecker := monitor.New(logger, certificate)
 
 	go func() {
-		err = healthChecker.Run(logger, db, options.PostgresDSN, certificate, options.TTLOfflineService)
+		err = healthChecker.Run(db, options.PostgresDSN, options.TTLOfflineService)
 		if err != nil && err != context.DeadlineExceeded {
 			logger.Fatal("failed to run monitor healthchecker", zap.Error(err))
 		}
