@@ -6,7 +6,7 @@ import styled from 'styled-components'
 export const Outways = styled.ul`
   list-style-type: none;
   padding: 0;
-  margin: 0;
+  margin-top: 0;
 `
 
 export const OutwayName = styled.li`

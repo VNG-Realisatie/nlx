@@ -19,7 +19,12 @@ import { IconCheck } from '../../../../../../../../icons'
 import Switch from '../../../../../../../../components/Switch'
 import OutgoingAccessRequestModel from '../../../../../../../../stores/models/OutgoingAccessRequestModel'
 import AccessProofModel from '../../../../../../../../stores/models/AccessProofModel'
-import { Section, IconItem, StateDetail, StyledAlert } from './index.styles'
+import {
+  IconItem,
+  StateDetail,
+  StyledAlert,
+  StateContainer,
+} from './index.styles'
 
 const AccessSection = ({
   accessRequest,
@@ -40,16 +45,16 @@ const AccessSection = ({
   }
 
   return (
-    <Section data-testid="request-access-section">
+    <section data-testid="request-access-section">
       <Switch test={displayState}>
         <Switch.Case value={SHOW_REQUEST_ACCESS}>
           {() => (
-            <>
+            <StateContainer>
               <StateDetail>{t('You have no access')}</StateDetail>
               <Button onClick={onRequestAccessButtonClick}>
                 {t('Request access')}
               </Button>
-            </>
+            </StateContainer>
           )}
         </Switch.Case>
 
@@ -74,29 +79,29 @@ const AccessSection = ({
 
         <Switch.Case value={SHOW_REQUEST_CREATED}>
           {() => (
-            <>
+            <StateContainer>
               <IconItem as={Spinner} />
               <StateDetail>
                 <span>{t('Sending request')}…</span>
               </StateDetail>
-            </>
+            </StateContainer>
           )}
         </Switch.Case>
 
         <Switch.Case value={SHOW_REQUEST_RECEIVED}>
           {() => (
-            <>
+            <StateContainer>
               <StateDetail>
                 <span>{t('Access requested')}</span>
                 <small>{t('On date', { date: accessRequest.updatedAt })}</small>
               </StateDetail>
-            </>
+            </StateContainer>
           )}
         </Switch.Case>
 
         <Switch.Case value={SHOW_HAS_ACCESS}>
           {() => (
-            <>
+            <StateContainer>
               <IconItem as={IconCheck} />
               <StateDetail>
                 <span>{t('You have access')}</span>
@@ -106,13 +111,13 @@ const AccessSection = ({
                   })}
                 </small>
               </StateDetail>
-            </>
+            </StateContainer>
           )}
         </Switch.Case>
 
         <Switch.Case value={SHOW_REQUEST_REJECTED}>
           {() => (
-            <>
+            <StateContainer>
               <StateDetail>
                 <span>{t('Access request rejected')}</span>
                 <small>
@@ -124,13 +129,13 @@ const AccessSection = ({
               <Button onClick={onRequestAccessButtonClick}>
                 {t('Request access')}
               </Button>
-            </>
+            </StateContainer>
           )}
         </Switch.Case>
 
         <Switch.Case value={SHOW_ACCESS_REVOKED}>
           {() => (
-            <>
+            <StateContainer>
               <StateDetail>
                 <span>{t('Your access was revoked')}</span>
                 <small>
@@ -142,12 +147,12 @@ const AccessSection = ({
               <Button onClick={onRequestAccessButtonClick}>
                 {t('Request access')}
               </Button>
-            </>
+            </StateContainer>
           )}
         </Switch.Case>
         <Switch.Default>{() => null}</Switch.Default>
       </Switch>
-    </Section>
+    </section>
   )
 }
 

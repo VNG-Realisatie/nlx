@@ -8,7 +8,7 @@ export const StyledAlert = styled(Alert)`
   margin-bottom: ${(p) => p.theme.tokens.spacing05};
 `
 
-export const Section = styled.section`
+export const StateContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
