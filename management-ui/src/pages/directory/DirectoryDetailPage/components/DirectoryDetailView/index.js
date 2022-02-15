@@ -82,6 +82,7 @@ const DirectoryDetailView = ({ service }) => {
         <OutwaysWithAccessSection service={service} />
 
         <ContactSection service={service} />
+
         <CostsSection
           oneTimeCosts={service.oneTimeCosts}
           monthlyCosts={service.monthlyCosts}
