@@ -14,6 +14,27 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+type CreateOutgoingOrder struct {
+	ID             uint64
+	Reference      string
+	Description    string
+	PublicKeyPEM   string
+	Delegatee      string
+	CreatedAt      time.Time
+	ValidFrom      time.Time
+	ValidUntil     time.Time
+	AccessProofIds []uint64
+}
+
+type UpdateOutgoingOrder struct {
+	ID             uint64
+	Description    string
+	PublicKeyPEM   string
+	ValidFrom      time.Time
+	ValidUntil     time.Time
+	AccessProofIds []uint64
+}
+
 type OutgoingOrder struct {
 	ID           uint
 	Reference    string
@@ -24,11 +45,29 @@ type OutgoingOrder struct {
 	CreatedAt    time.Time
 	ValidFrom    time.Time
 	ValidUntil   time.Time
+	AccessProofs []AccessProof
 	Services     []OutgoingOrderService `gorm:"foreignKey:outgoing_order_id;"`
+}
+
+type OutgoingOrderAccessProof struct {
+	OutgoingOrderID uint64
+	AccessProofID   uint64
 }
 
 func (o *OutgoingOrder) TableName() string {
 	return "nlx_management.outgoing_orders"
+}
+
+func (o *CreateOutgoingOrder) TableName() string {
+	return "nlx_management.outgoing_orders"
+}
+
+func (o *UpdateOutgoingOrder) TableName() string {
+	return "nlx_management.outgoing_orders"
+}
+
+func (o *OutgoingOrderAccessProof) TableName() string {
+	return "nlx_management.outgoing_orders_access_proofs"
 }
 
 type OutgoingOrderService struct {
@@ -48,7 +87,7 @@ type OutgoingOrderServiceOrganization struct {
 
 var ErrDuplicateOutgoingOrder = errors.New("duplicate outgoing order")
 
-func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error {
+func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *CreateOutgoingOrder) error {
 	tx := db.DB.Begin()
 	defer tx.Rollback()
 
@@ -67,23 +106,18 @@ func (db *PostgresConfigDatabase) CreateOutgoingOrder(ctx context.Context, order
 		return err
 	}
 
-	orderServices := []OutgoingOrderService{}
-
-	for _, service := range order.Services {
-		orderServices = append(orderServices, OutgoingOrderService{
+	orderAccessProofs := make([]*OutgoingOrderAccessProof, len(order.AccessProofIds))
+	for i, id := range order.AccessProofIds {
+		orderAccessProofs[i] = &OutgoingOrderAccessProof{
 			OutgoingOrderID: order.ID,
-			Organization: OutgoingOrderServiceOrganization{
-				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
-			},
-			Service: service.Service,
-		})
+			AccessProofID:   id,
+		}
 	}
 
 	if err := dbWithTx.DB.
 		WithContext(ctx).
-		Model(OutgoingOrderService{}).
-		Create(orderServices).Error; err != nil {
+		Model(OutgoingOrderAccessProof{}).
+		Create(orderAccessProofs).Error; err != nil {
 		return err
 	}
 
@@ -137,7 +171,7 @@ func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.C
 	return orders, nil
 }
 
-func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error {
+func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order *UpdateOutgoingOrder) error {
 	tx := db.DB.Begin()
 	defer tx.Rollback()
 
@@ -158,35 +192,30 @@ func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order
 		return err
 	}
 
-	// Delete all services for the updated order (note that we are in a transaction)
+	// Delete all access proofs for the updated order (note that we are in a transaction)
 	err := dbWithTx.DB.
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Where("outgoing_order_id = ?", order.ID).
-		Delete(&OutgoingOrderService{}).
+		Delete(&OutgoingOrderAccessProof{}).
 		Error
 	if err != nil {
 		return err
 	}
 
-	// Add all services to the order
-	orderServices := []OutgoingOrderService{}
-
-	for _, service := range order.Services {
-		orderServices = append(orderServices, OutgoingOrderService{
+	// Add all access proofs to the order
+	orderAccessProofs := make([]*OutgoingOrderAccessProof, len(order.AccessProofIds))
+	for i, id := range order.AccessProofIds {
+		orderAccessProofs[i] = &OutgoingOrderAccessProof{
 			OutgoingOrderID: order.ID,
-			Organization: OutgoingOrderServiceOrganization{
-				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
-			},
-			Service: service.Service,
-		})
+			AccessProofID:   id,
+		}
 	}
 
 	if err := dbWithTx.DB.
 		WithContext(ctx).
-		Model(OutgoingOrderService{}).
-		Create(orderServices).Error; err != nil {
+		Model(OutgoingOrderAccessProof{}).
+		Create(orderAccessProofs).Error; err != nil {
 		return err
 	}
 

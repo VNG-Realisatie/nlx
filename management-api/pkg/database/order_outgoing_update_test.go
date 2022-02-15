@@ -26,55 +26,32 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 	require.NoError(t, err)
 
 	type args struct {
-		outgoingOrder *database.OutgoingOrder
+		outgoingOrder *database.UpdateOutgoingOrder
 	}
 
 	tests := map[string]struct {
 		loadFixtures bool
 		args         args
-		updatedOrder *database.OutgoingOrder
+		updatedOrder *database.UpdateOutgoingOrder
 		wantErr      error
 	}{
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				outgoingOrder: &database.OutgoingOrder{
+				outgoingOrder: &database.UpdateOutgoingOrder{
 					ID:           1,
 					Description:  "description updated",
 					ValidFrom:    now,
 					ValidUntil:   now,
 					PublicKeyPEM: "PUBLIC_KEY_HERE",
-					Services: []database.OutgoingOrderService{
-						{
-							OutgoingOrderID: 1,
-							Service:         "fixture-service-two",
-							Organization: database.OutgoingOrderServiceOrganization{
-								Name:         "fixture-organization-two",
-								SerialNumber: "10000000000000000002",
-							},
-						},
-					},
 				},
 			},
-			updatedOrder: &database.OutgoingOrder{
+			updatedOrder: &database.UpdateOutgoingOrder{
 				ID:           1,
-				Reference:    "fixture-reference",
 				Description:  "description updated",
 				PublicKeyPEM: "PUBLIC_KEY_HERE",
-				Delegatee:    "00000000000000000001",
 				ValidFrom:    now,
 				ValidUntil:   now,
-				CreatedAt:    getFixtureTime(t),
-				Services: []database.OutgoingOrderService{
-					{
-						OutgoingOrderID: 1,
-						Service:         "fixture-service-two",
-						Organization: database.OutgoingOrderServiceOrganization{
-							Name:         "fixture-organization-two",
-							SerialNumber: "10000000000000000002",
-						},
-					},
-				},
 			},
 			wantErr: nil,
 		},

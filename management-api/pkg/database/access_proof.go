@@ -89,3 +89,17 @@ func (db *PostgresConfigDatabase) RevokeAccessProof(ctx context.Context, accessP
 
 	return accessProof, nil
 }
+
+func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessProofIDs []uint64) ([]*AccessProof, error) {
+	accessProofs := &[]*AccessProof{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Preload("access_request_outgoing").
+		Where("id IN ?", accessProofIDs).
+		Find(accessProofs).Error; err != nil {
+		return nil, err
+	}
+
+	return *accessProofs, nil
+}

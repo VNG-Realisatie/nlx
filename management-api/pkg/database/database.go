@@ -61,6 +61,7 @@ type ConfigDatabase interface {
 	CreateAccessProof(ctx context.Context, accessRequest *OutgoingAccessRequest) (*AccessProof, error)
 	RevokeAccessProof(ctx context.Context, id uint, revokedAt time.Time) (*AccessProof, error)
 	GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error)
+	GetAccessProofs(ctx context.Context, accessProofIDs []uint64) ([]*AccessProof, error)
 
 	GetSettings(ctx context.Context) (*domain.Settings, error)
 	UpdateSettings(ctx context.Context, settings *domain.Settings) error
@@ -68,8 +69,8 @@ type ConfigDatabase interface {
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
 	ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error)
 
-	CreateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error
-	UpdateOutgoingOrder(ctx context.Context, order *OutgoingOrder) error
+	CreateOutgoingOrder(ctx context.Context, order *CreateOutgoingOrder) error
+	UpdateOutgoingOrder(ctx context.Context, order *UpdateOutgoingOrder) error
 	GetOutgoingOrderByReference(ctx context.Context, reference string) (*OutgoingOrder, error)
 	ListOutgoingOrders(ctx context.Context) ([]*OutgoingOrder, error)
 	ListOutgoingOrdersByOrganization(ctx context.Context, organizationSerialNumber string) ([]*OutgoingOrder, error)

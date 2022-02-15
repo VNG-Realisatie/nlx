@@ -9,7 +9,6 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"regexp"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
@@ -26,9 +25,17 @@ import (
 func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateOutgoingOrder")
 
-	order := convertOutgoingOrder(request)
+	order := &database.CreateOutgoingOrder{
+		Reference:      request.Reference,
+		Description:    request.Description,
+		PublicKeyPEM:   request.PublicKeyPEM,
+		Delegatee:      request.Delegatee,
+		ValidFrom:      request.ValidFrom.AsTime(),
+		ValidUntil:     request.ValidUntil.AsTime(),
+		AccessProofIds: request.AccessProofIds,
+	}
 
-	if err := validateOutgoingOrder(order); err != nil {
+	if err := validateCreateOutgoingOrder(order); err != nil {
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outgoing order: %s", err))
 	}
 
@@ -38,16 +45,23 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	services := []auditlog.RecordService{}
+	accessProofs, err := s.configDatabase.GetAccessProofs(ctx, order.AccessProofIds)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
+	}
 
-	for _, service := range order.Services {
-		services = append(services, auditlog.RecordService{
-			Organization: auditlog.RecordServiceOrganization{
-				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
-			},
-			Service: service.Service,
-		})
+	services := make([]auditlog.RecordService, len(accessProofs))
+
+	for i, a := range accessProofs {
+		if a.OutgoingAccessRequest != nil {
+			services[i] = auditlog.RecordService{
+				Organization: auditlog.RecordServiceOrganization{
+					SerialNumber: a.OutgoingAccessRequest.Organization.SerialNumber,
+					Name:         a.OutgoingAccessRequest.Organization.Name,
+				},
+				Service: a.OutgoingAccessRequest.ServiceName,
+			}
+		}
 	}
 
 	err = s.auditLogger.OrderCreate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, services)
@@ -71,21 +85,6 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 }
 
 func convertOutgoingOrder(request *api.OutgoingOrderRequest) *database.OutgoingOrder {
-	services := make([]database.OutgoingOrderService, len(request.Services))
-
-	for i, service := range request.Services {
-		services[i] = database.OutgoingOrderService{
-			Service: service.Service,
-		}
-
-		if service.Organization != nil {
-			services[i].Organization = database.OutgoingOrderServiceOrganization{
-				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
-			}
-		}
-	}
-
 	return &database.OutgoingOrder{
 		Reference:    request.Reference,
 		Description:  request.Description,
@@ -93,7 +92,6 @@ func convertOutgoingOrder(request *api.OutgoingOrderRequest) *database.OutgoingO
 		Delegatee:    request.Delegatee,
 		ValidFrom:    request.ValidFrom.AsTime(),
 		ValidUntil:   request.ValidUntil.AsTime(),
-		Services:     services,
 	}
 }
 
@@ -109,38 +107,25 @@ func validateOrganizationSerialNumber(value interface{}) error {
 }
 
 func validateOutgoingOrder(order *database.OutgoingOrder) error {
-	serviceNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
-	organizationNameRegex := regexp.MustCompile(`^[a-zA-Z0-9-.\s]{1,100}$`)
-
 	return validation.ValidateStruct(
 		order,
 		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
 		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
 		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
 		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
-		validation.Field(&order.Services, validation.Required, validation.Each(validation.By(func(value interface{}) error {
-			orderService, ok := value.(database.OutgoingOrderService)
-			if !ok {
-				return errors.New("expecting an outgoing order-service")
-			}
-
-			err := validation.ValidateStruct(
-				&orderService,
-				validation.Field(&orderService.Service, validation.Match(serviceNameRegex).
-					Error("service must be in a valid format")),
-			)
-			if err != nil {
-				return err
-			}
-
-			return validation.ValidateStruct(
-				&orderService.Organization,
-				validation.Field(&orderService.Organization.Name, validation.Match(organizationNameRegex).
-					Error("organization name must be in a valid format")),
-				validation.Field(&orderService.Organization.SerialNumber, validation.By(validateOrganizationSerialNumber)),
-			)
-		}))),
 		validation.Field(&order.Delegatee, validation.By(validateOrganizationSerialNumber)),
+	)
+}
+
+func validateCreateOutgoingOrder(order *database.CreateOutgoingOrder) error {
+	return validation.ValidateStruct(
+		order,
+		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
+		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
+		validation.Field(&order.Delegatee, validation.By(validateOrganizationSerialNumber)),
+		validation.Field(&order.AccessProofIds, validation.Required, validation.Length(1, 0)),
 	)
 }
 

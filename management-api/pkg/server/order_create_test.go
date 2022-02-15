@@ -40,21 +40,13 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 	validOutgoingOrderRequest := func() api.OutgoingOrderRequest {
 		return api.OutgoingOrderRequest{
-			Reference:    "a-reference",
-			Description:  "a-description",
-			Delegatee:    "00000000000000000001",
-			PublicKeyPEM: testPublicKeyPEM,
-			ValidFrom:    timestamppb.New(validFrom),
-			ValidUntil:   timestamppb.New(validUntil),
-			Services: []*api.OrderService{
-				{
-					Organization: &api.Organization{
-						Name:         "a-organization",
-						SerialNumber: "10000000000000000001",
-					},
-					Service: "a-service",
-				},
-			},
+			Reference:      "a-reference",
+			Description:    "a-description",
+			Delegatee:      "00000000000000000001",
+			PublicKeyPEM:   testPublicKeyPEM,
+			ValidFrom:      timestamppb.New(validFrom),
+			ValidUntil:     timestamppb.New(validUntil),
+			AccessProofIds: []uint64{1, 2, 3},
 		}
 	}
 
@@ -112,25 +104,13 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: ValidUntil: order can not expire before the start date."),
 		},
-		"when_providing_an_empty_list_of_services": {
+		"when_providing_an_empty_list_of_access_proofs": {
 			request: func() *api.OutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
-				request.Services = []*api.OrderService{}
+				request.AccessProofIds = []uint64{}
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: cannot be blank."),
-		},
-		"when_providing_an_invalid_service_name": {
-			request: func() *api.OutgoingOrderRequest {
-				request := validOutgoingOrderRequest()
-				request.Services = []*api.OrderService{
-					{
-						Service: "invalid / service name",
-					},
-				}
-				return &request
-			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: (0: (Service: service must be in a valid format.).)."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: AccessProofIds: cannot be blank."),
 		},
 		"when_providing_an_invalid_public_key": {
 			request: func() *api.OutgoingOrderRequest {
@@ -142,36 +122,43 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		},
 		"when_a_record_with_the_same_reference_for_the_same_organization_already_exists": {
 			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
+					Return([]*database.AccessProof{
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "organization-a",
+								},
+								ServiceName: "service-a",
+							},
+						},
+					}, nil)
+
 				mocks.al.
 					EXPECT().
 					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
-								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
+								SerialNumber: "00000000000000000001",
+								Name:         "organization-a",
 							},
-							Service: "a-service",
+							Service: "service-a",
 						},
 					})
 
 				mocks.db.
 					EXPECT().
-					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
-						Reference:    "a-reference",
-						Description:  "a-description",
-						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "00000000000000000001",
-						ValidFrom:    validFrom,
-						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
-								},
-								Service: "a-service",
-							},
-						},
+					CreateOutgoingOrder(gomock.Any(), &database.CreateOutgoingOrder{
+						Reference:      "a-reference",
+						Description:    "a-description",
+						PublicKeyPEM:   testPublicKeyPEM,
+						Delegatee:      "00000000000000000001",
+						ValidFrom:      validFrom,
+						ValidUntil:     validUntil,
+						AccessProofIds: []uint64{1, 2, 3},
 					}).
 					Return(database.ErrDuplicateOutgoingOrder)
 			},
@@ -184,36 +171,43 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		"when_creating_the_order_fails": {
 			wantErr: status.Error(codes.Internal, "failed to create outgoing order"),
 			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
+					Return([]*database.AccessProof{
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "organization-a",
+								},
+								ServiceName: "service-a",
+							},
+						},
+					}, nil)
+
 				mocks.al.
 					EXPECT().
 					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
-								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
+								SerialNumber: "00000000000000000001",
+								Name:         "organization-a",
 							},
-							Service: "a-service",
+							Service: "service-a",
 						},
 					})
 
 				mocks.db.
 					EXPECT().
-					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
-						Reference:    "a-reference",
-						Description:  "a-description",
-						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "00000000000000000001",
-						ValidFrom:    validFrom,
-						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
-								},
-								Service: "a-service",
-							},
-						},
+					CreateOutgoingOrder(gomock.Any(), &database.CreateOutgoingOrder{
+						Reference:      "a-reference",
+						Description:    "a-description",
+						PublicKeyPEM:   testPublicKeyPEM,
+						Delegatee:      "00000000000000000001",
+						ValidFrom:      validFrom,
+						ValidUntil:     validUntil,
+						AccessProofIds: []uint64{1, 2, 3},
 					}).
 					Return(errors.New("arbitrary error"))
 			},
@@ -222,17 +216,45 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				return &request
 			}(),
 		},
+		"when_get_access_proofs_fails": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			request: func() *api.OutgoingOrderRequest {
+				request := validOutgoingOrderRequest()
+				return &request
+			}(),
+			wantErr: status.Error(codes.Internal, "could not retrieve access proofs"),
+		},
 		"when_creating_audit_log_Fails": {
 			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
+					Return([]*database.AccessProof{
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "organization-a",
+								},
+								ServiceName: "service-a",
+							},
+						},
+					}, nil)
+
 				mocks.al.
 					EXPECT().
 					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
-								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
+								SerialNumber: "00000000000000000001",
+								Name:         "organization-a",
 							},
-							Service: "a-service",
+							Service: "service-a",
 						},
 					}).
 					Return(errors.New("arbitrary error"))
@@ -247,36 +269,43 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					CreateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
-						Reference:    "a-reference",
-						Description:  "a-description",
-						PublicKeyPEM: testPublicKeyPEM,
-						Delegatee:    "00000000000000000001",
-						ValidFrom:    validFrom,
-						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
+					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
+					Return([]*database.AccessProof{
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "organization-a",
 								},
-								Service: "a-service",
+								ServiceName: "service-a",
 							},
 						},
-					}).
-					Return(nil)
+					}, nil)
 
 				mocks.al.
 					EXPECT().
 					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
-								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
+								SerialNumber: "00000000000000000001",
+								Name:         "organization-a",
 							},
-							Service: "a-service",
+							Service: "service-a",
 						},
 					})
+
+				mocks.db.
+					EXPECT().
+					CreateOutgoingOrder(gomock.Any(), &database.CreateOutgoingOrder{
+						Reference:      "a-reference",
+						Description:    "a-description",
+						PublicKeyPEM:   testPublicKeyPEM,
+						Delegatee:      "00000000000000000001",
+						ValidFrom:      validFrom,
+						ValidUntil:     validUntil,
+						AccessProofIds: []uint64{1, 2, 3},
+					}).
+					Return(nil)
 			},
 			request: func() *api.OutgoingOrderRequest {
 				request := validOutgoingOrderRequest()

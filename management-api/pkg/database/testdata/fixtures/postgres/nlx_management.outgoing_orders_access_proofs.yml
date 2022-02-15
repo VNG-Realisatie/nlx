@@ -1,0 +1,14 @@
+- outgoing_order_id: 1
+  access_proof_id: 1
+
+- outgoing_order_id: 1
+  access_proof_id: 2
+
+- outgoing_order_id: 2
+  access_proof_id: 1
+
+- outgoing_order_id: 3
+  access_proof_id: 1
+
+- outgoing_order_id: 4
+  access_proof_id: 1

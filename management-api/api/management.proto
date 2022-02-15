@@ -556,7 +556,7 @@ message OutgoingOrderRequest {
   string delegatee = 4;
   google.protobuf.Timestamp validFrom = 5;
   google.protobuf.Timestamp validUntil = 6;
-  repeated OrderService services = 7;
+  repeated uint64 accessProofIds = 7;
 }
 
 message RevokeOutgoingOrderRequest{

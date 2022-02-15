@@ -2,23 +2,23 @@ BEGIN transaction;
 
 CREATE TABLE nlx_management.outgoing_orders_access_proofs
 (
-    order_id BIGINT,
+    outgoing_order_id BIGINT,
     access_proof_id BIGINT,
     CONSTRAINT fk_order
-        FOREIGN KEY (order_id)
+        FOREIGN KEY (outgoing_order_id)
             REFERENCES nlx_management.outgoing_orders (id)
             ON DELETE RESTRICT,
     CONSTRAINT fk_access_proof
         FOREIGN KEY (access_proof_id)
             REFERENCES nlx_management.access_proofs (id)
             ON DELETE RESTRICT,
-    PRIMARY KEY(order_id, access_proof_id)
+    PRIMARY KEY(outgoing_order_id, access_proof_id)
 );
 
-CREATE INDEX idx_outgoing_order_access_proofs_order_id ON nlx_management.outgoing_orders_access_proofs (order_id);
+CREATE INDEX idx_outgoing_order_access_proofs_outgoing_order_id ON nlx_management.outgoing_orders_access_proofs (outgoing_order_id);
 CREATE INDEX idx_outgoing_order_access_proofs_access_proof_id ON nlx_management.outgoing_orders_access_proofs (access_proof_id);
 
-INSERT INTO nlx_management.outgoing_orders_access_proofs (order_id, access_proof_id)
+INSERT INTO nlx_management.outgoing_orders_access_proofs (outgoing_order_id, access_proof_id)
 SELECT
     os.outgoing_order_id, ap.id
 FROM

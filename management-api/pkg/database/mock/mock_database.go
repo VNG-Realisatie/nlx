@@ -130,7 +130,7 @@ func (mr *MockConfigDatabaseMockRecorder) CreateOutgoingAccessRequest(ctx, acces
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *database.OutgoingOrder) error {
+func (m *MockConfigDatabase) CreateOutgoingOrder(ctx context.Context, order *database.CreateOutgoingOrder) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOutgoingOrder", ctx, order)
 	ret0, _ := ret[0].(error)
@@ -256,6 +256,21 @@ func (m *MockConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.
 func (mr *MockConfigDatabaseMockRecorder) GetAccessProofForOutgoingAccessRequest(ctx, accessRequestID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProofForOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetAccessProofForOutgoingAccessRequest), ctx, accessRequestID)
+}
+
+// GetAccessProofs mocks base method.
+func (m *MockConfigDatabase) GetAccessProofs(ctx context.Context, accessProofIDs []uint64) ([]*database.AccessProof, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccessProofs", ctx, accessProofIDs)
+	ret0, _ := ret[0].([]*database.AccessProof)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessProofs indicates an expected call of GetAccessProofs.
+func (mr *MockConfigDatabaseMockRecorder) GetAccessProofs(ctx, accessProofIDs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessProofs", reflect.TypeOf((*MockConfigDatabase)(nil).GetAccessProofs), ctx, accessProofIDs)
 }
 
 // GetFingerprintOfPublicKeys mocks base method.

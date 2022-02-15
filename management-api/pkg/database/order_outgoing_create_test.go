@@ -7,7 +7,6 @@ package database_test
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -28,7 +27,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 	require.NoError(t, err)
 
 	type args struct {
-		outgoingOrder *database.OutgoingOrder
+		outgoingOrder *database.CreateOutgoingOrder
 	}
 
 	tests := map[string]struct {
@@ -39,23 +38,14 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		"when_an_order_with_the_same_reference_already_exists": {
 			loadFixtures: true,
 			args: args{
-				outgoingOrder: &database.OutgoingOrder{
-					Reference:   "fixture-reference",
-					Description: "description",
-					Delegatee:   "00000000000000000001",
-					RevokedAt:   sql.NullTime{},
-					ValidFrom:   now,
-					ValidUntil:  now,
-					CreatedAt:   now,
-					Services: []database.OutgoingOrderService{
-						{
-							Service: "service",
-							Organization: database.OutgoingOrderServiceOrganization{
-								Name:         "organization-one",
-								SerialNumber: "10000000000000000001",
-							},
-						},
-					},
+				outgoingOrder: &database.CreateOutgoingOrder{
+					Reference:      "fixture-reference",
+					Description:    "description",
+					Delegatee:      "00000000000000000001",
+					ValidFrom:      now,
+					ValidUntil:     now,
+					CreatedAt:      now,
+					AccessProofIds: []uint64{1},
 				},
 			},
 			wantErr: database.ErrDuplicateOutgoingOrder,
@@ -63,25 +53,15 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				outgoingOrder: &database.OutgoingOrder{
-					ID:          fixturesStartID,
-					Reference:   "reference-one",
-					Description: "description",
-					Delegatee:   "00000000000000000001",
-					RevokedAt:   sql.NullTime{},
-					ValidFrom:   now,
-					ValidUntil:  now,
-					CreatedAt:   now,
-					Services: []database.OutgoingOrderService{
-						{
-							OutgoingOrderID: fixturesStartID,
-							Service:         "fixture-service",
-							Organization: database.OutgoingOrderServiceOrganization{
-								Name:         "fixture-organization",
-								SerialNumber: "10000000000000000001",
-							},
-						},
-					},
+				outgoingOrder: &database.CreateOutgoingOrder{
+					ID:             fixturesStartID,
+					Reference:      "reference-one",
+					Description:    "description",
+					Delegatee:      "00000000000000000001",
+					ValidFrom:      now,
+					ValidUntil:     now,
+					CreatedAt:      now,
+					AccessProofIds: []uint64{1},
 				},
 			},
 			wantErr: nil,
@@ -101,16 +81,24 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				assertOutgoingOrder(t, configDb, tt.args.outgoingOrder)
+				assertCreateOutgoingOrder(t, configDb, tt.args.outgoingOrder)
 			}
 		})
 	}
 }
 
-func assertOutgoingOrder(t *testing.T, repo database.ConfigDatabase, want *database.OutgoingOrder) {
+func assertCreateOutgoingOrder(t *testing.T, repo database.ConfigDatabase, want *database.CreateOutgoingOrder) {
 	got, err := repo.GetOutgoingOrderByReference(context.Background(), want.Reference)
 	require.NoError(t, err)
 	require.NotNil(t, got)
 
-	assert.EqualValues(t, want, got)
+	assert.Equal(t, want.PublicKeyPEM, got.PublicKeyPEM)
+	assert.Equal(t, want.Reference, got.Reference)
+	assert.Equal(t, want.CreatedAt, got.CreatedAt)
+	assert.Equal(t, want.Delegatee, got.Delegatee)
+	assert.Equal(t, want.Description, got.Description)
+	assert.Equal(t, want.ValidFrom, got.ValidFrom)
+	assert.Equal(t, want.ValidUntil, got.ValidUntil)
+
+	// TODO: check if access proofs are equal
 }

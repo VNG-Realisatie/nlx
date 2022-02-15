@@ -46,15 +46,6 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 			PublicKeyPEM: testPublicKeyPEM,
 			ValidFrom:    timestamppb.New(validFrom),
 			ValidUntil:   timestamppb.New(validUntil),
-			Services: []*api.OrderService{
-				{
-					Organization: &api.Organization{
-						Name:         "a-organization",
-						SerialNumber: "10000000000000000001",
-					},
-					Service: "a-service",
-				},
-			},
 		}
 	}
 
@@ -104,25 +95,13 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: ValidUntil: order can not expire before the start date."),
 		},
-		"when_providing_an_empty_list_of_services": {
+		"when_providing_an_empty_list_of_access_proof_ids": {
 			request: func() *api.OutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
-				request.Services = []*api.OrderService{}
+				request.AccessProofIds = []uint64{}
 				return &request
 			}(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: cannot be blank."),
-		},
-		"when_providing_an_invalid_service_name": {
-			request: func() *api.OutgoingOrderRequest {
-				request := validOutgoingOrderRequest()
-				request.Services = []*api.OrderService{
-					{
-						Service: "invalid / service name",
-					},
-				}
-				return &request
-			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: (0: (Service: service must be in a valid format.).)."),
 		},
 		"when_providing_an_invalid_public_key": {
 			request: func() *api.OutgoingOrderRequest {
