@@ -32,6 +32,7 @@ Go tests (unit & integration):
   tags:
     - docker
     - cg
+  retry: 1
 
 Go linter:
   stage: Tests
