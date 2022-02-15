@@ -2,14 +2,15 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { number, string, shape } from 'prop-types'
+import { number, string, shape, arrayOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import {
   SectionHeader,
-  SectionContentService,
   SectionContent,
   StyledIconServices,
   ServiceData,
+  SectionContentWithPadding,
+  StyledIconOutways,
 } from './index.styles'
 
 const costFormatter = new Intl.NumberFormat('nl-NL', {
@@ -23,6 +24,8 @@ const RequestAccessDetails = ({
   oneTimeCosts,
   monthlyCosts,
   requestCosts,
+  publicKeyFingerprint,
+  outwayNames,
 }) => {
   const { t } = useTranslation()
 
@@ -32,7 +35,7 @@ const RequestAccessDetails = ({
 
       <section>
         <SectionHeader>{t('Service')}</SectionHeader>
-        <SectionContentService>
+        <SectionContentWithPadding>
           <StyledIconServices />
           <ServiceData>
             <strong>{serviceName}</strong>
@@ -40,7 +43,7 @@ const RequestAccessDetails = ({
               {organization.name} ({organization.serialNumber})
             </span>
           </ServiceData>
-        </SectionContentService>
+        </SectionContentWithPadding>
 
         {oneTimeCosts ? (
           <>
@@ -68,6 +71,17 @@ const RequestAccessDetails = ({
             </SectionContent>
           </>
         ) : null}
+
+        <SectionHeader>{t('Outways')}</SectionHeader>
+        <SectionContentWithPadding>
+          <StyledIconOutways />
+          <ServiceData>
+            <p>
+              <strong>{outwayNames.join(', ')}</strong>
+            </p>
+            <p>{publicKeyFingerprint}</p>
+          </ServiceData>
+        </SectionContentWithPadding>
       </section>
     </>
   )
@@ -82,6 +96,12 @@ RequestAccessDetails.propTypes = {
   oneTimeCosts: number,
   monthlyCosts: number,
   requestCosts: number,
+  publicKeyFingerprint: string,
+  outwayNames: arrayOf(string),
+}
+
+RequestAccessDetails.defaultProps = {
+  outwayNames: [],
 }
 
 export default RequestAccessDetails

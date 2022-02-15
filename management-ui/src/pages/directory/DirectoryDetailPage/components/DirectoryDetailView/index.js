@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useState } from 'react'
 import { instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +11,7 @@ import DirectoryServiceModel from '../../../../../stores/models/DirectoryService
 import { useConfirmationModal } from '../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../../RequestAccessDetails'
 import usePolling from '../../../../../hooks/use-polling'
+import { useOutwayStore } from '../../../../../hooks/use-stores'
 import ExternalLinkSection from './ExternalLinkSection'
 import ContactSection from './ContactSection'
 import {
@@ -20,6 +21,12 @@ import {
 
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()
+  const outwayStore = useOutwayStore()
+  const [
+    requestAccessPublicKeyFingerprint,
+    setRequestAccessPublicKeyFingerprint,
+  ] = useState()
+  const [requestAccessOutwayNames, setRequestAccessOutwayNames] = useState([])
 
   const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
     title: t('Request access'),
@@ -31,6 +38,8 @@ const DirectoryDetailView = ({ service }) => {
         oneTimeCosts={service.oneTimeCosts}
         monthlyCosts={service.monthlyCosts}
         requestCosts={service.requestCosts}
+        publicKeyFingerprint={requestAccessPublicKeyFingerprint}
+        outwayNames={requestAccessOutwayNames}
       />
     ),
   })
@@ -40,7 +49,15 @@ const DirectoryDetailView = ({ service }) => {
   const onRequestAccess = async (publicKeyFingerprint) => {
     pauseFetchPolling()
 
-    if (await confirmRequest(publicKeyFingerprint)) {
+    setRequestAccessPublicKeyFingerprint(publicKeyFingerprint)
+
+    const outwayNames = outwayStore
+      .getByPublicKeyFingerprint(publicKeyFingerprint)
+      .map((outway) => outway.name)
+
+    setRequestAccessOutwayNames(outwayNames)
+
+    if (await confirmRequest({ publicKeyFingerprint: publicKeyFingerprint })) {
       service.requestAccess(publicKeyFingerprint)
     }
 

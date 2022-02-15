@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import styled from 'styled-components'
-import { IconServices } from '../../../icons'
+import { IconServices, IconOutway } from '../../../icons'
 
 export const SectionHeader = styled.p`
   margin-bottom: 0;
@@ -14,7 +14,7 @@ export const SectionContent = styled.div`
   margin-bottom: ${(p) => p.theme.tokens.spacing07};
 `
 
-export const SectionContentService = styled(SectionContent)`
+export const SectionContentWithPadding = styled(SectionContent)`
   margin-top: ${(p) => p.theme.tokens.spacing03};
 `
 
@@ -23,7 +23,16 @@ export const StyledIconServices = styled(IconServices)`
   fill: ${(p) => p.theme.tokens.colorPaletteGray500};
 `
 
+export const StyledIconOutways = styled(IconOutway)`
+  margin-right: ${(p) => p.theme.tokens.spacing05};
+  fill: ${(p) => p.theme.tokens.colorPaletteGray500};
+`
+
 export const ServiceData = styled.div`
   display: flex;
   flex-direction: column;
+`
+
+export const StyledOutways = styled.ul`
+  list-style
 `
