@@ -14,13 +14,12 @@ import getDirectoryServiceAccessUIState, {
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
   SHOW_ACCESS_REVOKED,
-} from '../../../../directoryServiceAccessState'
-import { IconCheck } from '../../../../../../icons'
-import Switch from '../../../../../../components/Switch'
-import OutgoingAccessRequestModel from '../../../../../../stores/models/OutgoingAccessRequestModel'
-import AccessProofModel from '../../../../../../stores/models/AccessProofModel'
-import { StyledAlert } from '../index.styles'
-import { Section, IconItem, StateDetail } from './index.styles'
+} from '../../../../../../directoryServiceAccessState'
+import { IconCheck } from '../../../../../../../../icons'
+import Switch from '../../../../../../../../components/Switch'
+import OutgoingAccessRequestModel from '../../../../../../../../stores/models/OutgoingAccessRequestModel'
+import AccessProofModel from '../../../../../../../../stores/models/AccessProofModel'
+import { Section, IconItem, StateDetail, StyledAlert } from './index.styles'
 
 const AccessSection = ({
   accessRequest,

@@ -13,8 +13,10 @@ import RequestAccessDetails from '../../../RequestAccessDetails'
 import usePolling from '../../../../../hooks/use-polling'
 import ExternalLinkSection from './ExternalLinkSection'
 import ContactSection from './ContactSection'
-import OutwaysWithoutAccessSection from './OutwaysWithoutAccessSection'
-import OutwaysWithAccessSection from './OutwaysWithAccessSection'
+import {
+  OutwaysWithoutAccessSection,
+  OutwaysWithAccessSection,
+} from './AccessSections'
 
 const DirectoryDetailView = ({ service }) => {
   const { t } = useTranslation()

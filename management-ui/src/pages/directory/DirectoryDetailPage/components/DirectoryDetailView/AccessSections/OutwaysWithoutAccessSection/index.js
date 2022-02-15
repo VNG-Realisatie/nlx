@@ -6,13 +6,13 @@ import { func, instanceOf } from 'prop-types'
 import { Collapsible } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
-import { StyledCollapsibleBody } from '../../../../../../components/DetailView'
-import DirectoryServiceModel from '../../../../../../stores/models/DirectoryServiceModel'
-import AccessSection from '../AccessSection'
-import { useOutwayStore } from '../../../../../../hooks/use-stores'
-import Table from '../../../../../../components/Table'
-import { OutwayName, OutwayNames } from './index.styles'
-import Header from './Header'
+import { StyledCollapsibleBody } from '../../../../../../../components/DetailView'
+import DirectoryServiceModel from '../../../../../../../stores/models/DirectoryServiceModel'
+import State from '../components/State'
+import { useOutwayStore } from '../../../../../../../hooks/use-stores'
+import Table from '../../../../../../../components/Table'
+import { OutwayName, Outways } from '../components/index.styles'
+import Header from '../components/Header'
 
 const OutwaysWithoutAccessSection = ({
   service,
@@ -28,9 +28,12 @@ const OutwaysWithoutAccessSection = ({
     )
 
   return publicKeyFingerPrintsWithoutAccess.length < 1 ? (
-    <Header label={t('None')} />
+    <Header title={t('Outways without access')} label={t('None')} />
   ) : (
-    <Collapsible title={<Header />} ariaLabel={t('Outways without access')}>
+    <Collapsible
+      title={<Header title={t('Outways without access')} />}
+      ariaLabel={t('Outways without access')}
+    >
       <StyledCollapsibleBody>
         <Table>
           <tbody>
@@ -49,22 +52,17 @@ const OutwaysWithoutAccessSection = ({
               return (
                 <Table.Tr key={publicKeyFingerprint}>
                   <Table.Td>
-                    <OutwayNames data-testid="outway-names">
+                    <Outways>
                       {outwayStore
                         .getByPublicKeyFingerprint(publicKeyFingerprint)
                         .map((outway) => (
                           <OutwayName key={outway.name}>
                             {outway.name}
                           </OutwayName>
-                        ))
-                        .reduce(
-                          (accu, elem) =>
-                            accu === null ? [elem] : [...accu, ', ', elem],
-                          null,
-                        )}
-                    </OutwayNames>
+                        ))}
+                    </Outways>
 
-                    <AccessSection
+                    <State
                       accessRequest={accessRequest}
                       accessProof={accessProof}
                       onRequestAccess={onRequestAccess}
