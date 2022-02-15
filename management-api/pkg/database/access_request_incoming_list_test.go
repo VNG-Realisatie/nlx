@@ -16,7 +16,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func TestListAllIncomingAccessRequests(t *testing.T) {
+func TestListIncomingAccessRequests(t *testing.T) {
 	t.Parallel()
 
 	setup(t)
@@ -27,12 +27,14 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 	require.NoError(t, err)
 
 	tests := map[string]struct {
-		loadFixtures bool
-		want         []*database.IncomingAccessRequest
-		wantErr      error
+		loadFixtures   bool
+		argServiceName string
+		want           []*database.IncomingAccessRequest
+		wantErr        error
 	}{
 		"happy_flow": {
-			loadFixtures: true,
+			loadFixtures:   true,
+			argServiceName: "fixture-service-name",
 			want: []*database.IncomingAccessRequest{
 				{
 					ID:        1,
@@ -92,35 +94,6 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 					UpdatedAt:            fixtureTime,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				},
-				{
-					ID:        3,
-					ServiceID: 2,
-					Service: &database.Service{
-						ID:                     2,
-						Name:                   "fixture-service-name-two",
-						EndpointURL:            "http://fixture-api:8000",
-						DocumentationURL:       "https://fixture-documentation-url.com",
-						APISpecificationURL:    "http://fixture-api:8000/schema?format=openapi-json",
-						Internal:               false,
-						TechSupportContact:     "fixture@tech-support-contact.com",
-						PublicSupportContact:   "fixture@public-support-contact.com",
-						Inways:                 nil,
-						IncomingAccessRequests: nil,
-						OneTimeCosts:           1,
-						MonthlyCosts:           2,
-						RequestCosts:           3,
-						CreatedAt:              fixtureTime,
-						UpdatedAt:              fixtureTime,
-					},
-					Organization: database.IncomingAccessRequestOrganization{
-						Name:         "fixture-organization-name-three",
-						SerialNumber: "00000000000000000003",
-					},
-					State:                database.IncomingAccessRequestReceived,
-					CreatedAt:            fixtureTime,
-					UpdatedAt:            fixtureTime,
-					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
-				},
 			},
 			wantErr: nil,
 		},
@@ -135,7 +108,7 @@ func TestListAllIncomingAccessRequests(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.ListAllIncomingAccessRequests(context.Background())
+			got, err := configDb.ListIncomingAccessRequests(context.Background(), tt.argServiceName)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {

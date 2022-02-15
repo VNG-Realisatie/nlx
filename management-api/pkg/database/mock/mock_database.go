@@ -483,21 +483,6 @@ func (mr *MockConfigDatabaseMockRecorder) ListAccessGrantsForService(ctx, servic
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockConfigDatabase)(nil).ListAccessGrantsForService), ctx, serviceName)
 }
 
-// ListAllIncomingAccessRequests mocks base method.
-func (m *MockConfigDatabase) ListAllIncomingAccessRequests(ctx context.Context) ([]*database.IncomingAccessRequest, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAllIncomingAccessRequests", ctx)
-	ret0, _ := ret[0].([]*database.IncomingAccessRequest)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListAllIncomingAccessRequests indicates an expected call of ListAllIncomingAccessRequests.
-func (mr *MockConfigDatabaseMockRecorder) ListAllIncomingAccessRequests(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllIncomingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListAllIncomingAccessRequests), ctx)
-}
-
 // ListAuditLogRecords mocks base method.
 func (m *MockConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*database.AuditLog, error) {
 	m.ctrl.T.Helper()
@@ -511,6 +496,21 @@ func (m *MockConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*databa
 func (mr *MockConfigDatabaseMockRecorder) ListAuditLogRecords(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogRecords", reflect.TypeOf((*MockConfigDatabase)(nil).ListAuditLogRecords), ctx)
+}
+
+// ListIncomingAccessRequests mocks base method.
+func (m *MockConfigDatabase) ListIncomingAccessRequests(ctx context.Context, serviceName string) ([]*database.IncomingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListIncomingAccessRequests", ctx, serviceName)
+	ret0, _ := ret[0].([]*database.IncomingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListIncomingAccessRequests indicates an expected call of ListIncomingAccessRequests.
+func (mr *MockConfigDatabaseMockRecorder) ListIncomingAccessRequests(ctx, serviceName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListIncomingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListIncomingAccessRequests), ctx, serviceName)
 }
 
 // ListIncomingOrders mocks base method.

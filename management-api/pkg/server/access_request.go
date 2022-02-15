@@ -57,7 +57,7 @@ func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req 
 	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
 	if err != nil {
 		if errIsNotFound(err) {
-			return nil, status.Error(codes.NotFound, "service not found")
+			return nil, ErrServiceDoesNotExist
 		}
 
 		s.logger.Error("fetching service", zap.String("name", req.ServiceName), zap.Error(err))
@@ -65,27 +65,22 @@ func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req 
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	accessRequests, err := s.configDatabase.ListAllIncomingAccessRequests(ctx)
+	accessRequests, err := s.configDatabase.ListIncomingAccessRequests(ctx, req.ServiceName)
 	if err != nil {
 		s.logger.Error("fetching incoming access requests", zap.String("service name", req.ServiceName), zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	filtered := []*api.IncomingAccessRequest{}
+	convertedAccessRequests := make([]*api.IncomingAccessRequest, len(accessRequests))
 
-	for _, accessRequest := range accessRequests {
-		if accessRequest.Service.Name == req.ServiceName {
-			responseAccessRequest := convertIncomingAccessRequest(accessRequest)
-			filtered = append(filtered, responseAccessRequest)
-		}
+	for i, accessRequest := range accessRequests {
+		convertedAccessRequests[i] = convertIncomingAccessRequest(accessRequest)
 	}
 
-	response := &api.ListIncomingAccessRequestsResponse{
-		AccessRequests: filtered,
-	}
-
-	return response, nil
+	return &api.ListIncomingAccessRequestsResponse{
+		AccessRequests: convertedAccessRequests,
+	}, nil
 }
 
 func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
@@ -386,10 +381,11 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 			Name:         accessRequest.Organization.Name,
 			SerialNumber: accessRequest.Organization.SerialNumber,
 		},
-		ServiceName: accessRequest.Service.Name,
-		State:       incomingAccessRequestStateToProto(accessRequest.State),
-		CreatedAt:   timestamppb.New(accessRequest.CreatedAt),
-		UpdatedAt:   timestamppb.New(accessRequest.UpdatedAt),
+		ServiceName:          accessRequest.Service.Name,
+		State:                incomingAccessRequestStateToProto(accessRequest.State),
+		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
+		CreatedAt:            timestamppb.New(accessRequest.CreatedAt),
+		UpdatedAt:            timestamppb.New(accessRequest.UpdatedAt),
 	}
 }
 

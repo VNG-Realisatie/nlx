@@ -351,6 +351,7 @@ message IncomingAccessRequest {
   AccessRequestState state = 4;
   google.protobuf.Timestamp createdAt = 5;
   google.protobuf.Timestamp updatedAt = 6;
+  string publicKeyFingerprint = 7;
 }
 
 message ListIncomingAccessRequestsRequest {

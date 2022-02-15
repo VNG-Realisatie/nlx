@@ -42,12 +42,13 @@ func (i *IncomingAccessRequest) TableName() string {
 	return "nlx_management.access_requests_incoming"
 }
 
-func (db *PostgresConfigDatabase) ListAllIncomingAccessRequests(ctx context.Context) ([]*IncomingAccessRequest, error) {
+func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context, serviceName string) ([]*IncomingAccessRequest, error) {
 	accessRequests := []*IncomingAccessRequest{}
 
 	if err := db.DB.
 		WithContext(ctx).
 		Preload("Service").
+		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND s.name = ?", serviceName).
 		Find(&accessRequests).Error; err != nil {
 		return nil, err
 	}

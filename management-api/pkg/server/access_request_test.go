@@ -846,3 +846,117 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 		})
 	}
 }
+
+func TestListIncomingAccessRequests(t *testing.T) {
+	currentTime := time.Now()
+
+	tests := map[string]struct {
+		setup   func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context
+		want    *api.ListIncomingAccessRequestsResponse
+		wantErr error
+	}{
+		"when_retrieving_the_service_fails": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(nil, errors.New("error"))
+
+				return ctx
+			},
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"when_the_service_does_not_exists": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(nil, database.ErrNotFound)
+
+				return ctx
+			},
+			wantErr: server.ErrServiceDoesNotExist,
+		},
+		"happy_flow": {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+
+				db.
+					EXPECT().
+					GetService(ctx, "service").
+					Return(&database.Service{}, nil)
+
+				db.
+					EXPECT().
+					ListIncomingAccessRequests(
+						ctx,
+						"service",
+					).
+					Return([]*database.IncomingAccessRequest{
+						{
+							ID:        1,
+							ServiceID: 1,
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "00000000000000000001",
+								Name:         "test-organization",
+							},
+							Service: &database.Service{
+								ID:          1,
+								Name:        "service-name",
+								EndpointURL: "https://example.com",
+								CreatedAt:   currentTime,
+								UpdatedAt:   currentTime,
+							},
+							State:                database.IncomingAccessRequestReceived,
+							PublicKeyFingerprint: "public-key-fingerprint",
+							CreatedAt:            currentTime,
+							UpdatedAt:            currentTime,
+						},
+					}, nil)
+
+				return ctx
+			},
+			want: &api.ListIncomingAccessRequestsResponse{
+				AccessRequests: []*api.IncomingAccessRequest{
+					{
+						Id: 1,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization",
+						},
+						ServiceName:          "service-name",
+						State:                api.AccessRequestState_RECEIVED,
+						CreatedAt:            timestamppb.New(currentTime),
+						UpdatedAt:            timestamppb.New(currentTime),
+						PublicKeyFingerprint: "public-key-fingerprint",
+					},
+				},
+			},
+		},
+	}
+
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			service, certBundle, mocks := newService(t)
+			ctx := tt.setup(t, mocks.db, certBundle)
+
+			actual, err := service.ListIncomingAccessRequests(ctx, &api.ListIncomingAccessRequestsRequest{
+				ServiceName: "service",
+			})
+
+			assert.Equal(t, tt.wantErr, err)
+
+			if tt.wantErr == nil {
+				assert.Equal(t, tt.want, actual)
+			}
+		})
+	}
+}
