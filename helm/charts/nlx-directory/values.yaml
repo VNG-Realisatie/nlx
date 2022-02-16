@@ -23,9 +23,13 @@ fullnameOverride: ""
 config:
   logType: live
   logLevel: info
-  monitorOfflineServiceTTL: 86400  # 24 hours
   resetDatabase: false
   termsOfServiceURL: ""
+  monitor:
+    offlineServiceTTL: 86400  # 24 hours
+    dbConnectionTimeout: 300 # 5 minutes
+    dbMaxOpenConnections: 25
+    dbMaxIdleConnections: 5
 
 postgresql:
   hostname: postgresql

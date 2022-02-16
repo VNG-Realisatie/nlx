@@ -38,7 +38,7 @@ spec:
             - name: GODEBUG
               value: x509ignoreCN=0
             - name: TTL_OFFLINE_SERVICE
-              value: {{ .Values.config.monitorOfflineServiceTTL | quote }}
+              value: {{ .Values.config.monitor.offlineServiceTTL | quote }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -61,6 +61,12 @@ spec:
               value: /certificate/tls.crt
             - name: TLS_MONITOR_KEY
               value: /certificate/tls.key
+            - name: DB_MAX_IDLE_CONNECTIONS
+              value: {{ .Values.config.monitor.dbMaxIdleConnections | quote }}
+            - name: DB_MAX_OPEN_CONNECTIONS
+              value: {{ .Values.config.monitor.dbMaxOpenConnections | quote }}
+            - name: DB_CONNECTION_TIMEOUT
+              value: {{ .Values.config.monitor.dbConnectionTimeout | quote }}
             - name: LOG_TYPE
               value: {{ .Values.config.logType }}
             - name: LOG_LEVEL

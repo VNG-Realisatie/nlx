@@ -55,13 +55,16 @@ The following table lists the configurable parameters of the nlx-directory Chart
 
 ### NLX directory parameters
 
-| Parameter | Description                                                                                                                                        | Default | Required (yes/no) |
-| --------- |----------------------------------------------------------------------------------------------------------------------------------------------------| ------- | -------- |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.    | `live` | no |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType`                                              | `info` | no |
-| `config.monitorOfflineServiceTTL` | The offline Time to Live (TTL) for a service in seconds. If the offline time of a service exceeds the time to live, the service will be removed from the directory  | `86400` | no |
-| `config.resetDatabase` | If set to true, the directory database will be reset                                                                                               | `false` | no |
-| `config.termsOfServiceURL` | If a terms of service URL is specified, participants of this NLX network need to agree to the terms of service before they can use the network     | `""` | no |
+| Parameter                             | Description                                                                                                                                                        | Default | Required (yes/no) |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------| -------- |
+| `config.logType`                      | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.                    | `live`  | no |
+| `config.logLevel`                     | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType`                                                              | `info`  | no |
+| `config.monitor.offlineServiceTTL`    | The offline Time to Live (TTL) for a service in seconds. If the offline time of a service exceeds the time to live, the service will be removed from the directory | `86400` | no |
+| `config.monitor.dbConnectionTimeout`  | The database connection timeout in seconds                                                                                                                         | `300`   | no |
+| `config.monitor.dbMaxIdleConnections` | The maximum number of idle connections allowed to the database                                                                                                     | `5`     | no |
+| `config.monitor.dbMaxOpenConnections` | The maximum number of open connections allowed to the database                                                                                                     | `25`    | no |
+| `config.resetDatabase`                | If set to true, the directory database will be reset                                                                                                               | `false` | no |
+| `config.termsOfServiceURL`            | If a terms of service URL is specified, participants of this NLX network need to agree to the terms of service before they can use the network                     | `""`    | no |
 
 ### Deployment parameters
 

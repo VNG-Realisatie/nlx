@@ -7,20 +7,22 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-const (
-	dbConnectionMaxLifetime = 5 * time.Minute
-	dbMaxIdleConnections    = 2
-)
+type DBConnectionArgs struct {
+	DSN                string
+	MaxIdleConnections int
+	MaxOpenConnections int
+	ConnectionTimeout  time.Duration
+}
 
-func InitDatabase(dsn string) (*sqlx.DB, error) {
-	db, err := sqlx.Open("postgres", dsn)
+func InitDatabase(d *DBConnectionArgs) (*sqlx.DB, error) {
+	db, err := sqlx.Open("postgres", d.DSN)
 	if err != nil {
 		return nil, err
 	}
 
-	db.SetConnMaxLifetime(dbConnectionMaxLifetime)
-	db.SetMaxOpenConns()
-	db.SetMaxIdleConns(dbMaxIdleConnections)
+	db.SetConnMaxLifetime(d.ConnectionTimeout)
+	db.SetMaxIdleConns(d.MaxIdleConnections)
+	db.SetMaxOpenConns(d.MaxOpenConnections)
 	db.MapperFunc(xstrings.ToSnakeCase)
 
 	return db, nil

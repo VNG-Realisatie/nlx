@@ -146,7 +146,8 @@ ca:
 nlx-directory:
   replicaCount: 3
   config:
-    monitorOfflineServiceTTL: 86400  # 24 hours
+    monitor:
+     offlineServiceTTL: 86400  # 24 hours
   ui:
     ingress:
       annotations:

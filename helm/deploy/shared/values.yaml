@@ -155,7 +155,8 @@ ca:
 nlx-directory:
   config:
     termsOfServiceURL: https://gitlab.com/commonground/nlx/terms-of-service/-/raw/main/v1.0.pdf
-    monitorOfflineServiceTTL: 30  # seconds
+    monitor:
+      offlineServiceTTL: 30  # seconds
   postgresql:
     hostname: shared-postgresql
     database: postgres
