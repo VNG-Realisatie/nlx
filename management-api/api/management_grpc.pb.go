@@ -53,7 +53,7 @@ type ManagementClient interface {
 	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
 	CreateOutgoingOrder(ctx context.Context, in *OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateOutgoingOrder(ctx context.Context, in *OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error)
 	ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error)
@@ -330,7 +330,7 @@ func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *Outgoing
 	return out, nil
 }
 
-func (c *managementClient) UpdateOutgoingOrder(ctx context.Context, in *OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *managementClient) UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateOutgoingOrder", in, out, opts...)
 	if err != nil {
@@ -417,7 +417,7 @@ type ManagementServer interface {
 	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
 	CreateOutgoingOrder(context.Context, *OutgoingOrderRequest) (*emptypb.Empty, error)
-	UpdateOutgoingOrder(context.Context, *OutgoingOrderRequest) (*emptypb.Empty, error)
+	UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error)
 	ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error)
 	ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error)
@@ -517,7 +517,7 @@ func (UnimplementedManagementServer) RetrieveClaimForOrder(context.Context, *Ret
 func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *OutgoingOrderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) UpdateOutgoingOrder(context.Context, *OutgoingOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOutgoingOrder not implemented")
 }
 func (UnimplementedManagementServer) RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
@@ -1071,7 +1071,7 @@ func _Management_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Contex
 }
 
 func _Management_UpdateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OutgoingOrderRequest)
+	in := new(UpdateOutgoingOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1083,7 +1083,7 @@ func _Management_UpdateOutgoingOrder_Handler(srv interface{}, ctx context.Contex
 		FullMethod: "/nlx.management.Management/UpdateOutgoingOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).UpdateOutgoingOrder(ctx, req.(*OutgoingOrderRequest))
+		return srv.(ManagementServer).UpdateOutgoingOrder(ctx, req.(*UpdateOutgoingOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

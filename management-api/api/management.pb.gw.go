@@ -1167,7 +1167,7 @@ func local_request_Management_CreateOutgoingOrder_0(ctx context.Context, marshal
 }
 
 func request_Management_UpdateOutgoingOrder_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OutgoingOrderRequest
+	var protoReq UpdateOutgoingOrderRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -1184,7 +1184,7 @@ func request_Management_UpdateOutgoingOrder_0(ctx context.Context, marshaler run
 }
 
 func local_request_Management_UpdateOutgoingOrder_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OutgoingOrderRequest
+	var protoReq UpdateOutgoingOrderRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)

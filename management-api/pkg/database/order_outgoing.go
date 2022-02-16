@@ -28,6 +28,7 @@ type CreateOutgoingOrder struct {
 
 type UpdateOutgoingOrder struct {
 	ID             uint64
+	Reference      string
 	Description    string
 	PublicKeyPEM   string
 	ValidFrom      time.Time
@@ -36,7 +37,7 @@ type UpdateOutgoingOrder struct {
 }
 
 type OutgoingOrder struct {
-	ID           uint
+	ID           uint64
 	Reference    string
 	Description  string
 	PublicKeyPEM string
@@ -184,6 +185,7 @@ func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order
 		WithContext(ctx).
 		Omit(clause.Associations).
 		Model(&order).
+		Where("reference=?", order.Reference).
 		Updates(order).Error; err != nil {
 		if strings.Contains(err.Error(), duplicateDelegateWithReferenceSQLError) {
 			return ErrDuplicateOutgoingOrder

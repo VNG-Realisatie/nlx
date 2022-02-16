@@ -791,7 +791,7 @@ func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, 
 }
 
 // UpdateOutgoingOrder mocks base method.
-func (m *MockConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order *database.OutgoingOrder) error {
+func (m *MockConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order *database.UpdateOutgoingOrder) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", ctx, order)
 	ret0, _ := ret[0].(error)

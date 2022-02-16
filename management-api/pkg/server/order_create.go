@@ -9,7 +9,6 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -84,17 +83,6 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 	return &emptypb.Empty{}, nil
 }
 
-func convertOutgoingOrder(request *api.OutgoingOrderRequest) *database.OutgoingOrder {
-	return &database.OutgoingOrder{
-		Reference:    request.Reference,
-		Description:  request.Description,
-		PublicKeyPEM: request.PublicKeyPEM,
-		Delegatee:    request.Delegatee,
-		ValidFrom:    request.ValidFrom.AsTime(),
-		ValidUntil:   request.ValidUntil.AsTime(),
-	}
-}
-
 func validateOrganizationSerialNumber(value interface{}) error {
 	valueAsString, _ := value.(string)
 
@@ -125,6 +113,17 @@ func validateCreateOutgoingOrder(order *database.CreateOutgoingOrder) error {
 		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
 		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
 		validation.Field(&order.Delegatee, validation.By(validateOrganizationSerialNumber)),
+		validation.Field(&order.AccessProofIds, validation.Required, validation.Length(1, 0)),
+	)
+}
+
+func validateUpdateOutgoingOrder(order *database.UpdateOutgoingOrder) error {
+	return validation.ValidateStruct(
+		order,
+		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
+		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
 		validation.Field(&order.AccessProofIds, validation.Required, validation.Length(1, 0)),
 	)
 }

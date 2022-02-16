@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -15,14 +14,8 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *api.UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request UpdateOutgoingOrder")
-
-	order := convertOutgoingOrder(request)
-
-	if err := validateOutgoingOrder(order); err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outgoing order: %s", err))
-	}
 
 	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
 	if err != nil {
@@ -30,19 +23,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	services := []auditlog.RecordService{}
-
-	for _, service := range order.Services {
-		services = append(services, auditlog.RecordService{
-			Organization: auditlog.RecordServiceOrganization{
-				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
-			},
-			Service: service.Service,
-		})
-	}
-
-	orderInDB, err := s.configDatabase.GetOutgoingOrderByReference(ctx, order.Reference)
+	orderInDB, err := s.configDatabase.GetOutgoingOrderByReference(ctx, request.Reference)
 	if err != nil {
 		s.logger.Error("failed to fetch order in database", zap.Error(err))
 
@@ -53,17 +34,48 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "failed to fetch outgoing order in management database")
 	}
 
-	order.ID = orderInDB.ID
+	updateOutgoingOrder := &database.UpdateOutgoingOrder{
+		ID:             orderInDB.ID,
+		Reference:      request.Reference,
+		Description:    request.Description,
+		PublicKeyPEM:   request.PublicKeyPEM,
+		ValidFrom:      request.ValidFrom.AsTime(),
+		ValidUntil:     request.ValidUntil.AsTime(),
+		AccessProofIds: request.AccessProofIds,
+	}
 
-	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, order.Reference, services)
+	if err := validateUpdateOutgoingOrder(updateOutgoingOrder); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid update outgoing order: %s", err))
+	}
+
+	accessProofs, err := s.configDatabase.GetAccessProofs(ctx, updateOutgoingOrder.AccessProofIds)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
+	}
+
+	services := make([]auditlog.RecordService, len(accessProofs))
+
+	for i, a := range accessProofs {
+		if a.OutgoingAccessRequest != nil {
+			services[i] = auditlog.RecordService{
+				Organization: auditlog.RecordServiceOrganization{
+					SerialNumber: a.OutgoingAccessRequest.Organization.SerialNumber,
+					Name:         a.OutgoingAccessRequest.Organization.Name,
+				},
+				Service: a.OutgoingAccessRequest.ServiceName,
+			}
+		}
+	}
+
+	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.username, userInfo.userAgent, orderInDB.Delegatee, orderInDB.Reference, services)
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "failed to write to auditlog")
 	}
 
-	if err := s.configDatabase.UpdateOutgoingOrder(ctx, order); err != nil {
-		s.logger.Error("failed to create outgoing order", zap.Error(err))
+	if err := s.configDatabase.UpdateOutgoingOrder(ctx, updateOutgoingOrder); err != nil {
+		s.logger.Error("failed to update outgoing order", zap.Error(err))
 
 		return nil, status.Errorf(codes.Internal, "failed to update outgoing order")
 	}

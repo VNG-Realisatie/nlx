@@ -679,7 +679,7 @@ func (mr *MockManagementClientMockRecorder) UpdateInway(ctx, in interface{}, opt
 }
 
 // UpdateOutgoingOrder mocks base method.
-func (m *MockManagementClient) UpdateOutgoingOrder(ctx context.Context, in *api.OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) UpdateOutgoingOrder(ctx context.Context, in *api.UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -1242,7 +1242,7 @@ func (mr *MockManagementServerMockRecorder) UpdateInway(arg0, arg1 interface{}) 
 }
 
 // UpdateOutgoingOrder mocks base method.
-func (m *MockManagementServer) UpdateOutgoingOrder(arg0 context.Context, arg1 *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) UpdateOutgoingOrder(arg0 context.Context, arg1 *api.UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", arg0, arg1)
 	ret0, _ := ret[0].(*emptypb.Empty)

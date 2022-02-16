@@ -38,78 +38,119 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 	testPublicKeyPEM, err := certBundle.PublicKeyPEM()
 	require.NoError(t, err)
 
-	validOutgoingOrderRequest := func() api.OutgoingOrderRequest {
-		return api.OutgoingOrderRequest{
-			Reference:    "a-reference",
-			Description:  "a-description",
-			Delegatee:    "00000000000000000001",
-			PublicKeyPEM: testPublicKeyPEM,
-			ValidFrom:    timestamppb.New(validFrom),
-			ValidUntil:   timestamppb.New(validUntil),
+	validOutgoingOrderRequest := func() api.UpdateOutgoingOrderRequest {
+		return api.UpdateOutgoingOrderRequest{
+			Reference:      "a-reference",
+			Description:    "a-description",
+			Delegatee:      "00000000000000000001",
+			PublicKeyPEM:   testPublicKeyPEM,
+			ValidFrom:      timestamppb.New(validFrom),
+			ValidUntil:     timestamppb.New(validUntil),
+			AccessProofIds: []uint64{1},
 		}
 	}
 
 	tests := map[string]struct {
-		request *api.OutgoingOrderRequest
+		request *api.UpdateOutgoingOrderRequest
 		setup   func(serviceMocks)
 		wantErr error
 	}{
 		"when_providing_an_empty_reference": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Reference = ""
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: cannot be blank."),
-		},
-		"when_providing_an_empty_delegatee": {
-			request: func() *api.OutgoingOrderRequest {
-				request := validOutgoingOrderRequest()
-				request.Delegatee = ""
-				return &request
-			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: organization serial number must be in a valid format: cannot be empty."),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID: 1,
+					}, nil)
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid update outgoing order: Reference: cannot be blank."),
 		},
 		"when_providing_an_empty_description": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Description = ""
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: cannot be blank."),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID: 1,
+					}, nil)
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid update outgoing order: Description: cannot be blank."),
 		},
 		"when_providing_a_description_which_is_too_long": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Description = "description-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: the length must be between 1 and 100."),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID: 1,
+					}, nil)
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid update outgoing order: Description: the length must be between 1 and 100."),
 		},
 		"when_providing_an_end_date_which_is_before_the_start_date": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.ValidFrom = timestamppb.New(time.Now().Add(time.Millisecond))
 				request.ValidUntil = timestamppb.New(time.Now())
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: ValidUntil: order can not expire before the start date."),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID: 1,
+					}, nil)
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid update outgoing order: ValidUntil: order can not expire before the start date."),
 		},
 		"when_providing_an_empty_list_of_access_proof_ids": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.AccessProofIds = []uint64{}
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Services: cannot be blank."),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID: 1,
+					}, nil)
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid update outgoing order: AccessProofIds: cannot be blank."),
 		},
 		"when_providing_an_invalid_public_key": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.PublicKeyPEM = "invalid"
 				return &request
 			}(),
-			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: PublicKeyPEM: expect public key as pem."),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
+					Return(&database.OutgoingOrder{
+						ID: 1,
+					}, nil)
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid update outgoing order: PublicKeyPEM: expect public key as pem."),
 		},
 		"when_updating_the_order_fails": {
 			wantErr: status.Error(codes.Internal, "failed to update outgoing order"),
@@ -120,9 +161,9 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
+								Name:         "organization-a",
 							},
-							Service: "a-service",
+							Service: "service-a",
 						},
 					})
 
@@ -141,35 +182,38 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 							{
 								Organization: database.OutgoingOrderServiceOrganization{
 									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
+									Name:         "organization-a",
 								},
-								Service: "a-service",
+								Service: "service-a",
 							},
 						},
 					}, nil)
 
+				mocks.db.EXPECT().GetAccessProofs(gomock.Any(), []uint64{1}).Return([]*database.AccessProof{
+					{
+						ID: 1,
+						OutgoingAccessRequest: &database.OutgoingAccessRequest{Organization: database.Organization{
+							SerialNumber: "10000000000000000001",
+							Name:         "organization-a",
+						},
+							ServiceName: "service-a",
+						},
+					},
+				}, nil)
+
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
-						Reference:    "a-reference",
-						Description:  "a-description",
-						Delegatee:    "00000000000000000001",
-						PublicKeyPEM: testPublicKeyPEM,
-						ValidFrom:    validFrom,
-						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
-								},
-								Service: "a-service",
-							},
-						},
+					UpdateOutgoingOrder(gomock.Any(), &database.UpdateOutgoingOrder{
+						Reference:      "a-reference",
+						Description:    "a-description",
+						PublicKeyPEM:   testPublicKeyPEM,
+						ValidFrom:      validFrom,
+						ValidUntil:     validUntil,
+						AccessProofIds: []uint64{1},
 					}).
 					Return(errors.New("arbitrary error"))
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -182,7 +226,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 					GetOutgoingOrderByReference(gomock.Any(), gomock.Any()).
 					Return(nil, database.ErrNotFound)
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -204,12 +248,24 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 							{
 								Organization: database.OutgoingOrderServiceOrganization{
 									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
+									Name:         "organization-a",
 								},
-								Service: "a-service",
+								Service: "service-a",
 							},
 						},
 					}, nil)
+
+				mocks.db.EXPECT().GetAccessProofs(gomock.Any(), []uint64{1}).Return([]*database.AccessProof{
+					{
+						ID: 1,
+						OutgoingAccessRequest: &database.OutgoingAccessRequest{Organization: database.Organization{
+							SerialNumber: "10000000000000000001",
+							Name:         "organization-a",
+						},
+							ServiceName: "service-a",
+						},
+					},
+				}, nil)
 
 				mocks.al.
 					EXPECT().
@@ -217,14 +273,14 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
+								Name:         "organization-a",
 							},
-							Service: "a-service",
+							Service: "service-a",
 						},
 					}).
 					Return(errors.New("arbitrary error"))
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -232,26 +288,17 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.
+				mocks.al.
 					EXPECT().
-					UpdateOutgoingOrder(gomock.Any(), &database.OutgoingOrder{
-						Reference:    "a-reference",
-						Description:  "a-description",
-						Delegatee:    "00000000000000000001",
-						PublicKeyPEM: testPublicKeyPEM,
-						ValidFrom:    validFrom,
-						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
-								},
-								Service: "a-service",
+					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
+						{
+							Organization: auditlog.RecordServiceOrganization{
+								SerialNumber: "10000000000000000001",
+								Name:         "organization-a",
 							},
+							Service: "service-a",
 						},
-					}).
-					Return(nil)
+					})
 
 				mocks.db.
 					EXPECT().
@@ -268,26 +315,38 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 							{
 								Organization: database.OutgoingOrderServiceOrganization{
 									SerialNumber: "10000000000000000001",
-									Name:         "a-organization",
+									Name:         "organization-a",
 								},
-								Service: "a-service",
+								Service: "service-a",
 							},
 						},
 					}, nil)
 
-				mocks.al.
-					EXPECT().
-					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
-						{
-							Organization: auditlog.RecordServiceOrganization{
-								SerialNumber: "10000000000000000001",
-								Name:         "a-organization",
-							},
-							Service: "a-service",
+				mocks.db.EXPECT().GetAccessProofs(gomock.Any(), []uint64{1}).Return([]*database.AccessProof{
+					{
+						ID: 1,
+						OutgoingAccessRequest: &database.OutgoingAccessRequest{Organization: database.Organization{
+							SerialNumber: "10000000000000000001",
+							Name:         "organization-a",
 						},
-					})
+							ServiceName: "service-a",
+						},
+					},
+				}, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingOrder(gomock.Any(), &database.UpdateOutgoingOrder{
+						Reference:      "a-reference",
+						Description:    "a-description",
+						PublicKeyPEM:   testPublicKeyPEM,
+						ValidFrom:      validFrom,
+						ValidUntil:     validUntil,
+						AccessProofIds: []uint64{1},
+					}).
+					Return(nil)
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
