@@ -53,7 +53,7 @@
     "jest-fetch-mock": "3.0.3",
     "js-cookie": "3.0.1",
     "mobx": "6.4.0",
-    "mobx-react": "7.2.1",
+    "mobx-react": "7.3.0",
     "react": "17.0.2",
     "react-app-polyfill": "3.0.0",
     "react-dom": "17.0.2",
