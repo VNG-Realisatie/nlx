@@ -4,6 +4,7 @@
 import React from 'react'
 import { string, arrayOf, instanceOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
+import { observer } from 'mobx-react'
 import DirectoryServiceModel from '../../../stores/models/DirectoryServiceModel'
 import { IconOrganization, IconOutway, IconServices } from '../../../icons'
 import { SectionHeader, SectionContent, StyledIcon } from './index.styles'
@@ -96,4 +97,4 @@ RequestAccessDetails.defaultProps = {
   outwayNames: [],
 }
 
-export default RequestAccessDetails
+export default observer(RequestAccessDetails)
