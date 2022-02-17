@@ -3,12 +3,13 @@
 //
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { arrayOf, instanceOf, string } from 'prop-types'
 import Table from '../../../../../components/Table'
 import EmptyContentMessage from '../../../../../components/EmptyContentMessage'
 import DirectoryServiceRow from '../DirectoryServiceRow'
-import Service from '../../../../../types/Service'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 
-const DirectoryPageView: React.FC<DirectoryPageViewProps> = ({
+const DirectoryPageView = ({
   managementSubjectSerialNumber,
   services,
   selectedServiceName,
@@ -47,10 +48,10 @@ const DirectoryPageView: React.FC<DirectoryPageViewProps> = ({
   )
 }
 
-interface DirectoryPageViewProps {
-  managementSubjectSerialNumber: string
-  services: Service[]
-  selectedServiceName: string
+DirectoryPageView.propTypes = {
+  managementSubjectSerialNumber: string,
+  services: arrayOf(instanceOf(DirectoryServiceModel)),
+  selectedServiceName: string,
 }
 
 export default DirectoryPageView
