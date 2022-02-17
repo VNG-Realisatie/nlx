@@ -72,20 +72,13 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}
 
 	claims := delegation.JWTClaims{
-		Services:       make([]delegation.Service, len(order.Services)),
 		Delegatee:      md.OrganizationSerialNumber,
 		OrderReference: req.OrderReference,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expiresAt.Unix(),
+		AccessProofs:   convertAccessProofsToDelegationAccessProofs(order.AccessProofs),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expiresAt),
 			Issuer:    s.orgCert.Certificate().Subject.SerialNumber,
 		},
-	}
-
-	for i, service := range order.Services {
-		claims.Services[i] = delegation.Service{
-			OrganizationSerialNumber: service.Organization.SerialNumber,
-			Service:                  service.Service,
-		}
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
@@ -99,4 +92,18 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	return &external.RequestClaimResponse{
 		Claim: signedString,
 	}, nil
+}
+
+func convertAccessProofsToDelegationAccessProofs(accessProofs []*database.AccessProof) []*delegation.AccessProof {
+	claimAccessProofs := make([]*delegation.AccessProof, len(accessProofs))
+	for i, accessProof := range accessProofs {
+		claimAccessProofs[i] = &delegation.AccessProof{
+			ServiceName:              accessProof.OutgoingAccessRequest.ServiceName,
+			OrganizationSerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
+			PublicKeyFingerprint:     accessProof.OutgoingAccessRequest.PublicKeyFingerprint,
+		}
+
+	}
+
+	return claimAccessProofs
 }

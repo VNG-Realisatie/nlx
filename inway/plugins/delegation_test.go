@@ -42,85 +42,126 @@ func TestDelegationPlugin(t *testing.T) {
 	certPEM, err := delegatorCertBundle.PublicKeyPEM()
 	require.NoError(t, err)
 
-	validClaim, err := getJWTAsSignedString(delegatorCertBundle, delegateeCertBundle.Certificate().Subject.SerialNumber, serviceProviderSerialNumber, "mock-service")
+	validClaim, err := getJWTAsSignedString(&jwtArgs{
+		delegatorCert:               delegatorCertBundle,
+		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
+		delegateeSerialNumber:       delegateeCertBundle.Certificate().Subject.SerialNumber,
+		serviceProviderSerialNumber: serviceProviderSerialNumber,
+		serviceName:                 "mock-service",
+	})
+
 	assert.Nil(t, err)
 
-	validClaimOtherService, err := getJWTAsSignedString(delegatorCertBundle, delegateeCertBundle.Certificate().Subject.SerialNumber, serviceProviderSerialNumber, "mock-service-other")
+	validClaimOtherService, err := getJWTAsSignedString(&jwtArgs{
+		delegatorCert:               delegatorCertBundle,
+		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
+		delegateeSerialNumber:       delegateeCertBundle.Certificate().Subject.SerialNumber,
+		serviceProviderSerialNumber: serviceProviderSerialNumber,
+		serviceName:                 "mock-service-other",
+	})
 	assert.Nil(t, err)
 
-	validClaimOtherDelegatee, err := getJWTAsSignedString(delegatorCertBundle, "nlx-hackerman", serviceProviderSerialNumber, "mock-service")
+	validClaimOtherDelegatee, err := getJWTAsSignedString(&jwtArgs{
+		delegatorCert:               delegatorCertBundle,
+		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
+		delegateeSerialNumber:       "nlx-hackerman",
+		serviceProviderSerialNumber: serviceProviderSerialNumber,
+		serviceName:                 "mock-service",
+	})
 	assert.Nil(t, err)
 
-	validClaimOtherDelegateeAndService, err := getJWTAsSignedString(delegatorCertBundle, "nlx-hackerman", serviceProviderSerialNumber, "mock-service-without-valid-grant")
+	validClaimOtherDelegateeAndService, err := getJWTAsSignedString(&jwtArgs{
+		delegatorCert:               delegatorCertBundle,
+		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
+		delegateeSerialNumber:       "nlx-hackerman",
+		serviceProviderSerialNumber: serviceProviderSerialNumber,
+		serviceName:                 "mock-service-without-grant",
+	})
 	assert.Nil(t, err)
+
+	type args struct {
+		service *plugins.Service
+		claim   string
+	}
 
 	tests := map[string]struct {
-		service            *plugins.Service
-		claim              string
-		expectedStatusCode int
-		expectedMessage    string
-		delegationSuccess  bool
+		args                  *args
+		wantStatusCode        int
+		wantMessage           string
+		wantDelegationSuccess bool
 	}{
 		"invalid_claim_format": {
-			claim:              "invalid-claim",
-			expectedStatusCode: http.StatusInternalServerError,
-			expectedMessage:    "nlx-inway: unable to verify claim\n",
-			delegationSuccess:  false,
+			args: &args{
+				claim: "invalid-claim",
+			},
+			wantStatusCode:        http.StatusInternalServerError,
+			wantMessage:           "nlx-inway: unable to verify claim\n",
+			wantDelegationSuccess: false,
 		},
 		"delegatee_is_not_requesting_organization": {
-			claim: validClaimOtherDelegatee,
-			service: &plugins.Service{
-				Name: "mock-service",
+			args: &args{
+				claim: validClaimOtherDelegatee,
+				service: &plugins.Service{
+					Name: "mock-service",
+				},
 			},
-			expectedStatusCode: http.StatusUnauthorized,
-			expectedMessage:    "nlx-inway: no access\n",
-			delegationSuccess:  false,
+			wantStatusCode:        http.StatusUnauthorized,
+			wantMessage:           "nlx-inway: no access\n",
+			wantDelegationSuccess: false,
 		},
 		"delegatee_does_not_have_access_to_service": {
-			claim: validClaimOtherDelegateeAndService,
-			service: &plugins.Service{
-				Name:   "mock-service-without-valid-grant",
-				Grants: []*plugins.Grant{},
+			args: &args{
+				claim: validClaimOtherDelegateeAndService,
+				service: &plugins.Service{
+					Name:   "mock-service-without-valid-grant",
+					Grants: []*plugins.Grant{},
+				},
 			},
-			expectedStatusCode: http.StatusUnauthorized,
-			expectedMessage:    "nlx-inway: no access\n",
-			delegationSuccess:  false,
+			wantStatusCode:        http.StatusUnauthorized,
+			wantMessage:           "nlx-inway: no access\n",
+			wantDelegationSuccess: false,
 		},
 		"delegatee_does_not_have_service_in_claims": {
-			claim: validClaimOtherService,
-			service: &plugins.Service{
-				Name: "mock-service",
-				Grants: []*plugins.Grant{
-					{
-						OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
-						PublicKeyPEM:             certPEM,
-						PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
+			args: &args{
+				claim: validClaimOtherService,
+				service: &plugins.Service{
+					Name: "mock-service",
+					Grants: []*plugins.Grant{
+						{
+							OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
+							PublicKeyPEM:             certPEM,
+							PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
+						},
 					},
 				},
 			},
-			expectedStatusCode: http.StatusUnauthorized,
-			expectedMessage:    "nlx-inway: no access\n",
-			delegationSuccess:  false,
+			wantStatusCode:        http.StatusUnauthorized,
+			wantMessage:           "nlx-inway: no access\n",
+			wantDelegationSuccess: false,
 		},
 		"happy_flow": {
-			claim: validClaim,
-			service: &plugins.Service{
-				Name: "mock-service",
-				Grants: []*plugins.Grant{
-					{
-						OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
-						PublicKeyPEM:             certPEM,
-						PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
+			args: &args{
+				claim: validClaim,
+				service: &plugins.Service{
+					Name: "mock-service",
+					Grants: []*plugins.Grant{
+						{
+							OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
+							PublicKeyPEM:             certPEM,
+							PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
+						},
 					},
 				},
 			},
-			expectedStatusCode: http.StatusOK,
-			delegationSuccess:  true,
+			wantStatusCode:        http.StatusOK,
+			wantDelegationSuccess: true,
 		},
 		"happy_flow_without_delegation": {
-			claim:              "",
-			expectedStatusCode: http.StatusOK,
-			delegationSuccess:  false,
+			args: &args{
+				claim: "",
+			},
+			wantStatusCode:        http.StatusOK,
+			wantDelegationSuccess: false,
 		},
 	}
 
@@ -129,14 +170,14 @@ func TestDelegationPlugin(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			context := fakeContext(&plugins.Destination{
-				Service:      tt.service,
+				Service:      tt.args.service,
 				Organization: serviceProviderSerialNumber,
 			}, nil, &plugins.AuthInfo{
 				OrganizationSerialNumber: delegateeCertBundle.Certificate().Subject.SerialNumber,
 				PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
 			})
 
-			context.Request.Header.Add("X-NLX-Request-Claim", tt.claim)
+			context.Request.Header.Add("X-NLX-Request-Claim", tt.args.claim)
 
 			err := delegationPlugin.Serve(nopServeFunc)(context)
 			assert.NoError(t, err)
@@ -147,10 +188,10 @@ func TestDelegationPlugin(t *testing.T) {
 			contents, err := ioutil.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			assert.Equal(t, tt.expectedMessage, string(contents))
-			assert.Equal(t, tt.expectedStatusCode, response.StatusCode)
+			assert.Equal(t, tt.wantMessage, string(contents))
+			assert.Equal(t, tt.wantStatusCode, response.StatusCode)
 
-			if tt.delegationSuccess {
+			if tt.wantDelegationSuccess {
 				assert.Equal(t, delegatorCertBundle.Certificate().Subject.SerialNumber, context.LogData["delegator"])
 				assert.Equal(t, "order-reference", context.LogData["orderReference"])
 
@@ -161,29 +202,39 @@ func TestDelegationPlugin(t *testing.T) {
 	}
 }
 
-// nolint:unparam // we want to keep the param name for readability
-func getJWTAsSignedString(delegatorOrgCert *common_tls.CertificateBundle, delegateeSerialNumber, serviceProviderSerialNumber, service string) (string, error) {
+type jwtArgs struct {
+	delegatorCert               *common_tls.CertificateBundle
+	delegatorSerialNumber       string
+	delegateeSerialNumber       string
+	serviceProviderSerialNumber string
+	serviceName                 string
+}
+
+func getJWTAsSignedString(args *jwtArgs) (string, error) {
 	claims := delegation.JWTClaims{
-		Delegatee:      delegateeSerialNumber,
+		Delegatee:      args.delegateeSerialNumber,
 		OrderReference: "order-reference",
-		Services: []delegation.Service{
+		AccessProofs: []*delegation.AccessProof{
 			{
-				OrganizationSerialNumber: serviceProviderSerialNumber,
-				Service:                  service,
+				OrganizationSerialNumber: args.delegatorSerialNumber,
+				ServiceName:              args.serviceName,
+				PublicKeyFingerprint:     args.delegatorCert.PublicKeyFingerprint(),
 			},
 		},
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour).Unix(),
-			Issuer:    delegatorOrgCert.Certificate().Subject.SerialNumber,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
+			Issuer:    args.delegatorSerialNumber,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
 
-	signedString, err := token.SignedString(delegatorOrgCert.PrivateKey())
+	signedString, err := token.SignedString(args.delegatorCert.PrivateKey())
 	if err != nil {
 		return "", err
 	}
+
+	println(signedString)
 
 	return signedString, nil
 }

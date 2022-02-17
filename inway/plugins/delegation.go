@@ -30,17 +30,6 @@ func NewDelegationPlugin() *DelegationPlugin {
 	return &DelegationPlugin{}
 }
 
-func isServiceInClaims(claims *delegation.JWTClaims, serviceName, organizationSerialNumber string) bool {
-	for _, service := range claims.Services {
-		if service.Service == serviceName &&
-			service.OrganizationSerialNumber == organizationSerialNumber {
-			return true
-		}
-	}
-
-	return false
-}
-
 func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 	return func(context *Context) error {
 		claim := context.Request.Header.Get("X-NLX-Request-Claim")
@@ -57,18 +46,13 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 				return nil, ErrRequestingOrganizationIsNotDelegatee
 			}
 
-			if !isServiceInClaims(claims, context.Destination.Service.Name, context.Destination.Organization) {
-				return nil, ErrServiceNotInClaims
-			}
-
 			for _, grant := range context.Destination.Service.Grants {
-				if grant.OrganizationSerialNumber == claims.Issuer {
+				if claims.IsValidFor(context.Destination.Service.Name, claims.Issuer, grant.PublicKeyFingerprint) {
+					publicKeyFingerprint = grant.PublicKeyFingerprint
 					publicKey, err := parsePublicKeyFromPEM(grant.PublicKeyPEM)
 					if err != nil {
 						return nil, err
 					}
-
-					publicKeyFingerprint = grant.PublicKeyFingerprint
 
 					return publicKey, nil
 				}

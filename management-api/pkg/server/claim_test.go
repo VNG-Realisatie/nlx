@@ -175,8 +175,8 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				OrderReference: "order-reference",
 			},
 			want: delegation.JWTClaims{
-				StandardClaims: jwt.StandardClaims{
-					ExpiresAt: now.Add(2 * time.Hour).Unix(),
+				RegisteredClaims: jwt.RegisteredClaims{
+					ExpiresAt: jwt.NewNumericDate(now.Add(2 * time.Hour)),
 					Issuer:    "00000000000000000001",
 				},
 				Delegatee:      "00000000000000000002",
@@ -210,13 +210,13 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				OrderReference: "order-reference",
 			},
 			want: delegation.JWTClaims{
-				StandardClaims: jwt.StandardClaims{
-					ExpiresAt: now.Add(4 * time.Hour).Unix(),
+				RegisteredClaims: jwt.RegisteredClaims{
+					ExpiresAt: jwt.NewNumericDate(now.Add(4 * time.Hour)),
 					Issuer:    "00000000000000000001",
 				},
 				Delegatee:      "00000000000000000002",
 				OrderReference: "order-reference",
-				Services:       nil,
+				AccessProofs:   nil,
 			},
 		},
 	}

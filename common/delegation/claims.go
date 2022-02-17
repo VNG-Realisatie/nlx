@@ -3,16 +3,27 @@
 
 package delegation
 
-import "github.com/golang-jwt/jwt/v4"
+import (
+	"github.com/golang-jwt/jwt/v4"
+)
 
-type Service struct {
-	Service                  string `json:"service"`
+type AccessProof struct {
+	ServiceName              string `json:"service_name"`
 	OrganizationSerialNumber string `json:"organization_serial_number"`
+	PublicKeyFingerprint     string `json:"public_key_fingerprint"`
 }
 
 type JWTClaims struct {
-	jwt.StandardClaims
-	Delegatee      string    `json:"delegatee"`
-	OrderReference string    `json:"orderReference"`
-	Services       []Service `json:"services"`
+	jwt.RegisteredClaims
+	Delegatee      string         `json:"delegatee"`
+	OrderReference string         `json:"orderReference"`
+	AccessProofs   []*AccessProof `json:"accessProofs"`
+}
+
+func (j *JWTClaims) IsValidFor(serviceName, organizationSerialNumber, publicKeyFingerprint string) bool {
+	for _, accessProof := range j.AccessProofs {
+		return accessProof.ServiceName == serviceName && accessProof.OrganizationSerialNumber == organizationSerialNumber && publicKeyFingerprint == accessProof.PublicKeyFingerprint
+	}
+
+	return false
 }

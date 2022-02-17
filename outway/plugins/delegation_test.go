@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/golang/mock/gomock"
@@ -144,8 +145,8 @@ func TestDelegationPlugin(t *testing.T) {
 				plugin.claims.Store("00000000000000000001/test-ref-123", &claimData{
 					Raw: testToken,
 					JWTClaims: delegation.JWTClaims{
-						StandardClaims: jwt.StandardClaims{
-							ExpiresAt: 1,
+						RegisteredClaims: jwt.RegisteredClaims{
+							ExpiresAt: jwt.NewNumericDate(time.Now()),
 						},
 						Delegatee:      "00000000000000000001",
 						OrderReference: "test-ref-123",
@@ -164,9 +165,9 @@ func TestDelegationPlugin(t *testing.T) {
 				plugin.claims.Store("00000000000000000001/test-ref-123", &claimData{
 					Raw: "claim",
 					JWTClaims: delegation.JWTClaims{
-						StandardClaims: jwt.StandardClaims{},
-						Delegatee:      "00000000000000000001",
-						OrderReference: "test-ref-123",
+						RegisteredClaims: jwt.RegisteredClaims{},
+						Delegatee:        "00000000000000000001",
+						OrderReference:   "test-ref-123",
 					},
 				})
 			},
