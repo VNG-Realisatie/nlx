@@ -86,7 +86,7 @@ class DirectoryServicesStore {
 
   _updateFromServer(serviceData) {
     const cachedDirectoryService = this.getService(
-      serviceData.organizationSerialNumber,
+      serviceData.organization.serialNumber,
       serviceData.serviceName,
     )
 

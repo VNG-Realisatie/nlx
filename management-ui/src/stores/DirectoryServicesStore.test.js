@@ -109,23 +109,25 @@ test('fetching a single service', async () => {
   const directoryServicesStore = rootStore.directoryServicesStore
   expect(directoryServicesStore.services).toHaveLength(0)
 
-  let service = await directoryServicesStore.fetch(
+  const initialService = await directoryServicesStore.fetch(
     '00000000000000000001',
     'Service A',
   )
 
   expect(directoryServicesStore.services).toHaveLength(1)
-  expect(service).toBeInstanceOf(DirectoryServiceModel)
+  expect(initialService).toBeInstanceOf(DirectoryServiceModel)
 
-  service = await directoryServicesStore.fetch(
+  const updatedService = await directoryServicesStore.fetch(
     '00000000000000000001',
     'Service A',
   )
 
-  expect(service).toBeInstanceOf(DirectoryServiceModel)
+  expect(updatedService).toBeInstanceOf(DirectoryServiceModel)
   expect(
-    service.hasAccess('h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc='),
+    updatedService.hasAccess('h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc='),
   ).toEqual(true)
+
+  expect(initialService).toBe(updatedService)
 })
 
 test('requesting access to a service in the directory', async () => {
