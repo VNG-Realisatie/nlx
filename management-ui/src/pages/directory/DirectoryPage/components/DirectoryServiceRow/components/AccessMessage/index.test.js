@@ -3,14 +3,14 @@
 //
 import React from 'react'
 
-import { renderWithProviders } from '../../../../../test-utils'
+import { renderWithProviders } from '../../../../../../../test-utils'
 import {
   SHOW_HAS_ACCESS,
   SHOW_REQUEST_CREATED,
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
-} from '../../../directoryServiceAccessState'
+} from '../../../../../directoryServiceAccessState'
 import AccessMessage from './index'
 
 test('Correctly renders the access request states', () => {

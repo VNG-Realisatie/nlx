@@ -8,8 +8,8 @@ import { useTheme } from 'styled-components'
 import Table from '../../../../../components/Table'
 import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import StateIndicator from '../../../../../components/StateIndicator'
-import AccessMessage from '../AccessMessage'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
+import AccessMessage from './components/AccessMessage'
 import { StyledTd, AccessMessageWrapper, StyledTdAccess } from './index.styles'
 
 const DirectoryServiceRow = ({ service, ownService, ...props }) => {

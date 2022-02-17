@@ -5,16 +5,15 @@ import React from 'react'
 import { number } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
-
 import {
   SHOW_HAS_ACCESS,
   SHOW_REQUEST_CREATED,
   SHOW_REQUEST_FAILED,
   SHOW_REQUEST_RECEIVED,
   SHOW_REQUEST_REJECTED,
-} from '../../../directoryServiceAccessState'
-import { IconCheck } from '../../../../../icons'
-import Switch from '../../../../../components/Switch'
+} from '../../../../../directoryServiceAccessState'
+import { IconCheck } from '../../../../../../../icons'
+import Switch from '../../../../../../../components/Switch'
 import { Message, WarnMessage } from './index.styles'
 
 const AccessMessage = ({ displayState }) => {
