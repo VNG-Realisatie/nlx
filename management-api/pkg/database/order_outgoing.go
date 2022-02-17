@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -23,7 +24,7 @@ type CreateOutgoingOrder struct {
 	CreatedAt      time.Time
 	ValidFrom      time.Time
 	ValidUntil     time.Time
-	AccessProofIds []uint64
+	AccessProofIds []uint64 `gorm:"-"`
 }
 
 type UpdateOutgoingOrder struct {
@@ -33,26 +34,26 @@ type UpdateOutgoingOrder struct {
 	PublicKeyPEM   string
 	ValidFrom      time.Time
 	ValidUntil     time.Time
-	AccessProofIds []uint64
+	AccessProofIds []uint64 `gorm:"-"`
 }
 
 type OutgoingOrder struct {
-	ID           uint64
-	Reference    string
-	Description  string
-	PublicKeyPEM string
-	Delegatee    string
-	RevokedAt    sql.NullTime
-	CreatedAt    time.Time
-	ValidFrom    time.Time
-	ValidUntil   time.Time
-	AccessProofs []AccessProof
-	Services     []OutgoingOrderService `gorm:"foreignKey:outgoing_order_id;"`
+	ID                        uint64
+	Reference                 string
+	Description               string
+	PublicKeyPEM              string
+	Delegatee                 string
+	RevokedAt                 sql.NullTime
+	CreatedAt                 time.Time
+	ValidFrom                 time.Time
+	ValidUntil                time.Time
+	OutgoingOrderAccessProofs []*OutgoingOrderAccessProof `gorm:"foreignKey:outgoing_order_id"`
 }
 
 type OutgoingOrderAccessProof struct {
 	OutgoingOrderID uint64
 	AccessProofID   uint64
+	AccessProof     *AccessProof `gorm:"foreignKey:access_proof_id;"`
 }
 
 func (o *OutgoingOrder) TableName() string {
@@ -69,16 +70,6 @@ func (o *UpdateOutgoingOrder) TableName() string {
 
 func (o *OutgoingOrderAccessProof) TableName() string {
 	return "nlx_management.outgoing_orders_access_proofs"
-}
-
-type OutgoingOrderService struct {
-	OutgoingOrderID uint
-	Service         string
-	Organization    OutgoingOrderServiceOrganization `gorm:"embedded;embeddedPrefix:organization_"`
-}
-
-func (s *OutgoingOrderService) TableName() string {
-	return "nlx_management.outgoing_orders_services"
 }
 
 type OutgoingOrderServiceOrganization struct {
@@ -130,7 +121,9 @@ func (db *PostgresConfigDatabase) GetOutgoingOrderByReference(ctx context.Contex
 
 	if err := db.DB.
 		WithContext(ctx).
-		Preload("Services").
+		Preload("OutgoingOrderAccessProofs").
+		Preload("OutgoingOrderAccessProofs.AccessProof").
+		Preload("OutgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest").
 		Where("reference = ?", reference).
 		First(order).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -149,7 +142,9 @@ func (db *PostgresConfigDatabase) ListOutgoingOrders(ctx context.Context) ([]*Ou
 	if err := db.DB.
 		WithContext(ctx).
 		Order("valid_until desc").
-		Preload("Services").
+		Preload("OutgoingOrderAccessProofs").
+		Preload("OutgoingOrderAccessProofs.AccessProof").
+		Preload("OutgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest").
 		Find(&orders).Error; err != nil {
 		return nil, err
 	}
@@ -164,7 +159,9 @@ func (db *PostgresConfigDatabase) ListOutgoingOrdersByOrganization(ctx context.C
 		WithContext(ctx).
 		Where("delegatee = ?", organizationSerialNumber).
 		Order("valid_until desc").
-		Preload("Services").
+		Preload("OutgoingOrderAccessProofs").
+		Preload("OutgoingOrderAccessProofs.AccessProof").
+		Preload("OutgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest").
 		Find(&orders).Error; err != nil {
 		return nil, err
 	}
@@ -183,7 +180,6 @@ func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order
 	// Update the outgoing order table for the modified order, uses order.ID as pk
 	if err := dbWithTx.DB.
 		WithContext(ctx).
-		Omit(clause.Associations).
 		Model(&order).
 		Where("reference=?", order.Reference).
 		Updates(order).Error; err != nil {
@@ -195,13 +191,10 @@ func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order
 	}
 
 	// Delete all access proofs for the updated order (note that we are in a transaction)
-	err := dbWithTx.DB.
+	if err := dbWithTx.DB.
 		WithContext(ctx).
-		Omit(clause.Associations).
-		Where("outgoing_order_id = ?", order.ID).
-		Delete(&OutgoingOrderAccessProof{}).
-		Error
-	if err != nil {
+		Where(fmt.Sprintf("outgoing_order_id = (select id FROM %s WHERE reference = ? LIMIT 1)", order.TableName()), order.Reference).
+		Delete(&OutgoingOrderAccessProof{}).Error; err != nil {
 		return err
 	}
 
@@ -214,11 +207,13 @@ func (db *PostgresConfigDatabase) UpdateOutgoingOrder(ctx context.Context, order
 		}
 	}
 
-	if err := dbWithTx.DB.
-		WithContext(ctx).
-		Model(OutgoingOrderAccessProof{}).
-		Create(orderAccessProofs).Error; err != nil {
-		return err
+	if len(orderAccessProofs) > 0 {
+		if err := dbWithTx.DB.
+			WithContext(ctx).
+			Model(OutgoingOrderAccessProof{}).
+			Create(orderAccessProofs).Error; err != nil {
+			return err
+		}
 	}
 
 	return tx.Commit().Error

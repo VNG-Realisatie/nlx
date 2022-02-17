@@ -50,8 +50,8 @@ func (db *PostgresConfigDatabase) ListIncomingOrders(ctx context.Context) ([]*do
 	orders := []*IncomingOrder{}
 	if err := db.DB.
 		WithContext(ctx).
-		Order("valid_until desc").
 		Preload("Services").
+		Order("valid_until desc").
 		Find(&orders).Error; err != nil {
 		return nil, err
 	}

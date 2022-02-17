@@ -44,8 +44,8 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		AccessProofIds: request.AccessProofIds,
 	}
 
-	if err := validateUpdateOutgoingOrder(updateOutgoingOrder); err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid update outgoing order: %s", err))
+	if errValidation := validateUpdateOutgoingOrder(updateOutgoingOrder); errValidation != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid update outgoing order: %s", errValidation))
 	}
 
 	accessProofs, err := s.configDatabase.GetAccessProofs(ctx, updateOutgoingOrder.AccessProofIds)
@@ -53,6 +53,23 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
 	}
 
+	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.username, userInfo.userAgent, orderInDB.Delegatee, orderInDB.Reference, accessProofsToAuditLogRecordServices(accessProofs))
+	if err != nil {
+		s.logger.Error("failed to write auditlog", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "failed to write to auditlog")
+	}
+
+	if err := s.configDatabase.UpdateOutgoingOrder(ctx, updateOutgoingOrder); err != nil {
+		s.logger.Error("failed to update outgoing order", zap.Error(err))
+
+		return nil, status.Errorf(codes.Internal, "failed to update outgoing order")
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func accessProofsToAuditLogRecordServices(accessProofs []*database.AccessProof) []auditlog.RecordService {
 	services := make([]auditlog.RecordService, len(accessProofs))
 
 	for i, a := range accessProofs {
@@ -67,18 +84,5 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		}
 	}
 
-	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.username, userInfo.userAgent, orderInDB.Delegatee, orderInDB.Reference, services)
-	if err != nil {
-		s.logger.Error("failed to write auditlog", zap.Error(err))
-
-		return nil, status.Error(codes.Internal, "failed to write to auditlog")
-	}
-
-	if err := s.configDatabase.UpdateOutgoingOrder(ctx, updateOutgoingOrder); err != nil {
-		s.logger.Error("failed to update outgoing order", zap.Error(err))
-
-		return nil, status.Errorf(codes.Internal, "failed to update outgoing order")
-	}
-
-	return &emptypb.Empty{}, nil
+	return services
 }

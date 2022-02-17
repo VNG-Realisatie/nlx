@@ -151,16 +151,6 @@ func (db *PostgresConfigDatabase) DeleteService(ctx context.Context, serviceName
 		return err
 	}
 
-	err = dbWithTx.Where(&OutgoingOrderService{
-		Service: serviceName,
-		Organization: OutgoingOrderServiceOrganization{
-			SerialNumber: organizationSerialNumber,
-		},
-	}).Delete(&OutgoingOrderService{}).Error
-	if err != nil {
-		return err
-	}
-
 	err = dbWithTx.Where(&OutgoingAccessRequest{
 		ServiceName: serviceName,
 		Organization: Organization{

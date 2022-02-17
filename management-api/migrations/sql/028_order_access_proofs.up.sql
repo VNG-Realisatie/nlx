@@ -7,11 +7,11 @@ CREATE TABLE nlx_management.outgoing_orders_access_proofs
     CONSTRAINT fk_order
         FOREIGN KEY (outgoing_order_id)
             REFERENCES nlx_management.outgoing_orders (id)
-            ON DELETE RESTRICT,
+            ON DELETE CASCADE,
     CONSTRAINT fk_access_proof
         FOREIGN KEY (access_proof_id)
             REFERENCES nlx_management.access_proofs (id)
-            ON DELETE RESTRICT,
+            ON DELETE CASCADE,
     PRIMARY KEY(outgoing_order_id, access_proof_id)
 );
 

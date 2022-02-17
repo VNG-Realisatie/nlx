@@ -178,15 +178,6 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 						PublicKeyPEM: testPublicKeyPEM,
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "organization-a",
-								},
-								Service: "service-a",
-							},
-						},
 					}, nil)
 
 				mocks.db.EXPECT().GetAccessProofs(gomock.Any(), []uint64{1}).Return([]*database.AccessProof{
@@ -244,15 +235,6 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 						PublicKeyPEM: testPublicKeyPEM,
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "organization-a",
-								},
-								Service: "service-a",
-							},
-						},
 					}, nil)
 
 				mocks.db.EXPECT().GetAccessProofs(gomock.Any(), []uint64{1}).Return([]*database.AccessProof{
@@ -311,15 +293,6 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 						PublicKeyPEM: testPublicKeyPEM,
 						ValidFrom:    validFrom,
 						ValidUntil:   validUntil,
-						Services: []database.OutgoingOrderService{
-							{
-								Organization: database.OutgoingOrderServiceOrganization{
-									SerialNumber: "10000000000000000001",
-									Name:         "organization-a",
-								},
-								Service: "service-a",
-							},
-						},
 					}, nil)
 
 				mocks.db.EXPECT().GetAccessProofs(gomock.Any(), []uint64{1}).Return([]*database.AccessProof{

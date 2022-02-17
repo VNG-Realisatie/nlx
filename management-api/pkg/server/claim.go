@@ -74,7 +74,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	claims := delegation.JWTClaims{
 		Delegatee:      md.OrganizationSerialNumber,
 		OrderReference: req.OrderReference,
-		AccessProofs:   convertAccessProofsToDelegationAccessProofs(order.AccessProofs),
+		AccessProofs:   convertOutgoingOrderAccessProofsToDelegationAccessProofs(order.OutgoingOrderAccessProofs),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expiresAt),
 			Issuer:    s.orgCert.Certificate().Subject.SerialNumber,
@@ -94,15 +94,15 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}, nil
 }
 
-func convertAccessProofsToDelegationAccessProofs(accessProofs []*database.AccessProof) []*delegation.AccessProof {
-	claimAccessProofs := make([]*delegation.AccessProof, len(accessProofs))
-	for i, accessProof := range accessProofs {
-		claimAccessProofs[i] = &delegation.AccessProof{
-			ServiceName:              accessProof.OutgoingAccessRequest.ServiceName,
-			OrganizationSerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
-			PublicKeyFingerprint:     accessProof.OutgoingAccessRequest.PublicKeyFingerprint,
-		}
+func convertOutgoingOrderAccessProofsToDelegationAccessProofs(outgoingOrderAccessProofs []*database.OutgoingOrderAccessProof) []*delegation.AccessProof {
+	claimAccessProofs := make([]*delegation.AccessProof, len(outgoingOrderAccessProofs))
 
+	for i, outgoingOrderAccessProof := range outgoingOrderAccessProofs {
+		claimAccessProofs[i] = &delegation.AccessProof{
+			ServiceName:              outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.ServiceName,
+			OrganizationSerialNumber: outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber,
+			PublicKeyFingerprint:     outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.PublicKeyFingerprint,
+		}
 	}
 
 	return claimAccessProofs

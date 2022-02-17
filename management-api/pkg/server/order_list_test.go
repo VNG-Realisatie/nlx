@@ -58,15 +58,6 @@ func TestListOutgoingOrders(t *testing.T) {
 							ValidFrom:    validFrom,
 							ValidUntil:   validUntil,
 							RevokedAt:    sql.NullTime{},
-							Services: []database.OutgoingOrderService{
-								{
-									Service: "service-a",
-									Organization: database.OutgoingOrderServiceOrganization{
-										Name:         "a-organization",
-										SerialNumber: "00000000000000000001",
-									},
-								},
-							},
 						},
 					}, nil)
 			},
@@ -79,15 +70,6 @@ func TestListOutgoingOrders(t *testing.T) {
 						PublicKeyPem: "public_key",
 						ValidFrom:    timestamppb.New(validFrom),
 						ValidUntil:   timestamppb.New(validUntil),
-						Services: []*api.OrderService{
-							{
-								Service: "service-a",
-								Organization: &api.Organization{
-									Name:         "a-organization",
-									SerialNumber: "00000000000000000001",
-								},
-							},
-						},
 					},
 				},
 			},
@@ -297,12 +279,15 @@ func TestListOrders(t *testing.T) {
 							ValidFrom:   validFrom,
 							ValidUntil:  validUntil,
 							RevokedAt:   sql.NullTime{},
-							Services: []database.OutgoingOrderService{
+							OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
 								{
-									Service: "service-a",
-									Organization: database.OutgoingOrderServiceOrganization{
-										Name:         "organization-a",
-										SerialNumber: "00000000000000000001",
+									AccessProof: &database.AccessProof{
+										OutgoingAccessRequest: &database.OutgoingAccessRequest{
+											ServiceName: "service-a",
+											Organization: database.Organization{
+												Name:         "organization-a",
+												SerialNumber: "00000000000000000001"},
+										},
 									},
 								},
 							},
@@ -357,12 +342,15 @@ func TestListOrders(t *testing.T) {
 								Valid: true,
 								Time:  revokedAt,
 							},
-							Services: []database.OutgoingOrderService{
+							OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
 								{
-									Service: "service-a",
-									Organization: database.OutgoingOrderServiceOrganization{
-										Name:         "organization-a",
-										SerialNumber: "00000000000000000001",
+									AccessProof: &database.AccessProof{
+										OutgoingAccessRequest: &database.OutgoingAccessRequest{
+											ServiceName: "service-a",
+											Organization: database.Organization{
+												Name:         "organization-a",
+												SerialNumber: "00000000000000000001"},
+										},
 									},
 								},
 							},

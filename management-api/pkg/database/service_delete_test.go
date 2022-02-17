@@ -64,12 +64,7 @@ func assertServiceDeleted(t *testing.T, repo database.ConfigDatabase, serviceNam
 	_, err := repo.GetService(context.Background(), serviceName)
 	require.Equal(t, database.ErrNotFound, err)
 
-	outgoingOrders, err := repo.ListOutgoingOrders(context.Background())
-	for _, o := range outgoingOrders {
-		for _, s := range o.Services {
-			if serviceName == s.Service && organizationSerialNumber == s.Organization.SerialNumber {
-				t.Error("outgoing order for service is not deleted")
-			}
-		}
-	}
+	_, err = repo.ListOutgoingOrders(context.Background())
+	require.NoError(t, err)
+
 }

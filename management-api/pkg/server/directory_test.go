@@ -152,18 +152,20 @@ func TestListDirectoryServices(t *testing.T) {
 
 	db.EXPECT().
 		ListLatestOutgoingAccessRequests(ctx, service.Organization.SerialNumber, service.Name).
-		Return([]*database.OutgoingAccessRequest{{
-			ID: 1,
-			Organization: database.Organization{
-				SerialNumber: "00000000000000000001",
-				Name:         "test-organization-a",
+		Return([]*database.OutgoingAccessRequest{
+			{
+				ID: 1,
+				Organization: database.Organization{
+					SerialNumber: "00000000000000000001",
+					Name:         "test-organization-a",
+				},
+				ServiceName:          "test-service-1",
+				State:                database.OutgoingAccessRequestCreated,
+				PublicKeyFingerprint: "public-key-fingerprint",
+				CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
+				UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 			},
-			ServiceName:          "test-service-1",
-			State:                database.OutgoingAccessRequestCreated,
-			PublicKeyFingerprint: "public-key-fingerprint",
-			CreatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-			UpdatedAt:            time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
-		}}, nil)
+		}, nil)
 
 	db.EXPECT().
 		GetAccessProofForOutgoingAccessRequest(ctx, uint(1)).
@@ -204,30 +206,32 @@ func TestListDirectoryServices(t *testing.T) {
 			OneTimeCosts:         1,
 			MonthlyCosts:         5,
 			RequestCosts:         250,
-			AccessStates: []*api.DirectoryService_AccessState{{
-				AccessRequest: &api.OutgoingAccessRequest{
-					Id: 1,
-					Organization: &api.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "test-organization-a",
+			//nolint dupl: this is a test
+			AccessStates: []*api.DirectoryService_AccessState{
+				{
+					AccessRequest: &api.OutgoingAccessRequest{
+						Id: 1,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization-a",
+						},
+						ServiceName:          "test-service-1",
+						PublicKeyFingerprint: "public-key-fingerprint",
+						State:                api.AccessRequestState_CREATED,
+						CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+						UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 					},
-					ServiceName:          "test-service-1",
-					State:                api.AccessRequestState_CREATED,
-					CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
-					UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
-					PublicKeyFingerprint: "public-key-fingerprint",
-				},
-				AccessProof: &api.AccessProof{
-					Id: 1,
-					Organization: &api.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "test-organization-a",
+					AccessProof: &api.AccessProof{
+						Id: 1,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization-a",
+						},
+						ServiceName:     "test-service-1",
+						AccessRequestId: 1,
+						CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 					},
-					ServiceName:     "test-service-1",
-					AccessRequestId: 1,
-					CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 				},
-			},
 			},
 		},
 	}
@@ -305,30 +309,32 @@ func TestGetOrganizationService(t *testing.T) {
 					Name:         "test-organization",
 				},
 				ServiceName: "test-service",
-				AccessStates: []*api.DirectoryService_AccessState{{
-					AccessRequest: &api.OutgoingAccessRequest{
-						Id: 1,
-						Organization: &api.Organization{
-							SerialNumber: "00000000000000000001",
-							Name:         "test-organization",
+				//nolint dupl: this is a test
+				AccessStates: []*api.DirectoryService_AccessState{
+					{
+						AccessRequest: &api.OutgoingAccessRequest{
+							Id: 1,
+							Organization: &api.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "test-organization",
+							},
+							ServiceName:          "test-service",
+							PublicKeyFingerprint: "public-key-fingerprint",
+							State:                api.AccessRequestState_CREATED,
+							CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+							UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						},
-						ServiceName:          "test-service",
-						State:                api.AccessRequestState_CREATED,
-						CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-						UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-						PublicKeyFingerprint: "public-key-fingerprint",
-					},
-					AccessProof: &api.AccessProof{
-						Id: 1,
-						Organization: &api.Organization{
-							SerialNumber: "00000000000000000001",
-							Name:         "test-organization",
+						AccessProof: &api.AccessProof{
+							Id: 1,
+							Organization: &api.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "test-organization",
+							},
+							ServiceName:     "test-service",
+							AccessRequestId: 1,
+							CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						},
-						ServiceName:     "test-service",
-						AccessRequestId: 1,
-						CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 					},
-				},
 				},
 			},
 			nil,

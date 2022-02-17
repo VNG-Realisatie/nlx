@@ -6,6 +6,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -40,7 +41,6 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 			RevokedAt:    convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:    timestamppb.New(order.ValidFrom),
 			ValidUntil:   timestamppb.New(order.ValidUntil),
-			Services:     convertOutgoingOrderServices(order.Services),
 		}
 	}
 
@@ -101,27 +101,11 @@ func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*
 			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:   timestamppb.New(order.ValidFrom),
 			ValidUntil:  timestamppb.New(order.ValidUntil),
-			Services:    convertOutgoingOrderServices(order.Services),
+			Services:    convertOutgoingAccessProofsToOrderServices(order.OutgoingOrderAccessProofs),
 		}
 	}
 
 	return &external.ListOrdersResponse{Orders: incomingOrders}, nil
-}
-
-func convertOutgoingOrderServices(services []database.OutgoingOrderService) []*api.OrderService {
-	protoServices := make([]*api.OrderService, len(services))
-
-	for i, service := range services {
-		protoServices[i] = &api.OrderService{
-			Organization: &api.Organization{
-				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
-			},
-			Service: service.Service,
-		}
-	}
-
-	return protoServices
 }
 
 func convertIncomingOrderServices(services []database.IncomingOrderService) []*api.OrderService {
@@ -140,6 +124,32 @@ func convertIncomingOrderServices(services []database.IncomingOrderService) []*a
 	return protoServices
 }
 
+func convertOutgoingAccessProofsToOrderServices(outgoingOrderAccessProofs []*database.OutgoingOrderAccessProof) []*api.OrderService {
+	orderServices := make(map[string]*api.OrderService)
+	protoServices := make([]*api.OrderService, 0)
+
+	for _, outgoingOrderAccessProof := range outgoingOrderAccessProofs {
+		orderServiceKey := fmt.Sprintf("%s.%s", outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber, outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.ServiceName)
+
+		_, ok := orderServices[orderServiceKey]
+		if ok {
+			continue
+		}
+
+		orderService := &api.OrderService{
+			Organization: &api.Organization{
+				SerialNumber: outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber,
+				Name:         outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.Name,
+			},
+			Service: outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.ServiceName,
+		}
+
+		orderServices[orderServiceKey] = orderService
+		protoServices = append(protoServices, orderService)
+	}
+
+	return protoServices
+}
 func convertDomainIncomingOrderServices(services []domain.IncomingOrderService) []*api.OrderService {
 	protoServices := make([]*api.OrderService, len(services))
 

@@ -64,7 +64,34 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 					ValidFrom:    fixtureTime,
 					ValidUntil:   fixtureTime,
 					CreatedAt:    fixtureTime,
-					Services:     []database.OutgoingOrderService{},
+					OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
+						{
+							AccessProofID:   1,
+							OutgoingOrderID: 4,
+							AccessProof: &database.AccessProof{
+								ID:                      1,
+								AccessRequestOutgoingID: 1,
+								CreatedAt:               fixtureTime,
+								OutgoingAccessRequest: &database.OutgoingAccessRequest{
+									ID: 1,
+									Organization: database.Organization{
+										Name:         "fixture-organization-name",
+										SerialNumber: "00000000000000000001",
+									},
+									ServiceName:          "fixture-service-name",
+									ReferenceID:          1,
+									State:                database.OutgoingAccessRequestReceived,
+									PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
+									ErrorCode:            0,
+									ErrorCause:           "",
+									ErrorStackTrace:      nil,
+									CreatedAt:            fixtureTime,
+									UpdatedAt:            fixtureTime,
+									SynchronizeAt:        fixtureTime,
+								},
+							},
+						},
+					},
 				},
 				{
 					ID:           3,
@@ -79,7 +106,34 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 					ValidFrom:  fixtureTime,
 					ValidUntil: fixtureTime,
 					CreatedAt:  fixtureTime,
-					Services:   []database.OutgoingOrderService{},
+					OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
+						{
+							AccessProofID:   1,
+							OutgoingOrderID: 3,
+							AccessProof: &database.AccessProof{
+								ID:                      1,
+								AccessRequestOutgoingID: 1,
+								CreatedAt:               fixtureTime,
+								OutgoingAccessRequest: &database.OutgoingAccessRequest{
+									ID: 1,
+									Organization: database.Organization{
+										Name:         "fixture-organization-name",
+										SerialNumber: "00000000000000000001",
+									},
+									ServiceName:          "fixture-service-name",
+									ReferenceID:          1,
+									State:                database.OutgoingAccessRequestReceived,
+									PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
+									ErrorCode:            0,
+									ErrorCause:           "",
+									ErrorStackTrace:      nil,
+									CreatedAt:            fixtureTime,
+									UpdatedAt:            fixtureTime,
+									SynchronizeAt:        fixtureTime,
+								},
+							},
+						},
+					},
 				},
 			},
 			wantErr: nil,
@@ -99,6 +153,12 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
+				println("hold up!")
+				if len(got) > 0 {
+					println("access proof boy!")
+
+				}
+
 				require.EqualValues(t, tt.want, got)
 			}
 		})

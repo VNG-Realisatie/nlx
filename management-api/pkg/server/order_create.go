@@ -17,7 +17,6 @@ import (
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
-	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -49,21 +48,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
 	}
 
-	services := make([]auditlog.RecordService, len(accessProofs))
-
-	for i, a := range accessProofs {
-		if a.OutgoingAccessRequest != nil {
-			services[i] = auditlog.RecordService{
-				Organization: auditlog.RecordServiceOrganization{
-					SerialNumber: a.OutgoingAccessRequest.Organization.SerialNumber,
-					Name:         a.OutgoingAccessRequest.Organization.Name,
-				},
-				Service: a.OutgoingAccessRequest.ServiceName,
-			}
-		}
-	}
-
-	err = s.auditLogger.OrderCreate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, services)
+	err = s.auditLogger.OrderCreate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, accessProofsToAuditLogRecordServices(accessProofs))
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 
@@ -94,22 +79,16 @@ func validateOrganizationSerialNumber(value interface{}) error {
 	return err
 }
 
-func validateOutgoingOrder(order *database.OutgoingOrder) error {
-	return validation.ValidateStruct(
-		order,
-		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
-		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
-		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
-		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
-		validation.Field(&order.Delegatee, validation.By(validateOrganizationSerialNumber)),
-	)
-}
-
 func validateCreateOutgoingOrder(order *database.CreateOutgoingOrder) error {
+	const (
+		minLength = 1
+		maxLength = 100
+	)
+
 	return validation.ValidateStruct(
 		order,
-		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
-		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.Reference, validation.Required, validation.Length(minLength, maxLength)),
+		validation.Field(&order.Description, validation.Required, validation.Length(minLength, maxLength)),
 		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
 		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
 		validation.Field(&order.Delegatee, validation.By(validateOrganizationSerialNumber)),
@@ -118,13 +97,18 @@ func validateCreateOutgoingOrder(order *database.CreateOutgoingOrder) error {
 }
 
 func validateUpdateOutgoingOrder(order *database.UpdateOutgoingOrder) error {
+	const (
+		minLength = 1
+		maxLength = 100
+	)
+
 	return validation.ValidateStruct(
 		order,
-		validation.Field(&order.Reference, validation.Required, validation.Length(1, 100)),
-		validation.Field(&order.Description, validation.Required, validation.Length(1, 100)),
+		validation.Field(&order.Reference, validation.Required, validation.Length(minLength, maxLength)),
+		validation.Field(&order.Description, validation.Required, validation.Length(minLength, maxLength)),
 		validation.Field(&order.ValidUntil, validation.Min(order.ValidFrom).Error("order can not expire before the start date")),
 		validation.Field(&order.PublicKeyPEM, validation.By(validatePublicKey)),
-		validation.Field(&order.AccessProofIds, validation.Required, validation.Length(1, 0)),
+		validation.Field(&order.AccessProofIds, validation.Required, validation.Length(minLength, 0)),
 	)
 }
 
