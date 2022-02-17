@@ -26,7 +26,7 @@ import {
   StateContainer,
 } from './index.styles'
 
-const AccessSection = ({
+const AccessState = ({
   accessRequest,
   accessProof,
   onRequestAccess,
@@ -156,11 +156,11 @@ const AccessSection = ({
   )
 }
 
-AccessSection.propTypes = {
+AccessState.propTypes = {
   accessRequest: instanceOf(OutgoingAccessRequestModel),
   accessProof: instanceOf(AccessProofModel),
   onRequestAccess: func,
   onRetryRequestAccess: func,
 }
 
-export default observer(AccessSection)
+export default observer(AccessState)

@@ -11,13 +11,13 @@ import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../../../../../../../../stores/models/OutgoingAccessRequestModel'
 import AccessProofModel from '../../../../../../../../stores/models/AccessProofModel'
-import State from './index'
+import AccessState from './index'
 
 test('No access', () => {
   const requestAccessSpy = jest.fn()
 
   renderWithProviders(
-    <State
+    <AccessState
       accessRequest={null}
       accessProof={null}
       onRequestAccess={requestAccessSpy}
@@ -44,7 +44,7 @@ test('Request access failed', () => {
   })
 
   renderWithProviders(
-    <State
+    <AccessState
       accessRequest={accessRequest}
       accessProof={null}
       onRetryRequestAccess={retryRequestAccessSpy}
@@ -67,7 +67,7 @@ test('Request access created', () => {
   })
 
   renderWithProviders(
-    <State accessRequest={accessRequest} accessProof={null} />,
+    <AccessState accessRequest={accessRequest} accessProof={null} />,
   )
 
   expect(screen.getByText('Sending request…')).toBeInTheDocument()
@@ -82,7 +82,7 @@ test('Request access received', () => {
   })
 
   renderWithProviders(
-    <State accessRequest={accessRequest} accessProof={null} />,
+    <AccessState accessRequest={accessRequest} accessProof={null} />,
   )
 
   expect(screen.getByText('Access requested')).toBeInTheDocument()
@@ -103,7 +103,7 @@ test('Has access', () => {
   })
 
   renderWithProviders(
-    <State accessRequest={accessRequest} accessProof={accessProof} />,
+    <AccessState accessRequest={accessRequest} accessProof={accessProof} />,
   )
 
   expect(screen.getByText('You have access')).toBeInTheDocument()
@@ -120,7 +120,7 @@ test('Access rejected', () => {
   })
 
   renderWithProviders(
-    <State
+    <AccessState
       accessRequest={accessRequest}
       accessProof={null}
       onRequestAccess={requestAccessSpy}
@@ -150,7 +150,7 @@ test('Access revoked', () => {
   })
 
   renderWithProviders(
-    <State
+    <AccessState
       accessRequest={accessRequest}
       accessProof={accessProof}
       onRequestAccess={requestAccessSpy}

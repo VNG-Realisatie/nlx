@@ -29,10 +29,6 @@ class DirectoryServiceModel {
   requestCosts = 0
   _accessStates = observable.map()
 
-  getAccessStateFor = (publicKeyFingerprint) => {
-    return this._accessStates.get(publicKeyFingerprint) || {}
-  }
-
   constructor({ directoryServicesStore, serviceData, accessStates }) {
     makeAutoObservable(this)
 
@@ -41,7 +37,12 @@ class DirectoryServiceModel {
     this.update({ serviceData, accessStates })
   }
 
-  update = ({ serviceData, accessStates }) => {
+  // TODO: add test
+  getAccessStateFor(publicKeyFingerprint) {
+    return this._accessStates.get(publicKeyFingerprint) || {}
+  }
+
+  update({ serviceData, accessStates }) {
     if (serviceData.serviceName) {
       this.serviceName = serviceData.serviceName
     }
@@ -116,6 +117,8 @@ class DirectoryServiceModel {
       this.serviceName,
       publicKeyFingerprint,
     )
+
+    yield this.fetch()
   }).bind(this)
 
   retryRequestAccess = flow(function* retryRequestAccess(publicKeyFingerprint) {
@@ -130,6 +133,7 @@ class DirectoryServiceModel {
     }
 
     yield accessStateForFingerprint.accessRequest.retry()
+    yield this.fetch()
   }).bind(this)
 
   hasAccess(publicKeyFingerprint) {

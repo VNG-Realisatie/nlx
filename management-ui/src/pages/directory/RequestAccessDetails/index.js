@@ -2,16 +2,11 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { number, string, shape, arrayOf } from 'prop-types'
+import { string, arrayOf, instanceOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import {
-  SectionHeader,
-  SectionContent,
-  StyledIconServices,
-  ServiceData,
-  SectionContentWithPadding,
-  StyledIconOutways,
-} from './index.styles'
+import DirectoryServiceModel from '../../../stores/models/DirectoryServiceModel'
+import { IconOrganization, IconOutway, IconServices } from '../../../icons'
+import { SectionHeader, SectionContent, StyledIcon } from './index.styles'
 
 const costFormatter = new Intl.NumberFormat('nl-NL', {
   style: 'currency',
@@ -19,11 +14,7 @@ const costFormatter = new Intl.NumberFormat('nl-NL', {
 })
 
 const RequestAccessDetails = ({
-  organization,
-  serviceName,
-  oneTimeCosts,
-  monthlyCosts,
-  requestCosts,
+  service,
   publicKeyFingerprint,
   outwayNames,
 }) => {
@@ -34,68 +25,69 @@ const RequestAccessDetails = ({
       <p>{t('You are requesting access to a service')}.</p>
 
       <section>
-        <SectionHeader>{t('Service')}</SectionHeader>
-        <SectionContentWithPadding>
-          <StyledIconServices />
-          <ServiceData>
-            <strong>{serviceName}</strong>
-            <span>
-              {organization.name} ({organization.serialNumber})
-            </span>
-          </ServiceData>
-        </SectionContentWithPadding>
+        <SectionHeader>
+          <StyledIcon as={IconOrganization} inline /> {t('Organization')}
+        </SectionHeader>
+        <SectionContent>
+          {service.organization.name} ({service.organization.serialNumber})
+        </SectionContent>
 
-        {oneTimeCosts ? (
+        <SectionHeader>
+          <StyledIcon as={IconServices} inline /> {t('Service')}
+        </SectionHeader>
+        <SectionContent>{service.serviceName}</SectionContent>
+
+        {service.oneTimeCosts ? (
           <>
-            <SectionHeader>{t('One time costs')}</SectionHeader>
+            <SectionHeader withoutIcon>{t('One time costs')}</SectionHeader>
             <SectionContent>
-              {costFormatter.format(oneTimeCosts)}
+              {costFormatter.format(service.oneTimeCosts)}
             </SectionContent>
           </>
         ) : null}
 
-        {monthlyCosts ? (
+        {service.oneTimeCosts ? (
           <>
-            <SectionHeader>{t('Monthly costs')}</SectionHeader>
+            <SectionHeader withoutIcon>{t('One time costs')}</SectionHeader>
             <SectionContent>
-              {costFormatter.format(monthlyCosts)}
+              {costFormatter.format(service.oneTimeCosts)}
             </SectionContent>
           </>
         ) : null}
 
-        {requestCosts ? (
+        {service.monthlyCosts ? (
           <>
-            <SectionHeader>{t('Cost per request')}</SectionHeader>
+            <SectionHeader withoutIcon>{t('Monthly costs')}</SectionHeader>
             <SectionContent>
-              {costFormatter.format(requestCosts)}
+              {costFormatter.format(service.monthlyCosts)}
             </SectionContent>
           </>
         ) : null}
 
-        <SectionHeader>{t('Outways')}</SectionHeader>
-        <SectionContentWithPadding>
-          <StyledIconOutways />
-          <ServiceData>
-            <p>
-              <strong>{outwayNames.join(', ')}</strong>
-            </p>
-            <p>{publicKeyFingerprint}</p>
-          </ServiceData>
-        </SectionContentWithPadding>
+        {service.requestCosts ? (
+          <>
+            <SectionHeader withoutIcon>{t('Cost per request')}</SectionHeader>
+            <SectionContent>
+              {costFormatter.format(service.requestCosts)}
+            </SectionContent>
+          </>
+        ) : null}
+
+        <SectionHeader>
+          <StyledIcon as={IconOutway} inline />{' '}
+          {t('Outways', { count: outwayNames.length })}
+        </SectionHeader>
+        <SectionContent>{outwayNames.join(', ')}</SectionContent>
+
+        <SectionHeader withoutIcon>{t('Public Key Fingerprint')}</SectionHeader>
+        <SectionContent>{publicKeyFingerprint}</SectionContent>
       </section>
     </>
   )
 }
 
 RequestAccessDetails.propTypes = {
-  organization: shape({
-    serialNumber: string.isRequired,
-    name: string.isRequired,
-  }).isRequired,
-  serviceName: string.isRequired,
-  oneTimeCosts: number,
-  monthlyCosts: number,
-  requestCosts: number,
+  service: instanceOf(DirectoryServiceModel),
   publicKeyFingerprint: string,
   outwayNames: arrayOf(string),
 }

@@ -8,11 +8,10 @@ import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
 import { StyledCollapsibleBody } from '../../../../../../../components/DetailView'
 import DirectoryServiceModel from '../../../../../../../stores/models/DirectoryServiceModel'
-import State from '../components/State'
 import { useOutwayStore } from '../../../../../../../hooks/use-stores'
 import Table from '../../../../../../../components/Table'
-import { OutwayName, Outways } from '../components/index.styles'
 import Header from '../components/Header'
+import Row from './Row'
 
 const CertificatesWithAccessSection = ({ service }) => {
   const { t } = useTranslation()
@@ -33,31 +32,16 @@ const CertificatesWithAccessSection = ({ service }) => {
       <StyledCollapsibleBody>
         <Table>
           <tbody>
-            {publicKeyFingerPrintsWithAccess.map((publicKeyFingerprint) => {
-              const { accessRequest, accessProof } =
-                service.getAccessStateFor(publicKeyFingerprint)
-
-              return (
-                <Table.Tr key={publicKeyFingerprint}>
-                  <Table.Td>
-                    <Outways>
-                      {outwayStore
-                        .getByPublicKeyFingerprint(publicKeyFingerprint)
-                        .map((outway) => (
-                          <OutwayName key={outway.name}>
-                            {outway.name}
-                          </OutwayName>
-                        ))}
-                    </Outways>
-
-                    <State
-                      accessRequest={accessRequest}
-                      accessProof={accessProof}
-                    />
-                  </Table.Td>
-                </Table.Tr>
-              )
-            })}
+            {publicKeyFingerPrintsWithAccess.map((publicKeyFingerprint) => (
+              <Row
+                key={publicKeyFingerprint}
+                publicKeyFingerprint={publicKeyFingerprint}
+                service={service}
+                outways={outwayStore.getByPublicKeyFingerprint(
+                  publicKeyFingerprint,
+                )}
+              />
+            ))}
           </tbody>
         </Table>
       </StyledCollapsibleBody>
