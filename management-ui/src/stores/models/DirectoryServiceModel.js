@@ -37,7 +37,6 @@ class DirectoryServiceModel {
     this.update({ serviceData, accessStates })
   }
 
-  // TODO: add test
   getAccessStateFor(publicKeyFingerprint) {
     return this._accessStates.get(publicKeyFingerprint) || {}
   }

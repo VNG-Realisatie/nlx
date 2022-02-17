@@ -58,6 +58,13 @@ test('initializing the model', () => {
 
   expect(directoryService.state).toBe('down')
   expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(true)
+
+  expect(
+    directoryService.getAccessStateFor(accessRequest.publicKeyFingerprint),
+  ).toEqual({
+    accessRequest: accessRequest,
+    accessProof: accessProof,
+  })
 })
 
 test('updating the model with an invalid latest access request and access proof', () => {
