@@ -3,8 +3,8 @@
 //
 import React from 'react'
 import { screen } from '@testing-library/react'
-import { renderWithProviders } from '../../../test-utils'
-import DirectoryServiceModel from '../../../stores/models/DirectoryServiceModel'
+import { renderWithProviders } from '../../../../../../../../test-utils'
+import DirectoryServiceModel from '../../../../../../../../stores/models/DirectoryServiceModel'
 import RequestAccessDetails from './index'
 
 test('Request Access Details', () => {

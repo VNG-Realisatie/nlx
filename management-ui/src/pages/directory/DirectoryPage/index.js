@@ -19,7 +19,7 @@ const DirectoryPage = () => {
   const { t } = useTranslation()
   const { services, isInitiallyFetched, error, fetchAll } =
     useDirectoryServiceStore()
-  const { name } = useParams<{ name: string }>()
+  const { name } = useParams()
 
   useEffect(() => {
     const loadEnv = async () => {

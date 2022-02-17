@@ -61,6 +61,7 @@ test('listing all services', async () => {
   directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
     services: [
       {
+        organization: {},
         serviceName: 'Test Service',
       },
     ],

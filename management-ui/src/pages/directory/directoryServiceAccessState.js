@@ -25,6 +25,10 @@ export default function getDirectoryServiceAccessUIState(
     return SHOW_ACCESS_REVOKED
   }
 
+  if (!accessProof && outgoingAccessRequest.state === APPROVED) {
+    return SHOW_REQUEST_RECEIVED
+  }
+
   switch (outgoingAccessRequest.state) {
     case CREATED:
       return SHOW_REQUEST_CREATED

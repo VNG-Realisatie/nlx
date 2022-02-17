@@ -139,6 +139,7 @@ test('(re-)fetching the model', async () => {
 
 test('requesting access to a service', async () => {
   configure({ safeDescriptors: false })
+
   const rootStore = new RootStore({})
 
   const directoryService = new DirectoryServiceModel({
@@ -156,12 +157,19 @@ test('requesting access to a service', async () => {
     .spyOn(rootStore.directoryServicesStore, 'requestAccess')
     .mockResolvedValue(null)
 
+  jest.spyOn(rootStore.directoryServicesStore, 'fetch').mockResolvedValue(null)
+
   await directoryService.requestAccess('public-key-fingerprint')
 
   expect(rootStore.directoryServicesStore.requestAccess).toHaveBeenCalledWith(
     '00000000000000000001',
     'service',
     'public-key-fingerprint',
+  )
+
+  expect(rootStore.directoryServicesStore.fetch).toHaveBeenCalledWith(
+    '00000000000000000001',
+    'service',
   )
 })
 

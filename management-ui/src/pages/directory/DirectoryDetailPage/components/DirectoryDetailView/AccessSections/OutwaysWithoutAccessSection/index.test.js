@@ -3,13 +3,18 @@
 //
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../../test-utils'
 import { DirectoryApi, ManagementApi } from '../../../../../../../api'
 import { RootStore, StoreProvider } from '../../../../../../../stores'
 import OutwaysWithoutAccessSection from './index'
 
+jest.mock('../../../../../../../components/Modal')
+
 test('Outways without access section', async () => {
+  configure({ safeDescriptors: false })
+
   const managementApiClient = new ManagementApi()
 
   managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
@@ -48,14 +53,22 @@ test('Outways without access section', async () => {
     'my-service',
   )
 
-  const requestAccessHandler = jest.fn()
+  jest.spyOn(service, 'requestAccess').mockResolvedValue()
+
+  const onShowConfirmRequestAccessModalHandler = jest.fn()
+  const onHideConfirmRequestAccessModalHandler = jest.fn()
 
   const { container } = renderWithProviders(
     <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OutwaysWithoutAccessSection
           service={service}
-          requestAccessHandler={requestAccessHandler}
+          onShowConfirmRequestAccessModalHandler={
+            onShowConfirmRequestAccessModalHandler
+          }
+          onHideConfirmRequestAccessModalHandler={
+            onHideConfirmRequestAccessModalHandler
+          }
         />
       </StoreProvider>
     </MemoryRouter>,
@@ -72,5 +85,14 @@ test('Outways without access section', async () => {
 
   fireEvent.click(screen.getByText('Request access'))
 
-  expect(requestAccessHandler).toHaveBeenCalledWith('public-key-fingerprint-1')
+  expect(onShowConfirmRequestAccessModalHandler).toHaveBeenCalledTimes(1)
+
+  fireEvent.click(await screen.findByText('Send'))
+
+  await waitFor(() => {
+    expect(service.requestAccess).toHaveBeenCalledWith(
+      'public-key-fingerprint-1',
+    )
+  })
+  expect(onHideConfirmRequestAccessModalHandler).toHaveBeenCalledTimes(1)
 })

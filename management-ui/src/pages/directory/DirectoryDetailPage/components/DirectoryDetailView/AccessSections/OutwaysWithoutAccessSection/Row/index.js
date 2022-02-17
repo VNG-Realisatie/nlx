@@ -11,7 +11,7 @@ import AccessState from '../../components/AccessState'
 import OutwayModel from '../../../../../../../../stores/models/OutwayModel'
 import DirectoryServiceModel from '../../../../../../../../stores/models/DirectoryServiceModel'
 import { useConfirmationModal } from '../../../../../../../../components/ConfirmationModal'
-import RequestAccessDetails from '../../../../../../RequestAccessDetails'
+import RequestAccessDetails from '../../components/RequestAccessDetails'
 
 const Row = ({
   publicKeyFingerprint,

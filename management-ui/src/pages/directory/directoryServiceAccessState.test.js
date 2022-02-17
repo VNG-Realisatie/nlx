@@ -58,11 +58,25 @@ test('access request is received', () => {
   ).toBe(SHOW_REQUEST_RECEIVED)
 })
 
+test('access request is approved but has no access proof yet', () => {
+  expect(
+    getDirectoryServiceAccessState(
+      createOutgoingAccessRequestInstance({
+        state: APPROVED,
+      }),
+      null,
+    ),
+  ).toBe(SHOW_REQUEST_RECEIVED)
+})
+
 test('access request is approved', () => {
   expect(
     getDirectoryServiceAccessState(
       createOutgoingAccessRequestInstance({
         state: APPROVED,
+      }),
+      new AccessProofModel({
+        accessProofData: {},
       }),
     ),
   ).toBe(SHOW_HAS_ACCESS)
