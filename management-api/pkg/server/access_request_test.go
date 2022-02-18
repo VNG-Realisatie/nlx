@@ -847,6 +847,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 	}
 }
 
+//nolint funlen: this is a test
 func TestListIncomingAccessRequests(t *testing.T) {
 	currentTime := time.Now()
 

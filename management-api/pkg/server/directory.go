@@ -14,7 +14,6 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/common/diagnostics"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -130,7 +129,7 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 		return nil, err
 	}
 
-	response := convertDirectoryAccessRequest(accessRequest)
+	response := convertOutgoingAccessRequest(accessRequest)
 
 	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)
 	if err != nil {
@@ -211,45 +210,17 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 	return service
 }
 
-// TODO: this is a duplicate of the model conversion from access_request.go
-func convertDirectoryAccessRequest(a *database.OutgoingAccessRequest) *api.OutgoingAccessRequest {
-	var errorDetails *api.ErrorDetails
-
-	if a.ErrorCause != "" {
-		code := api.ErrorCode_INTERNAL
-
-		if a.ErrorCode == int(diagnostics.NoInwaySelectedError) {
-			code = api.ErrorCode_NO_INWAY_SELECTED
-		}
-
-		errorDetails = &api.ErrorDetails{
-			Code:       code,
-			Cause:      a.ErrorCause,
-			StackTrace: a.ErrorStackTrace,
-		}
-	}
-
-	return &api.OutgoingAccessRequest{
-		Id:                   uint64(a.ID),
-		PublicKeyFingerprint: a.PublicKeyFingerprint,
-		State:                outgoingAccessRequestStateToProto(a.State),
-		CreatedAt:            timestamppb.New(a.CreatedAt),
-		UpdatedAt:            timestamppb.New(a.UpdatedAt),
-		ErrorDetails:         errorDetails,
-	}
-}
-
 func getLatestAccessRequestStates(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
 	outgoingAccessRequests, err := configDatabase.ListLatestOutgoingAccessRequests(ctx, organizationSerialNumber, serviceName)
 	if err != nil {
 		return nil, err
 	}
+
 	accessRequestStates := make([]*api.DirectoryService_AccessState, len(outgoingAccessRequests))
 
 	for i, outgoingAccessRequest := range outgoingAccessRequests {
-
 		accessRequestState := &api.DirectoryService_AccessState{
-			AccessRequest: convertDirectoryAccessRequest(outgoingAccessRequest),
+			AccessRequest: convertOutgoingAccessRequest(outgoingAccessRequest),
 		}
 		accessRequestStates[i] = accessRequestState
 

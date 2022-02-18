@@ -115,6 +115,7 @@ func TestDirectoryServiceState(t *testing.T) {
 	}
 }
 
+//nolint dupl: this is a test
 func TestListDirectoryServices(t *testing.T) {
 	logger := zap.NewNop()
 	env := &environment.Environment{}
@@ -151,7 +152,7 @@ func TestListDirectoryServices(t *testing.T) {
 
 	db.EXPECT().
 		ListLatestOutgoingAccessRequests(ctx, service.Organization.SerialNumber, service.Name).
-		Return([]*database.OutgoingAccessRequest{&database.OutgoingAccessRequest{
+		Return([]*database.OutgoingAccessRequest{{
 			ID: 1,
 			Organization: database.Organization{
 				SerialNumber: "00000000000000000001",
@@ -205,11 +206,16 @@ func TestListDirectoryServices(t *testing.T) {
 			RequestCosts:         250,
 			AccessStates: []*api.DirectoryService_AccessState{{
 				AccessRequest: &api.OutgoingAccessRequest{
-					Id:                   1,
-					PublicKeyFingerprint: "public-key-fingerprint",
+					Id: 1,
+					Organization: &api.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization-a",
+					},
+					ServiceName:          "test-service-1",
 					State:                api.AccessRequestState_CREATED,
 					CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 					UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
+					PublicKeyFingerprint: "public-key-fingerprint",
 				},
 				AccessProof: &api.AccessProof{
 					Id: 1,
@@ -229,7 +235,7 @@ func TestListDirectoryServices(t *testing.T) {
 	assert.EqualValues(t, expected, response.Services)
 }
 
-// nolint:funlen // this is a test method
+// nolint:funlen,dupl // this is a test method
 func TestGetOrganizationService(t *testing.T) {
 	ctx := context.Background()
 
@@ -238,8 +244,8 @@ func TestGetOrganizationService(t *testing.T) {
 		req             *api.GetOrganizationServiceRequest
 		db              func(db *mock_database.MockConfigDatabase)
 		directoryClient func(directoryClient *mock_directory.MockClient)
-		expectedReq     *api.DirectoryService
-		expectedErr     error
+		want            *api.DirectoryService
+		wantErr         error
 	}{
 		{
 			"happy_flow",
@@ -301,11 +307,16 @@ func TestGetOrganizationService(t *testing.T) {
 				ServiceName: "test-service",
 				AccessStates: []*api.DirectoryService_AccessState{{
 					AccessRequest: &api.OutgoingAccessRequest{
-						Id:                   1,
-						PublicKeyFingerprint: "public-key-fingerprint",
+						Id: 1,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization",
+						},
+						ServiceName:          "test-service",
 						State:                api.AccessRequestState_CREATED,
 						CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+						PublicKeyFingerprint: "public-key-fingerprint",
 					},
 					AccessProof: &api.AccessProof{
 						Id: 1,
@@ -451,8 +462,8 @@ func TestGetOrganizationService(t *testing.T) {
 
 			returnedService, err := service.GetOrganizationService(ctx, tt.req)
 
-			assert.Equal(t, tt.expectedReq, returnedService)
-			assert.Equal(t, tt.expectedErr, err)
+			assert.Equal(t, tt.want, returnedService)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
