@@ -5,20 +5,22 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { instanceOf, bool } from 'prop-types'
 import { useTheme } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
-import getDirectoryServiceAccessUIState from '../../../directoryServiceAccessState'
 import StateIndicator from '../../../../../components/StateIndicator'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
-import AccessMessage from './components/AccessMessage'
-import { StyledTd, AccessMessageWrapper, StyledTdAccess } from './index.styles'
+import {
+  StyledTd,
+  AccessMessageWrapper,
+  StyledTdAccess,
+  WarnMessage,
+} from './index.styles'
 
 const DirectoryServiceRow = ({ service, ownService, ...props }) => {
   const theme = useTheme()
+  const { t } = useTranslation()
 
-  const displayState = getDirectoryServiceAccessUIState(
-    service.latestAccessRequest,
-    service.latestAccessProof,
-  )
+  const failingAccessStates = service.getFailingAccessStates()
 
   const ownServiceColor = theme.tokens.colorBrand1
 
@@ -39,7 +41,9 @@ const DirectoryServiceRow = ({ service, ownService, ...props }) => {
       <Table.Td>{service.apiSpecificationType}</Table.Td>
       <StyledTdAccess>
         <AccessMessageWrapper>
-          <AccessMessage displayState={displayState} />
+          {failingAccessStates.length ? (
+            <WarnMessage>{t('Request could not be sent')}</WarnMessage>
+          ) : null}
         </AccessMessageWrapper>
       </StyledTdAccess>
     </Table.Tr>

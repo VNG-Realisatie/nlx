@@ -25,3 +25,11 @@ export const AccessMessageWrapper = styled.div`
   align-items: center;
   justify-content: flex-end;
 `
+
+export const WarnMessage = styled.span`
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: ${(p) => p.theme.tokens.colorWarning};
+`

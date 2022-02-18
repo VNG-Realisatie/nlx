@@ -264,3 +264,41 @@ describe('access to this service', () => {
     expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(false)
   })
 })
+
+test('retrieving the first failing access state for this service', () => {
+  const accessRequest = new OutgoingAccessRequestModel({
+    outgoingAccessRequestStore: {},
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.FAILED,
+      publicKeyFingerprint: 'public-key-fingerprint',
+      errorDetails: {
+        cause: 'failed to request access',
+      },
+    },
+  })
+
+  const directoryService = new DirectoryServiceModel({
+    directoryServicesStore: {},
+    serviceData: {
+      organization: {
+        name: 'Organization',
+        serialNumber: '00000000000000000001',
+      },
+      serviceName: 'Service',
+      state: 'up',
+      apiSpecificationType: 'API',
+    },
+    accessStates: [
+      {
+        accessRequest: accessRequest,
+      },
+    ],
+  })
+
+  expect(directoryService.getFailingAccessStates()).toEqual([
+    {
+      accessRequest: accessRequest,
+      accessProof: undefined,
+    },
+  ])
+})

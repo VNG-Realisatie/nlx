@@ -11,9 +11,10 @@ import {
   SERVICE_STATE_DEGRADED,
   SERVICE_STATE_UP,
 } from '../../../../../components/StateIndicator'
+import OutgoingAccessRequestModel, {
+  ACCESS_REQUEST_STATES,
+} from '../../../../../stores/models/OutgoingAccessRequestModel'
 import DirectoryServiceRow from './index'
-
-jest.mock('../../../../../stores/models/OutgoingAccessRequestModel')
 
 const buildServiceModel = () => {
   return new DirectoryServiceModel({
@@ -69,4 +70,31 @@ test('display changes to the service', () => {
   const serviceRow = screen.getByTestId('directory-service-row')
   expect(serviceRow).not.toHaveTextContent('state-degraded.svg')
   expect(serviceRow).toHaveTextContent('state-up.svg')
+})
+
+test('display warning if there is a failed access request for the service', async () => {
+  const service = buildServiceModel()
+  renderComponent({ service })
+
+  service.update({
+    serviceData: {},
+    accessStates: [
+      {
+        accessRequest: new OutgoingAccessRequestModel({
+          accessRequestData: {
+            publicKeyFingerprint: 'public-key-fingerprint',
+            state: ACCESS_REQUEST_STATES.FAILED,
+            errorDetails: {
+              cause: 'cause of failed access request',
+            },
+          },
+          outgoingAccessRequestStore: null,
+        }),
+      },
+    ],
+  })
+
+  expect(
+    await screen.findByText('Request could not be sent'),
+  ).toBeInTheDocument()
 })

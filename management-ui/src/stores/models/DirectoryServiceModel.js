@@ -41,6 +41,12 @@ class DirectoryServiceModel {
     return this._accessStates.get(publicKeyFingerprint) || {}
   }
 
+  getFailingAccessStates() {
+    return [...this._accessStates.values()].filter((accessState) => {
+      return accessState.accessRequest.state === ACCESS_REQUEST_STATES.FAILED
+    })
+  }
+
   update({ serviceData, accessStates }) {
     if (serviceData.serviceName) {
       this.serviceName = serviceData.serviceName
