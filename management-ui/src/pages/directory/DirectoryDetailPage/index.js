@@ -66,10 +66,7 @@ const DirectoryDetailPage = () => {
 
       <Drawer.Content>
         {service ? (
-          <DirectoryDetailView
-            service={service}
-            outways={outwayStore.outways}
-          />
+          <DirectoryDetailView service={service} />
         ) : (
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the service', {
