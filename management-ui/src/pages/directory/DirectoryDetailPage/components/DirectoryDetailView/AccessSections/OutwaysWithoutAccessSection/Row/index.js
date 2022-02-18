@@ -38,8 +38,9 @@ const Row = ({
 
     if (await confirmRequest()) {
       await service.requestAccess(publicKeyFingerprint)
-      onHideConfirmRequestAccessModalHandler()
     }
+
+    onHideConfirmRequestAccessModalHandler()
   }
 
   const onRetryRequestAccess = () => {
