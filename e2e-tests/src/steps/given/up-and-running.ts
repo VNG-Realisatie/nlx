@@ -3,7 +3,10 @@ import { authenticate } from "../../utils/authenticate";
 import { acceptToS } from "../../utils/tos";
 import { getOrgByName } from "../../utils/organizations";
 import { hasDefaultOutwayRunning } from "../../utils/outway";
-import { hasDefaultInwayRunning } from "../../utils/inway";
+import {
+  hasDefaultInwayRunning,
+  setDefaultInwayAsOrganizationInway,
+} from "../../utils/inway";
 import { Given } from "@cucumber/cucumber";
 
 Given(
@@ -20,6 +23,7 @@ Given(
 
     if (org.defaultInway.name !== "") {
       await hasDefaultInwayRunning(this, orgName);
+      await setDefaultInwayAsOrganizationInway(this, orgName);
     }
   }
 );
