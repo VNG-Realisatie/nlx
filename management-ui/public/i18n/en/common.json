@@ -196,6 +196,7 @@
   "Please try again": "Please try again",
   "Pricing": "Pricing",
   "Public Key Fingerprint": "Public Key Fingerprint",
+  "Public Key Fingerprint publicKeyFingerprint": "Public Key Fingerprint {{publicKeyFingerprint}}",
   "Public key PEM": "Public key PEM",
   "Public Key PEM": "Public Key PEM",
   "Public support email": "Public support email",

@@ -24,6 +24,9 @@ import {
     ManagementCreateAccessRequestRequest,
     ManagementCreateAccessRequestRequestFromJSON,
     ManagementCreateAccessRequestRequestToJSON,
+    ManagementCreateOutgoingOrderRequest,
+    ManagementCreateOutgoingOrderRequestFromJSON,
+    ManagementCreateOutgoingOrderRequestToJSON,
     ManagementCreateServiceRequest,
     ManagementCreateServiceRequestFromJSON,
     ManagementCreateServiceRequestToJSON,
@@ -78,9 +81,6 @@ import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
-    ManagementOutgoingOrderRequest,
-    ManagementOutgoingOrderRequestFromJSON,
-    ManagementOutgoingOrderRequestToJSON,
     ManagementRegisterOutwayRequest,
     ManagementRegisterOutwayRequestFromJSON,
     ManagementRegisterOutwayRequestToJSON,
@@ -116,8 +116,8 @@ export interface ManagementCreateAccessRequestOperationRequest {
     body: ManagementCreateAccessRequestRequest;
 }
 
-export interface ManagementCreateOutgoingOrderRequest {
-    body: ManagementOutgoingOrderRequest;
+export interface ManagementCreateOutgoingOrderOperationRequest {
+    body: ManagementCreateOutgoingOrderRequest;
 }
 
 export interface ManagementCreateServiceOperationRequest {
@@ -295,7 +295,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOutgoingOrderRaw(requestParameters: ManagementCreateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async managementCreateOutgoingOrderRaw(requestParameters: ManagementCreateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
             throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateOutgoingOrder.');
         }
@@ -311,7 +311,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementOutgoingOrderRequestToJSON(requestParameters.body),
+            body: ManagementCreateOutgoingOrderRequestToJSON(requestParameters.body),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -319,7 +319,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOutgoingOrder(requestParameters: ManagementCreateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<object> {
+    async managementCreateOutgoingOrder(requestParameters: ManagementCreateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<object> {
         const response = await this.managementCreateOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }

@@ -15,7 +15,7 @@ const IncomingAccessRequestRow = ({
   rejectHandler,
 }) => {
   const { t } = useTranslation()
-  const { id, organization, serviceName } = accessRequest
+  const { id, organization, serviceName, publicKeyFingerprint } = accessRequest
 
   const [ConfirmApproveModal, confirmApprove] = useConfirmationModal({
     okText: t('Approve'),
@@ -71,6 +71,12 @@ const IncomingAccessRequestRow = ({
             serialNumber: organization.serialNumber,
           })}
         </small>
+        <br />
+        <small>
+          {t('Public Key Fingerprint publicKeyFingerprint', {
+            publicKeyFingerprint: publicKeyFingerprint,
+          })}
+        </small>
       </Table.Td>
       <TdActions>
         <StyledButton size="small" variant="link" onClick={approve}>
@@ -95,6 +101,7 @@ IncomingAccessRequestRow.propTypes = {
       name: string.isRequired,
     }).isRequired,
     serviceName: string.isRequired,
+    publicKeyFingerprint: string.isRequired,
   }).isRequired,
   approveHandler: func.isRequired,
   rejectHandler: func.isRequired,

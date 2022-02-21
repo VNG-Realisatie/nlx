@@ -23,6 +23,7 @@ class IncomingAccessRequestModel {
   state = ''
   createdAt = ''
   updatedAt = ''
+  publicKeyFingerprint = ''
 
   constructor({ incomingAccessRequestStore, accessRequestData }) {
     makeAutoObservable(this)
@@ -64,6 +65,10 @@ class IncomingAccessRequestModel {
 
     if (accessRequestData.updatedAt) {
       this.updatedAt = new Date(accessRequestData.updatedAt)
+    }
+
+    if (accessRequestData.publicKeyFingerprint) {
+      this.publicKeyFingerprint = accessRequestData.publicKeyFingerprint
     }
   }
 

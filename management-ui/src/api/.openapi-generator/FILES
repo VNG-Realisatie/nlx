@@ -16,6 +16,7 @@ models/ManagementAuditLogRecord.ts
 models/ManagementAuditLogRecordMetadata.ts
 models/ManagementAuditLogRecordService.ts
 models/ManagementCreateAccessRequestRequest.ts
+models/ManagementCreateOutgoingOrderRequest.ts
 models/ManagementCreateServiceRequest.ts
 models/ManagementCreateServiceResponse.ts
 models/ManagementDirectoryListServicesResponse.ts
@@ -46,7 +47,6 @@ models/ManagementOrderService.ts
 models/ManagementOrganization.ts
 models/ManagementOutgoingAccessRequest.ts
 models/ManagementOutgoingOrder.ts
-models/ManagementOutgoingOrderRequest.ts
 models/ManagementOutway.ts
 models/ManagementRegisterOutwayRequest.ts
 models/ManagementRetrieveClaimForOrderResponse.ts
