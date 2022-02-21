@@ -218,6 +218,11 @@ func getJWTAsSignedString(args *jwtArgs) (string, error) {
 			{
 				OrganizationSerialNumber: args.delegatorSerialNumber,
 				ServiceName:              args.serviceName,
+				PublicKeyFingerprint:     "other-public-key-fingerprint",
+			},
+			{
+				OrganizationSerialNumber: args.delegatorSerialNumber,
+				ServiceName:              args.serviceName,
 				PublicKeyFingerprint:     args.delegatorCert.PublicKeyFingerprint(),
 			},
 		},
@@ -233,8 +238,6 @@ func getJWTAsSignedString(args *jwtArgs) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	println(signedString)
 
 	return signedString, nil
 }

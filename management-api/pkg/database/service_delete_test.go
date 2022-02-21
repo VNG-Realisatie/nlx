@@ -35,7 +35,7 @@ func TestDeleteService(t *testing.T) {
 			loadFixtures: true,
 			args: args{
 				serviceName:              "fixture-service-name",
-				organizationSerialNumber: "00000000000000000000",
+				organizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: nil,
 		},
@@ -64,7 +64,15 @@ func assertServiceDeleted(t *testing.T, repo database.ConfigDatabase, serviceNam
 	_, err := repo.GetService(context.Background(), serviceName)
 	require.Equal(t, database.ErrNotFound, err)
 
-	_, err = repo.ListOutgoingOrders(context.Background())
+	orders, err := repo.ListOutgoingOrders(context.Background())
 	require.NoError(t, err)
+
+	for _, order := range orders {
+		for _, outgoingOrderAccessProof := range order.OutgoingOrderAccessProofs {
+			if outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.ServiceName == serviceName && outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber == organizationSerialNumber {
+				t.Error("outgoing order for service is not deleted")
+			}
+		}
+	}
 
 }

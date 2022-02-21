@@ -39,8 +39,24 @@ func TestGetInway(t *testing.T) {
 			want:         &database.Inway{},
 			wantErr:      database.ErrNotFound,
 		},
+		"empty_inway_name": {
+			loadFixtures: true,
+			args:         args{name: ""},
+			want: &database.Inway{
+				ID:          2,
+				Name:        "",
+				Version:     "unknown",
+				Hostname:    "fixture-server",
+				IPAddress:   "127.0.0.1",
+				SelfAddress: "fixture.local",
+				Services:    []*database.Service{},
+				CreatedAt:   fixtureTime,
+				UpdatedAt:   fixtureTime,
+			},
+		},
 		"happy_flow": {
 			loadFixtures: true,
+			args:         args{name: "fixture-inway"},
 			want: &database.Inway{
 				ID:          1,
 				Name:        "fixture-inway",

@@ -38,8 +38,8 @@ func TestCreateOutgoingOrder(t *testing.T) {
 	testPublicKeyPEM, err := certBundle.PublicKeyPEM()
 	require.NoError(t, err)
 
-	validOutgoingOrderRequest := func() api.OutgoingOrderRequest {
-		return api.OutgoingOrderRequest{
+	validOutgoingOrderRequest := func() api.CreateOutgoingOrderRequest {
+		return api.CreateOutgoingOrderRequest{
 			Reference:      "a-reference",
 			Description:    "a-description",
 			Delegatee:      "00000000000000000001",
@@ -51,12 +51,12 @@ func TestCreateOutgoingOrder(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		request *api.OutgoingOrderRequest
+		request *api.CreateOutgoingOrderRequest
 		setup   func(serviceMocks)
 		wantErr error
 	}{
 		"when_providing_an_empty_reference": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Reference = ""
 				return &request
@@ -64,7 +64,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: cannot be blank."),
 		},
 		"when_providing_a_reference_which_is_too_long": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Reference = "reference-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdea"
 				return &request
@@ -72,7 +72,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: the length must be between 1 and 100."),
 		},
 		"when_providing_an_empty_description": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Description = ""
 				return &request
@@ -80,7 +80,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: cannot be blank."),
 		},
 		"when_providing_a_description_which_is_too_long": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Description = "description-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd"
 				return &request
@@ -88,7 +88,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: the length must be between 1 and 100."),
 		},
 		"when_providing_an_invalid_delegatee": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Delegatee = "00000000000000000000000001_too_long"
 				return &request
@@ -96,7 +96,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: organization serial number must be in a valid format: too long, max 20 bytes."),
 		},
 		"when_providing_an_end_date_which_is_before_the_start_date": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.ValidFrom = timestamppb.New(time.Now().Add(time.Millisecond))
 				request.ValidUntil = timestamppb.New(time.Now())
@@ -105,7 +105,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: ValidUntil: order can not expire before the start date."),
 		},
 		"when_providing_an_empty_list_of_access_proofs": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.AccessProofIds = []uint64{}
 				return &request
@@ -113,7 +113,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: AccessProofIds: cannot be blank."),
 		},
 		"when_providing_an_invalid_public_key": {
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.PublicKeyPEM = "invalid"
 				return &request
@@ -162,7 +162,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(database.ErrDuplicateOutgoingOrder)
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -211,7 +211,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(errors.New("arbitrary error"))
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -223,7 +223,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
 					Return(nil, errors.New("arbitrary error"))
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -259,7 +259,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(errors.New("arbitrary error"))
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),
@@ -307,7 +307,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(nil)
 			},
-			request: func() *api.OutgoingOrderRequest {
+			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
 			}(),

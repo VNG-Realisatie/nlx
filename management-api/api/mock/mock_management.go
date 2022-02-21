@@ -99,7 +99,7 @@ func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interfac
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -807,7 +807,7 @@ func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 inter
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockManagementServer) CreateOutgoingOrder(arg0 context.Context, arg1 *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) CreateOutgoingOrder(arg0 context.Context, arg1 *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOutgoingOrder", arg0, arg1)
 	ret0, _ := ret[0].(*emptypb.Empty)

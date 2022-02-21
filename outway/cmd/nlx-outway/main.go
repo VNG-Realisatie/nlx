@@ -32,7 +32,7 @@ import (
 )
 
 var options struct {
-	Name string `long:"name" env:"OUTWAY_NAME" description:"ServiceName of the outway. Every outway should have a unique name within the organization." required:"true"`
+	Name string `long:"name" env:"OUTWAY_NAME" description:"Name of the outway. Every outway should have a unique name within the organization." required:"true"`
 
 	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 	ListenHTTPS   bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`

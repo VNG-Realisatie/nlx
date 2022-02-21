@@ -20,7 +20,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.OutgoingOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateOutgoingOrder")
 
 	order := &database.CreateOutgoingOrder{

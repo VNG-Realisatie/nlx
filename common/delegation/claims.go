@@ -22,7 +22,9 @@ type JWTClaims struct {
 
 func (j *JWTClaims) IsValidFor(serviceName, organizationSerialNumber, publicKeyFingerprint string) bool {
 	for _, accessProof := range j.AccessProofs {
-		return accessProof.ServiceName == serviceName && accessProof.OrganizationSerialNumber == organizationSerialNumber && publicKeyFingerprint == accessProof.PublicKeyFingerprint
+		if accessProof.ServiceName == serviceName && accessProof.OrganizationSerialNumber == organizationSerialNumber && publicKeyFingerprint == accessProof.PublicKeyFingerprint {
+			return true
+		}
 	}
 
 	return false

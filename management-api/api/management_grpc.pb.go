@@ -52,7 +52,7 @@ type ManagementClient interface {
 	RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
 	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
-	CreateOutgoingOrder(ctx context.Context, in *OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error)
@@ -321,7 +321,7 @@ func (c *managementClient) RetrieveClaimForOrder(ctx context.Context, in *Retrie
 	return out, nil
 }
 
-func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *OutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateOutgoingOrder", in, out, opts...)
 	if err != nil {
@@ -416,7 +416,7 @@ type ManagementServer interface {
 	RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error)
 	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
 	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
-	CreateOutgoingOrder(context.Context, *OutgoingOrderRequest) (*emptypb.Empty, error)
+	CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error)
 	UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error)
 	ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error)
@@ -514,7 +514,7 @@ func (UnimplementedManagementServer) ListAuditLogs(context.Context, *emptypb.Emp
 func (UnimplementedManagementServer) RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RetrieveClaimForOrder not implemented")
 }
-func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *OutgoingOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOutgoingOrder not implemented")
 }
 func (UnimplementedManagementServer) UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
@@ -1053,7 +1053,7 @@ func _Management_RetrieveClaimForOrder_Handler(srv interface{}, ctx context.Cont
 }
 
 func _Management_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OutgoingOrderRequest)
+	in := new(CreateOutgoingOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1065,7 +1065,7 @@ func _Management_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Contex
 		FullMethod: "/nlx.management.Management/CreateOutgoingOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).CreateOutgoingOrder(ctx, req.(*OutgoingOrderRequest))
+		return srv.(ManagementServer).CreateOutgoingOrder(ctx, req.(*CreateOutgoingOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

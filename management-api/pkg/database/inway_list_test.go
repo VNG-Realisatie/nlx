@@ -26,12 +26,10 @@ func TestListInways(t *testing.T) {
 	tests := map[string]struct {
 		loadFixtures bool
 		want         []*database.Inway
-		wantErr      error
 	}{
 		"no_inways_present": {
 			loadFixtures: false,
 			want:         []*database.Inway{},
-			wantErr:      nil,
 		},
 		"happy_flow": {
 			loadFixtures: true,
@@ -96,8 +94,17 @@ func TestListInways(t *testing.T) {
 					CreatedAt: fixtureTime,
 					UpdatedAt: fixtureTime,
 				},
+				{
+					ID:          2,
+					Version:     "unknown",
+					Hostname:    "fixture-server",
+					IPAddress:   "127.0.0.1",
+					SelfAddress: "fixture.local",
+					Services:    []*database.Service{},
+					CreatedAt:   fixtureTime,
+					UpdatedAt:   fixtureTime,
+				},
 			},
-			wantErr: nil,
 		},
 	}
 
@@ -111,11 +118,9 @@ func TestListInways(t *testing.T) {
 			defer close()
 
 			got, err := configDb.ListInways(context.Background())
-			require.ErrorIs(t, err, tt.wantErr)
 
-			if tt.wantErr == nil {
-				require.EqualValues(t, tt.want, got)
-			}
+			require.NoError(t, err)
+			require.EqualValues(t, tt.want, got)
 		})
 	}
 }
