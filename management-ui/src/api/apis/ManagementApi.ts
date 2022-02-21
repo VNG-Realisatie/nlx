@@ -93,6 +93,9 @@ import {
     ManagementSynchronizeOrdersResponse,
     ManagementSynchronizeOrdersResponseFromJSON,
     ManagementSynchronizeOrdersResponseToJSON,
+    ManagementUpdateOutgoingOrderRequest,
+    ManagementUpdateOutgoingOrderRequestFromJSON,
+    ManagementUpdateOutgoingOrderRequestToJSON,
     ManagementUpdateServiceResponse,
     ManagementUpdateServiceResponseFromJSON,
     ManagementUpdateServiceResponseToJSON,
@@ -185,8 +188,8 @@ export interface ManagementUpdateInwayRequest {
     body: ManagementInway;
 }
 
-export interface ManagementUpdateOutgoingOrderRequest {
-    body: ManagementOutgoingOrderRequest;
+export interface ManagementUpdateOutgoingOrderOperationRequest {
+    body: ManagementUpdateOutgoingOrderRequest;
 }
 
 export interface ManagementUpdateServiceRequest {
@@ -1087,7 +1090,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateOutgoingOrderRaw(requestParameters: ManagementUpdateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async managementUpdateOutgoingOrderRaw(requestParameters: ManagementUpdateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
             throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementUpdateOutgoingOrder.');
         }
@@ -1103,7 +1106,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementOutgoingOrderRequestToJSON(requestParameters.body),
+            body: ManagementUpdateOutgoingOrderRequestToJSON(requestParameters.body),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -1111,7 +1114,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateOutgoingOrder(requestParameters: ManagementUpdateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<object> {
+    async managementUpdateOutgoingOrder(requestParameters: ManagementUpdateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<object> {
         const response = await this.managementUpdateOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }

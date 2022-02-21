@@ -37,6 +37,12 @@ export interface ManagementRegisterOutwayRequest {
      * @memberof ManagementRegisterOutwayRequest
      */
     version?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementRegisterOutwayRequest
+     */
+    publicKeyFingerprint?: string;
 }
 
 export function ManagementRegisterOutwayRequestFromJSON(json: any): ManagementRegisterOutwayRequest {
@@ -52,6 +58,7 @@ export function ManagementRegisterOutwayRequestFromJSONTyped(json: any, ignoreDi
         'name': !exists(json, 'name') ? undefined : json['name'],
         'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
         'version': !exists(json, 'version') ? undefined : json['version'],
+        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
     };
 }
 
@@ -67,6 +74,7 @@ export function ManagementRegisterOutwayRequestToJSON(value?: ManagementRegister
         'name': value.name,
         'publicKeyPEM': value.publicKeyPEM,
         'version': value.version,
+        'publicKeyFingerprint': value.publicKeyFingerprint,
     };
 }
 

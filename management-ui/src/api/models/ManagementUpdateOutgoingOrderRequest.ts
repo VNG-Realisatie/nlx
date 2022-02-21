@@ -16,58 +16,58 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ManagementOutgoingOrderRequest
+ * @interface ManagementUpdateOutgoingOrderRequest
  */
-export interface ManagementOutgoingOrderRequest {
+export interface ManagementUpdateOutgoingOrderRequest {
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     reference?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     description?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     publicKeyPEM?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     delegatee?: string;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     validFrom?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     validUntil?: Date;
     /**
      * 
      * @type {Array<string>}
-     * @memberof ManagementOutgoingOrderRequest
+     * @memberof ManagementUpdateOutgoingOrderRequest
      */
     accessProofIds?: Array<string>;
 }
 
-export function ManagementOutgoingOrderRequestFromJSON(json: any): ManagementOutgoingOrderRequest {
-    return ManagementOutgoingOrderRequestFromJSONTyped(json, false);
+export function ManagementUpdateOutgoingOrderRequestFromJSON(json: any): ManagementUpdateOutgoingOrderRequest {
+    return ManagementUpdateOutgoingOrderRequestFromJSONTyped(json, false);
 }
 
-export function ManagementOutgoingOrderRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOutgoingOrderRequest {
+export function ManagementUpdateOutgoingOrderRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementUpdateOutgoingOrderRequest {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -83,7 +83,7 @@ export function ManagementOutgoingOrderRequestFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function ManagementOutgoingOrderRequestToJSON(value?: ManagementOutgoingOrderRequest | null): any {
+export function ManagementUpdateOutgoingOrderRequestToJSON(value?: ManagementUpdateOutgoingOrderRequest | null): any {
     if (value === undefined) {
         return undefined;
     }

@@ -55,6 +55,7 @@ export * from './ManagementTXLogOrder';
 export * from './ManagementTXLogOrganization';
 export * from './ManagementTXLogRecord';
 export * from './ManagementTXLogService';
+export * from './ManagementUpdateOutgoingOrderRequest';
 export * from './ManagementUpdateServiceResponse';
 export * from './ManagementUpdateSettingsRequest';
 export * from './ProtobufAny';

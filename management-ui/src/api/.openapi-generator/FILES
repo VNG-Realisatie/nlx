@@ -59,6 +59,7 @@ models/ManagementTXLogOrder.ts
 models/ManagementTXLogOrganization.ts
 models/ManagementTXLogRecord.ts
 models/ManagementTXLogService.ts
+models/ManagementUpdateOutgoingOrderRequest.ts
 models/ManagementUpdateServiceResponse.ts
 models/ManagementUpdateSettingsRequest.ts
 models/ProtobufAny.ts
