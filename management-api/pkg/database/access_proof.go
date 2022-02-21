@@ -95,7 +95,7 @@ func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessPro
 
 	if err := db.DB.
 		WithContext(ctx).
-		Preload("access_request_outgoing").
+		Preload("OutgoingAccessRequest").
 		Where("id IN ?", accessProofIDs).
 		Find(accessProofs).Error; err != nil {
 		return nil, err
