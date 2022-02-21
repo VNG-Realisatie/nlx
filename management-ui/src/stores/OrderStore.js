@@ -30,7 +30,15 @@ class OrderStore {
   create = flow(function* create(formData) {
     try {
       yield this._managementApiClient.managementCreateOutgoingOrder({
-        body: formData,
+        body: {
+          reference: formData.reference,
+          description: formData.description,
+          publicKeyPEM: formData.publicKeyPEM,
+          delegatee: formData.delegatee,
+          validFrom: formData.validFrom,
+          validUntil: formData.validUntil,
+          accessProofIds: [],
+        },
       })
 
       const order = new OutgoingOrderModel({
