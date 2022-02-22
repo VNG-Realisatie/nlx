@@ -29,6 +29,7 @@ test('fetching, getting and updating from server', async () => {
           state: 'RECEIVED',
           createdAt: '2020-10-01T12:00:00Z',
           updatedAt: '2020-10-01T12:00:10Z',
+          publicKeyFingerprint: 'public-key-fingerprint',
         },
       ],
     })
@@ -41,6 +42,7 @@ test('fetching, getting and updating from server', async () => {
           state: 'CREATED',
           createdAt: '2020-10-01T12:00:00Z',
           updatedAt: '2020-10-01T12:00:01Z',
+          publicKeyFingerprint: 'public-key-fingerprint-2',
         },
       ],
     })
@@ -70,6 +72,9 @@ test('fetching, getting and updating from server', async () => {
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
   expect(updatedAccessRequests[0]).toBeInstanceOf(IncomingAccessRequestModel)
   expect(updatedAccessRequests[0].state).toBe('RECEIVED')
+  expect(updatedAccessRequests[0].publicKeyFingerprint).toBe(
+    'public-key-fingerprint',
+  )
 })
 
 test('approving an access request', async () => {
@@ -139,12 +144,14 @@ test('fetching for a service should update existing in-memory models instead of 
           serviceName: 'service-a',
           organizationName: 'organization-a',
           state: STATES.CREATED,
+          publicKeyFingerprint: 'public-key-fingerprint',
         },
         {
           id: 'ar-2',
           serviceName: 'service-a',
           organizationName: 'organization-b',
           state: STATES.CREATED,
+          publicKeyFingerprint: 'public-key-fingerprint-2',
         },
       ],
     })
@@ -155,12 +162,14 @@ test('fetching for a service should update existing in-memory models instead of 
           serviceName: 'service-a',
           organizationName: 'organization-a',
           state: STATES.CREATED,
+          publicKeyFingerprint: 'public-key-fingerprint',
         },
         {
           id: 'ar-2',
           serviceName: 'service-a',
           organizationName: 'organization-b',
           state: STATES.CREATED,
+          publicKeyFingerprint: 'public-key-fingerprint-2',
         },
       ],
     })
@@ -189,6 +198,7 @@ describe('have the access requests been changed for a service', () => {
     serviceName: 'service-a',
     organizationName: 'organization-a',
     state: STATES.CREATED,
+    publicKeyFingerprint: 'public-key-fingerprint',
   }
 
   const ACCESS_REQUEST_TWO = {
@@ -196,6 +206,7 @@ describe('have the access requests been changed for a service', () => {
     serviceName: 'service-a',
     organizationName: 'organization-a',
     state: STATES.CREATED,
+    publicKeyFingerprint: 'public-key-fingerprint-2',
   }
 
   beforeEach(async () => {

@@ -28,6 +28,7 @@ test('approving an incoming access request', async () => {
       state: STATES.RECEIVED,
       createdAt: '2020-10-01T12:00:00Z',
       updatedAt: '2020-10-01T12:00:01Z',
+      publicKeyFingerprint: 'public-key-fingerprint',
     },
   })
 
@@ -66,6 +67,7 @@ test('rejecting an incoming access request', async () => {
       state: STATES.RECEIVED,
       createdAt: '2020-10-01T12:00:00Z',
       updatedAt: '2020-10-01T12:00:01Z',
+      publicKeyFingerprint: 'public-key-fingerprint',
     },
   })
 

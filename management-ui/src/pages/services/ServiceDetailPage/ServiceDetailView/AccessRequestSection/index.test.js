@@ -41,6 +41,7 @@ test('polling with access request section collapsed', async () => {
           state: STATES.RECEIVED,
           createdAt: new Date(),
           updatedAt: new Date(),
+          publicKeyFingerprint: 'public-key-fingerprint',
         },
       ],
     })
@@ -91,6 +92,7 @@ test('polling with access request section expanded', async () => {
           state: STATES.RECEIVED,
           createdAt: new Date(),
           updatedAt: new Date(),
+          publicKeyFingerprint: 'public-key-fingerprint',
         },
       ],
     })
@@ -127,6 +129,9 @@ test('polling with access request section expanded', async () => {
 
   expect(getByText(/organization-a/)).toBeInTheDocument()
   expect(getByText(/Serial Number serialNumber/)).toBeInTheDocument()
+  expect(
+    getByText(/Public Key Fingerprint publicKeyFingerprint/),
+  ).toBeInTheDocument()
   expect(queryByText('Show updates')).not.toBeInTheDocument()
 
   act(() => {
