@@ -46,6 +46,12 @@ const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
             serialNumber: accessGrant.organization.serialNumber,
           })}
         </small>
+        <br />
+        <small>
+          {t('Public Key Fingerprint publicKeyFingerprint', {
+            publicKeyFingerprint: accessGrant.publicKeyFingerprint,
+          })}
+        </small>
       </Table.Td>
       <TdActions>
         <Button

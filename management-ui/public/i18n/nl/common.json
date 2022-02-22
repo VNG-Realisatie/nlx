@@ -222,7 +222,7 @@
   "Revoke": "Intrekken",
   "Revoke access": "Toegang intrekken",
   "Revoked on date": "Ingetrokken op {{date, DD-MM-YYYY}}",
-  "Revoking this access grant will revoke access for the organization to the service. Are you sure?": "Door het weigeren van dit toegangsverzoek heeft de organisatie geen toegang meer tot de service. Weet je het zeker?",
+  "Revoking this access grant will revoke access for the organization to the service. Are you sure?": "Door het intrekken van dit toegangsverzoek heeft de organisatie geen toegang meer tot de service. Weet je het zeker?",
   "Save": "Opslaan",
   "Save settings": "Instellingen opslaan",
   "Select a service…": "Kies een service…",
