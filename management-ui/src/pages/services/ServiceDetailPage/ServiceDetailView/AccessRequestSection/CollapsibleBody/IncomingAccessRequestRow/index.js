@@ -8,6 +8,7 @@ import Table from '../../../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../../../components/ConfirmationModal'
 import { IconCheck, IconClose } from '../../../../../../../icons'
 import { TdActions, StyledButton } from './index.styles'
+import AccessDetails from './components/AccessDetails'
 
 const IncomingAccessRequestRow = ({
   accessRequest,
@@ -18,34 +19,32 @@ const IncomingAccessRequestRow = ({
   const { id, organization, serviceName, publicKeyFingerprint } = accessRequest
 
   const [ConfirmApproveModal, confirmApprove] = useConfirmationModal({
+    title: t('Grant access'),
     okText: t('Approve'),
     children: (
-      <p>
-        {t(
-          'Approving this access request will grant organizationName (organizationSerialNumber) access to serviceName. Are you sure?',
-          {
-            organizationName: organization.name,
-            organizationSerialNumber: organization.serialNumber,
-            serviceName,
-          },
+      <AccessDetails
+        subTitle={t(
+          'Approving this access request will grant this organization access to the service. Are you sure?',
         )}
-      </p>
+        organization={organization}
+        serviceName={serviceName}
+        publicKeyFingerprint={publicKeyFingerprint}
+      />
     ),
   })
 
   const [ConfirmRejectModal, confirmReject] = useConfirmationModal({
+    title: t('Reject access'),
     okText: t('Reject'),
     children: (
-      <p>
-        {t(
-          'Rejecting this access request will refuse organizationName (organizationSerialNumber) access to serviceName. Are you sure?',
-          {
-            organizationName: organization.name,
-            organizationSerialNumber: organization.serialNumber,
-            serviceName,
-          },
+      <AccessDetails
+        subTitle={t(
+          'Rejecting this access request will refuse the organization access to the service. Are you sure?',
         )}
-      </p>
+        organization={organization}
+        serviceName={serviceName}
+        publicKeyFingerprint={publicKeyFingerprint}
+      />
     ),
   })
 

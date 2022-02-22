@@ -8,24 +8,24 @@ import { useTranslation } from 'react-i18next'
 import Table from '../../../../../../../components/Table'
 import { useConfirmationModal } from '../../../../../../../components/ConfirmationModal'
 import { IconRevoke } from '../../../../../../../icons'
+import AccessDetails from '../../../AccessRequestSection/CollapsibleBody/IncomingAccessRequestRow/components/AccessDetails'
 import { TdActions } from './index.styles'
 
 const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
   const { t } = useTranslation()
 
   const [ConfirmRevokeModal, confirmRevoke] = useConfirmationModal({
+    title: t('Revoke access'),
     okText: t('Revoke'),
     children: (
-      <p>
-        {t(
-          'Access will be revoked for the serviceName service from organizationName (organizationSerialNumber)',
-          {
-            organizationName: accessGrant.organization.name,
-            organizationSerialNumber: accessGrant.organization.serialNumber,
-            serviceName: accessGrant.serviceName,
-          },
+      <AccessDetails
+        subTitle={t(
+          'Revoking this access grant will revoke access for the organization to the service. Are you sure?',
         )}
-      </p>
+        organization={accessGrant.organization}
+        serviceName={accessGrant.serviceName}
+        publicKeyFingerprint={accessGrant.publicKeyFingerprint}
+      />
     ),
   })
 
