@@ -302,3 +302,36 @@ test('retrieving the first failing access state for this service', () => {
     },
   ])
 })
+
+test('access states with access', () => {
+  const directoryService = new DirectoryServiceModel({
+    directoryServicesStore: {},
+    serviceData: {
+      organization: {
+        name: 'Organization',
+        serialNumber: '00000000000000000001',
+      },
+      serviceName: 'Service',
+      state: 'up',
+      apiSpecificationType: 'API',
+    },
+    accessStates: [
+      {
+        accessRequest: new OutgoingAccessRequestModel({
+          outgoingAccessRequestStore: {},
+          accessRequestData: {
+            state: ACCESS_REQUEST_STATES.APPROVED,
+            publicKeyFingerprint: 'public-key-fingerprint',
+          },
+        }),
+        accessProof: new AccessProofModel({
+          accessProofData: {
+            id: '42',
+          },
+        }),
+      },
+    ],
+  })
+
+  expect(directoryService.accessStatesWithAccess).toHaveLength(1)
+})

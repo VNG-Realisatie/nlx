@@ -163,3 +163,56 @@ test('requesting access to a service in the directory', async () => {
     'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
   )
 })
+
+test('retrieving all services with access', async () => {
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
+        },
+        serviceName: 'Service A',
+      },
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
+        },
+        serviceName: 'Service B',
+      },
+    ],
+  })
+
+  const rootStore = new RootStore({
+    directoryApiClient,
+    managementApiClient,
+  })
+
+  rootStore.accessProofStore.updateFromServer({
+    id: '1',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'Org A',
+    },
+    serviceName: 'Service A',
+  })
+
+  await rootStore.directoryServicesStore.fetchAll()
+
+  const serviceWithAccess = rootStore.directoryServicesStore.getService(
+    '00000000000000000001',
+    'Service A',
+  )
+
+  const servicesWithAccess = rootStore.directoryServicesStore.servicesWithAccess
+
+  expect(servicesWithAccess).toHaveLength(1)
+  expect(servicesWithAccess[0]).toBe(serviceWithAccess)
+})

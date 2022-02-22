@@ -141,6 +141,15 @@ class DirectoryServiceModel {
     yield this.fetch()
   }).bind(this)
 
+  _accessStateHasAccess(accessState) {
+    const { accessRequest, accessProof } = accessState
+    return !!(
+      accessRequest.state === ACCESS_REQUEST_STATES.APPROVED &&
+      accessProof &&
+      !accessProof.revokedAt
+    )
+  }
+
   hasAccess(publicKeyFingerprint) {
     const accessStateForFingerprint =
       this._accessStates.get(publicKeyFingerprint)
@@ -149,15 +158,13 @@ class DirectoryServiceModel {
       return false
     }
 
-    const accessRequest = accessStateForFingerprint.accessRequest
-    const accessProof = accessStateForFingerprint.accessProof
+    return this._accessStateHasAccess(accessStateForFingerprint)
+  }
 
-    return !!(
-      accessRequest &&
-      accessRequest.state === ACCESS_REQUEST_STATES.APPROVED &&
-      accessProof &&
-      !accessProof.revokedAt
-    )
+  get accessStatesWithAccess() {
+    return [...this._accessStates.values()].filter((accessState) => {
+      return this._accessStateHasAccess(accessState)
+    })
   }
 }
 

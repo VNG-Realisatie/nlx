@@ -1,8 +1,8 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import React from 'react'
-import { arrayOf, func, shape, string } from 'prop-types'
+import React, { useEffect } from 'react'
+import { arrayOf, func, instanceOf } from 'prop-types'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
@@ -13,11 +13,24 @@ import {
   Select,
   TextInput,
 } from '@commonground/design-system'
+import { observer } from 'mobx-react'
 import DateInput, { isoDateSchema } from '../../../../../components/DateInput'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
+import {
+  useDirectoryServiceStore,
+  useOutwayStore,
+} from '../../../../../hooks/use-stores'
 import { DateInputsWrapper, DateInputWrapper, StyledForm } from './index.styles'
 
-const OrderForm = ({ services, onSubmitHandler }) => {
+const OrderForm = ({ onSubmitHandler }) => {
   const { t } = useTranslation()
+  const outwayStore = useOutwayStore()
+  const directoryServiceStore = useDirectoryServiceStore()
+
+  useEffect(() => {
+    outwayStore.fetchAll()
+    directoryServiceStore.fetchAll()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const initialValues = {
     description: '',
@@ -26,7 +39,7 @@ const OrderForm = ({ services, onSubmitHandler }) => {
     publicKeyPEM: '',
     validFrom: '',
     validUntil: '',
-    services: [],
+    accessProofIds: [],
   }
 
   const validationSchema = Yup.object().shape({
@@ -42,23 +55,29 @@ const OrderForm = ({ services, onSubmitHandler }) => {
       t('This field is required'),
     ),
     validUntil: isoDateSchema().required(t('This field is required')),
-    services: Yup.array()
-      .of(
-        Yup.object().shape({
-          organization: Yup.object().shape({
-            serialNumber: Yup.string(),
-            name: Yup.string(),
-          }),
-          service: Yup.string(),
-        }),
-      )
-      .min(1, t('This field is required')),
+    accessProofIds: Yup.array().min(1, t('This field is required')),
   })
 
-  const selectableServices = services.map((service) => ({
-    value: service,
-    label: `${service.organization.name} (${service.organization.serialNumber}) - ${service.service}`,
-  }))
+  const selectableServices = directoryServiceStore.servicesWithAccess.reduce(
+    (previousValue, service) => {
+      service.accessStatesWithAccess.forEach((accessState) => {
+        const { accessRequest, accessProof } = accessState
+
+        const outwayNames = outwayStore
+          .getByPublicKeyFingerprint(accessRequest.publicKeyFingerprint)
+          .map((outway) => outway.name)
+          .join(', ')
+
+        previousValue.push({
+          value: accessProof.id,
+          label: `${service.serviceName} - ${service.organization.name} (${service.organization.serialNumber}) - via ${outwayNames} (${accessRequest.publicKeyFingerprint})`,
+        })
+      })
+
+      return previousValue
+    },
+    [],
+  )
 
   const handleSubmit = (values) => {
     onSubmitHandler(values)
@@ -116,9 +135,9 @@ const OrderForm = ({ services, onSubmitHandler }) => {
           </DateInputsWrapper>
 
           <Select
-            name="services"
+            name="accessProofIds"
             options={selectableServices}
-            size="l"
+            size="xl"
             isMulti
             placeholder={t('Select a service…')}
           >
@@ -138,15 +157,7 @@ const OrderForm = ({ services, onSubmitHandler }) => {
 }
 
 OrderForm.propTypes = {
-  services: arrayOf(
-    shape({
-      organization: shape({
-        serialNumber: string.isRequired,
-        name: string.isRequired,
-      }).isRequired,
-      service: string,
-    }),
-  ),
+  services: arrayOf(instanceOf(DirectoryServiceModel)),
   onSubmitHandler: func.isRequired,
 }
 
@@ -154,4 +165,4 @@ OrderForm.defaultProps = {
   services: [],
 }
 
-export default OrderForm
+export default observer(OrderForm)

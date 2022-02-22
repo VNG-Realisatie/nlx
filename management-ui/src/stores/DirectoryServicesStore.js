@@ -120,9 +120,16 @@ class DirectoryServicesStore {
     })
   }
 
-  // TODO: pass fingerprint
   get servicesWithAccess() {
-    return this.services.filter((service) => service.hasAccess)
+    return this._rootStore.accessProofStore.accessProofs
+      .map((accessProof) =>
+        this._rootStore.directoryServicesStore.getService(
+          accessProof.organization.serialNumber,
+          accessProof.serviceName,
+        ),
+      )
+      .filter((service) => !!service)
+      .filter((directoryService, i, arr) => arr.indexOf(directoryService) === i)
   }
 }
 

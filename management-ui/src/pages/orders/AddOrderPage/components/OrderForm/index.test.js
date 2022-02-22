@@ -6,24 +6,66 @@ import userEvent from '@testing-library/user-event'
 import { waitFor, fireEvent } from '@testing-library/react'
 import selectEvent from 'react-select-event'
 import { renderWithProviders } from '../../../../../test-utils'
+import { RootStore, StoreProvider } from '../../../../../stores'
+import { DirectoryApi, ManagementApi } from '../../../../../api'
+import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import OrderForm from './index'
 
 test('the form values of the onSubmitHandler', async () => {
   const onSubmitHandlerMock = jest.fn()
 
-  const { getByLabelText, getByText } = renderWithProviders(
-    <OrderForm
-      services={[
-        {
-          organization: {
-            serialNumber: '00000000000000000001',
-            name: 'organization-a',
-          },
-          service: 'service-a',
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'outway-a',
+        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+      },
+    ],
+  })
+
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'organization-a',
         },
-      ]}
-      onSubmitHandler={onSubmitHandlerMock}
-    />,
+        serviceName: 'service-a',
+        accessStates: [
+          {
+            accessRequest: {
+              id: '1',
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint:
+                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+            },
+            accessProof: {
+              id: '1',
+              organization: {
+                serialNumber: '00000000000000000001',
+                name: 'organization-a',
+              },
+              serviceName: 'service-a',
+            },
+          },
+        ],
+      },
+    ],
+  })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+    directoryApiClient,
+  })
+
+  const { getByLabelText, getByText } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <OrderForm onSubmitHandler={onSubmitHandlerMock} />
+    </StoreProvider>,
   )
 
   userEvent.type(getByLabelText(/Order description/), 'my-description')
@@ -39,7 +81,10 @@ test('the form values of the onSubmitHandler', async () => {
   fireEvent.change(getByLabelText(/Valid until/), {
     target: { value: '2021-01-31' },
   })
-  await selectEvent.select(getByLabelText(/Services/), /service-a/)
+  await selectEvent.select(
+    getByLabelText(/Services/),
+    /service-a - organization-a \(00000000000000000001\) - via outway-a \(h\+jpuLAMFzM09tOZpb0Ehslhje4S\/IsIxSWsS4E16Yc=\)/,
+  )
 
   userEvent.click(getByText('Add order'))
 
@@ -49,17 +94,9 @@ test('the form values of the onSubmitHandler', async () => {
       reference: 'my-reference',
       delegatee: '01234567890123456789',
       publicKeyPEM: 'my-public-key-pem',
-      services: [
-        {
-          organization: {
-            serialNumber: '00000000000000000001',
-            name: 'organization-a',
-          },
-          service: 'service-a',
-        },
-      ],
       validFrom: new Date('2021-01-01T00:00:00.000Z'),
       validUntil: new Date('2021-01-31T00:00:00.000Z'),
+      accessProofIds: ['1'],
     }),
   )
 })

@@ -21,15 +21,12 @@ const AddOrderPage = () => {
     directoryServicesStore.fetchAll()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const serviceNames = directoryServicesStore.servicesWithAccess.map(
-    (service) => ({
-      service: service.serviceName,
-      organization: service.organization,
-    }),
-  )
+  const servicesWithAccess = directoryServicesStore.servicesWithAccess
 
   const noAccessibleServices =
-    directoryServicesStore.isInitiallyFetched && !serviceNames.length && !error
+    directoryServicesStore.isInitiallyFetched &&
+    !servicesWithAccess.length &&
+    !error
 
   const submitOrder = async (formData) => {
     try {
@@ -66,7 +63,7 @@ const AddOrderPage = () => {
         </Alert>
       )}
 
-      <OrderForm services={serviceNames} onSubmitHandler={submitOrder} />
+      <OrderForm services={servicesWithAccess} onSubmitHandler={submitOrder} />
     </PageTemplate>
   )
 }

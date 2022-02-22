@@ -37,7 +37,7 @@ class OrderStore {
           delegatee: formData.delegatee,
           validFrom: formData.validFrom,
           validUntil: formData.validUntil,
-          accessProofIds: [],
+          accessProofIds: formData.accessProofIds,
         },
       })
 
