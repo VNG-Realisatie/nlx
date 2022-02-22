@@ -7,7 +7,7 @@ import AccessProofStore from './AccessProofStore'
 test('updating from server', async () => {
   const accessProofStore = new AccessProofStore()
 
-  expect(accessProofStore.accessProofs.size).toEqual(0)
+  expect(accessProofStore.accessProofs).toHaveLength(0)
   expect(accessProofStore.updateFromServer()).toBeNull()
 
   let accessProof = await accessProofStore.updateFromServer({
@@ -19,7 +19,7 @@ test('updating from server', async () => {
   })
 
   // new model should be created
-  expect(accessProofStore.accessProofs.size).toEqual(1)
+  expect(accessProofStore.accessProofs).toHaveLength(1)
   expect(accessProof).toBeInstanceOf(AccessProofModel)
 
   accessProof = await accessProofStore.updateFromServer({
@@ -31,6 +31,6 @@ test('updating from server', async () => {
   })
 
   // existing model should be updated
-  expect(accessProofStore.accessProofs.size).toEqual(1)
+  expect(accessProofStore.accessProofs).toHaveLength(1)
   expect(accessProof).toBeInstanceOf(AccessProofModel)
 })

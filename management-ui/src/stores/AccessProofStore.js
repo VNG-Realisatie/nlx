@@ -6,16 +6,20 @@ import { makeAutoObservable, observable } from 'mobx'
 import AccessProofModel from './models/AccessProofModel'
 
 class AccessProofStore {
-  accessProofs = observable.map()
+  _accessProofs = observable.map()
 
   constructor() {
     makeAutoObservable(this)
   }
 
+  get accessProofs() {
+    return [...this._accessProofs]
+  }
+
   updateFromServer = (accessProofData) => {
     if (!accessProofData) return null
 
-    const cachedAccessProof = this.accessProofs.get(accessProofData.id)
+    const cachedAccessProof = this._accessProofs.get(accessProofData.id)
 
     if (cachedAccessProof) {
       cachedAccessProof.update(accessProofData)
@@ -24,7 +28,7 @@ class AccessProofStore {
 
     const accessProof = new AccessProofModel({ accessProofData })
 
-    this.accessProofs.set(accessProof.id, accessProof)
+    this._accessProofs.set(accessProof.id, accessProof)
 
     return accessProof
   }
