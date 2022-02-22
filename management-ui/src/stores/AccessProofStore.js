@@ -13,7 +13,7 @@ class AccessProofStore {
   }
 
   get accessProofs() {
-    return [...this._accessProofs]
+    return [...this._accessProofs.values()]
   }
 
   updateFromServer = (accessProofData) => {
