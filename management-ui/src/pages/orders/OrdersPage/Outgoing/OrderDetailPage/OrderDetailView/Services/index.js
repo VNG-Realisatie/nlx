@@ -5,6 +5,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Collapsible } from '@commonground/design-system'
+import { arrayOf, instanceOf } from 'prop-types'
 import { IconServices } from '../../../../../../../icons'
 import Amount from '../../../../../../../components/Amount'
 import Table from '../../../../../../../components/Table'
@@ -12,10 +13,10 @@ import {
   DetailHeading,
   StyledCollapsibleBody,
 } from '../../../../../../../components/DetailView'
-import Service from '../../../../../../../types/Service'
+import DirectoryServiceModel from '../../../../../../../stores/models/DirectoryServiceModel'
 import { OrganizationName, Separator } from './index.styles'
 
-const Services: React.FC<{ services: Service[] }> = ({ services }) => {
+const Services = ({ services }) => {
   const { t } = useTranslation()
 
   const ConnectedServices = () => {
@@ -65,6 +66,10 @@ const Services: React.FC<{ services: Service[] }> = ({ services }) => {
       </StyledCollapsibleBody>
     </Collapsible>
   )
+}
+
+Services.propTypes = {
+  services: arrayOf(instanceOf(DirectoryServiceModel)),
 }
 
 export default Services
