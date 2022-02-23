@@ -2,22 +2,29 @@
 // Licensed under the EUPL
 //
 import { flow, makeAutoObservable } from 'mobx'
+import AccessProofModel from './AccessProofModel'
+
+function throwErrorWhenNotInstanceOf(object, model) {
+  if (object && !(object instanceof model)) {
+    throw new Error(`Object should be an instance of ${model}`)
+  }
+}
 
 class OutgoingOrderModel {
   _description = null
   _delegatee = null
   _reference = null
   _publicKeyPem = null
-  _services = null
   _revokedAt = null
   _validFrom = null
   _validUntil = null
+  _accessProofs = []
 
-  constructor({ orderStore, orderData }) {
+  constructor({ orderStore, orderData, accessProofs }) {
     makeAutoObservable(this)
 
     this.orderStore = orderStore
-    this.update(orderData)
+    this.update({ orderData, accessProofs })
   }
 
   get description() {
@@ -48,15 +55,15 @@ class OutgoingOrderModel {
     return this._validUntil
   }
 
-  get services() {
-    return this._services
+  get accessProofs() {
+    return this._accessProofs
   }
 
   revoke = flow(function* revoke() {
     yield this.orderStore.revokeOutgoing(this)
   }).bind(this)
 
-  update = (orderData) => {
+  update = ({ orderData, accessProofs }) => {
     if (!orderData) {
       throw Error('Data required to update outgoing order')
     }
@@ -77,10 +84,6 @@ class OutgoingOrderModel {
       this._publicKeyPem = orderData.publicKeyPem
     }
 
-    if (orderData.services) {
-      this._services = orderData.services
-    }
-
     if (orderData.revokedAt) {
       this._revokedAt = new Date(orderData.revokedAt)
     }
@@ -91,6 +94,15 @@ class OutgoingOrderModel {
 
     if (orderData.validUntil) {
       this._validUntil = new Date(orderData.validUntil)
+    }
+
+    if (accessProofs) {
+      this._accessProofs = []
+
+      accessProofs.forEach((accessProof) => {
+        throwErrorWhenNotInstanceOf(accessProof, AccessProofModel)
+        this._accessProofs.push(accessProof)
+      })
     }
   }
 }

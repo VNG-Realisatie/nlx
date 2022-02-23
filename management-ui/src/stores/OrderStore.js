@@ -10,8 +10,10 @@ class OrderStore {
   _outgoingOrders = observable.map()
   _incomingOrders = observable.map()
 
-  constructor({ managementApiClient }) {
+  constructor({ rootStore, managementApiClient }) {
     makeAutoObservable(this)
+
+    this._rootStore = rootStore
     this._managementApiClient = managementApiClient
   }
 
@@ -66,9 +68,14 @@ class OrderStore {
         yield this._managementApiClient.managementListOutgoingOrders()
 
       result.orders.forEach((order) => {
+        const accessProofModels = order.accessProofs.map((accessProof) =>
+          this._rootStore.accessProofStore.updateFromServer(accessProof),
+        )
+
         const orderModel = new OutgoingOrderModel({
           orderStore: this,
           orderData: order,
+          accessProofs: accessProofModels,
         })
 
         this._outgoingOrders.set(

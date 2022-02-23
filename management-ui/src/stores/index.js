@@ -75,6 +75,7 @@ export class RootStore {
       managementApiClient,
     })
     this.orderStore = new OrderStore({
+      rootStore: this,
       managementApiClient,
     })
   }
