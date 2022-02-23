@@ -39,10 +39,7 @@ const Incoming = ({ orders }) => {
       </Wrapper>
 
       <Routes>
-        <Route
-          path="/orders/incoming/:delegator/:reference"
-          element={<OrderDetailPage />}
-        />
+        <Route path=":delegator/:reference" element={<OrderDetailPage />} />
       </Routes>
     </>
   ) : (
