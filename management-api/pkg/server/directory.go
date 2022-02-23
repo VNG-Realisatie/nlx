@@ -253,9 +253,10 @@ func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 			SerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
 			Name:         accessProof.OutgoingAccessRequest.Organization.Name,
 		},
-		ServiceName:     accessProof.OutgoingAccessRequest.ServiceName,
-		CreatedAt:       createdAt,
-		RevokedAt:       revokedAt,
-		AccessRequestId: uint64(accessProof.OutgoingAccessRequest.ID),
+		ServiceName:          accessProof.OutgoingAccessRequest.ServiceName,
+		CreatedAt:            createdAt,
+		RevokedAt:            revokedAt,
+		PublicKeyFingerprint: accessProof.OutgoingAccessRequest.PublicKeyFingerprint,
+		AccessRequestId:      uint64(accessProof.OutgoingAccessRequest.ID),
 	}
 }

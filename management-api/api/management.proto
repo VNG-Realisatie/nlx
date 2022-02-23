@@ -411,6 +411,7 @@ message AccessProof {
   google.protobuf.Timestamp createdAt = 4;
   google.protobuf.Timestamp revokedAt = 5;
   uint64 accessRequestId = 6;
+  string publicKeyFingerprint = 7;
 }
 
 service Directory {
