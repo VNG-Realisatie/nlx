@@ -33,6 +33,12 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 	outgoingOrders := make([]*api.OutgoingOrder, len(orders))
 
 	for i, order := range orders {
+		accessProofs := make([]*api.AccessProof, len(order.OutgoingOrderAccessProofs))
+
+		for j, outgoingOrderAccessProofs := range order.OutgoingOrderAccessProofs {
+			accessProofs[j] = convertAccessProof(outgoingOrderAccessProofs.AccessProof)
+		}
+
 		outgoingOrders[i] = &api.OutgoingOrder{
 			Reference:    order.Reference,
 			PublicKeyPem: order.PublicKeyPEM,
@@ -41,6 +47,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 			RevokedAt:    convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:    timestamppb.New(order.ValidFrom),
 			ValidUntil:   timestamppb.New(order.ValidUntil),
+			AccessProofs: accessProofs,
 		}
 	}
 

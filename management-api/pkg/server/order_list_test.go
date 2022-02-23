@@ -33,6 +33,9 @@ func TestListOutgoingOrders(t *testing.T) {
 	validFrom := time.Now()
 	validUntil := time.Now().Add(time.Hour)
 
+	accessProofCreatedAt := time.Now()
+	accessRequestCreatedAt := time.Now()
+
 	tests := map[string]struct {
 		setup        func(serviceMocks)
 		wantResponse *api.ListOutgoingOrdersResponse
@@ -51,6 +54,7 @@ func TestListOutgoingOrders(t *testing.T) {
 					ListOutgoingOrders(gomock.Any()).
 					Return([]*database.OutgoingOrder{
 						{
+							ID:           1,
 							Reference:    "reference",
 							Description:  "description",
 							Delegatee:    "10000000000000000001",
@@ -58,6 +62,34 @@ func TestListOutgoingOrders(t *testing.T) {
 							ValidFrom:    validFrom,
 							ValidUntil:   validUntil,
 							RevokedAt:    sql.NullTime{},
+							OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
+								{
+									OutgoingOrderID: 1,
+									AccessProofID:   10,
+									AccessProof: &database.AccessProof{
+										ID:        10,
+										CreatedAt: accessProofCreatedAt,
+										OutgoingAccessRequest: &database.OutgoingAccessRequest{
+											ID:                   100,
+											Organization:         database.Organization{
+												Name: ""
+											},
+											ServiceName:          "",
+											ReferenceID:          0,
+											State:                "",
+											LockID:               nil,
+											LockExpiresAt:        sql.NullTime{},
+											PublicKeyFingerprint: "",
+											ErrorCode:            0,
+											ErrorCause:           "",
+											ErrorStackTrace:      nil,
+											CreatedAt:            time.Time{},
+											UpdatedAt:            time.Time{},
+											SynchronizeAt:        time.Time{},
+										},
+									},
+								},
+							},
 						},
 					}, nil)
 			},
@@ -70,6 +102,9 @@ func TestListOutgoingOrders(t *testing.T) {
 						PublicKeyPem: "public_key",
 						ValidFrom:    timestamppb.New(validFrom),
 						ValidUntil:   timestamppb.New(validUntil),
+						AccessProofs: []*api.AccessProof{{
+							Id: 10,
+						}},
 					},
 				},
 			},
