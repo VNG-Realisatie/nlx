@@ -3,11 +3,12 @@
 //
 import React from 'react'
 import { observer } from 'mobx-react'
-import { arrayOf, instanceOf, shape, string } from 'prop-types'
+import { instanceOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
 import { CellServices } from '../index.styles'
 import StatusIcon from '../../StatusIcon'
+import IncomingOrderModel from '../../../../../stores/models/IncomingOrderModel'
 import { Cell, List, Item, OrganizationName, Separator } from './index.styles'
 
 const OrderRow = ({ order }) => {
@@ -36,11 +37,10 @@ const OrderRow = ({ order }) => {
           {order.services.map((service, i) => (
             <Item
               key={i}
-              title={`${service.organization.name} (${service.organization.serialNumber}) - ${service.service}`}
+              title={`${service.organization.serialNumber} - ${service.service}`}
             >
               <OrganizationName>
-                {service.organization.name} ({service.organization.serialNumber}
-                )
+                {service.organization.serialNumber}
               </OrganizationName>
               <Separator> - </Separator>
               {service.service}
@@ -54,21 +54,7 @@ const OrderRow = ({ order }) => {
 }
 
 OrderRow.propTypes = {
-  order: shape({
-    delegator: string.isRequired,
-    reference: string.isRequired,
-    services: arrayOf(
-      shape({
-        service: string.isRequired,
-        organization: shape({
-          serialNumber: string.isRequired,
-          name: string.isRequired,
-        }).isRequired,
-      }),
-    ),
-    validFrom: instanceOf(Date).isRequired,
-    validUntil: instanceOf(Date).isRequired,
-  }),
+  order: instanceOf(IncomingOrderModel),
 }
 
 export default observer(OrderRow)

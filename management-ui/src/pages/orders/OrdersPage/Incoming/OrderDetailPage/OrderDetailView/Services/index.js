@@ -43,7 +43,7 @@ const Services = ({ services }) => {
                 >
                   <Table.Td>
                     <OrganizationName>
-                      {organization.name} ({organization.serialNumber})
+                      {organization.serialNumber}
                     </OrganizationName>
                     <Separator> - </Separator>
                     <small>{service}</small>
