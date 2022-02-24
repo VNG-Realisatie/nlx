@@ -73,10 +73,16 @@ proto-management-api:
             --grpc-gateway_out=/dist/external --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist/external \
             ./external.proto
+
+    RUN  npx @openapitools/openapi-generator-cli generate -i /dist/management.swagger.json -g openapi --additional-properties=outputFileName=management.swagger.json -o /openapi
+    RUN  npx @openapitools/openapi-generator-cli generate -i /dist/external/external.swagger.json -g openapi --additional-properties=outputFileName=external.swagger.json -o /openapi
+
     RUN goimports -w -local "go.nlx.io" /dist/
 
     SAVE ARTIFACT /dist/*.* AS LOCAL ./management-api/api/
     SAVE ARTIFACT /dist/external/*.* AS LOCAL ./management-api/api/external/
+    SAVE ARTIFACT /openapi/management.swagger.json AS LOCAL ./management-api/api/
+    SAVE ARTIFACT /openapi/external.swagger.json AS LOCAL ./management-api/api/external/
 
 proto-management-api-client:
     FROM +proto-management-api

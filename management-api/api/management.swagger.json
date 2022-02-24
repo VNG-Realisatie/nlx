@@ -1,2239 +1,2511 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "management.proto",
-    "version": "version not set"
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "management.proto",
+    "version" : "version not set"
   },
-  "tags": [
-    {
-      "name": "Management"
-    },
-    {
-      "name": "Directory"
-    },
-    {
-      "name": "TXLog"
-    }
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "paths": {
-    "/api/v1/access-grants/services/{serviceName}": {
-      "get": {
-        "operationId": "Management_ListAccessGrantsForService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListAccessGrantsForServiceResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "tags" : [ {
+    "name" : "Management"
+  }, {
+    "name" : "Directory"
+  }, {
+    "name" : "TXLog"
+  } ],
+  "paths" : {
+    "/api/v1/access-grants/services/{serviceName}" : {
+      "get" : {
+        "operationId" : "Management_ListAccessGrantsForService",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
           }
-        },
-        "parameters": [
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/access-grants/{accessGrantID}/revoke": {
-      "post": {
-        "operationId": "Management_RevokeAccessGrant",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementAccessGrant"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "accessGrantID",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/access-requests": {
-      "post": {
-        "operationId": "Management_CreateAccessRequest",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementOutgoingAccessRequest"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementCreateAccessRequestRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/access-requests/incoming/services/{serviceName}": {
-      "get": {
-        "operationId": "Management_ListIncomingAccessRequests",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListIncomingAccessRequestsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve": {
-      "post": {
-        "operationId": "Management_ApproveIncomingAccessRequest",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "accessRequestID",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject": {
-      "post": {
-        "operationId": "Management_RejectIncomingAccessRequest",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "accessRequestID",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/access-requests/outgoing/{accessRequestID}/send": {
-      "post": {
-        "operationId": "Management_SendAccessRequest",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementOutgoingAccessRequest"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "accessRequestID",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/audit-logs": {
-      "get": {
-        "operationId": "Management_ListAuditLogs",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListAuditLogsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}": {
-      "get": {
-        "operationId": "Directory_GetOrganizationService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementDirectoryService"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "organizationSerialNumber",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Directory"
-        ]
-      }
-    },
-    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests": {
-      "post": {
-        "operationId": "Directory_RequestAccessToService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementOutgoingAccessRequest"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "organizationSerialNumber",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "serviceName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Directory"
-        ]
-      }
-    },
-    "/api/v1/directory/services": {
-      "get": {
-        "operationId": "Directory_ListServices",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementDirectoryListServicesResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Directory"
-        ]
-      }
-    },
-    "/api/v1/directory/terms-of-service": {
-      "get": {
-        "operationId": "Directory_GetTermsOfService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementGetTermsOfServiceResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Directory"
-        ]
-      }
-    },
-    "/api/v1/finance/enabled": {
-      "get": {
-        "operationId": "Management_IsFinanceEnabled",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementIsFinanceEnabledResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/finance/export": {
-      "get": {
-        "operationId": "Management_DownloadFinanceExport",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementDownloadFinanceExportResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/inways": {
-      "get": {
-        "operationId": "Management_ListInways",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListInwaysResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      },
-      "post": {
-        "operationId": "Management_RegisterInway",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementInway"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementInway"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/inways/{name}": {
-      "get": {
-        "operationId": "Management_GetInway",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementInway"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      },
-      "delete": {
-        "operationId": "Management_DeleteInway",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      },
-      "put": {
-        "operationId": "Management_UpdateInway",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementInway"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementInway"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/orders/incoming": {
-      "get": {
-        "operationId": "Management_ListIncomingOrders",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListIncomingOrdersResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/orders/outgoing": {
-      "get": {
-        "operationId": "Management_ListOutgoingOrders",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListOutgoingOrdersResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      },
-      "post": {
-        "operationId": "Management_CreateOutgoingOrder",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementOutgoingOrderRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      },
-      "put": {
-        "operationId": "Management_UpdateOutgoingOrder",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementOutgoingOrderRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke": {
-      "put": {
-        "operationId": "Management_RevokeOutgoingOrder",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "delegatee",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "reference",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/orders/synchronize": {
-      "post": {
-        "operationId": "Management_SynchronizeOrders",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementSynchronizeOrdersResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/outways": {
-      "get": {
-        "operationId": "Management_ListOutways",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListOutwaysResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
-      },
-      "post": {
-        "operationId": "Management_RegisterOutway",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementRegisterOutwayRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/retrieve-claim": {
-      "get": {
-        "operationId": "Management_RetrieveClaimForOrder",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementRetrieveClaimForOrderResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "orderReference",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "orderOrganizationSerialNumber",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/services": {
-      "get": {
-        "operationId": "Management_ListServices",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementListServicesResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "inwayName",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      },
-      "post": {
-        "operationId": "Management_CreateService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementCreateServiceResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementCreateServiceRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/services/{name}": {
-      "get": {
-        "operationId": "Management_GetService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementGetServiceResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      },
-      "delete": {
-        "operationId": "Management_DeleteService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      },
-      "put": {
-        "operationId": "Management_UpdateService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementUpdateServiceResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "endpointURL": {
-                  "type": "string"
-                },
-                "documentationURL": {
-                  "type": "string"
-                },
-                "apiSpecificationURL": {
-                  "type": "string"
-                },
-                "internal": {
-                  "type": "boolean"
-                },
-                "techSupportContact": {
-                  "type": "string"
-                },
-                "publicSupportContact": {
-                  "type": "string"
-                },
-                "inways": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "oneTimeCosts": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "monthlyCosts": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "requestCosts": {
-                  "type": "integer",
-                  "format": "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListAccessGrantsForServiceResponse"
                 }
               }
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/settings": {
-      "get": {
-        "operationId": "Management_GetSettings",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementSettings"
-            }
+            },
+            "description" : "A successful response."
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
           }
         },
-        "tags": [
-          "Management"
-        ]
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/access-grants/{accessGrantID}/revoke" : {
+      "post" : {
+        "operationId" : "Management_RevokeAccessGrant",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "accessGrantID",
+          "required" : true,
+          "schema" : {
+            "format" : "uint64",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementAccessGrant"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/access-requests" : {
+      "post" : {
+        "operationId" : "Management_CreateAccessRequest",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementCreateAccessRequestRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      }
+    },
+    "/api/v1/access-requests/incoming/services/{serviceName}" : {
+      "get" : {
+        "operationId" : "Management_ListIncomingAccessRequests",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListIncomingAccessRequestsResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve" : {
+      "post" : {
+        "operationId" : "Management_ApproveIncomingAccessRequest",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "accessRequestID",
+          "required" : true,
+          "schema" : {
+            "format" : "uint64",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject" : {
+      "post" : {
+        "operationId" : "Management_RejectIncomingAccessRequest",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "accessRequestID",
+          "required" : true,
+          "schema" : {
+            "format" : "uint64",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/access-requests/outgoing/{accessRequestID}/send" : {
+      "post" : {
+        "operationId" : "Management_SendAccessRequest",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "accessRequestID",
+          "required" : true,
+          "schema" : {
+            "format" : "uint64",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/audit-logs" : {
+      "get" : {
+        "operationId" : "Management_ListAuditLogs",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListAuditLogsResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}" : {
+      "get" : {
+        "operationId" : "Directory_GetOrganizationService",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "organizationSerialNumber",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementDirectoryService"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Directory" ]
+      }
+    },
+    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests" : {
+      "post" : {
+        "operationId" : "Directory_RequestAccessToService",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "organizationSerialNumber",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Directory" ]
+      }
+    },
+    "/api/v1/directory/services" : {
+      "get" : {
+        "operationId" : "Directory_ListServices",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementDirectoryListServicesResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Directory" ]
+      }
+    },
+    "/api/v1/directory/terms-of-service" : {
+      "get" : {
+        "operationId" : "Directory_GetTermsOfService",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementGetTermsOfServiceResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Directory" ]
+      }
+    },
+    "/api/v1/finance/enabled" : {
+      "get" : {
+        "operationId" : "Management_IsFinanceEnabled",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementIsFinanceEnabledResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/finance/export" : {
+      "get" : {
+        "operationId" : "Management_DownloadFinanceExport",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementDownloadFinanceExportResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/inways" : {
+      "get" : {
+        "operationId" : "Management_ListInways",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListInwaysResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
       },
-      "put": {
-        "operationId": "Management_UpdateSettings",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
+      "post" : {
+        "operationId" : "Management_RegisterInway",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementInway"
+              }
             }
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementInway"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/managementUpdateSettingsRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Management"
-        ]
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
       }
     },
-    "/api/v1/statistics/services": {
-      "get": {
-        "operationId": "Management_GetStatisticsOfServices",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementGetStatisticsOfServicesResponse"
-            }
+    "/api/v1/inways/{name}" : {
+      "delete" : {
+        "operationId" : "Management_DeleteInway",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
           }
         },
-        "tags": [
-          "Management"
-        ]
-      }
-    },
-    "/api/v1/terms-of-service": {
-      "get": {
-        "operationId": "Management_GetTermsOfServiceStatus",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementGetTermsOfServiceStatusResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Management"
-        ]
+        "tags" : [ "Management" ]
       },
-      "post": {
-        "operationId": "Management_AcceptTermsOfService",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
+      "get" : {
+        "operationId" : "Management_GetInway",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementInway"
+                }
+              }
+            },
+            "description" : "A successful response."
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
           }
         },
-        "tags": [
-          "Management"
-        ]
+        "tags" : [ "Management" ]
+      },
+      "put" : {
+        "operationId" : "Management_UpdateInway",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementInway"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementInway"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
       }
     },
-    "/api/v1/txlog/enabled": {
-      "get": {
-        "operationId": "Management_IsTXLogEnabled",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementIsTXLogEnabledResponse"
-            }
+    "/api/v1/orders/incoming" : {
+      "get" : {
+        "operationId" : "Management_ListIncomingOrders",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListIncomingOrdersResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
           }
         },
-        "tags": [
-          "Management"
-        ]
+        "tags" : [ "Management" ]
       }
     },
-    "/api/v1/txlog/records": {
-      "get": {
-        "operationId": "TXLog_ListRecords",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/managementTXLogListRecordsResponse"
-            }
+    "/api/v1/orders/outgoing" : {
+      "get" : {
+        "operationId" : "Management_ListOutgoingOrders",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListOutgoingOrdersResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
           }
         },
-        "tags": [
-          "TXLog"
-        ]
+        "tags" : [ "Management" ]
+      },
+      "post" : {
+        "operationId" : "Management_CreateOutgoingOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementOutgoingOrderRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      },
+      "put" : {
+        "operationId" : "Management_UpdateOutgoingOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementOutgoingOrderRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      }
+    },
+    "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke" : {
+      "put" : {
+        "operationId" : "Management_RevokeOutgoingOrder",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "delegatee",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "reference",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/orders/synchronize" : {
+      "post" : {
+        "operationId" : "Management_SynchronizeOrders",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementSynchronizeOrdersResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/outways" : {
+      "get" : {
+        "operationId" : "Management_ListOutways",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListOutwaysResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      },
+      "post" : {
+        "operationId" : "Management_RegisterOutway",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementRegisterOutwayRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      }
+    },
+    "/api/v1/retrieve-claim" : {
+      "get" : {
+        "operationId" : "Management_RetrieveClaimForOrder",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "orderReference",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "orderOrganizationSerialNumber",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementRetrieveClaimForOrderResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/services" : {
+      "get" : {
+        "operationId" : "Management_ListServices",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "inwayName",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementListServicesResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      },
+      "post" : {
+        "operationId" : "Management_CreateService",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementCreateServiceRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementCreateServiceResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      }
+    },
+    "/api/v1/services/{name}" : {
+      "delete" : {
+        "operationId" : "Management_DeleteService",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      },
+      "get" : {
+        "operationId" : "Management_GetService",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementGetServiceResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      },
+      "put" : {
+        "operationId" : "Management_UpdateService",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/inline_object",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "properties" : {
+                  "endpointURL" : {
+                    "type" : "string"
+                  },
+                  "documentationURL" : {
+                    "type" : "string"
+                  },
+                  "apiSpecificationURL" : {
+                    "type" : "string"
+                  },
+                  "internal" : {
+                    "type" : "boolean"
+                  },
+                  "techSupportContact" : {
+                    "type" : "string"
+                  },
+                  "publicSupportContact" : {
+                    "type" : "string"
+                  },
+                  "inways" : {
+                    "items" : {
+                      "type" : "string"
+                    },
+                    "type" : "array"
+                  },
+                  "oneTimeCosts" : {
+                    "format" : "int32",
+                    "type" : "integer"
+                  },
+                  "monthlyCosts" : {
+                    "format" : "int32",
+                    "type" : "integer"
+                  },
+                  "requestCosts" : {
+                    "format" : "int32",
+                    "type" : "integer"
+                  }
+                },
+                "type" : "object"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementUpdateServiceResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      }
+    },
+    "/api/v1/settings" : {
+      "get" : {
+        "operationId" : "Management_GetSettings",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementSettings"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      },
+      "put" : {
+        "operationId" : "Management_UpdateSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/managementUpdateSettingsRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ],
+        "x-codegen-request-body-name" : "body"
+      }
+    },
+    "/api/v1/statistics/services" : {
+      "get" : {
+        "operationId" : "Management_GetStatisticsOfServices",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementGetStatisticsOfServicesResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/terms-of-service" : {
+      "get" : {
+        "operationId" : "Management_GetTermsOfServiceStatus",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementGetTermsOfServiceStatusResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      },
+      "post" : {
+        "operationId" : "Management_AcceptTermsOfService",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/txlog/enabled" : {
+      "get" : {
+        "operationId" : "Management_IsTXLogEnabled",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementIsTXLogEnabledResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
+    "/api/v1/txlog/records" : {
+      "get" : {
+        "operationId" : "TXLog_ListRecords",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementTXLogListRecordsResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "TXLog" ]
       }
     }
   },
-  "definitions": {
-    "AuditLogRecordActionType": {
-      "type": "string",
-      "enum": [
-        "loginSuccess",
-        "loginFail",
-        "logout",
-        "incomingAccessRequestAccept",
-        "incomingAccessRequestReject",
-        "accessGrantRevoke",
-        "outgoingAccessRequestCreate",
-        "outgoingAccessRequestFail",
-        "serviceCreate",
-        "serviceUpdate",
-        "serviceDelete",
-        "organizationSettingsUpdate",
-        "orderCreate",
-        "orderOutgoingRevoke",
-        "orderIncomingRevoke",
-        "inwayDelete",
-        "orderOutgoingUpdate",
-        "acceptTermsOfService"
-      ],
-      "default": "loginSuccess"
-    },
-    "AuthorizationSettingsAuthorization": {
-      "type": "object",
-      "properties": {
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "publicKeyHash": {
-          "type": "string"
-        },
-        "publicKeyPEM": {
-          "type": "string"
-        }
-      }
-    },
-    "DirectoryServiceState": {
-      "type": "string",
-      "enum": [
-        "unknown",
-        "up",
-        "down",
-        "degraded"
-      ],
-      "default": "unknown"
-    },
-    "ServiceAuthorizationSettings": {
-      "type": "object",
-      "properties": {
-        "mode": {
-          "type": "string"
-        },
-        "authorizations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AuthorizationSettingsAuthorization"
-          }
-        }
-      }
-    },
-    "managementAccessGrant": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "publicKeyFingerprint": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "revokedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "accessRequestId": {
-          "type": "string",
-          "format": "uint64"
-        }
-      }
-    },
-    "managementAccessProof": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "revokedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "accessRequestId": {
-          "type": "string",
-          "format": "uint64"
-        }
-      }
-    },
-    "managementAccessRequestState": {
-      "type": "string",
-      "enum": [
-        "UNSPECIFIED",
-        "FAILED",
-        "CREATED",
-        "RECEIVED",
-        "APPROVED",
-        "REJECTED"
-      ],
-      "default": "UNSPECIFIED"
-    },
-    "managementAuditLogRecord": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "action": {
-          "$ref": "#/definitions/AuditLogRecordActionType"
-        },
-        "operatingSystem": {
-          "type": "string"
-        },
-        "browser": {
-          "type": "string"
-        },
-        "client": {
-          "type": "string"
-        },
-        "user": {
-          "type": "string"
-        },
-        "delegatee": {
-          "type": "string"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementAuditLogRecordService"
+  "components" : {
+    "requestBodies" : {
+      "inline_object" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/inline_object"
+            }
           }
         },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "data": {
-          "$ref": "#/definitions/managementAuditLogRecordMetadata"
-        }
+        "required" : true
       }
     },
-    "managementAuditLogRecordMetadata": {
-      "type": "object",
-      "properties": {
-        "delegatee": {
-          "type": "string"
-        },
-        "delegator": {
-          "type": "string"
-        },
-        "reference": {
-          "type": "string"
-        },
-        "inwayName": {
-          "type": "string"
-        }
-      }
-    },
-    "managementAuditLogRecordService": {
-      "type": "object",
-      "properties": {
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "service": {
-          "type": "string"
-        }
-      }
-    },
-    "managementCreateAccessRequestRequest": {
-      "type": "object",
-      "properties": {
-        "organizationSerialNumber": {
-          "type": "string"
-        },
-        "serviceName": {
-          "type": "string"
-        }
-      }
-    },
-    "managementCreateServiceRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "managementCreateServiceResponse": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "managementDirectoryListServicesResponse": {
-      "type": "object",
-      "properties": {
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementDirectoryService"
-          }
-        }
-      }
-    },
-    "managementDirectoryService": {
-      "type": "object",
-      "properties": {
-        "serviceName": {
-          "type": "string"
-        },
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "apiSpecificationType": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/DirectoryServiceState"
-        },
-        "latestAccessRequest": {
-          "$ref": "#/definitions/managementOutgoingAccessRequest"
-        },
-        "latestAccessProof": {
-          "$ref": "#/definitions/managementAccessProof"
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "managementDownloadFinanceExportResponse": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "managementErrorCode": {
-      "type": "string",
-      "enum": [
-        "INTERNAL",
-        "NO_INWAY_SELECTED"
-      ],
-      "default": "INTERNAL"
-    },
-    "managementErrorDetails": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "$ref": "#/definitions/managementErrorCode"
-        },
-        "cause": {
-          "type": "string"
-        },
-        "stackTrace": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "managementGetServiceResponse": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "managementGetStatisticsOfServicesResponse": {
-      "type": "object",
-      "properties": {
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementServiceStatistics"
-          }
-        }
-      }
-    },
-    "managementGetTermsOfServiceResponse": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": "boolean"
-        },
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "managementGetTermsOfServiceStatusResponse": {
-      "type": "object",
-      "properties": {
-        "accepted": {
-          "type": "boolean"
-        }
-      }
-    },
-    "managementIncomingAccessRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/managementAccessRequestState"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "managementIncomingOrder": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "delegator": {
-          "type": "string"
-        },
-        "validFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOrderService"
-          }
-        },
-        "revokedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "managementInway": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "version": {
-          "type": "string"
-        },
-        "hostname": {
-          "type": "string"
-        },
-        "selfAddress": {
-          "type": "string"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementInwayService"
-          }
-        },
-        "ipAddress": {
-          "type": "string"
-        }
-      }
-    },
-    "managementInwayService": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "managementIsFinanceEnabledResponse": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": "boolean"
-        }
-      }
-    },
-    "managementIsTXLogEnabledResponse": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": "boolean"
-        }
-      }
-    },
-    "managementListAccessGrantsForServiceResponse": {
-      "type": "object",
-      "properties": {
-        "accessGrants": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementAccessGrant"
-          }
-        }
-      }
-    },
-    "managementListAuditLogsResponse": {
-      "type": "object",
-      "properties": {
-        "auditLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementAuditLogRecord"
-          }
-        }
-      }
-    },
-    "managementListIncomingAccessRequestsResponse": {
-      "type": "object",
-      "properties": {
-        "accessRequests": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementIncomingAccessRequest"
-          }
-        }
-      }
-    },
-    "managementListIncomingOrdersResponse": {
-      "type": "object",
-      "properties": {
-        "orders": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementIncomingOrder"
-          }
-        }
-      }
-    },
-    "managementListInwaysResponse": {
-      "type": "object",
-      "properties": {
-        "inways": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementInway"
-          }
-        }
-      }
-    },
-    "managementListOutgoingOrdersResponse": {
-      "type": "object",
-      "properties": {
-        "orders": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOutgoingOrder"
-          }
-        }
-      }
-    },
-    "managementListOutwaysResponse": {
-      "type": "object",
-      "properties": {
-        "outways": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOutway"
-          }
-        }
-      }
-    },
-    "managementListServicesResponse": {
-      "type": "object",
-      "properties": {
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementListServicesResponseService"
-          }
-        }
-      }
-    },
-    "managementListServicesResponseService": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "authorizationSettings": {
-          "$ref": "#/definitions/ServiceAuthorizationSettings"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "incomingAccessRequestCount": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "managementOrderService": {
-      "type": "object",
-      "properties": {
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "service": {
-          "type": "string"
-        }
-      }
-    },
-    "managementOrganization": {
-      "type": "object",
-      "properties": {
-        "serialNumber": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "managementOutgoingAccessRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "organization": {
-          "$ref": "#/definitions/managementOrganization"
-        },
-        "serviceName": {
-          "type": "string"
-        },
-        "state": {
-          "$ref": "#/definitions/managementAccessRequestState"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "errorDetails": {
-          "$ref": "#/definitions/managementErrorDetails"
-        }
-      }
-    },
-    "managementOutgoingOrder": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "delegatee": {
-          "type": "string"
-        },
-        "validFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOrderService"
-          }
-        },
-        "revokedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "publicKeyPem": {
-          "type": "string"
-        }
-      }
-    },
-    "managementOutgoingOrderRequest": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "publicKeyPEM": {
-          "type": "string"
-        },
-        "delegatee": {
-          "type": "string"
-        },
-        "validFrom": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "validUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "services": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementOrderService"
-          }
-        }
-      }
-    },
-    "managementOutway": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "ipAddress": {
-          "type": "string"
-        },
-        "publicKeyPEM": {
-          "type": "string"
-        },
-        "version": {
-          "type": "string"
-        }
-      }
-    },
-    "managementRegisterOutwayRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "publicKeyPEM": {
-          "type": "string"
-        },
-        "version": {
-          "type": "string"
-        }
-      }
-    },
-    "managementRetrieveClaimForOrderResponse": {
-      "type": "object",
-      "properties": {
-        "claim": {
-          "type": "string"
-        }
-      }
-    },
-    "managementServiceStatistics": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "incomingAccessRequestCount": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "managementSettings": {
-      "type": "object",
-      "properties": {
-        "organizationInway": {
-          "type": "string"
-        },
-        "organizationEmailAddress": {
-          "type": "string"
-        }
-      }
-    },
-    "managementSynchronizeOrdersResponse": {
-      "type": "object",
-      "properties": {
-        "orders": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementIncomingOrder"
-          }
-        }
-      }
-    },
-    "managementTXLogDirection": {
-      "type": "string",
-      "enum": [
-        "IN",
-        "OUT"
-      ],
-      "default": "IN"
-    },
-    "managementTXLogListRecordsResponse": {
-      "type": "object",
-      "properties": {
-        "records": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/managementTXLogRecord"
-          }
-        }
-      }
-    },
-    "managementTXLogOrder": {
-      "type": "object",
-      "properties": {
-        "delegator": {
-          "type": "string"
-        },
-        "reference": {
-          "type": "string"
-        }
-      }
-    },
-    "managementTXLogOrganization": {
-      "type": "object",
-      "properties": {
-        "serialNumber": {
-          "type": "string"
-        }
-      }
-    },
-    "managementTXLogRecord": {
-      "type": "object",
-      "properties": {
-        "source": {
-          "$ref": "#/definitions/managementTXLogOrganization"
-        },
-        "destination": {
-          "$ref": "#/definitions/managementTXLogOrganization"
-        },
-        "direction": {
-          "$ref": "#/definitions/managementTXLogDirection"
-        },
-        "service": {
-          "$ref": "#/definitions/managementTXLogService"
-        },
-        "data": {
-          "type": "string"
-        },
-        "order": {
-          "$ref": "#/definitions/managementTXLogOrder"
-        },
-        "TransactionID": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "managementTXLogService": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "managementUpdateServiceResponse": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "endpointURL": {
-          "type": "string"
-        },
-        "documentationURL": {
-          "type": "string"
-        },
-        "apiSpecificationURL": {
-          "type": "string"
-        },
-        "internal": {
-          "type": "boolean"
-        },
-        "techSupportContact": {
-          "type": "string"
-        },
-        "publicSupportContact": {
-          "type": "string"
-        },
-        "inways": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneTimeCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "monthlyCosts": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestCosts": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "managementUpdateSettingsRequest": {
-      "type": "object",
-      "properties": {
-        "organizationInway": {
-          "type": "string"
-        },
-        "organizationEmailAddress": {
-          "type": "string"
-        }
-      }
-    },
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "@type": {
-          "type": "string"
-        }
+    "schemas" : {
+      "AuditLogRecordActionType" : {
+        "default" : "loginSuccess",
+        "enum" : [ "loginSuccess", "loginFail", "logout", "incomingAccessRequestAccept", "incomingAccessRequestReject", "accessGrantRevoke", "outgoingAccessRequestCreate", "outgoingAccessRequestFail", "serviceCreate", "serviceUpdate", "serviceDelete", "organizationSettingsUpdate", "orderCreate", "orderOutgoingRevoke", "orderIncomingRevoke", "inwayDelete", "orderOutgoingUpdate", "acceptTermsOfService" ],
+        "type" : "string"
       },
-      "additionalProperties": {}
-    },
-    "rpcStatus": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protobufAny"
+      "AuthorizationSettingsAuthorization" : {
+        "properties" : {
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "publicKeyHash" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
           }
-        }
+        },
+        "type" : "object"
+      },
+      "DirectoryServiceState" : {
+        "default" : "unknown",
+        "enum" : [ "unknown", "up", "down", "degraded" ],
+        "type" : "string"
+      },
+      "ServiceAuthorizationSettings" : {
+        "properties" : {
+          "mode" : {
+            "type" : "string"
+          },
+          "authorizations" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AuthorizationSettingsAuthorization"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementAccessGrant" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "serviceName" : {
+            "type" : "string"
+          },
+          "publicKeyFingerprint" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "revokedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "accessRequestId" : {
+            "format" : "uint64",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementAccessProof" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "serviceName" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "revokedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "accessRequestId" : {
+            "format" : "uint64",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementAccessRequestState" : {
+        "default" : "UNSPECIFIED",
+        "enum" : [ "UNSPECIFIED", "FAILED", "CREATED", "RECEIVED", "APPROVED", "REJECTED" ],
+        "type" : "string"
+      },
+      "managementAuditLogRecord" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "action" : {
+            "$ref" : "#/components/schemas/AuditLogRecordActionType"
+          },
+          "operatingSystem" : {
+            "type" : "string"
+          },
+          "browser" : {
+            "type" : "string"
+          },
+          "client" : {
+            "type" : "string"
+          },
+          "user" : {
+            "type" : "string"
+          },
+          "delegatee" : {
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementAuditLogRecordService"
+            },
+            "type" : "array"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/managementAuditLogRecordMetadata"
+          }
+        },
+        "type" : "object"
+      },
+      "managementAuditLogRecordMetadata" : {
+        "properties" : {
+          "delegatee" : {
+            "type" : "string"
+          },
+          "delegator" : {
+            "type" : "string"
+          },
+          "reference" : {
+            "type" : "string"
+          },
+          "inwayName" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementAuditLogRecordService" : {
+        "properties" : {
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "service" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementCreateAccessRequestRequest" : {
+        "properties" : {
+          "organizationSerialNumber" : {
+            "type" : "string"
+          },
+          "serviceName" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementCreateServiceRequest" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "inways" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementCreateServiceResponse" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "inways" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementDirectoryListServicesResponse" : {
+        "properties" : {
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementDirectoryService"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementDirectoryService" : {
+        "properties" : {
+          "serviceName" : {
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "apiSpecificationType" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "state" : {
+            "$ref" : "#/components/schemas/DirectoryServiceState"
+          },
+          "latestAccessRequest" : {
+            "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+          },
+          "latestAccessProof" : {
+            "$ref" : "#/components/schemas/managementAccessProof"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementDownloadFinanceExportResponse" : {
+        "properties" : {
+          "data" : {
+            "format" : "byte",
+            "pattern" : "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementErrorCode" : {
+        "default" : "INTERNAL",
+        "enum" : [ "INTERNAL", "NO_INWAY_SELECTED" ],
+        "type" : "string"
+      },
+      "managementErrorDetails" : {
+        "properties" : {
+          "code" : {
+            "$ref" : "#/components/schemas/managementErrorCode"
+          },
+          "cause" : {
+            "type" : "string"
+          },
+          "stackTrace" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetServiceResponse" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "inways" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetStatisticsOfServicesResponse" : {
+        "properties" : {
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementServiceStatistics"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetTermsOfServiceResponse" : {
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean"
+          },
+          "url" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetTermsOfServiceStatusResponse" : {
+        "properties" : {
+          "accepted" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "managementIncomingAccessRequest" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "serviceName" : {
+            "type" : "string"
+          },
+          "state" : {
+            "$ref" : "#/components/schemas/managementAccessRequestState"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementIncomingOrder" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "delegator" : {
+            "type" : "string"
+          },
+          "validFrom" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "validUntil" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementOrderService"
+            },
+            "type" : "array"
+          },
+          "revokedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementInway" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          },
+          "hostname" : {
+            "type" : "string"
+          },
+          "selfAddress" : {
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementInwayService"
+            },
+            "type" : "array"
+          },
+          "ipAddress" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementInwayService" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementIsFinanceEnabledResponse" : {
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "managementIsTXLogEnabledResponse" : {
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListAccessGrantsForServiceResponse" : {
+        "properties" : {
+          "accessGrants" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementAccessGrant"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListAuditLogsResponse" : {
+        "properties" : {
+          "auditLogs" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementAuditLogRecord"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListIncomingAccessRequestsResponse" : {
+        "properties" : {
+          "accessRequests" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementIncomingAccessRequest"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListIncomingOrdersResponse" : {
+        "properties" : {
+          "orders" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementIncomingOrder"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListInwaysResponse" : {
+        "properties" : {
+          "inways" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementInway"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListOutgoingOrdersResponse" : {
+        "properties" : {
+          "orders" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementOutgoingOrder"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListOutwaysResponse" : {
+        "properties" : {
+          "outways" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementOutway"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListServicesResponse" : {
+        "properties" : {
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementListServicesResponseService"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListServicesResponseService" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "authorizationSettings" : {
+            "$ref" : "#/components/schemas/ServiceAuthorizationSettings"
+          },
+          "inways" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "incomingAccessRequestCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementOrderService" : {
+        "properties" : {
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "service" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementOrganization" : {
+        "properties" : {
+          "serialNumber" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementOutgoingAccessRequest" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "serviceName" : {
+            "type" : "string"
+          },
+          "state" : {
+            "$ref" : "#/components/schemas/managementAccessRequestState"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "errorDetails" : {
+            "$ref" : "#/components/schemas/managementErrorDetails"
+          }
+        },
+        "type" : "object"
+      },
+      "managementOutgoingOrder" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "delegatee" : {
+            "type" : "string"
+          },
+          "validFrom" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "validUntil" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementOrderService"
+            },
+            "type" : "array"
+          },
+          "revokedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "publicKeyPem" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementOutgoingOrderRequest" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          },
+          "delegatee" : {
+            "type" : "string"
+          },
+          "validFrom" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "validUntil" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementOrderService"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementOutway" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "ipAddress" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementRegisterOutwayRequest" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementRetrieveClaimForOrderResponse" : {
+        "properties" : {
+          "claim" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementServiceStatistics" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "incomingAccessRequestCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementSettings" : {
+        "properties" : {
+          "organizationInway" : {
+            "type" : "string"
+          },
+          "organizationEmailAddress" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementSynchronizeOrdersResponse" : {
+        "properties" : {
+          "orders" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementIncomingOrder"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementTXLogDirection" : {
+        "default" : "IN",
+        "enum" : [ "IN", "OUT" ],
+        "type" : "string"
+      },
+      "managementTXLogListRecordsResponse" : {
+        "properties" : {
+          "records" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementTXLogRecord"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementTXLogOrder" : {
+        "properties" : {
+          "delegator" : {
+            "type" : "string"
+          },
+          "reference" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementTXLogOrganization" : {
+        "properties" : {
+          "serialNumber" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementTXLogRecord" : {
+        "properties" : {
+          "source" : {
+            "$ref" : "#/components/schemas/managementTXLogOrganization"
+          },
+          "destination" : {
+            "$ref" : "#/components/schemas/managementTXLogOrganization"
+          },
+          "direction" : {
+            "$ref" : "#/components/schemas/managementTXLogDirection"
+          },
+          "service" : {
+            "$ref" : "#/components/schemas/managementTXLogService"
+          },
+          "data" : {
+            "type" : "string"
+          },
+          "order" : {
+            "$ref" : "#/components/schemas/managementTXLogOrder"
+          },
+          "TransactionID" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementTXLogService" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementUpdateServiceResponse" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "inways" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementUpdateSettingsRequest" : {
+        "properties" : {
+          "organizationInway" : {
+            "type" : "string"
+          },
+          "organizationEmailAddress" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "protobufAny" : {
+        "additionalProperties" : {
+          "type" : "object"
+        },
+        "properties" : {
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "rpcStatus" : {
+        "properties" : {
+          "code" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "details" : {
+            "items" : {
+              "$ref" : "#/components/schemas/protobufAny"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_object" : {
+        "properties" : {
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "inways" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
       }
     }
-  }
+  },
+  "x-original-swagger-version" : "2.0"
 }
