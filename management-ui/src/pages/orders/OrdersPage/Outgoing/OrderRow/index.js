@@ -33,19 +33,18 @@ const OrderRow = ({ order }) => {
       <Cell>{order.delegatee}</Cell>
       <CellServices>
         <List>
-          {/*{order.services.map((service, i) => (*/}
-          {/*  <Item*/}
-          {/*    key={i}*/}
-          {/*    title={`${service.organization.name} (${service.organization.serialNumber}) - ${service.service}`}*/}
-          {/*  >*/}
-          {/*    <OrganizationName>*/}
-          {/*      {service.organization.name} ({service.organization.serialNumber}*/}
-          {/*      )*/}
-          {/*    </OrganizationName>*/}
-          {/*    <Separator> - </Separator>*/}
-          {/*    {service.service}*/}
-          {/*  </Item>*/}
-          {/*))}*/}
+          {order.accessProofs.map((accessProof, i) => (
+            <Item
+              key={i}
+              title={`${accessProof.organization.serialNumber} - ${accessProof.serviceName}`}
+            >
+              <OrganizationName>
+                {accessProof.organization.serialNumber}
+              </OrganizationName>
+              <Separator> - </Separator>
+              {accessProof.serviceName}
+            </Item>
+          ))}
         </List>
       </CellServices>
       <Cell>{t('date', { date: new Date(order.validUntil) })}</Cell>

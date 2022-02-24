@@ -29,7 +29,10 @@ test('revoke access grant', async () => {
     accessGrantData: {
       id: '1',
       serviceName: 'service-a',
-      organizationName: 'organization-a',
+      organization: {
+        name: 'organization-a',
+        serialNumber: '00000000000000000001',
+      },
       createdAt: new Date(),
       updatedAt: new Date(),
     },

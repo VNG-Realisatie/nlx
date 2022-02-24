@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, within } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import {
   Route,
   Routes,
@@ -29,8 +29,8 @@ test('displays an order row for each order', () => {
         reference: 'ref1',
         description: 'my own description',
         delegator: '01234567890123456789',
-        services: [],
         validUntil: '2021-05-10',
+        accessProofIds: [],
       },
     }),
     new OutgoingOrderModel({
@@ -39,15 +39,15 @@ test('displays an order row for each order', () => {
         reference: 'ref2',
         description: 'my own description',
         delegator: '01234567890123456789',
-        services: [],
         validUntil: '2021-05-05',
+        accessProofIds: [],
       },
     }),
   ]
 
   const history = createMemoryHistory()
 
-  const { getAllByText } = renderWithProviders(
+  renderWithProviders(
     <HistoryRouter history={history}>
       <StoreProvider rootStore={rootStore}>
         <Routes>
@@ -56,116 +56,76 @@ test('displays an order row for each order', () => {
       </StoreProvider>
     </HistoryRouter>,
   )
-  expect(getAllByText('my own description')).toHaveLength(2)
+  expect(screen.getAllByText('my own description')).toHaveLength(2)
 })
 
 test('displays text to indicate there are no orders', () => {
   const managementApiClient = new ManagementApi()
   const rootStore = new RootStore({ managementApiClient })
 
-  const { getByText } = renderWithProviders(
+  renderWithProviders(
     <StoreProvider rootStore={rootStore}>
       <Outgoing orders={[]} />
     </StoreProvider>,
   )
-  expect(getByText("You don't have any issued orders yet")).toBeInTheDocument()
+  expect(
+    screen.getByText("You don't have any issued orders yet"),
+  ).toBeInTheDocument()
 })
 
-test('content should render expected data', () => {
-  const day = 86400000
+test('content should render expected data', async () => {
+  const oneDay = 86400000
 
   const managementApiClient = new ManagementApi()
-  const rootStore = new RootStore({ managementApiClient })
 
-  const orders = [
-    new OutgoingOrderModel({
-      orderStore: rootStore.orderStore,
-      orderData: {
-        reference: 'ref1',
-        description: 'my own description',
-        delegatee: '10000000000000000000',
-        services: [
-          {
-            organization: {
-              serialNumber: '00000000000000000001',
-              name: 'organization X',
+  managementApiClient.managementListOutgoingOrders = jest
+    .fn()
+    .mockResolvedValue({
+      orders: [
+        {
+          reference: 'ref1',
+          description: 'my own description',
+          delegatee: '10000000000000000000',
+          validFrom: new Date(new Date().getTime() - oneDay).toISOString(),
+          validUntil: new Date(new Date().getTime() + oneDay).toISOString(),
+          revokedAt: null,
+          accessProofs: [
+            {
+              id: 1,
+              organization: {
+                serialNumber: '00000000000000000001',
+                name: '',
+              },
+              serviceName: 'service A',
+              publicKeyFingerprint: 'public-key-fingerprint-a',
             },
-            service: 'service Y',
-          },
-          {
-            organization: {
-              serialNumber: '00000000000000000002',
-              name: 'organization Y',
+            {
+              id: 2,
+              organization: {
+                serialNumber: '00000000000000000002',
+                name: '',
+              },
+              serviceName: 'service B',
+              publicKeyFingerprint: 'public-key-fingerprint-b',
             },
-            service: 'service Z',
-          },
-        ],
-        validFrom: new Date(new Date().getTime() - day).toISOString(),
-        validUntil: new Date(new Date().getTime() + day).toISOString(),
-        revokedAt: null,
-      },
-    }),
-    new OutgoingOrderModel({
-      orderStore: rootStore.orderStore,
-      orderData: {
-        reference: 'ref2',
-        description: 'my own description',
-        delegatee: '20000000000000000000',
-        services: [
-          {
-            organization: {
-              serialNumber: '00000000000000000002',
-              name: 'organization X',
-            },
-            service: 'service Y',
-          },
-        ],
-        validFrom: new Date(new Date().getTime() - day).toISOString(),
-        validUntil: new Date(new Date().getTime() - day).toISOString(),
-        revokedAt: null,
-      },
-    }),
-    new OutgoingOrderModel({
-      orderStore: rootStore.orderStore,
-      orderData: {
-        reference: 'ref3',
-        description: 'my own description',
-        delegatee: '30000000000000000000',
-        services: [
-          {
-            organization: {
-              serialNumber: '00000000000000000003',
-              name: 'organization X',
-            },
-            service: 'service Y',
-          },
-        ],
-        validFrom: new Date(new Date().getTime() + day).toISOString(),
-        validUntil: new Date(new Date().getTime() + 2 * day).toISOString(),
-        revokedAt: null,
-      },
-    }),
-    new OutgoingOrderModel({
-      orderStore: rootStore.orderStore,
-      orderData: {
-        reference: 'ref4',
-        description: 'my own description',
-        delegatee: '40000000000000000000',
-        services: [
-          {
-            organization: {
-              serialNumber: '00000000000000000004',
-              name: 'organization X',
-            },
-            service: 'service Y',
-          },
-        ],
-        validFrom: new Date(new Date().getTime() - day).toISOString(),
-        validUntil: new Date(new Date().getTime() + day).toISOString(),
-        revokedAt: new Date(),
-      },
-    }),
-  ]
+          ],
+        },
+        {
+          reference: 'ref2',
+          description: 'my own description',
+          delegatee: '20000000000000000000',
+          validFrom: new Date(new Date().getTime() - oneDay).toISOString(),
+          validUntil: new Date(new Date().getTime() - oneDay).toISOString(),
+          revokedAt: null,
+          accessProofs: [],
+        },
+      ],
+    })
+
+  const rootStore = new RootStore({ managementApiClient })
+  const orderStore = rootStore.orderStore
+
+  await orderStore.fetchOutgoing()
 
   const history = createMemoryHistory()
 
@@ -173,7 +133,10 @@ test('content should render expected data', () => {
     <HistoryRouter history={history}>
       <StoreProvider rootStore={rootStore}>
         <Routes>
-          <Route path="/*" element={<Outgoing orders={orders} />} />
+          <Route
+            path="/*"
+            element={<Outgoing orders={orderStore.outgoingOrders} />}
+          />
         </Routes>
       </StoreProvider>
     </HistoryRouter>,
@@ -185,20 +148,14 @@ test('content should render expected data', () => {
   expect(firstOrder.getByText('my own description')).toBeInTheDocument()
   expect(firstOrder.getByText('10000000000000000000')).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('organization X (00000000000000000001) - service Y'),
+    firstOrder.getByTitle('00000000000000000001 - service A'),
   ).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('organization Y (00000000000000000002) - service Z'),
-  ).toHaveTextContent('organization Y (00000000000000000002) - service Z')
+    firstOrder.getByTitle('00000000000000000002 - service B'),
+  ).toBeInTheDocument()
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
   expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()
-
-  const thirdOrder = container.querySelectorAll('tbody tr')[2]
-  expect(within(thirdOrder).getByTitle('Inactive')).toBeInTheDocument()
-
-  const fourthOrder = container.querySelectorAll('tbody tr')[3]
-  expect(within(fourthOrder).getByTitle('Inactive')).toBeInTheDocument()
 
   fireEvent.click(firstOrderEl)
   expect(history.location.pathname).toEqual(

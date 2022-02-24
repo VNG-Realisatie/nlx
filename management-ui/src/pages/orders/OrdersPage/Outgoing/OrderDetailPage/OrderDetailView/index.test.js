@@ -4,14 +4,24 @@
 import React from 'react'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../test-utils'
-import { ManagementApi } from '../../../../../../api'
-import { RootStore } from '../../../../../../stores'
+import { DirectoryApi, ManagementApi } from '../../../../../../api'
+import { RootStore, StoreProvider } from '../../../../../../stores'
 import OutgoingOrderModel from '../../../../../../stores/models/OutgoingOrderModel'
 import OrderDetailView from './index'
 
 test('display order details', () => {
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [],
+  })
+
   const managementApiClient = new ManagementApi()
-  const rootStore = new RootStore({ managementApiClient })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+    directoryApiClient,
+  })
 
   const order = new OutgoingOrderModel({
     orderStore: rootStore.orderStore,
@@ -20,13 +30,14 @@ test('display order details', () => {
       delegatee: 'delegatee',
       validFrom: '2021-01-01T00:00:00.000Z',
       validUntil: '3000-01-01T00:00:00.000Z',
-      services: [],
       revokedAt: null,
     },
   })
 
   renderWithProviders(
-    <OrderDetailView order={order} revokeHandler={() => {}} />,
+    <StoreProvider rootStore={rootStore}>
+      <OrderDetailView order={order} revokeHandler={() => {}} />
+    </StoreProvider>,
   )
 
   expect(screen.getByTestId('status')).toHaveTextContent(

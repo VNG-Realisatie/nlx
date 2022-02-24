@@ -13,7 +13,7 @@ import { configure } from 'mobx'
 import { createMemoryHistory } from 'history'
 import { renderWithAllProviders, screen } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
-import { ManagementApi } from '../../../../../api'
+import { DirectoryApi, ManagementApi } from '../../../../../api'
 import OrderDetailPage from './index'
 
 jest.mock('../../../../../components/Modal')
@@ -28,6 +28,12 @@ afterEach(() => {
 
 test('display order details', async () => {
   configure({ safeDescriptors: false })
+
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [],
+  })
 
   const managementApiClient = new ManagementApi()
 
@@ -46,7 +52,10 @@ test('display order details', async () => {
         },
       ],
     })
-  const rootStore = new RootStore({ managementApiClient })
+  const rootStore = new RootStore({
+    managementApiClient,
+    directoryApiClient,
+  })
   const orderStore = rootStore.orderStore
 
   await orderStore.fetchOutgoing()

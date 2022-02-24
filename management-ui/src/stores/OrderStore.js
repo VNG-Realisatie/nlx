@@ -68,6 +68,8 @@ class OrderStore {
         yield this._managementApiClient.managementListOutgoingOrders()
 
       result.orders.forEach((order) => {
+        order.accessProofs = order.accessProofs || []
+
         const accessProofModels = order.accessProofs.map((accessProof) =>
           this._rootStore.accessProofStore.updateFromServer(accessProof),
         )
@@ -115,7 +117,7 @@ class OrderStore {
         reference: order.reference,
       })
 
-      order.update({ revokedAt: new Date() })
+      order.update({ orderData: { revokedAt: new Date() } })
     } catch (error) {
       throw new Error(error.message)
     }

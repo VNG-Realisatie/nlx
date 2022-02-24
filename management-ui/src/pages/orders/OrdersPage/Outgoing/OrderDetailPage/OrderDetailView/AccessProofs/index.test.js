@@ -7,16 +7,23 @@ import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { renderWithProviders } from '../../../../../../../test-utils'
-import Services from './index'
+import AccessProofModel from '../../../../../../../stores/models/AccessProofModel'
+import AccessProofs from './index'
 
-const createComponent = (services) => {
+const createComponent = (accessProofs) => {
+  const accessProofModels = accessProofs.map((accessProof) => {
+    return new AccessProofModel({
+      accessProofData: accessProof,
+    })
+  })
+
   const history = createMemoryHistory({
     initialEntries: ['/'],
   })
 
   renderWithProviders(
     <HistoryRouter history={history}>
-      <Services services={services} />
+      <AccessProofs accessProofs={accessProofModels} />
     </HistoryRouter>,
   )
 
@@ -25,7 +32,7 @@ const createComponent = (services) => {
   }
 }
 
-test('no services available', async () => {
+test('no access proofs available', async () => {
   createComponent([])
 
   fireEvent.click(screen.getByText('Requestable services'))
@@ -35,14 +42,15 @@ test('no services available', async () => {
   ).toBeInTheDocument()
 })
 
-test('listing the services', async () => {
+test('listing the access proofs', async () => {
   const { history } = createComponent([
     {
-      service: 'My Service',
+      serviceName: 'My Service',
       organization: {
         serialNumber: '00000000000000000001',
         name: 'My Organization',
       },
+      publicKeyFingerprint: 'public-key-fingerprint',
     },
   ])
 
@@ -50,9 +58,8 @@ test('listing the services', async () => {
 
   const service = await screen.findByText('My Service')
   expect(service).toBeInTheDocument()
-  expect(
-    await screen.findByText('My Organization (00000000000000000001)'),
-  ).toBeInTheDocument()
+  expect(screen.getByText('00000000000000000001')).toBeInTheDocument()
+  expect(screen.getByText('public-key-fingerprint')).toBeInTheDocument()
 
   fireEvent.click(service)
 

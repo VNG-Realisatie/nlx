@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 import { instanceOf } from 'prop-types'
 import { SectionGroup } from '../../../../../../components/DetailView'
@@ -10,21 +10,14 @@ import { useDirectoryServiceStore } from '../../../../../../hooks/use-stores'
 import Status from './Status'
 import Reference from './Reference'
 import StartEndDate from './StartEndDate'
-import Services from './Services'
+import AccessProofs from './AccessProofs'
 
 const OrderDetailView = ({ order }) => {
   const directoryServiceStore = useDirectoryServiceStore()
-  const services = order.accessProofs
-    .map((accessProof) => {
-      return directoryServiceStore.getService(
-        accessProof.organization.serialNumber,
-        accessProof.serviceName,
-      )
-    })
-    .filter((service) => !!service)
-    .filter((service, index, arr) => {
-      return arr.indexOf(service) === index
-    })
+
+  useEffect(() => {
+    directoryServiceStore.fetchAll()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <SectionGroup>
@@ -36,7 +29,7 @@ const OrderDetailView = ({ order }) => {
         revokedAt={order.revokedAt}
       />
       <Reference value={order.reference} />
-      <Services services={services} />
+      <AccessProofs accessProofs={order.accessProofs} />
     </SectionGroup>
   )
 }

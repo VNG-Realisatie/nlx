@@ -15,6 +15,7 @@ beforeEach(() => {
     serviceName: 'Service',
     createdAt: '2020-10-01',
     revokedAt: null,
+    publicKeyFingerprint: 'public-key-fingerprint',
   }
 })
 
@@ -29,4 +30,7 @@ test('should properly construct object', () => {
   expect(accessProof.serviceName).toBe(accessProofData.serviceName)
   expect(accessProof.createdAt).toEqual(new Date(accessProofData.createdAt))
   expect(accessProof.revokedAt).toEqual(accessProofData.revokedAt)
+  expect(accessProof.publicKeyFingerprint).toEqual(
+    accessProofData.publicKeyFingerprint,
+  )
 })

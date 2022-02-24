@@ -14,6 +14,7 @@ class AccessProofModel {
   createdAt = null
   revokedAt = null
   accessRequestId = null
+  publicKeyFingerprint = ''
 
   constructor({ accessProofData }) {
     makeAutoObservable(this)
@@ -49,6 +50,10 @@ class AccessProofModel {
 
     if (accessProofData.accessRequestId) {
       this.accessRequestId = accessProofData.accessRequestId
+    }
+
+    if (accessProofData.publicKeyFingerprint) {
+      this.publicKeyFingerprint = accessProofData.publicKeyFingerprint
     }
   }
 }

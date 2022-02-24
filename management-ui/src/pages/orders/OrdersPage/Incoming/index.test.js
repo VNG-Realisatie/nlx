@@ -187,11 +187,11 @@ test('content should render expected data', () => {
   expect(firstOrder.getByText('my own description')).toBeInTheDocument()
   expect(firstOrder.getByText('10000000000000000000')).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('organization X (00000000000000000001) - service Y'),
+    firstOrder.getByTitle('00000000000000000001 - service Y'),
   ).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('organization Y (00000000000000000002) - service Z'),
-  ).toHaveTextContent('organization Y (00000000000000000002) - service Z')
+    firstOrder.getByTitle('00000000000000000002 - service Z'),
+  ).toHaveTextContent('00000000000000000002 - service Z')
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
   expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()

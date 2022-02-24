@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { act, waitForElementToBeRemoved } from '@testing-library/react'
+import { act, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import {
   fireEvent,
@@ -29,6 +29,10 @@ test('polling with access grant section collapsed', async () => {
     services: [
       {
         name: 'service-a',
+        organization: {
+          name: 'organization-a',
+          serialNumber: '00000000000000000001',
+        },
       },
     ],
   })
@@ -42,7 +46,7 @@ test('polling with access grant section collapsed', async () => {
           serviceName: 'service-a',
           organization: {
             name: 'organization-a',
-            serviceName: '00000000000000000001',
+            serialNumber: '00000000000000000001',
           },
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -85,7 +89,7 @@ test('polling with access grant section expanded', async () => {
           serviceName: 'service-a',
           organization: {
             name: 'organization-a',
-            serviceName: '00000000000000000001',
+            serialNumber: '00000000000000000001',
           },
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -108,7 +112,7 @@ test('polling with access grant section expanded', async () => {
   })
   const service = rootStore.servicesStore.getByName('service-a')
 
-  const { getByText, queryByText, findByText } = renderWithAllProviders(
+  renderWithAllProviders(
     <StoreProvider rootStore={rootStore}>
       <MemoryRouter>
         <AccessGrantSection service={service} />
@@ -116,23 +120,23 @@ test('polling with access grant section expanded', async () => {
     </StoreProvider>,
   )
 
-  const toggler = getByText(/Organizations with access/i)
+  const toggler = screen.getByText(/Organizations with access/i)
 
   fireEvent.click(toggler)
 
-  expect(getByText('organization-a')).toBeInTheDocument()
-  expect(queryByText('Show updates')).not.toBeInTheDocument()
+  expect(screen.getByText('organization-a')).toBeInTheDocument()
+  expect(screen.queryByText('Show updates')).not.toBeInTheDocument()
 
   act(() => {
     jest.advanceTimersByTime(INTERVAL)
   })
 
-  expect(await findByText('organization-a')).toBeInTheDocument()
+  expect(await screen.findByText('organization-a')).toBeInTheDocument()
 
-  expect(getByText('Show updates')).toBeInTheDocument()
+  expect(screen.getByText('Show updates')).toBeInTheDocument()
 
-  fireEvent.click(getByText('Show updates'))
+  fireEvent.click(screen.getByText('Show updates'))
 
-  await waitForElementToBeRemoved(() => getByText('organization-a'))
-  expect(queryByText('Show updates')).not.toBeInTheDocument()
+  await waitForElementToBeRemoved(() => screen.getByText('organization-a'))
+  expect(screen.queryByText('Show updates')).not.toBeInTheDocument()
 })
