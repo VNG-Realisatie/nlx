@@ -35,15 +35,15 @@ export const createOrder = async (
         publicKeyPEM: defaultOutwayPublicKeyPEM,
         validFrom: dayjs().subtract(1, "day").toDate(),
         validUntil: dayjs().add(1, "day").toDate(),
-        // services: [
-        //   {
-        //     organization: {
-        //       serialNumber: serviceProvider.serialNumber,
-        //       name: serviceProviderOrgName,
-        //     },
-        //     service: serviceName,
-        //   },
-        // ],
+        services: [
+          {
+            organization: {
+              serialNumber: serviceProvider.serialNumber,
+              name: serviceProviderOrgName,
+            },
+            service: serviceName,
+          },
+        ],
       },
     });
   } catch (err) {

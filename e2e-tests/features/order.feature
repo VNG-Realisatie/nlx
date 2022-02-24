@@ -1,7 +1,6 @@
 @management @order
 Feature: Order
 
-    @ignore
     Scenario: Create an order
         Given "Gemeente Stijns" is up and running
             And "RvRD" is up and running
@@ -9,7 +8,6 @@ Feature: Order
         When "Gemeente Stijns" creates an order with reference "order-ref-1" for "Vergunningsoftware BV" including the service "basis-register-fictieve-kentekens" of "RvRD"
         Then an order of "Gemeente Stijns" with reference "order-ref-1" for "Vergunningsoftware BV" with service "basis-register-fictieve-kentekens" of "RvRD" is created
 
-    @ignore
     Scenario: Use an order to access service
         Given "Vergunningsoftware BV" is up and running
             And "Vergunningsoftware BV" has an active order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
