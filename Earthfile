@@ -10,6 +10,7 @@ all:
 proto:
     BUILD +proto-directory-api
     BUILD +proto-management-api
+    BUILD +proto-management-api-client
     BUILD +proto-txlog-api
     BUILD +proto-inway-test
 
@@ -76,6 +77,16 @@ proto-management-api:
 
     SAVE ARTIFACT /dist/*.* AS LOCAL ./management-api/api/
     SAVE ARTIFACT /dist/external/*.* AS LOCAL ./management-api/api/external/
+
+proto-management-api-client:
+    FROM +proto-management-api
+    COPY ./management-api/api /src/management-api/api
+    COPY ./management-ui /src/management-ui
+
+    WORKDIR ./management-ui
+    RUN npx @openapitools/openapi-generator-cli generate
+
+    SAVE ARTIFACT ./src/api AS LOCAL ./management-ui/src/api
 
 proto-txlog-api:
     FROM +deps
