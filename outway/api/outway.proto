@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package nlx.outway;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "go.nlx.io/nlx/outway/api";
+
+service Outway {
+  rpc SignOrderClaim(SignOrderClaimRequest) returns (SignOrderClaimResponse) {}
+}
+
+message SignOrderClaimRequest {
+    string delegatee = 1;
+    string orderReference = 2;
+    AccessProof accessProof = 3;
+    google.protobuf.Timestamp expiresAt = 4;
+}
+
+message SignOrderClaimResponse {
+    string signedOrderclaim = 1;
+}
+
+message AccessProof {
+    string ServiceName = 1;
+	string OrganizationSerialNumber = 2;
+	string PublicKeyFingerprint = 3;
+}

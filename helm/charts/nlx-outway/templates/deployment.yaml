@@ -73,6 +73,8 @@ spec:
               value: /certificate/tls.crt
             - name: TLS_KEY
               value: /certificate/tls.key
+            - name: LISTEN_ADDRESS_GRPC
+              value: 0.0.0.0:8444
           {{- if .Values.https.enabled }}
             - name: LISTEN_ADDRESS
               value: 0.0.0.0:8443

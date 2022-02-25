@@ -12,12 +12,21 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"reflect"
+	"runtime/debug"
 	"sync"
 	"time"
 
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/jpillora/backoff"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
@@ -25,7 +34,9 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
-	"go.nlx.io/nlx/management-api/api"
+	managementapi "go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/outway/api"
+	"go.nlx.io/nlx/outway/pkg/server"
 	"go.nlx.io/nlx/outway/plugins"
 )
 
@@ -46,6 +57,7 @@ type Outway struct {
 	txlogger            transactionlog.TransactionLogger
 	directoryClient     directoryapi.DirectoryClient
 	httpServer          *http.Server
+	grpcServer          *grpc.Server
 	monitorService      *monitoring.Service
 	requestHTTPHandler  loggerHTTPHandler
 	forwardingHTTPProxy *httputil.ReverseProxy
@@ -60,7 +72,7 @@ type NewOutwayArgs struct {
 	Ctx               context.Context
 	Logger            *zap.Logger
 	Txlogger          transactionlog.TransactionLogger
-	ManagementClient  api.ManagementClient
+	ManagementClient  managementapi.ManagementClient
 	MonitoringAddress string
 	OrgCert           *common_tls.CertificateBundle
 	DirectoryClient   directoryapi.DirectoryClient
@@ -188,6 +200,17 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 
 	o.directoryClient = args.DirectoryClient
 
+	outwayService := server.NewOutwayService(
+		o.logger,
+		args.OrgCert,
+	)
+
+	grpcServer := newGRPCServer(o.logger, args.OrgCert)
+
+	api.RegisterOutwayServer(grpcServer, outwayService)
+
+	o.grpcServer = grpcServer
+
 	return o, nil
 }
 
@@ -213,6 +236,37 @@ func newForwardingProxy() *httputil.ReverseProxy {
 	return &httputil.ReverseProxy{
 		Director: director,
 	}
+}
+
+func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc.Server {
+	// setup zap connection for global grpc logging
+	// grpc_zap.ReplaceGrpcLogger(logger)
+
+	tlsConfig := cert.TLSConfig(cert.WithTLSClientAuth())
+	transportCredentials := credentials.NewTLS(tlsConfig)
+
+	recoveryOptions := []grpc_recovery.Option{
+		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
+			logger.Warn("recovered from a panic in a grpc request handler", zap.ByteString("stack", debug.Stack()))
+			return status.Error(codes.Internal, fmt.Sprintf("%s", p))
+		}),
+	}
+
+	opts := []grpc.ServerOption{
+		grpc.Creds(transportCredentials),
+		grpc_middleware.WithStreamServerChain(
+			grpc_ctxtags.StreamServerInterceptor(),
+			grpc_zap.StreamServerInterceptor(logger),
+			grpc_recovery.StreamServerInterceptor(recoveryOptions...),
+		),
+		grpc_middleware.WithUnaryServerChain(
+			grpc_ctxtags.UnaryServerInterceptor(),
+			grpc_zap.UnaryServerInterceptor(logger),
+			grpc_recovery.UnaryServerInterceptor(recoveryOptions...),
+		),
+	}
+
+	return grpc.NewServer(opts...)
 }
 
 func (o *Outway) keepServiceListUpToDate() {

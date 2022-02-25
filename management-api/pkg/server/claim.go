@@ -8,7 +8,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -71,26 +70,14 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		expiresAt = order.ValidUntil
 	}
 
-	claims := delegation.JWTClaims{
-		Delegatee:      md.OrganizationSerialNumber,
-		OrderReference: req.OrderReference,
-		AccessProofs:   convertOutgoingOrderAccessProofsToDelegationAccessProofs(order.OutgoingOrderAccessProofs),
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expiresAt),
-			Issuer:    s.orgCert.Certificate().Subject.SerialNumber,
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
-
-	signedString, err := token.SignedString(s.orgCert.PrivateKey())
-	if err != nil {
-		s.logger.Error("unable to create signed string from private key", zap.Error(err))
-		return nil, status.Error(codes.Internal, "unable to sign claim")
-	}
+	// TODO sign request via outway
+	// Delegatee:      md.OrganizationSerialNumber,
+	// OrderReference: req.OrderReference,
+	// AccessProof:   convertOutgoingOrderAccessProofsToDelegationAccessProofs(order.OutgoingOrderAccessProofs),
+	// ExpiresAt: expiresAt,
 
 	return &external.RequestClaimResponse{
-		Claim: signedString,
+		Claim: "", // TODO get this string via outway SignOrderClaim request
 	}, nil
 }
 

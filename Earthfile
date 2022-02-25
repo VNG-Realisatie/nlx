@@ -128,6 +128,23 @@ proto-inway-test:
 
     SAVE ARTIFACT /dist/* AS LOCAL ./inway/grpcproxy/test/
 
+proto-outway:
+    FROM +deps
+    COPY ./outway/api/*.proto /src/
+
+    RUN mkdir -p /dist || true && \
+        protoc \
+            -I. \
+            -I/protobuf/include \
+            -I/protobuf/googleapis \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
+            ./outway.proto
+
+    RUN goimports -w -local "go.nlx.io" /dist/
+
+    SAVE ARTIFACT /dist/*.* AS LOCAL ./outway/api/
+
 mocks-management-api:
     FROM +deps
     COPY ./management-api /src/management-api

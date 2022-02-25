@@ -483,19 +483,22 @@ func TestRunServer(t *testing.T) {
 	)
 
 	tests := map[string]struct {
-		listenAddress string
-		certificate   *tls.Certificate
-		errorMessage  string
+		listenAddress     string
+		listenAddressGRPC string
+		certificate       *tls.Certificate
+		errorMessage      string
 	}{
 		"invalid listen address": {
-			"invalid",
-			nil,
-			"error listening on server: listen tcp: address invalid: missing port in address",
+			listenAddress:     "invalid",
+			listenAddressGRPC: "127.0.0.1:8082",
+			certificate:       nil,
+			errorMessage:      "error listening on server: listen tcp: address invalid: missing port in address",
 		},
 		"invalid listen address with TLS": {
-			"invalid",
-			&certificate,
-			"error listening on server: listen tcp: address invalid: missing port in address",
+			listenAddress:     "invalid",
+			listenAddressGRPC: "127.0.0.1:8082",
+			certificate:       &certificate,
+			errorMessage:      "error listening on server: listen tcp: address invalid: missing port in address",
 		},
 	}
 
@@ -514,7 +517,7 @@ func TestRunServer(t *testing.T) {
 				monitorService: monitorService,
 			}
 
-			err = o.RunServer(tt.listenAddress, tt.certificate)
+			err = o.RunServer(tt.listenAddress, tt.listenAddressGRPC, tt.certificate)
 			assert.EqualError(t, err, tt.errorMessage)
 
 			err = monitorService.Stop()

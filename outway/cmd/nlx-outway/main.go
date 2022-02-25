@@ -34,8 +34,9 @@ import (
 var options struct {
 	Name string `long:"name" env:"OUTWAY_NAME" description:"Name of the outway. Every outway should have a unique name within the organization." required:"true"`
 
-	ListenAddress string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenHTTPS   bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
+	ListenAddress     string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenHTTPS       bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
+	ListenAddressGRPC string `long:"listen-address-grpc" env:"LISTEN_ADDRESS_GRPC" default:"127.0.0.1:8082" description:"Address for the outway grpc server to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
 	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
@@ -174,7 +175,7 @@ func main() {
 			logger.Fatal("error running outway", zap.Error(err))
 		}
 
-		err = ow.RunServer(options.ListenAddress, serverCertificate)
+		err = ow.RunServer(options.ListenAddress, options.ListenAddressGRPC, serverCertificate)
 		if err != nil {
 			logger.Fatal("error running outway", zap.Error(err))
 		}

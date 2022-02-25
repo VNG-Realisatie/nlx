@@ -15,16 +15,14 @@ type AccessProof struct {
 
 type JWTClaims struct {
 	jwt.RegisteredClaims
-	Delegatee      string         `json:"delegatee"`
-	OrderReference string         `json:"orderReference"`
-	AccessProofs   []*AccessProof `json:"accessProofs"`
+	Delegatee      string       `json:"delegatee"`
+	OrderReference string       `json:"orderReference"`
+	AccessProof    *AccessProof `json:"accessProof"`
 }
 
 func (j *JWTClaims) IsValidFor(serviceName, organizationSerialNumber, publicKeyFingerprint string) bool {
-	for _, accessProof := range j.AccessProofs {
-		if accessProof.ServiceName == serviceName && accessProof.OrganizationSerialNumber == organizationSerialNumber && publicKeyFingerprint == accessProof.PublicKeyFingerprint {
-			return true
-		}
+	if j.AccessProof.ServiceName == serviceName && j.AccessProof.OrganizationSerialNumber == organizationSerialNumber && publicKeyFingerprint == j.AccessProof.PublicKeyFingerprint {
+		return true
 	}
 
 	return false

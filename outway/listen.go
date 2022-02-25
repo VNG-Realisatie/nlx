@@ -13,6 +13,7 @@ import (
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/outway/plugins"
@@ -27,7 +28,7 @@ const (
 	ExpectConinueTimeout = 1 * time.Second
 )
 
-func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certificate) error {
+func (o *Outway) RunServer(listenAddress, listenAddressGRPC string, serverCertificate *tls.Certificate) error {
 	o.httpServer = &http.Server{
 		Addr:    listenAddress,
 		Handler: o,
@@ -59,7 +60,19 @@ func (o *Outway) RunServer(listenAddress string, serverCertificate *tls.Certific
 		}
 	}()
 
-	err := <-errorChannel
+	listen, err := net.Listen("tcp", listenAddressGRPC)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		err := o.grpcServer.Serve(listen)
+		if err != nil {
+			errorChannel <- errors.Wrap(err, "error listening on grpc server")
+		}
+	}()
+
+	err = <-errorChannel
 
 	if err == http.ErrServerClosed {
 		return nil
@@ -81,6 +94,24 @@ func (o *Outway) Shutdown(ctx context.Context) {
 	err = o.monitorService.Stop()
 	if err != nil {
 		o.logger.Error("error shutting down monitoring service", zap.Error(err))
+	}
+
+	shutdownGrpcServer(ctx, o.grpcServer)
+}
+
+func shutdownGrpcServer(ctx context.Context, s *grpc.Server) {
+	stopped := make(chan struct{})
+
+	go func() {
+		s.GracefulStop()
+		close(stopped)
+	}()
+
+	select {
+	case <-ctx.Done():
+		s.Stop()
+	case <-stopped:
+		return
 	}
 }
 
