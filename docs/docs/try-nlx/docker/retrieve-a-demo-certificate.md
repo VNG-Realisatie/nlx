@@ -58,7 +58,8 @@ Answer the questions accordingly:
 - **Organization Name**, please enter a URL-friendly value with a maximum length of 100 characters.
   A good value could be: `my-organization`.
 - **Organization Unit Name**, enter any value
-- **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your inway, e.g. `inway.my-organization.nl` or `nlx.my-organization.nl`. For an outway this FQDN does not have to be resolvable. It is possible to use the inway certificate for the outway and NLX Management.
+- **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your Inway,
+  we will use `my-organization.nl` for this guide. For an Outway this FQDN does not have to be resolvable. It is possible to use the Inway certificate for the Outway and NLX Management.
 - **Email Address**, enter any value
 - **Serial Number** (optional), enter a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness. 
 - **A challenge password**, leave empty
