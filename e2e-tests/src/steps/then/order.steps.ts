@@ -33,10 +33,10 @@ Then(
           order.reference === orderReference &&
           order.delegatee === delegatee.serialNumber &&
           order.revokedAt === undefined &&
-          order.services?.some(
-            (service: ManagementOrderService) =>
-              service.service === serviceName &&
-              service.organization?.serialNumber === org.serialNumber
+          order.accessProofs?.some(
+            (accessProof) =>
+              accessProof.serviceName === serviceName &&
+              accessProof.organization?.serialNumber === org.serialNumber
           )
       ),
       true,

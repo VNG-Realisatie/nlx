@@ -1,5 +1,6 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
+import { getDefaultOutwayForOrganization } from "../../utils/order";
 import { When } from "@cucumber/cucumber";
 import { By } from "selenium-webdriver";
 import dayjs from "dayjs";
@@ -65,7 +66,11 @@ When(
       By.className("ReactSelect__option")
     );
 
-    const serviceOptionText = `${orgName} (${org.serialNumber}) - ${serviceName}`;
+    const delegatorDefaultOutway = await getDefaultOutwayForOrganization(
+      delegatorOrgName
+    );
+
+    const serviceOptionText = `${serviceName} - ${orgName} (${org.serialNumber}) - via ${delegatorDefaultOutway?.name} (${delegatorDefaultOutway?.publicKeyFingerprint})`;
 
     let theOption;
     for (const o of options) {

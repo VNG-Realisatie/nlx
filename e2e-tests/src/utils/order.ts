@@ -1,6 +1,7 @@
 import { getOrgByName, Organization } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
 import { default as logger } from "../debug";
+import { ManagementOutway } from "../../../management-ui/src/api/models/ManagementOutway";
 import dayjs from "dayjs";
 const debug = logger("e2e-tests:order");
 
@@ -23,8 +24,26 @@ export const createOrder = async (
     `creating an order for delegator '${delegatorOrgName} (${delegator.serialNumber})' with reference '${orderReference}' and service '${serviceName} by ${serviceProviderOrgName} (${serviceProvider.serialNumber})' delegated to '${delegateeOrgName} (${delegatee.serialNumber})'`
   );
 
-  const defaultOutwayPublicKeyPEM =
-    await getDefaultOutwayPublicKeyPemForOrganization(delegateeOrgName);
+  const defaultOutway = await getDefaultOutwayForOrganization(delegateeOrgName);
+
+  const directoryServices =
+    await delegator.apiClients.directory?.directoryListServices();
+
+  const directoryService = directoryServices?.services?.find(
+    (directoryService) =>
+      directoryService.serviceName === serviceName &&
+      directoryService?.organization?.serialNumber === serviceProviderOrgName
+  );
+
+  const accessStateForService = directoryService?.accessStates?.find(
+    (accessState) =>
+      accessState?.accessProof?.publicKeyFingerprint ===
+      defaultOutway?.publicKeyFingerprint
+  );
+
+  if (!accessStateForService || !accessStateForService.accessProof) {
+    throw Error(`could not find access proof for service '${serviceName}'`);
+  }
 
   try {
     await delegator.apiClients.management?.managementCreateOutgoingOrder({
@@ -32,18 +51,10 @@ export const createOrder = async (
         reference: orderReference,
         description: "arbitrary description",
         delegatee: delegatee.serialNumber,
-        publicKeyPEM: defaultOutwayPublicKeyPEM,
+        publicKeyPEM: defaultOutway?.publicKeyPEM,
         validFrom: dayjs().subtract(1, "day").toDate(),
         validUntil: dayjs().add(1, "day").toDate(),
-        services: [
-          {
-            organization: {
-              serialNumber: serviceProvider.serialNumber,
-              name: serviceProviderOrgName,
-            },
-            service: serviceName,
-          },
-        ],
+        accessProofIds: [`${accessStateForService?.accessProof?.id}`],
       },
     });
   } catch (err) {
@@ -58,9 +69,9 @@ export const createOrder = async (
   debug(`created order with reference '${orderReference}'`);
 };
 
-const getDefaultOutwayPublicKeyPemForOrganization = async (
+export const getDefaultOutwayForOrganization = async (
   organizationName: string
-): Promise<string | undefined> => {
+): Promise<ManagementOutway | undefined> => {
   const organization: Organization = getOrgByName(organizationName);
 
   const outwaysResponse =
@@ -72,9 +83,7 @@ const getDefaultOutwayPublicKeyPemForOrganization = async (
     );
   }
 
-  const defaultOutway = outwaysResponse.outways?.find(
+  return outwaysResponse.outways?.find(
     (outway) => outway.name === organization.defaultOutway.name
   );
-
-  return defaultOutway?.publicKeyPEM;
 };
