@@ -10,10 +10,14 @@ const NavLink = ({ to, children, target, ...props }) => {
   const isExternal = to.substring(0, 4) === 'http'
   const rel = isExternal ? { rel: 'noreferrer' } : {}
 
-  return (
-    <RouterNavLink to={{ pathname: to }} target={target} {...rel} {...props}>
+  return isExternal ? (
+    <a href={to} target={target} {...rel} {...props}>
       {children}
       {isExternal && <StyledIcon as={IconExternalLink} inline />}
+    </a>
+  ) : (
+    <RouterNavLink to={{ pathname: to }} target={target} {...rel} {...props}>
+      {children}
     </RouterNavLink>
   )
 }

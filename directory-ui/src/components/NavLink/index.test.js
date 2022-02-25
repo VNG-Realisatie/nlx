@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../test-utils'
 import NavLink from './index'
 
@@ -17,4 +18,16 @@ test('receives active classname', () => {
 
   rerender(<NavLink to="/page">page</NavLink>)
   expect(getByText('page')).toHaveClass('active')
+})
+
+test('works with external links', () => {
+  renderWithProviders(
+    <Router>
+      <NavLink to="https://nlx.io">nlx.io</NavLink>
+    </Router>,
+  )
+
+  const link = screen.getByText('nlx.io')
+
+  expect(link.getAttribute('href')).toBe('https://nlx.io')
 })
