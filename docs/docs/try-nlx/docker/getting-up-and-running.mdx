@@ -28,10 +28,15 @@ Set the hostname of the Inway (where `my-organization.nl:8443` should be replace
 export INWAY_SELF_ADDRESS="my-organization.nl:8443"
 ```
 
-The NLX components will print warning messages when the private keys file permissions are too lenient, to prevent these warning messages we need to set the proper permissions.
+Ensure the file permissions are locked down. The NLX components will print warning messages when the file permissions are too broad.
+The containers run as UID: 1001, which means this must be owner of the private keys.
 
 ```bash
-chmod 600 ../org.key ./pki/certs/internal-cert-key.pem
+sudo chmod 600 ../org.key
+sudo chown 1001 ../org.key
+
+sudo chmod 600 ./pki/certs/internal-cert-key.pem
+sudo chown 1001 ./pki/certs/internal-cert-key.pem
 ```
 
 Then, start all components by running:
