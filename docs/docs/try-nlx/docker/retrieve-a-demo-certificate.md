@@ -15,7 +15,7 @@ The very first certificate we need is the CA root certificate.
 This one is used to validate certificates of other organizations.
 
 Download [the root certificate](https://certportal.demo.nlx.io/root.crt) file and save it as `root.crt` in `~/nlx-setup/`.
-That is the working directory as described in [part 1](./setup-your-environment).
+That is the working directory as described in [Setup your environment](./setup-your-environment).
 
 >  If you are using Windows make sure that you select `All files` as file-type when saving the root certificate. If you do not do this Windows will add the extension `txt` to the file.
 
@@ -31,20 +31,25 @@ Example of the output: `Subject: C=NL, ST=Noord-Holland, L=Amsterdam, O=Common G
 
 ## The certificate for our service
 
-Now we have the root certificate installed. The next certificate we need is our own generated certificate.
+We now have the root certificate installed. The next certificate we need is our own generated certificate.
 It should include information about the API we will provide or consume.
 
 In order to request or own certificate, we need to generate a key and Certificate Signing Request (CSR).
-We can create these using [openssl](https://www.openssl.org/).
+We can create these using [OpenSSL](https://www.openssl.org/).
 
-**Note**: If you wish to choose your own organization serial number or keep the serial number when generating a CSR, you need to add the following lines to your openssl config:
+**Note**
 
-```toml
-[ req_distinguished_name ]
-serialNumber = Serial Number
-```
+> NLX uses the Subject Serial Number field of a certificate to identify an organization.
+> If you want to use the Subject Serial Number that you provice when generating the CSR, you need to add the following lines to your OpenSSL config:
+>
+> ```toml
+> [ req_distinguished_name ]
+> serialNumber = <your-subject-serial-number>
+> ```
+>
+> For more information about this, see the [organization identification](/reference-information/organization-identification) section.
 
-Generate CSR:
+Now let's generate the CSR:
 
 ```bash
 openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
@@ -61,10 +66,10 @@ Answer the questions accordingly:
 - **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your Inway,
   we will use `my-organization.nl` for this guide. For an Outway this FQDN does not have to be resolvable. It is possible to use the Inway certificate for the Outway and NLX Management.
 - **Email Address**, enter any value
-- **Serial Number** (optional), enter a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness. 
+- **Serial Number** (optional), enter a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness.
 - **A challenge password**, leave empty
 
-Now openssl wil generate two files:
+Now OpenSSL will generate two files:
 
 - A private key `org.key`.  **Keep this file safe**, limit access to it and do not transfer it in an insecure way.
 - A certificate request `org.csr`. Use this file to request a certificate.
@@ -77,7 +82,7 @@ List the files in your working directory.
 ls -la
 ```
 
-If all of the above went well, you should see at least two files listed:
+If all the steps above went well, you should see at least two files listed:
 
 * org.csr
 * org.key
@@ -93,12 +98,12 @@ Make sure to copy the complete output, including `-----BEGIN CERTIFICATE REQUEST
 cat org.csr
 ```
 
-Open [certportal](https://certportal.demo.nlx.io) and paste the content in the `CSR` field.
+Open the [NLX Certportal](https://certportal.demo.nlx.io) and paste the content in the `CSR` field.
 
 Scroll to the bottom of the page and click on **Request certificate**.
 
-The system will instantly sign your csr and return your certificate.
-You can either copy paste your certificate and store it in a file or you can click **Download certificate** to download the certificate.
+The system will instantly sign your CSR and return your certificate.
+You can either copy and paste your certificate and store it in a file or you can click **Download certificate** to download the certificate.
 
 Rename the file from `certificate.crt` to `org.crt` and store the file next to your private key.
 
@@ -116,7 +121,8 @@ The output should contain the answers you've provided when you created the certi
 
 Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl/serialNumber=01234567890123456789`.
 
-The value after `serialNumber=` in the Subject's CN field is the primary way to identify your organization on NLX. For details about this, see the [organization identification](/reference-information/organization-identification) page.
+The value after `serialNumber=` in the Subject's CN field is the primary way to identify your organization on NLX.
+For details about this, see the [organization identification](/reference-information/organization-identification) page.
 
 ## In sum
 

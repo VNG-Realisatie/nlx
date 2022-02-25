@@ -23,6 +23,6 @@ An organization's [OIN (Organisatie-identificatienummer)](https://www.logius.nl/
 
 ### Compatibility with non-Dutch standards
 
-NLX's first objective is to be used as a standard in The Netherlands, but the ambitions go beyond these borders. This is why the Subject Serial Number field is not limited to be only numbers (which would be a check whether it is a valid OIN), but only a length check is in place to check compliancy with the x509 standards.
+The first objective of NLX is to be used as a standard in The Netherlands, but the ambitions go beyond these borders. This is why the Subject Serial Number field is not limited to be only numbers (which would be a check whether it is a valid OIN), but only a length check is in place to check compliancy with the x509 standards.
 
-Another reason why NLX does not force the use of OIN-like Subject Serial Numbers is because this is not the responsibility of NLX to check; this is the responsibility of the certificate authority. NLX's goal is to be as open as possible. Therefore, NLX leaves specific implementation details up to the certificate authorities.
+Another reason why NLX does not force the use of OIN-like Subject Serial Numbers is because this is not the responsibility of NLX to check; this is the responsibility of the certificate authority. The goal of NLX is to be as open as possible. Therefore, NLX leaves specific implementation details up to the certificate authorities.
