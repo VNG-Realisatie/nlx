@@ -38,7 +38,8 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} VNG Realisatie`,
     },
     algolia: {
-      apiKey: 'f5d0c017e70ffe180e05515a2869c1e4',
+      appId: 'DBDBO7N8NJ',
+      apiKey: '4ad324f65a78b6513d2300c525fa05a9',
       indexName: 'nlx',
     },
   },
