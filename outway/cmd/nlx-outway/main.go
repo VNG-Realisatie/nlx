@@ -38,6 +38,8 @@ var options struct {
 	ListenHTTPS       bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
 	ListenAddressGRPC string `long:"listen-address-grpc" env:"LISTEN_ADDRESS_GRPC" default:"127.0.0.1:8082" description:"Address for the outway grpc server to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
+	Address string `long:"self-address" env:"SELF_ADDRESS" description:"The address that the management API can use to reach me" required:"true"`
+
 	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
 	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
@@ -129,6 +131,7 @@ func main() {
 	_, err = client.RegisterOutway(context.TODO(), &api.RegisterOutwayRequest{
 		Name:         options.Name,
 		PublicKeyPEM: publicKeyPEM,
+		SelfAddress:  options.Address,
 		Version:      version.BuildVersion,
 	})
 	if err != nil {
@@ -153,6 +156,7 @@ func main() {
 
 	ow, err := outway.NewOutway(&outway.NewOutwayArgs{
 		Name:              options.Name,
+		Address:           options.Address,
 		Ctx:               context.Background(),
 		Logger:            logger,
 		Txlogger:          txlogger,
