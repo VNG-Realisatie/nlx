@@ -19,6 +19,7 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	mock_txlog "go.nlx.io/nlx/management-api/pkg/txlog/mock"
 	txlogapi "go.nlx.io/nlx/txlog-api/api"
@@ -53,6 +54,7 @@ func TestIsTXLogEnabled(t *testing.T) {
 				nil,
 				nil,
 				management.NewClient,
+				outway.NewClient,
 			)
 
 			response, err := service.IsTXLogEnabled(context.Background(), nil)

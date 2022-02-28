@@ -28,6 +28,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -76,7 +77,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 			l := zap.NewNop()
 			d := mock_directory.NewMockClient(ctrl)
 
-			h := server.NewManagementService(l, d, nil, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl), management.NewClient)
+			h := server.NewManagementService(l, d, nil, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl), management.NewClient, outway.NewClient)
 			got, err := h.GetSettings(context.Background(), &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
@@ -264,7 +265,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 
 			l := zap.NewNop()
 
-			h := server.NewManagementService(l, tt.directoryClient(ctrl), nil, nil, tt.db(ctrl), nil, tt.auditLog(ctrl), management.NewClient)
+			h := server.NewManagementService(l, tt.directoryClient(ctrl), nil, nil, tt.db(ctrl), nil, tt.auditLog(ctrl), management.NewClient, outway.NewClient)
 			got, err := h.UpdateSettings(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)

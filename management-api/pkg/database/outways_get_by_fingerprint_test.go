@@ -7,27 +7,16 @@ package database_test
 
 import (
 	"context"
-	"net"
 	"testing"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	"github.com/jackc/pgtype"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func mockIP(t *testing.T, ip string) pgtype.Inet {
-	_, ipNet, err := net.ParseCIDR(ip)
-	require.NoError(t, err)
-
-	return pgtype.Inet{
-		Status: pgtype.Present,
-		IPNet:  ipNet,
-	}
-}
-func TestListOutways(t *testing.T) {
+func TestGetOutwaysByPublicKeyFingerprint(t *testing.T) {
 	t.Parallel()
 
 	setup(t)
@@ -41,12 +30,20 @@ func TestListOutways(t *testing.T) {
 	require.NoError(t, err)
 
 	tests := map[string]struct {
-		loadFixtures bool
-		want         []*database.Outway
-		wantErr      error
+		loadFixtures         bool
+		publicKeyFingerprint string
+		want                 []*database.Outway
+		wantErr              error
 	}{
+		"when_not_found": {
+			loadFixtures:         false,
+			publicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+			want:                 nil,
+			wantErr:              database.ErrNotFound,
+		},
 		"happy_flow": {
-			loadFixtures: true,
+			loadFixtures:         true,
+			publicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 			want: []*database.Outway{
 				{
 					ID:                   1,

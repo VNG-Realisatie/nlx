@@ -27,6 +27,7 @@ func (req *RegisterOutwayRequest) Validate() error {
 		req,
 		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
 		validation.Field(&req.PublicKeyPEM, validation.Required),
+		validation.Field(&req.SelfAddress, validation.Required),
 		validation.Field(&req.Version, validation.Required),
 	)
 }

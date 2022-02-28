@@ -32,6 +32,7 @@ type ConfigDatabase interface {
 
 	ListOutways(ctx context.Context) ([]*Outway, error)
 	GetOutway(ctx context.Context, name string) (*Outway, error)
+	GetOutwaysByPublicKeyFingerprint(ctx context.Context, publicKeyFingerprint string) ([]*Outway, error)
 	RegisterOutway(ctx context.Context, outway *Outway) error
 
 	GetFingerprintOfPublicKeys(ctx context.Context) ([]string, error)

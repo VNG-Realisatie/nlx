@@ -69,7 +69,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		context.AuthInfo.OrganizationSerialNumber = claims.Issuer
 		context.AuthInfo.PublicKeyFingerprint = publicKeyFingerprint
-
+		println("delegator setten")
 		context.LogData["delegator"] = claims.Issuer
 		context.LogData["orderReference"] = claims.OrderReference
 

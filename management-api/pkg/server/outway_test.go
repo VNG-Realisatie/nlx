@@ -26,6 +26,7 @@ import (
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
@@ -67,6 +68,7 @@ func TestRegisterOutway(t *testing.T) {
 					Name:                 "outway42.ip-context-required",
 					PublicKeyPEM:         testPublicKeyPEM,
 					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
+					SelfAddress:          "self-address",
 					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
@@ -83,11 +85,24 @@ func TestRegisterOutway(t *testing.T) {
 				request: &api.RegisterOutwayRequest{
 					Name:         "",
 					PublicKeyPEM: testPublicKeyPEM,
+					SelfAddress:  "self-address",
 					Version:      "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
 			wantErr: status.Error(codes.InvalidArgument, "invalid outway: name: cannot be blank."),
+		},
+		"when_providing_an_empty_self_address": {
+			args: args{
+				request: &api.RegisterOutwayRequest{
+					Name:         "outway42.basic",
+					PublicKeyPEM: testPublicKeyPEM,
+					SelfAddress:  "",
+					Version:      "unknown",
+				},
+				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
+			},
+			wantErr: status.Error(codes.InvalidArgument, "invalid outway: selfAddress: cannot be blank."),
 		},
 		"happy_flow_ipv4": {
 			args: args{
@@ -95,12 +110,14 @@ func TestRegisterOutway(t *testing.T) {
 					Name:                 "outway42.basic",
 					PublicKeyPEM:         testPublicKeyPEM,
 					IPAddress:            mockIP(t, "127.1.1.1/32"),
+					SelfAddress:          "self-address",
 					Version:              "unknown",
 					PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
 				},
 				request: &api.RegisterOutwayRequest{
 					Name:         "outway42.basic",
 					PublicKeyPEM: testPublicKeyPEM,
+					SelfAddress:  "self-address",
 					Version:      "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
@@ -113,11 +130,13 @@ func TestRegisterOutway(t *testing.T) {
 					IPAddress:            mockIP(t, "::1/32"),
 					PublicKeyPEM:         testPublicKeyPEM,
 					PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
+					SelfAddress:          "self-address",
 					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
 					Name:         "outway42.ipv6",
 					PublicKeyPEM: testPublicKeyPEM,
+					SelfAddress:  "self-address",
 					Version:      "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
@@ -150,6 +169,7 @@ func TestRegisterOutway(t *testing.T) {
 				nil,
 				mock_auditlog.NewMockLogger(mockCtrl),
 				management.NewClient,
+				outway.NewClient,
 			)
 
 			_, err := service.RegisterOutway(ctx, tt.args.request)
@@ -176,6 +196,7 @@ func TestListOutways(t *testing.T) {
 			IPAddress:            mockIP(t, "127.1.1.1/32"),
 			PublicKeyPEM:         "mock-public-key-pem",
 			PublicKeyFingerprint: "mock-public-key-fingerprint",
+			SelfAddress:          "self-address",
 		},
 	}
 
@@ -190,6 +211,7 @@ func TestListOutways(t *testing.T) {
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),
 		management.NewClient,
+		outway.NewClient,
 	)
 	actualResponse, err := service.ListOutways(ctx, &api.ListOutwaysRequest{})
 	assert.NoError(t, err)
@@ -208,6 +230,7 @@ func TestListOutways(t *testing.T) {
 				Version:              "1.0.0",
 				PublicKeyPEM:         "mock-public-key-pem",
 				PublicKeyFingerprint: "mock-public-key-fingerprint",
+				SelfAddress:          "self-address",
 			},
 		},
 	}

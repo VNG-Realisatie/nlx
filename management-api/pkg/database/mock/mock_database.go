@@ -423,6 +423,21 @@ func (mr *MockConfigDatabaseMockRecorder) GetOutway(ctx, name interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutway", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutway), ctx, name)
 }
 
+// GetOutwaysByPublicKeyFingerprint mocks base method.
+func (m *MockConfigDatabase) GetOutwaysByPublicKeyFingerprint(ctx context.Context, publicKeyFingerprint string) ([]*database.Outway, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOutwaysByPublicKeyFingerprint", ctx, publicKeyFingerprint)
+	ret0, _ := ret[0].([]*database.Outway)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOutwaysByPublicKeyFingerprint indicates an expected call of GetOutwaysByPublicKeyFingerprint.
+func (mr *MockConfigDatabaseMockRecorder) GetOutwaysByPublicKeyFingerprint(ctx, publicKeyFingerprint interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutwaysByPublicKeyFingerprint", reflect.TypeOf((*MockConfigDatabase)(nil).GetOutwaysByPublicKeyFingerprint), ctx, publicKeyFingerprint)
+}
+
 // GetService mocks base method.
 func (m *MockConfigDatabase) GetService(ctx context.Context, name string) (*database.Service, error) {
 	m.ctrl.T.Helper()

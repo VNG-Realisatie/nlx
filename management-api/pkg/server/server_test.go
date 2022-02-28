@@ -22,6 +22,8 @@ import (
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	mock_management "go.nlx.io/nlx/management-api/pkg/management/mock"
+	"go.nlx.io/nlx/management-api/pkg/outway"
+	mock_outway "go.nlx.io/nlx/management-api/pkg/outway/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	mock_txlog "go.nlx.io/nlx/management-api/pkg/txlog/mock"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
@@ -65,6 +67,7 @@ type serviceMocks struct {
 	dc *mock_directory.MockClient
 	tx *mock_txlog.MockClient
 	mc *mock_management.MockClient
+	oc *mock_outway.MockClient
 }
 
 func newService(t *testing.T) (*server.ManagementService, *common_tls.CertificateBundle, serviceMocks) {
@@ -81,6 +84,7 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		al: mock_auditlog.NewMockLogger(ctrl),
 		db: mock_database.NewMockConfigDatabase(ctrl),
 		mc: mock_management.NewMockClient(ctrl),
+		oc: mock_outway.NewMockClient(ctrl),
 	}
 
 	logger := zaptest.Logger(t)
@@ -98,6 +102,9 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		mocks.al,
 		func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
 			return mocks.mc, nil
+		},
+		func(context.Context, string, *common_tls.CertificateBundle) (outway.Client, error) {
+			return mocks.oc, nil
 		},
 	)
 

@@ -8,6 +8,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"google.golang.org/grpc"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -488,15 +489,15 @@ func TestRunServer(t *testing.T) {
 		certificate       *tls.Certificate
 		errorMessage      string
 	}{
-		"invalid listen address": {
+		"invalid_listen_address": {
 			listenAddress:     "invalid",
 			listenAddressGRPC: "127.0.0.1:8082",
 			certificate:       nil,
 			errorMessage:      "error listening on server: listen tcp: address invalid: missing port in address",
 		},
-		"invalid listen address with TLS": {
+		"invalid_listen_address with TLS": {
 			listenAddress:     "invalid",
-			listenAddressGRPC: "127.0.0.1:8082",
+			listenAddressGRPC: "127.0.0.1:8083",
 			certificate:       &certificate,
 			errorMessage:      "error listening on server: listen tcp: address invalid: missing port in address",
 		},
@@ -515,6 +516,7 @@ func TestRunServer(t *testing.T) {
 				ctx:            context.Background(),
 				logger:         logger,
 				monitorService: monitorService,
+				grpcServer:     grpc.NewServer(),
 			}
 
 			err = o.RunServer(tt.listenAddress, tt.listenAddressGRPC, tt.certificate)

@@ -44,6 +44,8 @@ message RequestAccessResponse {
 
 message RequestClaimRequest {
   string order_reference = 1;
+  string organization_serial_number = 2;
+  string service_name = 3;
 }
 
 message RequestClaimResponse {

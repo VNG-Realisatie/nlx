@@ -11,11 +11,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/outway"
+	outwayapi "go.nlx.io/nlx/outway/api"
 )
 
 const expiresInHours = 4
@@ -33,6 +35,10 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.InvalidArgument, "an order reference must be provided")
 	}
 
+	if req.ServiceName == "" {
+		return nil, status.Error(codes.InvalidArgument, "an service name must be provided")
+	}
+
 	order, err := s.configDatabase.GetOutgoingOrderByReference(ctx, req.OrderReference)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
@@ -44,6 +50,11 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 	if order.Delegatee != md.OrganizationSerialNumber {
 		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization serialnumber %s not found", req.OrderReference, md.OrganizationSerialNumber)
+	}
+
+	outgoingAccessRequest := filterOutgoingAccessRequestFromOrder(order, req.OrganizationSerialNumber, req.ServiceName)
+	if outgoingAccessRequest == nil {
+		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization serialnumber %s and service name %s not found", req.OrderReference, md.OrganizationSerialNumber, req.ServiceName)
 	}
 
 	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(order.PublicKeyPEM))
@@ -70,27 +81,59 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		expiresAt = order.ValidUntil
 	}
 
-	// TODO sign request via outway
-	// Delegatee:      md.OrganizationSerialNumber,
-	// OrderReference: req.OrderReference,
-	// AccessProof:   convertOutgoingOrderAccessProofsToDelegationAccessProofs(order.OutgoingOrderAccessProofs),
-	// ExpiresAt: expiresAt,
+	outways, err := s.configDatabase.GetOutwaysByPublicKeyFingerprint(ctx, outgoingAccessRequest.PublicKeyFingerprint)
+	if err != nil {
+		s.logger.Error("could not find outway", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not find outway")
+	}
+
+	outwayClient := createOutwayClient(ctx, s, outways)
+	if outwayClient == nil {
+		s.logger.Error("could not connect to outway", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not connect to outway")
+	}
+
+	signedOrderClaimResp, err := outwayClient.SignOrderClaim(ctx, &outwayapi.SignOrderClaimRequest{
+		Delegatee:      md.OrganizationSerialNumber,
+		OrderReference: req.OrderReference,
+		AccessProof: &outwayapi.AccessProof{
+			ServiceName:              outgoingAccessRequest.ServiceName,
+			OrganizationSerialNumber: outgoingAccessRequest.Organization.SerialNumber,
+			PublicKeyFingerprint:     outgoingAccessRequest.PublicKeyFingerprint,
+		},
+		ExpiresAt: timestamppb.New(expiresAt),
+	})
+	if err != nil {
+		s.logger.Error("could not sign order claim via outway", zap.Error(err))
+		return nil, status.Error(codes.Internal, "could not sign order claim via outway")
+	}
 
 	return &external.RequestClaimResponse{
-		Claim: "", // TODO get this string via outway SignOrderClaim request
+		Claim: signedOrderClaimResp.SignedOrderclaim,
 	}, nil
 }
 
-func convertOutgoingOrderAccessProofsToDelegationAccessProofs(outgoingOrderAccessProofs []*database.OutgoingOrderAccessProof) []*delegation.AccessProof {
-	claimAccessProofs := make([]*delegation.AccessProof, len(outgoingOrderAccessProofs))
+func createOutwayClient(ctx context.Context, s *ManagementService, outways []*database.Outway) outway.Client {
+	for _, o := range outways {
+		c, err := s.createOutwayClientFunc(ctx, o.SelfAddress, s.orgCert)
 
-	for i, outgoingOrderAccessProof := range outgoingOrderAccessProofs {
-		claimAccessProofs[i] = &delegation.AccessProof{
-			ServiceName:              outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.ServiceName,
-			OrganizationSerialNumber: outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber,
-			PublicKeyFingerprint:     outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.PublicKeyFingerprint,
+		if err != nil {
+			s.logger.Error("error creating outway client", zap.Error(err))
+			continue
+		}
+
+		return c
+	}
+
+	return nil
+}
+
+func filterOutgoingAccessRequestFromOrder(order *database.OutgoingOrder, providerSerialNumber, serviceName string) *database.OutgoingAccessRequest {
+	for _, a := range order.OutgoingOrderAccessProofs {
+		if a.AccessProof.OutgoingAccessRequest.ServiceName == serviceName && a.AccessProof.OutgoingAccessRequest.Organization.SerialNumber == providerSerialNumber {
+			return a.AccessProof.OutgoingAccessRequest
 		}
 	}
 
-	return claimAccessProofs
+	return nil
 }

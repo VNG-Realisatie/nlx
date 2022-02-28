@@ -17,6 +17,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
@@ -36,9 +37,10 @@ type ManagementService struct {
 	txlogDatabase              txlogdb.TxlogDatabase
 	auditLogger                auditlog.Logger
 	createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
+	createOutwayClientFunc     func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)
 }
 
-func NewManagementService(logger *zap.Logger, directoryClient directory.Client, txlogClient txlog.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)) *ManagementService {
+func NewManagementService(logger *zap.Logger, directoryClient directory.Client, txlogClient txlog.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error), createOutwayClientFunc func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)) *ManagementService {
 	return &ManagementService{
 		logger:                     logger,
 		orgCert:                    orgCert,
@@ -48,6 +50,7 @@ func NewManagementService(logger *zap.Logger, directoryClient directory.Client, 
 		txlogDatabase:              txlogDatabase,
 		auditLogger:                auditLogger,
 		createManagementClientFunc: createManagementClientFunc,
+		createOutwayClientFunc:     createOutwayClientFunc,
 	}
 }
 

@@ -31,6 +31,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/management"
+	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
@@ -97,6 +98,7 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 		txlogDB,
 		auditLogger,
 		management.NewClient,
+		outway.NewClient,
 	)
 
 	grpcServer := newGRPCServer(logger, cert)

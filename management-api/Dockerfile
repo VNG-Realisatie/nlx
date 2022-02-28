@@ -16,6 +16,7 @@ COPY directory-api  /go/src/go.nlx.io/nlx/directory-api
 COPY txlog-api  /go/src/go.nlx.io/nlx/txlog-api
 COPY management-api     /go/src/go.nlx.io/nlx/management-api
 COPY common             /go/src/go.nlx.io/nlx/common
+COPY outway             /go/src/go.nlx.io/nlx/outway
 
 WORKDIR /go/src/go.nlx.io/nlx/management-api
 

@@ -23,6 +23,10 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 		return nil, status.Error(codes.InvalidArgument, "an organization serial number of the order must be provided")
 	}
 
+	if req.ServiceName == "" {
+		return nil, status.Error(codes.InvalidArgument, "an service name must be provided")
+	}
+
 	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, req.OrderOrganizationSerialNumber)
 	if err != nil {
 		s.logger.Error("unable to get the inway proxy address of the external organization", zap.Error(err))
@@ -39,6 +43,7 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 
 	response, err := externalManagementClient.RequestClaim(context.Background(), &external.RequestClaimRequest{
 		OrderReference: req.OrderReference,
+		ServiceName:    req.ServiceName,
 	})
 
 	if err != nil {

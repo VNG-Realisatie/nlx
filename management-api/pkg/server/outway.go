@@ -61,6 +61,7 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 			IPNet:  ipAddress,
 			Status: pgtype.Present,
 		},
+		SelfAddress:          req.SelfAddress,
 		PublicKeyPEM:         req.PublicKeyPEM,
 		PublicKeyFingerprint: fingerPrint,
 		Version:              req.Version,
@@ -108,6 +109,7 @@ func convertFromDatabaseOutway(model *database.Outway) *api.Outway {
 		Name:                 model.Name,
 		PublicKeyPEM:         model.PublicKeyPEM,
 		PublicKeyFingerprint: model.PublicKeyFingerprint,
+		SelfAddress:          model.SelfAddress,
 		Version:              model.Version,
 	}
 

@@ -30,6 +30,7 @@ func TestRetrieveClaim(t *testing.T) {
 		"when_providing_an_empty_order_reference": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference: "",
+				ServiceName:    "service-name",
 			},
 			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
@@ -40,16 +41,29 @@ func TestRetrieveClaim(t *testing.T) {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "arbitrary-order-reference",
 				OrderOrganizationSerialNumber: "",
+				ServiceName:                   "service-name",
 			},
 			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
 			wantErr: status.Error(codes.InvalidArgument, "an organization serial number of the order must be provided"),
 		},
+		"when_providing_an_empty_service_name": {
+			request: &api.RetrieveClaimForOrderRequest{
+				OrderReference:                "arbitrary-order-reference",
+				OrderOrganizationSerialNumber: "arbitrary-org-name",
+				ServiceName:                   "",
+			},
+			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
+				return context.Background()
+			},
+			wantErr: status.Error(codes.InvalidArgument, "an service name must be provided"),
+		},
 		"when_getting_the_organization_inway_proxy_address_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
 				OrderOrganizationSerialNumber: "00000000000000000001",
+				ServiceName:                   "service-name",
 			},
 			setup: func(t *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -65,6 +79,7 @@ func TestRetrieveClaim(t *testing.T) {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
 				OrderOrganizationSerialNumber: "00000000000000000001",
+				ServiceName:                   "service-name",
 			},
 			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -76,6 +91,7 @@ func TestRetrieveClaim(t *testing.T) {
 				mocks.mc.EXPECT().
 					RequestClaim(gomock.Any(), &external.RequestClaimRequest{
 						OrderReference: "order-reference-a",
+						ServiceName:    "service-name",
 					}).
 					Return(nil, errors.New("arbitrary error"))
 
@@ -88,6 +104,7 @@ func TestRetrieveClaim(t *testing.T) {
 			request: &api.RetrieveClaimForOrderRequest{
 				OrderReference:                "order-reference-a",
 				OrderOrganizationSerialNumber: "00000000000000000001",
+				ServiceName:                   "service-name",
 			},
 			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -99,6 +116,7 @@ func TestRetrieveClaim(t *testing.T) {
 				mocks.mc.EXPECT().
 					RequestClaim(gomock.Any(), &external.RequestClaimRequest{
 						OrderReference: "order-reference-a",
+						ServiceName:    "service-name",
 					}).
 					Return(nil, status.Errorf(codes.Unauthenticated, "order is revoked"))
 
@@ -135,6 +153,7 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 	mocks.mc.EXPECT().
 		RequestClaim(gomock.Any(), &external.RequestClaimRequest{
 			OrderReference: "order-reference-a",
+			ServiceName:    "service-name",
 		}).
 		Return(&external.RequestClaimResponse{
 			Claim: "claim",
@@ -143,6 +162,7 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 	response, err := service.RetrieveClaimForOrder(ctx, &api.RetrieveClaimForOrderRequest{
 		OrderReference:                "order-reference-a",
 		OrderOrganizationSerialNumber: "00000000000000000001",
+		ServiceName:                   "service-name",
 	})
 
 	assert.NoError(t, err)

@@ -214,18 +214,12 @@ func getJWTAsSignedString(args *jwtArgs) (string, error) {
 	claims := delegation.JWTClaims{
 		Delegatee:      args.delegateeSerialNumber,
 		OrderReference: "order-reference",
-		AccessProofs: []*delegation.AccessProof{
-			{
-				OrganizationSerialNumber: args.delegatorSerialNumber,
-				ServiceName:              args.serviceName,
-				PublicKeyFingerprint:     "other-public-key-fingerprint",
-			},
-			{
-				OrganizationSerialNumber: args.delegatorSerialNumber,
-				ServiceName:              args.serviceName,
-				PublicKeyFingerprint:     args.delegatorCert.PublicKeyFingerprint(),
-			},
+		AccessProof: &delegation.AccessProof{
+			OrganizationSerialNumber: args.delegatorSerialNumber,
+			ServiceName:              args.serviceName,
+			PublicKeyFingerprint:     "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
 		},
+
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
 			Issuer:    args.delegatorSerialNumber,

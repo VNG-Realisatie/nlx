@@ -17,6 +17,7 @@ type Outway struct {
 	ID                   uint
 	Name                 string
 	IPAddress            pgtype.Inet `gorm:"type:inet"`
+	SelfAddress          string
 	PublicKeyPEM         string
 	PublicKeyFingerprint string
 	Version              string
@@ -34,7 +35,7 @@ func (db *PostgresConfigDatabase) RegisterOutway(ctx context.Context, outway *Ou
 		Omit(clause.Associations).
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "name"}},
-			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "public_key_pem", "public_key_fingerprint"}),
+			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "self_address", "public_key_pem", "public_key_fingerprint"}),
 		}).
 		Create(outway).Error
 }
@@ -65,4 +66,21 @@ func (db *PostgresConfigDatabase) GetOutway(ctx context.Context, name string) (*
 	}
 
 	return outway, nil
+}
+
+func (db *PostgresConfigDatabase) GetOutwaysByPublicKeyFingerprint(ctx context.Context, publicKeyFingerprint string) ([]*Outway, error) {
+	outways := []*Outway{}
+
+	if err := db.DB.
+		WithContext(ctx).
+		Where("public_key_fingerprint = ?", publicKeyFingerprint).
+		Find(&outways).Error; err != nil {
+		return nil, err
+	}
+
+	if len(outways) == 0 {
+		return nil, ErrNotFound
+	}
+
+	return outways, nil
 }

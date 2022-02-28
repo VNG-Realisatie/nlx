@@ -73,10 +73,11 @@ func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string,
 	return
 }
 
-func (plugin *DelegationPlugin) requestClaim(serialNumber, orderReference string) (*delegation.JWTClaims, string, error) {
+func (plugin *DelegationPlugin) requestClaim(serialNumber, orderReference, serviceName string) (*delegation.JWTClaims, string, error) {
 	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
 		OrderOrganizationSerialNumber: serialNumber,
 		OrderReference:                orderReference,
+		ServiceName:                   serviceName,
 	})
 	if err != nil {
 		st, ok := status.FromError(err)
@@ -103,12 +104,12 @@ func (plugin *DelegationPlugin) requestClaim(serialNumber, orderReference string
 	return token.Claims.(*delegation.JWTClaims), token.Raw, nil
 }
 
-func (plugin *DelegationPlugin) getOrRequestClaim(serialNumber, orderReference string) (*claimData, error) {
-	claimKey := fmt.Sprintf("%s/%s", serialNumber, orderReference)
+func (plugin *DelegationPlugin) getOrRequestClaim(serialNumber, orderReference, serviceName string) (*claimData, error) {
+	claimKey := fmt.Sprintf("%s/%s/%s", serialNumber, orderReference, serviceName)
 
 	value, ok := plugin.claims.Load(claimKey)
 	if !ok || value.(*claimData).Valid() != nil {
-		claim, raw, err := plugin.requestClaim(serialNumber, orderReference)
+		claim, raw, err := plugin.requestClaim(serialNumber, orderReference, serviceName)
 		if err != nil {
 			return nil, err
 		}
@@ -145,7 +146,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		context.LogData["delegator"] = serialNumber
 		context.LogData["orderReference"] = orderReference
 
-		claim, err := plugin.getOrRequestClaim(serialNumber, orderReference)
+		claim, err := plugin.getOrRequestClaim(serialNumber, orderReference, context.Destination.Service)
 		if err != nil {
 			msg := fmt.Sprintf("failed to request claim from %s", serialNumber)
 

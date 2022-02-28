@@ -65,6 +65,7 @@ func TestDelegationPlugin(t *testing.T) {
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
 						OrderOrganizationSerialNumber: "00000000000000000001",
 						OrderReference:                "test-ref-123",
+						ServiceName:                   "service-name",
 					}).
 					Return(nil, errors.New("something went wrong"))
 			},
@@ -83,6 +84,7 @@ func TestDelegationPlugin(t *testing.T) {
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
 						OrderOrganizationSerialNumber: "00000000000000000001",
 						OrderReference:                "test-ref-123",
+						ServiceName:                   "service-name",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: "invalid_jwt",
@@ -101,6 +103,7 @@ func TestDelegationPlugin(t *testing.T) {
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
 						OrderOrganizationSerialNumber: "00000000000000000001",
 						OrderReference:                "test-ref-123",
+						ServiceName:                   "service-name",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,
@@ -121,6 +124,7 @@ func TestDelegationPlugin(t *testing.T) {
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
 						OrderOrganizationSerialNumber: "00000000000000000001",
 						OrderReference:                "test-ref-123",
+						ServiceName:                   "service-name",
 					}).
 					Return(nil, status.Error(codes.Unauthenticated, "order is revoked"))
 			},
@@ -137,12 +141,13 @@ func TestDelegationPlugin(t *testing.T) {
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
 						OrderOrganizationSerialNumber: "00000000000000000001",
 						OrderReference:                "test-ref-123",
+						ServiceName:                   "service-name",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,
 					}, nil)
 
-				plugin.claims.Store("00000000000000000001/test-ref-123", &claimData{
+				plugin.claims.Store("00000000000000000001/test-ref-123/service-name", &claimData{
 					Raw: testToken,
 					JWTClaims: delegation.JWTClaims{
 						RegisteredClaims: jwt.RegisteredClaims{
@@ -162,7 +167,7 @@ func TestDelegationPlugin(t *testing.T) {
 				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
-				plugin.claims.Store("00000000000000000001/test-ref-123", &claimData{
+				plugin.claims.Store("00000000000000000001/test-ref-123/service-name", &claimData{
 					Raw: "claim",
 					JWTClaims: delegation.JWTClaims{
 						RegisteredClaims: jwt.RegisteredClaims{},
@@ -182,7 +187,9 @@ func TestDelegationPlugin(t *testing.T) {
 			defer ctrl.Finish()
 
 			client := mock.NewMockManagementClient(ctrl)
-			context := fakeContext(&Destination{})
+			context := fakeContext(&Destination{
+				Service: "service-name",
+			})
 
 			tt.setHeaders(context.Request)
 

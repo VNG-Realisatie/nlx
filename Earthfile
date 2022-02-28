@@ -151,6 +151,7 @@ mocks-management-api:
     COPY ./common /src/common
     COPY ./directory-api /src/directory-api
     COPY ./txlog-api /src/txlog-api
+    COPY ./outway /src/outway
 
     RUN mkdir -p /dist || true
     WORKDIR /src/management-api
@@ -160,6 +161,7 @@ mocks-management-api:
     RUN mockgen -source pkg/database/database.go -destination /dist/management-api/pkg/database/mock/mock_database.go
     RUN mockgen -destination /dist/management-api/pkg/directory/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/directory Client
     RUN mockgen -destination /dist/management-api/pkg/txlog/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/txlog Client
+    RUN mockgen -destination /dist/management-api/pkg/outway/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/outway Client
     RUN mockgen -destination /dist/management-api/pkg/management/mock/mock_client.go go.nlx.io/nlx/management-api/pkg/management Client
     RUN mockgen -source pkg/auditlog/logger.go -destination /dist/management-api/pkg/auditlog/mock/mock_auditlog.go
     RUN mockgen -source pkg/txlogdb/database.go -destination /dist/management-api/pkg/txlogdb/mock/mock_database.go
@@ -172,6 +174,7 @@ mocks-management-api:
     SAVE ARTIFACT /dist/management-api/pkg/database/mock/*.go AS LOCAL ./management-api/pkg/database/mock/
     SAVE ARTIFACT /dist/management-api/pkg/directory/mock/*.go AS LOCAL ./management-api/pkg/directory/mock/
     SAVE ARTIFACT /dist/management-api/pkg/txlog/mock/*.go AS LOCAL ./management-api/pkg/txlog/mock/
+    SAVE ARTIFACT /dist/management-api/pkg/outway/mock/*.go AS LOCAL ./management-api/pkg/outway/mock/
     SAVE ARTIFACT /dist/management-api/pkg/management/mock/*.go AS LOCAL ./management-api/pkg/management/mock/
     SAVE ARTIFACT /dist/management-api/pkg/auditlog/mock/*.go AS LOCAL ./management-api/pkg/auditlog/mock/
     SAVE ARTIFACT /dist/management-api/pkg/txlogdb/mock/*.go AS LOCAL ./management-api/pkg/txlogdb/mock/
