@@ -1,3 +1,17 @@
+# [0.124.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.123.0...v0.124.0) (2022-02-28)
+
+
+### Bug Fixes
+
+* **directory:** ensure external links of the Navigation are opened correctly ([ca02b92](https://gitlab.com/commonground/nlx/nlx/commit/ca02b92241028ab55d6ea7a5ec75841285278199))
+* **docs:** update filename in command to fix file permissions ([daa5433](https://gitlab.com/commonground/nlx/nlx/commit/daa5433e06fb8a4858f85cabea2fbb555e54562d))
+* **docs:** upgrade the Algolia credentials to use the team core mailbox account ([91596c1](https://gitlab.com/commonground/nlx/nlx/commit/91596c1a83d701ea2f253f26bed57ba1168ba905))
+
+
+### Features
+
+* **directory:** made database connection parameters configurable for directory-monitor ([45aea7e](https://gitlab.com/commonground/nlx/nlx/commit/45aea7e896c3d4fa1511fd2c0edd0928881cad51))
+
 # [0.123.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.122.0...v0.123.0) (2022-02-11)
 
 
