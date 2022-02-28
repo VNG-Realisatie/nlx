@@ -15,8 +15,8 @@ Please note that:
 
 It is not recommended to follow this guide when you're working from your home network.
 
-> In the Docker Compose file we have started, the inway is running on
-`8443`. Make sure that port is publicly available.
+> In the Docker Compose file we have started, the inway is running on the ports
+`8443` and `8444`. Make sure that both ports are publicly available. For more information [click here](../../reference-information/ip-addresses#your-nlx-components)
 
 ![Settings screen](/img/nlx-management-settings-screen.png "Settings screen")
 
