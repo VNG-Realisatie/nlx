@@ -1,6 +1,7 @@
 @outway
 Feature: Outway
 
+    @ignore
     Scenario: Access a service using an Outway
         Given "Gemeente Stijns" is up and running
             And "RvRD" is up and running

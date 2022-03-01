@@ -24,7 +24,13 @@ export const createOrder = async (
     `creating an order for delegator '${delegatorOrgName} (${delegator.serialNumber})' with reference '${orderReference}' and service '${serviceName} by ${serviceProviderOrgName} (${serviceProvider.serialNumber})' delegated to '${delegateeOrgName} (${delegatee.serialNumber})'`
   );
 
-  const defaultOutway = await getDefaultOutwayForOrganization(delegateeOrgName);
+  const delegatorDefaultOutway = await getDefaultOutwayForOrganization(
+    delegatorOrgName
+  );
+
+  const delegateeDefaultOutway = await getDefaultOutwayForOrganization(
+    delegateeOrgName
+  );
 
   const directoryServices =
     await delegator.apiClients.directory?.directoryListServices();
@@ -32,13 +38,14 @@ export const createOrder = async (
   const directoryService = directoryServices?.services?.find(
     (directoryService) =>
       directoryService.serviceName === serviceName &&
-      directoryService?.organization?.serialNumber === serviceProviderOrgName
+      directoryService?.organization?.serialNumber ===
+        serviceProvider.serialNumber
   );
 
   const accessStateForService = directoryService?.accessStates?.find(
     (accessState) =>
       accessState?.accessProof?.publicKeyFingerprint ===
-      defaultOutway?.publicKeyFingerprint
+      delegatorDefaultOutway?.publicKeyFingerprint
   );
 
   if (!accessStateForService || !accessStateForService.accessProof) {
@@ -51,7 +58,7 @@ export const createOrder = async (
         reference: orderReference,
         description: "arbitrary description",
         delegatee: delegatee.serialNumber,
-        publicKeyPEM: defaultOutway?.publicKeyPEM,
+        publicKeyPEM: delegateeDefaultOutway?.publicKeyPEM,
         validFrom: dayjs().subtract(1, "day").toDate(),
         validUntil: dayjs().add(1, "day").toDate(),
         accessProofIds: [`${accessStateForService?.accessProof?.id}`],
