@@ -3,13 +3,112 @@
 //
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { waitFor, fireEvent } from '@testing-library/react'
+import { waitFor, fireEvent, screen } from '@testing-library/react'
 import selectEvent from 'react-select-event'
 import { renderWithProviders } from '../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../stores'
 import { DirectoryApi, ManagementApi } from '../../../../api'
 import { ACCESS_REQUEST_STATES } from '../../../../stores/models/OutgoingAccessRequestModel'
 import OrderForm from './index'
+
+test('with initial values', async () => {
+  const onSubmitHandlerMock = jest.fn()
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'outway-a',
+        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+      },
+    ],
+  })
+
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'organization-a',
+        },
+        serviceName: 'service-a',
+        accessStates: [
+          {
+            accessRequest: {
+              id: '1',
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint:
+                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+            },
+            accessProof: {
+              id: '1',
+              organization: {
+                serialNumber: '00000000000000000001',
+                name: 'organization-a',
+              },
+              serviceName: 'service-a',
+            },
+          },
+        ],
+      },
+    ],
+  })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+    directoryApiClient,
+  })
+
+  const { container } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <OrderForm
+        initialValues={{
+          description: 'my-description',
+          reference: 'my-reference',
+          delegatee: '01234567890123456789',
+          publicKeyPEM: 'my-public-key-pem',
+          validFrom: new Date('2022-03-01T00:00:00.000Z'),
+          validUntil: new Date('2022-03-02T00:00:00.000Z'),
+          accessProofIds: ['1'],
+        }}
+        submitButtonText="Edit order"
+        onSubmitHandler={onSubmitHandlerMock}
+      />
+    </StoreProvider>,
+  )
+
+  expect(screen.getByLabelText(/Order description/).value).toBe(
+    'my-description',
+  )
+
+  expect(screen.getByLabelText(/Reference/).value).toBe('my-reference')
+
+  expect(screen.getByLabelText(/Delegated organization/).value).toBe(
+    '01234567890123456789',
+  )
+
+  expect(screen.getByLabelText(/Public key PEM/).value).toBe(
+    'my-public-key-pem',
+  )
+
+  expect(screen.getByLabelText(/Valid from/).value).toBe('2022-03-01')
+
+  expect(screen.getByLabelText(/Valid until/).value).toBe('2022-03-02')
+
+  // we're asserting the selected value like this, since React-Select does not
+  // set the input's value properly
+  await waitFor(async () => {
+    expect(
+      container.querySelectorAll('.ReactSelect__multi-value__label')[0]
+        .textContent,
+    ).toBe(
+      'service-a - organization-a (00000000000000000001) - via outway-a (h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=)',
+    )
+  })
+})
 
 test('the form values of the onSubmitHandler', async () => {
   const onSubmitHandlerMock = jest.fn()
