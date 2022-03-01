@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { renderWithProviders } from '../../../../../test-utils'
+import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 import DirectoryServices from './index'
 
 // eslint-disable-next-line react/prop-types
@@ -31,13 +32,15 @@ test('show a table with rows for every service', () => {
   const { getByTestId, getByRole } = renderWithProviders(
     <DirectoryServices
       services={[
-        {
-          organization: {
-            name: 'Test Organization',
-            serialNumber: '00000000000000000001',
+        new DirectoryServiceModel({
+          serviceData: {
+            organization: {
+              name: 'Test Organization',
+              serialNumber: '00000000000000000001',
+            },
+            serviceName: 'Test Service',
           },
-          serviceName: 'Test Service',
-        },
+        }),
       ]}
     />,
   )

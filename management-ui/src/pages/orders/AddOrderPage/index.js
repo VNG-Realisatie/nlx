@@ -8,7 +8,7 @@ import { Alert } from '@commonground/design-system'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import useStores, { useOrderStore } from '../../../hooks/use-stores'
-import OrderForm from './components/OrderForm'
+import OrderForm from '../components/OrderForm'
 
 const AddOrderPage = () => {
   const { t } = useTranslation()
@@ -63,7 +63,11 @@ const AddOrderPage = () => {
         </Alert>
       )}
 
-      <OrderForm services={servicesWithAccess} onSubmitHandler={submitOrder} />
+      <OrderForm
+        services={servicesWithAccess}
+        submitButtonText={t('Add order')}
+        onSubmitHandler={submitOrder}
+      />
     </PageTemplate>
   )
 }

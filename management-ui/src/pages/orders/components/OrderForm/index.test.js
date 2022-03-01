@@ -5,10 +5,10 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { waitFor, fireEvent } from '@testing-library/react'
 import selectEvent from 'react-select-event'
-import { renderWithProviders } from '../../../../../test-utils'
-import { RootStore, StoreProvider } from '../../../../../stores'
-import { DirectoryApi, ManagementApi } from '../../../../../api'
-import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
+import { renderWithProviders } from '../../../../test-utils'
+import { RootStore, StoreProvider } from '../../../../stores'
+import { DirectoryApi, ManagementApi } from '../../../../api'
+import { ACCESS_REQUEST_STATES } from '../../../../stores/models/OutgoingAccessRequestModel'
 import OrderForm from './index'
 
 test('the form values of the onSubmitHandler', async () => {
@@ -64,7 +64,10 @@ test('the form values of the onSubmitHandler', async () => {
 
   const { getByLabelText, getByText } = renderWithProviders(
     <StoreProvider rootStore={rootStore}>
-      <OrderForm onSubmitHandler={onSubmitHandlerMock} />
+      <OrderForm
+        submitButtonText="Add order"
+        onSubmitHandler={onSubmitHandlerMock}
+      />
     </StoreProvider>,
   )
 

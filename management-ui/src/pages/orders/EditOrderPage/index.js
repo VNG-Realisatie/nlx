@@ -5,21 +5,19 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
-import useStores, { useOrderStore } from '../../../hooks/use-stores'
+import useStores from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
 import { StyledUpdatedError } from '../../services/EditServicePage/index.styles'
-import EditOrderForm from './components/EditOrderForm'
+import OrderForm from '../components/OrderForm'
 
 const EditOrderPage = () => {
   const { t } = useTranslation()
   const { delegatee, reference } = useParams()
-  const { directoryServicesStore } = useStores()
-  const orderStore = useOrderStore()
+  const { directoryServicesStore, orderStore } = useStores()
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [error, setError] = useState(null)
   const [updateError, setUpdatedError] = useState(null)
-  const [serviceNames, setServiceNames] = useState(null)
   const [order, setOrder] = useState(null)
   const navigate = useNavigate()
 
@@ -28,27 +26,18 @@ const EditOrderPage = () => {
       try {
         await Promise.all([
           orderStore.fetchOutgoing(),
-          orderStore.fetchIncoming(),
           directoryServicesStore.fetchAll(),
         ])
 
-        const orderModel = orderStore.outgoingOrders.getOutgoing(
-          delegatee,
-          reference,
-        )
+        const orderModel = orderStore.getOutgoing(delegatee, reference)
 
         if (!orderModel) {
-          throw new Error('could not find order in outgoingOrders')
+          throw new Error(
+            `unable to find outgoing order for delegatee '${delegatee}' with reference '${reference}'`,
+          )
         }
 
         setOrder(orderModel)
-
-        const fetchedServiceNames =
-          directoryServicesStore.servicesWithAccess.map((service) => ({
-            service: service.serviceName,
-            organization: service.organization,
-          }))
-        setServiceNames(fetchedServiceNames)
 
         setLoadingInitial(false)
       } catch (err) {
@@ -58,6 +47,8 @@ const EditOrderPage = () => {
     }
     fetchInitialData()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const servicesWithAccess = directoryServicesStore.servicesWithAccess
 
   const submitOrder = async (formData) => {
     try {
@@ -88,7 +79,7 @@ const EditOrderPage = () => {
         >
           {error}
         </StyledUpdatedError>
-      ) : orderStore.isLoading || loadingInitial || !order || !serviceNames ? (
+      ) : orderStore.isLoading || loadingInitial || !order ? (
         <LoadingMessage />
       ) : (
         <>
@@ -98,13 +89,23 @@ const EditOrderPage = () => {
               variant="error"
               data-testid="error-message"
             >
-              {t(`${updateError || ''}`)}
+              {t(`${updateError}`)}
             </StyledUpdatedError>
           ) : null}
 
-          <EditOrderForm
-            order={order}
-            services={serviceNames}
+          <OrderForm
+            isEditMode
+            initialValues={{
+              description: order.description,
+              reference: order.reference,
+              delegatee: order.delegatee,
+              publicKeyPEM: order.publicKeyPEM,
+              validFrom: order.validFrom,
+              validUntil: order.validUntil,
+              accessProofIds: order.accessProofs.map((model) => model.id),
+            }}
+            services={servicesWithAccess}
+            submitButtonText={t('Update order')}
             onSubmitHandler={submitOrder}
           />
         </>

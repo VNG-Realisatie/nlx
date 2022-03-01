@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React, { useEffect } from 'react'
-import { arrayOf, func, instanceOf } from 'prop-types'
+import { array, bool, func, instanceOf, shape, string } from 'prop-types'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
@@ -14,15 +14,37 @@ import {
   TextInput,
 } from '@commonground/design-system'
 import { observer } from 'mobx-react'
-import DateInput, { isoDateSchema } from '../../../../../components/DateInput'
-import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
+import DateInput, { isoDateSchema } from '../../../../components/DateInput'
 import {
   useDirectoryServiceStore,
   useOutwayStore,
-} from '../../../../../hooks/use-stores'
+} from '../../../../hooks/use-stores'
 import { DateInputsWrapper, DateInputWrapper, StyledForm } from './index.styles'
 
-const OrderForm = ({ onSubmitHandler }) => {
+const formatDateToYYYYMMDD = (date) =>
+  date.getFullYear() +
+  '-' +
+  `${date.getMonth() + 1}`.padStart(2, 0) +
+  '-' +
+  `${date.getDate()}`.padStart(2, 0)
+
+const DEFAULT_INITIAL_VALUES = {
+  description: '',
+  reference: '',
+  delegatee: '',
+  publicKeyPEM: '',
+  validFrom: '',
+  validUntil: '',
+  accessProofIds: [],
+}
+
+const OrderForm = ({
+  initialValues,
+  onSubmitHandler,
+  submitButtonText,
+  isEditMode,
+  ...props
+}) => {
   const { t } = useTranslation()
   const outwayStore = useOutwayStore()
   const directoryServiceStore = useDirectoryServiceStore()
@@ -31,16 +53,6 @@ const OrderForm = ({ onSubmitHandler }) => {
     outwayStore.fetchAll()
     directoryServiceStore.fetchAll()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const initialValues = {
-    description: '',
-    reference: '',
-    delegatee: '',
-    publicKeyPEM: '',
-    validFrom: '',
-    validUntil: '',
-    accessProofIds: [],
-  }
 
   const validationSchema = Yup.object().shape({
     description: Yup.string()
@@ -83,9 +95,26 @@ const OrderForm = ({ onSubmitHandler }) => {
     onSubmitHandler(values)
   }
 
+  const combinedInitialValues = {
+    ...DEFAULT_INITIAL_VALUES,
+    ...initialValues,
+  }
+
+  if (combinedInitialValues.validFrom) {
+    combinedInitialValues.validFrom = formatDateToYYYYMMDD(
+      combinedInitialValues.validFrom,
+    )
+  }
+
+  if (combinedInitialValues.validUntil) {
+    combinedInitialValues.validUntil = formatDateToYYYYMMDD(
+      combinedInitialValues.validUntil,
+    )
+  }
+
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={combinedInitialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => {
         handleSubmit({
@@ -95,7 +124,7 @@ const OrderForm = ({ onSubmitHandler }) => {
         })
       }}
     >
-      <StyledForm>
+      <StyledForm {...props}>
         <Fieldset>
           <TextInput name="description" size="l">
             <FieldLabel
@@ -104,14 +133,14 @@ const OrderForm = ({ onSubmitHandler }) => {
             />
           </TextInput>
 
-          <TextInput name="reference" size="l">
+          <TextInput name="reference" size="l" disabled={isEditMode}>
             <FieldLabel
               label={t('Reference')}
               small={t('This identifier is sent with each request')}
             />
           </TextInput>
 
-          <TextInput name="delegatee" size="l">
+          <TextInput name="delegatee" size="l" disabled={isEditMode}>
             <FieldLabel
               label={t('Delegated organization')}
               small={t('Serial number of the delegatee')}
@@ -150,19 +179,29 @@ const OrderForm = ({ onSubmitHandler }) => {
           </Select>
         </Fieldset>
 
-        <Button type="submit">{t('Add order')}</Button>
+        <Button type="submit">{submitButtonText}</Button>
       </StyledForm>
     </Formik>
   )
 }
 
 OrderForm.propTypes = {
-  services: arrayOf(instanceOf(DirectoryServiceModel)),
+  initialValues: shape({
+    description: string,
+    reference: string,
+    delegatee: string,
+    publicKeyPEM: string,
+    validFrom: instanceOf(Date),
+    validUntil: instanceOf(Date),
+    accessProofIds: array,
+  }),
+  submitButtonText: string.isRequired,
   onSubmitHandler: func.isRequired,
+  isEditMode: bool,
 }
 
 OrderForm.defaultProps = {
-  services: [],
+  isEditMode: false,
 }
 
 export default observer(OrderForm)

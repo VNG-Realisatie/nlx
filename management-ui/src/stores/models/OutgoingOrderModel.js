@@ -59,6 +59,10 @@ class OutgoingOrderModel {
     return this._accessProofs
   }
 
+  get publicKeyPEM() {
+    return this._publicKeyPem
+  }
+
   revoke = flow(function* revoke() {
     yield this.orderStore.revokeOutgoing(this)
   }).bind(this)
