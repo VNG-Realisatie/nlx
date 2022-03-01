@@ -1,9 +1,6 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
-import {
-  ManagementOutgoingOrder,
-  ManagementOrderService,
-} from "../../../../management-ui/src/api/models";
+import { ManagementOutgoingOrder } from "../../../../management-ui/src/api/models";
 import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "assert";
 
