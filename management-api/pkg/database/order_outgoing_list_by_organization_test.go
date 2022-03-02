@@ -153,12 +153,6 @@ func TestListOutgoingOrdersByOrganization(t *testing.T) {
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
-				println("hold up!")
-				if len(got) > 0 {
-					println("access proof boy!")
-
-				}
-
 				require.EqualValues(t, tt.want, got)
 			}
 		})

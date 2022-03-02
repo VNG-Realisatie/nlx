@@ -81,12 +81,10 @@ func TestGetOutwaysByPublicKeyFingerprint(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.ListOutways(context.Background())
-			require.ErrorIs(t, err, tt.wantErr)
+			got, err := configDb.GetOutwaysByPublicKeyFingerprint(context.Background(), tt.publicKeyFingerprint)
 
-			if tt.wantErr == nil {
-				require.EqualValues(t, tt.want, got)
-			}
+			require.Equal(t, err, tt.wantErr)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
