@@ -69,6 +69,7 @@ Update the `/etc/hosts` file on your system:
 
 127.0.0.1     management-api.organization-a.nlx.local
 127.0.0.1     inway.organization-a.nlx.local
+127.0.0.1     outway.organization-a.nlx.local
 127.0.0.1     management.organization-a.nlx.local
 127.0.0.1     txlog-api.organization-a.nlx.local
 
@@ -78,6 +79,7 @@ Update the `/etc/hosts` file on your system:
 
 127.0.0.1     management-api.organization-c.nlx.local
 127.0.0.1     inway.organization-c.nlx.local
+127.0.0.1     outway.organization-c.nlx.local
 127.0.0.1     management.organization-c.nlx.local
 
 ::1           dex.shared.nlx.local
