@@ -4,8 +4,9 @@
 package plugins
 
 import (
-	"go.nlx.io/nlx/common/delegation"
 	"testing"
+
+	"go.nlx.io/nlx/common/delegation"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -8,7 +8,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"google.golang.org/grpc"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -16,6 +15,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"testing"
+
+	"google.golang.org/grpc"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"

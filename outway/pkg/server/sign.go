@@ -5,11 +5,12 @@ import (
 	"crypto"
 
 	"github.com/golang-jwt/jwt/v4"
-	"go.nlx.io/nlx/common/delegation"
-	"go.nlx.io/nlx/outway/api"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"go.nlx.io/nlx/common/delegation"
+	"go.nlx.io/nlx/outway/api"
 )
 
 func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderClaimRequest) (*api.SignOrderClaimResponse, error) {
