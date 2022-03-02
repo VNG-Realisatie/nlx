@@ -1,4 +1,4 @@
-// Copyright © VNG Realisatie 2021
+// Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 
 package server
