@@ -39,6 +39,10 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.InvalidArgument, "an service name must be provided")
 	}
 
+	if req.OrganizationSerialNumber == "" {
+		return nil, status.Error(codes.InvalidArgument, "an organization serial number must be provided")
+	}
+
 	order, err := s.configDatabase.GetOutgoingOrderByReference(ctx, req.OrderReference)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {

@@ -181,7 +181,7 @@ func TestOutwayValidate(t *testing.T) {
 		},
 		"happy_flow": {
 			req: &api.RegisterOutwayRequest{
-				Name:         "inway42.test",
+				Name:         "outway42.test",
 				SelfAddress:  "mock-address",
 				PublicKeyPEM: testPublicKeyPEM,
 				Version:      "unknown",

@@ -63,6 +63,16 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 			},
 			wantErr: status.Error(codes.InvalidArgument, "an order reference must be provided"),
 		},
+		"when_providing_an_empty_organization_serial_number": {
+			setup: func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context {
+				return setProxyMetadata(t, context.Background())
+			},
+			request: &external.RequestClaimRequest{
+				OrderReference: "order-reference",
+				ServiceName:    "service-name",
+			},
+			wantErr: status.Error(codes.InvalidArgument, "an organization serial number must be provided"),
+		},
 		"when_providing_an_empty_service_name": {
 			setup: func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context {
 				return setProxyMetadata(t, context.Background())
@@ -92,17 +102,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 										},
 										ServiceName:          "service-name",
 										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
 									},
 								},
 							},
@@ -139,17 +138,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 										},
 										ServiceName:          "service-name",
 										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
 									},
 								},
 							},
@@ -194,17 +182,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 									},
 								},
 							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
-									},
-								},
-							},
 						},
 					}, nil)
 
@@ -242,17 +219,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 									},
 								},
 							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
-									},
-								},
-							},
 						},
 					}, nil)
 
@@ -277,38 +243,14 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				requesterPublicKeyPEM, err := requesterCertBundle.PublicKeyPEM()
 				require.NoError(t, err)
 
-				// nolint:dupl // this is a test
 				mocks.db.
 					EXPECT().
 					GetOutgoingOrderByReference(ctx, "order-reference").
 					Return(&database.OutgoingOrder{
-						Delegatee:    requesterCertBundle.Certificate().Subject.SerialNumber,
-						PublicKeyPEM: requesterPublicKeyPEM,
-						ValidUntil:   now.Add(4 * time.Hour),
-						OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000001",
-										},
-										ServiceName:          "service-name",
-										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
-									},
-								},
-							},
-						},
+						Delegatee:                 requesterCertBundle.Certificate().Subject.SerialNumber,
+						PublicKeyPEM:              requesterPublicKeyPEM,
+						ValidUntil:                now.Add(4 * time.Hour),
+						OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{},
 					}, nil)
 
 				return ctx
@@ -349,17 +291,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 										},
 										ServiceName:          "service-name",
 										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
 									},
 								},
 							},
@@ -409,17 +340,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 										},
 										ServiceName:          "service-name",
 										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
 									},
 								},
 							},
@@ -488,17 +408,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 										},
 										ServiceName:          "service-name",
 										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
 									},
 								},
 							},
@@ -574,17 +483,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 									},
 								},
 							},
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000002",
-										},
-										ServiceName:          "service-name-2",
-										PublicKeyFingerprint: "public-key-fingerprint-2",
-									},
-								},
-							},
 						},
 					}, nil)
 
@@ -636,13 +534,8 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 
 			actual, err := service.RequestClaim(ctx, tt.request)
 
-			if tt.wantErr != nil {
-				assert.Equal(t, tt.wantErr, err)
-			} else {
-				require.NoError(t, err)
-
-				assert.Equal(t, tt.want, actual)
-			}
+			assert.Equal(t, tt.wantErr, err)
+			assert.Equal(t, tt.want, actual)
 		})
 	}
 }
