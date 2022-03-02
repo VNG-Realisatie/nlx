@@ -66,9 +66,9 @@ func (o *Outway) RunServer(listenAddress, listenAddressGRPC string, serverCertif
 	}
 
 	go func() {
-		err := o.grpcServer.Serve(listen)
-		if err != nil {
-			errorChannel <- errors.Wrap(err, "error listening on grpc server")
+		errGrpc := o.grpcServer.Serve(listen)
+		if errGrpc != nil {
+			errorChannel <- errors.Wrap(errGrpc, "error listening on grpc server")
 		}
 	}()
 

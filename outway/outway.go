@@ -243,9 +243,6 @@ func newForwardingProxy() *httputil.ReverseProxy {
 }
 
 func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc.Server {
-	// setup zap connection for global grpc logging
-	// grpc_zap.ReplaceGrpcLogger(logger)
-
 	tlsConfig := cert.TLSConfig(cert.WithTLSClientAuth())
 	transportCredentials := credentials.NewTLS(tlsConfig)
 

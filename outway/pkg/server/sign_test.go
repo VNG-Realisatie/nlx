@@ -23,6 +23,8 @@ import (
 func TestSignOrderClaim(t *testing.T) {
 	now := time.Now()
 
+	const mockSignedClaim = "signed-claim"
+
 	tests := map[string]struct {
 		signer  server.SignFunction
 		request *outwayapi.SignOrderClaimRequest
@@ -30,9 +32,6 @@ func TestSignOrderClaim(t *testing.T) {
 		wantErr error
 	}{
 		"invalid_expires_at": {
-			signer: func(_ crypto.PrivateKey, _ delegation.JWTClaims) (string, error) {
-				return "signed-claim", nil
-			},
 			request: &outwayapi.SignOrderClaimRequest{
 				Delegatee:      "00000000000000000001",
 				OrderReference: "order-reference",
@@ -46,7 +45,7 @@ func TestSignOrderClaim(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "invalid expiry time provided"),
 		},
 		"signing_claim_fails": {
-			signer: func(_ crypto.PrivateKey, _ delegation.JWTClaims) (string, error) {
+			signer: func(_ crypto.PrivateKey, _ *delegation.JWTClaims) (string, error) {
 				return "", fmt.Errorf("arbitrary error")
 			},
 			request: &outwayapi.SignOrderClaimRequest{
@@ -62,8 +61,8 @@ func TestSignOrderClaim(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "unable to sign claim"),
 		},
 		"happy_flow": {
-			signer: func(_ crypto.PrivateKey, _ delegation.JWTClaims) (string, error) {
-				return "signed-claim", nil
+			signer: func(_ crypto.PrivateKey, _ *delegation.JWTClaims) (string, error) {
+				return mockSignedClaim, nil
 			},
 			request: &outwayapi.SignOrderClaimRequest{
 				Delegatee:      "00000000000000000001",
@@ -76,7 +75,7 @@ func TestSignOrderClaim(t *testing.T) {
 				ExpiresAt: timestamppb.New(now),
 			},
 			want: &outwayapi.SignOrderClaimResponse{
-				SignedOrderclaim: "signed-claim",
+				SignedOrderclaim: mockSignedClaim,
 			},
 		},
 	}
@@ -93,7 +92,6 @@ func TestSignOrderClaim(t *testing.T) {
 
 			assert.Equal(t, tt.wantErr, err)
 			assert.Equal(t, tt.want, actual)
-
 		})
 	}
 }

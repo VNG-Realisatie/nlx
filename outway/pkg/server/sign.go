@@ -25,7 +25,7 @@ func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderCl
 		return nil, status.Error(codes.Internal, "invalid expiry time provided")
 	}
 
-	signedClaim, err := s.signFunction(s.orgCert.PrivateKey(), delegation.JWTClaims{
+	signedClaim, err := s.signFunction(s.orgCert.PrivateKey(), &delegation.JWTClaims{
 		Delegatee:      req.Delegatee,
 		OrderReference: req.OrderReference,
 		AccessProof: &delegation.AccessProof{
@@ -49,7 +49,7 @@ func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderCl
 	}, nil
 }
 
-func SignAsRS512(privateKey crypto.PrivateKey, claims delegation.JWTClaims) (string, error) {
+func SignAsRS512(privateKey crypto.PrivateKey, claims *delegation.JWTClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
 
 	signedString, err := token.SignedString(privateKey)

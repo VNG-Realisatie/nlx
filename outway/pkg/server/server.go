@@ -14,7 +14,7 @@ import (
 	"go.nlx.io/nlx/outway/api"
 )
 
-type SignFunction func(privateKey crypto.PrivateKey, claims delegation.JWTClaims) (string, error)
+type SignFunction func(privateKey crypto.PrivateKey, claims *delegation.JWTClaims) (string, error)
 
 type OutwayService struct {
 	api.UnimplementedOutwayServer
