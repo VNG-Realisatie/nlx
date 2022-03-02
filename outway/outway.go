@@ -206,6 +206,7 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 	outwayService := server.NewOutwayService(
 		o.logger,
 		args.OrgCert,
+		server.SignAsRS512,
 	)
 
 	grpcServer := newGRPCServer(o.logger, args.OrgCert)

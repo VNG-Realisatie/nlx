@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"crypto"
 
 	"github.com/golang-jwt/jwt/v4"
 	"go.nlx.io/nlx/common/delegation"
@@ -20,7 +21,7 @@ func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderCl
 		return nil, status.Error(codes.Internal, "invalid expiry time provided")
 	}
 
-	claims := delegation.JWTClaims{
+	signedClaim, err := s.signFunction(s.orgCert.PrivateKey(), delegation.JWTClaims{
 		Delegatee:      req.Delegatee,
 		OrderReference: req.OrderReference,
 		AccessProof: &delegation.AccessProof{
@@ -32,17 +33,25 @@ func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderCl
 			ExpiresAt: jwt.NewNumericDate(req.ExpiresAt.AsTime()),
 			Issuer:    s.orgCert.Certificate().Subject.SerialNumber,
 		},
-	}
+	})
 
-	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
-
-	signedString, err := token.SignedString(s.orgCert.PrivateKey())
 	if err != nil {
 		s.logger.Error("unable to create signed string from private key", zap.Error(err))
 		return nil, status.Error(codes.Internal, "unable to sign claim")
 	}
 
 	return &api.SignOrderClaimResponse{
-		SignedOrderclaim: signedString,
+		SignedOrderclaim: signedClaim,
 	}, nil
+}
+
+func SignAsRS512(privateKey crypto.PrivateKey, claims delegation.JWTClaims) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
+
+	signedString, err := token.SignedString(privateKey)
+	if err != nil {
+		return "", err
+	}
+
+	return signedString, nil
 }
