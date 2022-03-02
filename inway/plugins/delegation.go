@@ -32,7 +32,7 @@ func NewDelegationPlugin() *DelegationPlugin {
 
 func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 	return func(context *Context) error {
-		claim := context.Request.Header.Get("X-NLX-Request-Claim")
+		claim := context.Request.Header.Get(delegation.HTTPHeaderClaim)
 		if claim == "" {
 			return next(context)
 		}
@@ -69,7 +69,7 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		context.AuthInfo.OrganizationSerialNumber = claims.Issuer
 		context.AuthInfo.PublicKeyFingerprint = publicKeyFingerprint
-		println("delegator setten")
+
 		context.LogData["delegator"] = claims.Issuer
 		context.LogData["orderReference"] = claims.OrderReference
 

@@ -4,6 +4,7 @@
 package plugins
 
 import (
+	"go.nlx.io/nlx/common/delegation"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,8 +14,8 @@ func TestStripHeadersPlugin(t *testing.T) {
 	headers := []string{
 		"X-NLX-Requester-User",
 		"X-NLX-Requester-Claims",
-		"X-NLX-Request-Delegator",
-		"X-NLX-Request-Order-Reference",
+		delegation.HTTPHeaderDelegator,
+		delegation.HTTPHeaderOrderReference,
 		"X-NLX-Request-Subject-Identifier",
 		"X-NLX-Request-Application-Id",
 		"X-NLX-Request-User-Id",
@@ -27,8 +28,8 @@ func TestStripHeadersPlugin(t *testing.T) {
 		"X-NLX-Requester-User",
 		"X-NLX-Request-User-Id",
 		"X-NLX-Requester-Claims",
-		"X-NLX-Request-Delegator",
-		"X-NLX-Request-Order-Reference",
+		delegation.HTTPHeaderDelegator,
+		delegation.HTTPHeaderOrderReference,
 		"X-NLX-Request-Application-Id",
 		"X-NLX-Request-Subject-Identifier",
 	}

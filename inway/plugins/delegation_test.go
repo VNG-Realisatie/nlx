@@ -25,9 +25,7 @@ import (
 func TestDelegationPlugin(t *testing.T) {
 	delegationPlugin := plugins.NewDelegationPlugin()
 
-	const (
-		serviceProviderSerialNumber = "00000000000000000099"
-	)
+	const serviceProviderSerialNumber = "00000000000000000099"
 
 	pkiDir := filepath.Join("..", "..", "testing", "pki")
 
@@ -49,39 +47,13 @@ func TestDelegationPlugin(t *testing.T) {
 		serviceProviderSerialNumber: serviceProviderSerialNumber,
 		serviceName:                 "mock-service",
 	})
-
-	assert.Nil(t, err)
-
-	validClaimOtherService, err := getJWTAsSignedString(&jwtArgs{
-		delegatorCert:               delegatorCertBundle,
-		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
-		delegateeSerialNumber:       delegateeCertBundle.Certificate().Subject.SerialNumber,
-		serviceProviderSerialNumber: serviceProviderSerialNumber,
-		serviceName:                 "mock-service-other",
-	})
-	assert.Nil(t, err)
-
-	validClaimOtherDelegatee, err := getJWTAsSignedString(&jwtArgs{
-		delegatorCert:               delegatorCertBundle,
-		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
-		delegateeSerialNumber:       "nlx-hackerman",
-		serviceProviderSerialNumber: serviceProviderSerialNumber,
-		serviceName:                 "mock-service",
-	})
-	assert.Nil(t, err)
-
-	validClaimOtherDelegateeAndService, err := getJWTAsSignedString(&jwtArgs{
-		delegatorCert:               delegatorCertBundle,
-		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
-		delegateeSerialNumber:       "nlx-hackerman",
-		serviceProviderSerialNumber: serviceProviderSerialNumber,
-		serviceName:                 "mock-service-without-grant",
-	})
 	assert.Nil(t, err)
 
 	type args struct {
-		service *plugins.Service
-		claim   string
+		service                       *plugins.Service
+		claim                         string
+		delegateeSerialNumber         string
+		delegateePublicKeyFingerprint string
 	}
 
 	tests := map[string]struct {
@@ -100,10 +72,12 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		"delegatee_is_not_requesting_organization": {
 			args: &args{
-				claim: validClaimOtherDelegatee,
 				service: &plugins.Service{
 					Name: "mock-service",
 				},
+				claim:                         validClaim,
+				delegateePublicKeyFingerprint: "public-key-fingerprint",
+				delegateeSerialNumber:         "00000000000000000099",
 			},
 			wantStatusCode:        http.StatusUnauthorized,
 			wantMessage:           "nlx-inway: no access\n",
@@ -111,11 +85,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		"delegatee_does_not_have_access_to_service": {
 			args: &args{
-				claim: validClaimOtherDelegateeAndService,
 				service: &plugins.Service{
 					Name:   "mock-service-without-valid-grant",
 					Grants: []*plugins.Grant{},
 				},
+				claim:                         validClaim,
+				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
+				delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusUnauthorized,
 			wantMessage:           "nlx-inway: no access\n",
@@ -123,9 +99,8 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		"delegatee_does_not_have_service_in_claims": {
 			args: &args{
-				claim: validClaimOtherService,
 				service: &plugins.Service{
-					Name: "mock-service",
+					Name: "mock-service-not-in-claim",
 					Grants: []*plugins.Grant{
 						{
 							OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
@@ -134,6 +109,9 @@ func TestDelegationPlugin(t *testing.T) {
 						},
 					},
 				},
+				claim:                         validClaim,
+				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
+				delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusUnauthorized,
 			wantMessage:           "nlx-inway: no access\n",
@@ -141,7 +119,6 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		"happy_flow": {
 			args: &args{
-				claim: validClaim,
 				service: &plugins.Service{
 					Name: "mock-service",
 					Grants: []*plugins.Grant{
@@ -152,6 +129,9 @@ func TestDelegationPlugin(t *testing.T) {
 						},
 					},
 				},
+				claim:                         validClaim,
+				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
+				delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusOK,
 			wantDelegationSuccess: true,
@@ -173,8 +153,8 @@ func TestDelegationPlugin(t *testing.T) {
 				Service:      tt.args.service,
 				Organization: serviceProviderSerialNumber,
 			}, nil, &plugins.AuthInfo{
-				OrganizationSerialNumber: delegateeCertBundle.Certificate().Subject.SerialNumber,
-				PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
+				OrganizationSerialNumber: tt.args.delegateeSerialNumber,
+				PublicKeyFingerprint:     tt.args.delegateePublicKeyFingerprint,
 			})
 
 			context.Request.Header.Add("X-NLX-Request-Claim", tt.args.claim)

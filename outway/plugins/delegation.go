@@ -54,13 +54,13 @@ func NewDelegationPlugin(managementClient api.ManagementClient) *DelegationPlugi
 }
 
 func isDelegatedRequest(r *http.Request) bool {
-	return r.Header.Get("X-NLX-Request-Delegator") != "" ||
-		r.Header.Get("X-NLX-Request-Order-Reference") != ""
+	return r.Header.Get(delegation.HTTPHeaderDelegator) != "" ||
+		r.Header.Get(delegation.HTTPHeaderOrderReference) != ""
 }
 
 func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string, err error) {
-	serialNumber = r.Header.Get("X-NLX-Request-Delegator")
-	orderReference = r.Header.Get("X-NLX-Request-Order-Reference")
+	serialNumber = r.Header.Get(delegation.HTTPHeaderDelegator)
+	orderReference = r.Header.Get(delegation.HTTPHeaderOrderReference)
 
 	if serialNumber == "" {
 		return "", "", errors.New("missing organization serial number in delegation headers")
@@ -165,7 +165,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			return nil
 		}
 
-		context.Request.Header.Add("X-NLX-Request-Claim", claim.Raw)
+		context.Request.Header.Add(delegation.HTTPHeaderClaim, claim.Raw)
 
 		return next(context)
 	}

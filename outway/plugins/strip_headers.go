@@ -3,6 +3,8 @@
 
 package plugins
 
+import "go.nlx.io/nlx/common/delegation"
+
 type StripHeadersPlugin struct {
 	organizationSerialNumber string
 }
@@ -21,8 +23,8 @@ func (plugin *StripHeadersPlugin) Serve(next ServeFunc) ServeFunc {
 			context.Request.Header.Del("X-NLX-Request-Subject-Identifier")
 			context.Request.Header.Del("X-NLX-Request-Application-Id")
 			context.Request.Header.Del("X-NLX-Request-User-Id")
-			context.Request.Header.Del("X-NLX-Request-Delegator")
-			context.Request.Header.Del("X-NLX-Request-Order-Reference")
+			context.Request.Header.Del(delegation.HTTPHeaderDelegator)
+			context.Request.Header.Del(delegation.HTTPHeaderOrderReference)
 		}
 
 		context.Request.Header.Del("Proxy-Authorization")

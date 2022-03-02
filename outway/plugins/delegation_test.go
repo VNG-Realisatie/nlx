@@ -39,7 +39,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 			},
 		},
 
@@ -48,7 +48,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 		},
 
@@ -57,8 +57,8 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to retrieve claim\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
@@ -76,8 +76,8 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusInternalServerError,
 			wantMessage:        "failed to parse JWT\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
@@ -95,8 +95,8 @@ func TestDelegationPlugin(t *testing.T) {
 		"missing_claim_results_in_requesting_a_claim": {
 			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
@@ -116,8 +116,8 @@ func TestDelegationPlugin(t *testing.T) {
 			wantHTTPStatusCode: http.StatusUnauthorized,
 			wantMessage:        "order is revoked\n",
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
@@ -133,8 +133,8 @@ func TestDelegationPlugin(t *testing.T) {
 		"invalid_claim_results_in_requesting_a_new_claim": {
 			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
@@ -163,8 +163,8 @@ func TestDelegationPlugin(t *testing.T) {
 		"required_headers_with_valid_claims_succeeds": {
 			wantHTTPStatusCode: http.StatusOK,
 			setHeaders: func(r *http.Request) {
-				r.Header.Add("X-NLX-Request-Delegator", "00000000000000000001")
-				r.Header.Add("X-NLX-Request-Order-Reference", "test-ref-123")
+				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
+				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				plugin.claims.Store("00000000000000000001/test-ref-123/service-name", &claimData{
