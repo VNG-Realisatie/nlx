@@ -103,7 +103,7 @@ func TestListOutgoingOrders(t *testing.T) {
 							Organization:         &api.Organization{SerialNumber: "00000000000000000001"},
 							ServiceName:          "test-service",
 							PublicKeyFingerprint: "public-key-fingerprint",
-							CreatedAt:            timestamppb.New(accessRequestCreatedAt),
+							CreatedAt:            timestamppb.New(accessProofCreatedAt),
 							RevokedAt:            nil,
 							AccessRequestId:      100,
 						}},
