@@ -75,7 +75,7 @@ spec:
               value: /certificate/tls.key
             - name: SELF_ADDRESS
               value: {{ template "nlx-outway.fullname" . }}
-            - name: LISTEN_ADDRESS_GRPC
+            - name: LISTEN_ADDRESS_API
               value: 0.0.0.0:8444
           {{- if .Values.https.enabled }}
             - name: LISTEN_ADDRESS
