@@ -33,6 +33,7 @@ type IncomingAccessRequest struct {
 	State                IncomingAccessRequestState
 	AccessGrants         []AccessGrant
 	PublicKeyFingerprint string
+	PublicKeyPEM         string
 	Service              *Service
 	CreatedAt            time.Time
 	UpdatedAt            time.Time

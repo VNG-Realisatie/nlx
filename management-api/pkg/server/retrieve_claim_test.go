@@ -129,6 +129,32 @@ func TestRetrieveClaim(t *testing.T) {
 			},
 			wantErr: status.Error(codes.Unauthenticated, "order is revoked"),
 		},
+		"when_outway_is_unable_to_sign_claim": {
+			request: &api.RetrieveClaimForOrderRequest{
+				OrderReference:                  "order-reference-a",
+				OrderOrganizationSerialNumber:   "00000000000000000001",
+				ServiceOrganizationSerialNumber: "00000000000000000002",
+				ServiceName:                     "service-name",
+			},
+			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
+				mocks.dc.EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), gomock.Any()).
+					Return("inway-address", nil)
+
+				mocks.mc.EXPECT().Close()
+
+				mocks.mc.EXPECT().
+					RequestClaim(gomock.Any(), &external.RequestClaimRequest{
+						OrderReference:                  "order-reference-a",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
+						ServiceName:                     "service-name",
+					}).
+					Return(nil, status.Errorf(codes.Internal, "could not sign order claim via outway"))
+
+				return context.Background()
+			},
+			wantErr: status.Error(codes.Internal, "outway of delegator is unable to sign claim"),
+		},
 	}
 
 	for name, tt := range tests {

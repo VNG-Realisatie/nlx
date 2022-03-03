@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"go.nlx.io/nlx/common/tls"
 	"strings"
 	"time"
 
@@ -294,9 +295,15 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 		return nil, status.Error(codes.Internal, "failed to retrieve service")
 	}
 
-	if req.PublicKeyFingerprint == "" {
-		s.logger.Error("request missing public key fingerprint", zap.String("service-name", req.ServiceName), zap.Error(err))
-		return nil, status.Error(codes.InvalidArgument, "missing public key fingerprint")
+	if req.PublicKeyPem == "" {
+		s.logger.Error("request missing public key pem", zap.String("service-name", req.ServiceName), zap.Error(err))
+		return nil, status.Error(codes.InvalidArgument, "missing public key pem")
+	}
+
+	publicKeyFingerPrint, err := tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPem))
+	if err != nil {
+		s.logger.Error("cannot parse public key fingerprint", zap.Error(err), zap.String("public-key-pem", req.PublicKeyPem))
+		return nil, status.Error(codes.InvalidArgument, "invalid public key pem")
 	}
 
 	request := &database.IncomingAccessRequest{
@@ -305,14 +312,15 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 			Name:         md.OrganizationName,
 			SerialNumber: md.OrganizationSerialNumber,
 		},
-		PublicKeyFingerprint: req.PublicKeyFingerprint,
+		PublicKeyFingerprint: publicKeyFingerPrint,
+		PublicKeyPEM:         req.PublicKeyPem,
 		State:                database.IncomingAccessRequestReceived,
 	}
 
 	existingIncomingAccessRequest, err := s.configDatabase.GetLatestIncomingAccessRequest(ctx, md.OrganizationSerialNumber, req.GetServiceName(), request.PublicKeyFingerprint)
 	if err != nil {
 		if !errIsNotFound(err) {
-			s.logger.Error("getting latest incoming access request failed", zap.String("organization-serial-number", md.OrganizationSerialNumber), zap.String("service-name", req.ServiceName), zap.String("public-key-fingerprint", req.PublicKeyFingerprint), zap.Error(err))
+			s.logger.Error("getting latest incoming access request failed", zap.String("organization-serial-number", md.OrganizationSerialNumber), zap.String("service-name", req.ServiceName), zap.String("public-key-pem", req.PublicKeyPem), zap.Error(err))
 			return nil, status.Error(codes.Internal, "failed to create access request")
 		}
 	}

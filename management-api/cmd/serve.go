@@ -195,15 +195,17 @@ var serveCommand = &cobra.Command{
 		}
 
 		a, err := api.NewAPI(
-			db,
-			txlogDB,
-			logger,
-			cert,
-			orgCert,
-			serveOpts.DirectoryAddress,
-			serveOpts.TXLogAddress,
-			authenticator,
-			auditLogger,
+			&api.NewAPIArgs{
+				DB:               db,
+				TXlogDB:          txlogDB,
+				Logger:           logger,
+				InternalCert:     cert,
+				OrgCert:          orgCert,
+				DirectoryAddress: serveOpts.DirectoryAddress,
+				TXLogAddress:     serveOpts.TXLogAddress,
+				Authenticator:    authenticator,
+				AuditLogger:      auditLogger,
+			},
 		)
 		if err != nil {
 			logger.Fatal("cannot setup management api", zap.Error(err))

@@ -23,6 +23,7 @@ import (
 const expiresInHours = 4
 
 var errMessageOrderRevoked = "order is revoked"
+var errMessageOutwayUnableToSignClaim = "could not sign order claim via outway"
 
 func (s *ManagementService) RequestClaim(ctx context.Context, req *external.RequestClaimRequest) (*external.RequestClaimResponse, error) {
 	md, err := s.parseProxyMetadata(ctx)
@@ -102,7 +103,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		OrderReference: req.OrderReference,
 		AccessProof: &outwayapi.AccessProof{
 			ServiceName:              outgoingAccessRequest.ServiceName,
-			OrganizationSerialNumber: outgoingAccessRequest.Organization.SerialNumber,
+			OrganizationSerialNumber: s.orgCert.GetOrganizationInfo().SerialNumber,
 			PublicKeyFingerprint:     outgoingAccessRequest.PublicKeyFingerprint,
 		},
 		ExpiresAt: timestamppb.New(expiresAt),
@@ -119,7 +120,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 func createOutwayClient(ctx context.Context, s *ManagementService, outways []*database.Outway) outway.Client {
 	for _, o := range outways {
-		c, err := s.createOutwayClientFunc(ctx, o.SelfAddressAPI, s.orgCert)
+		c, err := s.createOutwayClientFunc(ctx, o.SelfAddressAPI, s.internalCert)
 
 		if err != nil {
 			s.logger.Error("error creating outway client", zap.Error(err))

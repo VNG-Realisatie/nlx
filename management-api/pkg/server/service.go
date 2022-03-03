@@ -258,6 +258,7 @@ func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant)
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},
 		PublicKeyHash: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
+		PublicKeyPEM:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
 	}
 }
 

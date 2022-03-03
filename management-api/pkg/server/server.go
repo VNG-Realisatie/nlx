@@ -33,6 +33,7 @@ type ManagementService struct {
 	directoryClient            directory.Client
 	txlogClient                txlog.Client
 	orgCert                    *tls.CertificateBundle
+	internalCert               *tls.CertificateBundle
 	configDatabase             database.ConfigDatabase
 	txlogDatabase              txlogdb.TxlogDatabase
 	auditLogger                auditlog.Logger
@@ -40,10 +41,11 @@ type ManagementService struct {
 	createOutwayClientFunc     func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)
 }
 
-func NewManagementService(logger *zap.Logger, directoryClient directory.Client, txlogClient txlog.Client, orgCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error), createOutwayClientFunc func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)) *ManagementService {
+func NewManagementService(logger *zap.Logger, directoryClient directory.Client, txlogClient txlog.Client, orgCert, internalCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error), createOutwayClientFunc func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)) *ManagementService {
 	return &ManagementService{
 		logger:                     logger,
 		orgCert:                    orgCert,
+		internalCert:               internalCert,
 		directoryClient:            directoryClient,
 		txlogClient:                txlogClient,
 		configDatabase:             configDatabase,

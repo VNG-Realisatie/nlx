@@ -52,6 +52,18 @@ type API struct {
 	configDatabase  database.ConfigDatabase
 }
 
+type NewAPIArgs struct {
+	DB               database.ConfigDatabase
+	TXlogDB          txlogdb.TxlogDatabase
+	Logger           *zap.Logger
+	InternalCert     *common_tls.CertificateBundle
+	OrgCert          *common_tls.CertificateBundle
+	DirectoryAddress string
+	TXLogAddress     string
+	Authenticator    Authenticator
+	AuditLogger      auditlog.Logger
+}
+
 type Authenticator interface {
 	MountRoutes(router chi.Router)
 	OnlyAuthenticated(h http.Handler) http.Handler
@@ -59,65 +71,66 @@ type Authenticator interface {
 
 // NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
-func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *zap.Logger, cert, orgCert *common_tls.CertificateBundle, directoryAddress, txLogAddress string, authenticator Authenticator, auditLogger auditlog.Logger) (*API, error) {
-	if db == nil {
+func NewAPI(args *NewAPIArgs) (*API, error) {
+	if args.DB == nil {
 		return nil, errors.New("database is not configured")
 	}
 
-	if len(orgCert.Certificate().Subject.Organization) != 1 {
+	if len(args.OrgCert.Certificate().Subject.Organization) != 1 {
 		return nil, errors.New("cannot obtain organization name from self cert")
 	}
 
-	if directoryAddress == "" {
+	if args.DirectoryAddress == "" {
 		return nil, errors.New("directory address is not configured")
 	}
 
-	if authenticator == nil {
+	if args.Authenticator == nil {
 		return nil, errors.New("authenticator is not configured")
 	}
 
-	directoryClient, err := directory.NewClient(context.TODO(), directoryAddress, orgCert)
+	directoryClient, err := directory.NewClient(context.TODO(), args.DirectoryAddress, args.OrgCert)
 	if err != nil {
-		logger.Fatal("failed to setup directory client", zap.Error(err))
+		args.Logger.Fatal("failed to setup directory client", zap.Error(err))
 	}
 
 	var txlogClient txlog.Client
-	if txLogAddress != "" {
-		txlogClient, err = txlog.NewClient(context.TODO(), txLogAddress, cert)
+	if args.TXLogAddress != "" {
+		txlogClient, err = txlog.NewClient(context.TODO(), args.TXLogAddress, args.InternalCert)
 		if err != nil {
-			logger.Fatal("failed to setup txlog client", zap.Error(err))
+			args.Logger.Fatal("failed to setup txlog client", zap.Error(err))
 		}
 	}
 
 	managementService := server.NewManagementService(
-		logger,
+		args.Logger,
 		directoryClient,
 		txlogClient,
-		orgCert,
-		db,
-		txlogDB,
-		auditLogger,
+		args.OrgCert,
+		args.InternalCert,
+		args.DB,
+		args.TXlogDB,
+		args.AuditLogger,
 		management.NewClient,
 		outway.NewClient,
 	)
 
-	grpcServer := newGRPCServer(logger, cert)
+	grpcServer := newGRPCServer(args.Logger, args.InternalCert)
 
 	api.RegisterManagementServer(grpcServer, managementService)
 	external.RegisterAccessRequestServiceServer(grpcServer, managementService)
 	external.RegisterDelegationServiceServer(grpcServer, managementService)
 
 	e := &environment.Environment{
-		OrganizationSerialNumber: orgCert.Certificate().Subject.SerialNumber,
-		OrganizationName:         orgCert.Certificate().Subject.Organization[0],
+		OrganizationSerialNumber: args.OrgCert.Certificate().Subject.SerialNumber,
+		OrganizationName:         args.OrgCert.Certificate().Subject.Organization[0],
 	}
 
-	directoryService := server.NewDirectoryService(logger, e, directoryClient, db)
+	directoryService := server.NewDirectoryService(args.Logger, e, directoryClient, args.DB)
 
 	api.RegisterDirectoryServer(grpcServer, directoryService)
 
-	if txLogAddress != "" {
-		txlogService := server.NewTXLogService(logger, txlogClient)
+	if args.TXLogAddress != "" {
+		txlogService := server.NewTXLogService(args.Logger, txlogClient)
 		api.RegisterTXLogServer(grpcServer, txlogService)
 	}
 
@@ -141,16 +154,16 @@ func NewAPI(db database.ConfigDatabase, txlogDB txlogdb.TxlogDatabase, logger *z
 	)
 
 	a := &API{
-		logger:          logger,
+		logger:          args.Logger,
 		environment:     e,
-		cert:            cert,
-		orgCert:         orgCert,
+		cert:            args.InternalCert,
+		orgCert:         args.OrgCert,
 		grpcServer:      grpcServer,
 		mux:             mux,
-		authenticator:   authenticator,
+		authenticator:   args.Authenticator,
 		directoryClient: directoryClient,
 		txlogClient:     txlogClient,
-		configDatabase:  db,
+		configDatabase:  args.DB,
 	}
 
 	return a, nil

@@ -57,6 +57,15 @@ func (c *CertificateBundle) PublicKey() crypto.PublicKey {
 	return c.Certificate().PublicKey
 }
 
+func (c *CertificateBundle) GetOrganizationInfo() *OrganizationInformation {
+	cert := c.Certificate()
+
+	return &OrganizationInformation{
+		Name:         cert.Subject.Organization[0],
+		SerialNumber: cert.Subject.SerialNumber,
+	}
+}
+
 func (c *CertificateBundle) PublicKeyPEM() (string, error) {
 	publicKeyPEM := pem.EncodeToMemory(&pem.Block{
 		Type:  "PUBLIC KEY",

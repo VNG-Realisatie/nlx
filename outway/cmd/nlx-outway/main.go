@@ -163,6 +163,7 @@ func main() {
 		ManagementClient:  client,
 		MonitoringAddress: options.MonitoringAddress,
 		OrgCert:           orgCert,
+		InternalCert:      cert,
 		DirectoryClient:   directoryClient,
 		AuthServiceURL:    options.AuthorizationServiceAddress,
 		AuthCAPath:        options.AuthorizationCA,

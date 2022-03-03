@@ -77,6 +77,7 @@ type NewOutwayArgs struct {
 	ManagementClient  managementapi.ManagementClient
 	MonitoringAddress string
 	OrgCert           *common_tls.CertificateBundle
+	InternalCert      *common_tls.CertificateBundle
 	DirectoryClient   directoryapi.DirectoryClient
 	AuthServiceURL    string
 	AuthCAPath        string
@@ -209,7 +210,7 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 		server.SignAsRS512,
 	)
 
-	grpcServer := newGRPCServer(o.logger, args.OrgCert)
+	grpcServer := newGRPCServer(o.logger, args.InternalCert)
 
 	api.RegisterOutwayServer(grpcServer, outwayService)
 

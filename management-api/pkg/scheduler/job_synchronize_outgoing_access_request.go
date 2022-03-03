@@ -120,9 +120,19 @@ func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Co
 
 	defer client.Close()
 
+	outways, err := job.configDatabase.GetOutwaysByPublicKeyFingerprint(ctx, request.PublicKeyFingerprint)
+	if err != nil {
+		return database.OutgoingAccessRequestFailed, 0, err
+	}
+
+	if len(outways) == 0 {
+		// Should we remove the entire access request in this case?
+		return database.OutgoingAccessRequestFailed, 0, fmt.Errorf("no outway using the publickey fingerprint '%s'", request.PublicKeyFingerprint)
+	}
+
 	response, err := client.RequestAccess(ctx, &external.RequestAccessRequest{
-		ServiceName:          request.ServiceName,
-		PublicKeyFingerprint: request.PublicKeyFingerprint,
+		ServiceName:  request.ServiceName,
+		PublicKeyPem: outways[0].PublicKeyPEM,
 	}, grpc_retry.WithMax(maxRetries))
 	if err != nil {
 		return database.OutgoingAccessRequestFailed, 0, err

@@ -56,8 +56,13 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 
 		st, ok := status.FromError(err)
 		if ok {
+			println(st.Message())
 			if st.Message() == errMessageOrderRevoked {
 				return nil, status.Errorf(codes.Unauthenticated, errMessageOrderRevoked)
+			}
+
+			if st.Message() == errMessageOutwayUnableToSignClaim {
+				return nil, status.Error(codes.Internal, "outway of delegator is unable to sign claim")
 			}
 		}
 
