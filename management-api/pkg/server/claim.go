@@ -36,7 +36,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}
 
 	if req.ServiceName == "" {
-		return nil, status.Error(codes.InvalidArgument, "an service name must be provided")
+		return nil, status.Error(codes.InvalidArgument, "a service name must be provided")
 	}
 
 	if req.OrganizationSerialNumber == "" {
@@ -46,19 +46,19 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	order, err := s.configDatabase.GetOutgoingOrderByReference(ctx, req.OrderReference)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, status.Errorf(codes.NotFound, "order with reference %s not found", req.OrderReference)
+			return nil, status.Errorf(codes.NotFound, "order with reference '%s' not found", req.OrderReference)
 		}
 
 		return nil, status.Error(codes.Internal, "failed to find order")
 	}
 
 	if order.Delegatee != md.OrganizationSerialNumber {
-		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization serialnumber %s not found", req.OrderReference, md.OrganizationSerialNumber)
+		return nil, status.Errorf(codes.NotFound, "order with reference '%s' and organization serial number '%s' not found", req.OrderReference, md.OrganizationSerialNumber)
 	}
 
 	outgoingAccessRequest := filterOutgoingAccessRequestFromOrder(order, req.OrganizationSerialNumber, req.ServiceName)
 	if outgoingAccessRequest == nil {
-		return nil, status.Errorf(codes.NotFound, "order with reference %s and organization serialnumber %s and service name %s not found", req.OrderReference, md.OrganizationSerialNumber, req.ServiceName)
+		return nil, status.Errorf(codes.NotFound, "order with reference '%s' and organization serial number '%s' and service name '%s' not found", req.OrderReference, md.OrganizationSerialNumber, req.ServiceName)
 	}
 
 	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(order.PublicKeyPEM))

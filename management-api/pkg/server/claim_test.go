@@ -81,7 +81,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				OrderReference: "order-reference",
 				ServiceName:    "",
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an service name must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "a service name must be provided"),
 		},
 		"when_public_key_is_invalid": {
 			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -260,7 +260,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				ServiceName:              "non-existing-service",
 				OrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.NotFound, "order with reference order-reference and organization serialnumber 00000000000000000002 and service name non-existing-service not found"),
+			wantErr: status.Error(codes.NotFound, "order with reference 'order-reference' and organization serial number '00000000000000000002' and service name 'non-existing-service' not found"),
 		},
 		"when_outway_not_found": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
