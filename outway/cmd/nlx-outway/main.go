@@ -38,7 +38,7 @@ var options struct {
 	ListenHTTPS      bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
 	ListenAddressAPI string `long:"listen-address-api" env:"LISTEN_ADDRESS_API" default:"127.0.0.1:8082" description:"Address for the outway api server to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
-	Address string `long:"self-address" env:"SELF_ADDRESS" description:"The address that the management API can use to reach me" required:"true"`
+	AddressAPI string `long:"self-address-api" env:"SELF_ADDRESS_API" description:"The address that the management API can use to reach the api of the outway" required:"true"`
 
 	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
 
@@ -129,10 +129,10 @@ func main() {
 	client := api.NewManagementClient(conn)
 
 	_, err = client.RegisterOutway(context.TODO(), &api.RegisterOutwayRequest{
-		Name:         options.Name,
-		PublicKeyPEM: publicKeyPEM,
-		SelfAddress:  options.Address,
-		Version:      version.BuildVersion,
+		Name:           options.Name,
+		PublicKeyPEM:   publicKeyPEM,
+		SelfAddressAPI: options.AddressAPI,
+		Version:        version.BuildVersion,
 	})
 	if err != nil {
 		logger.Fatal("failed to register outway in Management API", zap.Error(err))
@@ -156,7 +156,7 @@ func main() {
 
 	ow, err := outway.NewOutway(&outway.NewOutwayArgs{
 		Name:              options.Name,
-		Address:           options.Address,
+		AddressAPI:        options.AddressAPI,
 		Ctx:               context.Background(),
 		Logger:            logger,
 		Txlogger:          txlogger,

@@ -68,7 +68,7 @@ func TestRegisterOutway(t *testing.T) {
 					Name:                 "outway42.ip-context-required",
 					PublicKeyPEM:         testPublicKeyPEM,
 					PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
-					SelfAddress:          "self-address",
+					SelfAddressAPI:       "self-address",
 					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
@@ -83,10 +83,10 @@ func TestRegisterOutway(t *testing.T) {
 		"when_providing_an_invalid_outway_name": {
 			args: args{
 				request: &api.RegisterOutwayRequest{
-					Name:         "",
-					PublicKeyPEM: testPublicKeyPEM,
-					SelfAddress:  "self-address",
-					Version:      "unknown",
+					Name:           "",
+					PublicKeyPEM:   testPublicKeyPEM,
+					SelfAddressAPI: "self-address",
+					Version:        "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
@@ -95,14 +95,14 @@ func TestRegisterOutway(t *testing.T) {
 		"when_providing_an_empty_self_address": {
 			args: args{
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					SelfAddress:  "",
-					Version:      "unknown",
+					Name:           "outway42.basic",
+					PublicKeyPEM:   testPublicKeyPEM,
+					SelfAddressAPI: "",
+					Version:        "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
-			wantErr: status.Error(codes.InvalidArgument, "invalid outway: selfAddress: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid outway: selfAddressAPI: cannot be blank."),
 		},
 		"happy_flow_ipv4": {
 			args: args{
@@ -110,15 +110,15 @@ func TestRegisterOutway(t *testing.T) {
 					Name:                 "outway42.basic",
 					PublicKeyPEM:         testPublicKeyPEM,
 					IPAddress:            mockIP(t, "127.1.1.1/32"),
-					SelfAddress:          "self-address",
+					SelfAddressAPI:       "self-address",
 					Version:              "unknown",
 					PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.basic",
-					PublicKeyPEM: testPublicKeyPEM,
-					SelfAddress:  "self-address",
-					Version:      "unknown",
+					Name:           "outway42.basic",
+					PublicKeyPEM:   testPublicKeyPEM,
+					SelfAddressAPI: "self-address",
+					Version:        "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
 			},
@@ -130,14 +130,14 @@ func TestRegisterOutway(t *testing.T) {
 					IPAddress:            mockIP(t, "::1/32"),
 					PublicKeyPEM:         testPublicKeyPEM,
 					PublicKeyFingerprint: "g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
-					SelfAddress:          "self-address",
+					SelfAddressAPI:       "self-address",
 					Version:              "unknown",
 				},
 				request: &api.RegisterOutwayRequest{
-					Name:         "outway42.ipv6",
-					PublicKeyPEM: testPublicKeyPEM,
-					SelfAddress:  "self-address",
-					Version:      "unknown",
+					Name:           "outway42.ipv6",
+					PublicKeyPEM:   testPublicKeyPEM,
+					SelfAddressAPI: "self-address",
+					Version:        "unknown",
 				},
 				peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			},
@@ -196,7 +196,7 @@ func TestListOutways(t *testing.T) {
 			IPAddress:            mockIP(t, "127.1.1.1/32"),
 			PublicKeyPEM:         "mock-public-key-pem",
 			PublicKeyFingerprint: "mock-public-key-fingerprint",
-			SelfAddress:          "self-address",
+			SelfAddressAPI:       "self-address",
 		},
 	}
 
@@ -230,7 +230,7 @@ func TestListOutways(t *testing.T) {
 				Version:              "1.0.0",
 				PublicKeyPEM:         "mock-public-key-pem",
 				PublicKeyFingerprint: "mock-public-key-fingerprint",
-				SelfAddress:          "self-address",
+				SelfAddressAPI:       "self-address",
 			},
 		},
 	}

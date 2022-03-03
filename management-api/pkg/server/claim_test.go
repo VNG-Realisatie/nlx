@@ -351,7 +351,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					GetOutwaysByPublicKeyFingerprint(ctx, "public-key-fingerprint").
 					Return([]*database.Outway{
 						{
-							SelfAddress: "self-address",
+							SelfAddressAPI: "self-address",
 						},
 					}, nil)
 
@@ -419,7 +419,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					GetOutwaysByPublicKeyFingerprint(ctx, "public-key-fingerprint").
 					Return([]*database.Outway{
 						{
-							SelfAddress: "self-address",
+							SelfAddressAPI: "self-address",
 						},
 					}, nil)
 
@@ -491,7 +491,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 					GetOutwaysByPublicKeyFingerprint(ctx, "public-key-fingerprint").
 					Return([]*database.Outway{
 						{
-							SelfAddress: "self-address",
+							SelfAddressAPI: "self-address",
 						},
 					}, nil)
 

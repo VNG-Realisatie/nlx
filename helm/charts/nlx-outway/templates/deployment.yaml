@@ -73,8 +73,8 @@ spec:
               value: /certificate/tls.crt
             - name: TLS_KEY
               value: /certificate/tls.key
-            - name: SELF_ADDRESS
-              value: {{ template "nlx-outway.fullname" . }}
+            - name: SELF_ADDRESS_API
+              value: {{ template "nlx-outway.fullname" . }}:8444
             - name: LISTEN_ADDRESS_API
               value: 0.0.0.0:8444
           {{- if .Values.https.enabled }}

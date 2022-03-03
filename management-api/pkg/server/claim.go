@@ -119,7 +119,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 func createOutwayClient(ctx context.Context, s *ManagementService, outways []*database.Outway) outway.Client {
 	for _, o := range outways {
-		c, err := s.createOutwayClientFunc(ctx, o.SelfAddress, s.orgCert)
+		c, err := s.createOutwayClientFunc(ctx, o.SelfAddressAPI, s.orgCert)
 
 		if err != nil {
 			s.logger.Error("error creating outway client", zap.Error(err))

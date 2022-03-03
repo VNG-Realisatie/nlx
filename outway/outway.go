@@ -49,7 +49,7 @@ type Organization struct {
 
 type Outway struct {
 	name                string
-	address             string
+	addressAPI          string
 	ctx                 context.Context
 	wg                  *sync.WaitGroup
 	organization        *Organization // the organization running this outway
@@ -70,7 +70,7 @@ type Outway struct {
 
 type NewOutwayArgs struct {
 	Name              string
-	Address           string
+	AddressAPI        string
 	Ctx               context.Context
 	Logger            *zap.Logger
 	Txlogger          transactionlog.TransactionLogger
@@ -147,9 +147,9 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 	organizationSerialNumber := cert.Subject.SerialNumber
 
 	o := &Outway{
-		ctx:     args.Ctx,
-		address: args.Address,
-		wg:      &sync.WaitGroup{},
+		ctx:        args.Ctx,
+		addressAPI: args.AddressAPI,
+		wg:         &sync.WaitGroup{},
 		logger: args.Logger.With(
 			zap.String("outway-organization-name", organizationName),
 			zap.String("outway-organization-serialnumber", organizationSerialNumber)),

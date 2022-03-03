@@ -148,43 +148,43 @@ func TestOutwayValidate(t *testing.T) {
 	}{
 		"without_name": {
 			req: &api.RegisterOutwayRequest{
-				Name:         "",
-				SelfAddress:  "mock-address",
-				PublicKeyPEM: testPublicKeyPEM,
-				Version:      "unknown",
+				Name:           "",
+				SelfAddressAPI: "mock-address",
+				PublicKeyPEM:   testPublicKeyPEM,
+				Version:        "unknown",
 			},
 			err: "name: cannot be blank.",
 		},
 		"without_public_key_pem": {
 			req: &api.RegisterOutwayRequest{
-				Name:        "outway42.test",
-				SelfAddress: "mock-address",
-				Version:     "unknown",
+				Name:           "outway42.test",
+				SelfAddressAPI: "mock-address",
+				Version:        "unknown",
 			},
 			err: "publicKeyPEM: cannot be blank.",
 		},
-		"without_self_address": {
+		"without_self_address_api": {
 			req: &api.RegisterOutwayRequest{
 				Name:         "outway42.test",
 				Version:      "unknown",
 				PublicKeyPEM: testPublicKeyPEM,
 			},
-			err: "selfAddress: cannot be blank.",
+			err: "selfAddressAPI: cannot be blank.",
 		},
 		"without_version": {
 			req: &api.RegisterOutwayRequest{
-				Name:         "outway42.test",
-				SelfAddress:  "mock-address",
-				PublicKeyPEM: testPublicKeyPEM,
+				Name:           "outway42.test",
+				SelfAddressAPI: "mock-address",
+				PublicKeyPEM:   testPublicKeyPEM,
 			},
 			err: "version: cannot be blank.",
 		},
 		"happy_flow": {
 			req: &api.RegisterOutwayRequest{
-				Name:         "outway42.test",
-				SelfAddress:  "mock-address",
-				PublicKeyPEM: testPublicKeyPEM,
-				Version:      "unknown",
+				Name:           "outway42.test",
+				SelfAddressAPI: "mock-address",
+				PublicKeyPEM:   testPublicKeyPEM,
+				Version:        "unknown",
 			},
 			err: "",
 		},

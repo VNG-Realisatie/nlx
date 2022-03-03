@@ -58,7 +58,7 @@ func TestGetOutway(t *testing.T) {
 				PublicKeyPEM:         fixturePublicKeyPEM,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 				IPAddress:            mockIP(t, "127.0.0.1/32"),
-				SelfAddress:          "self-address",
+				SelfAddressAPI:       "self-address-api",
 				Version:              "unknown",
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,

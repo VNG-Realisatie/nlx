@@ -226,14 +226,14 @@ message Outway {
   string publicKeyPEM = 3;
   string version = 4;
   string publicKeyFingerprint = 5;
-  string selfAddress = 6;
+  string selfAddressAPI = 6;
 }
 
 message RegisterOutwayRequest {
   string name = 1;
   string publicKeyPEM = 2;
   string version = 3;
-  string selfAddress = 4;
+  string selfAddressAPI = 4;
 }
 
 message ListOutwaysRequest {}
