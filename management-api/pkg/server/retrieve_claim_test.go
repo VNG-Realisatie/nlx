@@ -57,13 +57,14 @@ func TestRetrieveClaim(t *testing.T) {
 			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an service name must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "a service name must be provided"),
 		},
 		"when_getting_the_organization_inway_proxy_address_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "00000000000000000001",
-				ServiceName:                   "service-name",
+				OrderReference:                  "order-reference-a",
+				OrderOrganizationSerialNumber:   "00000000000000000001",
+				ServiceOrganizationSerialNumber: "00000000000000000002",
+				ServiceName:                     "service-name",
 			},
 			setup: func(t *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -77,9 +78,10 @@ func TestRetrieveClaim(t *testing.T) {
 		// nolint dupl: linter is unable to detect difference in error message
 		"when_creating_the_management_client_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "00000000000000000001",
-				ServiceName:                   "service-name",
+				OrderReference:                  "order-reference-a",
+				OrderOrganizationSerialNumber:   "00000000000000000001",
+				ServiceOrganizationSerialNumber: "00000000000000000002",
+				ServiceName:                     "service-name",
 			},
 			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -90,8 +92,9 @@ func TestRetrieveClaim(t *testing.T) {
 
 				mocks.mc.EXPECT().
 					RequestClaim(gomock.Any(), &external.RequestClaimRequest{
-						OrderReference: "order-reference-a",
-						ServiceName:    "service-name",
+						OrderReference:                  "order-reference-a",
+						ServiceName:                     "service-name",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
 					}).
 					Return(nil, errors.New("arbitrary error"))
 
@@ -102,9 +105,10 @@ func TestRetrieveClaim(t *testing.T) {
 		// nolint dupl: linter is unable to detect difference in error message
 		"when_order_is_revoked": {
 			request: &api.RetrieveClaimForOrderRequest{
-				OrderReference:                "order-reference-a",
-				OrderOrganizationSerialNumber: "00000000000000000001",
-				ServiceName:                   "service-name",
+				OrderReference:                  "order-reference-a",
+				OrderOrganizationSerialNumber:   "00000000000000000001",
+				ServiceOrganizationSerialNumber: "00000000000000000002",
+				ServiceName:                     "service-name",
 			},
 			setup: func(_ *testing.T, service *server.ManagementService, mocks serviceMocks) context.Context {
 				mocks.dc.EXPECT().
@@ -115,8 +119,9 @@ func TestRetrieveClaim(t *testing.T) {
 
 				mocks.mc.EXPECT().
 					RequestClaim(gomock.Any(), &external.RequestClaimRequest{
-						OrderReference: "order-reference-a",
-						ServiceName:    "service-name",
+						OrderReference:                  "order-reference-a",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
+						ServiceName:                     "service-name",
 					}).
 					Return(nil, status.Errorf(codes.Unauthenticated, "order is revoked"))
 
@@ -152,17 +157,19 @@ func TestRetrieveClaimHappyFlow(t *testing.T) {
 
 	mocks.mc.EXPECT().
 		RequestClaim(gomock.Any(), &external.RequestClaimRequest{
-			OrderReference: "order-reference-a",
-			ServiceName:    "service-name",
+			OrderReference:                  "order-reference-a",
+			ServiceName:                     "service-name",
+			ServiceOrganizationSerialNumber: "00000000000000000002",
 		}).
 		Return(&external.RequestClaimResponse{
 			Claim: "claim",
 		}, nil)
 
 	response, err := service.RetrieveClaimForOrder(ctx, &api.RetrieveClaimForOrderRequest{
-		OrderReference:                "order-reference-a",
-		OrderOrganizationSerialNumber: "00000000000000000001",
-		ServiceName:                   "service-name",
+		OrderReference:                  "order-reference-a",
+		OrderOrganizationSerialNumber:   "00000000000000000001",
+		ServiceName:                     "service-name",
+		ServiceOrganizationSerialNumber: "00000000000000000002",
 	})
 
 	assert.NoError(t, err)

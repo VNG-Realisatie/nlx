@@ -39,7 +39,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Error(codes.InvalidArgument, "a service name must be provided")
 	}
 
-	if req.OrganizationSerialNumber == "" {
+	if req.ServiceOrganizationSerialNumber == "" {
 		return nil, status.Error(codes.InvalidArgument, "an organization serial number must be provided")
 	}
 
@@ -56,7 +56,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Errorf(codes.NotFound, "order with reference '%s' and organization serial number '%s' not found", req.OrderReference, md.OrganizationSerialNumber)
 	}
 
-	outgoingAccessRequest := filterOutgoingAccessRequestFromOrder(order, req.OrganizationSerialNumber, req.ServiceName)
+	outgoingAccessRequest := filterOutgoingAccessRequestFromOrder(order, req.ServiceOrganizationSerialNumber, req.ServiceName)
 	if outgoingAccessRequest == nil {
 		return nil, status.Errorf(codes.NotFound, "order with reference '%s' and organization serial number '%s' and service name '%s' not found", req.OrderReference, md.OrganizationSerialNumber, req.ServiceName)
 	}

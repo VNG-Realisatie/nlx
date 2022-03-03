@@ -111,9 +111,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Internal, "invalid public key format"),
 		},
@@ -147,9 +147,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Unauthenticated, "invalid public key for order"),
 		},
@@ -188,9 +188,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Unauthenticated, "order is revoked"),
 		},
@@ -225,9 +225,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Unauthenticated, "order is no longer valid"),
 		},
@@ -256,9 +256,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "non-existing-service",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "non-existing-service",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.NotFound, "order with reference 'order-reference' and organization serial number '00000000000000000002' and service name 'non-existing-service' not found"),
 		},
@@ -305,9 +305,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Internal, "could not find outway"),
 		},
@@ -372,9 +372,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Internal, "could not sign order claim via outway"),
 		},
@@ -442,9 +442,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			want: &external.RequestClaimResponse{
 				Claim: "signed-string",
@@ -514,9 +514,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				return ctx
 			},
 			request: &external.RequestClaimRequest{
-				OrderReference:           "order-reference",
-				ServiceName:              "service-name",
-				OrganizationSerialNumber: "00000000000000000001",
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			want: &external.RequestClaimResponse{
 				Claim: "signed-string",

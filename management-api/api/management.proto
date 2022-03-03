@@ -545,7 +545,8 @@ message ListAuditLogsResponse {
 message RetrieveClaimForOrderRequest {
   string orderReference = 1;
   string orderOrganizationSerialNumber = 2;
-  string serviceName = 3;
+  string serviceOrganizationSerialNumber = 3;
+  string serviceName = 4;
 }
 
 message RetrieveClaimForOrderResponse {
