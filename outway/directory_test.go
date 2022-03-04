@@ -86,6 +86,7 @@ func TestRegisterToDirectory(t *testing.T) {
 				Txlogger:          nil,
 				Name:              "mock-outway",
 				MonitoringAddress: "localhost:1813",
+				InternalCert:      cert,
 				OrgCert:           cert,
 				DirectoryClient:   tc.directoryClient(ctx, ctrl),
 			}

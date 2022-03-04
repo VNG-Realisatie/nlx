@@ -64,6 +64,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           certOrg,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
@@ -74,6 +75,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           certWithoutSerialNumber,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
@@ -84,6 +86,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           cert,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "http://auth.nlx.io",
 				AuthCAPath:        "",
@@ -94,6 +97,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           cert,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "http://auth.nlx.io",
 				AuthCAPath:        "/path/to",
@@ -104,6 +108,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           cert,
+				InternalCert:      cert,
 				MonitoringAddress: "",
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
@@ -114,6 +119,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           cert,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "https://auth.nlx.io",
 				AuthCAPath:        "../testing/pki/ca-root.pem",
@@ -124,6 +130,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           cert,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "https://auth.nlx.io",
 				AuthCAPath:        "../testing/pki/ca-root.pem",
@@ -136,6 +143,7 @@ func TestNewOutwayExeception(t *testing.T) {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
 				OrgCert:           cert,
+				InternalCert:      cert,
 				MonitoringAddress: "localhost:8080",
 				DirectoryClient:   mockdirectory.NewMockDirectoryClient(gomock.NewController(t)),
 			},

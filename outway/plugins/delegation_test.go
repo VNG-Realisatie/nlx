@@ -55,7 +55,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"error_while_retrieving_claim_returns_an_error": {
 			wantErr:            true,
 			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to retrieve claim\n",
+			wantMessage:        "failed to request claim from 00000000000000000001: failed to request claim: message: failed to retrieve claim, source: something went wrong\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -63,9 +63,10 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationSerialNumber: "00000000000000000001",
-						OrderReference:                "test-ref-123",
-						ServiceName:                   "service-name",
+						OrderOrganizationSerialNumber:   "00000000000000000001",
+						OrderReference:                  "test-ref-123",
+						ServiceName:                     "service-name",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
 					}).
 					Return(nil, errors.New("something went wrong"))
 			},
@@ -74,7 +75,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"error_when_retrieving_invalid_jwt": {
 			wantErr:            true,
 			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to parse JWT\n",
+			wantMessage:        "failed to request claim from 00000000000000000001: failed to request claim: message: failed to parse JWT, source: token contains an invalid number of segments\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -82,9 +83,10 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationSerialNumber: "00000000000000000001",
-						OrderReference:                "test-ref-123",
-						ServiceName:                   "service-name",
+						OrderOrganizationSerialNumber:   "00000000000000000001",
+						OrderReference:                  "test-ref-123",
+						ServiceName:                     "service-name",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: "invalid_jwt",
@@ -101,9 +103,10 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationSerialNumber: "00000000000000000001",
-						OrderReference:                "test-ref-123",
-						ServiceName:                   "service-name",
+						OrderOrganizationSerialNumber:   "00000000000000000001",
+						OrderReference:                  "test-ref-123",
+						ServiceName:                     "service-name",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,
@@ -113,8 +116,8 @@ func TestDelegationPlugin(t *testing.T) {
 
 		"order_has_been_revoked": {
 			wantErr:            true,
-			wantHTTPStatusCode: http.StatusUnauthorized,
-			wantMessage:        "order is revoked\n",
+			wantHTTPStatusCode: http.StatusInternalServerError,
+			wantMessage:        "failed to request claim from 00000000000000000001: failed to request claim: message: order is revoked, source: rpc error: code = Unauthenticated desc = order is revoked\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -122,9 +125,10 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationSerialNumber: "00000000000000000001",
-						OrderReference:                "test-ref-123",
-						ServiceName:                   "service-name",
+						OrderOrganizationSerialNumber:   "00000000000000000001",
+						OrderReference:                  "test-ref-123",
+						ServiceName:                     "service-name",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
 					}).
 					Return(nil, status.Error(codes.Unauthenticated, "order is revoked"))
 			},
@@ -139,9 +143,10 @@ func TestDelegationPlugin(t *testing.T) {
 			setup: func(client *mock.MockManagementClient, plugin *DelegationPlugin) {
 				client.EXPECT().
 					RetrieveClaimForOrder(gomock.Any(), &api.RetrieveClaimForOrderRequest{
-						OrderOrganizationSerialNumber: "00000000000000000001",
-						OrderReference:                "test-ref-123",
-						ServiceName:                   "service-name",
+						OrderOrganizationSerialNumber:   "00000000000000000001",
+						OrderReference:                  "test-ref-123",
+						ServiceName:                     "service-name",
+						ServiceOrganizationSerialNumber: "00000000000000000002",
 					}).
 					Return(&api.RetrieveClaimForOrderResponse{
 						Claim: testToken,
@@ -188,7 +193,8 @@ func TestDelegationPlugin(t *testing.T) {
 
 			client := mock.NewMockManagementClient(ctrl)
 			context := fakeContext(&Destination{
-				Service: "service-name",
+				Service:                  "service-name",
+				OrganizationSerialNumber: "00000000000000000002",
 			})
 
 			tt.setHeaders(context.Request)
