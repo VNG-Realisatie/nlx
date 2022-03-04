@@ -97,6 +97,7 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		mocks.dc,
 		mocks.tx,
 		bundle,
+		bundle,
 		mocks.db,
 		nil,
 		mocks.al,

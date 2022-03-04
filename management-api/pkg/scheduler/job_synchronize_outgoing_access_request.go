@@ -122,12 +122,11 @@ func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Co
 
 	outways, err := job.configDatabase.GetOutwaysByPublicKeyFingerprint(ctx, request.PublicKeyFingerprint)
 	if err != nil {
-		return database.OutgoingAccessRequestFailed, 0, err
-	}
+		if err == database.ErrNotFound {
+			return database.OutgoingAccessRequestFailed, 0, fmt.Errorf("no outway using the publickey fingerprint '%s'", request.PublicKeyFingerprint)
+		}
 
-	if len(outways) == 0 {
-		// Should we remove the entire access request in this case?
-		return database.OutgoingAccessRequestFailed, 0, fmt.Errorf("no outway using the publickey fingerprint '%s'", request.PublicKeyFingerprint)
+		return database.OutgoingAccessRequestFailed, 0, fmt.Errorf("failed to retrieve outways: %v", err)
 	}
 
 	response, err := client.RequestAccess(ctx, &external.RequestAccessRequest{

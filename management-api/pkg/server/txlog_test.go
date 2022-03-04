@@ -53,6 +53,7 @@ func TestIsTXLogEnabled(t *testing.T) {
 				nil,
 				nil,
 				nil,
+				nil,
 				management.NewClient,
 				outway.NewClient,
 			)

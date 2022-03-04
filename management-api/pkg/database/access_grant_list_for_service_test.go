@@ -27,6 +27,9 @@ func TestListAccessGrantsForService(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
+	fixturePEM, err := fixtureCertBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
 	type args struct {
 		serviceName string
 	}
@@ -82,6 +85,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 						CreatedAt:            fixtureTime,
 						UpdatedAt:            fixtureTime,
 						PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+						PublicKeyPEM:         fixturePEM,
 					},
 					CreatedAt: fixtureTime,
 					RevokedAt: sql.NullTime{},
@@ -117,6 +121,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 						CreatedAt:            fixtureTime,
 						UpdatedAt:            fixtureTime,
 						PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+						PublicKeyPEM:         fixturePEM,
 					},
 					CreatedAt: fixtureTime,
 					RevokedAt: sql.NullTime{Time: fixtureTime, Valid: true},

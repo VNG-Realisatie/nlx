@@ -54,6 +54,7 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 		mock_directory.NewMockClient(ctrl),
 		nil,
 		bundle,
+		bundle,
 		mock_database.NewMockConfigDatabase(ctrl),
 		nil,
 		auditLogger,

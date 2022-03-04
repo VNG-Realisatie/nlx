@@ -165,6 +165,7 @@ func TestRegisterOutway(t *testing.T) {
 				mock_directory.NewMockClient(mockCtrl),
 				nil,
 				nil,
+				nil,
 				mockDatabase,
 				nil,
 				mock_auditlog.NewMockLogger(mockCtrl),
@@ -205,6 +206,7 @@ func TestListOutways(t *testing.T) {
 	service := server.NewManagementService(
 		logger,
 		mock_directory.NewMockClient(mockCtrl),
+		nil,
 		nil,
 		nil,
 		mockDatabase,

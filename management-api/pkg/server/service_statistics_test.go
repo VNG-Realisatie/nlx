@@ -39,6 +39,7 @@ func TestGetStatisticsOfServices(t *testing.T) {
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		nil,
+		nil,
 		mockDatabase,
 		nil,
 		mock_auditlog.NewMockLogger(mockCtrl),

@@ -27,6 +27,9 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
+	fixtureCertBundlePEM, err := fixtureCertBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
 	type args struct {
 		organizationSerialNumber string
 		serviceName              string
@@ -95,6 +98,7 @@ func TestGetLatestAccessGrantForService(t *testing.T) {
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+					PublicKeyPEM:         fixtureCertBundlePEM,
 				},
 				CreatedAt: fixtureTime,
 				RevokedAt: sql.NullTime{},

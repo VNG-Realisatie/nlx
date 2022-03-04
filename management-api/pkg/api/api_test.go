@@ -110,23 +110,25 @@ func TestNewAPI(t *testing.T) {
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
 
-			cert, err := common_tls.NewBundleFromFiles(test.cert.certFile, test.cert.keyFile, test.cert.rootCertFile)
+			internalCert, err := common_tls.NewBundleFromFiles(test.cert.certFile, test.cert.keyFile, test.cert.rootCertFile)
 			assert.NoError(t, err)
 
 			orgCert, err := common_tls.NewBundleFromFiles(test.orgCert.certFile, test.orgCert.keyFile, test.orgCert.rootCertFile)
 			assert.NoError(t, err)
 
-			_, err = NewAPI(
-				test.db,
-				nil,
-				logger,
-				cert,
-				orgCert,
-				test.directoryAddress,
-				test.txlogAddress,
-				&oidc.Authenticator{},
-				mock_auditlog.NewMockLogger(mockCtrl),
-			)
+			args := &NewAPIArgs{
+				DB:               test.db,
+				TXlogDB:          nil,
+				Logger:           logger,
+				InternalCert:     internalCert,
+				OrgCert:          orgCert,
+				DirectoryAddress: test.directoryAddress,
+				TXLogAddress:     test.txlogAddress,
+				Authenticator:    &oidc.Authenticator{},
+				AuditLogger:      mock_auditlog.NewMockLogger(mockCtrl),
+			}
+
+			_, err = NewAPI(args)
 
 			if test.expectedErrorMessage != "" {
 				assert.EqualError(t, err, test.expectedErrorMessage)

@@ -53,11 +53,20 @@ func getCreatedAccessRequests() map[string]testCase {
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("hostname:7200", nil)
 
+				mocks.db.
+					EXPECT().
+					GetOutwaysByPublicKeyFingerprint(gomock.Any(), "public-key-fingerprint").
+					Return([]*database.Outway{
+						{
+							PublicKeyPEM: "public-key-pem",
+						},
+					}, nil)
+
 				mocks.management.
 					EXPECT().
 					RequestAccess(gomock.Any(), &external.RequestAccessRequest{
-						ServiceName:          "service",
-						PublicKeyFingerprint: "public-key-fingerprint",
+						ServiceName:  "service",
+						PublicKeyPem: "public-key-pem",
 					}, gomock.Any()).
 					Return(nil, fmt.Errorf("mock grpc wrapper: %w", server.ErrServiceDoesNotExist))
 
@@ -81,11 +90,20 @@ func getCreatedAccessRequests() map[string]testCase {
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("hostname:7200", nil)
 
+				mocks.db.
+					EXPECT().
+					GetOutwaysByPublicKeyFingerprint(gomock.Any(), "public-key-fingerprint").
+					Return([]*database.Outway{
+						{
+							PublicKeyPEM: "public-key-pem",
+						},
+					}, nil)
+
 				mocks.management.
 					EXPECT().
 					RequestAccess(gomock.Any(), &external.RequestAccessRequest{
-						ServiceName:          "service",
-						PublicKeyFingerprint: "public-key-fingerprint",
+						ServiceName:  "service",
+						PublicKeyPem: "public-key-pem",
 					}, gomock.Any()).
 					Return(&external.RequestAccessResponse{
 						ReferenceId:        2,

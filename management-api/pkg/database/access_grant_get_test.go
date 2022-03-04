@@ -26,6 +26,9 @@ func TestGetAccessGrant(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
+	fixtureCertBundlePEM, err := fixtureCertBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
 	type args struct {
 		id uint
 	}
@@ -78,7 +81,9 @@ func TestGetAccessGrant(t *testing.T) {
 					State:                database.IncomingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
-					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint()},
+					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+					PublicKeyPEM:         fixtureCertBundlePEM,
+				},
 			},
 			wantErr: nil,
 		},

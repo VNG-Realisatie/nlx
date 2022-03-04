@@ -26,6 +26,9 @@ func TestListIncomingAccessRequests(t *testing.T) {
 	fixtureCertBundle, err := newFixtureCertificateBundle()
 	require.NoError(t, err)
 
+	fixturePEM, err := fixtureCertBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
 	tests := map[string]struct {
 		loadFixtures   bool
 		argServiceName string
@@ -64,6 +67,7 @@ func TestListIncomingAccessRequests(t *testing.T) {
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+					PublicKeyPEM:         fixturePEM,
 				},
 				{
 					ID:        2,
@@ -93,6 +97,7 @@ func TestListIncomingAccessRequests(t *testing.T) {
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+					PublicKeyPEM:         fixturePEM,
 				},
 			},
 			wantErr: nil,

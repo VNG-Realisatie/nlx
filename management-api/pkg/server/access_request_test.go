@@ -559,18 +559,18 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 //nolint funlen: this is a test
 func TestExternalRequestAccess(t *testing.T) {
 	tests := map[string]struct {
-		setup   func(*testing.T, *mock_database.MockConfigDatabase) context.Context
+		setup   func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context
 		want    *external.RequestAccessResponse
 		wantErr error
 	}{
 		"when_peer_context_is_missing": {
-			setup: func(*testing.T, *mock_database.MockConfigDatabase) context.Context {
+			setup: func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context {
 				return context.Background()
 			},
 			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
 		},
 		"when_the_service_does_not_exist": {
-			setup: func(_ *testing.T, db *mock_database.MockConfigDatabase) context.Context {
+			setup: func(_ *testing.T, db *mock_database.MockConfigDatabase, _ *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadata(t, context.Background())
 
 				db.
@@ -583,7 +583,7 @@ func TestExternalRequestAccess(t *testing.T) {
 			wantErr: server.ErrServiceDoesNotExist,
 		},
 		"when_creating_the_access_request_errors": {
-			setup: func(t *testing.T, db *mock_database.MockConfigDatabase) context.Context {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, orgCert *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadata(t, context.Background())
 
 				db.
@@ -596,7 +596,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", orgCert.PublicKeyFingerprint()).
 					Return(nil, database.ErrNotFound)
 
 				db.
@@ -609,7 +609,7 @@ func TestExternalRequestAccess(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "failed to create access request"),
 		},
 		"returns_error_when_a_active_access_request_already_exists": {
-			setup: func(t *testing.T, db *mock_database.MockConfigDatabase) context.Context {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, orgCert *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadata(t, context.Background())
 
 				db.
@@ -622,7 +622,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", orgCert.PublicKeyFingerprint()).
 					Return(nil, database.ErrNotFound)
 
 				db.
@@ -635,7 +635,7 @@ func TestExternalRequestAccess(t *testing.T) {
 			wantErr: status.Error(codes.AlreadyExists, "an active access request already exists"),
 		},
 		"happy_flow": {
-			setup: func(t *testing.T, db *mock_database.MockConfigDatabase) context.Context {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, orgCert *tls.CertificateBundle) context.Context {
 				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
 				certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
@@ -653,8 +653,11 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", orgCert.PublicKeyFingerprint()).
 					Return(nil, database.ErrNotFound)
+
+				pem, err := orgCert.PublicKeyPEM()
+				require.NoError(t, err)
 
 				db.
 					EXPECT().
@@ -665,7 +668,8 @@ func TestExternalRequestAccess(t *testing.T) {
 							Name:         certBundle.Certificate().Subject.Organization[0],
 						},
 						State:                database.IncomingAccessRequestReceived,
-						PublicKeyFingerprint: "public-key-fingerprint",
+						PublicKeyPEM:         pem,
+						PublicKeyFingerprint: orgCert.PublicKeyFingerprint(),
 					}).
 					Return(&database.IncomingAccessRequest{
 						ID: 42,
@@ -678,7 +682,7 @@ func TestExternalRequestAccess(t *testing.T) {
 			},
 		},
 		"happy_flow_existing_incoming_access_request": {
-			setup: func(t *testing.T, db *mock_database.MockConfigDatabase) context.Context {
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, orgCert *tls.CertificateBundle) context.Context {
 				pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
 				certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTestB)
@@ -696,7 +700,7 @@ func TestExternalRequestAccess(t *testing.T) {
 
 				db.
 					EXPECT().
-					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", "public-key-fingerprint").
+					GetLatestIncomingAccessRequest(ctx, gomock.Any(), "service", orgCert.PublicKeyFingerprint()).
 					Return(&database.IncomingAccessRequest{
 						ID:        43,
 						ServiceID: 1,
@@ -721,12 +725,15 @@ func TestExternalRequestAccess(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
-			ctx := tt.setup(t, mocks.db)
+			service, orgBundle, mocks := newService(t)
+			ctx := tt.setup(t, mocks.db, orgBundle)
+
+			pem, err := orgBundle.PublicKeyPEM()
+			assert.NoError(t, err)
 
 			result, err := service.RequestAccess(ctx, &external.RequestAccessRequest{
-				ServiceName:          "service",
-				PublicKeyFingerprint: "public-key-fingerprint",
+				ServiceName:  "service",
+				PublicKeyPem: pem,
 			})
 
 			if tt.wantErr != nil {

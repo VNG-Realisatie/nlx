@@ -52,6 +52,7 @@ func TestUpdateService(t *testing.T) {
 		mock_directory.NewMockClient(mockCtrl),
 		nil,
 		nil,
+		nil,
 		mockDatabase,
 		nil,
 		auditLogger,
