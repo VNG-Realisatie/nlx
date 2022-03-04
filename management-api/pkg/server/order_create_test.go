@@ -265,6 +265,56 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.Internal, "failed to write to auditlog"),
 		},
+		"when_order_has_duplicate_services": {
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
+					Return([]*database.AccessProof{
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "organization-a",
+								},
+								ServiceName: "service-a",
+							},
+						},
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "organization-a",
+								},
+								ServiceName: "service-a",
+							},
+						},
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000002",
+									Name:         "organization-b",
+								},
+								ServiceName: "service-b",
+							},
+						},
+						{
+							OutgoingAccessRequest: &database.OutgoingAccessRequest{
+								Organization: database.Organization{
+									SerialNumber: "00000000000000000002",
+									Name:         "organization-b",
+								},
+								ServiceName: "service-c",
+							},
+						},
+					}, nil)
+			},
+			request: func() *api.CreateOutgoingOrderRequest {
+				request := validOutgoingOrderRequest()
+				return &request
+			}(),
+			wantErr: status.Error(codes.Internal, "cannot create order with duplicate services"),
+		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.

@@ -184,12 +184,19 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
+	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPEM))
+	if err != nil {
+		s.logger.Error("invalid public key format", zap.Error(err))
+		return nil, status.Error(codes.Internal, "invalid public key format")
+	}
+
 	ar := &database.OutgoingAccessRequest{
 		Organization: database.Organization{
 			SerialNumber: req.OrganizationSerialNumber,
 		},
 		ServiceName:          req.ServiceName,
-		PublicKeyFingerprint: req.PublicKeyFingerprint,
+		PublicKeyPEM:         req.PublicKeyPEM,
+		PublicKeyFingerprint: fingerprint,
 		State:                database.OutgoingAccessRequestCreated,
 	}
 

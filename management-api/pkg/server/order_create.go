@@ -49,6 +49,20 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
 	}
 
+	// Check if there are no duplicate service entries in the access proofs
+	services := make(map[string]bool)
+
+	for _, a := range accessProofs {
+		key := fmt.Sprintf("%s/%s", a.OutgoingAccessRequest.Organization.SerialNumber, a.OutgoingAccessRequest.ServiceName)
+
+		_, exists := services[key]
+		if exists {
+			return nil, status.Error(codes.Internal, "cannot create order with duplicate services")
+		}
+
+		services[key] = true
+	}
+
 	err = s.auditLogger.OrderCreate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, accessProofsToAuditLogRecordServices(accessProofs))
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))

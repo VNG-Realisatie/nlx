@@ -38,6 +38,19 @@ func createTimestamp(ti time.Time) *timestamppb.Timestamp {
 }
 
 func TestCreateAccessRequest(t *testing.T) {
+	arbitraryPublicKeyPEM := `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e
+5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63
+pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4K
+ad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1T
+IvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBf
+mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
+4wIDAQAB
+-----END PUBLIC KEY-----`
+
+	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(arbitraryPublicKeyPEM))
+	require.NoError(t, err)
+
 	tests := map[string]struct {
 		setup   func(*testing.T, serviceMocks) context.Context
 		request *api.CreateAccessRequestRequest
@@ -63,7 +76,8 @@ func TestCreateAccessRequest(t *testing.T) {
 							SerialNumber: "00000000000000000001",
 						},
 						ServiceName:          "test-service",
-						PublicKeyFingerprint: "public-key-fingerprint",
+						PublicKeyFingerprint: fingerprint,
+						PublicKeyPEM:         arbitraryPublicKeyPEM,
 						State:                database.OutgoingAccessRequestCreated,
 					}).
 					Return(&database.OutgoingAccessRequest{
@@ -73,7 +87,8 @@ func TestCreateAccessRequest(t *testing.T) {
 							Name:         "test-organization",
 						},
 						ServiceName:          "test-service",
-						PublicKeyFingerprint: "public-key-fingerprint",
+						PublicKeyFingerprint: fingerprint,
+						PublicKeyPEM:         arbitraryPublicKeyPEM,
 						State:                database.OutgoingAccessRequestCreated,
 						CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 						UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -84,7 +99,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "test-service",
-				PublicKeyFingerprint:     "public-key-fingerprint",
+				PublicKeyPEM:             arbitraryPublicKeyPEM,
 			},
 			want: &api.OutgoingAccessRequest{
 				Id: 1,
@@ -92,7 +107,7 @@ func TestCreateAccessRequest(t *testing.T) {
 					SerialNumber: "00000000000000000001",
 					Name:         "test-organization",
 				},
-				PublicKeyFingerprint: "public-key-fingerprint",
+				PublicKeyFingerprint: fingerprint,
 				ServiceName:          "test-service",
 				State:                api.AccessRequestState_CREATED,
 				CreatedAt:            createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
@@ -118,7 +133,8 @@ func TestCreateAccessRequest(t *testing.T) {
 							SerialNumber: "00000000000000000001",
 						},
 						ServiceName:          "test-service",
-						PublicKeyFingerprint: "public-key-fingerprint",
+						PublicKeyFingerprint: fingerprint,
+						PublicKeyPEM:         arbitraryPublicKeyPEM,
 						State:                database.OutgoingAccessRequestCreated,
 					}).
 					Return(nil, database.ErrActiveAccessRequest)
@@ -128,7 +144,7 @@ func TestCreateAccessRequest(t *testing.T) {
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "test-service",
-				PublicKeyFingerprint:     "public-key-fingerprint",
+				PublicKeyPEM:             arbitraryPublicKeyPEM,
 			},
 			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
 		},
