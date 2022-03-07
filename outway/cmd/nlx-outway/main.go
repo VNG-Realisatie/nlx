@@ -32,30 +32,22 @@ import (
 )
 
 var options struct {
-	Name string `long:"name" env:"OUTWAY_NAME" description:"Name of the outway. Every outway should have a unique name within the organization." required:"true"`
-
-	ListenAddress    string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenHTTPS      bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
-	ListenAddressAPI string `long:"listen-address-api" env:"LISTEN_ADDRESS_API" default:"127.0.0.1:8082" description:"Address for the outway api server to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-
-	AddressAPI string `long:"self-address-api" env:"SELF_ADDRESS_API" description:"The address that the management API can use to reach the api of the outway" required:"true"`
-
-	MonitoringAddress string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-
-	DirectoryInspectionAddress string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
-	DirectoryAddress           string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
-
-	UseAsHTTPProxy       bool   `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
-	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
-
-	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
-	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
-
+	Name                        string `long:"name" env:"OUTWAY_NAME" description:"Name of the outway. Every outway should have a unique name within the organization." required:"true"`
+	ListenAddress               string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8080" description:"Address for the outway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	ListenHTTPS                 bool   `long:"listen-https" env:"LISTEN_HTTPS" description:"Enable HTTPS on the ListenAddress" required:"false"`
+	ListenAddressAPI            string `long:"listen-address-api" env:"LISTEN_ADDRESS_API" default:"127.0.0.1:8082" description:"Address for the outway api server to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	AddressAPI                  string `long:"self-address-api" env:"SELF_ADDRESS_API" description:"The address that the management API can use to reach the api of the outway" required:"true"`
+	MonitoringAddress           string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the outway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	DirectoryInspectionAddress  string `long:"directory-inspection-address" env:"DIRECTORY_INSPECTION_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
+	DirectoryAddress            string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this outway can fetch the service list"`
+	UseAsHTTPProxy              bool   `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
+	ManagementAPIAddress        string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
+	DisableLogdb                bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
+	PostgresDSN                 string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 	AuthorizationServiceAddress string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the inway"`
 	AuthorizationCA             string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certifcate"`
-
-	ServerCertFile string `long:"tls-server-cert" env:"TLS_SERVER_CERT" description:"Path to a cert .pem, used for the HTTPS server" required:"false"`
-	ServerKeyFile  string `long:"tls-server-key" env:"TLS_SERVER_KEY" description:"Path the a key .pem, used for the HTTPS server" required:"false"`
+	ServerCertFile              string `long:"tls-server-cert" env:"TLS_SERVER_CERT" description:"Path to a cert .pem, used for the HTTPS server" required:"false"`
+	ServerKeyFile               string `long:"tls-server-key" env:"TLS_SERVER_KEY" description:"Path the a key .pem, used for the HTTPS server" required:"false"`
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
