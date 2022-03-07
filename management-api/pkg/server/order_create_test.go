@@ -229,7 +229,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			}(),
 			wantErr: status.Error(codes.Internal, "could not retrieve access proofs"),
 		},
-		"when_creating_audit_log_Fails": {
+		"when_creating_audit_log_fails": {
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
