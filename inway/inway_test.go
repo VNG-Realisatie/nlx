@@ -12,12 +12,13 @@ import (
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 var pkiDir = filepath.Join("..", "testing", "pki")
 
 func Test_NewInway(t *testing.T) {
-	certOrg, cert := getCertBundles()
+	orgCertWithoutName, orgCert := getCertBundles()
 
 	tests := map[string]struct {
 		params               *inway.Params
@@ -27,7 +28,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           nil,
 				Address:           "inway.test",
-				OrgCertBundle:     cert,
+				OrgCertBundle:     orgCert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
 			},
@@ -37,7 +38,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           context.Background(),
 				Address:           "inway.test",
-				OrgCertBundle:     certOrg,
+				OrgCertBundle:     orgCertWithoutName,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
 			},
@@ -47,7 +48,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           context.Background(),
 				Address:           "inway.test",
-				OrgCertBundle:     cert,
+				OrgCertBundle:     orgCert,
 				MonitoringAddress: "",
 				Name:              "my-inway",
 			},
@@ -57,7 +58,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           context.Background(),
 				Address:           "test.com",
-				OrgCertBundle:     cert,
+				OrgCertBundle:     orgCert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
 			},
@@ -67,7 +68,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           context.Background(),
 				Address:           "localhost:1:2",
-				OrgCertBundle:     cert,
+				OrgCertBundle:     orgCert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "my-inway",
 			},
@@ -77,7 +78,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           context.Background(),
 				Address:           "inway.test",
-				OrgCertBundle:     cert,
+				OrgCertBundle:     orgCert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "",
 			},
@@ -87,7 +88,7 @@ func Test_NewInway(t *testing.T) {
 			params: &inway.Params{
 				Context:           context.Background(),
 				Address:           "inway.test",
-				OrgCertBundle:     cert,
+				OrgCertBundle:     orgCert,
 				MonitoringAddress: "localhost:8080",
 				Name:              "#",
 			},
@@ -105,18 +106,10 @@ func Test_NewInway(t *testing.T) {
 	}
 }
 
-func getCertBundles() (certOrg, cert *common_tls.CertificateBundle) {
-	certOrg, _ = common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-without-name-chain.pem"),
-		filepath.Join(pkiDir, "org-without-name-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+func getCertBundles() (orgCertWithoutName, orgCert *common_tls.CertificateBundle) {
+	orgCertWithoutName, _ = common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutName)
 
-	cert, _ = common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCert, _ = common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
 
-	return certOrg, cert
+	return orgCertWithoutName, orgCert
 }

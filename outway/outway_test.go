@@ -9,19 +9,18 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
-	mock "go.nlx.io/nlx/outway/mock"
-
 	mockdirectory "go.nlx.io/nlx/directory-api/api/mock"
+	mock "go.nlx.io/nlx/outway/mock"
 	"go.nlx.io/nlx/outway/plugins"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 type authRequest struct {
@@ -37,23 +36,17 @@ type authResponse struct {
 
 // nolint:funlen // this is a test
 func TestNewOutwayExeception(t *testing.T) {
-	certOrg, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-without-name-chain.pem"),
-		filepath.Join(pkiDir, "org-without-name-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCertWithoutName, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutName)
+	require.NoError(t, err)
 
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
-	certWithoutSerialNumber, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-without-serial-number-chain.pem"),
-		filepath.Join(pkiDir, "org-without-serial-number-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCertWithoutSerialNumber, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutSerialNumber)
+	require.NoError(t, err)
+
+	internalCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.NLXTestInternal)
+	require.NoError(t, err)
 
 	tests := map[string]struct {
 		args            *NewOutwayArgs
@@ -63,8 +56,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"certificate_without_organization": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           certOrg,
-				InternalCert:      cert,
+				OrgCert:           orgCertWithoutName,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
@@ -74,8 +67,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"certificate_without_organization_serial_number": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           certWithoutSerialNumber,
-				InternalCert:      cert,
+				OrgCert:           orgCertWithoutSerialNumber,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
@@ -85,8 +78,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"authorization_service_URL_set_but_no_CA_for_authorization_provided": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           cert,
-				InternalCert:      cert,
+				OrgCert:           orgCert,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "http://auth.nlx.io",
 				AuthCAPath:        "",
@@ -96,8 +89,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"authorization_service_URL_is_not_'https'": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           cert,
-				InternalCert:      cert,
+				OrgCert:           orgCert,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "http://auth.nlx.io",
 				AuthCAPath:        "/path/to",
@@ -107,8 +100,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"invalid_monitioring_service_address": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           cert,
-				InternalCert:      cert,
+				OrgCert:           orgCert,
+				InternalCert:      internalCert,
 				MonitoringAddress: "",
 				AuthServiceURL:    "",
 				AuthCAPath:        "",
@@ -118,8 +111,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"directory_client_must_be_not_nil": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           cert,
-				InternalCert:      cert,
+				OrgCert:           orgCert,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "https://auth.nlx.io",
 				AuthCAPath:        "../testing/pki/ca-root.pem",
@@ -129,8 +122,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"happy_flow_with_authorization_plugin": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           cert,
-				InternalCert:      cert,
+				OrgCert:           orgCert,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				AuthServiceURL:    "https://auth.nlx.io",
 				AuthCAPath:        "../testing/pki/ca-root.pem",
@@ -142,8 +135,8 @@ func TestNewOutwayExeception(t *testing.T) {
 		"happy_flow": {
 			args: &NewOutwayArgs{
 				Logger:            zap.NewNop(),
-				OrgCert:           cert,
-				InternalCert:      cert,
+				OrgCert:           orgCert,
+				InternalCert:      internalCert,
 				MonitoringAddress: "localhost:8080",
 				DirectoryClient:   mockdirectory.NewMockDirectoryClient(gomock.NewController(t)),
 			},

@@ -136,7 +136,7 @@ func TestInwayValidate(t *testing.T) {
 func TestOutwayValidate(t *testing.T) {
 	pkiDir := filepath.Join("..", "..", "testing", "pki")
 
-	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.NLXTestInternal)
 	require.NoError(t, err)
 
 	testPublicKeyPEM, err := certBundle.PublicKeyPEM()

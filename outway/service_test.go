@@ -5,14 +5,14 @@ package outway
 
 import (
 	"net/http/httputil"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 const (
@@ -26,14 +26,11 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 
 	inwayAddresses := []string{"mockaddress1", "mockaddress2"}
 
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(), cert,
+		zap.NewNop(), orgCert,
 		organizationSerialNumber, serviceName,
 		[]directoryapi.Inway{
 			{

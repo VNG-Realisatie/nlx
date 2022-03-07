@@ -12,9 +12,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/plugins"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 func TestAuthenticationPlugin(t *testing.T) {
@@ -29,11 +30,8 @@ func TestAuthenticationPlugin(t *testing.T) {
 	}{
 		"invalid_certificate": {
 			certifcate: func() *x509.Certificate {
-				cert, _ := common_tls.NewBundleFromFiles(
-					filepath.Join(pkiDir, "org-without-name-chain.pem"),
-					filepath.Join(pkiDir, "org-without-name-key.pem"),
-					filepath.Join(pkiDir, "ca-root.pem"),
-				)
+				cert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutName)
+				require.NoError(t, err)
 
 				return cert.Certificate()
 			}(),
@@ -42,11 +40,8 @@ func TestAuthenticationPlugin(t *testing.T) {
 		},
 		"invalid_certificate_without_serial_number": {
 			certifcate: func() *x509.Certificate {
-				cert, _ := common_tls.NewBundleFromFiles(
-					filepath.Join(pkiDir, "org-without-serial-number-chain.pem"),
-					filepath.Join(pkiDir, "org-without-serial-number-key.pem"),
-					filepath.Join(pkiDir, "ca-root.pem"),
-				)
+				cert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgWithoutSerialNumber)
+				require.NoError(t, err)
 
 				return cert.Certificate()
 			}(),
@@ -55,11 +50,8 @@ func TestAuthenticationPlugin(t *testing.T) {
 		},
 		"happy_flow": {
 			certifcate: func() *x509.Certificate {
-				cert, _ := common_tls.NewBundleFromFiles(
-					filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-					filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-					filepath.Join(pkiDir, "ca-root.pem"),
-				)
+				cert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+				require.NoError(t, err)
 
 				return cert.Certificate()
 			}(),

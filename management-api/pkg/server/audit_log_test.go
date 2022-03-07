@@ -13,12 +13,12 @@ import (
 	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
@@ -27,6 +27,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 func newManagementService(t *testing.T) (s *server.ManagementService, auditLogger *mock_auditlog.MockLogger) {
@@ -39,11 +40,12 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 	})
 
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
-	bundle, err := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+
+	orgCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
+
+	internalCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.NLXTestInternal)
+	require.NoError(t, err)
 
 	assert.NoError(t, err)
 
@@ -53,8 +55,8 @@ func newManagementService(t *testing.T) (s *server.ManagementService, auditLogge
 		logger,
 		mock_directory.NewMockClient(ctrl),
 		nil,
-		bundle,
-		bundle,
+		orgCert,
+		internalCert,
 		mock_database.NewMockConfigDatabase(ctrl),
 		nil,
 		auditLogger,

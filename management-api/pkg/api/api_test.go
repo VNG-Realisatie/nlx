@@ -8,130 +8,90 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	"go.nlx.io/nlx/management-api/pkg/oidc"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
-
-type certFiles struct {
-	certFile, keyFile, rootCertFile string
-}
-
-var pkiDir = filepath.Join("..", "..", "..", "testing", "pki")
-
-var tests = []struct {
-	name                 string
-	cert                 certFiles
-	orgCert              certFiles
-	db                   database.ConfigDatabase
-	directoryAddress     string
-	txlogAddress         string
-	expectedErrorMessage string
-}{
-	{
-		"certificate_is_missing_organization",
-		certFiles{
-			filepath.Join(pkiDir, "org-without-name-chain.pem"),
-			filepath.Join(pkiDir, "org-without-name-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		certFiles{
-			filepath.Join(pkiDir, "org-without-name-chain.pem"),
-			filepath.Join(pkiDir, "org-without-name-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		&mock_database.MockConfigDatabase{},
-		"directory.test:8443",
-		"txlog.test:8443",
-		"cannot obtain organization name from self cert",
-	},
-	{
-		"postgres_connection_is_missing",
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		nil,
-		"directory.test:8443",
-		"txlog.test:8443",
-		"database is not configured",
-	},
-	{
-		"directory_inspection_address_is_missing",
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		&mock_database.MockConfigDatabase{},
-		"",
-		"txlog.test:8443",
-		"directory address is not configured",
-	},
-	{
-		"happy_flow",
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		certFiles{
-			filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-			filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-			filepath.Join(pkiDir, "ca-root.pem"),
-		},
-		&mock_database.MockConfigDatabase{},
-		"directory.test:8443",
-		"txlog.test:8443",
-		"",
-	},
-}
 
 func TestNewAPI(t *testing.T) {
 	logger := zap.NewNop()
 
+	var pkiDir = filepath.Join("..", "..", "..", "testing", "pki")
+
+	tests := map[string]struct {
+		cert                 common_testing.CertificateBundleOrganizationName
+		orgCert              common_testing.CertificateBundleOrganizationName
+		db                   database.ConfigDatabase
+		directoryAddress     string
+		txlogAddress         string
+		expectedErrorMessage string
+	}{
+		"certificate_is_missing_organization": {
+			cert:                 common_testing.OrgWithoutName,
+			orgCert:              common_testing.OrgWithoutName,
+			db:                   &mock_database.MockConfigDatabase{},
+			directoryAddress:     "directory.test:8443",
+			txlogAddress:         "txlog.test:8443",
+			expectedErrorMessage: "cannot obtain organization name from self cert",
+		},
+		"postgres_connection_is_missing": {
+			cert:                 common_testing.OrgNLXTest,
+			orgCert:              common_testing.OrgNLXTest,
+			db:                   nil,
+			directoryAddress:     "directory.test:8443",
+			txlogAddress:         "txlog.test:8443",
+			expectedErrorMessage: "database is not configured",
+		},
+		"directory_inspection_address_is_missing": {
+			cert:                 common_testing.OrgNLXTest,
+			orgCert:              common_testing.OrgNLXTest,
+			db:                   &mock_database.MockConfigDatabase{},
+			directoryAddress:     "",
+			txlogAddress:         "txlog.test:8443",
+			expectedErrorMessage: "directory address is not configured",
+		},
+		"happy_flow": {
+			cert:                 common_testing.OrgNLXTest,
+			orgCert:              common_testing.OrgNLXTest,
+			db:                   &mock_database.MockConfigDatabase{},
+			directoryAddress:     "directory.test:8443",
+			txlogAddress:         "txlog.test:8443",
+			expectedErrorMessage: "",
+		},
+	}
+
 	// Test exceptions during management-api creation
-	for _, test := range tests {
-		test := test
-		t.Run(test.name, func(t *testing.T) {
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
 
-			internalCert, err := common_tls.NewBundleFromFiles(test.cert.certFile, test.cert.keyFile, test.cert.rootCertFile)
+			internalCert, err := common_testing.GetCertificateBundle(pkiDir, tt.cert)
 			assert.NoError(t, err)
 
-			orgCert, err := common_tls.NewBundleFromFiles(test.orgCert.certFile, test.orgCert.keyFile, test.orgCert.rootCertFile)
+			orgCert, err := common_testing.GetCertificateBundle(pkiDir, tt.orgCert)
 			assert.NoError(t, err)
 
 			args := &NewAPIArgs{
-				DB:               test.db,
+				DB:               tt.db,
 				TXlogDB:          nil,
 				Logger:           logger,
 				InternalCert:     internalCert,
 				OrgCert:          orgCert,
-				DirectoryAddress: test.directoryAddress,
-				TXLogAddress:     test.txlogAddress,
+				DirectoryAddress: tt.directoryAddress,
+				TXLogAddress:     tt.txlogAddress,
 				Authenticator:    &oidc.Authenticator{},
 				AuditLogger:      mock_auditlog.NewMockLogger(mockCtrl),
 			}
 
 			_, err = NewAPI(args)
 
-			if test.expectedErrorMessage != "" {
-				assert.EqualError(t, err, test.expectedErrorMessage)
+			if tt.expectedErrorMessage != "" {
+				assert.EqualError(t, err, tt.expectedErrorMessage)
 			} else {
 				assert.Nil(t, err)
 			}

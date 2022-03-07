@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+# ORG CERTIFICATES
 # Create root CA certificates
 cfssl gencert -initca ca-root-csr.json | cfssljson -bare ca-root
 cfssl gencert -initca ca-root-second-csr.json | cfssljson -bare ca-root-second
@@ -20,3 +21,20 @@ cat org-nlx-test.pem ca-intermediate.pem > org-nlx-test-chain.pem
 cat org-nlx-test-b.pem ca-intermediate.pem > org-nlx-test-b-chain.pem
 cat org-without-name.pem ca-intermediate.pem > org-without-name-chain.pem
 cat org-without-serial-number.pem ca-intermediate.pem > org-without-serial-number-chain.pem
+
+
+# INTERNAL CERTIFICATES
+cd internal
+# Create root CA certificates
+cfssl gencert -initca ca-root-csr.json | cfssljson -bare ca-root
+cfssl gencert -initca ca-root-second-csr.json | cfssljson -bare ca-root-second
+
+# Create intermediate CA certificate
+cfssl gencert -initca ca-intermediate-csr.json | cfssljson -bare ca-intermediate
+cfssl sign -ca ca-root.pem -ca-key ca-root-key.pem -config ca-config.json -profile intermediate ca-intermediate.csr | cfssljson -bare ca-intermediate
+
+# Create organisation certificiates
+cfssl gencert -ca=ca-intermediate.pem -ca-key=ca-intermediate-key.pem -config=ca-config.json -profile=peer org-nlx-test-internal-csr.json | cfssljson -bare org-nlx-test-internal
+
+# Combine certificates
+cat org-nlx-test-internal.pem ca-intermediate.pem > org-nlx-test-internal-chain.pem

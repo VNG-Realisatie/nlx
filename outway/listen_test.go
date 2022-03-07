@@ -20,14 +20,15 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/monitoring"
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	mock "go.nlx.io/nlx/outway/mock"
 	"go.nlx.io/nlx/outway/plugins"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 var pkiDir = filepath.Join("..", "testing", "pki")
@@ -452,14 +453,11 @@ func TestFailingTransport(t *testing.T) {
 	// Setup mock httpservice
 	outway.servicesDirectory["00000000000000000001.mockservice"] = &inwayMessage
 
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
 	l, err := NewRoundRobinLoadBalancedHTTPService(
-		zap.NewNop(), cert,
+		zap.NewNop(), certBundle,
 		"00000000000000000001", "mockservice",
 		[]directoryapi.Inway{{
 			Address: "inway.00000000000000000001",

@@ -5,26 +5,23 @@ package inway
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
 	mock_api "go.nlx.io/nlx/management-api/api/mock"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 //nolint:funlen // this is a test
 func TestStartConfigurationPolling(t *testing.T) {
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
 	tests := map[string]struct {
 		managementClient          func(ctrl *gomock.Controller) *mock_api.MockManagementClient
@@ -151,7 +148,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 				Address:                 "localhost:1812",
 				MonitoringAddress:       "localhost:1813",
 				ListenManagementAddress: "",
-				OrgCertBundle:           cert,
+				OrgCertBundle:           orgCert,
 			}
 
 			iw, err := NewInway(params)

@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 const nonFixturesStartID = 1
@@ -21,11 +22,7 @@ const fixturesStartID = 10001
 func newFixtureCertificateBundle() (*common_tls.CertificateBundle, error) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
-	return common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	return common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
 }
 
 func getFixtureTime(t *testing.T) time.Time {

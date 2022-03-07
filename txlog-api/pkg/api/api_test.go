@@ -7,9 +7,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 	"go.nlx.io/nlx/txlog-api/domain/txlog/storage"
 	mock_storage "go.nlx.io/nlx/txlog-api/domain/txlog/storage/mock"
 )
@@ -21,9 +23,12 @@ func TestNewAPI(t *testing.T) {
 
 	var pkiDir = filepath.Join("..", "..", "..", "testing", "pki")
 
+	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
+
 	var tests = map[string]struct {
 		logger  *zap.Logger
-		cert    *certFiles
+		cert    *common_tls.CertificateBundle
 		storage storage.Repository
 		wantErr error
 	}{
@@ -34,32 +39,20 @@ func TestNewAPI(t *testing.T) {
 			wantErr: errors.New("cert is required"),
 		},
 		"when_no_storage": {
-			logger: zap.NewNop(),
-			cert: &certFiles{
-				filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-				filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-				filepath.Join(pkiDir, "ca-root.pem"),
-			},
+			logger:  zap.NewNop(),
+			cert:    certBundle,
 			storage: nil,
 			wantErr: errors.New("storage is required"),
 		},
 		"when_no_logger": {
-			logger: nil,
-			cert: &certFiles{
-				filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-				filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-				filepath.Join(pkiDir, "ca-root.pem"),
-			},
+			logger:  nil,
+			cert:    certBundle,
 			storage: &mock_storage.MockRepository{},
 			wantErr: errors.New("logger is required"),
 		},
 		"happy_flow": {
-			logger: zap.NewNop(),
-			cert: &certFiles{
-				filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-				filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-				filepath.Join(pkiDir, "ca-root.pem"),
-			},
+			logger:  zap.NewNop(),
+			cert:    certBundle,
 			storage: &mock_storage.MockRepository{},
 			wantErr: nil,
 		},
@@ -73,16 +66,9 @@ func TestNewAPI(t *testing.T) {
 			mockCtrl := gomock.NewController(t)
 			defer mockCtrl.Finish()
 
-			var cert *common_tls.CertificateBundle
-			if tt.cert != nil {
-				var err error
-				cert, err = common_tls.NewBundleFromFiles(tt.cert.certFile, tt.cert.keyFile, tt.cert.rootCertFile)
-				assert.NoError(t, err)
-			}
-
 			_, err := NewAPI(
 				tt.logger,
-				cert,
+				tt.cert,
 				tt.storage,
 			)
 

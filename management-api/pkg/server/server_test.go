@@ -89,15 +89,20 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 
 	logger := zaptest.Logger(t)
 
-	bundle, err := newCertificateBundle()
+	orgCert, err := newCertificateBundle()
 	assert.NoError(t, err)
+
+	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
+
+	internalCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.NLXTestInternal)
+	require.NoError(t, err)
 
 	s := server.NewManagementService(
 		logger,
 		mocks.dc,
 		mocks.tx,
-		bundle,
-		bundle,
+		orgCert,
+		internalCert,
 		mocks.db,
 		nil,
 		mocks.al,
@@ -109,5 +114,5 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		},
 	)
 
-	return s, bundle, mocks
+	return s, orgCert, mocks
 }

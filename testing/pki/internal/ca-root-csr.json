@@ -1,0 +1,15 @@
+{
+    "CN": "NLX Internal Root CA",
+    "key": {
+        "algo": "rsa",
+        "size": 4096
+    },
+    "names": [
+        {
+            "O": "NLX Internal Root CA"
+        }
+    ],
+    "ca": {
+        "expiry": "1753163h"
+    }
+}

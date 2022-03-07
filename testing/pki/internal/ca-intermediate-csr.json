@@ -1,0 +1,15 @@
+{
+    "CN": "NLX Internal Intermediate CA",
+    "key": {
+        "algo": "rsa",
+        "size": 4096
+    },
+    "names": [
+        {
+            "O": "NLX Internal Intermediate CA"
+        }
+    ],
+    "ca": {
+        "expiry": "1753163h"
+    }
+}

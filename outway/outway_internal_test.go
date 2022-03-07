@@ -6,19 +6,19 @@ package outway
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
-	common_tls "go.nlx.io/nlx/common/tls"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/api/mock"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 //nolint:funlen // it is a test
@@ -30,22 +30,18 @@ func TestUpdateServiceList(t *testing.T) {
 
 	logger := zaptest.NewLogger(t)
 
-	cert, _ := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
 	o := &Outway{
 		ctx:               context.Background(),
 		directoryClient:   client,
 		logger:            logger,
-		orgCert:           cert,
+		orgCert:           orgCert,
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
 	}
 
-	var err error
 	o.monitorService, err = monitoring.NewMonitoringService("localhost:8080", logger)
 	assert.Nil(t, err)
 

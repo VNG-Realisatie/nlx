@@ -13,21 +13,19 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/plugins"
+	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
 var pkiDir = filepath.Join("..", "testing", "pki")
 
 //nolint:funlen // this is a test
 func TestInwayApiSpec(t *testing.T) {
-	cert, err := common_tls.NewBundleFromFiles(
-		filepath.Join(pkiDir, "org-nlx-test-chain.pem"),
-		filepath.Join(pkiDir, "org-nlx-test-key.pem"),
-		filepath.Join(pkiDir, "ca-root.pem"),
-	)
+	orgCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
+	require.NoError(t, err)
 
 	assert.NoError(t, err)
 
@@ -51,7 +49,7 @@ func TestInwayApiSpec(t *testing.T) {
 		Address:                 "localhost:1811",
 		MonitoringAddress:       "localhost:1812",
 		ListenManagementAddress: "localhost:1813",
-		OrgCertBundle:           cert,
+		OrgCertBundle:           orgCert,
 	}
 
 	iw, err := NewInway(params)
