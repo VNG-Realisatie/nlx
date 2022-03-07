@@ -1,0 +1,63 @@
+{{ if .Values.verwerkingenloggingAPI.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gemeente-stijns.fullname" . }}-verwerkingenlogging-api
+  labels:
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
+    app: verwerkingenlogging-api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "gemeente-stijns.labels" . | nindent 6 }}
+      app: verwerkingenlogging-api
+  template:
+    metadata:
+      labels:
+        {{- include "gemeente-stijns.labels" . | nindent 8 }}
+        app: verwerkingenlogging-api
+    spec:
+      containers:
+        - name: nlx-verwerkingenlogging
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.verwerkingenloggingAPI.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.verwerkingenloggingAPI.database.existingSecret.name }}
+                key: {{ .Values.verwerkingenloggingAPI.database.existingSecret.usernameKey }}
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.verwerkingenloggingAPI.database.existingSecret.name }}
+                key: {{ .Values.verwerkingenloggingAPI.database.existingSecret.passwordKey }}
+          - name: POSTGRES_HOST
+            value: {{ required "PostgreSQL hostname is required" .Values.verwerkingenloggingAPI.database.hostname }}
+          - name: POSTGRES_PORT
+            value: {{ required "PostgreSQL port number is required" .Values.verwerkingenloggingAPI.database.port | quote }}
+          - name: POSTGRES_DATABASE
+            value: {{ required "PostgreSQL database name is required" .Values.verwerkingenloggingAPI.database.name }}
+          - name: PGSSLMODE
+            value: {{ .Values.verwerkingenloggingAPI.database.sslMode }}
+          - name: PGCONNECT_TIMEOUT
+            value: {{ .Values.verwerkingenloggingAPI.database.connectTimeout | quote }}
+          - name:  DJANGO_SETTINGS_MODULE
+            value: verwerkingenlogging.settings.production
+          - name:   ALLOWED_HOSTS
+            value: "localhost,gemeente-stijns-verwerkingenlogging-api"
+          - name: SECRET_KEY
+            value: {{ randAlphaNum 64 | quote }}
+  {{ end }}

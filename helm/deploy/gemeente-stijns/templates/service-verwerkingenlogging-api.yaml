@@ -1,0 +1,18 @@
+{{ if .Values.verwerkingenloggingAPI.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gemeente-stijns.fullname" . }}-verwerkingenlogging-api
+  labels:
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app: verwerkingenlogging-api
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: http
+  {{ end }}
+

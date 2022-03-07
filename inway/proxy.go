@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -66,6 +67,15 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = context.Destination.Path
 
 		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
+		proxy.ModifyResponse = func(response *http.Response) error {
+			for h, values := range response.Header {
+				for _, value := range values {
+					println(fmt.Sprintf("Get header: %s, value: %s", h, value))
+				}
+			}
+
+			return nil
+		}
 		proxy.Transport = newRoundTripHTTPTransport()
 		proxy.ErrorHandler = i.LogAPIErrors
 		proxy.ServeHTTP(w, r)

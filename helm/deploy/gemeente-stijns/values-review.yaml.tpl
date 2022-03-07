@@ -10,6 +10,9 @@ outway:
     enabled: true
     host: nlx-outway-gemeente-stijns-{{DOMAIN_SUFFIX}}
 
+verwerkingenloggingAPI:
+  enabled: true
+
 ################
 ## Sub-charts ##
 ################

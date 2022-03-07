@@ -35,3 +35,20 @@ dex:
     hosts:
         # abbreviated organization name, because https://gitlab.com/commonground/nlx/nlx/-/blob/master/technical-docs/notes.md#1215-rename-current-organizations
       - dex-vgs-bv-{{DOMAIN_SUFFIX}}
+
+parkeerrechten-admin:
+  enabled: true
+  organizationName: "Vergunningsoftware BV"
+  organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
+  organizationColor: #FEBC2D
+  servicesList:
+    - organization: "Stijns"
+      baseUrl: "http://vergunningsoftware-bv-nlx-outway/12345678901234567890/parkeerrechten"
+  verwerkingenLoggingAPIBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567890/verwerkingenlogging
+  kentekenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567891/basisregister-fictieve-kentekens
+  personenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567891/basisregister-fictieve-personen
+  verwerkingenLoggingApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567890/verwerkingenlogging
+  ingress:
+    enabled: true
+    hosts:
+      - parkeerrechten-admin-vgs-bv-{{DOMAIN_SUFFIX}}
