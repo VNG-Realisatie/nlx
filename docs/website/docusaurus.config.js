@@ -38,9 +38,9 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} VNG Realisatie`,
     },
     algolia: {
-      appId: 'DBDBO7N8NJ',
-      apiKey: '4ad324f65a78b6513d2300c525fa05a9',
-      indexName: 'nlx',
+      appId: 'OZCKSG4LL8',
+      apiKey: 'e0b23250ffedb285810a41e0f2616eb0',
+      indexName: 'docs-nlx',
     },
   },
   presets: [
