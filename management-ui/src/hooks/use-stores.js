@@ -58,4 +58,9 @@ export const useOrderStore = () => {
   return orderStore
 }
 
+export const useAccessProofStore = () => {
+  const { accessProofStore } = useStores()
+  return accessProofStore
+}
+
 export default useStores

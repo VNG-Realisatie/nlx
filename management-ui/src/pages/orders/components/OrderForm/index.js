@@ -16,6 +16,7 @@ import {
 import { observer } from 'mobx-react'
 import DateInput, { isoDateSchema } from '../../../../components/DateInput'
 import {
+  useAccessProofStore,
   useDirectoryServiceStore,
   useOutwayStore,
 } from '../../../../hooks/use-stores'
@@ -48,6 +49,7 @@ const OrderForm = ({
   const { t } = useTranslation()
   const outwayStore = useOutwayStore()
   const directoryServiceStore = useDirectoryServiceStore()
+  const accessProofStore = useAccessProofStore()
 
   useEffect(() => {
     outwayStore.fetchAll()
@@ -112,6 +114,26 @@ const OrderForm = ({
     )
   }
 
+  const isServiceOptionDisabledCheck = (option, selectedOptions) => {
+    const accessProof = accessProofStore.getById(option.value)
+
+    const selectedAccessProofModels = selectedOptions.map((option) =>
+      accessProofStore.getById(option.value),
+    )
+
+    const selectedAccessProofsForSameService = selectedAccessProofModels.find(
+      (selectedAccessProof) => {
+        return (
+          selectedAccessProof.organization.serialNumber ===
+            accessProof.organization.serialNumber &&
+          selectedAccessProof.serviceName === accessProof.serviceName
+        )
+      },
+    )
+
+    return !!selectedAccessProofsForSameService
+  }
+
   return (
     <Formik
       initialValues={combinedInitialValues}
@@ -169,6 +191,7 @@ const OrderForm = ({
             size="xl"
             isMulti
             placeholder={t('Select a service…')}
+            isOptionDisabled={isServiceOptionDisabledCheck}
           >
             <FieldLabel
               label={t('Services')}

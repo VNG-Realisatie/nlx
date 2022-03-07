@@ -32,6 +32,10 @@ class AccessProofStore {
 
     return accessProof
   }
+
+  getById = (id) => {
+    return this._accessProofs.get(id)
+  }
 }
 
 export default AccessProofStore

@@ -12,7 +12,10 @@ test('updating from server', async () => {
 
   let accessProof = await accessProofStore.updateFromServer({
     id: 'abcd',
-    organizationName: 'Organization',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'organization-name',
+    },
     serviceName: 'Service',
     createdAt: '2020-10-01',
     revokedAt: null,
@@ -24,7 +27,10 @@ test('updating from server', async () => {
 
   accessProof = await accessProofStore.updateFromServer({
     id: 'abcd',
-    organizationName: 'Organization',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'organization-name',
+    },
     serviceName: 'Service',
     createdAt: '2020-10-01',
     revokedAt: '2020-10-02',
@@ -33,4 +39,23 @@ test('updating from server', async () => {
   // existing model should be updated
   expect(accessProofStore.accessProofs).toHaveLength(1)
   expect(accessProof).toBeInstanceOf(AccessProofModel)
+})
+
+test('get model by id', () => {
+  const accessProofStore = new AccessProofStore()
+
+  expect(accessProofStore.getById('42')).toBeUndefined()
+
+  accessProofStore.updateFromServer({
+    id: '42',
+    organization: {
+      serialNumber: '00000000000000000001',
+      name: 'organization-name',
+    },
+    serviceName: 'service-name',
+    createdAt: '2020-10-01',
+    revokedAt: null,
+  })
+
+  expect(accessProofStore.getById('42')).toBeInstanceOf(AccessProofModel)
 })

@@ -4,7 +4,7 @@
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { waitFor, fireEvent, screen } from '@testing-library/react'
-import selectEvent from 'react-select-event'
+import selectEvent, { openMenu } from 'react-select-event'
 import { renderWithProviders } from '../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../stores'
 import { DirectoryApi, ManagementApi } from '../../../../api'
@@ -200,5 +200,158 @@ test('the form values of the onSubmitHandler', async () => {
       validUntil: new Date('2021-01-31T00:00:00.000Z'),
       accessProofIds: ['1'],
     }),
+  )
+})
+
+test('access proofs for which the same service has already been selected should be disabled', async () => {
+  const onSubmitHandlerMock = jest.fn()
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'outway-a',
+        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+      },
+      {
+        name: 'outway-b',
+        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yd=',
+      },
+    ],
+  })
+
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'organization-a',
+        },
+        serviceName: 'service-a',
+        accessStates: [
+          {
+            accessRequest: {
+              id: '1',
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint:
+                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+            },
+            accessProof: {
+              id: '1',
+              organization: {
+                serialNumber: '00000000000000000001',
+                name: 'organization-a',
+              },
+              serviceName: 'service-a',
+            },
+          },
+          {
+            accessRequest: {
+              id: '2',
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint:
+                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yd=',
+            },
+            accessProof: {
+              id: '2',
+              organization: {
+                serialNumber: '00000000000000000001',
+                name: 'organization-a',
+              },
+              serviceName: 'service-a',
+            },
+          },
+        ],
+      },
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'organization-a',
+        },
+        serviceName: 'service-b',
+        accessStates: [
+          {
+            accessRequest: {
+              id: '3',
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint:
+                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+            },
+            accessProof: {
+              id: '3',
+              organization: {
+                serialNumber: '00000000000000000001',
+                name: 'organization-a',
+              },
+              serviceName: 'service-b',
+            },
+          },
+        ],
+      },
+    ],
+  })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+    directoryApiClient,
+  })
+
+  const { getByLabelText, container } = renderWithProviders(
+    <StoreProvider rootStore={rootStore}>
+      <OrderForm
+        submitButtonText="Add order"
+        onSubmitHandler={onSubmitHandlerMock}
+      />
+    </StoreProvider>,
+  )
+
+  // open the dropdown and verify there are no disabled options
+  openMenu(getByLabelText(/Services/))
+
+  await waitFor(() => {
+    expect(
+      container.querySelector('.ReactSelect__menu-list'),
+    ).toBeInTheDocument()
+  })
+
+  let options = container.querySelectorAll('.ReactSelect__option')
+  expect(options).toHaveLength(3)
+
+  for (const option of options) {
+    expect(option.getAttribute('aria-disabled')).toEqual('false')
+  }
+
+  // select an option
+  await selectEvent.select(
+    getByLabelText(/Services/),
+    /service-a - organization-a \(00000000000000000001\) - via outway-b \(h\+jpuLAMFzM09tOZpb0Ehslhje4S\/IsIxSWsS4E16Yd=\)/,
+  )
+
+  // open the dropdown and verify the remaining options
+  openMenu(getByLabelText(/Services/))
+
+  await waitFor(() => {
+    expect(
+      container.querySelector('.ReactSelect__menu-list'),
+    ).toBeInTheDocument()
+  })
+
+  options = container.querySelectorAll('.ReactSelect__option')
+  expect(options).toHaveLength(2)
+
+  const optionServiceA = options[0]
+  const optionServiceB = options[1]
+
+  expect(optionServiceA.getAttribute('aria-disabled')).toEqual('true')
+  expect(optionServiceA.innerHTML).toEqual(
+    'service-a - organization-a (00000000000000000001) - via outway-a (h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=)',
+  )
+
+  expect(optionServiceB.getAttribute('aria-disabled')).toEqual('false')
+  expect(optionServiceB.innerHTML).toEqual(
+    'service-b - organization-a (00000000000000000001) - via outway-a (h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=)',
   )
 })
