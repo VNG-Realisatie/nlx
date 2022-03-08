@@ -1,0 +1,10 @@
+{
+  "CN": "outway-2.organization-a.nlx.local",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "outway-2.organization-a.nlx.local"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "CN": "outway-2.organization-a.nlx.local",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "outway-2.organization-a.nlx.local"
+  ],
+  "serialnumber":"12345678901234567890",
+  "names": [
+    {
+      "O": "Gemeente Stijns",
+      "C": "NL"
+    }
+  ]
+}
