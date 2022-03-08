@@ -12,9 +12,10 @@ service Outway {
 
 message SignOrderClaimRequest {
     string delegatee = 1;
-    string orderReference = 2;
-    AccessProof accessProof = 3;
-    google.protobuf.Timestamp expiresAt = 4;
+    string delegateePublicKeyFingerprint = 2;
+    string orderReference = 3;
+    AccessProof accessProof = 4;
+    google.protobuf.Timestamp expiresAt = 5;
 }
 
 message SignOrderClaimResponse {

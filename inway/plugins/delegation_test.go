@@ -41,11 +41,12 @@ func TestDelegationPlugin(t *testing.T) {
 	require.NoError(t, err)
 
 	validClaim, err := getJWTAsSignedString(&jwtArgs{
-		delegatorCert:               delegatorCertBundle,
-		delegatorSerialNumber:       delegatorCertBundle.Certificate().Subject.SerialNumber,
-		delegateeSerialNumber:       delegateeCertBundle.Certificate().Subject.SerialNumber,
-		serviceProviderSerialNumber: serviceProviderSerialNumber,
-		serviceName:                 "mock-service",
+		delegatorCert:                 delegatorCertBundle,
+		delegatorSerialNumber:         delegatorCertBundle.Certificate().Subject.SerialNumber,
+		delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
+		delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
+		serviceProviderSerialNumber:   serviceProviderSerialNumber,
+		serviceName:                   "mock-service",
 	})
 	assert.Nil(t, err)
 
@@ -83,6 +84,38 @@ func TestDelegationPlugin(t *testing.T) {
 			wantMessage:           "nlx-inway: no access\n",
 			wantDelegationSuccess: false,
 		},
+		"delegatee_pub_key_fingerprint_not_found_in_order": {
+			args: &args{
+				service: &plugins.Service{
+					Name: "mock-service",
+					Grants: []*plugins.Grant{
+						{
+							OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
+							PublicKeyPEM:             certPEM,
+							PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
+						},
+					},
+				},
+				claim: func() string {
+					claim, err := getJWTAsSignedString(&jwtArgs{
+						delegatorCert:                 delegatorCertBundle,
+						delegatorSerialNumber:         delegatorCertBundle.Certificate().Subject.SerialNumber,
+						delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
+						delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
+						serviceProviderSerialNumber:   serviceProviderSerialNumber,
+						serviceName:                   "mock-service",
+					})
+					require.NoError(t, err)
+
+					return claim
+				}(),
+				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
+				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
+			},
+			wantStatusCode:        http.StatusUnauthorized,
+			wantMessage:           "nlx-inway: no access\n",
+			wantDelegationSuccess: false,
+		},
 		"delegatee_does_not_have_access_to_service": {
 			args: &args{
 				service: &plugins.Service{
@@ -91,7 +124,7 @@ func TestDelegationPlugin(t *testing.T) {
 				},
 				claim:                         validClaim,
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
-				delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
+				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusUnauthorized,
 			wantMessage:           "nlx-inway: no access\n",
@@ -111,7 +144,7 @@ func TestDelegationPlugin(t *testing.T) {
 				},
 				claim:                         validClaim,
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
-				delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
+				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusUnauthorized,
 			wantMessage:           "nlx-inway: no access\n",
@@ -131,7 +164,7 @@ func TestDelegationPlugin(t *testing.T) {
 				},
 				claim:                         validClaim,
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
-				delegateePublicKeyFingerprint: delegatorCertBundle.PublicKeyFingerprint(),
+				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusOK,
 			wantDelegationSuccess: true,
@@ -183,17 +216,19 @@ func TestDelegationPlugin(t *testing.T) {
 }
 
 type jwtArgs struct {
-	delegatorCert               *common_tls.CertificateBundle
-	delegatorSerialNumber       string
-	delegateeSerialNumber       string
-	serviceProviderSerialNumber string
-	serviceName                 string
+	delegatorCert                 *common_tls.CertificateBundle
+	delegatorSerialNumber         string
+	delegateeSerialNumber         string
+	delegateePublicKeyFingerprint string
+	serviceProviderSerialNumber   string
+	serviceName                   string
 }
 
 func getJWTAsSignedString(args *jwtArgs) (string, error) {
 	claims := delegation.JWTClaims{
-		Delegatee:      args.delegateeSerialNumber,
-		OrderReference: "order-reference",
+		Delegatee:                     args.delegateeSerialNumber,
+		DelegateePublicKeyFingerprint: args.delegateePublicKeyFingerprint,
+		OrderReference:                "order-reference",
 		AccessProof: &delegation.AccessProof{
 			OrganizationSerialNumber: args.delegatorSerialNumber,
 			ServiceName:              args.serviceName,

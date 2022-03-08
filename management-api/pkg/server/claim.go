@@ -62,16 +62,6 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 		return nil, status.Errorf(codes.NotFound, "order with reference '%s' and organization serial number '%s' and service name '%s' not found", req.OrderReference, md.OrganizationSerialNumber, req.ServiceName)
 	}
 
-	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(order.PublicKeyPEM))
-	if err != nil {
-		s.logger.Error("invalid public key format", zap.Error(err))
-		return nil, status.Error(codes.Internal, "invalid public key format")
-	}
-
-	if fingerprint != md.PublicKeyFingerprint {
-		return nil, status.Errorf(codes.Unauthenticated, "invalid public key for order")
-	}
-
 	if order.RevokedAt.Valid {
 		return nil, status.Errorf(codes.Unauthenticated, errMessageOrderRevoked)
 	}
@@ -84,6 +74,12 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 
 	if expiresAt.After(order.ValidUntil) {
 		expiresAt = order.ValidUntil
+	}
+
+	delegateeFingerprint, err := tls.PemPublicKeyFingerprint([]byte(order.PublicKeyPEM))
+	if err != nil {
+		s.logger.Error("invalid public key format", zap.Error(err))
+		return nil, status.Error(codes.Internal, "invalid public key format")
 	}
 
 	outways, err := s.configDatabase.GetOutwaysByPublicKeyFingerprint(ctx, outgoingAccessRequest.PublicKeyFingerprint)
@@ -99,8 +95,9 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}
 
 	signedOrderClaimResp, err := outwayClient.SignOrderClaim(ctx, &outwayapi.SignOrderClaimRequest{
-		Delegatee:      md.OrganizationSerialNumber,
-		OrderReference: req.OrderReference,
+		Delegatee:                     md.OrganizationSerialNumber,
+		DelegateePublicKeyFingerprint: delegateeFingerprint,
+		OrderReference:                req.OrderReference,
 		AccessProof: &outwayapi.AccessProof{
 			ServiceName:              outgoingAccessRequest.ServiceName,
 			OrganizationSerialNumber: s.orgCert.GetOrganizationInfo().SerialNumber,

@@ -56,7 +56,6 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 
 		st, ok := status.FromError(err)
 		if ok {
-			println(st.Message())
 			if st.Message() == errMessageOrderRevoked {
 				return nil, status.Errorf(codes.Unauthenticated, errMessageOrderRevoked)
 			}

@@ -29,17 +29,6 @@ import (
 func TestRequestClaim(t *testing.T) {
 	now := time.Now()
 
-	arbitraryPublicKeyPEM := `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArN5xGkM73tJsCpKny59e
-5lXNRY+eT0sbWyEGsR1qIPRKmLSiRHl3xMsovn5mo6jN3eeK/Q4wKd6Ae5XGzP63
-pTG6U5KVVB74eQxSFfV3UEOrDaJ78X5mBZO+Ku21V2QFr44tvMh5IZDX3RbMB/4K
-ad6sapmSF00HWrqTVMkrEsZ98DTb5nwGLh3kISnct4tLyVSpsl9s1rtkSgGUcs1T
-IvWxS2D2mOsSL1HRdUNcFQmzchbfG87kXPvicoOISAZDJKDqWp3iuH0gJpQ+XMBf
-mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
-4wIDAQAB
------END PUBLIC KEY-----
-`
-
 	tests := map[string]struct {
 		setup   func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context
 		request *external.RequestClaimRequest
@@ -106,6 +95,7 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 								},
 							},
 						},
+						ValidUntil: time.Now().Add(time.Hour),
 					}, nil)
 
 				return ctx
@@ -116,42 +106,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
 			wantErr: status.Error(codes.Internal, "invalid public key format"),
-		},
-		"when_public_key_fingerprint_does_not_equal_metadata_fingerprint": {
-			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
-				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
-
-				// nolint:dupl // this is a test
-				mocks.db.
-					EXPECT().
-					GetOutgoingOrderByReference(ctx, "order-reference").
-					Return(&database.OutgoingOrder{
-						Delegatee:    certBundle.Certificate().Subject.SerialNumber,
-						PublicKeyPEM: arbitraryPublicKeyPEM,
-						ValidUntil:   now.Add(4 * time.Hour),
-						OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{
-							{
-								AccessProof: &database.AccessProof{
-									OutgoingAccessRequest: &database.OutgoingAccessRequest{
-										Organization: database.Organization{
-											SerialNumber: "00000000000000000001",
-										},
-										ServiceName:          "service-name",
-										PublicKeyFingerprint: "public-key-fingerprint",
-									},
-								},
-							},
-						},
-					}, nil)
-
-				return ctx
-			},
-			request: &external.RequestClaimRequest{
-				OrderReference:                  "order-reference",
-				ServiceName:                     "service-name",
-				ServiceOrganizationSerialNumber: "00000000000000000001",
-			},
-			wantErr: status.Error(codes.Unauthenticated, "invalid public key for order"),
 		},
 		"when_order_is revoked": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -358,8 +312,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				mocks.oc.
 					EXPECT().
 					SignOrderClaim(ctx, &outwayapi.SignOrderClaimRequest{
-						Delegatee:      "00000000000000000002",
-						OrderReference: "order-reference",
+						Delegatee:                     "00000000000000000002",
+						DelegateePublicKeyFingerprint: requesterCertBundle.PublicKeyFingerprint(),
+						OrderReference:                "order-reference",
 						AccessProof: &outwayapi.AccessProof{
 							ServiceName:              "service-name",
 							OrganizationSerialNumber: "00000000000000000001",
@@ -426,8 +381,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				mocks.oc.
 					EXPECT().
 					SignOrderClaim(ctx, &outwayapi.SignOrderClaimRequest{
-						Delegatee:      "00000000000000000002",
-						OrderReference: "order-reference",
+						Delegatee:                     "00000000000000000002",
+						DelegateePublicKeyFingerprint: requesterCertBundle.PublicKeyFingerprint(),
+						OrderReference:                "order-reference",
 						AccessProof: &outwayapi.AccessProof{
 							ServiceName:              "service-name",
 							OrganizationSerialNumber: "00000000000000000001",
@@ -498,8 +454,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				mocks.oc.
 					EXPECT().
 					SignOrderClaim(ctx, &outwayapi.SignOrderClaimRequest{
-						Delegatee:      "00000000000000000002",
-						OrderReference: "order-reference",
+						Delegatee:                     "00000000000000000002",
+						DelegateePublicKeyFingerprint: requesterCertBundle.PublicKeyFingerprint(),
+						OrderReference:                "order-reference",
 						AccessProof: &outwayapi.AccessProof{
 							ServiceName:              "service-name",
 							OrganizationSerialNumber: "00000000000000000001",

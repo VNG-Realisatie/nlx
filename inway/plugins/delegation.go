@@ -17,10 +17,11 @@ import (
 )
 
 var (
-	ErrServiceNotInClaims                   = errors.New("service is not in claims")
-	ErrDelegatorDoesNotHaveAccess           = errors.New("delegator does have access")
-	ErrRequestingOrganizationIsNotDelegatee = errors.New("requesting organization is not the delegatee")
-	ErrCannotParsePublicKeyFromPEM          = errors.New("failed to parse PEM block containing the public key")
+	ErrServiceNotInClaims                             = errors.New("service is not in claims")
+	ErrDelegatorDoesNotHaveAccess                     = errors.New("delegator does have access")
+	ErrRequestingOrganizationIsNotDelegatee           = errors.New("requesting organization is not the delegatee")
+	ErrRequestingOrganizationPublicKeyNotFoundInOrder = errors.New("requesting organization public key is not the public key found in order")
+	ErrCannotParsePublicKeyFromPEM                    = errors.New("failed to parse PEM block containing the public key")
 )
 
 type DelegationPlugin struct {
@@ -44,6 +45,10 @@ func (d *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		_, err := jwt.ParseWithClaims(claim, claims, func(token *jwt.Token) (interface{}, error) {
 			if claims.Delegatee != context.AuthInfo.OrganizationSerialNumber {
 				return nil, ErrRequestingOrganizationIsNotDelegatee
+			}
+
+			if claims.DelegateePublicKeyFingerprint != context.AuthInfo.PublicKeyFingerprint {
+				return nil, ErrRequestingOrganizationPublicKeyNotFoundInOrder
 			}
 
 			for _, grant := range context.Destination.Service.Grants {
@@ -87,6 +92,13 @@ func handleJWTValidationError(context *Context, claims *delegation.JWTClaims, er
 	}
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
+		context.Logger.Info("requesting organization public key is not the public key found in order", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
+		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+
+		return
+	}
+
+	if errors.Is(validationError.Inner, ErrRequestingOrganizationPublicKeyNotFoundInOrder) {
 		context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
 		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
 

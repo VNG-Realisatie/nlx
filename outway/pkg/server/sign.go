@@ -26,8 +26,9 @@ func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderCl
 	}
 
 	signedClaim, err := s.signFunction(s.orgCert.PrivateKey(), &delegation.JWTClaims{
-		Delegatee:      req.Delegatee,
-		OrderReference: req.OrderReference,
+		Delegatee:                     req.Delegatee,
+		DelegateePublicKeyFingerprint: req.DelegateePublicKeyFingerprint,
+		OrderReference:                req.OrderReference,
 		AccessProof: &delegation.AccessProof{
 			ServiceName:              req.AccessProof.ServiceName,
 			OrganizationSerialNumber: req.AccessProof.OrganizationSerialNumber,

@@ -33,12 +33,13 @@ func TestSignOrderClaim(t *testing.T) {
 	}{
 		"invalid_expires_at": {
 			request: &outwayapi.SignOrderClaimRequest{
-				Delegatee:      "00000000000000000001",
-				OrderReference: "order-reference",
+				Delegatee:                     "00000000000000000001",
+				DelegateePublicKeyFingerprint: "public-key-fingerprint",
+				OrderReference:                "order-reference",
 				AccessProof: &outwayapi.AccessProof{
 					ServiceName:              "mock-service",
 					OrganizationSerialNumber: "00000000000000000002",
-					PublicKeyFingerprint:     "public-key-fingerprint",
+					PublicKeyFingerprint:     "public-key-fingerprint-2",
 				},
 				ExpiresAt: nil,
 			},
@@ -49,12 +50,13 @@ func TestSignOrderClaim(t *testing.T) {
 				return "", fmt.Errorf("arbitrary error")
 			},
 			request: &outwayapi.SignOrderClaimRequest{
-				Delegatee:      "00000000000000000001",
-				OrderReference: "order-reference",
+				Delegatee:                     "00000000000000000001",
+				DelegateePublicKeyFingerprint: "public-key-fingerprint",
+				OrderReference:                "order-reference",
 				AccessProof: &outwayapi.AccessProof{
 					ServiceName:              "mock-service",
 					OrganizationSerialNumber: "00000000000000000002",
-					PublicKeyFingerprint:     "public-key-fingerprint",
+					PublicKeyFingerprint:     "public-key-fingerprint-2",
 				},
 				ExpiresAt: timestamppb.New(now),
 			},
@@ -65,12 +67,13 @@ func TestSignOrderClaim(t *testing.T) {
 				return mockSignedClaim, nil
 			},
 			request: &outwayapi.SignOrderClaimRequest{
-				Delegatee:      "00000000000000000001",
-				OrderReference: "order-reference",
+				Delegatee:                     "00000000000000000001",
+				DelegateePublicKeyFingerprint: "public-key-fingerprint",
+				OrderReference:                "order-reference",
 				AccessProof: &outwayapi.AccessProof{
 					ServiceName:              "mock-service",
 					OrganizationSerialNumber: "00000000000000000002",
-					PublicKeyFingerprint:     "public-key-fingerprint",
+					PublicKeyFingerprint:     "public-key-fingerprint-2",
 				},
 				ExpiresAt: timestamppb.New(now),
 			},
