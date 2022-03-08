@@ -8,14 +8,21 @@ if [ "${1}" = "-f" ]; then
   FORCE=1
 fi
 
-PKIS="shared organization-a organization-b organization-c"
+PKIS="external internal/organization-a internal/organization-b internal/organization-c"
 
 for PKI in ${PKIS}; do
   PKI_DIR="${BASE_DIR}/${PKI}"
 
-  for CERT_DIR in $(find "${PKI_DIR}/certs"/* -maxdepth 0 -type d -print); do
+  for CERT_DIR in $(find "${PKI_DIR}/certs"/* -maxdepth 1 -type d -print); do
     CERT="$(basename "${CERT_DIR}")"
+
+    # Skip when no certs found in directory
+    if [ ! -f "${CERT_DIR}/csr.json" ]; then
+      continue
+    fi
+
     if [ -f "${CERT_DIR}/cert.pem" ] && [ ${FORCE} == 0 ]; then
+      echo "Skipping ${CERT_DIR} because -f (force) parameter is not specified"
       continue
     fi
 
