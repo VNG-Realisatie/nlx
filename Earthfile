@@ -13,6 +13,7 @@ proto:
     BUILD +proto-management-api-client
     BUILD +proto-txlog-api
     BUILD +proto-inway-test
+    BUILD +proto-outway
 
 mocks:
     BUILD +mocks-management-api
