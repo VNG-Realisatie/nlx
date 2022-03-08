@@ -154,13 +154,13 @@ test('requesting access to a service in the directory', async () => {
   await rootStore.directoryServicesStore.requestAccess(
     directoryService.organization.serialNumber,
     directoryService.serviceName,
-    'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+    'public-key-pem',
   )
 
   expect(rootStore.outgoingAccessRequestStore.create).toHaveBeenCalledWith(
     '00000000000000000001',
     'service',
-    'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+    'public-key-pem',
   )
 })
 

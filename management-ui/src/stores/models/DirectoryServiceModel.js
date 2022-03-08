@@ -116,11 +116,11 @@ class DirectoryServiceModel {
     )
   }
 
-  requestAccess = flow(function* requestAccess(publicKeyFingerprint) {
+  requestAccess = flow(function* requestAccess(publicKeyPEM) {
     yield this.directoryServicesStore.requestAccess(
       this.organization.serialNumber,
       this.serviceName,
-      publicKeyFingerprint,
+      publicKeyPEM,
     )
 
     yield this.fetch()

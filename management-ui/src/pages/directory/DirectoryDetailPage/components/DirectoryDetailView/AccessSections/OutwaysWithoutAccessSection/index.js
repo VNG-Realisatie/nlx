@@ -26,6 +26,16 @@ const OutwaysWithoutAccessSection = ({
       (publicKeyFingerprint) => !service.hasAccess(publicKeyFingerprint),
     )
 
+  const publicKeyFingerprintsToPEMMap =
+    publicKeyFingerprintsWithoutAccess.reduce((previousValue, currentValue) => {
+      const outwaysForPublicKeyFingerprint =
+        outwayStore.getByPublicKeyFingerprint(currentValue)
+      previousValue[`${currentValue}`] =
+        outwaysForPublicKeyFingerprint[0].publicKeyPEM
+
+      return previousValue
+    }, {})
+
   return publicKeyFingerprintsWithoutAccess.length < 1 ? (
     <Header title={t('Outways without access')} label={t('None')} />
   ) : (
@@ -40,6 +50,9 @@ const OutwaysWithoutAccessSection = ({
               <Row
                 key={publicKeyFingerprint}
                 publicKeyFingerprint={publicKeyFingerprint}
+                publicKeyPEM={
+                  publicKeyFingerprintsToPEMMap[`${publicKeyFingerprint}`]
+                }
                 service={service}
                 outways={outwayStore.getByPublicKeyFingerprint(
                   publicKeyFingerprint,

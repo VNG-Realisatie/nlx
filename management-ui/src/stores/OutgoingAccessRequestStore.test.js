@@ -40,6 +40,7 @@ test('creating an outgoing access request', async () => {
   const outgoingAccessRequest = await outgoingAccessRequestStore.create(
     '00000000000000000001',
     'service-name',
+    'public-key-pem',
   )
 
   expect(
@@ -48,6 +49,7 @@ test('creating an outgoing access request', async () => {
     body: {
       organizationSerialNumber: '00000000000000000001',
       serviceName: 'service-name',
+      publicKeyPEM: 'public-key-pem',
     },
   })
 

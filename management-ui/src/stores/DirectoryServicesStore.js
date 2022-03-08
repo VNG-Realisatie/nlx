@@ -72,15 +72,11 @@ class DirectoryServicesStore {
     )
   }
 
-  async requestAccess(
-    organizationSerialNumber,
-    serviceName,
-    publicKeyFingerprint,
-  ) {
+  async requestAccess(organizationSerialNumber, serviceName, publicKeyPEM) {
     return this._rootStore.outgoingAccessRequestStore.create(
       organizationSerialNumber,
       serviceName,
-      publicKeyFingerprint,
+      publicKeyPEM,
     )
   }
 

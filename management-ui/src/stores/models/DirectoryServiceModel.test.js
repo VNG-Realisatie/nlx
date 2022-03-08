@@ -159,12 +159,12 @@ test('requesting access to a service', async () => {
 
   jest.spyOn(rootStore.directoryServicesStore, 'fetch').mockResolvedValue(null)
 
-  await directoryService.requestAccess('public-key-fingerprint')
+  await directoryService.requestAccess('public-key-pem')
 
   expect(rootStore.directoryServicesStore.requestAccess).toHaveBeenCalledWith(
     '00000000000000000001',
     'service',
-    'public-key-fingerprint',
+    'public-key-pem',
   )
 
   expect(rootStore.directoryServicesStore.fetch).toHaveBeenCalledWith(

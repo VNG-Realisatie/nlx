@@ -15,6 +15,7 @@ import RequestAccessDetails from '../../components/RequestAccessDetails'
 
 const Row = ({
   publicKeyFingerprint,
+  publicKeyPEM,
   outways,
   service,
   onShowConfirmRequestAccessModalHandler,
@@ -37,14 +38,14 @@ const Row = ({
     onShowConfirmRequestAccessModalHandler()
 
     if (await confirmRequest()) {
-      await service.requestAccess(publicKeyFingerprint)
+      await service.requestAccess(publicKeyPEM)
     }
 
     onHideConfirmRequestAccessModalHandler()
   }
 
   const onRetryRequestAccess = () => {
-    service.retryRequestAccess(publicKeyFingerprint)
+    service.retryRequestAccess(publicKeyPEM)
   }
 
   const { accessRequest, accessProof } =
@@ -74,6 +75,7 @@ const Row = ({
 
 Row.propTypes = {
   publicKeyFingerprint: string,
+  publicKeyPEM: string,
   outways: arrayOf(instanceOf(OutwayModel)),
   service: instanceOf(DirectoryServiceModel),
   onShowConfirmRequestAccessModalHandler: func,

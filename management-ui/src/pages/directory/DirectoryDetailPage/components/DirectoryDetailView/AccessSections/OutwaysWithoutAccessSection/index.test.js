@@ -22,10 +22,12 @@ test('Outways without access section', async () => {
       {
         name: 'outway-1',
         publicKeyFingerprint: 'public-key-fingerprint-1',
+        publicKeyPEM: 'public-key-pem-1',
       },
       {
         name: 'outway-2',
         publicKeyFingerprint: 'public-key-fingerprint-1',
+        publicKeyPEM: 'public-key-pem-2',
       },
     ],
   })
@@ -90,9 +92,7 @@ test('Outways without access section', async () => {
   fireEvent.click(await screen.findByText('Send'))
 
   await waitFor(() => {
-    expect(service.requestAccess).toHaveBeenCalledWith(
-      'public-key-fingerprint-1',
-    )
+    expect(service.requestAccess).toHaveBeenCalledWith('public-key-pem-1')
   })
   expect(onHideConfirmRequestAccessModalHandler).toHaveBeenCalledTimes(1)
 })
