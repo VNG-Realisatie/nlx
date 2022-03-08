@@ -9,6 +9,10 @@ spec:
     {{- include "nlx-outway.selectorLabels" . | nindent 4 }}
   type: {{ .Values.service.type }}
   ports:
+    - name: https
+      port: 8444
+      targetPort: https
+      protocol: TCP
   {{- if .Values.https.enabled }}
     - name: https
       port: {{ .Values.service.httpsPort }}

@@ -186,6 +186,16 @@ ca:
         - gemeente-stijns-auth-service
       issuerRef:
         name: shared
+    organization-outway-2:
+      subject:
+        organizations:
+          - Gemeente Stijns
+        serialNumber: "12345678901234567890"
+      commonName: gemeente-stijns-nlx-outway-2
+      dnsNames:
+        - gemeente-stijns-nlx-outway-2
+      issuerRef:
+        name: shared
     inway:
       commonName: gemeente-stijns-nlx-inway
       dnsNames:
@@ -196,6 +206,12 @@ ca:
       commonName: gemeente-stijns-nlx-outway
       dnsNames:
         - gemeente-stijns-nlx-outway
+      issuerRef:
+        name: gemeente-stijns
+    outway-2:
+      commonName: gemeente-stijns-nlx-outway-2
+      dnsNames:
+        - gemeente-stijns-nlx-outway-2
       issuerRef:
         name: gemeente-stijns
     management-api:
@@ -286,6 +302,24 @@ nlx-outway:
       existingSecret: gemeente-stijns-organization-tls
     internal:
       existingSecret: gemeente-stijns-outway-tls
+
+nlx-outway-2:
+  config:
+    directoryHostname: shared-nlx-directory-api
+    managementAPI:
+      address: gemeente-stijns-nlx-management-api:443
+  transactionLog:
+    hostname: gemeente-stijns-postgresql
+    database: "gemeente-stijns-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  tls:
+    organization:
+      existingSecret: gemeente-stijns-organization-outway-2-tls
+    internal:
+      existingSecret: gemeente-stijns-outway-2-tls
 
 nlx-inway:
   config:
