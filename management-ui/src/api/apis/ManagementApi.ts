@@ -168,6 +168,8 @@ export interface ManagementRejectIncomingAccessRequestRequest {
 export interface ManagementRetrieveClaimForOrderRequest {
     orderReference?: string;
     orderOrganizationSerialNumber?: string;
+    serviceOrganizationSerialNumber?: string;
+    serviceName?: string;
 }
 
 export interface ManagementRevokeAccessGrantRequest {
@@ -920,6 +922,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
         if (requestParameters.orderOrganizationSerialNumber !== undefined) {
             queryParameters['orderOrganizationSerialNumber'] = requestParameters.orderOrganizationSerialNumber;
+        }
+
+        if (requestParameters.serviceOrganizationSerialNumber !== undefined) {
+            queryParameters['serviceOrganizationSerialNumber'] = requestParameters.serviceOrganizationSerialNumber;
+        }
+
+        if (requestParameters.serviceName !== undefined) {
+            queryParameters['serviceName'] = requestParameters.serviceName;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
