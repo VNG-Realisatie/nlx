@@ -304,7 +304,7 @@ nlx-outway:
       existingSecret: gemeente-stijns-outway-tls
 
 nlx-outway-2:
-  fullnameOverride: "nlx-outway-2"
+  nameOverride: "nlx-outway-2"
   config:
     directoryHostname: shared-nlx-directory-api
     managementAPI:
