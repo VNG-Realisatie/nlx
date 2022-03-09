@@ -1,6 +1,7 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
 import { default as logger } from "../../debug";
+import { getOutwayByName } from "../../utils/outway";
 import { When } from "@cucumber/cucumber";
 import fetch from "cross-fetch";
 import pWaitFor from "p-wait-for";
@@ -15,9 +16,10 @@ const isNotBadRequest = async (
 };
 
 When(
-  "the default Outway of {string} calls the service {string} from {string}",
+  "the Outway {string} of {string} calls the service {string} from {string}",
   async function (
     this: CustomWorld,
+    outwayName: string,
     orgNameConsumer: string,
     serviceName: string,
     orgNameProvider: string
@@ -26,10 +28,11 @@ When(
 
     const { scenarioContext } = this;
 
-    const orgConsumer = getOrgByName(orgNameConsumer);
     const orgProvider = getOrgByName(orgNameProvider);
 
-    const url = `${orgConsumer.defaultOutway.address}/${orgProvider.serialNumber}/${serviceName}/get`;
+    const outway = await getOutwayByName(orgNameConsumer, outwayName);
+
+    const url = `${outway.listenAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     // wait until the Outway has had the time to update its internal services list
     await pWaitFor.default(async () => await isNotBadRequest(url), {
@@ -44,9 +47,10 @@ When(
 );
 
 When(
-  "the default Outway of {string} calls the service {string} of {string} via the order of {string} with reference {string}",
+  "the Outway {string} of {string} calls the service {string} of {string} via the order of {string} with reference {string}",
   async function (
     this: CustomWorld,
+    outwayName: string,
     orgNameConsumer: string,
     serviceName: string,
     orgNameServiceProvider: string,
@@ -58,11 +62,12 @@ When(
 
     const { scenarioContext } = this;
 
-    const orgConsumer = getOrgByName(orgNameConsumer);
     const orgProvider = getOrgByName(orgNameServiceProvider);
     const orgDelegator = getOrgByName(orgNameDelegator);
 
-    const url = `${orgConsumer.defaultOutway.address}/${orgProvider.serialNumber}/${serviceName}/get`;
+    const outway = await getOutwayByName(orgNameConsumer, outwayName);
+
+    const url = `${outway.listenAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     const headers = {
       "X-NLX-Request-Delegator": orgDelegator.serialNumber,

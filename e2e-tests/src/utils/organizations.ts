@@ -7,7 +7,6 @@ export interface Organization {
     name: string;
     address: string;
   };
-  outways: Outways;
   management: {
     basicAuth: boolean;
     url: string;
@@ -22,15 +21,6 @@ export interface Organization {
 
 interface Organizations {
   [key: string]: Organization;
-}
-
-interface Outway {
-  name: string;
-  address: string;
-}
-
-interface Outways {
-  [name: string]: Outway;
 }
 
 const convertToBool = (
@@ -52,15 +42,6 @@ export const organizations: Organizations = {
       address:
         process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_ADDRESS ||
         "inway.organization-a.nlx.local:7913",
-    },
-    outways: {
-      [process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a"]: {
-        name:
-          process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a",
-        address:
-          process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_ADDRESS ||
-          "http://127.0.0.1:7917",
-      },
     },
     management: {
       basicAuth: convertToBool(
@@ -89,10 +70,6 @@ export const organizations: Organizations = {
         process.env.E2E_RVRD_DEFAULT_INWAY_ADDRESS ||
         "inway.organization-b.nlx.local:7923",
     },
-    defaultOutway: {
-      name: process.env.E2E_RVRD_DEFAULT_OUTWAY_NAME || "",
-      address: process.env.E2E_RVRD_DEFAULT_OUTWAY_ADDRESS || "",
-    },
     management: {
       basicAuth: convertToBool(
         process.env.E2E_RVRD_MANAGEMENT_BASIC_AUTH,
@@ -115,14 +92,6 @@ export const organizations: Organizations = {
       name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "",
       address:
         process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_ADDRESS || "",
-    },
-    defaultOutway: {
-      name:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_NAME ||
-        "outway-org-c",
-      address:
-        process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_ADDRESS ||
-        "http://127.0.0.1:7937",
     },
     management: {
       basicAuth: convertToBool(

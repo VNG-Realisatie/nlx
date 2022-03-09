@@ -1,4 +1,5 @@
 import { getOrgByName, Organization } from "./organizations";
+import { getOutwayByName } from "./outway";
 import { CustomWorld } from "../support/custom-world";
 import {
   ManagementDirectoryService,
@@ -102,7 +103,8 @@ export const getAccessToService = async (
   world: CustomWorld,
   serviceConsumerOrgName: string,
   serviceName: string,
-  serviceProviderOrgName: string
+  serviceProviderOrgName: string,
+  outwayName: string
 ) => {
   debug(
     `${serviceConsumerOrgName} is requesting access to service ${serviceName} of ${serviceProviderOrgName}`
@@ -123,20 +125,7 @@ export const getAccessToService = async (
     });
   assert.equal(createServiceResponse?.name, uniqueServiceName);
 
-  // retrieve public key fingerprint of the default Outway
-  const outwaysResponse =
-    await serviceConsumer.apiClients.management?.managementListOutways();
-  assert.equal(!!outwaysResponse?.outways?.length, true);
-
-  const defaultOutway = outwaysResponse?.outways?.find(
-    (outway) => outway.name === serviceConsumer.defaultOutway.name
-  );
-
-  if (!defaultOutway) {
-    throw new Error(
-      `unable to find the default Outway for ${serviceConsumerOrgName}`
-    );
-  }
+  const outway = await getOutwayByName(serviceConsumerOrgName, outwayName);
 
   // request access to new service
   const createAccessRequestResponse =
@@ -144,7 +133,7 @@ export const getAccessToService = async (
       body: {
         organizationSerialNumber: serviceProvider.serialNumber,
         serviceName: uniqueServiceName,
-        publicKeyPEM: defaultOutway?.publicKeyPEM,
+        publicKeyPEM: outway.publicKeyPEM,
       },
     });
   assert.equal(createAccessRequestResponse?.serviceName, uniqueServiceName);
@@ -156,7 +145,7 @@ export const getAccessToService = async (
         uniqueServiceName,
         serviceConsumer,
         serviceProvider,
-        defaultOutway.publicKeyFingerprint || ""
+        outway.publicKeyFingerprint || ""
       ),
     {
       interval: 200,
@@ -168,7 +157,7 @@ export const getAccessToService = async (
     uniqueServiceName,
     serviceConsumer,
     serviceProvider,
-    defaultOutway.publicKeyFingerprint || ""
+    outway.publicKeyFingerprint || ""
   );
 
   assert.notEqual(incomingAccessRequest, undefined);
@@ -186,7 +175,7 @@ export const getAccessToService = async (
       await isAccessRequestApprovedForService(
         uniqueServiceName,
         serviceConsumer,
-        defaultOutway?.publicKeyFingerprint || ""
+        outway.publicKeyFingerprint || ""
       ),
     {
       interval: 200,

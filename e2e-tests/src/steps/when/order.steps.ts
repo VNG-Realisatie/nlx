@@ -1,6 +1,6 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
-import { getDefaultOutwayForOrganization } from "../../utils/order";
+import { getOutwayByName } from "../../utils/outway";
 import { When } from "@cucumber/cucumber";
 import { By } from "selenium-webdriver";
 import dayjs from "dayjs";
@@ -20,14 +20,15 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 -----END PUBLIC KEY-----`;
 
 When(
-  "{string} creates an order with reference {string} for {string} including the service {string} of {string}",
+  "{string} creates an order with reference {string} for {string} including the service {string} of {string} via Outway {string}",
   async function (
     this: CustomWorld,
     delegatorOrgName: string,
     orderReference: string,
     delegateeOrgName: string,
     serviceName: string,
-    orgName: string
+    orgName: string,
+    delegatorOutwayName: string
   ) {
     serviceName = `${serviceName}-${this.id}`;
     orderReference = `${orderReference}-${this.id}`;
@@ -66,11 +67,12 @@ When(
       By.className("ReactSelect__option")
     );
 
-    const delegatorDefaultOutway = await getDefaultOutwayForOrganization(
-      delegatorOrgName
+    const delegatorOutway = await getOutwayByName(
+      delegatorOrgName,
+      delegatorOutwayName
     );
 
-    const serviceOptionText = `${serviceName} - ${orgName} (${org.serialNumber}) - via ${delegatorDefaultOutway?.name} (${delegatorDefaultOutway?.publicKeyFingerprint})`;
+    const serviceOptionText = `${serviceName} - ${orgName} (${org.serialNumber}) - via ${delegatorOutway.name} (${delegatorOutway.publicKeyFingerprint})`;
 
     let theOption;
     for (const o of options) {

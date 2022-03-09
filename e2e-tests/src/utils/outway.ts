@@ -3,18 +3,39 @@ import { ManagementOutway } from "../../../management-ui/src/api/models";
 import { CustomWorld } from "../support/custom-world";
 import { strict as assert } from "assert";
 
-export const hasDefaultOutwayRunning = async (
+interface Outways {
+  [name: string]: ManagementOutway;
+}
+
+export const hasOutwayRunning = async (
   world: CustomWorld,
-  orgName: string
+  orgName: string,
+  outwayName: string
 ) => {
+  const outways = await getOutways(orgName);
+
+  assert.equal(!!outways[outwayName], true);
+};
+
+export const getOutways = async (orgName: string): Promise<Outways> => {
   const org = getOrgByName(orgName);
 
   const response = await org.apiClients.management?.managementListOutways();
 
-  assert.equal(
-    response?.outways?.some(
-      (outway: ManagementOutway) => outway.name === org.defaultOutway.name
-    ),
-    true
-  );
+  const outways = {} as Outways;
+
+  response?.outways?.forEach((o) => {
+    outways[`${o.name}`] = o;
+  });
+
+  return outways;
+};
+
+export const getOutwayByName = async (
+  orgName: string,
+  outwayName: string
+): Promise<ManagementOutway> => {
+  const outways = await getOutways(orgName);
+
+  return outways[outwayName];
 };
