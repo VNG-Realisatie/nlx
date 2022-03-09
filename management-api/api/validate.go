@@ -29,6 +29,7 @@ func (req *RegisterOutwayRequest) Validate() error {
 		validation.Field(&req.PublicKeyPEM, validation.Required),
 		validation.Field(&req.SelfAddressAPI, validation.Required),
 		validation.Field(&req.Version, validation.Required),
+		validation.Field(&req.ListenAddress, validation.Required),
 	)
 }
 

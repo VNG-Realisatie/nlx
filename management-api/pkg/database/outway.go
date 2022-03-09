@@ -21,6 +21,7 @@ type Outway struct {
 	PublicKeyPEM         string
 	PublicKeyFingerprint string
 	Version              string
+	ListenAddress        string
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 }
@@ -35,7 +36,7 @@ func (db *PostgresConfigDatabase) RegisterOutway(ctx context.Context, outway *Ou
 		Omit(clause.Associations).
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "name"}},
-			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "self_address_api", "public_key_pem", "public_key_fingerprint"}),
+			DoUpdates: clause.AssignmentColumns([]string{"version", "ip_address", "self_address_api", "public_key_pem", "public_key_fingerprint", "listen_address"}),
 		}).
 		Create(outway).Error
 }

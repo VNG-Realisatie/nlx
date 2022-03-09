@@ -60,6 +60,7 @@ func TestGetOutway(t *testing.T) {
 				IPAddress:            mockIP(t, "127.0.0.1/32"),
 				SelfAddressAPI:       "self-address-api",
 				Version:              "unknown",
+				ListenAddress:        "localhost:8080",
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
 			},
