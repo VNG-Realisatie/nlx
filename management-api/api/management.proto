@@ -227,6 +227,7 @@ message Outway {
   string version = 4;
   string publicKeyFingerprint = 5;
   string selfAddressAPI = 6;
+  string listenAddress = 7;
 }
 
 message RegisterOutwayRequest {

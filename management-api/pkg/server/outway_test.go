@@ -218,6 +218,7 @@ func TestListOutways(t *testing.T) {
 			PublicKeyPEM:         "mock-public-key-pem",
 			PublicKeyFingerprint: "mock-public-key-fingerprint",
 			SelfAddressAPI:       "self-address",
+			ListenAddress:        "listen-address",
 		},
 	}
 
@@ -253,6 +254,7 @@ func TestListOutways(t *testing.T) {
 				PublicKeyPEM:         "mock-public-key-pem",
 				PublicKeyFingerprint: "mock-public-key-fingerprint",
 				SelfAddressAPI:       "self-address",
+				ListenAddress:        "listen-address",
 			},
 		},
 	}
