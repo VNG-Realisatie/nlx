@@ -43,6 +43,12 @@ export interface ManagementRegisterOutwayRequest {
      * @memberof ManagementRegisterOutwayRequest
      */
     selfAddressAPI?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementRegisterOutwayRequest
+     */
+    listenAddress?: string;
 }
 
 export function ManagementRegisterOutwayRequestFromJSON(json: any): ManagementRegisterOutwayRequest {
@@ -59,6 +65,7 @@ export function ManagementRegisterOutwayRequestFromJSONTyped(json: any, ignoreDi
         'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
         'version': !exists(json, 'version') ? undefined : json['version'],
         'selfAddressAPI': !exists(json, 'selfAddressAPI') ? undefined : json['selfAddressAPI'],
+        'listenAddress': !exists(json, 'listenAddress') ? undefined : json['listenAddress'],
     };
 }
 
@@ -75,6 +82,7 @@ export function ManagementRegisterOutwayRequestToJSON(value?: ManagementRegister
         'publicKeyPEM': value.publicKeyPEM,
         'version': value.version,
         'selfAddressAPI': value.selfAddressAPI,
+        'listenAddress': value.listenAddress,
     };
 }
 
