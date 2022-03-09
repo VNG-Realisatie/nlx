@@ -1,5 +1,4 @@
 import { getOrgByName, Organization } from "./organizations";
-import { authenticate } from "./authenticate";
 import { CustomWorld } from "../support/custom-world";
 import {
   ManagementDirectoryService,
@@ -124,7 +123,7 @@ export const getAccessToService = async (
     });
   assert.equal(createServiceResponse?.name, uniqueServiceName);
 
-  // retrieve public key fingerprint of the default outway
+  // retrieve public key fingerprint of the default Outway
   const outwaysResponse =
     await serviceConsumer.apiClients.management?.managementListOutways();
   assert.equal(!!outwaysResponse?.outways?.length, true);
@@ -145,7 +144,7 @@ export const getAccessToService = async (
       body: {
         organizationSerialNumber: serviceProvider.serialNumber,
         serviceName: uniqueServiceName,
-        publicKeyFingerprint: defaultOutway?.publicKeyFingerprint,
+        publicKeyPEM: defaultOutway?.publicKeyPEM,
       },
     });
   assert.equal(createAccessRequestResponse?.serviceName, uniqueServiceName);
