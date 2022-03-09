@@ -38,8 +38,6 @@ Deploy review:
 
         helm upgrade ${CHART} ${CHART_DIRECTORY} \
           --install \
-          --render-subchart-notes \
-          --debug \
           --namespace ${K8S_NAMESPACE} \
           --set-string global.imageRegistry=${IMAGE_REGISTRY} \
           --set-string global.imageTag=${IMAGE_TAG} \

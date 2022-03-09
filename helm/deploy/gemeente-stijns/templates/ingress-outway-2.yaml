@@ -1,0 +1,40 @@
+{{- if ".Values.outway-2.ingress.enabled" }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.Version }}
+apiVersion: networking.k8s.io/v1
+{{- else }}
+apiVersion: networking.k8s.io/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "gemeente-stijns.fullname" . }}-ingress-outway-2
+  labels:
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
+  annotations:
+  {{- with index .Values "outway-2" "ingress" "annotations" }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if index .Values "outway-2" "ingress" "tls" }}
+  tls:
+    - hosts:
+        - {{ index .Values "outway-2" "ingress" "host" }}
+      secretName: {{ index .Values "outway-2" "ingress" "tls" "secretName" }}
+{{- end }}
+  rules:
+    - host: {{ index .Values "outway-2" "ingress" "host" }}
+      http:
+        paths:
+          - path: /
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.Version }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name:  {{ include "gemeente-stijns.fullname" . }}-nlx-outway-2
+                port:
+                  name: http
+          {{- else }}
+            backend:
+              serviceName: {{ include "gemeente-stijns.fullname" . }}-nlx-outway-2
+              servicePort: http
+          {{- end }}
+{{- end }}

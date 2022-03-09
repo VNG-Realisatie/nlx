@@ -10,6 +10,11 @@ outway:
     enabled: true
     host: nlx-outway-gemeente-stijns-{{DOMAIN_SUFFIX}}
 
+outway-2:
+  ingress:
+    enabled: true
+    host: nlx-outway-2-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
 ################
 ## Sub-charts ##
 ################

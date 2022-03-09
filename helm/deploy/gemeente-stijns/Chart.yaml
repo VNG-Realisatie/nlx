@@ -15,5 +15,14 @@ dependencies:
     condition: parkeerrechten-api.enabled
   - name: parkeerrechten-viewer
     repository: "file://../../charts/parkeerrechten-viewer"
-    version: ">=0" 
-    condition: parkeerrechten-viewer.enabled 
+    version: ">=0"
+    condition: parkeerrechten-viewer.enabled
+  - name: nlx-outway
+    repository: "file://../../charts/nlx-outway"
+    version: ">=0"
+    condition: nlx-outway.enabled
+  - name: nlx-outway
+    alias: nlx-outway-2
+    repository: "file://../../charts/nlx-outway"
+    version: ">=0"
+    condition: nlx-outway-2.enabled

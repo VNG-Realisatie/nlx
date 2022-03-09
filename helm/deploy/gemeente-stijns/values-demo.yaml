@@ -66,6 +66,10 @@ nlx-outway:
   config:
     directoryHostname: directory-api.demo.nlx.io
 
+nlx-outway-2:
+  config:
+    directoryHostname: directory-api.demo.nlx.io
+
 nlx-management:
   config:
     directoryHostname: directory-api.demo.nlx.io

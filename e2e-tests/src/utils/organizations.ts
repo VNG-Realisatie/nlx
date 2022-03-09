@@ -7,10 +7,7 @@ export interface Organization {
     name: string;
     address: string;
   };
-  defaultOutway: {
-    name: string;
-    address: string;
-  };
+  outways: Outways;
   management: {
     basicAuth: boolean;
     url: string;
@@ -25,6 +22,15 @@ export interface Organization {
 
 interface Organizations {
   [key: string]: Organization;
+}
+
+interface Outway {
+  name: string;
+  address: string;
+}
+
+interface Outways {
+  [name: string]: Outway;
 }
 
 const convertToBool = (
@@ -47,12 +53,14 @@ export const organizations: Organizations = {
         process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_ADDRESS ||
         "inway.organization-a.nlx.local:7913",
     },
-    defaultOutway: {
-      name:
-        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a",
-      address:
-        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_ADDRESS ||
-        "http://127.0.0.1:7917",
+    outways: {
+      [process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a"]: {
+        name:
+          process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME || "outway-org-a",
+        address:
+          process.env.E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_ADDRESS ||
+          "http://127.0.0.1:7917",
+      },
     },
     management: {
       basicAuth: convertToBool(
