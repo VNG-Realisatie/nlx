@@ -3,7 +3,7 @@ import { getAccessToService } from "../../utils/service";
 import { Given } from "@cucumber/cucumber";
 
 Given(
-  "{string} has access to {string} of {string}",
+  "the default Outway of {string} has access to {string} of {string}",
   async function (
     this: CustomWorld,
     serviceConsumerOrgName: string,
