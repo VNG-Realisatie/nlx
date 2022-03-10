@@ -44,6 +44,12 @@
       "paths": ["directory-ui/**"],
       "packageNames": ["redoc", "mobx", "core-js"],
       "enabled": false
+    },
+    {
+      "groupName": "v21.1.1 breaks our a11y test for NLX Management. We should first perform a11y tests for the dark theme as part of the DS a11y tests.",
+      "packageNames": ["@commonground/design-system"],
+      "managers": ["npm"],
+      "allowedVersions": "<21.1.1"
     }
   ]
 }
