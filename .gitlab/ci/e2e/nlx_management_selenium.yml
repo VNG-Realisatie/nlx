@@ -9,7 +9,6 @@ NLX Management - E2E-tests - Selenium:
     E2E_GEMEENTE_STIJNS_MANAGEMENT_USERNAME: "admin@example.com"
     E2E_GEMEENTE_STIJNS_MANAGEMENT_PASSWORD: "password"
     E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME: "gemeente-stijns-nlx-inway"
-    E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_NAME: "gemeente-stijns-nlx-outway"
     E2E_RVRD_MANAGEMENT_BASIC_AUTH: "false"
     E2E_RVRD_MANAGEMENT_USERNAME: "admin@example.com"
     E2E_RVRD_MANAGEMENT_PASSWORD: "password"
@@ -18,18 +17,15 @@ NLX Management - E2E-tests - Selenium:
     E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_USERNAME: "admin@example.com"
     E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_PASSWORD: "password"
     E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME: ""
-    E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_NAME: "vergunningsoftware-bv-nlx-outway"
   script:
     - apk --no-cache add bash curl
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export E2E_DIRECTORY_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-$CI_ENV_URL")
     - export E2E_GEMEENTE_STIJNS_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.gemeentestijns.nl" || echo "https://nlx-management-gemeente-stijns-$CI_ENV_URL")
     - export E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_ADDRESS=$([ -z "$CI_ENV_URL" ] && echo "gemeente-stijns-nlx-inway:443" || echo "gemeente-stijns-nlx-inway:443")
-    - export E2E_GEMEENTE_STIJNS_DEFAULT_OUTWAY_ADDRESS=$([ -z "$CI_ENV_URL" ] && echo "https://outway.acc.gemeentestijns.nl" || echo "https://nlx-outway-gemeente-stijns-$CI_ENV_URL")
     - export E2E_RVRD_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.rvrd.nl" || echo "https://nlx-management-rvrd-$CI_ENV_URL")
     - export E2E_RVRD_DEFAULT_INWAY_ADDRESS=$([ -z "$CI_ENV_URL" ] && echo "rvrd-nlx-inway:443" || echo "rvrd-nlx-inway:443")
     - export E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.vergunningsoftware.nl" || echo "https://nlx-management-vgs-bv-$CI_ENV_URL")
-    - export E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_OUTWAY_ADDRESS=$([ -z "$CI_ENV_URL" ] && echo "https://outway.acc.vergunningsoftware.nl" || echo "https://nlx-outway-vgs-bv-$CI_ENV_URL")
     - export E2E_BUILD_NAME="${CI_COMMIT_SHORT_SHA}"
     - cd e2e-tests/
     - install_npm_dependencies
