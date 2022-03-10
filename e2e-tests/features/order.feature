@@ -18,12 +18,14 @@ Feature: Order
         When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" of "RvRD" via the order of "Gemeente Stijns" with reference "order-ref-1"
         Then "Vergunningsoftware BV" receives a successful response
 
-    @ignore
     Scenario: Use an order to access service when order is revoked
-        Given "Vergunningsoftware BV" has the Outway "vergunningsoftware-bv-nlx-outway" running
-            And "Vergunningsoftware BV" has an revoked order with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD"
-        When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" via the order of "Gemeente Stijns" with reference "order-ref-1"
-        Then "Vergunningsoftware BV" receives a error response
+        Given "Vergunningsoftware BV" is up and running
+            And "RvRD" is up and running
+            And "Gemeente Stijns" is up and running
+            And the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" has access to "basis-register-fictieve-kentekens" of "RvRD"
+            And "Vergunningsoftware BV" has a revoked order for Outway "vergunningsoftware-bv-nlx-outway" with reference "order-ref-1" from "Gemeente Stijns" for service "basis-register-fictieve-kentekens" of "RvRD" via Outway "gemeente-stijns-nlx-outway"
+        When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basis-register-fictieve-kentekens" of "RvRD" via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives an order revoked response
 
     @ignore
     Scenario: Use an order to access service when order is expired

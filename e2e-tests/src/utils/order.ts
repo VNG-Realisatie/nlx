@@ -79,3 +79,33 @@ export const createOrder = async (
 
   debug(`created order with reference '${orderReference}'`);
 };
+
+export const revokeOrder = async (
+  world: CustomWorld,
+  delegatorOrgName: string,
+  delegateeOrgName: string,
+  orderReference: string
+) => {
+  orderReference = `${orderReference}-${world.id}`;
+
+  const delegator = getOrgByName(delegatorOrgName);
+  const delegatee = getOrgByName(delegateeOrgName);
+
+  debug(
+    `revoking the order with reference '${orderReference}' for delegator '${delegatorOrgName} (${delegator.serialNumber})' delegated to '${delegateeOrgName} (${delegatee.serialNumber})'`
+  );
+
+  try {
+    await delegator.apiClients.management?.managementRevokeOutgoingOrder({
+      delegatee: delegatee.serialNumber,
+      reference: orderReference,
+    });
+  } catch (err) {
+    const response = err as Response;
+    const responseAsJson = await response.json();
+
+    throw new Error(`failed to revoke order: ${responseAsJson.message}`);
+  }
+
+  debug(`revoked order with reference '${orderReference}'`);
+};

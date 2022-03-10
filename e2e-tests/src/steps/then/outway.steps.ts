@@ -26,3 +26,26 @@ Then(
     );
   }
 );
+
+Then(
+  "{string} receives an order revoked response",
+  async function (this: CustomWorld, orgName: string) {
+    const httpResponse = await this.scenarioContext.organizations[orgName]
+      .httpResponse;
+
+    assert.equal(httpResponse?.status, 500);
+
+    const responseText = await httpResponse?.text();
+    const containsRevokedText = responseText.includes(
+      "failed to request claim: message: order is revoked, source: rpc error: code = Unauthenticated desc = order is revoked"
+    );
+
+    if (!containsRevokedText) {
+      throw new Error(
+        `the response of the HTTP request seems not to be about a revoked order: ${responseText}`
+      );
+    }
+
+    assert.equal(containsRevokedText, true);
+  }
+);
