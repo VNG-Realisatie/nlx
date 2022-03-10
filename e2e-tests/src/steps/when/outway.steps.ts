@@ -67,7 +67,7 @@ When(
 
     const outway = await getOutwayByName(orgNameConsumer, outwayName);
 
-    const url = `${outway.listenAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
+    const url = `http://${outway.listenAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     const headers = {
       "X-NLX-Request-Delegator": orgDelegator.serialNumber,

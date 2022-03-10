@@ -1,8 +1,7 @@
-import { getOrgByName, Organization } from "./organizations";
-import { getOutwayByName, getOutways } from "./outway";
+import { getOrgByName } from "./organizations";
+import { getOutwayByName } from "./outway";
 import { CustomWorld } from "../support/custom-world";
 import { default as logger } from "../debug";
-import { ManagementOutway } from "../../../management-ui/src/api/models/ManagementOutway";
 import dayjs from "dayjs";
 const debug = logger("e2e-tests:order");
 

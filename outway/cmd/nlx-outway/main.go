@@ -125,6 +125,7 @@ func main() {
 		PublicKeyPEM:   publicKeyPEM,
 		SelfAddressAPI: options.AddressAPI,
 		Version:        version.BuildVersion,
+		ListenAddress:  options.ListenAddress,
 	})
 	if err != nil {
 		logger.Fatal("failed to register outway in Management API", zap.Error(err))
