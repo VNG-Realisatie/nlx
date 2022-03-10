@@ -45,6 +45,8 @@ var options struct {
 	UseAsHTTPProxy       bool   `long:"use-as-http-proxy" env:"USE_AS_HTTP_PROXY" description:"An experimental flag which when true makes the outway function as an HTTP proxy"`
 	ManagementAPIAddress string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
 
+	VerwerkingenLoggingAPIAddress string `long:"verwerkingen-logging-api-address" env:"VERWERKINGEN_LOGGING_API_ADDRESS" default:"" description:"Address of the verwerkingenlogging API"`
+
 	DisableLogdb bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 
@@ -151,17 +153,18 @@ func main() {
 	directoryClient := directoryapi.NewDirectoryClient(directoryConn)
 
 	ow, err := outway.NewOutway(&outway.NewOutwayArgs{
-		Name:              options.Name,
-		Ctx:               context.Background(),
-		Logger:            logger,
-		Txlogger:          txlogger,
-		ManagementClient:  client,
-		MonitoringAddress: options.MonitoringAddress,
-		OrgCert:           orgCert,
-		DirectoryClient:   directoryClient,
-		AuthServiceURL:    options.AuthorizationServiceAddress,
-		AuthCAPath:        options.AuthorizationCA,
-		UseAsHTTPProxy:    options.UseAsHTTPProxy,
+		Name:                          options.Name,
+		Ctx:                           context.Background(),
+		Logger:                        logger,
+		Txlogger:                      txlogger,
+		ManagementClient:              client,
+		VerwerkingenLoggingAPIAddress: options.VerwerkingenLoggingAPIAddress,
+		MonitoringAddress:             options.MonitoringAddress,
+		OrgCert:                       orgCert,
+		DirectoryClient:               directoryClient,
+		AuthServiceURL:                options.AuthorizationServiceAddress,
+		AuthCAPath:                    options.AuthorizationCA,
+		UseAsHTTPProxy:                options.UseAsHTTPProxy,
 	})
 
 	if err != nil {

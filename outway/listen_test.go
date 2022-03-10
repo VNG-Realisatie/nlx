@@ -462,7 +462,7 @@ func TestFailingTransport(t *testing.T) {
 		[]directoryapi.Inway{{
 			Address: "inway.00000000000000000001",
 			State:   directoryapi.Inway_UP,
-		}})
+		}}, nil)
 
 	assert.Nil(t, err)
 

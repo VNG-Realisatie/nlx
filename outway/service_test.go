@@ -44,7 +44,7 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 				Address: inwayAddresses[1],
 				State:   directoryapi.Inway_UP,
 			},
-		})
+		}, nil)
 
 	assert.Nil(t, err)
 	assert.Equal(t, inwayAddresses, l.GetInwayAddresses())

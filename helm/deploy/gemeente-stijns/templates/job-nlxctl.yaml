@@ -29,6 +29,12 @@ spec:
                 if ! nlxctl service list | grep -q $SERVICE_NAME_PARKEERRECHTEN; then
                     nlxctl service create --config /tmp/service-parkeerrechten.json
                 fi
+
+                echo "${SERVICE_VERWERKINGENLOGGING_JSON}" > /tmp/service-verwerkingenlogging.json
+                if ! nlxctl service list | grep -q SERVICE_NAME_VERWERKINGENLOGGING; then
+                  nlxctl service create --config /tmp/service-verwerkingenlogging.json
+                fi
+
                 nlxctl service list
           env:
             - name: MANAGEMENT_API_ADDRESS
@@ -37,6 +43,10 @@ spec:
               value: {{ .Values.managementAPI.serviceParkeerrechten.name | quote }}
             - name: SERVICE_PARKEERRECHTEN_JSON
               value: {{ .Values.managementAPI.serviceParkeerrechten | toJson | quote }}
+            - name: SERVICE_NAME_VERWERKINGENLOGGING
+              value: { { .Values.managementAPI.serviceVerwerkingenlogging.name | quote } }
+            - name: SERVICE_VERWERKINGENLOGGING_JSON
+              value: { { .Values.managementAPI.serviceVerwerkingenlogging | toJson | quote } }
           volumeMounts:
             - name: certificate
               mountPath: /certificate

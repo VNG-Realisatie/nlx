@@ -52,3 +52,7 @@ parkeerrechten-admin:
     enabled: true
     hosts:
       - parkeerrechten-admin-vgs-bv-{{DOMAIN_SUFFIX}}
+
+nlx-outway:
+  config:
+      verwerkingenloggingAPIBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567890/verwerkingenlogging

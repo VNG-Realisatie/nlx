@@ -88,6 +88,10 @@ spec:
           {{- end }}
             - name: MONITORING_ADDRESS
               value: 0.0.0.0:8081
+            {{- if .Values.config.verwerkingenloggingAPIBaseUrl }}
+            - name: VERWERKINGEN_LOGGING_API_ADDRESS
+              value: {{ .Values.config.verwerkingenloggingAPIBaseUrl }}
+            {{ end }}
             - name: DIRECTORY_ADDRESS
             {{- if .Values.config.directoryHostname }}
               value: {{ .Values.config.directoryHostname }}:443

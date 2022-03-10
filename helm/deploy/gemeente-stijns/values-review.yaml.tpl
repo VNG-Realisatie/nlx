@@ -10,6 +10,15 @@ outway:
     enabled: true
     host: nlx-outway-gemeente-stijns-{{DOMAIN_SUFFIX}}
 
+management-api:
+  serviceVerwerkingenlogging:
+      name: verwerkingenlogging
+      endpointURL: http://gemeente-stijns-verwerkingenlogging-api:8000
+      publicSupportContact: support@nlx.io
+      documentationUrl: https://docs.nlx.io
+      inways:
+        - gemeente-stijns-nlx-inway
+
 verwerkingenloggingAPI:
   enabled: true
 

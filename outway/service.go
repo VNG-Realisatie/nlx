@@ -18,6 +18,7 @@ import (
 	"golang.org/x/net/http2"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	"go.nlx.io/nlx/common/verwerkingenlogging"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
@@ -81,6 +82,7 @@ func NewRoundRobinLoadBalancedHTTPService(
 	organizationSerialNumber,
 	serviceName string,
 	inways []directoryapi.Inway,
+	verwerkingenloggingClient verwerkingenlogging.VerwerkingenLoggingAPI,
 ) (*RoundRobinLoadBalancedHTTPService, error) {
 	if len(inways) == 0 {
 		return nil, errNoInwaysAvailable
@@ -110,6 +112,31 @@ func NewRoundRobinLoadBalancedHTTPService(
 
 		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
 		proxy.Transport = roundTripTransport
+
+		if verwerkingenloggingClient != nil {
+			proxy.ModifyResponse = func(response *http.Response) error {
+				request, err := verwerkingenlogging.BuildLogRequestFromHeaders(response.Header)
+				if err != nil {
+					if errors.Is(err, verwerkingenlogging.ErrHeadersDoNotContainVerwerkingenLoggingData) {
+						logger.Info("request does not contain verwerkingenlogging headers")
+						return nil
+					}
+
+					logger.Error("error building write verwerkingenlog request from headers", zap.Error(err))
+
+					return nil
+				}
+
+				err = verwerkingenloggingClient.WriteLog(request)
+				if err != nil {
+					logger.Error("error writing to verwerkinglog", zap.Error(err))
+					return nil
+				}
+
+				return nil
+			}
+		}
+
 		proxy.ErrorHandler = s.LogServiceErrors
 		s.proxies[i] = proxy
 	}

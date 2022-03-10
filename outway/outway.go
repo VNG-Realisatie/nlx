@@ -24,6 +24,7 @@ import (
 	"go.nlx.io/nlx/common/nlxversion"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
+	"go.nlx.io/nlx/common/verwerkingenlogging"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/outway/plugins"
@@ -37,36 +38,38 @@ type Organization struct {
 }
 
 type Outway struct {
-	name                string
-	ctx                 context.Context
-	wg                  *sync.WaitGroup
-	organization        *Organization // the organization running this outway
-	orgCert             *common_tls.CertificateBundle
-	logger              *zap.Logger
-	txlogger            transactionlog.TransactionLogger
-	directoryClient     directoryapi.DirectoryClient
-	httpServer          *http.Server
-	monitorService      *monitoring.Service
-	requestHTTPHandler  loggerHTTPHandler
-	forwardingHTTPProxy *httputil.ReverseProxy
-	servicesLock        sync.RWMutex
-	servicesHTTP        map[string]HTTPService
-	servicesDirectory   map[string]*directoryapi.ListServicesResponse_Service
-	plugins             []plugins.Plugin
+	name                      string
+	ctx                       context.Context
+	wg                        *sync.WaitGroup
+	organization              *Organization // the organization running this outway
+	orgCert                   *common_tls.CertificateBundle
+	logger                    *zap.Logger
+	txlogger                  transactionlog.TransactionLogger
+	directoryClient           directoryapi.DirectoryClient
+	httpServer                *http.Server
+	monitorService            *monitoring.Service
+	requestHTTPHandler        loggerHTTPHandler
+	forwardingHTTPProxy       *httputil.ReverseProxy
+	servicesLock              sync.RWMutex
+	servicesHTTP              map[string]HTTPService
+	servicesDirectory         map[string]*directoryapi.ListServicesResponse_Service
+	plugins                   []plugins.Plugin
+	verwerkingenloggingClient verwerkingenlogging.VerwerkingenLoggingAPI
 }
 
 type NewOutwayArgs struct {
-	Name              string
-	Ctx               context.Context
-	Logger            *zap.Logger
-	Txlogger          transactionlog.TransactionLogger
-	ManagementClient  api.ManagementClient
-	MonitoringAddress string
-	OrgCert           *common_tls.CertificateBundle
-	DirectoryClient   directoryapi.DirectoryClient
-	AuthServiceURL    string
-	AuthCAPath        string
-	UseAsHTTPProxy    bool
+	Name                          string
+	Ctx                           context.Context
+	Logger                        *zap.Logger
+	Txlogger                      transactionlog.TransactionLogger
+	ManagementClient              api.ManagementClient
+	MonitoringAddress             string
+	OrgCert                       *common_tls.CertificateBundle
+	DirectoryClient               directoryapi.DirectoryClient
+	AuthServiceURL                string
+	AuthCAPath                    string
+	VerwerkingenLoggingAPIAddress string
+	UseAsHTTPProxy                bool
 }
 
 func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) (*plugins.AuthorizationPlugin, error) {
@@ -174,6 +177,18 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 
 	if authorizationPlugin != nil {
 		o.plugins = append(o.plugins, authorizationPlugin)
+	}
+
+	if args.VerwerkingenLoggingAPIAddress != "" {
+		client, err := verwerkingenlogging.NewVerwerkingenLoggingHTTPClient(args.VerwerkingenLoggingAPIAddress)
+		if err != nil {
+			return nil, err
+		}
+
+		verwerkingenloggingPlugin := plugins.NewVerwerkingenLoggingPlugin(args.Logger, o.organization.serialNumber, client)
+		o.verwerkingenloggingClient = client
+
+		o.plugins = append(o.plugins, verwerkingenloggingPlugin)
 	}
 
 	if args.Name != "" {
@@ -315,6 +330,7 @@ func (o *Outway) createService(
 		serviceToImplement.Organization.SerialNumber,
 		serviceToImplement.Name,
 		inways,
+		o.verwerkingenloggingClient,
 	)
 	if err != nil {
 		if err == errNoInwaysAvailable {
