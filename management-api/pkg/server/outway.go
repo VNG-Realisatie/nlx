@@ -75,6 +75,7 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 	return &emptypb.Empty{}, nil
 }
 
+// ListInways returns a list of outways
 func (s *ManagementService) ListOutways(ctx context.Context, req *api.ListOutwaysRequest) (*api.ListOutwaysResponse, error) {
 	s.logger.Info("rpc request ListInways")
 
@@ -110,7 +111,6 @@ func convertFromDatabaseOutway(model *database.Outway) *api.Outway {
 		PublicKeyFingerprint: model.PublicKeyFingerprint,
 		SelfAddressAPI:       model.SelfAddressAPI,
 		Version:              model.Version,
-		ListenAddress:        model.ListenAddress,
 	}
 
 	if model.IPAddress.Status == pgtype.Present {
