@@ -7,6 +7,7 @@ export interface Organization {
     name: string;
     address: string;
   };
+  outways: Outways;
   management: {
     basicAuth: boolean;
     url: string;
@@ -21,6 +22,17 @@ export interface Organization {
 
 interface Organizations {
   [key: string]: Organization;
+}
+
+export interface Outway {
+  name: string;
+  publicKeyFingerprint: string;
+  publicKeyPEM: string;
+  selfAddress: string;
+}
+
+export interface Outways {
+  [name: string]: Outway;
 }
 
 const convertToBool = (
@@ -42,6 +54,26 @@ export const organizations: Organizations = {
       address:
         process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_ADDRESS ||
         "inway.organization-a.nlx.local:7913",
+    },
+    outways: {
+      [process.env.E2E_GEMEENTE_STIJNS_OUTWAY_1_NAME ||
+      "gemeente-stijns-nlx-outway"]: {
+        name: "",
+        selfAddress:
+          process.env.E2E_GEMEENTE_STIJNS_OUTWAY_1_ADDRESS ||
+          "http://127.0.0.1:7917",
+        publicKeyFingerprint: "",
+        publicKeyPEM: "",
+      },
+      [process.env.E2E_GEMEENTE_STIJNS_OUTWAY_2_NAME ||
+      "gemeente-stijns-nlx-outway-2"]: {
+        name: "",
+        selfAddress:
+          process.env.E2E_GEMEENTE_STIJNS_OUTWAY_2_ADDRESS ||
+          "http://127.0.0.1:7947",
+        publicKeyFingerprint: "",
+        publicKeyPEM: "",
+      },
     },
     management: {
       basicAuth: convertToBool(
@@ -70,6 +102,7 @@ export const organizations: Organizations = {
         process.env.E2E_RVRD_DEFAULT_INWAY_ADDRESS ||
         "inway.organization-b.nlx.local:7923",
     },
+    outways: {},
     management: {
       basicAuth: convertToBool(
         process.env.E2E_RVRD_MANAGEMENT_BASIC_AUTH,
@@ -92,6 +125,17 @@ export const organizations: Organizations = {
       name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "",
       address:
         process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_ADDRESS || "",
+    },
+    outways: {
+      [process.env.E2E_VERGUNNINGSOFTWARE_BV_OUTWAY_1_NAME ||
+      "vergunningsoftware-bv-nlx-outway"]: {
+        name: "",
+        selfAddress:
+          process.env.E2E_VERGUNNINGSOFTWARE_BV_OUTWAY_1_ADDRESS ||
+          "http://127.0.0.1:7937",
+        publicKeyFingerprint: "",
+        publicKeyPEM: "",
+      },
     },
     management: {
       basicAuth: convertToBool(

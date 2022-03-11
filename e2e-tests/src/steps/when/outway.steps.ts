@@ -32,7 +32,7 @@ When(
 
     const outway = await getOutwayByName(orgNameConsumer, outwayName);
 
-    const url = `http://${outway.listenAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
+    const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     // wait until the Outway has had the time to update its internal services list
     await pWaitFor.default(async () => await isNotBadRequest(url), {
@@ -67,7 +67,7 @@ When(
 
     const outway = await getOutwayByName(orgNameConsumer, outwayName);
 
-    const url = `http://${outway.listenAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
+    const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     const headers = {
       "X-NLX-Request-Delegator": orgDelegator.serialNumber,

@@ -1,11 +1,6 @@
-import { getOrgByName } from "./organizations";
-import { ManagementOutway } from "../../../management-ui/src/api/models";
+import { getOrgByName, Outway, Outways } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
 import { strict as assert } from "assert";
-
-interface Outways {
-  [name: string]: ManagementOutway;
-}
 
 export const hasOutwayRunning = async (
   world: CustomWorld,
@@ -20,21 +15,28 @@ export const hasOutwayRunning = async (
 export const getOutways = async (orgName: string): Promise<Outways> => {
   const org = getOrgByName(orgName);
 
-  const response = await org.apiClients.management?.managementListOutways();
+  const outwaysResponse =
+    await org.apiClients.management?.managementListOutways();
 
-  const outways = {} as Outways;
+  const outways = outwaysResponse?.outways;
+  outways?.forEach((outway) => {
+    if (!outway.name) {
+      return;
+    }
 
-  response?.outways?.forEach((o) => {
-    outways[`${o.name}`] = o;
+    org.outways[`${outway.name}`].name = outway.name || "";
+    org.outways[`${outway.name}`].publicKeyPEM = outway.publicKeyPEM || "";
+    org.outways[`${outway.name}`].publicKeyFingerprint =
+      outway.publicKeyFingerprint || "";
   });
 
-  return outways;
+  return org.outways;
 };
 
 export const getOutwayByName = async (
   orgName: string,
   outwayName: string
-): Promise<ManagementOutway> => {
+): Promise<Outway> => {
   const outways = await getOutways(orgName);
 
   return outways[outwayName];
