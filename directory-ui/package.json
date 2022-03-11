@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@commonground/design-system": "21.1.0",
-    "@fontsource/source-sans-pro": "4.5.3",
+    "@fontsource/source-sans-pro": "4.5.4",
     "dayjs": "1.10.8",
     "formik": "2.2.9",
     "mobx": "6.3.2",
