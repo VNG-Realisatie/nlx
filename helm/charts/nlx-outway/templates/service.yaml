@@ -11,7 +11,7 @@ spec:
   ports:
     - name: https
       port: 8444
-      targetPort: https
+      targetPort: 8444
       protocol: TCP
   {{- if .Values.https.enabled }}
     - name: https
