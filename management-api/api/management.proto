@@ -235,7 +235,6 @@ message RegisterOutwayRequest {
   string publicKeyPEM = 2;
   string version = 3;
   string selfAddressAPI = 4;
-  string listenAddress = 5;
 }
 
 message ListOutwaysRequest {}

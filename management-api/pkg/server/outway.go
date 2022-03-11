@@ -65,7 +65,6 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 		PublicKeyPEM:         req.PublicKeyPEM,
 		PublicKeyFingerprint: fingerPrint,
 		Version:              req.Version,
-		ListenAddress:        req.ListenAddress,
 	}
 
 	if err := s.configDatabase.RegisterOutway(ctx, model); err != nil {

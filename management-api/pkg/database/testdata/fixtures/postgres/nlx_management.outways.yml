@@ -19,7 +19,6 @@
   public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
   self_address_api: self-address-api
   version: unknown
-  listen_address: localhost:8080
   created_at: 2021-01-02 01:02:03.000000+00
   updated_at: 2021-01-02 01:02:03.000000+00
 - id: 2
@@ -43,6 +42,5 @@
   public_key_fingerprint: g+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=
   self_address_api: self-address-api-2
   version: 1.2.3
-  listen_address: localhost:8081
   created_at: 2021-01-02 01:02:03.000000+00
   updated_at: 2021-01-02 01:02:03.000000+00
