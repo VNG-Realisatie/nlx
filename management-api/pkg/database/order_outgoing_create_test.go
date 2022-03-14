@@ -100,5 +100,13 @@ func assertCreateOutgoingOrder(t *testing.T, repo database.ConfigDatabase, want 
 	assert.Equal(t, want.ValidFrom, got.ValidFrom)
 	assert.Equal(t, want.ValidUntil, got.ValidUntil)
 
-	// TODO: check if access proofs are equal
+	accessProofsFound := map[uint64]uint64{}
+	for _, accessProof := range got.OutgoingOrderAccessProofs {
+		for _, accessProofID := range want.AccessProofIds {
+			if accessProofID == accessProof.AccessProofID {
+				accessProofsFound[accessProofID] = accessProofID
+			}
+		}
+	}
+	assert.Equal(t, len(want.AccessProofIds), len(accessProofsFound))
 }
