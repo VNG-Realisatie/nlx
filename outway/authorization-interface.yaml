@@ -6,7 +6,7 @@ info:
   version: "1.0.0"
   title: Authorization
 paths:
-  /auth:
+  /:
     post:
       summary: Authorization request
       responses:
@@ -15,41 +15,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthorizationResponse'
+                $ref: "#/components/schemas/AuthorizationResponse"
       requestBody:
-        $ref: '#/components/requestBodies/AuthorizationRequest'
+        $ref: "#/components/requestBodies/AuthorizationRequest"
 components:
   schemas:
     AuthorizationRequest:
       type: object
       properties:
-        headers:
-           type: object
-           additionalProperties:
-            type: array
-            items:
+        input:
+          type: object
+          properties:
+            headers:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+              description: Contains the HTTP-headers of the request made to the outway
+            path:
               type: string
-           description: Contains the HTTP-headers of the request made to the outway
-        organization_serial_number:
-          type: string
-          description: organization serial number targeted by the request send to the outway
-        service:
-          type: string
-          description: service targeted by the request send to the outway
+              description: path of the request to the outway
+            organization_serial_number:
+              type: string
+              description: organization serial number targeted by the request send to the outway
+            service:
+              type: string
+              description: service targeted by the request send to the outway
     AuthorizationResponse:
       type: object
       properties:
-        authorized:
+        result:
           type: boolean
           description: true if the request is authorized. The outway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The outway will return a 401 to the requesting client.
-        reason:
-          type: string
-          description: If the authorization has failed this field can be used to explain why. This field will be send to the client responsible for the original request.
   requestBodies:
     AuthorizationRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AuthorizationRequest'
+            $ref: "#/components/schemas/AuthorizationRequest"
       description: The body of the request send to the authorization service
       required: true

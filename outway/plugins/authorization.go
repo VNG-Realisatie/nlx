@@ -8,21 +8,25 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"go.uber.org/zap"
 )
 
 type authRequest struct {
+	Input *authRequestInput `json:"input"`
+}
+
+type authRequestInput struct {
 	Headers                  http.Header `json:"headers"`
+	Path                     string      `json:"path"`
 	OrganizationSerialNumber string      `json:"organization_serial_number"`
 	Service                  string      `json:"service"`
 }
 
 type authResponse struct {
-	Authorized bool   `json:"authorized"`
-	Reason     string `json:"reason,omitempty"`
+	Result bool `json:"result"`
 }
 
 type AuthorizationPlugin struct {
@@ -51,14 +55,13 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		context.Logger.Info(
 			"authorization result",
-			zap.Bool("authorized", authResponse.Authorized),
-			zap.String("reason", authResponse.Reason),
+			zap.Bool("authorized", authResponse.Result),
 		)
 
-		if !authResponse.Authorized {
+		if !authResponse.Result {
 			http.Error(
 				context.Response,
-				fmt.Sprintf("nlx outway: authorization failed. reason: %s", authResponse.Reason),
+				"nlx outway: authorization server denied request.",
 				http.StatusUnauthorized,
 			)
 
@@ -70,23 +73,24 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 }
 
 func (plugin *AuthorizationPlugin) authorizeRequest(h http.Header, d *Destination) (*authResponse, error) {
-	req, err := http.NewRequest(http.MethodPost, plugin.serviceURL, nil)
+	req, err := http.NewRequest(http.MethodPost, plugin.serviceURL, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
 
-	authRequest := &authRequest{
-		Headers:                  h,
-		OrganizationSerialNumber: d.OrganizationSerialNumber,
-		Service:                  d.Service,
-	}
-
-	body, err := json.Marshal(authRequest)
+	body, err := json.Marshal(&authRequest{
+		Input: &authRequestInput{
+			Headers:                  h,
+			Path:                     d.Path,
+			OrganizationSerialNumber: d.OrganizationSerialNumber,
+			Service:                  d.Service,
+		},
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+	req.Body = io.NopCloser(bytes.NewBuffer(body))
 
 	resp, err := plugin.authorizationClient.Do(req)
 	if err != nil {

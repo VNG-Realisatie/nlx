@@ -82,6 +82,7 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     inway.organization-c.nlx.local
 127.0.0.1     outway.organization-c.nlx.local
 127.0.0.1     management.organization-c.nlx.local
+127.0.0.1     auth.organization-c.nlx.local
 
 ::1           dex.shared.nlx.local
 ::1           directory-api.shared.nlx.local
@@ -98,6 +99,7 @@ Update the `/etc/hosts` file on your system:
 ::1           management-api.organization-c.nlx.local
 ::1           inway.organization-c.nlx.local
 ::1           management.organization-c.nlx.local
+::1           auth.organization-c.nlx.local
 ```
 </details>
 </br>

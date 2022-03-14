@@ -12,7 +12,7 @@ import (
 
 func fakeContext(dest *Destination) *Context {
 	recorder := httptest.NewRecorder()
-	request, _ := http.NewRequest("GET", "/test", nil)
+	request, _ := http.NewRequest("GET", "/test", http.NoBody)
 
 	return &Context{
 		Destination: dest,

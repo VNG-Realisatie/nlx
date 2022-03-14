@@ -112,7 +112,7 @@ func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string)
 
 	return plugins.NewAuthorizationPlugin(
 		ca,
-		fmt.Sprintf("%s/auth", authServiceURL),
+		authURL.String(),
 		http.Client{
 			Transport: createHTTPTransport(tlsConfig),
 		},
@@ -185,12 +185,14 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 	o.plugins = []plugins.Plugin{
 		plugins.NewDelegationPlugin(args.ManagementClient),
 		plugins.NewLogRecordPlugin(o.organization.serialNumber, o.txlogger),
-		plugins.NewStripHeadersPlugin(o.organization.serialNumber),
 	}
 
 	if authorizationPlugin != nil {
 		o.plugins = append(o.plugins, authorizationPlugin)
 	}
+
+	// Strip headers as last step in plugin chain so intermediate steps can still access all headers
+	o.plugins = append(o.plugins, plugins.NewStripHeadersPlugin(o.organization.serialNumber))
 
 	if args.Name != "" {
 		o.name = args.Name
