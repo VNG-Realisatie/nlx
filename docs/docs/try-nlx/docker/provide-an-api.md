@@ -91,11 +91,13 @@ We are denied access because we first need to request access. This is one of the
 In order to request access, follow these steps:
 
 1. Navigate to the 'Directory' in NLX Management.
-1. Select the service `SwaggerPetstore` from the list and click on 'Toegang aanvragen'.
-1. Now navigate to the 'Services' page and again select the service `SwaggerPetStore`.
-1. You should see one access request under the section 'Toegansverzoeken'.
-1. Expand the section and click on 'Accepteren' to accept the access request.
-1. You now have an access grant for the service.
+2. Select the service `SwaggerPetstore` from the list
+3. Expand the 'Outways zonder toegang' section by clicking on its title
+4. Click on 'Toegang aanvragen' for the Outway 'Outway-01'
+5. Now navigate to back the 'Services' page and again select the service `SwaggerPetStore`.
+6. You should see one access request under the section 'Toegangsverzoeken'.
+7. Expand the section and click on 'Accepteren' to accept the access request.
+8. You now have an access grant for the service.
 
 Let's try to fetch the data again.
 
@@ -134,5 +136,5 @@ The inway and the Outway are able to log metadata of the requests they process i
 You have provided your API to the NLX network. In this part, you have:
 
 - Created a service for the demo API
-- Used your outway to consume your own inway API.
+- Used your Outway to consume your own Inway API.
 - Viewed the transaction logs in NLX Management
