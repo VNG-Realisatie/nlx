@@ -43,6 +43,18 @@ export interface ManagementOutway {
      * @memberof ManagementOutway
      */
     version?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementOutway
+     */
+    publicKeyFingerprint?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementOutway
+     */
+    selfAddressAPI?: string;
 }
 
 export function ManagementOutwayFromJSON(json: any): ManagementOutway {
@@ -59,6 +71,8 @@ export function ManagementOutwayFromJSONTyped(json: any, ignoreDiscriminator: bo
         'ipAddress': !exists(json, 'ipAddress') ? undefined : json['ipAddress'],
         'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
         'version': !exists(json, 'version') ? undefined : json['version'],
+        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
+        'selfAddressAPI': !exists(json, 'selfAddressAPI') ? undefined : json['selfAddressAPI'],
     };
 }
 
@@ -75,6 +89,8 @@ export function ManagementOutwayToJSON(value?: ManagementOutway | null): any {
         'ipAddress': value.ipAddress,
         'publicKeyPEM': value.publicKeyPEM,
         'version': value.version,
+        'publicKeyFingerprint': value.publicKeyFingerprint,
+        'selfAddressAPI': value.selfAddressAPI,
     };
 }
 

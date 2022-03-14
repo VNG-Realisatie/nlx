@@ -24,6 +24,9 @@ import {
     ManagementCreateAccessRequestRequest,
     ManagementCreateAccessRequestRequestFromJSON,
     ManagementCreateAccessRequestRequestToJSON,
+    ManagementCreateOutgoingOrderRequest,
+    ManagementCreateOutgoingOrderRequestFromJSON,
+    ManagementCreateOutgoingOrderRequestToJSON,
     ManagementCreateServiceRequest,
     ManagementCreateServiceRequestFromJSON,
     ManagementCreateServiceRequestToJSON,
@@ -78,9 +81,6 @@ import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
-    ManagementOutgoingOrderRequest,
-    ManagementOutgoingOrderRequestFromJSON,
-    ManagementOutgoingOrderRequestToJSON,
     ManagementRegisterOutwayRequest,
     ManagementRegisterOutwayRequestFromJSON,
     ManagementRegisterOutwayRequestToJSON,
@@ -93,6 +93,9 @@ import {
     ManagementSynchronizeOrdersResponse,
     ManagementSynchronizeOrdersResponseFromJSON,
     ManagementSynchronizeOrdersResponseToJSON,
+    ManagementUpdateOutgoingOrderRequest,
+    ManagementUpdateOutgoingOrderRequestFromJSON,
+    ManagementUpdateOutgoingOrderRequestToJSON,
     ManagementUpdateServiceResponse,
     ManagementUpdateServiceResponseFromJSON,
     ManagementUpdateServiceResponseToJSON,
@@ -113,8 +116,8 @@ export interface ManagementCreateAccessRequestOperationRequest {
     body: ManagementCreateAccessRequestRequest;
 }
 
-export interface ManagementCreateOutgoingOrderRequest {
-    body: ManagementOutgoingOrderRequest;
+export interface ManagementCreateOutgoingOrderOperationRequest {
+    body: ManagementCreateOutgoingOrderRequest;
 }
 
 export interface ManagementCreateServiceOperationRequest {
@@ -165,6 +168,8 @@ export interface ManagementRejectIncomingAccessRequestRequest {
 export interface ManagementRetrieveClaimForOrderRequest {
     orderReference?: string;
     orderOrganizationSerialNumber?: string;
+    serviceOrganizationSerialNumber?: string;
+    serviceName?: string;
 }
 
 export interface ManagementRevokeAccessGrantRequest {
@@ -185,8 +190,8 @@ export interface ManagementUpdateInwayRequest {
     body: ManagementInway;
 }
 
-export interface ManagementUpdateOutgoingOrderRequest {
-    body: ManagementOutgoingOrderRequest;
+export interface ManagementUpdateOutgoingOrderOperationRequest {
+    body: ManagementUpdateOutgoingOrderRequest;
 }
 
 export interface ManagementUpdateServiceRequest {
@@ -292,7 +297,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOutgoingOrderRaw(requestParameters: ManagementCreateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async managementCreateOutgoingOrderRaw(requestParameters: ManagementCreateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
             throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateOutgoingOrder.');
         }
@@ -308,7 +313,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementOutgoingOrderRequestToJSON(requestParameters.body),
+            body: ManagementCreateOutgoingOrderRequestToJSON(requestParameters.body),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -316,7 +321,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOutgoingOrder(requestParameters: ManagementCreateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<object> {
+    async managementCreateOutgoingOrder(requestParameters: ManagementCreateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<object> {
         const response = await this.managementCreateOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -919,6 +924,14 @@ export class ManagementApi extends runtime.BaseAPI {
             queryParameters['orderOrganizationSerialNumber'] = requestParameters.orderOrganizationSerialNumber;
         }
 
+        if (requestParameters.serviceOrganizationSerialNumber !== undefined) {
+            queryParameters['serviceOrganizationSerialNumber'] = requestParameters.serviceOrganizationSerialNumber;
+        }
+
+        if (requestParameters.serviceName !== undefined) {
+            queryParameters['serviceName'] = requestParameters.serviceName;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -1087,7 +1100,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateOutgoingOrderRaw(requestParameters: ManagementUpdateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async managementUpdateOutgoingOrderRaw(requestParameters: ManagementUpdateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
             throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementUpdateOutgoingOrder.');
         }
@@ -1103,7 +1116,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementOutgoingOrderRequestToJSON(requestParameters.body),
+            body: ManagementUpdateOutgoingOrderRequestToJSON(requestParameters.body),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -1111,7 +1124,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateOutgoingOrder(requestParameters: ManagementUpdateOutgoingOrderRequest, initOverrides?: RequestInit): Promise<object> {
+    async managementUpdateOutgoingOrder(requestParameters: ManagementUpdateOutgoingOrderOperationRequest, initOverrides?: RequestInit): Promise<object> {
         const response = await this.managementUpdateOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
