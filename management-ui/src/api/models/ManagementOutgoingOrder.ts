@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementAccessProof,
-    ManagementAccessProofFromJSON,
-    ManagementAccessProofFromJSONTyped,
-    ManagementAccessProofToJSON,
-} from './ManagementAccessProof';
+    ManagementOrderService,
+    ManagementOrderServiceFromJSON,
+    ManagementOrderServiceFromJSONTyped,
+    ManagementOrderServiceToJSON,
+} from './ManagementOrderService';
 
 /**
  * 
@@ -58,10 +58,10 @@ export interface ManagementOutgoingOrder {
     validUntil?: Date;
     /**
      * 
-     * @type {Array<ManagementAccessProof>}
+     * @type {Array<ManagementOrderService>}
      * @memberof ManagementOutgoingOrder
      */
-    accessProofs?: Array<ManagementAccessProof>;
+    services?: Array<ManagementOrderService>;
     /**
      * 
      * @type {Date}
@@ -91,7 +91,7 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
-        'accessProofs': !exists(json, 'accessProofs') ? undefined : ((json['accessProofs'] as Array<any>).map(ManagementAccessProofFromJSON)),
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
         'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
         'publicKeyPem': !exists(json, 'publicKeyPem') ? undefined : json['publicKeyPem'],
     };
@@ -111,7 +111,7 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         'delegatee': value.delegatee,
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'accessProofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ManagementAccessProofToJSON)),
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
         'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
         'publicKeyPem': value.publicKeyPem,
     };

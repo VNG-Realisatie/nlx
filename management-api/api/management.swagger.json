@@ -755,7 +755,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/managementOutgoingOrderRequest"
+                "$ref" : "#/components/schemas/managementCreateOutgoingOrderRequest"
               }
             }
           },
@@ -792,7 +792,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/managementOutgoingOrderRequest"
+                "$ref" : "#/components/schemas/managementUpdateOutgoingOrderRequest"
               }
             }
           },
@@ -972,6 +972,18 @@
         }, {
           "in" : "query",
           "name" : "orderOrganizationSerialNumber",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "serviceOrganizationSerialNumber",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "serviceName",
           "schema" : {
             "type" : "string"
           }
@@ -1464,6 +1476,17 @@
         },
         "type" : "object"
       },
+      "DirectoryServiceAccessState" : {
+        "properties" : {
+          "accessRequest" : {
+            "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+          },
+          "accessProof" : {
+            "$ref" : "#/components/schemas/managementAccessProof"
+          }
+        },
+        "type" : "object"
+      },
       "DirectoryServiceState" : {
         "default" : "unknown",
         "enum" : [ "unknown", "up", "down", "degraded" ],
@@ -1535,6 +1558,9 @@
           },
           "accessRequestId" : {
             "format" : "uint64",
+            "type" : "string"
+          },
+          "publicKeyFingerprint" : {
             "type" : "string"
           }
         },
@@ -1620,6 +1646,41 @@
           },
           "serviceName" : {
             "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementCreateOutgoingOrderRequest" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          },
+          "delegatee" : {
+            "type" : "string"
+          },
+          "validFrom" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "validUntil" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "accessProofIds" : {
+            "items" : {
+              "format" : "uint64",
+              "type" : "string"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -1743,12 +1804,6 @@
           "state" : {
             "$ref" : "#/components/schemas/DirectoryServiceState"
           },
-          "latestAccessRequest" : {
-            "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
-          },
-          "latestAccessProof" : {
-            "$ref" : "#/components/schemas/managementAccessProof"
-          },
           "oneTimeCosts" : {
             "format" : "int32",
             "type" : "integer"
@@ -1760,6 +1815,12 @@
           "requestCosts" : {
             "format" : "int32",
             "type" : "integer"
+          },
+          "accessStates" : {
+            "items" : {
+              "$ref" : "#/components/schemas/DirectoryServiceAccessState"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -1891,6 +1952,9 @@
           },
           "updatedAt" : {
             "format" : "date-time",
+            "type" : "string"
+          },
+          "publicKeyFingerprint" : {
             "type" : "string"
           }
         },
@@ -2164,6 +2228,9 @@
           },
           "errorDetails" : {
             "$ref" : "#/components/schemas/managementErrorDetails"
+          },
+          "publicKeyFingerprint" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -2187,9 +2254,9 @@
             "format" : "date-time",
             "type" : "string"
           },
-          "services" : {
+          "accessProofs" : {
             "items" : {
-              "$ref" : "#/components/schemas/managementOrderService"
+              "$ref" : "#/components/schemas/managementAccessProof"
             },
             "type" : "array"
           },
@@ -2199,37 +2266,6 @@
           },
           "publicKeyPem" : {
             "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementOutgoingOrderRequest" : {
-        "properties" : {
-          "reference" : {
-            "type" : "string"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "publicKeyPEM" : {
-            "type" : "string"
-          },
-          "delegatee" : {
-            "type" : "string"
-          },
-          "validFrom" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "validUntil" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "services" : {
-            "items" : {
-              "$ref" : "#/components/schemas/managementOrderService"
-            },
-            "type" : "array"
           }
         },
         "type" : "object"
@@ -2247,6 +2283,12 @@
           },
           "version" : {
             "type" : "string"
+          },
+          "publicKeyFingerprint" : {
+            "type" : "string"
+          },
+          "selfAddressAPI" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -2260,6 +2302,9 @@
             "type" : "string"
           },
           "version" : {
+            "type" : "string"
+          },
+          "selfAddressAPI" : {
             "type" : "string"
           }
         },
@@ -2376,6 +2421,38 @@
         "properties" : {
           "name" : {
             "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementUpdateOutgoingOrderRequest" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          },
+          "delegatee" : {
+            "type" : "string"
+          },
+          "validFrom" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "validUntil" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "accessProofIds" : {
+            "items" : {
+              "format" : "uint64",
+              "type" : "string"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"

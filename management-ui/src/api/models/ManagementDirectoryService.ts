@@ -14,23 +14,29 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    DirectoryServiceAccessState,
-    DirectoryServiceAccessStateFromJSON,
-    DirectoryServiceAccessStateFromJSONTyped,
-    DirectoryServiceAccessStateToJSON,
-} from './DirectoryServiceAccessState';
-import {
     DirectoryServiceState,
     DirectoryServiceStateFromJSON,
     DirectoryServiceStateFromJSONTyped,
     DirectoryServiceStateToJSON,
 } from './DirectoryServiceState';
 import {
+    ManagementAccessProof,
+    ManagementAccessProofFromJSON,
+    ManagementAccessProofFromJSONTyped,
+    ManagementAccessProofToJSON,
+} from './ManagementAccessProof';
+import {
     ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
 } from './ManagementOrganization';
+import {
+    ManagementOutgoingAccessRequest,
+    ManagementOutgoingAccessRequestFromJSON,
+    ManagementOutgoingAccessRequestFromJSONTyped,
+    ManagementOutgoingAccessRequestToJSON,
+} from './ManagementOutgoingAccessRequest';
 
 /**
  * 
@@ -76,6 +82,18 @@ export interface ManagementDirectoryService {
     state?: DirectoryServiceState;
     /**
      * 
+     * @type {ManagementOutgoingAccessRequest}
+     * @memberof ManagementDirectoryService
+     */
+    latestAccessRequest?: ManagementOutgoingAccessRequest;
+    /**
+     * 
+     * @type {ManagementAccessProof}
+     * @memberof ManagementDirectoryService
+     */
+    latestAccessProof?: ManagementAccessProof;
+    /**
+     * 
      * @type {number}
      * @memberof ManagementDirectoryService
      */
@@ -92,12 +110,6 @@ export interface ManagementDirectoryService {
      * @memberof ManagementDirectoryService
      */
     requestCosts?: number;
-    /**
-     * 
-     * @type {Array<DirectoryServiceAccessState>}
-     * @memberof ManagementDirectoryService
-     */
-    accessStates?: Array<DirectoryServiceAccessState>;
 }
 
 export function ManagementDirectoryServiceFromJSON(json: any): ManagementDirectoryService {
@@ -116,10 +128,11 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
         'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
         'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
         'state': !exists(json, 'state') ? undefined : DirectoryServiceStateFromJSON(json['state']),
+        'latestAccessRequest': !exists(json, 'latestAccessRequest') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['latestAccessRequest']),
+        'latestAccessProof': !exists(json, 'latestAccessProof') ? undefined : ManagementAccessProofFromJSON(json['latestAccessProof']),
         'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
         'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
         'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
-        'accessStates': !exists(json, 'accessStates') ? undefined : ((json['accessStates'] as Array<any>).map(DirectoryServiceAccessStateFromJSON)),
     };
 }
 
@@ -138,10 +151,11 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
         'documentationURL': value.documentationURL,
         'publicSupportContact': value.publicSupportContact,
         'state': DirectoryServiceStateToJSON(value.state),
+        'latestAccessRequest': ManagementOutgoingAccessRequestToJSON(value.latestAccessRequest),
+        'latestAccessProof': ManagementAccessProofToJSON(value.latestAccessProof),
         'oneTimeCosts': value.oneTimeCosts,
         'monthlyCosts': value.monthlyCosts,
         'requestCosts': value.requestCosts,
-        'accessStates': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryServiceAccessStateToJSON)),
     };
 }
 

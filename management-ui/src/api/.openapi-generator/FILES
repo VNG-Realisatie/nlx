@@ -6,7 +6,6 @@ apis/index.ts
 index.ts
 models/AuditLogRecordActionType.ts
 models/AuthorizationSettingsAuthorization.ts
-models/DirectoryServiceAccessState.ts
 models/DirectoryServiceState.ts
 models/InlineObject.ts
 models/ManagementAccessGrant.ts
@@ -16,7 +15,6 @@ models/ManagementAuditLogRecord.ts
 models/ManagementAuditLogRecordMetadata.ts
 models/ManagementAuditLogRecordService.ts
 models/ManagementCreateAccessRequestRequest.ts
-models/ManagementCreateOutgoingOrderRequest.ts
 models/ManagementCreateServiceRequest.ts
 models/ManagementCreateServiceResponse.ts
 models/ManagementDirectoryListServicesResponse.ts
@@ -47,6 +45,7 @@ models/ManagementOrderService.ts
 models/ManagementOrganization.ts
 models/ManagementOutgoingAccessRequest.ts
 models/ManagementOutgoingOrder.ts
+models/ManagementOutgoingOrderRequest.ts
 models/ManagementOutway.ts
 models/ManagementRegisterOutwayRequest.ts
 models/ManagementRetrieveClaimForOrderResponse.ts
@@ -59,7 +58,6 @@ models/ManagementTXLogOrder.ts
 models/ManagementTXLogOrganization.ts
 models/ManagementTXLogRecord.ts
 models/ManagementTXLogService.ts
-models/ManagementUpdateOutgoingOrderRequest.ts
 models/ManagementUpdateServiceResponse.ts
 models/ManagementUpdateSettingsRequest.ts
 models/ProtobufAny.ts

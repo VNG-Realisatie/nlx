@@ -31,12 +31,6 @@ export interface ManagementCreateAccessRequestRequest {
      * @memberof ManagementCreateAccessRequestRequest
      */
     serviceName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ManagementCreateAccessRequestRequest
-     */
-    publicKeyPEM?: string;
 }
 
 export function ManagementCreateAccessRequestRequestFromJSON(json: any): ManagementCreateAccessRequestRequest {
@@ -51,7 +45,6 @@ export function ManagementCreateAccessRequestRequestFromJSONTyped(json: any, ign
         
         'organizationSerialNumber': !exists(json, 'organizationSerialNumber') ? undefined : json['organizationSerialNumber'],
         'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
-        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
     };
 }
 
@@ -66,7 +59,6 @@ export function ManagementCreateAccessRequestRequestToJSON(value?: ManagementCre
         
         'organizationSerialNumber': value.organizationSerialNumber,
         'serviceName': value.serviceName,
-        'publicKeyPEM': value.publicKeyPEM,
     };
 }
 

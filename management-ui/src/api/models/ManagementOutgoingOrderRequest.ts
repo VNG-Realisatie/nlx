@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ManagementOrderService,
+    ManagementOrderServiceFromJSON,
+    ManagementOrderServiceFromJSONTyped,
+    ManagementOrderServiceToJSON,
+} from './ManagementOrderService';
+
 /**
  * 
  * @export
@@ -57,10 +64,10 @@ export interface ManagementOutgoingOrderRequest {
     validUntil?: Date;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<ManagementOrderService>}
      * @memberof ManagementOutgoingOrderRequest
      */
-    accessProofIds?: Array<string>;
+    services?: Array<ManagementOrderService>;
 }
 
 export function ManagementOutgoingOrderRequestFromJSON(json: any): ManagementOutgoingOrderRequest {
@@ -79,7 +86,7 @@ export function ManagementOutgoingOrderRequestFromJSONTyped(json: any, ignoreDis
         'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
-        'accessProofIds': !exists(json, 'accessProofIds') ? undefined : json['accessProofIds'],
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
     };
 }
 
@@ -98,7 +105,7 @@ export function ManagementOutgoingOrderRequestToJSON(value?: ManagementOutgoingO
         'delegatee': value.delegatee,
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'accessProofIds': value.accessProofIds,
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
     };
 }
 
