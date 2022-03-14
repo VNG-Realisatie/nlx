@@ -18,7 +18,7 @@ import (
 
 var (
 	ErrServiceNotInClaims                             = errors.New("service is not in claims")
-	ErrDelegatorDoesNotHaveAccess                     = errors.New("delegator does have access")
+	ErrDelegatorDoesNotHaveAccess                     = errors.New("delegator does not have access")
 	ErrRequestingOrganizationIsNotDelegatee           = errors.New("requesting organization is not the delegatee")
 	ErrRequestingOrganizationPublicKeyNotFoundInOrder = errors.New("requesting organization public key is not the public key found in order")
 	ErrCannotParsePublicKeyFromPEM                    = errors.New("failed to parse PEM block containing the public key")
