@@ -7,9 +7,13 @@ title: Access API through a client
 
 ## Set port forwarding
 
-You have installed the NLX outway and the example service. The outway is currently only available from within the cluster. In order to make a request to our API via the outway, the outway must be available for your local machine. For this, you create a port forward.
+You have installed the NLX Outway and the example service.
+The Outway is currently only available from within the cluster.
+In order to make a request to our API via the outway,
+the outway must be available for your local machine. For this, you create a port forward.
 
-Before we can create a port forward we need the name of the outway pod. You can find it by running the following command:
+Before we can create a port forward we need the name of the Outway pod.
+You can find it by running the following command:
 
 ```
 kubectl -n nlx get pods
@@ -26,23 +30,24 @@ kubectl -n nlx port-forward pod/<name of your outway pod> 8080:8080
 
 ## Request access to the service
 
-In order to access your service, you need to access that service. After all, you exploring NLX and therefore manage access to the service via NLX.
+In order to access your service, you need to request access to that service.
 
-Requesting and getting access via NLX is very easy:
-- Open the directory in NLX Management
-- Select the service `basisregister-fictieve-kentekens`.
-- In the detail screen that opens, you will see the yellow button `Request access`, click on this.
-- Wait a moment and now refresh your browser a few times until you see the text "access requested".
-- Now you have to accept the access request by opening the service page and clicking on `basisregister-fictieve-kentekens`
-- In the detail screen that opens you will see 'Access requests'.
-- Click here to see access requests. If all went well you will see your own. If not, then refresh your browser again.
-- You will now see your access request. Accept it by clicking the blue checkmark. If this is successful, your organization should be visible under the heading "Organizations with access".
+Requesting and getting access via NLX:
+
+1. Navigate to the 'Directory' in NLX Management.
+2. Select the service `basisregister-fictieve-kentekens` from the list
+3. Expand the 'Outways zonder toegang' section by clicking on its title
+4. Click on 'Toegang aanvragen' for the Outway 'outway-nlx-outway'
+5. Now navigate to back the 'Services' page and again select the service `SwaggerPetStore`.
+6. You should see one access request under the section 'Toegangsverzoeken'.
+7. Expand the section and click on 'Accepteren' to accept the access request.
+8. You now have access to the service.
 
 You now have access to the service via NLX.
 
 ## Query API
 
-Due to the port forwarding, your outway is now accessible from your local machine.
+Due to the port forwarding, your Outway is now accessible from your local machine.
 
 Replace in the command below:
 - `<your subject serial number>` for the certificate's serial number you entered in your external certificate. How to find this value is described in [Create Certificates](./create-certificate)
