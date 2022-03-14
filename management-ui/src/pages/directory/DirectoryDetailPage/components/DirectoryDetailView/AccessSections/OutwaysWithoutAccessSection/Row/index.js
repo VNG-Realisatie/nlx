@@ -45,7 +45,7 @@ const Row = ({
   }
 
   const onRetryRequestAccess = () => {
-    service.retryRequestAccess(publicKeyPEM)
+    service.retryRequestAccess(publicKeyFingerprint)
   }
 
   const { accessRequest, accessProof } =

@@ -8,6 +8,7 @@ import { configure } from 'mobx'
 import { renderWithProviders } from '../../../../../../../test-utils'
 import { DirectoryApi, ManagementApi } from '../../../../../../../api'
 import { RootStore, StoreProvider } from '../../../../../../../stores'
+import { ACCESS_REQUEST_STATES } from '../../../../../../../stores/models/OutgoingAccessRequestModel'
 import OutwaysWithoutAccessSection from './index'
 
 jest.mock('../../../../../../../components/Modal')
@@ -95,4 +96,80 @@ test('Outways without access section', async () => {
     expect(service.requestAccess).toHaveBeenCalledWith('public-key-pem-1')
   })
   expect(onHideConfirmRequestAccessModalHandler).toHaveBeenCalledTimes(1)
+})
+
+test('Retry requesting access', async () => {
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
+    outways: [
+      {
+        name: 'outway-1',
+        publicKeyFingerprint: 'public-key-fingerprint-1',
+        publicKeyPEM: 'public-key-pem-1',
+      },
+    ],
+  })
+
+  managementApiClient.managementSendAccessRequest = jest
+    .fn()
+    .mockResolvedValue({})
+
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryGetOrganizationService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'my-service',
+      organization: {
+        organizationName: 'my-organization',
+        organizationSerialNumber: '00000000000000000001',
+      },
+      accessStates: [
+        {
+          accessRequest: {
+            state: ACCESS_REQUEST_STATES.FAILED,
+            publicKeyFingerprint: 'public-key-fingerprint-1',
+            errorDetails: {
+              cause: 'cause of failed access request',
+            },
+          },
+          accessProof: null,
+        },
+      ],
+    })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+    directoryApiClient,
+  })
+
+  const service = await rootStore.directoryServicesStore.fetch(
+    '00000000000000000001',
+    'my-service',
+  )
+
+  jest.spyOn(service, 'retryRequestAccess').mockResolvedValue()
+
+  renderWithProviders(
+    <MemoryRouter>
+      <StoreProvider rootStore={rootStore}>
+        <OutwaysWithoutAccessSection service={service} />
+      </StoreProvider>
+    </MemoryRouter>,
+  )
+
+  await rootStore.outwayStore.fetchAll()
+
+  fireEvent.click(screen.getByText(/Outways without access/i))
+
+  fireEvent.click(screen.getByText('Retry'))
+
+  await waitFor(() => {
+    expect(service.retryRequestAccess).toHaveBeenCalledWith(
+      'public-key-fingerprint-1',
+    )
+  })
 })
