@@ -117,7 +117,6 @@ func (db *PostgresConfigDatabase) GetInway(ctx context.Context, name string) (*I
 
 	if err := db.DB.
 		WithContext(ctx).
-		Debug().
 		Preload("Services").
 		Where("name = ?", name).
 		First(inway).Error; err != nil {
