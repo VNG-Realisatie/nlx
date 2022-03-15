@@ -39,7 +39,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tabbed/pqtype v0.1.1
 	go.uber.org/zap v1.21.0
-	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
+	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
