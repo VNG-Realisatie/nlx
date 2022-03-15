@@ -36,9 +36,7 @@ Then(
     assert.equal(httpResponse?.status, 500);
 
     const responseText = await httpResponse?.text();
-    const containsRevokedText = responseText.includes(
-      "failed to request claim: message: order is revoked, source: rpc error: code = Unauthenticated desc = order is revoked"
-    );
+    const containsRevokedText = responseText.includes("order is revoked");
 
     if (!containsRevokedText) {
       throw new Error(

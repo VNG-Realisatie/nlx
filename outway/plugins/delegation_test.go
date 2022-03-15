@@ -55,7 +55,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"error_while_retrieving_claim_returns_an_error": {
 			wantErr:            true,
 			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to request claim from 00000000000000000001: failed to request claim: message: failed to retrieve claim, source: something went wrong\n",
+			wantMessage:        "message: failed to retrieve claim, source: something went wrong\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -75,7 +75,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"error_when_retrieving_invalid_jwt": {
 			wantErr:            true,
 			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to request claim from 00000000000000000001: failed to request claim: message: failed to parse JWT, source: token contains an invalid number of segments\n",
+			wantMessage:        "message: failed to parse JWT, source: token contains an invalid number of segments\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -117,7 +117,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"order_has_been_revoked": {
 			wantErr:            true,
 			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to request claim from 00000000000000000001: failed to request claim: message: order is revoked, source: rpc error: code = Unauthenticated desc = order is revoked\n",
+			wantMessage:        "failed to request claim from 00000000000000000001: order is revoked\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")

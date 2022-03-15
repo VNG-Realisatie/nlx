@@ -72,6 +72,29 @@ func TestRequestClaim(t *testing.T) {
 			},
 			wantErr: status.Error(codes.InvalidArgument, "a service name must be provided"),
 		},
+		"when_requester_is_not_delegatee": {
+			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+
+				mocks.db.
+					EXPECT().
+					GetOutgoingOrderByReference(gomock.Any(), "order-reference").
+					Return(&database.OutgoingOrder{
+						Delegatee:                 "00000000000000000005",
+						PublicKeyPEM:              "public-key",
+						OutgoingOrderAccessProofs: []*database.OutgoingOrderAccessProof{},
+						ValidUntil:                time.Now().Add(time.Hour),
+					}, nil)
+
+				return ctx
+			},
+			request: &external.RequestClaimRequest{
+				OrderReference:                  "order-reference",
+				ServiceName:                     "service-name",
+				ServiceOrganizationSerialNumber: "00000000000000000001",
+			},
+			wantErr: status.Error(codes.PermissionDenied, "order with reference 'order-reference' does not exist for your organization"),
+		},
 		"when_public_key_is_invalid": {
 			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)

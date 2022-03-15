@@ -12,6 +12,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
@@ -19,6 +20,7 @@ import (
 )
 
 const errMessageOrderRevoked = "order is revoked"
+const errMessageOrderNotFound = "order not found"
 
 type delegationError struct {
 	source  error
@@ -81,10 +83,19 @@ func (plugin *DelegationPlugin) requestClaim(orderOrganizationSerialNumber, orde
 		ServiceName:                     serviceName,
 	})
 	if err != nil {
+		println(err)
 		st, ok := status.FromError(err)
 		if ok {
+			if st.Message() == errMessageOrderNotFound {
+				return nil, "", fmt.Errorf("order does not exist for organization")
+			}
+
 			if st.Message() == errMessageOrderRevoked {
-				return nil, "", newDelegationError("order is revoked", err)
+				return nil, "", fmt.Errorf("order is revoked")
+			}
+
+			if st.Code() == codes.PermissionDenied {
+				return nil, "", fmt.Errorf("order can not be used")
 			}
 		}
 
@@ -112,7 +123,7 @@ func (plugin *DelegationPlugin) getOrRequestClaim(orderOrganizationSerialNumber,
 	if !ok || value.(*claimData).Valid() != nil {
 		claim, raw, err := plugin.requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName)
 		if err != nil {
-			return nil, fmt.Errorf("failed to request claim: %s", err)
+			return nil, err
 		}
 
 		data := &claimData{

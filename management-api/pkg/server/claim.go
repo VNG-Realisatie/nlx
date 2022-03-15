@@ -22,6 +22,7 @@ import (
 
 const expiresInHours = 4
 
+var errOrderNotFound = "order not found"
 var errMessageOrderRevoked = "order is revoked"
 var errMessageOutwayUnableToSignClaim = "could not sign order claim via outway"
 
@@ -47,14 +48,14 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	order, err := s.configDatabase.GetOutgoingOrderByReference(ctx, req.OrderReference)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, status.Errorf(codes.NotFound, "order with reference '%s' not found", req.OrderReference)
+			return nil, status.Errorf(codes.NotFound, errOrderNotFound)
 		}
 
 		return nil, status.Error(codes.Internal, "failed to find order")
 	}
 
 	if order.Delegatee != md.OrganizationSerialNumber {
-		return nil, status.Errorf(codes.NotFound, "order with reference '%s' and organization serial number '%s' not found", req.OrderReference, md.OrganizationSerialNumber)
+		return nil, status.Errorf(codes.PermissionDenied, "order with reference '%s' does not exist for your organization", req.OrderReference)
 	}
 
 	outgoingAccessRequest := filterOutgoingAccessRequestFromOrder(order, req.ServiceOrganizationSerialNumber, req.ServiceName)
