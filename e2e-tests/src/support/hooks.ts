@@ -33,7 +33,7 @@ Before({ tags: "@debug" }, async function (this: CustomWorld) {
 });
 
 Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
-  this.id = ulid();
+  this.id = `${ulid()}-e2e`;
 
   const time = new Date().toISOString().split(".")[0];
   this.testName =
