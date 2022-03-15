@@ -1,0 +1,54 @@
+@startuml
+title: Request a service on behalf of a delegator
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "Saas Organization"
+participant "Client" as clientSaasOrganization
+participant "Outway" as outwaySaasOrganization
+participant "Management API" as managementAPISaasOrganization
+end box
+
+box "API Provider"
+participant "Inway" as inwayAPIProvider
+participant "Service" as serviceAPIProvider
+end box
+
+box "Municipality"
+participant "Inway" as inwayMunicipality
+participant "Outway" as outwayMunicipality
+participant "Management API" as managementAPIMunicipality
+database "Management database" as managementDatabaseMunicipality
+end box
+
+clientSaasOrganization -> outwaySaasOrganization: HTTP request
+outwaySaasOrganization -> outwaySaasOrganization: parse delegation HTTP headers from request
+alt Outway does not have claim for this service
+outwaySaasOrganization -> managementAPISaasOrganization: retrieve claim for order
+managementAPISaasOrganization -> inwayMunicipality: request claim
+inwayMunicipality -> managementAPIMunicipality: request claim
+managementAPIMunicipality -> managementDatabaseMunicipality: retrieve Outgoing order by reference
+managementDatabaseMunicipality -> managementAPIMunicipality: return order
+managementAPIMunicipality -> managementAPIMunicipality: delegatee of order equals the Subject Serial Number of the requesting Management API
+managementAPIMunicipality -> managementAPIMunicipality: check if the order has not been revoked
+managementAPIMunicipality -> managementAPIMunicipality: check if the order is not expired
+managementAPIMunicipality -> managementDatabaseMunicipality: get outway with the same Public Key Fingerprint as the access proof in the order
+managementDatabaseMunicipality-> managementAPIMunicipality: return outway
+managementAPIMunicipality -> managementAPIMunicipality: include Public Key Fingerprint of the Outway in the claim
+managementAPIMunicipality -> outwayMunicipality: ask Outway to sign claim with its private key
+outwayMunicipality -> managementAPIMunicipality: return signed claim
+managementAPIMunicipality -> inwayMunicipality: return signed claim
+inwayMunicipality -> managementAPISaasOrganization: return signed claim
+managementAPISaasOrganization -> outwaySaasOrganization: return signed claim
+end
+
+outwaySaasOrganization -> inwayAPIProvider: HTTP request, with claim
+inwayAPIProvider -> inwayAPIProvider: delegator (municipality) has access to the service with the Public Key Fingerprint included in the claim
+inwayAPIProvider -> serviceAPIProvider: HTTP request
+serviceAPIProvider -> inwayAPIProvider: return
+inwayAPIProvider -> outwaySaasOrganization: return
+outwaySaasOrganization -> clientSaasOrganization: return
+
+@enduml
