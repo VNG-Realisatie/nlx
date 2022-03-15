@@ -81,7 +81,7 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateeSerialNumber:         "00000000000000000099",
 			},
 			wantStatusCode:        http.StatusUnauthorized,
-			wantMessage:           "nlx-inway: no access\n",
+			wantMessage:           "nlx-inway: no access. organization serialnumber does not match the delegatee organization serialnumber of the order\n",
 			wantDelegationSuccess: false,
 		},
 		"delegatee_pub_key_fingerprint_not_found_in_order": {
@@ -113,10 +113,10 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusUnauthorized,
-			wantMessage:           "nlx-inway: no access\n",
+			wantMessage:           "nlx-inway: no access. public key of the connection does not match the delegatee public key of the order\n",
 			wantDelegationSuccess: false,
 		},
-		"delegatee_does_not_have_access_to_service": {
+		"delegator_does_not_have_access_to_service": {
 			args: &args{
 				service: &plugins.Service{
 					Name:   "mock-service-without-valid-grant",
@@ -127,27 +127,7 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
 			wantStatusCode:        http.StatusUnauthorized,
-			wantMessage:           "nlx-inway: no access\n",
-			wantDelegationSuccess: false,
-		},
-		"delegatee_does_not_have_service_in_claims": {
-			args: &args{
-				service: &plugins.Service{
-					Name: "mock-service-not-in-claim",
-					Grants: []*plugins.Grant{
-						{
-							OrganizationSerialNumber: delegatorCertBundle.Certificate().Subject.SerialNumber,
-							PublicKeyPEM:             certPEM,
-							PublicKeyFingerprint:     delegatorCertBundle.PublicKeyFingerprint(),
-						},
-					},
-				},
-				claim:                         validClaim,
-				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
-				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
-			},
-			wantStatusCode:        http.StatusUnauthorized,
-			wantMessage:           "nlx-inway: no access\n",
+			wantMessage:           "nlx-inway: no access. delegator does not have access to the service for the public key in the claim\n",
 			wantDelegationSuccess: false,
 		},
 		"happy_flow": {

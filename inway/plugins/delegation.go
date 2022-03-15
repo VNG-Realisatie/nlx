@@ -17,7 +17,6 @@ import (
 )
 
 var (
-	ErrServiceNotInClaims                             = errors.New("service is not in claims")
 	ErrDelegatorDoesNotHaveAccess                     = errors.New("delegator does not have access")
 	ErrRequestingOrganizationIsNotDelegatee           = errors.New("requesting organization is not the delegatee")
 	ErrRequestingOrganizationPublicKeyNotFoundInOrder = errors.New("requesting organization public key is not the public key found in order")
@@ -93,28 +92,21 @@ func handleJWTValidationError(context *Context, claims *delegation.JWTClaims, er
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
 		context.Logger.Info("requesting organization public key is not the public key found in order", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+		http.Error(context.Response, "nlx-inway: no access. organization serialnumber does not match the delegatee organization serialnumber of the order", http.StatusUnauthorized)
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationPublicKeyNotFoundInOrder) {
 		context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+		http.Error(context.Response, "nlx-inway: no access. public key of the connection does not match the delegatee public key of the order", http.StatusUnauthorized)
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
 		context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
-
-		return
-	}
-
-	if errors.Is(validationError.Inner, ErrServiceNotInClaims) {
-		context.Logger.Info("delegator does have access but not to this service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access", http.StatusUnauthorized)
+		http.Error(context.Response, "nlx-inway: no access. delegator does not have access to the service for the public key in the claim", http.StatusUnauthorized)
 
 		return
 	}
