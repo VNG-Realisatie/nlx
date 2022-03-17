@@ -8,7 +8,7 @@ ENV GO111MODULE=off
 RUN apk add --update git g++
 RUN go get -u github.com/cloudflare/cfssl/cmd/...
 
-FROM alpine:3.15.0
+FROM alpine:3.15.1
 
 # Add csfssl tools.
 COPY --from=build-cfssl /go/bin/* /usr/local/bin/
