@@ -1,3 +1,72 @@
+# [0.125.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.124.0...v0.125.0) (2022-03-17)
+
+
+### Bug Fixes
+
+* add delegatee public key fingerprint to request claim call ([51ad428](https://gitlab.com/commonground/nlx/nlx/commit/51ad4284b4b5633589bedc6275c07d8b3046c586))
+* **docs:** update Algolia settings to re-enable search ([1c050fd](https://gitlab.com/commonground/nlx/nlx/commit/1c050fddb39cd56a8f5710e5ef46f36dce0aaf5b)), closes [#1491](https://gitlab.com/commonground/nlx/nlx/issues/1491)
+* **management:** add default value outway self address to migration ([235ed73](https://gitlab.com/commonground/nlx/nlx/commit/235ed736758d9a38791c324f16d96d9ba994c711))
+* **management:** always resume polling the directory service ([73081fc](https://gitlab.com/commonground/nlx/nlx/commit/73081fc7e62c56eddcbf6653f628e1d05b205068)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** correct revoke access translation and add finger print to access grant ([83d20dc](https://gitlab.com/commonground/nlx/nlx/commit/83d20dcfff830e09e33cdee82bbedf189e69281e))
+* **management:** enable displaying the incoming order detail drawer ([ab92fd5](https://gitlab.com/commonground/nlx/nlx/commit/ab92fd566837d6169e073f4f848c84088e3d952e)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** go import'ed ([3c66034](https://gitlab.com/commonground/nlx/nlx/commit/3c660346598aaf25effb7711c921ac264198cecf))
+* **management:** make retry requesting access work again ([2638804](https://gitlab.com/commonground/nlx/nlx/commit/2638804c9abc44e81894ac183551f265cab5e275)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** reword error message ([e66e77c](https://gitlab.com/commonground/nlx/nlx/commit/e66e77cf21c3ad6d3c3b8e9457d0de9b3e575b4c)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** rework broken Edit Order page ([4211e71](https://gitlab.com/commonground/nlx/nlx/commit/4211e718ca4a482e714365b68cf487ad0a2d0052)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** send the public key PEM when requesting access to a service ([8f083b0](https://gitlab.com/commonground/nlx/nlx/commit/8f083b0d7980e60bf4191dfbb9f9daae6bb7b8c3)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** show access request as received when its approved but has no prove yet ([81e2c2a](https://gitlab.com/commonground/nlx/nlx/commit/81e2c2a0ede6d33081ac77d63cd77e6f8524c670)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** use correct organization serial number to update a DirectoryService model ([3e2e6e5](https://gitlab.com/commonground/nlx/nlx/commit/3e2e6e54fea4e12f92d43839c1a529973e4b09df)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** using an order works ([41f04bd](https://gitlab.com/commonground/nlx/nlx/commit/41f04bd0b74a0d2caf99ef1205a4d4bc0a1ced13))
+
+
+### Features
+
+* add outway self addres to modd and helm chart ([de7f872](https://gitlab.com/commonground/nlx/nlx/commit/de7f8728a38217e88ea203f71fdea49f47f589a7))
+* **directory:** delegation claims use access proofs ([fe46215](https://gitlab.com/commonground/nlx/nlx/commit/fe46215dc18d8d3806a25a185d7a4cef9139b9e1))
+* **inway:** improved delegation error messages ([b88c4bd](https://gitlab.com/commonground/nlx/nlx/commit/b88c4bd9c5f382e19602d378d190f307c21fcb3f))
+* **management:** add get outways by public key fingerprint call and register outway self address ([ff94f64](https://gitlab.com/commonground/nlx/nlx/commit/ff94f64035bc28d797537fcfe454546858ca939e))
+* **management:** add migration for outgoing_orders_access_proofs table ([448c108](https://gitlab.com/commonground/nlx/nlx/commit/448c1085056b8703bc34ba3b0b2fa2cdc11c7d17))
+* **management:** add pub key fingerprint to outway ([3d434f6](https://gitlab.com/commonground/nlx/nlx/commit/3d434f656bfe647ea032efab1380b45d1c3a4e7f))
+* **management:** add public fingerprint to list incoming access request ([c876d3b](https://gitlab.com/commonground/nlx/nlx/commit/c876d3b188bf33fb2d58855f2461f1a66d9135e3))
+* **management:** add public key fingerprint to access request detail page ([6cad222](https://gitlab.com/commonground/nlx/nlx/commit/6cad222ff2a362508004c7eeba9a89c500cc8dd9))
+* **management:** add public key fingerprint to create orders ([3eb5410](https://gitlab.com/commonground/nlx/nlx/commit/3eb54106dfeeb14c20dcbc678ba0c33dd973c4ab))
+* **management:** add public key PEM to create outgoing access request and duplicate service check ([46e16c9](https://gitlab.com/commonground/nlx/nlx/commit/46e16c93fb433c77f67e6ed85964caf8b406930b))
+* **management:** disable selecting an access proof of an order for an already selected service ([805c2b2](https://gitlab.com/commonground/nlx/nlx/commit/805c2b2c2c256220cf4ba5035980b4b1d0f71171)), closes [#1491](https://gitlab.com/commonground/nlx/nlx/issues/1491)
+* **management:** display Outways & public key in the request access modal ([9ad5f9c](https://gitlab.com/commonground/nlx/nlx/commit/9ad5f9ca3d4e558a0f34ebab1e14710aceb6f4f4)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** display warning when one of the access requests failed for a service ([2f60a48](https://gitlab.com/commonground/nlx/nlx/commit/2f60a481edf0933fcede42c74dfa17010f756c27)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** enable listing incoming and outgoing orders with public key fingerprints ([439ebe1](https://gitlab.com/commonground/nlx/nlx/commit/439ebe1feccd7baecacd775a0f36aa1b62406816)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** include access proof models for ListOutgoingOrders ([e3d3be4](https://gitlab.com/commonground/nlx/nlx/commit/e3d3be4eb59049fd786bc0fc76b931d0f6e5f34b)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** include access proof models for ListOutgoingOrders (wip) ([a4cee4e](https://gitlab.com/commonground/nlx/nlx/commit/a4cee4e639584d236e973a9f569cc0037868ceef)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** include ListenAddress when listing the Outways ([7f7b3b3](https://gitlab.com/commonground/nlx/nlx/commit/7f7b3b3557d0ef3dda765e7b1b0f28463f7b01f9)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** make access detail modal more organized ([0eec9d0](https://gitlab.com/commonground/nlx/nlx/commit/0eec9d09d0440848b99d351a0b19c3297a25d460))
+* **management:** only show the subject serial number for the incoming orders ([0a0c183](https://gitlab.com/commonground/nlx/nlx/commit/0a0c183f752a47d2552f3f15dfba1df5e59335f9)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** orders use accessproofs ([29ae245](https://gitlab.com/commonground/nlx/nlx/commit/29ae245d8c9e7e0c677098c380d4a5107b254c37))
+* **management:** provide organization serialnumber when retrieving a claim ([fabc95b](https://gitlab.com/commonground/nlx/nlx/commit/fabc95b36ab330f9257c713738807df79b9ed15e))
+* **management:** regenerate management api client ([89f790e](https://gitlab.com/commonground/nlx/nlx/commit/89f790ee76ac50b2f5227f77f1c7e2fb662c571e)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** regenerate management api client ([dacfbe9](https://gitlab.com/commonground/nlx/nlx/commit/dacfbe9279ff8698c850b2bbd8f1ddda44bae4c5)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** remove column title for access ([80978fe](https://gitlab.com/commonground/nlx/nlx/commit/80978fe21eafb1149653a0dd49e404434af45a98))
+* **management:** remove the cancelled state for the access requests ([59589d3](https://gitlab.com/commonground/nlx/nlx/commit/59589d35ba46a28d593e6949af48edea35bb8011)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** return access state per public key fingerprint in list services ([cc9d2ed](https://gitlab.com/commonground/nlx/nlx/commit/cc9d2ed1d8db1aa9773b17577dc8e48144c1defb))
+* **management:** rework code & ui of access state for Outways ([9c5830d](https://gitlab.com/commonground/nlx/nlx/commit/9c5830d137de44ca7322be077da58f54f46c0d36)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** rework determining the access state based on the revoked at property ([22d8f8c](https://gitlab.com/commonground/nlx/nlx/commit/22d8f8cbe22896b8a8749fe20ec93c690d82f019)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** rework the AddOrderPage to use Public Key Fingerprints for access ([8ba71b1](https://gitlab.com/commonground/nlx/nlx/commit/8ba71b15fdbb9cb3bd815e59da607bef597c2c1c)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** show status of access requests per certificate ([34eeedf](https://gitlab.com/commonground/nlx/nlx/commit/34eeedf282fa7dcc58bfb7faf755745a3dd57609)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** store access proof models when creating an outgoing order model ([883de52](https://gitlab.com/commonground/nlx/nlx/commit/883de524a3583f83908e944cef37240936d90c21)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** sync access requests using the public key fingerprint ([4a921f7](https://gitlab.com/commonground/nlx/nlx/commit/4a921f781cab2a2b7dc14bee55187b559f71d675)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **management:** use full with for alert with access request error ([121d9cc](https://gitlab.com/commonground/nlx/nlx/commit/121d9cc46152c85e06b051514cedf7f6e294fdcb)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **outway:** add grpc server and sign order claim call ([62d193f](https://gitlab.com/commonground/nlx/nlx/commit/62d193f1699f37555dd42bd3ec9c6e66528c194a))
+* **outway:** improved error messages delegation ([ea7572c](https://gitlab.com/commonground/nlx/nlx/commit/ea7572cd3833d7866654e4abb6575d9ebeeedc51))
+* **outway:** pass listen address when registering to the Management API ([13ae3f5](https://gitlab.com/commonground/nlx/nlx/commit/13ae3f5359e1be86fbbfb399426ce1f7407aa387)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+* **outway:** register self address in management api ([0991d7f](https://gitlab.com/commonground/nlx/nlx/commit/0991d7fa27a1cf218cff1b2b5c381f1b8a904d94))
+* remove passing listen address when registering an Outway ([23190c4](https://gitlab.com/commonground/nlx/nlx/commit/23190c4b7bbd4ecaabdf542a6b447c5bc51cc180)), closes [#1427](https://gitlab.com/commonground/nlx/nlx/issues/1427)
+
+
+### Reverts
+
+* **management:** include ListenAddress when listing the Outways ([3f26d76](https://gitlab.com/commonground/nlx/nlx/commit/3f26d76886195daa9d7dea82b5060ca1fe7617e1))
+* **outway:** pass listen address when registering to the Management API ([4284a87](https://gitlab.com/commonground/nlx/nlx/commit/4284a87366c0952f3b926a5696b0434124794db0))
+* update dependency @commonground/design-system to v21.1.1 ([4bd2e2c](https://gitlab.com/commonground/nlx/nlx/commit/4bd2e2c46df39323de745ef634e3eaffdf702312))
+
 # [0.124.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.123.0...v0.124.0) (2022-02-28)
 
 
