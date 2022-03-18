@@ -140,7 +140,6 @@ func health(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, healthResponse{Status: "ok"})
 }
 
-// ServeHTTP handles a specific HTTP request
 func (a *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.mux.ServeHTTP(w, r)
 }

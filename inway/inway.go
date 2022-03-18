@@ -118,7 +118,6 @@ func NewInway(params *Params) (*Inway, error) {
 		},
 	}
 
-	// setup monitoring service
 	i.monitoringService, err = monitoring.NewMonitoringService(params.MonitoringAddress, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to create monitoring service")

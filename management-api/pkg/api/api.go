@@ -69,7 +69,6 @@ type Authenticator interface {
 	OnlyAuthenticated(h http.Handler) http.Handler
 }
 
-// NewAPI creates and prepares a new API
 //nolint:gocyclo // parameter validation
 func NewAPI(args *NewAPIArgs) (*API, error) {
 	if args.DB == nil {

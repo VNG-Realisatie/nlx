@@ -212,7 +212,6 @@ var serveCommand = &cobra.Command{
 		}
 
 		go func() {
-			// Listen on the address provided in the serveOpts
 			err = a.ListenAndServe(serveOpts.ListenAddress, serveOpts.ConfigListenAddress)
 			if err != nil {
 				logger.Fatal("failed to listen and serve", zap.Error(err))
