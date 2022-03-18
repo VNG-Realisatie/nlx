@@ -130,6 +130,46 @@ test('fetching a single service', async () => {
   expect(initialService).toBe(updatedService)
 })
 
+test('fetching a single service which has been removed', async () => {
+  const directoryApiClient = new DirectoryApi()
+
+  directoryApiClient.directoryGetOrganizationService = jest
+    .fn()
+    .mockResolvedValueOnce({
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Org A',
+      },
+      serviceName: 'Service A',
+    })
+    .mockRejectedValue({
+      status: 404,
+    })
+
+  const rootStore = new RootStore({
+    directoryApiClient,
+  })
+
+  const directoryServicesStore = rootStore.directoryServicesStore
+  expect(directoryServicesStore.services).toHaveLength(0)
+
+  const initialService = await directoryServicesStore.fetch(
+    '00000000000000000001',
+    'Service A',
+  )
+
+  expect(directoryServicesStore.services).toHaveLength(1)
+  expect(initialService).toBeInstanceOf(DirectoryServiceModel)
+
+  const updatedService = await directoryServicesStore.fetch(
+    '00000000000000000001',
+    'Service A',
+  )
+
+  expect(directoryServicesStore.services).toHaveLength(0)
+  expect(updatedService).toBeUndefined()
+})
+
 test('requesting access to a service in the directory', async () => {
   configure({ safeDescriptors: false })
 

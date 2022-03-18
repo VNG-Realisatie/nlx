@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
@@ -26,21 +26,15 @@ const DirectoryDetailPage = () => {
   const { showDrawer } = useDrawerStack()
   const directoryServiceStore = useDirectoryServiceStore()
   const outwayStore = useOutwayStore()
-  const [service, setService] = useState(
-    directoryServiceStore.getService(organizationSerialNumber, serviceName),
+
+  const service = directoryServiceStore.getService(
+    organizationSerialNumber,
+    serviceName,
   )
 
   useEffect(() => {
     const fetch = async () => {
       await outwayStore.fetchAll()
-
-      try {
-        const result = await directoryServiceStore.fetch(
-          organizationSerialNumber,
-          serviceName,
-        )
-        setService(result)
-      } catch {}
     }
 
     fetch()
@@ -79,4 +73,4 @@ const DirectoryDetailPage = () => {
   )
 }
 
-export default observer(withDrawerStack(DirectoryDetailPage))
+export default withDrawerStack(observer(DirectoryDetailPage))

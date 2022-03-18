@@ -16,19 +16,20 @@ jest.mock('./components/DirectoryDetailView', () => () => (
 test('display directory service details', async () => {
   const directoryApiClient = new DirectoryApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
-    .fn()
-    .mockResolvedValue({
-      id: 'Test Organization/Test Service',
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'Test Organization',
+  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
+    services: [
+      {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Test Organization',
+        },
+        serviceName: 'Test Service',
+        state: 'degraded',
+        apiSpecificationType: 'API',
+        latestAccessRequest: null,
       },
-      serviceName: 'Test Service',
-      state: 'degraded',
-      apiSpecificationType: 'API',
-      latestAccessRequest: null,
-    })
+    ],
+  })
 
   const managementApiClient = new ManagementApi()
 
@@ -40,6 +41,8 @@ test('display directory service details', async () => {
     directoryApiClient,
     managementApiClient,
   })
+
+  await rootStore.directoryServicesStore.fetchAll()
 
   renderWithProviders(
     <MemoryRouter initialEntries={['/00000000000000000001/Test Service']}>
@@ -58,6 +61,19 @@ test('display directory service details', async () => {
   expect(screen.getByText('Test Service')).toBeInTheDocument()
   expect(screen.getByText('state-degraded.svg')).toBeInTheDocument()
   expect(screen.getByTestId('directory-service-details')).toBeInTheDocument()
+
+  directoryApiClient.directoryGetOrganizationService = jest
+    .fn()
+    .mockRejectedValue({
+      status: 404,
+    })
+
+  await rootStore.directoryServicesStore.fetch(
+    '00000000000000000001',
+    'Test Service',
+  )
+
+  expect(screen.getByText('Failed to load the service')).toBeInTheDocument()
 })
 
 test('service does not exist', () => {

@@ -3,19 +3,13 @@
 //
 
 import React from 'react'
-import {
-  MemoryRouter,
-  Routes,
-  Route,
-  unstable_HistoryRouter as HistoryRouter,
-} from 'react-router-dom'
-import { createMemoryHistory } from 'history'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { configure } from 'mobx'
-import { screen, waitFor } from '@testing-library/react'
-import { act, renderWithProviders } from '../../../test-utils'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
-import { DirectoryApi, ManagementApi } from '../../../api'
+import { DirectoryApi } from '../../../api'
 import DirectoryPage from './index'
 
 jest.mock('../../../components/PageTemplate')
@@ -125,70 +119,4 @@ test('failed to load services', async () => {
   expect(() => screen.getByTestId('mock-directory-services')).toThrow()
 
   global.console.error.mockRestore()
-})
-
-test('navigating to the detail page should re-fetch the directory model', async () => {
-  // NOTE: we open the overview page before navigating to
-  // the detail page this allows us to first put a spy on
-  // the fetch-method of the ServiceDirectory model
-
-  configure({ safeDescriptors: false })
-
-  const directoryApiClient = new DirectoryApi()
-
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'foo',
-        },
-        serviceName: 'bar',
-        state: 'up',
-      },
-    ],
-  })
-
-  directoryApiClient.directoryGetOrganizationService = jest
-    .fn()
-    .mockResolvedValue({})
-
-  const managementApiClient = new ManagementApi()
-
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [],
-  })
-
-  const rootStore = new RootStore({
-    directoryApiClient,
-    managementApiClient,
-  })
-
-  const history = createMemoryHistory()
-
-  renderWithProviders(
-    <StoreProvider rootStore={rootStore}>
-      <UserContextProvider user={{}}>
-        <HistoryRouter history={history}>
-          <Routes>
-            <Route path="*" element={<DirectoryPage />} />
-          </Routes>
-        </HistoryRouter>
-      </UserContextProvider>
-    </StoreProvider>,
-  )
-
-  jest.spyOn(rootStore.directoryServicesStore, 'fetch')
-
-  act(() => {
-    history.push('/00000000000000000001/bar')
-  })
-
-  await waitFor(() => {
-    expect(rootStore.directoryServicesStore.fetch).toHaveBeenNthCalledWith(
-      1,
-      '00000000000000000001',
-      'bar',
-    )
-  })
 })
