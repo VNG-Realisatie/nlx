@@ -8,6 +8,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -34,36 +35,41 @@ import (
 var pkiDir = filepath.Join("..", "testing", "pki")
 
 // testRequests to check for expected reponses.
-func testRequests(t *testing.T, tests []struct {
+func testRequests(t *testing.T, tests map[string]struct {
 	url          string
 	statusCode   int
 	errorMessage string
 }) {
 	client := http.Client{}
 
-	for _, test := range tests {
-		req, err := http.NewRequest("GET", test.url, nil)
-		if err != nil {
-			t.Fatal("error creating http request", err)
-		}
+	for name, tt := range tests {
+		tt := tt
 
-		resp, err := client.Do(req)
-		if err != nil {
-			t.Fatal("error doing http request", err)
-		}
-		defer resp.Body.Close()
+		t.Run(name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", tt.url, http.NoBody)
+			if err != nil {
+				t.Fatal("error creating http request", err)
+			}
 
-		assert.Equal(t, test.statusCode, resp.StatusCode)
-		bytes, err := ioutil.ReadAll(resp.Body)
+			resp, err := client.Do(req)
+			if err != nil {
+				t.Fatal("error doing http request", err)
+			}
+			defer resp.Body.Close()
 
-		if err != nil {
-			t.Fatal("error parsing result.body", err)
-		}
+			assert.Equal(t, tt.statusCode, resp.StatusCode)
+			bytes, err := io.ReadAll(resp.Body)
 
-		assert.Equal(t, test.errorMessage, string(bytes))
+			if err != nil {
+				t.Fatal("error reading response body", err)
+			}
+
+			assert.Equal(t, tt.errorMessage, string(bytes))
+		})
 	}
 }
 
+//nolint:funlen // test function
 func TestOutwayListen(t *testing.T) {
 	logger := zap.NewNop()
 
@@ -83,6 +89,12 @@ func TestOutwayListen(t *testing.T) {
 
 	mockService := mock.NewMockHTTPService(ctrl)
 	mockFailService := mock.NewMockHTTPService(ctrl)
+
+	mockService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(
+		func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		},
+	)
 
 	mockService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(
 		func(w http.ResponseWriter, r *http.Request) {
@@ -136,26 +148,34 @@ func TestOutwayListen(t *testing.T) {
 	defer mockServer.Close()
 
 	// Test http responses
-	tests := []struct {
+	tests := map[string]struct {
 		url          string
 		statusCode   int
 		errorMessage string
 	}{
-		{
+		"when_invalid_path": {
 			fmt.Sprintf("%s/invalidpath", mockServer.URL),
 			http.StatusBadRequest,
 			"nlx outway: invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]\n",
-		}, {
+		},
+		"when_service_not_found": {
 			fmt.Sprintf("%s/00000000000000000001/nonexistingservice/add/", mockServer.URL),
 			http.StatusBadRequest,
 			"nlx outway: invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]\n",
-		}, {
+		},
+		"when_service_fails": {
+			fmt.Sprintf("%s/00000000000000000001/mockservicefail/", mockServer.URL),
+			http.StatusInternalServerError,
+			"",
+		},
+		"happy_flow": {
 			fmt.Sprintf("%s/00000000000000000001/mockservice0/", mockServer.URL),
 			http.StatusOK,
 			"",
-		}, {
-			fmt.Sprintf("%s/00000000000000000001/mockservicefail/", mockServer.URL),
-			http.StatusInternalServerError,
+		},
+		"happy_flow_without_trailing_slash": {
+			fmt.Sprintf("%s/00000000000000000001/mockservice0", mockServer.URL),
+			http.StatusOK,
 			"",
 		},
 	}
@@ -424,12 +444,12 @@ func TestFailingTransport(t *testing.T) {
 	mockServer := httptest.NewServer(outway)
 	defer mockServer.Close()
 
-	tests := []struct {
+	tests := map[string]struct {
 		url          string
 		statusCode   int
 		errorMessage string
 	}{
-		{
+		"when_request_to_inway_fails": {
 			fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL),
 			http.StatusServiceUnavailable,
 			"failed request to 'https://inway.00000000000000000001/mockservice/', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/\n",

@@ -42,8 +42,11 @@ func TestParseURLPath(t *testing.T) {
 	assert.Equal(t, "service", destination.Service)
 	assert.Equal(t, "path", destination.Path)
 
-	_, err = parseURLPath("/organization/service")
-	assert.EqualError(t, err, "invalid path in url expecting: /serialNumber/service/path")
+	destination, err = parseURLPath("/serialNumber/service")
+	assert.Nil(t, err)
+	assert.Equal(t, "serialNumber", destination.OrganizationSerialNumber)
+	assert.Equal(t, "service", destination.Service)
+	assert.Equal(t, "", destination.Path)
 }
 
 func TestParseLocalNLXURL(t *testing.T) {

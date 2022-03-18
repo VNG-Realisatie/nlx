@@ -21,6 +21,10 @@ func isNLXUrl(destinationURL *url.URL) bool {
 func parseURLPath(urlPath string) (*plugins.Destination, error) {
 	pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", nlxPathParts)
 
+	if len(pathParts) == nlxPathParts-1 {
+		pathParts = append(pathParts, "")
+	}
+
 	if len(pathParts) != nlxPathParts {
 		return nil, fmt.Errorf("invalid path in url expecting: /serialNumber/service/path")
 	}
