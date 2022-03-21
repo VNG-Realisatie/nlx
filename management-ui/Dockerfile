@@ -1,4 +1,4 @@
-FROM node:16.14.0-alpine AS node-build
+FROM node:16.14.2-alpine AS node-build
 
 RUN apk add --update git jq python3 make g++
 
