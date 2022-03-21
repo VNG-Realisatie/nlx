@@ -501,32 +501,33 @@ func TestRunServer(t *testing.T) {
 	)
 
 	tests := map[string]struct {
-		listenAddress     string
-		listenAddressGRPC string
-		certificate       *tls.Certificate
-		errorMessage      string
+		listenAddress            string
+		listenAddressGRPC        string
+		monitoringServiceAddress string
+		certificate              *tls.Certificate
+		errorMessage             string
 	}{
 		"invalid_listen_address": {
-			listenAddress:     "invalid",
-			listenAddressGRPC: "127.0.0.1:8082",
-			certificate:       nil,
-			errorMessage:      "error listening on server: listen tcp: address invalid: missing port in address",
+			listenAddress:            "invalid",
+			listenAddressGRPC:        "127.0.0.1:8082",
+			monitoringServiceAddress: "localhost:8081",
+			certificate:              nil,
+			errorMessage:             "error listening on server: listen tcp: address invalid: missing port in address",
 		},
 		"invalid_listen_address with TLS": {
-			listenAddress:     "invalid",
-			listenAddressGRPC: "127.0.0.1:8083",
-			certificate:       &certificate,
-			errorMessage:      "error listening on server: listen tcp: address invalid: missing port in address",
+			listenAddress:            "invalid",
+			listenAddressGRPC:        "127.0.0.1:8083",
+			monitoringServiceAddress: "localhost:8082",
+			certificate:              &certificate,
+			errorMessage:             "error listening on server: listen tcp: address invalid: missing port in address",
 		},
 	}
-
-	port := 8081
 
 	for name, tt := range tests {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			monitorService, err := monitoring.NewMonitoringService(fmt.Sprintf("localhost:%d", port), logger)
+			monitorService, err := monitoring.NewMonitoringService(tt.monitoringServiceAddress, logger)
 			assert.Nil(t, err)
 
 			o := &Outway{
@@ -542,7 +543,5 @@ func TestRunServer(t *testing.T) {
 			err = monitorService.Stop()
 			assert.NoError(t, err)
 		})
-
-		port++
 	}
 }
