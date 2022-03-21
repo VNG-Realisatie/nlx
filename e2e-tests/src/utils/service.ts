@@ -99,6 +99,71 @@ const getIncomingAccessRequest = async (
   return incomingAccessRequest;
 };
 
+const isServicePresentInDirectory = async (
+  serviceProvider: Organization,
+  uniqueServiceName: string
+): Promise<boolean> => {
+  const result = await getServiceFromDirectory(
+    serviceProvider,
+    uniqueServiceName
+  );
+  return Promise.resolve(!!result);
+};
+
+const getServiceFromDirectory = async (
+  serviceProvider: Organization,
+  uniqueServiceName: string
+): Promise<ManagementDirectoryService | undefined> => {
+  try {
+    return await serviceProvider.apiClients.directory?.directoryGetOrganizationService(
+      {
+        organizationSerialNumber: serviceProvider.serialNumber,
+        serviceName: uniqueServiceName,
+      }
+    );
+  } catch (error) {
+    return;
+  }
+};
+
+export const createService = async (
+  world: CustomWorld,
+  serviceName: string,
+  serviceProviderOrgName: string
+): Promise<string> => {
+  debug(`creating service ${serviceName} for ${serviceProviderOrgName}`);
+
+  const serviceProvider = getOrgByName(serviceProviderOrgName);
+  const uniqueServiceName = `${serviceName}-${world.id}`;
+
+  const createServiceResponse =
+    await serviceProvider.apiClients.management?.managementCreateService({
+      body: {
+        name: uniqueServiceName,
+        endpointURL: "https://postman-echo.com",
+        inways: [serviceProvider.defaultInway.name],
+        internal: false,
+      },
+    });
+  assert.equal(createServiceResponse?.name, uniqueServiceName);
+
+  debug(
+    `successfully created service ${serviceName} for ${serviceProviderOrgName}`
+  );
+
+  // wait until the service has been announced to the directory
+  await pWaitFor.default(
+    async () =>
+      await isServicePresentInDirectory(serviceProvider, uniqueServiceName),
+    {
+      interval: 200,
+      timeout: 1000 * 35,
+    }
+  );
+
+  return uniqueServiceName;
+};
+
 export const getAccessToService = async (
   world: CustomWorld,
   serviceConsumerOrgName: string,
@@ -112,18 +177,11 @@ export const getAccessToService = async (
   const serviceProvider = getOrgByName(serviceProviderOrgName);
   const serviceConsumer = getOrgByName(serviceConsumerOrgName);
 
-  const uniqueServiceName = `${serviceName}-${world.id}`;
-
-  const createServiceResponse =
-    await serviceProvider.apiClients.management?.managementCreateService({
-      body: {
-        name: uniqueServiceName,
-        endpointURL: "https://postman-echo.com",
-        inways: [serviceProvider.defaultInway.name],
-        internal: false,
-      },
-    });
-  assert.equal(createServiceResponse?.name, uniqueServiceName);
+  const uniqueServiceName = await createService(
+    world,
+    serviceName,
+    serviceProviderOrgName
+  );
 
   const outway = await getOutwayByName(serviceConsumerOrgName, outwayName);
 

@@ -47,3 +47,26 @@ Then(
     assert.equal(containsRevokedText, true);
   }
 );
+
+Then(
+  "{string} receives an unauthorized response",
+  async function (this: CustomWorld, orgName: string) {
+    const httpResponse = await this.scenarioContext.organizations[orgName]
+      .httpResponse;
+
+    assert.equal(httpResponse?.status, 403);
+
+    const responseText = await httpResponse?.text();
+    const containsRevokedText = responseText.includes(
+      "nlx-inway: permission denied"
+    );
+
+    if (!containsRevokedText) {
+      throw new Error(
+        `the response of the HTTP request seems not to be about not having permission: ${responseText}`
+      );
+    }
+
+    assert.equal(containsRevokedText, true);
+  }
+);
