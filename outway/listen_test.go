@@ -17,12 +17,11 @@ import (
 	"strconv"
 	"testing"
 
-	"google.golang.org/grpc"
-
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/transactionlog"
@@ -34,7 +33,6 @@ import (
 
 var pkiDir = filepath.Join("..", "testing", "pki")
 
-// testRequests to check for expected reponses.
 func testRequests(t *testing.T, tests map[string]struct {
 	url          string
 	statusCode   int
@@ -53,7 +51,7 @@ func testRequests(t *testing.T, tests map[string]struct {
 
 			resp, err := client.Do(req)
 			if err != nil {
-				t.Fatal("error doing http request", err)
+				t.Fatal("error making http request", err)
 			}
 			defer resp.Body.Close()
 
