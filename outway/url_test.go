@@ -11,8 +11,8 @@ import (
 
 func TestIsNLXURL(t *testing.T) {
 	tests := []struct {
-		url      string
-		isNLXUrl bool
+		url  string
+		want bool
 	}{
 		{
 			"http://service.organization.services.nlx.local/path",
@@ -31,7 +31,7 @@ func TestIsNLXURL(t *testing.T) {
 		assert.Nil(t, err)
 
 		result := isNLXUrl(destinationURL)
-		assert.Equal(t, test.isNLXUrl, result)
+		assert.Equal(t, test.want, result)
 	}
 }
 

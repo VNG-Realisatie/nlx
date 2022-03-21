@@ -71,7 +71,6 @@ func testRequests(t *testing.T, tests map[string]struct {
 func TestOutwayListen(t *testing.T) {
 	logger := zap.NewNop()
 
-	// Create a outway with a mock service
 	outway := &Outway{
 		servicesHTTP:      make(map[string]HTTPService),
 		servicesDirectory: make(map[string]*directoryapi.ListServicesResponse_Service),
@@ -81,7 +80,6 @@ func TestOutwayListen(t *testing.T) {
 
 	outway.requestHTTPHandler = outway.handleHTTPRequest
 
-	// Setup mock httpservice
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

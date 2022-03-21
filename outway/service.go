@@ -74,7 +74,6 @@ func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.
 	return transport
 }
 
-// NewRoundRobinLoadBalancedHTTPService creates a RoundRobinLoadBalancedHTTPService
 func NewRoundRobinLoadBalancedHTTPService(
 	logger *zap.Logger,
 	cert *common_tls.CertificateBundle,
