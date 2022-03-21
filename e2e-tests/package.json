@@ -5,7 +5,7 @@
         "test": "DEBUG=e2e-tests:* DEBUG_COLORS=true node ./cucumber-runner.js"
     },
     "devDependencies": {
-        "@cucumber/cucumber": "8.0.0-rc.2",
+        "@cucumber/cucumber": "8.0.0-rc.3",
         "@cucumber/html-formatter": "18.0.0",
         "@types/expect": "24.3.0",
         "@types/node": "17.0.9",
