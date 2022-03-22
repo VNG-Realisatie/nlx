@@ -17,3 +17,27 @@ Then(
     assert.equal(response?.name, serviceName);
   }
 );
+
+Then(
+  "the service {string} of {string} is no longer available",
+  async function (this: CustomWorld, serviceName: string, orgName: string) {
+    serviceName = `${serviceName}-${this.id}`;
+
+    const org = getOrgByName(orgName);
+
+    try {
+      await org.apiClients.management?.managementGetService({
+        name: serviceName,
+      });
+      throw new Error(
+        "this code should not be triggered, since we expect the service to be removed"
+      );
+    } catch (error: any) {
+      if (error.status !== 404) {
+        throw new Error(
+          `unexpected status code '${error.status}' while getting a service, expected 404`
+        );
+      }
+    }
+  }
+);
