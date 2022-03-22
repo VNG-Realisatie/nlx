@@ -1,3 +1,15 @@
+# [0.126.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.125.0...v0.126.0) (2022-03-22)
+
+
+### Bug Fixes
+
+* **management:** show 404 view for directory service when it is removed while polling ([fe82b8b](https://gitlab.com/commonground/nlx/nlx/commit/fe82b8bd4b28bc4a2f19d44d9b49c156c37dee9a)), closes [#1499](https://gitlab.com/commonground/nlx/nlx/issues/1499)
+
+
+### Features
+
+* **outway:** do not require trailing slash in service call ([b702fa8](https://gitlab.com/commonground/nlx/nlx/commit/b702fa813d36546f4df24d7dba91379b306d4506))
+
 # [0.125.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.124.0...v0.125.0) (2022-03-17)
 
 
