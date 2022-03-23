@@ -28,3 +28,23 @@ When(
     await driver.get(`${org.management.url}/directory`);
   }
 );
+
+When(
+  "{string} opens the inways page",
+  async function (this: CustomWorld, orgName: string) {
+    const { driver } = this;
+    const org = getOrgByName(orgName);
+    await driver.get(`${org.management.url}/inways-and-outways/inways`);
+  }
+);
+
+When(
+  "{string} opens the inway detail page of the default inway",
+  async function (this: CustomWorld, orgName: string) {
+    const { driver } = this;
+    const org = getOrgByName(orgName);
+    await driver.get(
+      `${org.management.url}/inways-and-outways/inways/${org.defaultInway.name}`
+    );
+  }
+);

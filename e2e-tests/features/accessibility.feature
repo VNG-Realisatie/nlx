@@ -16,3 +16,14 @@ Feature: Accessibility
         When "Gemeente Stijns" opens the directory page
         Then the page is accessible
 
+    Scenario: Inways page
+        Given "Gemeente Stijns" is up and running
+        When "Gemeente Stijns" opens the inways page
+        Then the page is accessible
+
+    Scenario: Inways page
+        Given "Gemeente Stijns" is up and running
+        When "Gemeente Stijns" opens the inway detail page of the default inway
+        Then the page is accessible
+
+
