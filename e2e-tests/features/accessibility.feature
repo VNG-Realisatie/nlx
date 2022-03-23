@@ -10,3 +10,9 @@ Feature: Accessibility
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" opens the login page
         Then the page is accessible
+
+    Scenario: Directory page
+        Given "Gemeente Stijns" is up and running
+        When "Gemeente Stijns" opens the directory page
+        Then the page is accessible
+

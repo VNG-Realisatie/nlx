@@ -19,3 +19,12 @@ When(
     await driver.get(`${org.management.url}/login`);
   }
 );
+
+When(
+  "{string} opens the directory page",
+  async function (this: CustomWorld, orgName: string) {
+    const { driver } = this;
+    const org = getOrgByName(orgName);
+    await driver.get(`${org.management.url}/directory`);
+  }
+);
