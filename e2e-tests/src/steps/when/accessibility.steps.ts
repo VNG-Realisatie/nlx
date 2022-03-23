@@ -48,3 +48,12 @@ When(
     );
   }
 );
+
+When(
+  "{string} opens the services page",
+  async function (this: CustomWorld, orgName: string) {
+    const { driver } = this;
+    const org = getOrgByName(orgName);
+    await driver.get(`${org.management.url}/services`);
+  }
+);

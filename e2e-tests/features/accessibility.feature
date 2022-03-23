@@ -21,9 +21,14 @@ Feature: Accessibility
         When "Gemeente Stijns" opens the inways page
         Then the page is accessible
 
-    Scenario: Inways page
+    Scenario: Inways detail page
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" opens the inway detail page of the default inway
+        Then the page is accessible with the tabindex disabled
+    @ignore
+    Scenario: Services page
+        Given "Gemeente Stijns" is up and running
+        When "Gemeente Stijns" opens the services page
         Then the page is accessible
 
 

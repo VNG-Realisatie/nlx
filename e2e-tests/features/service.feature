@@ -1,6 +1,6 @@
 @management @service
 Feature: Service
-
+    @ignore
     Scenario: Create a service
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" create a service named "MyService" and exposed via the default Inway

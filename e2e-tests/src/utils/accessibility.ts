@@ -9,10 +9,11 @@ interface Violation {
 }
 
 export const checkForAccessibilityIssues = async (
-  driver: webdriver.ThenableWebDriver
+  driver: webdriver.ThenableWebDriver,
+  rulesToDisable: Array<string>
 ): Promise<Array<any>> => {
   const builder = await new AxeBuilder(driver);
-  const results = await builder.analyze();
+  const results = await builder.disableRules(rulesToDisable).analyze();
   return logViolations(results.violations);
 };
 

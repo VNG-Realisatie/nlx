@@ -5,6 +5,15 @@ import { strict as assert } from "assert";
 
 Then("the page is accessible", async function (this: CustomWorld) {
   const { driver } = this;
-  const violations = await checkForAccessibilityIssues(driver);
+  const violations = await checkForAccessibilityIssues(driver, []);
   assert.deepEqual(violations, []);
 });
+
+Then(
+  "the page is accessible with the tabindex disabled",
+  async function (this: CustomWorld) {
+    const { driver } = this;
+    const violations = await checkForAccessibilityIssues(driver, ["tabindex"]);
+    assert.deepEqual(violations, []);
+  }
+);
