@@ -194,6 +194,7 @@ export const getAccessToService = async (
         publicKeyPEM: outway.publicKeyPEM,
       },
     });
+
   assert.equal(createAccessRequestResponse?.serviceName, uniqueServiceName);
 
   // wait until the other organization has received our access request

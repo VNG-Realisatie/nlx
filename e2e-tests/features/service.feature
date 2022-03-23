@@ -12,11 +12,10 @@ Feature: Service
         When "Gemeente Stijns" removes the service "MyServiceToDelete"
         Then the service "MyServiceToDelete" of "Gemeente Stijns" is no longer available
 
-    @ignore
     Scenario: Revoke access to the service
-        Given "RvRD" is logged into NLX management
-            And "RvRD" has given access to "Gemeenste Stijns" for the service "voorbeeld-websockets"
-            And the websocket chat of "Gemeente Stijns" can establish a connection
-        When "RvRD" revokes access of "Gemeenste Stijns" to "voorbeeld-websockets"
-        Then the websocket chat of "Gemeente Stijns" cannot establish a connection
+        Given "RvRD" is up and running
+            And "Gemeente Stijns" is up and running
+            And the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" has access to "basisregister-fictieve-kentekens" of "RvRD"
+        When "RvRD" revokes access of "Gemeenste Stijns" to "basisregister-fictieve-kentekens"
+        Then the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" no longer has access to the service "basisregister-fictieve-kentekens" from "RvRD"
 

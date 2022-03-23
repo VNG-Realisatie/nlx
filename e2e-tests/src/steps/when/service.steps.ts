@@ -2,7 +2,7 @@ import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
 import { When } from "@cucumber/cucumber";
 import { By } from "selenium-webdriver";
-import { strict as assert } from "assert";
+import assert from "assert";
 
 When(
   "{string} create a service named {string} and exposed via the default Inway",
@@ -54,5 +54,40 @@ When(
       By.xpath("//p[text()='De service is verwijderd']")
     );
     assert.notEqual(confirmationToast, undefined);
+  }
+);
+
+When(
+  "{string} revokes access of {string} to {string}",
+  async function (
+    this: CustomWorld,
+    orgProviderName: string,
+    orgConsumerName: string,
+    serviceName: string
+  ) {
+    serviceName = `${serviceName}-${this.id}`;
+
+    const { driver } = this;
+
+    const org = getOrgByName(orgProviderName);
+
+    await driver.get(`${org.management.url}/services/${serviceName}`);
+    await driver
+      .findElement(By.xpath("//*[text()='Organisaties met toegang']"))
+      .click();
+
+    await driver.findElement(By.xpath("//button[text()='Intrekken']")).click();
+
+    const buttonRevoke = await driver.findElement(
+      By.xpath(
+        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Intrekken']"
+      )
+    );
+    await buttonRevoke.click();
+
+    const element = await driver.findElement(
+      By.xpath("//p[text()='Toegang ingetrokken']")
+    );
+    assert.notEqual(element, undefined);
   }
 );

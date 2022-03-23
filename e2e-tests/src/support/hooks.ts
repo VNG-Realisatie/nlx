@@ -86,6 +86,8 @@ const mapBrowserLocaleToDayjs = (input: string): string => {
   switch (input) {
     case "en-US":
       return "en";
+    case "nl-NL":
+      return "nl";
 
     default:
       return input.toLowerCase();

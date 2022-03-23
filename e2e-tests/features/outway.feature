@@ -14,10 +14,4 @@ Feature: Outway
             And "RvRD" has a service named "basisregister-fictieve-kentekens"
         When the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" calls the service "basisregister-fictieve-kentekens" from "RvRD"
         Then "Gemeente Stijns" receives an unauthorized response
-
-    @ignore
-    Scenario: Access a service using an outway when having no access
-        Given "Gemeente Stijns" has an outway
-            And "Gemeente Stijns" has no access to the service "basisregister-fictieve-kentekens" of "RvRD"
-        When the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" calls the service "basisregister-fictieve-kentekens" from "RvRD"
-        Then "Gemeente Stijns" does not receive a successful response
+        
