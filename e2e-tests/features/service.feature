@@ -6,6 +6,7 @@ Feature: Service
         When "Gemeente Stijns" create a service named "MyService" and exposed via the default Inway
         Then the service "MyService" of "Gemeente Stijns" is created
 
+    @ignore
     Scenario: Delete a service
         Given "Gemeente Stijns" is up and running
             And "Gemeente Stijns" has a service named "MyServiceToDelete"

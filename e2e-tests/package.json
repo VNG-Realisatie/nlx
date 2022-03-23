@@ -5,6 +5,7 @@
         "test": "DEBUG=e2e-tests:* DEBUG_COLORS=true node ./cucumber-runner.js"
     },
     "devDependencies": {
+        "@axe-core/webdriverjs": "4.4.2",
         "@cucumber/cucumber": "8.0.0-rc.3",
         "@cucumber/html-formatter": "19.0.0",
         "@types/expect": "24.3.0",
@@ -13,8 +14,8 @@
         "@typescript-eslint/eslint-plugin": "5.16.0",
         "@typescript-eslint/parser": "5.16.0",
         "cross-fetch": "3.1.5",
-        "debug": "4.3.4",
         "dayjs": "1.11.0",
+        "debug": "4.3.4",
         "eslint": "8.12.0",
         "eslint-config-prettier": "8.5.0",
         "eslint-plugin-import": "2.25.4",
