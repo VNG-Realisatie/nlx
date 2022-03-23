@@ -2,17 +2,10 @@
 // Licensed under the EUPL
 //
 
-import logViolations from '../axe-utilities/log-violations'
-
 describe('Login page', () => {
   beforeEach(() => {
     cy.visit('/login')
-    cy.injectAxe()
     cy.get('h1').should('contain', 'Welkom')
-  })
-
-  it('Page is accessible', () => {
-    cy.checkA11y(null, null, logViolations)
   })
 
   it('Displays the organization name', () => {
