@@ -1,10 +1,13 @@
 import { CustomWorld } from "./custom-world";
-// import { snapshot } from "../utils/snapshot";
+import { logout } from "../utils/authenticate";
+import { organizations } from "../utils/organizations";
+import { default as logger } from "../debug";
 import { Before, After, setDefaultTimeout } from "@cucumber/cucumber";
 import { ITestCaseHookParameter } from "@cucumber/cucumber/lib/support_code_library_builder/types";
 import webdriver from "selenium-webdriver";
 import { ulid } from "ulid";
 import dayjs from "dayjs";
+const debug = logger("e2e-tests:hooks");
 
 const config_file =
   "../../conf/" + (process.env.E2E_CONFIG_FILE || "default") + ".conf.js";
@@ -32,6 +35,16 @@ Before({ tags: "@debug" }, async function (this: CustomWorld) {
   this.debug = true;
 });
 
+Before({ tags: "@unauthenticated" }, async function (this: CustomWorld) {
+  debug(`@unauthenticated tag detected, logging out all organizations`);
+
+  const logoutActions = Object.keys(organizations).map((orgName) =>
+    logout(this, orgName)
+  );
+
+  await Promise.all(logoutActions);
+});
+
 Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   this.id = `${ulid()}-e2e`;
 
@@ -39,7 +52,7 @@ Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   this.testName =
     pickle.name.replace(/\W/g, "-") + "-" + time.replace(/:|T/g, "-");
 
-  console.log(`starting ${this.testName}`);
+  debug(`starting ${this.testName}`);
 
   const task_id = parseInt(process.env.TASK_ID || "0");
   const caps = config.capabilities[task_id];
@@ -79,7 +92,7 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
     }
   }
   await this.driver?.quit();
-  console.log(`done with ${this.testName}`);
+  debug(`done with ${this.testName}`);
 });
 
 const mapBrowserLocaleToDayjs = (input: string): string => {

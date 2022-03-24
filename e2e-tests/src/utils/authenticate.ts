@@ -26,12 +26,12 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
   await driver.get(org.management.url);
 
   if (org.management.basicAuth) {
-    debug(`authenticating '${orgName}' using basic auth`);
-    await driver.findElement(By.id("email")).sendKeys(org.management.username);
-    await driver
-      .findElement(By.id("current-password"))
-      .sendKeys(org.management.password);
-    await driver.findElement(By.xpath("//button[@type='submit']")).click();
+    await authenticateUsingBasicAuth(
+      world,
+      orgName,
+      org.management.username,
+      org.management.password
+    );
 
     const credentialsBuffer = Buffer.from(
       `${org.management.username}:${org.management.password}`,
@@ -59,21 +59,13 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
       })
     );
   } else {
-    debug(`authenticating '${orgName}' using oidc`);
-
-    await driver
-      .findElement(By.linkText("Inloggen met organisatieaccount"))
-      .click();
-
-    await driver.findElement(By.id("login")).sendKeys(org.management.username);
-    await driver
-      .findElement(By.id("password"))
-      .sendKeys(org.management.password);
-    await driver.findElement(By.id("submit-login")).click();
-
-    await driver
-      .findElement(By.css(".theme-btn--success > .dex-btn-text"))
-      .click();
+    await authenticateUsingOIDC(
+      world,
+      orgName,
+      org.management.username,
+      org.management.password,
+      true
+    );
 
     const cookie = await driver.manage().getCookie("nlx_management_session");
 
@@ -100,4 +92,72 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
 
   world.scenarioContext.organizations[orgName].isLoggedIn = true;
   debug(`authentication successful for '${orgName}'`);
+};
+
+export const authenticateUsingOIDC = async (
+  world: CustomWorld,
+  orgName: string,
+  username: string,
+  password: string,
+  credentialsAreCorrect: boolean
+) => {
+  debug(`authenticating '${orgName}' using oidc`);
+
+  const { driver } = world;
+
+  await driver
+    .findElement(By.linkText("Inloggen met organisatieaccount"))
+    .click();
+
+  await driver.findElement(By.id("login")).sendKeys(username);
+  await driver.findElement(By.id("password")).sendKeys(password);
+  await driver.findElement(By.id("submit-login")).click();
+
+  if (!credentialsAreCorrect) {
+    return;
+  }
+
+  await driver
+    .findElement(By.css(".theme-btn--success > .dex-btn-text"))
+    .click();
+};
+
+export const authenticateUsingBasicAuth = async (
+  world: CustomWorld,
+  orgName: string,
+  username: string,
+  password: string
+) => {
+  debug(`authenticating '${orgName}' using basic auth`);
+
+  const { driver } = world;
+
+  await driver.findElement(By.id("email")).sendKeys(username);
+  await driver.findElement(By.id("current-password")).sendKeys(password);
+  await driver.findElement(By.xpath("//button[@type='submit']")).click();
+};
+
+export const logout = async (world: CustomWorld, orgName: string) => {
+  const orgIsLoggedIn = world.scenarioContext.organizations[orgName].isLoggedIn;
+
+  if (!orgIsLoggedIn) {
+    debug(`organization '${orgName}' is logged out already`);
+    return;
+  }
+
+  const { driver } = world;
+
+  const org = getOrgByName(orgName);
+
+  await driver.get(org.management.url);
+
+  await driver.findElement(By.xpath("//[@aria-label='Account menu']")).click();
+  await driver.findElement(By.xpath("//button[text()='Uitloggen']")).click();
+
+  org.apiClients.management = undefined;
+  org.apiClients.directory = undefined;
+
+  world.scenarioContext.organizations[orgName].isLoggedIn = false;
+
+  debug(`logout successful for '${orgName}'`);
 };
