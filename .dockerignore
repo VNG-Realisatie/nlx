@@ -12,7 +12,6 @@ helm
 apps-overview/
 ca-cfssl-unsafe/
 directory-ui/
-directory-ui-e2e-tests/
 docs/
 
 # Used as cache folder in pipeline
