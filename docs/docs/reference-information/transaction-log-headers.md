@@ -8,6 +8,8 @@ NLX logs requests on both the **outway** and **inway**. NLX adds a globally uniq
 The application that performs the request can append some additional headers that will be saved in the transaction log as well:
 
 * `X-NLX-Request-User-Id`, the id of the user performing the request
+* `X-NLX-Requester-User`, data about the user performing the request
+* `X-NLX-Requester-Claims`, claims the requester possesses
 * `X-NLX-Request-Application-Id`, the id of the application performing the request
 * `X-NLX-Request-Subject-Identifier`, an subject identifier for purpose registration (doelbinding)
 * `X-NLX-Request-Process-Id`, a process id for purpose registration (doelbinding)
@@ -16,6 +18,6 @@ The application that performs the request can append some additional headers tha
 
 The headers set by the application are optional.
 
-All request headers are logged before the request leaves the outway. The fields `X-NLX-Requester-User-Id`, `X-NLX-Request-Application-Id`, `X-NLX-Request-Subject-Identifier`, `X-NLX-Requester-Claims` and `X-NLX-Request-User` are stripped off the request before it is forwarded to the inway.
+All request headers are logged before the request leaves the outway. The fields `X-NLX-Request-User-Id`, `X-NLX-Request-Application-Id`, `X-NLX-Request-Subject-Identifier`, `X-NLX-Requester-Claims` and `X-NLX-Requester-User` are stripped off the request before it is forwarded to the inway.
 
 The value of a `X-NLX-*` header is limited to 1024 characters.
