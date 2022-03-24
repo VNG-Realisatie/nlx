@@ -22,12 +22,6 @@
   "ignoreDeps": [],
   "packageRules": [
     {
-      "groupName": "can be upgraded once the debug tooling is upgraded too, since the upgrade contains new rules that we violate. debug tooling: https://github.com/dequelabs/axe-core-npm/tree/develop/packages/react",
-      "packageNames": ["axe-core"],
-      "managers": ["npm"],
-      "allowedVersions": "4.3.5"
-    },
-    {
       "groupName": "styled-components@5.2.0 introduced breaking behaviour https://github.com/styled-components/styled-components/issues/3273",
       "packageNames": ["styled-components"],
       "managers": ["npm"],
