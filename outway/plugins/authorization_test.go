@@ -66,7 +66,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantHTTPStatusCode:           http.StatusInternalServerError,
 			wantError:                    "nlx outway: error authorizing request\n",
 		},
-		"when_no_access": {
+		"when_auth_server_returns_no_access": {
 			args: &authRequest{
 				Input: &authRequestInput{
 					Headers: http.Header{
@@ -113,14 +113,14 @@ func TestAuthorizationPlugin(t *testing.T) {
 				}
 			}
 
-			var gotRequest []byte
+			var gotAuthorizationServiceRequest []byte
 
 			server := httptest.NewServer(
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					body := r.Body
 
 					var err error
-					gotRequest, err = io.ReadAll(body)
+					gotAuthorizationServiceRequest, err = io.ReadAll(body)
 					assert.NoError(t, err)
 
 					w.WriteHeader(tt.authServerResponseStatusCode)
@@ -133,7 +133,11 @@ func TestAuthorizationPlugin(t *testing.T) {
 				}),
 			)
 
-			plugin := NewAuthorizationPlugin(nil, server.URL, *http.DefaultClient)
+			plugin := NewAuthorizationPlugin(&NewAuthorizationPluginArgs{
+				CA:                  nil,
+				ServiceURL:          server.URL,
+				AuthorizationClient: *http.DefaultClient,
+			})
 
 			err := plugin.Serve(nopServeFunc)(context)
 			assert.NoError(t, err)
@@ -149,10 +153,10 @@ func TestAuthorizationPlugin(t *testing.T) {
 			assert.Equal(t, tt.wantHTTPStatusCode, response.StatusCode)
 
 			if tt.wantError == "" {
-				wantRequest, err := json.Marshal(tt.args)
+				wantAuthorizationServiceRequest, err := json.Marshal(tt.args)
 				assert.NoError(t, err)
 
-				assert.Equal(t, wantRequest, gotRequest)
+				assert.Equal(t, wantAuthorizationServiceRequest, gotAuthorizationServiceRequest)
 			}
 		})
 	}

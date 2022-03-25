@@ -1,4 +1,4 @@
-package httpapi.authz
+package httpapi.outway
 
 default allow = false
 

@@ -110,13 +110,13 @@ func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string)
 	tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
 	tlsConfig.RootCAs = ca
 
-	return plugins.NewAuthorizationPlugin(
-		ca,
-		authURL.String(),
-		http.Client{
+	return plugins.NewAuthorizationPlugin(&plugins.NewAuthorizationPluginArgs{
+		CA:         ca,
+		ServiceURL: authURL.String(),
+		AuthorizationClient: http.Client{
 			Transport: createHTTPTransport(tlsConfig),
 		},
-	), nil
+	}), nil
 }
 
 func (o *Outway) startDirectoryInspector() error {

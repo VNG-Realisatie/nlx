@@ -104,7 +104,7 @@ spec:
             - name: AUTHORIZATION_SERVICE_ADDRESS
               value: {{ .Values.config.authorizationService.url }}
             - name: AUTHORIZATION_ROOT_CA
-              value: /config/root-organization.pem
+              value: /config/root-internal.pem
           {{- end }}
             - name: TLS_NLX_ROOT_CERT
               value: /config/root-organization.pem

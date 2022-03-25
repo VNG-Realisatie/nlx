@@ -83,6 +83,8 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 | `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
 | `config.directoryHostname` | Address of the NLX Directory where the Inway will register its services. | `""` | no |
 | `config.directoryRegistrationHostname` | Address of the NLX Directory where the Inway will register its services. This field is deprecated use config.directoryHostname instead. | `""` | no |
+| `config.authorizationService.enabled` | If `true`, the outway will use the authorization service | `false` | no |
+| `config.authorizationService.url` | URL of the authorization service to use | `""` | no |
 | `config.selfAddress` | The address that can be used by the NLX network to reach this Inway | `""` | no |
 | `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | no |
 

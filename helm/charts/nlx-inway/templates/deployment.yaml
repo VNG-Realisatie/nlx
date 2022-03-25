@@ -112,6 +112,12 @@ spec:
             - name: DISABLE_LOGDB
               value: "1"
           {{- end }}
+          {{- if .Values.config.authorizationService.enabled }}
+            - name: AUTHORIZATION_SERVICE_ADDRESS
+              value: {{ .Values.config.authorizationService.url }}
+            - name: AUTHORIZATION_ROOT_CA
+              value: /config/root-internal.pem
+          {{- end }}
             - name: TLS_NLX_ROOT_CERT
               value: "/config/root-organization.pem"
             - name: TLS_ORG_CERT

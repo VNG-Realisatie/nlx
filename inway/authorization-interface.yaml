@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  description: |
+    The inway has the option to configure a authorization service. Once configured, the requests going through the inway will be authorized by this authorization service.
+    In order to enable communication between the inway and their authorization service, each organization is required to implement the interface described in this specification on their authorization service.
+  version: "1.0.0"
+  title: Authorization
+paths:
+  /:
+    post:
+      summary: Authorization request
+      responses:
+        200:
+          description: The authorization request has been handled successfully. This does not mean the request is authorized, it means that the request has been processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorizationResponse"
+      requestBody:
+        $ref: "#/components/requestBodies/AuthorizationRequest"
+components:
+  schemas:
+    AuthorizationRequest:
+      type: object
+      properties:
+        input:
+          type: object
+          properties:
+            headers:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+              description: Contains the HTTP-headers of the request made to the inway
+            path:
+              type: string
+              description: path of the request to the inway
+            organization_serial_number:
+              type: string
+              description: organization serial number targeted by the request send to the inway (this is the serial number of your own organization)
+            service:
+              type: object
+              description: service targeted by the request send to the inway
+              properties:
+                grants:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      organization_serial_number:
+                        type: string
+                        description: organization serial number of the grant
+                      public_key_pem:
+                        type: string
+                        description: public key PEM
+                      public_key_fingerprint:
+                        type: string
+                        description: public key fingerprint
+                name:
+                  type: string
+                  description: name of the service
+                endpoint_url:
+                  type: string
+                  description: endpoint url of the service
+                documentation_url:
+                  type: string
+                  description: documentation url of the service
+                api_specification_document_url:
+                  type: string
+                  description: api specification document url of the service
+                public_support_url:
+                  type: string
+                  description: public support url of the service
+                tech_support_contact:
+                  type: string
+                  description: tech support contact email of the service
+                one_time_costs:
+                  type: integer
+                  description: one time costs of the service
+                monthly_costs:
+                  type: integer
+                  description: monthly costs of the service
+                request_costs:
+                  type: integer
+                  description: costs per request of the service
+                internal:
+                  type: boolean
+                  description: is the service an internal service
+
+    AuthorizationResponse:
+      type: object
+      properties:
+        result:
+          type: boolean
+          description: true if the request is authorized. The inway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The inway will return a 401 to the requesting client.
+  requestBodies:
+    AuthorizationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AuthorizationRequest"
+      description: The body of the request send to the authorization service
+      required: true

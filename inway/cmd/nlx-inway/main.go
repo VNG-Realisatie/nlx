@@ -46,6 +46,8 @@ var options struct {
 	Address                      string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
 	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
 	Name                         string `long:"name" env:"INWAY_NAME" description:"Name of the inway. Every inway should have a unique name within the organization." required:"true"`
+	AuthorizationServiceAddress  string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the service"`
+	AuthorizationCA              string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certifcate"`
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
@@ -131,6 +133,8 @@ func main() {
 		ListenManagementAddress: listenManagementAddress,
 		OrgCertBundle:           orgCert,
 		DirectoryClient:         directoryClient,
+		AuthServiceURL:          options.AuthorizationServiceAddress,
+		AuthCAPath:              options.AuthorizationCA,
 	}
 
 	iw, err := inway.NewInway(params)

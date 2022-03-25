@@ -29,6 +29,10 @@ config:
   directoryHostname: ""
   directoryRegistrationHostname: ""
 
+  authorizationService:
+    enabled: false
+    url: ""
+
   managementAPI:
     address: ""
 

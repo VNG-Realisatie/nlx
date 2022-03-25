@@ -6,13 +6,17 @@ package inway
 import (
 	"context"
 	"crypto/sha256"
+	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
+	"fmt"
 	"net"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -27,6 +31,15 @@ import (
 )
 
 var nameRegex = regexp.MustCompile(`^[a-zA-Z0-9-]{1,100}$`)
+
+const (
+	timeOut               = 30 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleCons           = 100
+	IdleConnTimeout       = 20 * time.Second
+	TLSHandshakeTimeout   = 10 * time.Second
+	ExpectContinueTimeout = 1 * time.Second
+)
 
 type Organization struct {
 	SerialNumber string
@@ -63,6 +76,8 @@ type Params struct {
 	ListenManagementAddress string
 	OrgCertBundle           *common_tls.CertificateBundle
 	DirectoryClient         directoryapi.DirectoryClient
+	AuthServiceURL          string
+	AuthCAPath              string
 }
 
 func NewInway(params *Params) (*Inway, error) {
@@ -113,10 +128,19 @@ func NewInway(params *Params) (*Inway, error) {
 		plugins: []plugins.Plugin{
 			plugins.NewAuthenticationPlugin(),
 			plugins.NewDelegationPlugin(),
-			plugins.NewAuthorizationPlugin(),
-			plugins.NewLogRecordPlugin(organizationSerialNumber, params.Txlogger),
 		},
 	}
+
+	authorizationPlugin, err := configureAuthorizationPlugin(params.AuthCAPath, params.AuthServiceURL)
+	if err != nil {
+		return nil, err
+	}
+
+	i.plugins = append(i.plugins, []plugins.Plugin{
+		authorizationPlugin,
+		plugins.NewLogRecordPlugin(organizationSerialNumber, params.Txlogger),
+	}...,
+	)
 
 	i.monitoringService, err = monitoring.NewMonitoringService(params.MonitoringAddress, logger)
 	if err != nil {
@@ -166,4 +190,54 @@ func getFingerPrint(rawCert []byte) string {
 	}
 
 	return base64.URLEncoding.EncodeToString(bytes)
+}
+
+func configureAuthorizationPlugin(authCAPath, authServiceURL string) (*plugins.AuthorizationPlugin, error) {
+	if authServiceURL == "" {
+		return plugins.NewAuthorizationPlugin(&plugins.NewAuthorizationPluginArgs{}), nil
+	}
+
+	if authCAPath == "" {
+		return nil, fmt.Errorf("authorization service URL set but no CA for authorization provided")
+	}
+
+	authURL, err := url.Parse(authServiceURL)
+	if err != nil {
+		return nil, err
+	}
+
+	if authURL.Scheme != "https" {
+		return nil, errors.New("scheme of authorization service URL is not 'https'")
+	}
+
+	ca, _, err := common_tls.NewCertPoolFromFile(authCAPath)
+	if err != nil {
+		return nil, err
+	}
+
+	tlsConfig := common_tls.NewConfig(common_tls.WithTLS12())
+	tlsConfig.RootCAs = ca
+
+	return plugins.NewAuthorizationPlugin(&plugins.NewAuthorizationPluginArgs{
+		CA:         ca,
+		ServiceURL: authURL.String(),
+		AuthorizationClient: &http.Client{
+			Transport: createHTTPTransport(tlsConfig),
+		},
+		AuthServerEnabled: true,
+	}), nil
+}
+
+func createHTTPTransport(tlsConfig *tls.Config) *http.Transport {
+	return &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   timeOut,
+			KeepAlive: keepAlive,
+		}).DialContext,
+		MaxIdleConns:          maxIdleCons,
+		IdleConnTimeout:       IdleConnTimeout,
+		TLSHandshakeTimeout:   TLSHandshakeTimeout,
+		ExpectContinueTimeout: ExpectContinueTimeout,
+		TLSClientConfig:       tlsConfig,
+	}
 }

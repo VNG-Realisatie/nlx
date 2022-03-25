@@ -35,11 +35,17 @@ type AuthorizationPlugin struct {
 	authorizationClient http.Client
 }
 
-func NewAuthorizationPlugin(ca *x509.CertPool, serviceURL string, authorizationClient http.Client) *AuthorizationPlugin {
+type NewAuthorizationPluginArgs struct {
+	CA                  *x509.CertPool
+	ServiceURL          string
+	AuthorizationClient http.Client
+}
+
+func NewAuthorizationPlugin(args *NewAuthorizationPluginArgs) *AuthorizationPlugin {
 	return &AuthorizationPlugin{
-		ca:                  ca,
-		serviceURL:          serviceURL,
-		authorizationClient: authorizationClient,
+		ca:                  args.CA,
+		serviceURL:          args.ServiceURL,
+		authorizationClient: args.AuthorizationClient,
 	}
 }
 

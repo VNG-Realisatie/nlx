@@ -1,0 +1,10 @@
+{
+  "CN": "auth.organization-b.nlx.local",
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "hosts": [
+    "auth.organization-b.nlx.local"
+  ]
+}

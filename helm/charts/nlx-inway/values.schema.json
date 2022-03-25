@@ -27,6 +27,17 @@
           "description": "Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger.",
           "enum": ["live", "local"]
         },
+        "authorizationService": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        },
         "managementAPI": {
           "type": "object",
           "properties": {

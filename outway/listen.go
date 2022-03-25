@@ -20,12 +20,12 @@ import (
 )
 
 const (
-	timeOut              = 30 * time.Second
-	keepAlive            = 30 * time.Second
-	maxIdelCons          = 100
-	IdleConnTimeout      = 20 * time.Second
-	TLSHandshakeTimeout  = 10 * time.Second
-	ExpectConinueTimeout = 1 * time.Second
+	timeOut               = 30 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleCons           = 100
+	IdleConnTimeout       = 20 * time.Second
+	TLSHandshakeTimeout   = 10 * time.Second
+	ExpectContinueTimeout = 1 * time.Second
 )
 
 func (o *Outway) RunServer(listenAddress, listenAddressGRPC string, serverCertificate *tls.Certificate) error {
@@ -122,10 +122,10 @@ func createHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 			KeepAlive: keepAlive,
 			DualStack: true,
 		}).DialContext,
-		MaxIdleConns:          maxIdelCons,
+		MaxIdleConns:          maxIdleCons,
 		IdleConnTimeout:       IdleConnTimeout,
 		TLSHandshakeTimeout:   TLSHandshakeTimeout,
-		ExpectContinueTimeout: ExpectConinueTimeout,
+		ExpectContinueTimeout: ExpectContinueTimeout,
 		TLSClientConfig:       tlsConfig,
 	}
 }

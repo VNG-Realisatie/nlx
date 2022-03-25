@@ -23,10 +23,35 @@ services:
       - ./dex.dev.yaml:/config.yaml
     restart: on-failure
 
+  auth-org-b:
+      image: openpolicyagent/opa:0.38.1
+      ports:
+        - 127.0.0.1:8181:8181
+      command: 
+        - run 
+        - --log-level
+        - debug 
+        - -w 
+        - --server 
+        - --addr
+        - :8181 
+        - --tls-ca-cert-file
+        - /pki/internal/organization-b/ca/root.pem
+        - --tls-cert-file
+        - /pki/internal/organization-b/certs/auth/cert.pem
+        - --tls-private-key-file
+        - /pki/internal/organization-b/certs/auth/key.pem
+        - /rego 
+        - /data
+      volumes:
+        - ./auth-opa/rego:/rego
+        - ./auth-opa/data:/data
+        - ./pki/internal/organization-b:/pki/internal/organization-b
+      restart: on-failure
   auth-org-c:
     image: openpolicyagent/opa:0.38.1
     ports:
-      - 127.0.0.1:8181:8181
+      - 127.0.0.1:8182:8181
     command: 
       - run 
       - --log-level
@@ -36,17 +61,17 @@ services:
       - --addr
       - :8181 
       - --tls-ca-cert-file
-      - /pki/organization-c/ca/root.pem
+      - /pki/internal/organization-c/ca/root.pem
       - --tls-cert-file
-      - /pki/organization-c/certs/auth/cert.pem
+      - /pki/internal/organization-c/certs/auth/cert.pem
       - --tls-private-key-file
-      - /pki/organization-c/certs/auth/key.pem
+      - /pki/internal/organization-c/certs/auth/key.pem
       - /rego 
       - /data
     volumes:
       - ./auth-opa/rego:/rego
       - ./auth-opa/data:/data
-      - ./pki/organization-c:/pki/organization-c
+      - ./pki/internal/organization-c:/pki/internal/organization-c
     restart: on-failure
     
 volumes:

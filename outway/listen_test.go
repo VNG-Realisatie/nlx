@@ -368,7 +368,11 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 
 			if tt.authEnabled {
 				outway.plugins = append([]plugins.Plugin{
-					plugins.NewAuthorizationPlugin(nil, "", http.Client{}),
+					plugins.NewAuthorizationPlugin(&plugins.NewAuthorizationPluginArgs{
+						CA:                  nil,
+						ServiceURL:          "",
+						AuthorizationClient: http.Client{},
+					}),
 				}, outway.plugins...)
 			}
 
