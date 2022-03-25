@@ -1,8 +1,8 @@
 .build-production-base:
   stage: Build
-  image: docker:20.10.13-git
+  image: docker:20.10.14-git
   services:
-    - docker:20.10.13-dind
+    - docker:20.10.14-dind
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
