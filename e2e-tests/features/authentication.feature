@@ -9,7 +9,7 @@ Feature: Authentication
     Scenario: Using OpenID Connect with correct credentials
         Given "Gemeente Stijns" is logged out of NLX Management
         When "Gemeente Stijns" authenticates using the right credentials
-        Then the Inways page of "Gemeente Stijns" should be visible
+        Then the Inways or Terms Of Service page of "Gemeente Stijns" should be visible after authenticating
 
     Scenario: Using Basic Auth with incorrect credentials
         Given "Vergunningsoftware BV" is logged out of NLX Management
@@ -19,4 +19,4 @@ Feature: Authentication
     Scenario: Using Basic Auth with correct credentials
         Given "Vergunningsoftware BV" is logged out of NLX Management
         When "Vergunningsoftware BV" authenticates using the right credentials
-        Then the Inways page of "Vergunningsoftware BV" should be visible
+        Then the Inways or Terms Of Service page of "Vergunningsoftware BV" should be visible after authenticating

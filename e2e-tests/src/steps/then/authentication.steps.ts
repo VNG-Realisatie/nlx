@@ -23,13 +23,13 @@ Then(
 );
 
 Then(
-  "the Inways page of {string} should be visible",
+  "the Inways or Terms Of Service page of {string} should be visible after authenticating",
   async function (this: CustomWorld, orgName: string) {
     const { driver } = this;
-    const org = getOrgByName(orgName);
 
-    await driver.wait(
-      until.urlIs(`${org.management.url}/inways-and-outways/inways`)
+    const inwaysOrTermsOfServicePageRegex = new RegExp(
+      /(\/inways-and-outways\/inways|\/terms-of-service)$/
     );
+    await driver.wait(until.urlMatches(inwaysOrTermsOfServicePageRegex));
   }
 );
