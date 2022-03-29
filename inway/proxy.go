@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -20,22 +21,31 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		zap.String("request-remote-address", r.RemoteAddr),
 	)
 
-	urlparts := strings.SplitN(strings.TrimPrefix(r.URL.Path, "/"), "/", 2)
-	if len(urlparts) != 2 {
-		http.Error(w, "nlx-inway: invalid path in url", http.StatusBadRequest)
+	if r.URL.Path == "" {
+		http.Error(w, "nlx-inway: path cannot be empty, must at least contain the service name.", http.StatusBadRequest)
 		logger.Warn("received request with invalid path")
 
 		return
 	}
 
-	serviceName := urlparts[0]
+	cleanedPath := strings.TrimPrefix(r.URL.Path, "/")
+	indexSlash := strings.Index(cleanedPath, "/")
+
+	var serviceName = cleanedPath
+
+	var path = ""
+
+	if indexSlash > -1 {
+		serviceName = cleanedPath[0:indexSlash]
+		path = cleanedPath[indexSlash:]
+	}
 
 	i.servicesLock.RLock()
 	service, exists := i.services[serviceName]
 	i.servicesLock.RUnlock()
 
 	if !exists {
-		http.Error(w, "nlx-inway: no endpoint for service", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("nlx-inway: no endpoint for service '%s'", serviceName), http.StatusBadRequest)
 		logger.Warn("received request for service with no known endpoint")
 
 		return
@@ -43,7 +53,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	destination := plugins.Destination{
 		Organization: i.organization.SerialNumber,
-		Path:         "/" + urlparts[1],
+		Path:         path,
 		Service:      service,
 	}
 
@@ -63,9 +73,27 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 		}
 
 		r.Host = endpointURL.Host
-		r.URL.Path = context.Destination.Path
+		proxy := &httputil.ReverseProxy{
+			// Use custom director because the default Director appends a trailing slash when the request path is empty. The trailing slash made requests to a SOAP API fail.
+			// See: https://github.com/golang/go/issues/50337
+			Director: func(req *http.Request) {
+				req.URL.Scheme = endpointURL.Scheme
+				req.URL.Host = endpointURL.Host
+				req.URL.Path = endpointURL.Path + destination.Path
 
-		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
+				if endpointURL.RawQuery == "" || req.URL.RawQuery == "" {
+					req.URL.RawQuery = endpointURL.RawQuery + req.URL.RawQuery
+				} else {
+					req.URL.RawQuery = endpointURL.RawQuery + "&" + req.URL.RawQuery
+				}
+
+				if _, ok := req.Header["User-Agent"]; !ok {
+					// explicitly disable User-Agent so it's not set to default value
+					req.Header.Set("User-Agent", "")
+				}
+			},
+		}
+
 		proxy.Transport = newRoundTripHTTPTransport()
 		proxy.ErrorHandler = i.LogAPIErrors
 		proxy.ServeHTTP(w, r)

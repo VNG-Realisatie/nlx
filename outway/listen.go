@@ -120,7 +120,6 @@ func createHTTPTransport(tlsConfig *tls.Config) *http.Transport {
 		DialContext: (&net.Dialer{
 			Timeout:   timeOut,
 			KeepAlive: keepAlive,
-			DualStack: true,
 		}).DialContext,
 		MaxIdleConns:          maxIdleCons,
 		IdleConnTimeout:       IdleConnTimeout,
@@ -204,8 +203,8 @@ func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destinatio
 	}
 
 	chain := buildChain(func(context *plugins.Context) error {
-		context.Request.URL.Path = destination.Path
-
+		context.Request.URL.Path = fmt.Sprintf("/%s%s", destination.Service, destination.Path)
+		context.Request.URL.RawPath = ""
 		service.ProxyHTTPRequest(context.Response, context.Request)
 		return nil
 	}, o.plugins...)
@@ -221,6 +220,7 @@ func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destinatio
 	logger.Info(
 		"forwarding API request",
 		zap.String("service", destination.Service),
+		zap.String("path", destination.Path),
 		zap.String("destination-organization-serial-number", destination.OrganizationSerialNumber),
 	)
 

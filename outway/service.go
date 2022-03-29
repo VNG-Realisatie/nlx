@@ -59,7 +59,6 @@ func newRoundTripHTTPTransport(logger *zap.Logger, tlsConfig *tls.Config) *http.
 		DialContext: (&net.Dialer{
 			Timeout:   Timeout,
 			KeepAlive: KeepAlive,
-			DualStack: true,
 		}).DialContext,
 		MaxIdleConns:          MaxIdleConns,
 		IdleConnTimeout:       IdleConnTimeout,
@@ -105,11 +104,10 @@ func NewRoundRobinLoadBalancedHTTPService(
 			return nil, errors.Wrap(err, "inway address:"+inways[i].Address+" is not a valid url")
 		}
 
-		endpointURL.Path = "/" + serviceName
-
 		proxy := httputil.NewSingleHostReverseProxy(endpointURL)
 		proxy.Transport = roundTripTransport
 		proxy.ErrorHandler = s.LogServiceErrors
+
 		s.proxies[i] = proxy
 	}
 

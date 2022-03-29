@@ -12,7 +12,7 @@ import (
 
 const nlxDomain = "services.nlx.local"
 const nlxHostNameParts = 5
-const nlxPathParts = 3
+const nlxPathParts = 2
 
 func isNLXUrl(destinationURL *url.URL) bool {
 	return strings.HasSuffix(destinationURL.Hostname(), nlxDomain)
@@ -20,19 +20,27 @@ func isNLXUrl(destinationURL *url.URL) bool {
 
 func parseURLPath(urlPath string) (*plugins.Destination, error) {
 	pathParts := strings.SplitN(strings.TrimPrefix(urlPath, "/"), "/", nlxPathParts)
-
-	if len(pathParts) == nlxPathParts-1 {
-		pathParts = append(pathParts, "")
+	if len(pathParts) != nlxPathParts {
+		return nil, fmt.Errorf("invalid path in url expecting: /serialNumber/service")
 	}
 
-	if len(pathParts) != nlxPathParts {
-		return nil, fmt.Errorf("invalid path in url expecting: /serialNumber/service/path")
+	organizationSerialNumber := pathParts[0]
+
+	indexSlash := strings.Index(pathParts[1], "/")
+
+	var serviceName = pathParts[1]
+
+	var path = ""
+
+	if indexSlash > -1 {
+		serviceName = pathParts[1][0:indexSlash]
+		path = pathParts[1][indexSlash:]
 	}
 
 	return &plugins.Destination{
-		OrganizationSerialNumber: pathParts[0],
-		Service:                  pathParts[1],
-		Path:                     pathParts[2],
+		OrganizationSerialNumber: organizationSerialNumber,
+		Service:                  serviceName,
+		Path:                     path,
 	}, nil
 }
 

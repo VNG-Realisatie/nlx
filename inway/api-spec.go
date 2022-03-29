@@ -24,7 +24,6 @@ func newRoundTripHTTPTransport() *http.Transport {
 		DialContext: (&net.Dialer{
 			Timeout:   timeout,
 			KeepAlive: timeout,
-			DualStack: true,
 		}).DialContext,
 		MaxIdleConns:          maxIdleConns,
 		MaxIdleConnsPerHost:   maxIdleConns,

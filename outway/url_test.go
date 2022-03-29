@@ -3,10 +3,13 @@
 package outway
 
 import (
+	"fmt"
 	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"go.nlx.io/nlx/outway/plugins"
 )
 
 func TestIsNLXURL(t *testing.T) {
@@ -36,17 +39,50 @@ func TestIsNLXURL(t *testing.T) {
 }
 
 func TestParseURLPath(t *testing.T) {
-	destination, err := parseURLPath("/serialNumber/service/path")
-	assert.Nil(t, err)
-	assert.Equal(t, "serialNumber", destination.OrganizationSerialNumber)
-	assert.Equal(t, "service", destination.Service)
-	assert.Equal(t, "path", destination.Path)
+	tests := map[string]struct {
+		path            string
+		wantDestination *plugins.Destination
+		wantErr         error
+	}{
+		"invalid_format": {
+			path:    "/serialNumber",
+			wantErr: fmt.Errorf("invalid path in url expecting: /serialNumber/service"),
+		},
+		"happy_flow_with_path": {
+			path: "/serialNumber/service/path",
+			wantDestination: &plugins.Destination{
+				OrganizationSerialNumber: "serialNumber",
+				Service:                  "service",
+				Path:                     "/path",
+			},
+		},
+		"happy_flow_trailing_slash": {
+			path: "/serialNumber/service/",
+			wantDestination: &plugins.Destination{
+				OrganizationSerialNumber: "serialNumber",
+				Service:                  "service",
+				Path:                     "/",
+			},
+		},
+		"happy_flow_empty_path": {
+			path: "/serialNumber/service",
+			wantDestination: &plugins.Destination{
+				OrganizationSerialNumber: "serialNumber",
+				Service:                  "service",
+				Path:                     "",
+			}},
+	}
 
-	destination, err = parseURLPath("/serialNumber/service")
-	assert.Nil(t, err)
-	assert.Equal(t, "serialNumber", destination.OrganizationSerialNumber)
-	assert.Equal(t, "service", destination.Service)
-	assert.Equal(t, "", destination.Path)
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			destination, err := parseURLPath(tt.path)
+			assert.Equal(t, tt.wantErr, err)
+			assert.Equal(t, tt.wantDestination, destination)
+		})
+	}
+
 }
 
 func TestParseLocalNLXURL(t *testing.T) {
