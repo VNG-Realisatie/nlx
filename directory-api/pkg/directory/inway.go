@@ -148,16 +148,16 @@ func (h *DirectoryService) registerService(organizationInformation *tls.Organiza
 	return nil
 }
 
-func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, specificationDocumentURL, inwayAddress, serviceName string) domain.SpecificationType {
-	if len(specificationDocumentURL) < 1 {
+func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logger, apiSpecificationDocumentURL, inwayAddress, serviceName string) domain.SpecificationType {
+	if len(apiSpecificationDocumentURL) < 1 {
 		return ""
 	}
 
 	specificationType, err := getAPISpecsTypeViaInway(httpClient, inwayAddress, serviceName)
 	if err != nil {
 		logger.Error(
-			"invalid documentation specification document provided by inway",
-			zap.String("documentation url", specificationType),
+			"invalid api specification document provided by inway",
+			zap.String("api specification document url", apiSpecificationDocumentURL),
 			zap.Error(err),
 		)
 

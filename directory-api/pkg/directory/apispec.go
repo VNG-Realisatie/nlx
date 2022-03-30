@@ -25,10 +25,10 @@ const (
 	openAPI3 = "OpenAPI3"
 )
 
-func ParseAPISpectType(data []byte) (string, error) {
+func ParseAPISpecificationType(data []byte) (string, error) {
 	versionCheck, err := parseVersion(data)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("unable to parse openapi specification version: %s", err)
 	}
 
 	var versionValue string
@@ -58,18 +58,20 @@ func parseVersion(data []byte) (*openAPIVersion, error) {
 	// If it looks like JSON, try to parse it as
 	if data[0] == '{' {
 		err := json.Unmarshal(data, version)
-		if err == nil {
-			return version, nil
+		if err != nil {
+			return nil, err
 		}
+
+		return version, nil
 	}
 
 	// JSON failed, try it as YAML
 	err := yaml.Unmarshal(data, version)
-	if err == nil {
-		return version, nil
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("unable to parse version")
+	return version, nil
 }
 
 func getAPISpecsTypeViaInway(httpClient *http.Client, inwayAddress, serviceName string) (string, error) {
@@ -78,7 +80,7 @@ func getAPISpecsTypeViaInway(httpClient *http.Client, inwayAddress, serviceName 
 		return "", err
 	}
 
-	return ParseAPISpectType(data)
+	return ParseAPISpecificationType(data)
 }
 
 func getAPISpecsViaInway(h *http.Client, inwayAddress, serviceName string) ([]byte, error) {

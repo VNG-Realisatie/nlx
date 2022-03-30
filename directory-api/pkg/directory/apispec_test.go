@@ -17,97 +17,89 @@ const (
 	openAPI3 = "OpenAPI3"
 )
 
-func TestParseAPISpectType(t *testing.T) {
+func TestParseAPISpecificationType(t *testing.T) {
 	errUnknownVersion := errors.New("documentation format is neither openAPI2 or openAPI3")
 
-	tests := []struct {
-		name     string
-		data     string
-		expected string
-		err      error
+	tests := map[string]struct {
+		input   string
+		want    string
+		wantErr error
 	}{
-		{
-			"json_2.0",
-			`{"swagger":"2.0"}`,
-			openAPI2,
-			nil,
+		"json_2.0": {
+
+			input:   `{"swagger":"2.0"}`,
+			want:    openAPI2,
+			wantErr: nil,
 		},
-		{
-			"json_3.0.0",
-			`{"openapi":"3.0.0"}`,
-			openAPI3,
-			nil,
+		"json_3.0.0": {
+
+			input:   `{"openapi":"3.0.0"}`,
+			want:    openAPI3,
+			wantErr: nil,
 		},
-		{
-			"json_3.0.1",
-			`{"openapi":"3.0.1"}`,
-			openAPI3,
-			nil,
+		"json_3.0.1": {
+
+			input:   `{"openapi":"3.0.1"}`,
+			want:    openAPI3,
+			wantErr: nil,
 		},
-		{
-			"json_3.0.2",
-			`{"openapi":"3.0.2"}`,
-			openAPI3,
-			nil,
+		"json_3.0.2": {
+
+			input:   `{"openapi":"3.0.2"}`,
+			want:    openAPI3,
+			wantErr: nil,
 		},
-		{
-			"json_1.0",
-			`{"swagger":"1.0"}`,
-			"",
-			errUnknownVersion,
+		"json_1.0": {
+			input:   `{"swagger":"1.0"}`,
+			want:    "",
+			wantErr: errUnknownVersion,
 		},
-		{
-			"yaml_2.0",
-			`swagger: "2.0"`,
-			openAPI2,
-			nil,
+		"yaml_2.0": {
+
+			input:   `swagger: "2.0"`,
+			want:    openAPI2,
+			wantErr: nil,
 		},
-		{
-			"yaml_2.0_float",
-			`swagger: 2.0`,
-			openAPI2,
-			nil,
+		"yaml_2.0_float": {
+			input:   `swagger: 2.0`,
+			want:    openAPI2,
+			wantErr: nil,
 		},
-		{
-			"yaml_2.0_float",
-			`swagger: 2.0`,
-			openAPI2,
-			nil,
+		"empty_input": {
+			input:   ``,
+			want:    "",
+			wantErr: errors.New("unable to parse openapi specification version: empty input"),
 		},
-		{
-			"empty_input",
-			``,
-			"",
-			errors.New("empty input"),
+		"invalid_json": {
+			input:   `{`,
+			want:    "",
+			wantErr: errors.New("unable to parse openapi specification version: unexpected end of JSON input"),
 		},
-		{
-			"invalid_input",
-			`this is invalid`,
-			"",
-			errors.New("unable to parse version"),
+		"invalid_input": {
+			input:   `this is invalid`,
+			want:    "",
+			wantErr: errors.New("unable to parse openapi specification version: yaml: unmarshal errors:\n  line 1: cannot unmarshal !!str `this is...` into directory.openAPIVersion"),
 		},
-		{
-			"json_incomplete",
-			`{}`,
-			"",
-			errUnknownVersion,
+		"json_incomplete": {
+			input:   `{}`,
+			want:    "",
+			wantErr: errUnknownVersion,
 		},
-		{
-			"yaml_incomplete",
-			`---`,
-			"",
-			errUnknownVersion,
+		"yaml_incomplete": {
+			input:   `---`,
+			want:    "",
+			wantErr: errUnknownVersion,
 		},
 	}
 
-	for _, test := range tests {
+	for name, test := range tests {
 		test := test
 
-		t.Run(test.name, func(t *testing.T) {
-			actual, err := directory.ParseAPISpectType([]byte(test.data))
+		t.Run(name, func(t *testing.T) {
+			actual, err := directory.ParseAPISpecificationType([]byte(test.input))
 
-			assert.Equal(t, test.expected, actual)
-			assert.Equal(t, test.err, err)
+			assert.Equal(t, test.want, actual)
+			assert.Equal(t, test.wantErr, err)
 		})
 	}
 }
