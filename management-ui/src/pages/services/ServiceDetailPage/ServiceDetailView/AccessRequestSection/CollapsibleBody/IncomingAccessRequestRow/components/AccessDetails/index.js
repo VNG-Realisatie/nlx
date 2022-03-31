@@ -27,9 +27,11 @@ const AccessDetails = ({
         <SectionHeader>
           <StyledIcon as={IconOrganization} inline /> {t('Organization')}
         </SectionHeader>
-        <SectionContent>
-          {organization.name} ({organization.serialNumber})
-        </SectionContent>
+        <SectionContent>{organization.name}</SectionContent>
+
+        <SectionHeader withoutIcon>{t('OIN')}</SectionHeader>
+        <SectionContent>{organization.serialNumber}</SectionContent>
+
         <SectionHeader withoutIcon>{t('Public Key Fingerprint')}</SectionHeader>
         <SectionContent>{publicKeyFingerprint}</SectionContent>
 

@@ -33,9 +33,10 @@ const RequestAccessDetails = ({
         <SectionHeader>
           <StyledIcon as={IconOrganization} inline /> {t('Organization')}
         </SectionHeader>
-        <SectionContent>
-          {service.organization.name} ({service.organization.serialNumber})
-        </SectionContent>
+        <SectionContent>{service.organization.name}</SectionContent>
+
+        <SectionHeader withoutIcon>{t('OIN')}</SectionHeader>
+        <SectionContent>{service.organization.serialNumber}</SectionContent>
 
         <SectionHeader>
           <StyledIcon as={IconServices} inline /> {t('Service')}
