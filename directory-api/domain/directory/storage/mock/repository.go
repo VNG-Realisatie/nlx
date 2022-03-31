@@ -94,6 +94,21 @@ func (mr *MockRepositoryMockRecorder) GetOrganizationInwayAddress(ctx, organizat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayAddress", reflect.TypeOf((*MockRepository)(nil).GetOrganizationInwayAddress), ctx, organizationSerialNumber)
 }
 
+// GetOrganizationInwayManagementAPIProxyAddress mocks base method.
+func (m *MockRepository) GetOrganizationInwayManagementAPIProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationInwayManagementAPIProxyAddress", ctx, organizationSerialNumber)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationInwayManagementAPIProxyAddress indicates an expected call of GetOrganizationInwayManagementAPIProxyAddress.
+func (mr *MockRepositoryMockRecorder) GetOrganizationInwayManagementAPIProxyAddress(ctx, organizationSerialNumber interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInwayManagementAPIProxyAddress", reflect.TypeOf((*MockRepository)(nil).GetOrganizationInwayManagementAPIProxyAddress), ctx, organizationSerialNumber)
+}
+
 // GetOutway mocks base method.
 func (m *MockRepository) GetOutway(name, organizationSerialNumber string) (*domain.Outway, error) {
 	m.ctrl.T.Helper()

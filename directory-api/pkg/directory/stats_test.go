@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +27,7 @@ func TestListInOutwayStatistics(t *testing.T) {
 	}{
 		"failed_to_get_statistics_from_the_db": {
 			setup: func(s serviceMocks) {
-				s.r.EXPECT().ListVersionStatistics(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				s.repository.EXPECT().ListVersionStatistics(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 			},
 			expectedResponse: nil,
 			expectedError:    status.New(codes.Internal, "Storage error.").Err(),
@@ -45,7 +46,7 @@ func TestListInOutwayStatistics(t *testing.T) {
 					Version:     "0.0.3",
 				})
 
-				s.r.EXPECT().ListVersionStatistics(gomock.Any()).Return([]*domain.VersionStatistics{
+				s.repository.EXPECT().ListVersionStatistics(gomock.Any()).Return([]*domain.VersionStatistics{
 					versionStatisticsOutway,
 					versionStatisticsInway,
 				}, nil)
@@ -71,7 +72,9 @@ func TestListInOutwayStatistics(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "")
+			service, mocks := newService(t, "", &testClock{
+				timeToReturn: time.Now(),
+			})
 
 			tt.setup(mocks)
 

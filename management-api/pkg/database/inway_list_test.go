@@ -40,7 +40,7 @@ func TestListInways(t *testing.T) {
 					Version:     "unknown",
 					Hostname:    "fixture-server",
 					IPAddress:   "127.0.0.1",
-					SelfAddress: "fixture.local",
+					SelfAddress: "fixture.local:443",
 					Services: []*database.Service{
 						{
 							ID:                   1,
@@ -99,7 +99,7 @@ func TestListInways(t *testing.T) {
 					Version:     "unknown",
 					Hostname:    "fixture-server",
 					IPAddress:   "127.0.0.1",
-					SelfAddress: "fixture.local",
+					SelfAddress: "fixture.local:443",
 					Services:    []*database.Service{},
 					CreatedAt:   fixtureTime,
 					UpdatedAt:   fixtureTime,

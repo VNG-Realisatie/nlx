@@ -6,9 +6,12 @@ package directory
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
-	"time"
+	"strconv"
+	"strings"
 
+	"github.com/blang/semver"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -29,10 +32,10 @@ func (h *DirectoryService) RegisterInway(ctx context.Context, req *directoryapi.
 		return nil, fmt.Errorf("failed to get organization information from request: %v", err)
 	}
 
-	nlxVersion := nlxversion.NewFromGRPCContext(ctx).Version
+	componentNLXVersion := nlxversion.NewFromGRPCContext(ctx).Version
 
 	// Created at and Updated at time are the same times when registering new inway
-	now := time.Now()
+	now := h.clock.Now()
 
 	organizationModel, err := domain.NewOrganization(organizationInformation.Name, organizationInformation.SerialNumber)
 	if err != nil {
@@ -40,14 +43,33 @@ func (h *DirectoryService) RegisterInway(ctx context.Context, req *directoryapi.
 		return nil, status.New(codes.InvalidArgument, msg).Err()
 	}
 
+	managementAPIProxyAddress, err := calculateManagementAPIProxyAddress(componentNLXVersion, req)
+	if err != nil {
+		h.logger.Error("cannot compute inway proxy address", zap.Error(err))
+		return nil, status.Errorf(codes.InvalidArgument, "cannot compute inway proxy address")
+	}
+
+	if isVersionInRange(">0.127.0", componentNLXVersion) {
+		if !isPortOfAddressValid(req.InwayAddress) {
+			return nil, status.Errorf(codes.InvalidArgument, "inway address must use port 443 or 8443")
+		}
+
+		if req.IsOrganizationInway {
+			if !isPortOfAddressValid(req.ManagementApiProxyAddress) {
+				return nil, status.Errorf(codes.InvalidArgument, "management API proxy address must use port 443 or 8443")
+			}
+		}
+	}
+
 	inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
-		Name:                req.InwayName,
-		Organization:        organizationModel,
-		IsOrganizationInway: req.IsOrganizationInway,
-		Address:             req.InwayAddress,
-		NlxVersion:          nlxVersion,
-		CreatedAt:           now,
-		UpdatedAt:           now,
+		Name:                      req.InwayName,
+		Organization:              organizationModel,
+		IsOrganizationInway:       req.IsOrganizationInway,
+		Address:                   req.InwayAddress,
+		ManagementAPIProxyAddress: managementAPIProxyAddress,
+		NlxVersion:                componentNLXVersion,
+		CreatedAt:                 now,
+		UpdatedAt:                 now,
 	},
 	)
 	if err != nil {
@@ -165,4 +187,48 @@ func getAPISpecificationTypeForService(httpClient *http.Client, logger *zap.Logg
 	}
 
 	return domain.SpecificationType(specificationType)
+}
+
+func isPortOfAddressValid(address string) bool {
+	_, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return false
+	}
+
+	return port == "443" || port == "8443"
+}
+
+func isVersionInRange(wantedVersionRange, componentVersion string) bool {
+	v, err := semver.Parse(strings.TrimPrefix(componentVersion, "v"))
+	if err != nil {
+		return false
+	}
+
+	return semver.MustParseRange(wantedVersionRange)(v)
+}
+
+func calculateManagementAPIProxyAddress(nlxComponentVersion string, req *directoryapi.RegisterInwayRequest) (string, error) {
+	if !req.IsOrganizationInway {
+		return "", nil
+	}
+
+	if isVersionInRange(">0.127.0", nlxComponentVersion) {
+		return req.ManagementApiProxyAddress, nil
+	}
+
+	if req.InwayAddress == "" {
+		return "", fmt.Errorf("empty inway address provided")
+	}
+
+	host, port, err := net.SplitHostPort(req.InwayAddress)
+	if err != nil {
+		return "", fmt.Errorf("invalid format for inway address: %w", err)
+	}
+
+	portNum, err := strconv.Atoi(port)
+	if err != nil {
+		return "", fmt.Errorf("invalid format for inway address port: %w", err)
+	}
+
+	return fmt.Sprintf("%s:%d", host, portNum+1), nil
 }

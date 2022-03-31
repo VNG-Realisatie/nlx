@@ -96,6 +96,36 @@
         ]
       }
     },
+    "/api/directory/organizations/{organizationSerialNumber}/inway/management-api-proxy-address": {
+      "get": {
+        "operationId": "Directory_GetOrganizationManagementAPIProxyAddress",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiGetOrganizationManagementAPIProxyAddressResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "organizationSerialNumber",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/api/directory/participants": {
       "get": {
         "operationId": "Directory_ListParticipants",
@@ -301,6 +331,17 @@
       }
     },
     "directoryapiGetOrganizationInwayResponse": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "managementApiProxyAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiGetOrganizationManagementAPIProxyAddressResponse": {
       "type": "object",
       "properties": {
         "address": {

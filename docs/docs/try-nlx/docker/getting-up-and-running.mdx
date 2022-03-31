@@ -23,7 +23,8 @@ Set the hostname of the Inway (where `my-organization.nl:8443` should be replace
 <TabItem value="mac-linux">
 
 ```bash
-export INWAY_SELF_ADDRESS="my-organization.nl:8443"
+export INWAY_SELF_ADDRESS="my-organization.nl:443"
+export MANAGEMENT_API_PROXY_ADDRESS="my-organization.nl:8443"
 ```
 
 </TabItem>
@@ -31,7 +32,8 @@ export INWAY_SELF_ADDRESS="my-organization.nl:8443"
 <TabItem value="windows">
 
 ```bash
-$env:INWAY_SELF_ADDRESS = 'my-organization.nl:8443'
+$env:INWAY_SELF_ADDRESS = 'my-organization.nl:443'
+$env:MANAGEMENT_API_PROXY_ADDRESS = 'my-organization.nl:8443'
 ```
 
 </TabItem>

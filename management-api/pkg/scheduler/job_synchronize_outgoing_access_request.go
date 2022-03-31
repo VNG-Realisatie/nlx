@@ -11,6 +11,7 @@ import (
 	"time"
 
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -30,6 +31,7 @@ type CreateManagementClientFunc func(context.Context, string, *common_tls.Certif
 
 type SynchronizeOutgoingAccessRequestJob struct {
 	ctx                        context.Context
+	logger                     *zap.Logger
 	orgCert                    *common_tls.CertificateBundle
 	directoryClient            directory.Client
 	configDatabase             database.ConfigDatabase
@@ -37,9 +39,10 @@ type SynchronizeOutgoingAccessRequestJob struct {
 	pollInterval               time.Duration
 }
 
-func NewSynchronizeOutgoingAccessRequestJob(ctx context.Context, pollInterval time.Duration, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle, createManagementClientFunc CreateManagementClientFunc) *SynchronizeOutgoingAccessRequestJob {
+func NewSynchronizeOutgoingAccessRequestJob(ctx context.Context, logger *zap.Logger, pollInterval time.Duration, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle, createManagementClientFunc CreateManagementClientFunc) *SynchronizeOutgoingAccessRequestJob {
 	return &SynchronizeOutgoingAccessRequestJob{
 		ctx:                        ctx,
+		logger:                     logger,
 		orgCert:                    orgCert,
 		directoryClient:            directoryClient,
 		configDatabase:             configDatabase,
@@ -84,9 +87,12 @@ func (job *SynchronizeOutgoingAccessRequestJob) Synchronize(ctx context.Context,
 
 	if err != nil {
 		if errors.Is(err, server.ErrServiceDoesNotExist) {
+			job.logger.Info("service no longer exists, deleting outgoing access request", zap.String("organization serialnumber", request.Organization.SerialNumber), zap.String("servicename", request.ServiceName))
+
 			return job.configDatabase.DeleteOutgoingAccessRequests(ctx, request.Organization.SerialNumber, request.ServiceName)
 		}
 
+		job.logger.Error("failed to synchronize outgoing access request", zap.Error(err))
 		// Return err to prevent the state of the outgoing access to be set to failed.
 		// If the state of the outgoing access request is set failed it will no longer be picked up by the scheduler.
 		if request.State == database.OutgoingAccessRequestApproved || request.State == database.OutgoingAccessRequestReceived {
@@ -272,6 +278,8 @@ func (job *SynchronizeOutgoingAccessRequestJob) getOrganizationManagementClient(
 	if err != nil {
 		return nil, err
 	}
+
+	job.logger.Info("got organization inway port address", zap.String("inway proxy address", address))
 
 	client, err := job.createManagementClientFunc(ctx, address, job.orgCert)
 	if err != nil {

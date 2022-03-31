@@ -52,9 +52,9 @@ func (i *Inway) Run(ctx context.Context, address string) error {
 	i.logger.Info("management proxy: starting")
 
 	go func() {
-		i.logger.Info("management proxy: listening", zap.String("management-address", i.listenManagementAddress))
+		i.logger.Info("management proxy: listening", zap.String("management-address", i.listenAddressManagementAPIProxy))
 
-		l, err := net.Listen("tcp", i.listenManagementAddress)
+		l, err := net.Listen("tcp", i.listenAddressManagementAPIProxy)
 		if err != nil {
 			errorChannel <- errors.Wrap(err, "listen on management-address")
 		}

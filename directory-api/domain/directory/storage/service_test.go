@@ -88,7 +88,7 @@ func TestRegisterService(t *testing.T) {
 			inwayModel, err := domain.NewInway(&domain.NewInwayArgs{
 				Name:         "inway-for-service",
 				Organization: organization,
-				Address:      "my-org.com",
+				Address:      "my-org.com:443",
 				NlxVersion:   domain.NlxVersionUnknown,
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -156,11 +156,11 @@ func TestListServices(t *testing.T) {
 					},
 					Inways: []*domain.NewServiceInwayArgs{
 						{
-							Address: "fixture-inway-address-one.com",
+							Address: "fixture-inway-address-one.com:443",
 							State:   domain.InwayDOWN,
 						},
 						{
-							Address: "fixture-inway-address-two.com",
+							Address: "fixture-inway-address-two.com:443",
 							State:   domain.InwayDOWN,
 						},
 					},

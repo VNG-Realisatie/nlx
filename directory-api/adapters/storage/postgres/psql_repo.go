@@ -17,23 +17,24 @@ import (
 )
 
 type PostgreSQLRepository struct {
-	logger                             *zap.Logger
-	db                                 *sqlx.DB
-	registerInwayStmt                  *sqlx.NamedStmt
-	getInwayStmt                       *sqlx.NamedStmt
-	registerServiceStmt                *sqlx.NamedStmt
-	getServiceStmt                     *sqlx.NamedStmt
-	selectInwayByAddressStmt           *sqlx.NamedStmt
-	setOrganizationInwayStmt           *sqlx.NamedStmt
-	clearOrganizationInwayStmt         *sqlx.NamedStmt
-	selectOrganizationInwayAddressStmt *sqlx.NamedStmt
-	setOrganizationEmailAddressStmt    *sqlx.NamedStmt
-	selectVersionStatisticsStmt        *sqlx.Stmt
-	selectServicesStmt                 *sqlx.Stmt
-	selectOrganizationsStmt            *sqlx.Stmt
-	registerOutwayStmt                 *sqlx.NamedStmt
-	getOutwayStmt                      *sqlx.NamedStmt
-	selectParticipantsStmt             *sqlx.Stmt
+	logger                                               *zap.Logger
+	db                                                   *sqlx.DB
+	registerInwayStmt                                    *sqlx.NamedStmt
+	getInwayStmt                                         *sqlx.NamedStmt
+	registerServiceStmt                                  *sqlx.NamedStmt
+	getServiceStmt                                       *sqlx.NamedStmt
+	selectInwayByAddressStmt                             *sqlx.NamedStmt
+	setOrganizationInwayStmt                             *sqlx.NamedStmt
+	clearOrganizationInwayStmt                           *sqlx.NamedStmt
+	selectOrganizationInwayAddressStmt                   *sqlx.NamedStmt
+	selectOrganizationInwayManagementAPIProxyAddressStmt *sqlx.NamedStmt
+	setOrganizationEmailAddressStmt                      *sqlx.NamedStmt
+	selectVersionStatisticsStmt                          *sqlx.Stmt
+	selectServicesStmt                                   *sqlx.Stmt
+	selectOrganizationsStmt                              *sqlx.Stmt
+	registerOutwayStmt                                   *sqlx.NamedStmt
+	getOutwayStmt                                        *sqlx.NamedStmt
+	selectParticipantsStmt                               *sqlx.Stmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -86,6 +87,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select organization inway address statement: %s", err)
 	}
 
+	selectOrganizationInwayManagementAPIProxyAddressStmt, err := prepareSelectOrganizationInwayManagementAPIProxyAddressStatement(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare select organization inway management api proxy address statement: %s", err)
+	}
+
 	selectVersionStatisticsStmt, err := prepareSelectVersionStatisticsStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create select version statistics prepared statement: %s", err)
@@ -133,12 +139,13 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		setOrganizationEmailAddressStmt:    setOrganizationEmailAddressStmt,
 		clearOrganizationInwayStmt:         clearOrganizationInwayStmt,
 		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
-		selectVersionStatisticsStmt:        selectVersionStatisticsStmt,
-		selectServicesStmt:                 selectServicesStatement,
-		selectOrganizationsStmt:            selectOrganizationsStmt,
-		registerOutwayStmt:                 registerOutwayStmt,
-		getOutwayStmt:                      getOutwayStmt,
-		selectParticipantsStmt:             selectParticipantsStmt,
+		selectOrganizationInwayManagementAPIProxyAddressStmt: selectOrganizationInwayManagementAPIProxyAddressStmt,
+		selectVersionStatisticsStmt:                          selectVersionStatisticsStmt,
+		selectServicesStmt:                                   selectServicesStatement,
+		selectOrganizationsStmt:                              selectOrganizationsStmt,
+		registerOutwayStmt:                                   registerOutwayStmt,
+		getOutwayStmt:                                        getOutwayStmt,
+		selectParticipantsStmt:                               selectParticipantsStmt,
 	}, nil
 }
 

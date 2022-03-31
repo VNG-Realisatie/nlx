@@ -5,10 +5,7 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"net"
-	"strconv"
 	"time"
 
 	"github.com/huandu/xstrings"
@@ -36,18 +33,19 @@ import (
 )
 
 var options struct {
-	ListenAddress                string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the inway to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	ListenManagementAddress      string `long:"listen-management-address" env:"LISTEN_MANAGEMENT_ADDRESS" description:"Address for the inway to listen on for management requests. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	MonitoringAddress            string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
-	DirectoryRegistrationAddress string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register it's services"`
-	DirectoryAddress             string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services"`
-	DisableLogdb                 bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
-	ManagementAPIAddress         string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
-	Address                      string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
-	PostgresDSN                  string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
-	Name                         string `long:"name" env:"INWAY_NAME" description:"Name of the inway. Every inway should have a unique name within the organization." required:"true"`
-	AuthorizationServiceAddress  string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the service"`
-	AuthorizationCA              string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certificate"`
+	ListenAddress                   string `long:"listen-address" env:"LISTEN_ADDRESS" default:"127.0.0.1:8443" description:"Address for the inway to listen on."`
+	ListenAddressManagementAPIProxy string `long:"listen-address-management-api-proxy" env:"LISTEN_ADDRESS_MANAGEMENT_API_PROXY" default:"127.0.0.1:8444" description:"Address for the inway to listen on for management requests." required:"true"`
+	Address                         string `long:"self-address" env:"SELF_ADDRESS" description:"The address that outways can use to reach me" required:"true"`
+	ManagementAPIAddress            string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address NLX Management API which will be served as a proxy." required:"true"`
+	ManagementAPIProxyAddress       string `long:"management-api-proxy-address" env:"MANAGEMENT_API_PROXY_ADDRESS" description:"The address other organizations can use to reach the NLX Management API proxy." required:"true"`
+	MonitoringAddress               string `long:"monitoring-address" env:"MONITORING_ADDRESS" default:"127.0.0.1:8081" description:"Address for the inway monitoring endpoints to listen on. Read https://golang.org/pkg/net/#Dial for possible tcp address specs."`
+	DirectoryRegistrationAddress    string `long:"directory-registration-address" env:"DIRECTORY_REGISTRATION_ADDRESS" description:"Address for the directory where this inway can register its services"`
+	DirectoryAddress                string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services"`
+	DisableLogdb                    bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
+	PostgresDSN                     string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	Name                            string `long:"name" env:"INWAY_NAME" description:"Name of the inway. Every inway should have a unique name within the organization." required:"true"`
+	AuthorizationServiceAddress     string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the service"`
+	AuthorizationCA                 string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certificate"`
 
 	logoptions.LogOptions
 	cmd.TLSOrgOptions
@@ -78,11 +76,6 @@ func main() {
 	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
 	if err != nil {
 		logger.Fatal("loading TLS files", zap.Error(err))
-	}
-
-	listenManagementAddress, err := defaultManagementAddress(options.ListenAddress)
-	if err != nil {
-		logger.Fatal("unable to create default management address", zap.Error(err))
 	}
 
 	creds := credentials.NewTLS(cert.TLSConfig())
@@ -122,19 +115,20 @@ func main() {
 	directoryClient := directoryapi.NewDirectoryClient(directoryConn)
 
 	params := &inway.Params{
-		Context:                 context.Background(),
-		Logger:                  logger,
-		Txlogger:                txlogger,
-		ManagementClient:        api.NewManagementClient(conn),
-		ManagementProxy:         managementProxy,
-		Name:                    options.Name,
-		Address:                 options.Address,
-		MonitoringAddress:       options.MonitoringAddress,
-		ListenManagementAddress: listenManagementAddress,
-		OrgCertBundle:           orgCert,
-		DirectoryClient:         directoryClient,
-		AuthServiceURL:          options.AuthorizationServiceAddress,
-		AuthCAPath:              options.AuthorizationCA,
+		Context:                         context.Background(),
+		Logger:                          logger,
+		Txlogger:                        txlogger,
+		ManagementClient:                api.NewManagementClient(conn),
+		ManagementProxy:                 managementProxy,
+		Name:                            options.Name,
+		Address:                         options.Address,
+		ManagementAPIProxyAddress:       options.ManagementAPIProxyAddress,
+		MonitoringAddress:               options.MonitoringAddress,
+		ListenAddressManagementAPIProxy: options.ListenAddressManagementAPIProxy,
+		OrgCertBundle:                   orgCert,
+		DirectoryClient:                 directoryClient,
+		AuthServiceURL:                  options.AuthorizationServiceAddress,
+		AuthCAPath:                      options.AuthorizationCA,
 	}
 
 	iw, err := inway.NewInway(params)
@@ -192,20 +186,6 @@ func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.T
 	logger.Info("transaction logger created")
 
 	return postgresTxLogger, logDB
-}
-
-func defaultManagementAddress(address string) (string, error) {
-	host, port, err := net.SplitHostPort(address)
-	if err != nil {
-		return "", err
-	}
-
-	intPort, err := strconv.Atoi(port)
-	if err != nil {
-		return "", nil
-	}
-
-	return fmt.Sprintf("%v:%v", host, (intPort + 1)), nil
 }
 
 func setupLogger() *zap.Logger {

@@ -11,6 +11,7 @@ replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
 
 require (
 	github.com/DATA-DOG/go-txdb v0.1.5
+	github.com/blang/semver v3.5.1+incompatible
 	github.com/cloudflare/cfssl v1.6.1
 	github.com/coreos/go-oidc/v3 v3.1.0
 	github.com/fgrosse/zaptest v1.1.0
@@ -60,7 +61,6 @@ require (
 	github.com/benbjohnson/clock v1.1.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
-	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cncf/udpa/go v0.0.0-20210930031921-04548b0d99d4 // indirect

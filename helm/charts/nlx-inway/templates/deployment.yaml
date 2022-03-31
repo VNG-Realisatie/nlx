@@ -61,7 +61,7 @@ spec:
           env:
             - name: LISTEN_ADDRESS
               value: 0.0.0.0:8443
-            - name: LISTEN_MANAGEMENT_ADDRESS
+            - name: LISTEN_ADDRESS_MANAGEMENT_API_PROXY
               value: 0.0.0.0:8444
             - name: MONITORING_ADDRESS
               value: 0.0.0.0:8081
@@ -69,6 +69,8 @@ spec:
               value: {{ default (include "nlx-inway.fullname" .) .Values.config.name }}
             - name: SELF_ADDRESS
               value: {{ include "nlx-inway.selfAddress" . }}
+            - name: MANAGEMENT_API_PROXY_ADDRESS
+              value: {{ include "nlx-inway.managementAPIProxyAddress" . }}
             - name: DIRECTORY_ADDRESS
             {{- if .Values.config.directoryHostname }}
               value: {{ .Values.config.directoryHostname }}:443

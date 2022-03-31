@@ -53,7 +53,11 @@
         },
         "selfAddress": {
           "type": "string",
-          "description": "The address that can be used by the NLX network to reach this Inway"
+          "description": "The address that can be used by the NLX network to reach this Inway."
+        },
+        "managementAPIProxyAddress": {
+          "type": "string",
+          "description": "The address other organizations can use to reach the NLX Management API proxy served by this Inway."
         },
         "serviceConfig": {
           "type": "object",
@@ -173,11 +177,19 @@
         },
         "port": {
           "type": "integer",
-          "description": "Port exposed by the service"
+          "description": "Port exposed by the service for Inway traffic"
+        },
+        "portManagementAPIProxy": {
+          "type": "integer",
+          "description": "Port exposed by the service for Management API Proxy traffic"
         },
         "nodePort": {
           "type": "integer",
-          "description": "Port exposed if service.type is NodePort. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API)"
+          "description": "Port exposed for Inway traffic if `service.type` is `NodePort`"
+        },
+        "nodePortManagementAPIProxy": {
+          "type": "integer",
+          "description": "Port exposed for Management API Proxy traffic `service.type` is `NodePort`"
         },
         "type": {
           "type": "string",

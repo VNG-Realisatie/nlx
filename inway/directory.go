@@ -74,10 +74,11 @@ func (i *Inway) registerToDirectory(ctx context.Context) error {
 	}
 
 	registerInwayRequest := &directoryapi.RegisterInwayRequest{
-		InwayName:           i.name,
-		InwayAddress:        i.address,
-		IsOrganizationInway: i.isOrganizationInway,
-		Services:            protoServiceDetails,
+		InwayName:                 i.name,
+		InwayAddress:              i.address,
+		ManagementApiProxyAddress: i.managementAPIProxyAddress,
+		IsOrganizationInway:       i.isOrganizationInway,
+		Services:                  protoServiceDetails,
 	}
 
 	nlxVersion := nlxversion.NewGRPCContext(ctx, "inway")

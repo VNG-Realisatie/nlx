@@ -100,7 +100,7 @@ func TestCreateServiceWithInways(t *testing.T) {
 						Version:     "unknown",
 						Hostname:    "fixture-server",
 						IPAddress:   "127.0.0.1",
-						SelfAddress: "fixture.local",
+						SelfAddress: "fixture.local:443",
 						CreatedAt:   fixtureTime,
 						UpdatedAt:   fixtureTime,
 					},

@@ -1,6 +1,6 @@
 - id: 1
   name: fixture-inway
-  self_address: fixture.local
+  self_address: fixture.local:443
   version: unknown
   hostname: fixture-server
   ip_address: 127.0.0.1
@@ -9,7 +9,7 @@
 
 - id: 2
   name: ""
-  self_address: fixture.local
+  self_address: fixture.local:443
   version: unknown
   hostname: fixture-server
   ip_address: 127.0.0.1

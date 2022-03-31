@@ -71,6 +71,12 @@ func newZapLogger() *zap.Logger {
 	return logger
 }
 
+type clock struct{}
+
+func (c *clock) Now() time.Time {
+	return time.Now()
+}
+
 func main() {
 	err := parseArgs()
 	if err != nil {
@@ -103,13 +109,14 @@ func main() {
 	}
 
 	httpClient := nlxhttp.NewHTTPClient(certificate)
-	directoryService := directory.New(
-		logger,
-		options.TermsOfServiceURL,
-		storage,
-		httpClient,
-		common_tls.GetOrganizationInfoFromRequest,
-	)
+	directoryService := directory.New(&directory.NewDirectoryArgs{
+		Logger:                                logger,
+		TermsOfServiceURL:                     options.TermsOfServiceURL,
+		Repository:                            storage,
+		Clock:                                 &clock{},
+		HTTPClient:                            httpClient,
+		GetOrganizationInformationFromRequest: common_tls.GetOrganizationInfoFromRequest,
+	})
 
 	httpServer := http.NewServer(db, certificate, logger)
 

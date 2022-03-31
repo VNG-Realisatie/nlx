@@ -6,6 +6,7 @@ package directory_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -31,7 +32,9 @@ func TestGetTermsOfService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _ := newService(t, tt.termsOfServiceURL)
+			service, _ := newService(t, tt.termsOfServiceURL, &testClock{
+				timeToReturn: time.Now(),
+			})
 
 			got, err := service.GetTermsOfService(context.Background(), &emptypb.Empty{})
 

@@ -4,31 +4,50 @@
 package directory
 
 import (
+	"context"
+	"fmt"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+
+	directoryapi "go.nlx.io/nlx/directory-api/api"
+	directoryapi_mock "go.nlx.io/nlx/directory-api/api/mock"
 )
 
-func TestComputeInwayProxyAddress(t *testing.T) {
+func TestGetOrganizationInwayProxyAddress(t *testing.T) {
+	organizationSerialNumber := "00000000000000000001"
 	tests := map[string]struct {
-		input   string
-		want    string
-		wantErr string
+		directoryClient func(ctrl *gomock.Controller) directoryapi.DirectoryClient
+		want            string
+		wantErr         error
 	}{
-		"empty_address": {
-			input:   "",
-			want:    "",
-			wantErr: "empty inway address provided",
-		},
-		"without_port": {
-			input:   "localhost",
-			want:    "",
-			wantErr: "invalid format for inway address: address localhost: missing port in address",
-		},
 		"happy_flow": {
-			input:   "localhost:8000",
-			want:    "localhost:8001",
-			wantErr: "",
+			directoryClient: func(ctrl *gomock.Controller) directoryapi.DirectoryClient {
+				client := directoryapi_mock.NewMockDirectoryClient(ctrl)
+
+				client.EXPECT().GetOrganizationManagementAPIProxyAddress(gomock.Any(), &directoryapi.GetOrganizationManagementAPIProxyAddressRequest{
+					OrganizationSerialNumber: organizationSerialNumber,
+				}).Return(&directoryapi.GetOrganizationManagementAPIProxyAddressResponse{
+					Address: "localhost:8443",
+				}, nil)
+
+				return client
+			},
+			want:    "localhost:8443",
+			wantErr: nil,
+		},
+		"directory_client_errors": {
+			directoryClient: func(ctrl *gomock.Controller) directoryapi.DirectoryClient {
+				client := directoryapi_mock.NewMockDirectoryClient(ctrl)
+
+				client.EXPECT().GetOrganizationManagementAPIProxyAddress(gomock.Any(), &directoryapi.GetOrganizationManagementAPIProxyAddressRequest{
+					OrganizationSerialNumber: organizationSerialNumber,
+				}).Return(nil, fmt.Errorf("arbitrary error"))
+				return client
+			},
+			want:    "",
+			wantErr: fmt.Errorf("arbitrary error"),
 		},
 	}
 
@@ -36,12 +55,17 @@ func TestComputeInwayProxyAddress(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			got, err := computeInwayProxyAddress(tt.input)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
 
-			if tt.wantErr != "" {
-				assert.EqualError(t, err, tt.wantErr)
+			directoryClient := tt.directoryClient(ctrl)
+			client := &client{
+				directoryClient,
 			}
 
+			got, err := client.GetOrganizationInwayProxyAddress(context.Background(), organizationSerialNumber)
+
+			assert.Equal(t, tt.wantErr, err)
 			assert.Equal(t, tt.want, got)
 		})
 	}

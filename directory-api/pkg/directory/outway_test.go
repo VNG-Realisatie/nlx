@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +27,7 @@ func TestRegisterOutway(t *testing.T) {
 	}{
 		"when_an_unexpected_repository_error_occurs": {
 			setup: func(mocks serviceMocks) {
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					RegisterOutway(gomock.Any()).
 					Return(errors.New("arbitrary error"))
@@ -39,7 +40,7 @@ func TestRegisterOutway(t *testing.T) {
 		},
 		"happy_flow_empty_name": {
 			setup: func(mocks serviceMocks) {
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					RegisterOutway(gomock.Any()).
 					Return(nil).
@@ -53,7 +54,7 @@ func TestRegisterOutway(t *testing.T) {
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					RegisterOutway(gomock.Any()).
 					Return(nil).
@@ -71,7 +72,9 @@ func TestRegisterOutway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "")
+			service, mocks := newService(t, "", &testClock{
+				timeToReturn: time.Now(),
+			})
 
 			if tt.setup != nil {
 				tt.setup(mocks)

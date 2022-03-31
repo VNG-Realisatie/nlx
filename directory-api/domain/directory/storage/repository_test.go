@@ -66,7 +66,7 @@ func loadFixtures(repo storage.Repository) error {
 	newInwaysArgs := []*domain.NewInwayArgs{
 		{
 			Name:                "fixture-inway-name-one",
-			Address:             "fixture-inway-address-one.com",
+			Address:             "fixture-inway-address-one.com:443",
 			IsOrganizationInway: true,
 			Organization:        organizationsModels[0],
 			NlxVersion:          "1.0.0",
@@ -75,7 +75,7 @@ func loadFixtures(repo storage.Repository) error {
 		},
 		{
 			Name:                "fixture-inway-name-two",
-			Address:             "fixture-inway-address-two.com",
+			Address:             "fixture-inway-address-two.com:443",
 			IsOrganizationInway: false,
 			Organization:        organizationsModels[0],
 			NlxVersion:          "1.0.0",
@@ -84,7 +84,7 @@ func loadFixtures(repo storage.Repository) error {
 		},
 		{
 			Name:                "fixture-inway-name-three",
-			Address:             "fixture-inway-address-three.com",
+			Address:             "fixture-inway-address-three.com:443",
 			IsOrganizationInway: false,
 			Organization:        organizationsModels[1],
 			NlxVersion:          "1.0.0",
@@ -93,7 +93,7 @@ func loadFixtures(repo storage.Repository) error {
 		},
 		{
 			Name:                "fixture-inway-name-four",
-			Address:             "fixture-inway-address-four.com",
+			Address:             "fixture-inway-address-four.com:443",
 			IsOrganizationInway: false,
 			Organization:        organizationsModels[2],
 			NlxVersion:          "1.0.0",
@@ -102,7 +102,7 @@ func loadFixtures(repo storage.Repository) error {
 		},
 		{
 			Name:                "fixture-inway-name-five",
-			Address:             "fixture-inway-address-five.com",
+			Address:             "fixture-inway-address-five.com:443",
 			IsOrganizationInway: false,
 			Organization:        organizationsModels[3],
 			NlxVersion:          "1.0.0",

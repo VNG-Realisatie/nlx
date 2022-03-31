@@ -27,6 +27,7 @@ type Repository interface {
 	ClearOrganizationInway(ctx context.Context, organizationSerialNumber string) error
 	ClearIfSetAsOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error
 	GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error)
+	GetOrganizationInwayManagementAPIProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error)
 	SetOrganizationEmailAddress(ctx context.Context, organization *domain.Organization, emailAddress string) error
 
 	ListServices(ctx context.Context, organizationSerialNumber string) ([]*domain.Service, error)

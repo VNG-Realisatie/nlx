@@ -6,7 +6,6 @@ package domain
 import (
 	"fmt"
 	"regexp"
-	"strings"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -14,23 +13,25 @@ import (
 )
 
 type Inway struct {
-	name                string
-	organization        *Organization
-	isOrganizationInway bool
-	address             string
-	nlxVersion          string
-	createdAt           time.Time
-	updatedAt           time.Time
+	name                      string
+	organization              *Organization
+	isOrganizationInway       bool
+	address                   string
+	managementAPIProxyAddress string
+	nlxVersion                string
+	createdAt                 time.Time
+	updatedAt                 time.Time
 }
 
 type NewInwayArgs struct {
-	Name                string
-	Organization        *Organization
-	IsOrganizationInway bool
-	Address             string
-	NlxVersion          string
-	CreatedAt           time.Time
-	UpdatedAt           time.Time
+	Name                      string
+	Organization              *Organization
+	IsOrganizationInway       bool
+	Address                   string
+	ManagementAPIProxyAddress string
+	NlxVersion                string
+	CreatedAt                 time.Time
+	UpdatedAt                 time.Time
 }
 
 const NlxVersionUnknown = "unknown"
@@ -42,10 +43,9 @@ func NewInway(args *NewInwayArgs) (*Inway, error) {
 		args,
 		validation.Field(&args.Name, validation.When(len(args.Name) > 0, validation.Match(nameRegex))),
 		validation.Field(&args.Organization, validation.NotNil),
-		validation.Field(&args.Address, validation.Required,
-			validation.When(strings.Contains(args.Address, ":"), is.DialString),
-			validation.When(!strings.Contains(args.Address, ":"), is.DNSName),
-		),
+		validation.Field(&args.Address, validation.Required, is.DialString),
+		validation.Field(&args.ManagementAPIProxyAddress,
+			validation.When(len(args.ManagementAPIProxyAddress) > 0, is.DialString)),
 		validation.Field(&args.NlxVersion, validation.When(args.NlxVersion != NlxVersionUnknown, is.Semver)),
 		validation.Field(&args.CreatedAt, validation.Max(time.Now()).Error("must not be in the future")),
 		validation.Field(&args.UpdatedAt, validation.Max(time.Now()).Error("must not be in the future")),
@@ -56,13 +56,14 @@ func NewInway(args *NewInwayArgs) (*Inway, error) {
 	}
 
 	return &Inway{
-		name:                args.Name,
-		organization:        args.Organization,
-		address:             args.Address,
-		nlxVersion:          args.NlxVersion,
-		createdAt:           args.CreatedAt,
-		updatedAt:           args.UpdatedAt,
-		isOrganizationInway: args.IsOrganizationInway,
+		name:                      args.Name,
+		organization:              args.Organization,
+		address:                   args.Address,
+		managementAPIProxyAddress: args.ManagementAPIProxyAddress,
+		nlxVersion:                args.NlxVersion,
+		createdAt:                 args.CreatedAt,
+		updatedAt:                 args.UpdatedAt,
+		isOrganizationInway:       args.IsOrganizationInway,
 	}, nil
 }
 
@@ -80,6 +81,10 @@ func (i *Inway) IsOrganizationInway() bool {
 
 func (i *Inway) Address() string {
 	return i.address
+}
+
+func (i *Inway) ManagementAPIProxyAddress() string {
+	return i.managementAPIProxyAddress
 }
 
 func (i *Inway) NlxVersion() string {

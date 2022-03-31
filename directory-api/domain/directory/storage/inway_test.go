@@ -38,7 +38,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-inway-name",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -49,7 +49,7 @@ func TestRegisterInway(t *testing.T) {
 			expectedInway: &domain.NewInwayArgs{
 				Name:         "my-inway-name",
 				Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-				Address:      "localhost",
+				Address:      "localhost:443",
 				NlxVersion:   domain.NlxVersionUnknown,
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -61,7 +61,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -72,7 +72,7 @@ func TestRegisterInway(t *testing.T) {
 			expectedInway: &domain.NewInwayArgs{
 				Name:         "",
 				Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-				Address:      "localhost",
+				Address:      "localhost:443",
 				NlxVersion:   domain.NlxVersionUnknown,
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -84,7 +84,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-inway",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -95,7 +95,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-inway",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "nlx-inway.io",
+						Address:      "nlx-inway.io:443",
 						NlxVersion:   "0.0.1",
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -106,7 +106,7 @@ func TestRegisterInway(t *testing.T) {
 			expectedInway: &domain.NewInwayArgs{
 				Name:         "my-inway",
 				Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-				Address:      "nlx-inway.io",
+				Address:      "nlx-inway.io:443",
 				NlxVersion:   "0.0.1",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -118,7 +118,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-first-inway",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -129,7 +129,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-second-inway",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -145,7 +145,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-inway",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now.Add(-1 * time.Hour),
 						UpdatedAt:    now.Add(-1 * time.Hour),
@@ -156,7 +156,7 @@ func TestRegisterInway(t *testing.T) {
 					inwayArgs: &domain.NewInwayArgs{
 						Name:         "my-inway",
 						Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-						Address:      "localhost",
+						Address:      "localhost:443",
 						NlxVersion:   domain.NlxVersionUnknown,
 						CreatedAt:    now,
 						UpdatedAt:    now,
@@ -167,7 +167,7 @@ func TestRegisterInway(t *testing.T) {
 			expectedInway: &domain.NewInwayArgs{
 				Name:         "my-inway",
 				Organization: createNewOrganization(t, "my-organization-name", testOrganizationSerialNumber),
-				Address:      "localhost",
+				Address:      "localhost:443",
 				NlxVersion:   domain.NlxVersionUnknown,
 				CreatedAt:    now.Add(-1 * time.Hour),
 				UpdatedAt:    now,

@@ -47,37 +47,39 @@ type Organization struct {
 }
 
 type Inway struct {
-	name                    string
-	organization            Organization
-	address                 string
-	listenManagementAddress string
-	isOrganizationInway     bool
-	orgCertBundle           *common_tls.CertificateBundle
-	logger                  *zap.Logger
-	serverTLS               *http.Server
-	monitoringService       *monitoring.Service
-	managementClient        api.ManagementClient
-	managementProxy         *grpcproxy.Proxy
-	directoryClient         directoryapi.DirectoryClient
-	plugins                 []plugins.Plugin
-	services                map[string]*plugins.Service
-	servicesLock            sync.RWMutex
+	name                            string
+	organization                    Organization
+	address                         string
+	managementAPIProxyAddress       string
+	listenAddressManagementAPIProxy string
+	isOrganizationInway             bool
+	orgCertBundle                   *common_tls.CertificateBundle
+	logger                          *zap.Logger
+	serverTLS                       *http.Server
+	monitoringService               *monitoring.Service
+	managementClient                api.ManagementClient
+	managementProxy                 *grpcproxy.Proxy
+	directoryClient                 directoryapi.DirectoryClient
+	plugins                         []plugins.Plugin
+	services                        map[string]*plugins.Service
+	servicesLock                    sync.RWMutex
 }
 
 type Params struct {
-	Context                 context.Context
-	Logger                  *zap.Logger
-	Txlogger                transactionlog.TransactionLogger
-	ManagementClient        api.ManagementClient
-	ManagementProxy         *grpcproxy.Proxy
-	Name                    string
-	Address                 string
-	MonitoringAddress       string
-	ListenManagementAddress string
-	OrgCertBundle           *common_tls.CertificateBundle
-	DirectoryClient         directoryapi.DirectoryClient
-	AuthServiceURL          string
-	AuthCAPath              string
+	Context                         context.Context
+	Logger                          *zap.Logger
+	Txlogger                        transactionlog.TransactionLogger
+	ManagementClient                api.ManagementClient
+	ManagementProxy                 *grpcproxy.Proxy
+	Name                            string
+	Address                         string
+	ManagementAPIProxyAddress       string
+	MonitoringAddress               string
+	ListenAddressManagementAPIProxy string
+	OrgCertBundle                   *common_tls.CertificateBundle
+	DirectoryClient                 directoryapi.DirectoryClient
+	AuthServiceURL                  string
+	AuthCAPath                      string
 }
 
 func NewInway(params *Params) (*Inway, error) {
@@ -117,14 +119,15 @@ func NewInway(params *Params) (*Inway, error) {
 			SerialNumber: organizationSerialNumber,
 			Name:         organizationName,
 		},
-		listenManagementAddress: params.ListenManagementAddress,
-		address:                 params.Address,
-		orgCertBundle:           params.OrgCertBundle,
-		managementClient:        params.ManagementClient,
-		managementProxy:         params.ManagementProxy,
-		directoryClient:         params.DirectoryClient,
-		services:                map[string]*plugins.Service{},
-		servicesLock:            sync.RWMutex{},
+		listenAddressManagementAPIProxy: params.ListenAddressManagementAPIProxy,
+		address:                         params.Address,
+		managementAPIProxyAddress:       params.ManagementAPIProxyAddress,
+		orgCertBundle:                   params.OrgCertBundle,
+		managementClient:                params.ManagementClient,
+		managementProxy:                 params.ManagementProxy,
+		directoryClient:                 params.DirectoryClient,
+		services:                        map[string]*plugins.Service{},
+		servicesLock:                    sync.RWMutex{},
 		plugins: []plugins.Plugin{
 			plugins.NewAuthenticationPlugin(),
 			plugins.NewDelegationPlugin(),

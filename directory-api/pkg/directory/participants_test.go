@@ -30,7 +30,7 @@ func TestListParticipants(t *testing.T) {
 	}{
 		"database_error": {
 			setup: func(mocks serviceMocks) {
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					ListParticipants(gomock.Any()).
 					Return(nil, errors.New("arbitrary error"))
@@ -64,7 +64,7 @@ func TestListParticipants(t *testing.T) {
 					},
 				}
 
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					ListParticipants(gomock.Any()).
 					Return(createParticipants(models), nil)
@@ -105,7 +105,9 @@ func TestListParticipants(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "")
+			service, mocks := newService(t, "", &testClock{
+				timeToReturn: time.Now(),
+			})
 
 			if tt.setup != nil {
 				tt.setup(mocks)

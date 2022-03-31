@@ -26,6 +26,7 @@ config:
 
   name: ""
   selfAddress: ""
+  managementAPIProxyAddress: ""
   directoryHostname: ""
   directoryRegistrationHostname: ""
 
@@ -79,6 +80,9 @@ podSecurityContext:
 service:
   type: LoadBalancer
   port: 443
+  portManagementAPIProxy: 8443
+  nodePort: 443
+  nodePortManagementAPIProxy: 8443
   annotations: {}
   loadBalancerIP: ""
 

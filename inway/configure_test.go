@@ -139,16 +139,16 @@ func TestStartConfigurationPolling(t *testing.T) {
 			})
 
 			params := &Params{
-				Context:                 ctx,
-				Logger:                  zap.NewNop(),
-				Txlogger:                nil,
-				ManagementClient:        tc.managementClient(ctrl),
-				ManagementProxy:         nil,
-				Name:                    "mock-inway",
-				Address:                 "localhost:1812",
-				MonitoringAddress:       "localhost:1813",
-				ListenManagementAddress: "",
-				OrgCertBundle:           orgCert,
+				Context:                         ctx,
+				Logger:                          zap.NewNop(),
+				Txlogger:                        nil,
+				ManagementClient:                tc.managementClient(ctrl),
+				ManagementProxy:                 nil,
+				Name:                            "mock-inway",
+				Address:                         "localhost:1812",
+				MonitoringAddress:               "localhost:1813",
+				ListenAddressManagementAPIProxy: "",
+				OrgCertBundle:                   orgCert,
 			}
 
 			iw, err := NewInway(params)

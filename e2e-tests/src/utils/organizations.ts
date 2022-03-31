@@ -5,7 +5,7 @@ export interface Organization {
   serialNumber: string;
   defaultInway: {
     name: string;
-    address: string;
+    managementAPIProxyAddress: string;
   };
   outways: Outways;
   management: {
@@ -51,9 +51,9 @@ export const organizations: Organizations = {
     serialNumber: "12345678901234567890",
     defaultInway: {
       name: process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME || "Inway-01",
-      address:
-        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_ADDRESS ||
-        "inway.organization-a.nlx.local:7913",
+      managementAPIProxyAddress:
+        process.env.E2E_GEMEENTE_STIJNS_DEFAULT_MANAGEMENT_API_PROXY_ADDRESS ||
+        "inway.organization-a.nlx.local:7914",
     },
     outways: {
       [process.env.E2E_GEMEENTE_STIJNS_OUTWAY_1_NAME ||
@@ -98,9 +98,9 @@ export const organizations: Organizations = {
     serialNumber: "12345678901234567891",
     defaultInway: {
       name: process.env.E2E_RVRD_DEFAULT_INWAY_NAME || "Inway-01",
-      address:
-        process.env.E2E_RVRD_DEFAULT_INWAY_ADDRESS ||
-        "inway.organization-b.nlx.local:7923",
+      managementAPIProxyAddress:
+        process.env.E2E_RVRD_DEFAULT_MANAGEMENT_API_PROXY_ADDRESS ||
+        "inway.organization-b.nlx.local:7926",
     },
     outways: {},
     management: {
@@ -123,7 +123,7 @@ export const organizations: Organizations = {
     serialNumber: "12345678901234567892",
     defaultInway: {
       name: process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_NAME || "",
-      address:
+      managementAPIProxyAddress:
         process.env.E2E_VERGUNNINGSOFTWARE_BV_DEFAULT_INWAY_ADDRESS || "",
     },
     outways: {

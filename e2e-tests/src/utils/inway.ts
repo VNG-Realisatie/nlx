@@ -11,16 +11,15 @@ const debug = logger("e2e-tests:inway");
 const isInwayAddressInDirectory = async (
   org: Organization
 ): Promise<boolean> => {
-  const url = `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway`;
+  const url = `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway/management-api-proxy-address`;
   const res = await fetch(url);
 
   assert.equal(res.status >= 400, false);
 
   const inway = await res.json();
-
   if (
     inway.address === undefined ||
-    inway.address !== org.defaultInway.address
+    inway.address !== org.defaultInway.managementAPIProxyAddress
   ) {
     return Promise.resolve(false);
   }
@@ -50,7 +49,6 @@ export const setDefaultInwayAsOrganizationInway = async (
 ) => {
   debug(`setting default inway as organization inway for ${organizationName}`);
   const org = getOrgByName(organizationName);
-
   const response = await org.apiClients.management?.managementUpdateSettings({
     body: {
       organizationInway: org.defaultInway.name,

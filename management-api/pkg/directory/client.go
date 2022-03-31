@@ -5,10 +5,6 @@ package directory
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"net"
-	"strconv"
 	"time"
 
 	"google.golang.org/grpc"
@@ -60,37 +56,14 @@ func NewClient(ctx context.Context, directoryAddress string, cert *common_tls.Ce
 }
 
 func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
-	response, err := c.GetOrganizationInway(ctx, &directoryapi.GetOrganizationInwayRequest{
+	response, err := c.GetOrganizationManagementAPIProxyAddress(ctx, &directoryapi.GetOrganizationManagementAPIProxyAddressRequest{
 		OrganizationSerialNumber: organizationSerialNumber,
 	})
 	if err != nil {
 		return "", err
 	}
 
-	inwayProxyAddress, err := computeInwayProxyAddress(response.Address)
-	if err != nil {
-		return "", errors.New("no organization inway set")
-	}
-
-	return inwayProxyAddress, nil
-}
-
-func computeInwayProxyAddress(address string) (string, error) {
-	if address == "" {
-		return "", errors.New("empty inway address provided")
-	}
-
-	host, port, err := net.SplitHostPort(address)
-	if err != nil {
-		return "", fmt.Errorf("invalid format for inway address: %w", err)
-	}
-
-	portNum, err := strconv.Atoi(port)
-	if err != nil {
-		return "", fmt.Errorf("invalid format for inway address port: %w", err)
-	}
-
-	return fmt.Sprintf("%s:%d", host, portNum+1), nil
+	return response.Address, nil
 }
 
 func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {

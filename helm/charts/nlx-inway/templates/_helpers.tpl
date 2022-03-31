@@ -90,3 +90,14 @@ Return the self address of the inway
   {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.port | int) -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the management API proxy address of the inway
+*/}}
+{{- define "nlx-inway.managementAPIProxyAddress" -}}
+{{- if .Values.config.managementAPIProxyAddress -}}
+  {{- .Values.config.managementAPIProxyAddress -}}
+{{- else }}
+  {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.portManagementAPIProxy | int) -}}
+{{- end -}}
+{{- end -}}

@@ -14,7 +14,15 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
-	storage "go.nlx.io/nlx/directory-api/domain/directory/storage"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
+)
+
+const (
+	ErrMessageDatabase                                 = "database error"
+	ErrMessageOrganizationInformationMissing           = "tls certificate does not contain organization information"
+	ErrMessageOrganizationInwayNotFound                = "organization not found or the organization has no inway configured"
+	ErrMessageOrganizationSerialNumberMissing          = "organization serial number is empty"
+	ErrMessageUnableToComputeManagementAPIProxyAddress = "unable to compute organization management API proxy address"
 )
 
 func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
@@ -22,7 +30,7 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 
 	organization, err := h.getOrganizationInformationFromRequest(ctx)
 	if err != nil {
-		return nil, status.Error(codes.Unknown, "determine organization")
+		return nil, status.Error(codes.Unknown, ErrMessageOrganizationInformationMissing)
 	}
 
 	logger.Debug("clearing organization inway", zap.Any("organization", organization))
@@ -36,36 +44,61 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 
 		logger.Error("failed to clear the organization inway", zap.Error(err))
 
-		return nil, status.New(codes.Internal, "database error").Err()
+		return nil, status.New(codes.Internal, ErrMessageDatabase).Err()
 	}
 
 	return &emptypb.Empty{}, nil
 }
 
-func (h *DirectoryService) GetOrganizationInway(ctx context.Context, req *directoryapi.GetOrganizationInwayRequest) (*directoryapi.GetOrganizationInwayResponse, error) {
-	h.logger.Info("rpc request GetOrganizationInwayAddress")
+func (h *DirectoryService) GetOrganizationManagementAPIProxyAddress(ctx context.Context, req *directoryapi.GetOrganizationManagementAPIProxyAddressRequest) (*directoryapi.GetOrganizationManagementAPIProxyAddressResponse, error) {
+	h.logger.Info("rpc request GetOrganizationManagementAPIProxyAddress")
 
 	serialNumber := req.OrganizationSerialNumber
 	if serialNumber == "" {
 		return nil, status.New(codes.InvalidArgument, "organization serial number is empty").Err()
 	}
 
-	address, err := h.repository.GetOrganizationInwayAddress(ctx, serialNumber)
+	address, err := h.repository.GetOrganizationInwayManagementAPIProxyAddress(ctx, serialNumber)
 	if err != nil {
 		if errors.Is(err, storage.ErrNotFound) {
-			return nil, status.New(codes.NotFound, "organization not found or has no inway").Err()
+			return nil, status.New(codes.NotFound, ErrMessageOrganizationInwayNotFound).Err()
 		}
 
 		h.logger.Error("failed to select organization inway address from storage", zap.Error(err))
 
-		return nil, status.New(codes.Internal, "Storage error.").Err()
+		return nil, status.New(codes.Internal, ErrMessageDatabase).Err()
 	}
 
-	resp := &directoryapi.GetOrganizationInwayResponse{
+	resp := &directoryapi.GetOrganizationManagementAPIProxyAddressResponse{
 		Address: address,
 	}
 
 	return resp, nil
+}
+
+// GetOrganizationInway is implemented to ensure that NLX instances running version <= v0.127.0 will still work.
+func (h *DirectoryService) GetOrganizationInway(ctx context.Context, req *directoryapi.GetOrganizationInwayRequest) (*directoryapi.GetOrganizationInwayResponse, error) {
+	h.logger.Info("rpc request GetOrganizationInway")
+
+	serialNumber := req.OrganizationSerialNumber
+	if serialNumber == "" {
+		return nil, status.New(codes.InvalidArgument, ErrMessageOrganizationSerialNumberMissing).Err()
+	}
+
+	address, err := h.repository.GetOrganizationInwayAddress(ctx, serialNumber)
+	if err != nil {
+		if errors.Is(err, storage.ErrNotFound) {
+			return nil, status.New(codes.NotFound, ErrMessageOrganizationInwayNotFound).Err()
+		}
+
+		h.logger.Error("failed to select organization inway address from storage", zap.Error(err))
+
+		return nil, status.New(codes.Internal, ErrMessageDatabase).Err()
+	}
+
+	return &directoryapi.GetOrganizationInwayResponse{
+		Address: address,
+	}, nil
 }
 
 func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListOrganizationsResponse, error) {
@@ -74,7 +107,7 @@ func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *emptypb.Emp
 	organizations, err := h.repository.ListOrganizations(ctx)
 	if err != nil {
 		h.logger.Error("failed to select organizations from db", zap.Error(err))
-		return nil, status.New(codes.Internal, "Database error.").Err()
+		return nil, status.New(codes.Internal, ErrMessageDatabase).Err()
 	}
 
 	return convertFromDatabaseOrganization(organizations), nil
@@ -85,7 +118,7 @@ func (h *DirectoryService) SetOrganizationContactDetails(ctx context.Context, re
 
 	organization, err := h.getOrganizationFromRequest(ctx)
 	if err != nil {
-		return nil, status.Error(codes.Unknown, "determine organization")
+		return nil, status.Error(codes.Unknown, ErrMessageOrganizationInformationMissing)
 	}
 
 	err = req.Validate()
@@ -96,7 +129,7 @@ func (h *DirectoryService) SetOrganizationContactDetails(ctx context.Context, re
 	err = h.repository.SetOrganizationEmailAddress(ctx, organization, req.EmailAddress)
 	if err != nil {
 		h.logger.Error("unable to set organization contact details in database", zap.Error(err))
-		return nil, status.Error(codes.Internal, "could not set organization email address")
+		return nil, status.Error(codes.Internal, ErrMessageDatabase)
 	}
 
 	return &emptypb.Empty{}, nil

@@ -6,6 +6,7 @@ package directory
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -17,6 +18,12 @@ import (
 // compile-time interface implementation verification
 var _ directoryapi.DirectoryServer = &DirectoryService{}
 
+type OrganizationInformationExtractor func(ctx context.Context) (*tls.OrganizationInformation, error)
+
+type Clock interface {
+	Now() time.Time
+}
+
 type DirectoryService struct {
 	directoryapi.UnimplementedDirectoryServer
 	directoryapi.UnimplementedDirectoryRegistrationServer
@@ -25,16 +32,27 @@ type DirectoryService struct {
 	repository                            storage.Repository
 	httpClient                            *http.Client
 	termsOfServiceURL                     string
-	getOrganizationInformationFromRequest func(ctx context.Context) (*tls.OrganizationInformation, error)
+	getOrganizationInformationFromRequest OrganizationInformationExtractor
+	clock                                 Clock
 }
 
-func New(logger *zap.Logger, termsOfServiceURL string, repository storage.Repository, httpClient *http.Client, getOrganisationInformationFromRequest func(ctx context.Context) (*tls.OrganizationInformation, error)) *DirectoryService {
+type NewDirectoryArgs struct {
+	Logger                                *zap.Logger
+	TermsOfServiceURL                     string
+	Repository                            storage.Repository
+	HTTPClient                            *http.Client
+	GetOrganizationInformationFromRequest OrganizationInformationExtractor
+	Clock                                 Clock
+}
+
+func New(args *NewDirectoryArgs) *DirectoryService {
 	s := &DirectoryService{
-		logger:                                logger,
-		repository:                            repository,
-		httpClient:                            httpClient,
-		termsOfServiceURL:                     termsOfServiceURL,
-		getOrganizationInformationFromRequest: getOrganisationInformationFromRequest,
+		logger:                                args.Logger,
+		repository:                            args.Repository,
+		httpClient:                            args.HTTPClient,
+		termsOfServiceURL:                     args.TermsOfServiceURL,
+		getOrganizationInformationFromRequest: args.GetOrganizationInformationFromRequest,
+		clock:                                 args.Clock,
 	}
 
 	return s

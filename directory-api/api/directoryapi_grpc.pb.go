@@ -30,6 +30,7 @@ type DirectoryClient interface {
 	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error)
 	ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
+	GetOrganizationManagementAPIProxyAddress(ctx context.Context, in *GetOrganizationManagementAPIProxyAddressRequest, opts ...grpc.CallOption) (*GetOrganizationManagementAPIProxyAddressResponse, error)
 	ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error)
 	ListParticipants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListParticipantsResponse, error)
@@ -98,6 +99,15 @@ func (c *directoryClient) GetOrganizationInway(ctx context.Context, in *GetOrgan
 	return out, nil
 }
 
+func (c *directoryClient) GetOrganizationManagementAPIProxyAddress(ctx context.Context, in *GetOrganizationManagementAPIProxyAddressRequest, opts ...grpc.CallOption) (*GetOrganizationManagementAPIProxyAddressResponse, error) {
+	out := new(GetOrganizationManagementAPIProxyAddressResponse)
+	err := c.cc.Invoke(ctx, "/directoryapi.Directory/GetOrganizationManagementAPIProxyAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *directoryClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
 	out := new(ListInOutwayStatisticsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ListInOutwayStatistics", in, out, opts...)
@@ -144,6 +154,7 @@ type DirectoryServer interface {
 	ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error)
 	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
+	GetOrganizationManagementAPIProxyAddress(context.Context, *GetOrganizationManagementAPIProxyAddressRequest) (*GetOrganizationManagementAPIProxyAddressResponse, error)
 	ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error)
 	RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error)
 	ListParticipants(context.Context, *emptypb.Empty) (*ListParticipantsResponse, error)
@@ -172,6 +183,9 @@ func (UnimplementedDirectoryServer) ListOrganizations(context.Context, *emptypb.
 }
 func (UnimplementedDirectoryServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationInway not implemented")
+}
+func (UnimplementedDirectoryServer) GetOrganizationManagementAPIProxyAddress(context.Context, *GetOrganizationManagementAPIProxyAddressRequest) (*GetOrganizationManagementAPIProxyAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationManagementAPIProxyAddress not implemented")
 }
 func (UnimplementedDirectoryServer) ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInOutwayStatistics not implemented")
@@ -306,6 +320,24 @@ func _Directory_GetOrganizationInway_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Directory_GetOrganizationManagementAPIProxyAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationManagementAPIProxyAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryServer).GetOrganizationManagementAPIProxyAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/directoryapi.Directory/GetOrganizationManagementAPIProxyAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryServer).GetOrganizationManagementAPIProxyAddress(ctx, req.(*GetOrganizationManagementAPIProxyAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Directory_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -408,6 +440,10 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrganizationInway",
 			Handler:    _Directory_GetOrganizationInway_Handler,
+		},
+		{
+			MethodName: "GetOrganizationManagementAPIProxyAddress",
+			Handler:    _Directory_GetOrganizationManagementAPIProxyAddress_Handler,
 		},
 		{
 			MethodName: "ListInOutwayStatistics",

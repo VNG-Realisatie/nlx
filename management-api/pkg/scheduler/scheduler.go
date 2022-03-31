@@ -37,6 +37,7 @@ type scheduler struct {
 func NewScheduler(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle) *scheduler {
 	synchronizeOutgoingAccessRequestJob := NewSynchronizeOutgoingAccessRequestJob(
 		context.Background(),
+		logger,
 		pollIntervalSynchronizeAccessRequestJob,
 		directoryClient,
 		configDatabase,

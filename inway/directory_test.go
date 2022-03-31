@@ -87,16 +87,16 @@ func TestRegisterToDirectory(t *testing.T) {
 			})
 
 			params := &Params{
-				Context:                 ctx,
-				Logger:                  zap.NewNop(),
-				Txlogger:                nil,
-				ManagementProxy:         nil,
-				Name:                    "mock-inway",
-				Address:                 "localhost:1812",
-				MonitoringAddress:       "localhost:1813",
-				ListenManagementAddress: "",
-				OrgCertBundle:           orgCert,
-				DirectoryClient:         tc.directoryClient(ctx, ctrl),
+				Context:                         ctx,
+				Logger:                          zap.NewNop(),
+				Txlogger:                        nil,
+				ManagementProxy:                 nil,
+				Name:                            "mock-inway",
+				Address:                         "localhost:1812",
+				MonitoringAddress:               "localhost:1813",
+				ListenAddressManagementAPIProxy: "",
+				OrgCertBundle:                   orgCert,
+				DirectoryClient:                 tc.directoryClient(ctx, ctrl),
 			}
 
 			iw, err := NewInway(params)

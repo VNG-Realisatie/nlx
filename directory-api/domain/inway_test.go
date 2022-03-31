@@ -25,7 +25,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "#*%",
 				Organization: createNewOrganization(t),
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -58,7 +58,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "invalid",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -69,7 +69,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
 				Organization: nil,
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -80,7 +80,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "",
 				Organization: createNewOrganization(t),
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,
@@ -91,7 +91,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now.Add(1 * time.Hour),
 				UpdatedAt:    now,
@@ -102,7 +102,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now.Add(1 * time.Hour),
@@ -113,7 +113,7 @@ func TestNewInway(t *testing.T) {
 			inwayArgs: &domain.NewInwayArgs{
 				Name:         "name",
 				Organization: createNewOrganization(t),
-				Address:      "address",
+				Address:      "address:443",
 				NlxVersion:   "0.0.0",
 				CreatedAt:    now,
 				UpdatedAt:    now,

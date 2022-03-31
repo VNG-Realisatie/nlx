@@ -78,6 +78,26 @@ func (mr *MockDirectoryClientMockRecorder) GetOrganizationInway(ctx, in interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryClient)(nil).GetOrganizationInway), varargs...)
 }
 
+// GetOrganizationManagementAPIProxyAddress mocks base method.
+func (m *MockDirectoryClient) GetOrganizationManagementAPIProxyAddress(ctx context.Context, in *directoryapi.GetOrganizationManagementAPIProxyAddressRequest, opts ...grpc.CallOption) (*directoryapi.GetOrganizationManagementAPIProxyAddressResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrganizationManagementAPIProxyAddress", varargs...)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationManagementAPIProxyAddressResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationManagementAPIProxyAddress indicates an expected call of GetOrganizationManagementAPIProxyAddress.
+func (mr *MockDirectoryClientMockRecorder) GetOrganizationManagementAPIProxyAddress(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationManagementAPIProxyAddress", reflect.TypeOf((*MockDirectoryClient)(nil).GetOrganizationManagementAPIProxyAddress), varargs...)
+}
+
 // GetTermsOfService mocks base method.
 func (m *MockDirectoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.GetTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
@@ -289,6 +309,21 @@ func (m *MockDirectoryServer) GetOrganizationInway(arg0 context.Context, arg1 *d
 func (mr *MockDirectoryServerMockRecorder) GetOrganizationInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationInway", reflect.TypeOf((*MockDirectoryServer)(nil).GetOrganizationInway), arg0, arg1)
+}
+
+// GetOrganizationManagementAPIProxyAddress mocks base method.
+func (m *MockDirectoryServer) GetOrganizationManagementAPIProxyAddress(arg0 context.Context, arg1 *directoryapi.GetOrganizationManagementAPIProxyAddressRequest) (*directoryapi.GetOrganizationManagementAPIProxyAddressResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrganizationManagementAPIProxyAddress", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.GetOrganizationManagementAPIProxyAddressResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationManagementAPIProxyAddress indicates an expected call of GetOrganizationManagementAPIProxyAddress.
+func (mr *MockDirectoryServerMockRecorder) GetOrganizationManagementAPIProxyAddress(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationManagementAPIProxyAddress", reflect.TypeOf((*MockDirectoryServer)(nil).GetOrganizationManagementAPIProxyAddress), arg0, arg1)
 }
 
 // GetTermsOfService mocks base method.

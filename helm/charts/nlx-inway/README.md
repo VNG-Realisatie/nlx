@@ -76,17 +76,18 @@ The following table lists the configurable parameters of the nlx-inway Chart and
 
 ### NLX Inway parameters
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `config.name` | Name of the Inway. Should be unique within the organization. | `""` | yes |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
-| `config.directoryHostname` | Address of the NLX Directory where the Inway will register its services. | `""` | no |
-| `config.directoryRegistrationHostname` | Address of the NLX Directory where the Inway will register its services. This field is deprecated use config.directoryHostname instead. | `""` | no |
-| `config.authorizationService.enabled` | If `true`, the outway will use the authorization service | `false` | no |
-| `config.authorizationService.url` | URL of the authorization service to use | `""` | no |
-| `config.selfAddress` | The address that can be used by the NLX network to reach this Inway | `""` | no |
-| `config.managementAPI.address` | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API | `""` | no |
+| Parameter                              | Description                                                                                                                                     | Default | Required (yes/no) |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------| ------- | -------- |
+| `config.name`                          | Name of the Inway. Should be unique within the organization.                                                                                    | `""` | yes |
+| `config.logType`                       | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
+| `config.logLevel`                      | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType`                                           | `info` | no |
+| `config.directoryHostname`             | Address of the NLX Directory where the Inway will register its services.                                                                        | `""` | no |
+| `config.directoryRegistrationHostname` | Address of the NLX Directory where the Inway will register its services. This field is deprecated use config.directoryHostname instead.         | `""` | no |
+| `config.authorizationService.enabled`  | If `true`, the outway will use the authorization service                                                                                        | `false` | no |
+| `config.authorizationService.url`      | URL of the authorization service to use                                                                                                         | `""` | no |
+| `config.selfAddress`                   | The address that can be used by the NLX network to reach this Inway                                                                             | `""` | no |
+| `config.managementAPIProxyAddress`     | The address other organizations can use to reach the NLX Management API proxy served by this Inway.                                             | `""` | no |
+| `config.managementAPI.address`         | The config address of the management API. Normally this would be: `hostname:443` where `hostname` is the hostname of the Management API         | `""` | no |
 
 ### TLS parameters
 
@@ -126,13 +127,15 @@ TLS certificates used by NLX components for internal communication.
 
 ### Exposure parameters
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `service.type` | Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS | `LoadBalancer` | no |
-| `service.port` | Port exposed by the service | `443` | no |
-| `service.nodePort` | Port exposed if `service.type` is `NodePort`. Please note that `service.nodePort` + 1 will also be exposed to accept traffic for the management API) | `""` | no |
-| `service.annotations` | You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata. | `{}` | no |
-| `service.loadBalancerIP` | Only applies when using `service.type`: 'LoadBalancer'. LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature. | `""` | no |
+| Parameter                      | Description                                                                                                                                                                                                                                                                                                                                  | Default        | Required (yes/no) |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------| -------- |
+| `service.type`                 | Service type (ClusterIP, NodePort or LoadBalancer). Please note that there should be no service performing TLS offloading as it uses mutual TLS                                                                                                                                                                                              | `LoadBalancer` | no |
+| `service.port`                 | Port exposed by the service for Inway traffic                                                                                                                                                                                                                                                                                                | `443`          | no |
+| `service.portManagementAPIProxy` | Port exposed by the service for Management API Proxy traffic                                                                                                                                                                                                                                                                                 | `8443`         | no |
+| `service.nodePort`              | Port exposed for Inway traffic if `service.type` is `NodePort`.                                                                                                                                                                                                                                                                              | `""`           | no |
+| `service.nodePortManagementAPIProxy` | Port exposed for Management API Proxy traffic `service.type` is `NodePort`.                                                                                                                                                                                                                                                                  | `""`           | no |
+| `service.annotations`          | You can use Kubernetes annotations to attach arbitrary non-identifying metadata to objects. Clients such as tools and libraries can retrieve this metadata.                                                                                                                                                                                  | `{}`           | no |
+| `service.loadBalancerIP`       | Only applies when using `service.type`: 'LoadBalancer'. LoadBalancer will get created with the IP specified in this field. This feature depends on whether the underlying cloud-provider supports specifying the loadBalancerIP when a load balancer is created. This field will be ignored if the cloud-provider does not support the feature. | `""`           | no |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

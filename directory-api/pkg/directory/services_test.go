@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -28,7 +29,7 @@ func TestListServices(t *testing.T) {
 	}{
 		"database_error": {
 			setup: func(mocks serviceMocks) {
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					ListServices(gomock.Any(), "01234567890123456789").
 					Return(nil, errors.New("arbitrary error"))
@@ -87,7 +88,7 @@ func TestListServices(t *testing.T) {
 					},
 				})
 
-				mocks.r.
+				mocks.repository.
 					EXPECT().
 					ListServices(gomock.Any(), "01234567890123456789").
 					Return([]*domain.Service{serviceA, serviceB}, nil)
@@ -152,7 +153,9 @@ func TestListServices(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "")
+			service, mocks := newService(t, "", &testClock{
+				timeToReturn: time.Now(),
+			})
 
 			if tt.setup != nil {
 				tt.setup(mocks)

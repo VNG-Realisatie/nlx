@@ -14,14 +14,14 @@ import (
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
-func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
+func (r *PostgreSQLRepository) GetOrganizationInwayManagementAPIProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
 	var address sql.NullString
 
 	arg := map[string]interface{}{
 		"organization_serial_number": organizationSerialNumber,
 	}
 
-	err := r.selectOrganizationInwayAddressStmt.GetContext(ctx, &address, arg)
+	err := r.selectOrganizationInwayManagementAPIProxyAddressStmt.GetContext(ctx, &address, arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return "", storage.ErrNotFound
@@ -33,9 +33,9 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 	return address.String, nil
 }
 
-func prepareSelectOrganizationInwayAddressStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
+func prepareSelectOrganizationInwayManagementAPIProxyAddressStatement(db *sqlx.DB) (*sqlx.NamedStmt, error) {
 	query := `
-		SELECT i.address
+		SELECT i.management_api_proxy_address
 		FROM directory.organizations o
 		LEFT JOIN directory.inways i ON o.inway_id = i.id
 		WHERE o.serial_number = :organization_serial_number

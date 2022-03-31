@@ -23,13 +23,17 @@ service Directory {
 		option (google.api.http).get = "/api/directory/list-organizations";
 	}
 
-	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {
-		option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway";
-	}
+    rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {
+        option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway";
+    }
 
-	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
-		option (google.api.http).get = "/api/stats";
-	}
+    rpc GetOrganizationManagementAPIProxyAddress (GetOrganizationManagementAPIProxyAddressRequest) returns (GetOrganizationManagementAPIProxyAddressResponse) {
+        option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway/management-api-proxy-address";
+    }
+
+    rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
+        option (google.api.http).get = "/api/stats";
+    }
 
 	rpc RegisterOutway (RegisterOutwayRequest) returns (RegisterOutwayResponse);
 
@@ -90,6 +94,7 @@ message RegisterInwayRequest {
 	repeated RegisterService services = 2;
 	string inway_name = 3;
 	bool is_organization_inway = 4;
+    string management_api_proxy_address = 5;
 }
 
 message RegisterInwayResponse {
@@ -136,12 +141,21 @@ message ListOrganizationsResponse {
 	repeated Organization organizations = 1;
 }
 
+message GetOrganizationManagementAPIProxyAddressRequest {
+    string organization_serial_number = 1;
+}
+
+message GetOrganizationManagementAPIProxyAddressResponse {
+    string address = 1;
+}
+
 message GetOrganizationInwayRequest {
 	string organization_serial_number = 1;
 }
 
 message GetOrganizationInwayResponse {
 	string address = 1;
+    string management_api_proxy_address = 2;
 }
 
 message ListInOutwayStatisticsResponse {

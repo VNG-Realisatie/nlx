@@ -6,6 +6,7 @@ package scheduler_test
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"testing"
 	"time"
 
@@ -47,6 +48,7 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 
 				job := scheduler.NewSynchronizeOutgoingAccessRequestJob(
 					context.Background(),
+					zap.NewNop(),
 					pollInterval,
 					mocks.directory,
 					mocks.db,

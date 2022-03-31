@@ -25,23 +25,12 @@ The central NLX components (directory) are located at the following IP addresses
 
 ### By default
 
-The following ports are used:
+The Inway must accessible on either port `443` or `8443`, the same applies to the Management API proxy.
+The ports are restricted so organizations know beforehand which ports that need to be exposed on their network.
 
-- Inway (`8443`)
+### For versions before v0.128.0
 
-If you use this Inway as an organization Inway, port `8444` needs to be exposed too.
-This is the Management API proxy via the organization Inway (Inway port + 1)
-
-### When following the [Try NLX Docker Compose guide](../try-nlx/docker/introduction)
-
-The following ports are being used:
-
-- Inway (`8443`)
-- Management API proxy via organization Inway (`8444`) (Inway port + 1)
-
-### When following the [Try NLX Helm guide](../try-nlx/helm/introduction)
-
-The following ports are being used:
+By default following ports are used:
 
 - Inway (`443`)
-- Management API proxy via organization Inway (`444`) (Inway port + 1)
+- Management API Proxy (Inway port + 1)
