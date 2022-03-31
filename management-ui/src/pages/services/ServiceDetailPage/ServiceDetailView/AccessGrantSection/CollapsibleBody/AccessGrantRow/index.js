@@ -42,9 +42,7 @@ const AccessGrantRow = ({ accessGrant, revokeHandler }) => {
       <Table.Td>
         {accessGrant.organization.name} <br />
         <small>
-          {t('OIN serialNumber', {
-            serialNumber: accessGrant.organization.serialNumber,
-          })}
+          {t('OIN')} {accessGrant.organization.serialNumber}
         </small>
         <br />
         <small>

@@ -159,7 +159,6 @@
   "Not visible in central directory": "Not visible in central directory",
   "OIN": "OIN",
   "OIN of the delegatee": "OIN of the delegatee",
-  "OIN serialNumber": "OIN {{serialNumber}}",
   "Ok": "Ok",
   "On behalf of": "on behalf of",
   "On date": "On {{date, DD-MM-YYYY[, ]HH:mm:ss}}",

@@ -66,9 +66,7 @@ const IncomingAccessRequestRow = ({
         {organization.name}
         <br />
         <small>
-          {t('OIN serialNumber', {
-            serialNumber: organization.serialNumber,
-          })}
+          {t('OIN')} {organization.serialNumber}
         </small>
         <br />
         <small>

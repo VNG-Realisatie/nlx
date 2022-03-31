@@ -128,7 +128,7 @@ test('polling with access request section expanded', async () => {
   fireEvent.click(toggler)
 
   expect(getByText(/organization-a/)).toBeInTheDocument()
-  expect(getByText(/OIN serialNumber/)).toBeInTheDocument()
+  expect(getByText('OIN 00000000000000000001')).toBeInTheDocument()
   expect(
     getByText(/Public Key Fingerprint publicKeyFingerprint/),
   ).toBeInTheDocument()

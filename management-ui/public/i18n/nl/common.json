@@ -158,7 +158,6 @@
   "Not visible in central directory": "Niet zichtbaar in centrale directory",
   "OIN": "OIN",
   "OIN of the delegatee": "OIN van de gedelegeerde organisatie",
-  "OIN serialNumber": "OIN {{serialNumber}}",
   "Ok": "Ok",
   "On behalf of": "namens",
   "On date": "Op {{date, DD-MM-YYYY[, ]HH:mm:ss}}",
