@@ -24,7 +24,7 @@ services:
     restart: on-failure
 
   auth-org-b:
-      image: openpolicyagent/opa:0.38.1
+      image: openpolicyagent/opa:0.39.0
       ports:
         - 127.0.0.1:8181:8181
       command: 
@@ -49,7 +49,7 @@ services:
         - ./pki/internal/organization-b:/pki/internal/organization-b
       restart: on-failure
   auth-org-c:
-    image: openpolicyagent/opa:0.38.1
+    image: openpolicyagent/opa:0.39.0
     ports:
       - 127.0.0.1:8182:8181
     command: 
