@@ -48,5 +48,5 @@ test('serial number', () => {
     </Drawer>,
   )
 
-  expect(queryByText('Serial Number serialNumber')).toBeInTheDocument()
+  expect(queryByText('OIN serialNumber')).toBeInTheDocument()
 })

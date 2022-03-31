@@ -4,12 +4,14 @@
 
 import React from 'react'
 import { func, bool } from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import usePromise from '../../hooks/use-promise'
 import EnvironmentRepository from '../../domain/environment-repository'
 import { StyledTextWithEllipsis } from './index.styles'
 
 const OrganizationInfo = ({ getEnvironment, isHeader, ...props }) => {
   const { result } = usePromise(getEnvironment)
+  const { t } = useTranslation()
 
   return result ? (
     <StyledTextWithEllipsis
@@ -18,7 +20,9 @@ const OrganizationInfo = ({ getEnvironment, isHeader, ...props }) => {
       {...props}
     >
       {result.organizationName} <br />
-      <small>{result.organizationSerialNumber}</small>
+      <small>
+        {t('OIN')} {result.organizationSerialNumber}
+      </small>
     </StyledTextWithEllipsis>
   ) : null
 }

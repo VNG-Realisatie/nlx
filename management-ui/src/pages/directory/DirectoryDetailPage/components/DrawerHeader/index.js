@@ -21,7 +21,7 @@ const DrawerHeader = ({ service }) => {
         <StateIndicator state={state} showText />
         {apiSpecificationType && <span>{apiSpecificationType}</span>}
         <span>
-          {t('Serial Number serialNumber', {
+          {t('OIN serialNumber', {
             serialNumber: organization.serialNumber,
           })}
         </span>

@@ -165,7 +165,7 @@ const OrderForm = ({
           <TextInput name="delegatee" size="l" disabled={isEditMode}>
             <FieldLabel
               label={t('Delegated organization')}
-              small={t('Serial number of the delegatee')}
+              small={t('OIN of the delegatee')}
             />
           </TextInput>
 
