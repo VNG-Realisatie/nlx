@@ -42,5 +42,7 @@ test('adding a title when used in the header', async () => {
   await waitFor(() => screen.findByTitle('test'))
 
   expect(screen.getByTitle('test')).toHaveTextContent(/test/)
-  expect(screen.getByTitle('test')).toHaveTextContent(/00000000000000000001/)
+  expect(screen.getByTitle('test')).toHaveTextContent(
+    'OIN 00000000000000000001',
+  )
 })
