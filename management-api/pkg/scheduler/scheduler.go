@@ -18,10 +18,11 @@ import (
 )
 
 const (
-	maxRetries              = 3
-	pollInterval            = 1500 * time.Millisecond
-	maxConcurrency          = 50
-	synchronizationInterval = 15 * time.Second
+	maxRetries                                  = 3
+	pollIntervalSynchronizeAccessRequestJob     = 1500 * time.Millisecond
+	pollIntervalSynchronizeDirectorySettingsJob = 10 * time.Second
+	maxConcurrencyAccessRequests                = 50
+	synchronizationIntervalAccessRequests       = 15 * time.Second
 
 	// jobs are unlocked after 5 minutes, let's wait at least one minute before retrying
 	jobTimeout = 4 * time.Minute
@@ -30,27 +31,71 @@ const (
 type scheduler struct {
 	logger                              *zap.Logger
 	synchronizeOutgoingAccessRequestJob *SynchronizeOutgoingAccessRequestJob
+	synchronizeDirectorySettingsJob     *SynchronizeDirectorySettingsJob
 }
 
-func NewOutgoingAccessRequestScheduler(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle) *scheduler {
-	job := NewSynchronizeOutgoingAccessRequestJob(
+func NewScheduler(logger *zap.Logger, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle) *scheduler {
+	synchronizeOutgoingAccessRequestJob := NewSynchronizeOutgoingAccessRequestJob(
 		context.Background(),
+		pollIntervalSynchronizeAccessRequestJob,
 		directoryClient,
 		configDatabase,
 		orgCert,
 		management.NewClient,
 	)
 
+	synchronizeDirectorySettingsJob := NewSynchronizeDirectorySettingsJob(context.Background(), pollIntervalSynchronizeDirectorySettingsJob, directoryClient, configDatabase)
+
 	return &scheduler{
 		logger:                              logger,
-		synchronizeOutgoingAccessRequestJob: job,
+		synchronizeOutgoingAccessRequestJob: synchronizeOutgoingAccessRequestJob,
+		synchronizeDirectorySettingsJob:     synchronizeDirectorySettingsJob,
 	}
 }
 
 func (s *scheduler) Run(ctx context.Context) {
 	wg := &sync.WaitGroup{}
-	ticker := time.NewTicker(pollInterval)
-	sem := semaphore.NewWeighted(int64(maxConcurrency))
+
+	wg.Add(1)
+
+	go func() {
+		s.RunSynchronizeDirectorySettings(ctx)
+		wg.Done()
+	}()
+
+	wg.Add(1)
+
+	go func() {
+		s.RunSynchronizeOutgoingAccessRequest(ctx)
+		wg.Done()
+	}()
+
+	wg.Wait()
+}
+
+func (s *scheduler) RunSynchronizeDirectorySettings(ctx context.Context) {
+	ticker := time.NewTicker(s.synchronizeDirectorySettingsJob.pollInterval)
+
+	defer ticker.Stop()
+
+schedulingLoop:
+	for {
+		select {
+		case <-ctx.Done():
+			break schedulingLoop
+		case <-ticker.C:
+			err := s.synchronizeDirectorySettingsJob.Synchronize(ctx)
+			if err != nil {
+				s.logger.Error("failed to schedule synchronize directory settings", zap.Error(err))
+			}
+		}
+	}
+}
+
+func (s *scheduler) RunSynchronizeOutgoingAccessRequest(ctx context.Context) {
+	wgRequests := &sync.WaitGroup{}
+	ticker := time.NewTicker(s.synchronizeOutgoingAccessRequestJob.pollInterval)
+	sem := semaphore.NewWeighted(int64(maxConcurrencyAccessRequests))
 
 	defer ticker.Stop()
 
@@ -78,8 +123,8 @@ schedulingLoop:
 
 					defer sem.Release(1)
 
-					wg.Add(1)
-					defer wg.Done()
+					wgRequests.Add(1)
+					defer wgRequests.Done()
 
 					err := s.synchronizeOutgoingAccessRequestJob.Synchronize(jobCtx, requestToSync)
 					if err != nil {
@@ -93,7 +138,7 @@ schedulingLoop:
 		}
 	}
 
-	wg.Wait()
+	wgRequests.Wait()
 }
 
 func (s *scheduler) unlockOutgoingAccessRequest(ctx context.Context, request *database.OutgoingAccessRequest) {

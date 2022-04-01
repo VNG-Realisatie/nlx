@@ -7,9 +7,10 @@ package scheduler_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -27,6 +28,8 @@ type testCase struct {
 }
 
 func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
+	pollInterval := 1500 * time.Millisecond
+
 	testGroups := []map[string]testCase{
 		getCreatedAccessRequests(),
 		getReceivedAccessRequests(),
@@ -44,6 +47,7 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 
 				job := scheduler.NewSynchronizeOutgoingAccessRequestJob(
 					context.Background(),
+					pollInterval,
 					mocks.directory,
 					mocks.db,
 					nil,
@@ -53,11 +57,7 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 				)
 				err := job.Synchronize(context.Background(), tt.request)
 
-				if tt.wantErr != nil {
-					require.EqualError(t, err, tt.wantErr.Error())
-				} else {
-					require.Nil(t, err)
-				}
+				assert.Equal(t, tt.wantErr, err)
 			})
 		}
 	}

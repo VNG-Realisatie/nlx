@@ -34,15 +34,17 @@ type SynchronizeOutgoingAccessRequestJob struct {
 	directoryClient            directory.Client
 	configDatabase             database.ConfigDatabase
 	createManagementClientFunc CreateManagementClientFunc
+	pollInterval               time.Duration
 }
 
-func NewSynchronizeOutgoingAccessRequestJob(ctx context.Context, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle, createManagementClientFunc CreateManagementClientFunc) *SynchronizeOutgoingAccessRequestJob {
+func NewSynchronizeOutgoingAccessRequestJob(ctx context.Context, pollInterval time.Duration, directoryClient directory.Client, configDatabase database.ConfigDatabase, orgCert *common_tls.CertificateBundle, createManagementClientFunc CreateManagementClientFunc) *SynchronizeOutgoingAccessRequestJob {
 	return &SynchronizeOutgoingAccessRequestJob{
 		ctx:                        ctx,
 		orgCert:                    orgCert,
 		directoryClient:            directoryClient,
 		configDatabase:             configDatabase,
 		createManagementClientFunc: createManagementClientFunc,
+		pollInterval:               pollInterval,
 	}
 }
 
@@ -56,7 +58,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) Synchronize(ctx context.Context,
 		synchronizeAt time.Time
 	)
 
-	synchronizeAt = time.Now().Add(synchronizationInterval)
+	synchronizeAt = time.Now().Add(synchronizationIntervalAccessRequests)
 
 	switch request.State {
 	case database.OutgoingAccessRequestCreated:

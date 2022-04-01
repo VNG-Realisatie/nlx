@@ -23,7 +23,7 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	s := scheduler.NewOutgoingAccessRequestScheduler(
+	s := scheduler.NewScheduler(
 		a.logger,
 		a.directoryClient,
 		a.configDatabase,
