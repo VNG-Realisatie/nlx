@@ -1,3 +1,14 @@
+# [0.127.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.126.0...v0.127.0) (2022-04-04)
+
+
+### Features
+
+* inway and outway allow and preserve trailing slashes ([98158bc](https://gitlab.com/commonground/nlx/nlx/commit/98158bcb928e821d72261e88aacd60569971fc7f))
+* **inway:** add authorization plugin to inway ([c4dc4fe](https://gitlab.com/commonground/nlx/nlx/commit/c4dc4fe3bb05cca6e8edc8d5a877bfdfd36a336f))
+* **management:** replace Serial Number with OIN in the Management UI ([4b504b5](https://gitlab.com/commonground/nlx/nlx/commit/4b504b5eb0c36345082931178a8c43354d77263c)), closes [#1498](https://gitlab.com/commonground/nlx/nlx/issues/1498)
+* **management:** separate OIN from organization name in the confirmation modals ([3c50548](https://gitlab.com/commonground/nlx/nlx/commit/3c5054813a5bc22a48959b0f5f4da5aa6275c594)), closes [#1498](https://gitlab.com/commonground/nlx/nlx/issues/1498)
+* **outway:** change auth plugin to work with OPA servers ([0e97b43](https://gitlab.com/commonground/nlx/nlx/commit/0e97b43b612d98a1a0cee502c77a627f71fc0932))
+
 # [0.126.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.125.0...v0.126.0) (2022-03-22)
 
 

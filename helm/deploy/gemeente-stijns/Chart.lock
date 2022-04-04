@@ -4,15 +4,15 @@ dependencies:
   version: 2.15.2
 - name: parkeerrechten-api
   repository: file://../../charts/parkeerrechten-api
-  version: 0.126.0
+  version: 0.127.0
 - name: parkeerrechten-viewer
   repository: file://../../charts/parkeerrechten-viewer
-  version: 0.126.0
+  version: 0.127.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.126.0
+  version: 0.127.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.126.0
-digest: sha256:d589fb854153f74f86e5dbc2fc515336498e8613a7a99ae29a274d43a5d2c6d5
-generated: "2022-03-22T09:10:20.486873893Z"
+  version: 0.127.0
+digest: sha256:1d490c8783a9e1996b03328dd0b22e5797954af92a82ac24b4458a715709c185
+generated: "2022-04-04T10:32:27.968292648Z"
