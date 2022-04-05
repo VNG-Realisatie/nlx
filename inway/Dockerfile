@@ -28,7 +28,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME' " \
         -o dist/bin/nlx-inway ./cmd/nlx-inway
 
-FROM alpine:3.15.3
+FROM alpine:3.15.4
 
 RUN apk add --no-cache ca-certificates bash
 
