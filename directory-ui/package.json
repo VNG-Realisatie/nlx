@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@commonground/eslint-config-cra-standard-prettier": "6.1.2",
-    "@testing-library/jest-dom": "5.16.3",
+    "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "12.1.4",
     "@testing-library/user-event": "13.5.0",
     "@types/jest": "27.4.1",
