@@ -8,19 +8,7 @@ title: Getting up and running
 
 Now we have prepared all the requirements to run NLX, we can start all components using Docker Compose.
 
-> Next to the certificates you created in [retrieve a demo certificate](./retrieve-a-demo-certificate) you also need certificates from an internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The demo already has a working PKI so you don't have to set this up yourself.
-
-First, let's clone the NLX project inside the `nlx-setup` directory. It contains the Docker Compose file and its dependencies.
-
-```bash
-git clone https://gitlab.com/commonground/nlx/nlx-try-me.git
-```
-
-After the repository is cloned, move into it:
-
-```bash
-cd nlx-try-me
-```
+> Next to the certificates you created in [retrieve a demo certificate](./retrieve-a-demo-certificate) you also need certificates from an internal PKI to encrypt traffic between NLX components (such as the Management API and the Inway). The script already automatically generated these internal certificates.
 
 Set the hostname of the Inway (where `my-organization.nl:8443` should be replaced with your own hostname).
 
@@ -28,18 +16,7 @@ Set the hostname of the Inway (where `my-organization.nl:8443` should be replace
 export INWAY_SELF_ADDRESS="my-organization.nl:8443"
 ```
 
-Ensure the file permissions are locked down. The NLX components will print warning messages when the file permissions are too broad.
-The containers run as UID: 1001, which means this must be owner of the private keys.
-
-```bash
-sudo chmod 600 ../org.key
-sudo chown 1001 ../org.key
-
-sudo chmod 600 ./pki/certs/internal-cert-key.pem
-sudo chown 1001 ./pki/certs/internal-cert-key.pem
-```
-
-Then, start all components by running:
+Start all components by running:
 
 ```bash
 docker-compose up -d

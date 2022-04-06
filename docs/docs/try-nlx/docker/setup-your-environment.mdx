@@ -46,70 +46,19 @@ Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 For setting up the testing environment locally we'll use Docker Compose.
 You can install it by following the [installation steps of the official Docker website](https://docs.docker.com/compose/install/#install-compose).
 
-## OpenSSL
+## Cloning NLX-Try-me repository
 
-<Tabs
-    groupId="operating-systems"
-    defaultValue="mac-linux"
-    values={[
-      { label: 'Mac & Linux', value: 'mac-linux' },
-      { label: 'Windows', value: 'windows' },
-    ]}
-  >
-  <TabItem value="mac-linux">
-
-If OpenSSL is not installed by default, please install it with the package manager of your distro.
-
-  </TabItem>
-
-  <TabItem value="windows">
-You will need `OpenSSL` to create the TLS certificates you will need to run NLX. We advise you to install [Chocolatey](https://chocolatey.org/install), a package manager for Windows which will install `OpenSSL` for you. 
-
-Once you installed Chocolatey you can install OpenSSL by running.
+First, let's clone the NLX project. It contains the Docker Compose file and its dependencies.
 
 ```bash
-choco install openssl.light
+git clone https://gitlab.com/commonground/nlx/nlx-try-me.git
 ```
 
-Now close and reopen PowerShell and verify your OpenSSL installation by running
+After the repository is cloned, move into it:
 
 ```bash
-openssl version
+cd nlx-try-me
 ```
-
-if the installation was successful, OpenSSL will print its version number.
-
-  </TabItem>
-</Tabs>
-
-## Working directory
-
-You can use any directory you want. Just make sure to update the example commands of all future commands accordingly.
-
-First, let's navigate to our home directory.
-
-```bash
-cd ~
-```
-
-Now, let's create the `nlx-setup` directory.
-
-```bash
-mkdir nlx-setup
-cd nlx-setup
-```
-
-> You can verify your current location by running
-
-```bash
-pwd
-```
-
-The output should be:
-* For Mac & Windows: `/Users/<your-username>/nlx-setup`
-* For Linux: `/home/<your-username>/nlx-setup`
-
-All commands later in this guide assume you are located in this directory.
 
 ## In sum
 

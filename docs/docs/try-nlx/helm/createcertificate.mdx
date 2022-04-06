@@ -92,70 +92,36 @@ internal   True    ??
 
 ## Create the external certificate
 
-Traffic between organizations takes place via an external certificate. For the NLX demo environment, you can easily create a certificate with the certificate portal.
+Traffic between organizations takes place via an external certificate. For the NLX demo environment, you can easily create a certificate via the [`init-organization-certs.sh`](https://gitlab.com/commonground/nlx/nlx-try-me/-/raw/master/scripts/init-organization-certs.sh?inline=false) script. Download this script and place it in your current work directory
 
-**Note**: If you wish to choose your own organization serial number or keep the serial number when generating a CSR, you need to add the following lines to your openssl config:
+For macOS & Linux:
 
-```toml
-[ req_distinguished_name ]
-serialNumber = Serial Number
-```
+```bash
+docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./init-organization-certs.sh
+``` 
 
-Generate a private key and certificate request for the organization by running:
+For Windows:
 
-```
-openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
-```
+```bash
+docker run --rm -it -v %cd%:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./init-organization-certs.sh
+``` 
 
-You now have to answer a series of questions. Below is an example of the answers. If the answer is `<skip>` then you can skip this question by pressing enter.
+See [OpenSSL questions](#openssl-questions) to know what to fill in the OpenSSL questions asked by the script.
 
-```
-- Country Name (2 letter code) []: NL
-- State or Province Name (full name) []: Noord holland
-- Locality Name (eg, city) []: Haarlem
-- Organization Name (eg, company) []: mijn-organisatie (url friendly name with a maximum length of 100 characters)
-  (remember this because we will need it later)
-- Organizational Unit Name (eg, section) []: <skip>
-- Common Name (eg, fully qualified host name) []:
-  (host name where your inway can be reached), for example:
-  inway.mijn.organisatie.nl
-- Email Address []: <skip>
-- Serial Number []: (optional), a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness  
-- A challenge password []: <skip>
-```
+### OpenSSL questions
+Answer the questions accordingly:
 
-
-A CSR has now been created (Certificate Signing Request). Check the content with the following command:
-
-```
-openssl req -in org.csr -text
-```
-
-The result should look similar.
-```
-Subject: C=NL, ST=Noord holland, L=Haarlem, O=mijn-organisatie, CN=inway.mijn.organisatie.nl
-```
-
-Print the contents of the CSR to the terminal with:
-
-```
-cat org.csr
-```
-
-Copy the CSR from the terminal including `-----BEGIN CERTIFICATE REQUEST-----` and `-----END CERTIFICATE REQUEST-----`.
-
-
-Now open the [NLX Certificate Portal](https://certportal.demo.nlx.io/) and paste the contents of the CSR into the text field. Click on `Request Certificate` in the portal to request your certificate.
-
-If this is successful, you will see `Download certificate` at the bottom of the page,
-
-Click on this and save the certificate as `org.crt` your working directory
-
-Check if `org.crt` is created by running:
-
-```
-ls
-```
+- **Country Name**, enter any value
+- **State**, enter any value
+- **Locality Name**, enter any value
+- **Organization Name**, please enter a URL-friendly value with a maximum length of 100 characters.
+  A good value could be: `my-organization`.
+- **Organization Unit Name**, enter any value
+- **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your Inway,
+  we will use `my-organization.nl` for this guide. For an Outway this FQDN does not have to be resolvable. It is possible to use the Inway certificate for the Outway and NLX Management.
+- **Email Address**, enter any value
+- **Organization Serial Number** (optional), enter a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness.
+- **A challenge password**, leave empty
 
 Then create a Kubernetes TLS secret by running:
 

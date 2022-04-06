@@ -1,0 +1,75 @@
+---
+id: retrieve-a-demo-certificate
+title: Retrieve a demo certificate
+---
+
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem';
+
+To be able to send traffic through the NLX network, you'll need a certificate and private key.
+The certificate and key are used to encrypt traffic between you and other nodes.
+
+In this part we will generate & install all required certificates.
+Before you continue, make sure you have [set up your environment](./setup-your-environment).
+
+## Generate internal & organization certificates
+Generate the required internal and organization certificates by running the following command in the `nlx-try-me` directory.
+
+<Tabs
+    groupId="operating-systems"
+    defaultValue="mac-linux"
+    values={[
+      { label: 'Mac & Linux', value: 'mac-linux' },
+      { label: 'Windows', value: 'windows' },
+    ]}
+  >
+  <TabItem value="mac-linux">
+
+```bash
+docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./scripts/init-certs.sh
+``` 
+
+  </TabItem>
+
+  <TabItem value="windows">
+
+```bash
+docker run --rm -it -v %cd%:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./scripts/init-certs.sh
+``` 
+
+  </TabItem>
+</Tabs>
+
+See [OpenSSL questions](#openssl-questions) to know what to fill in the OpenSSL questions asked by the script.
+
+### OpenSSL questions
+Answer the questions accordingly:
+
+- **Country Name**, enter any value
+- **State**, enter any value
+- **Locality Name**, enter any value
+- **Organization Name**, please enter a URL-friendly value with a maximum length of 100 characters.
+  A good value could be: `my-organization`.
+- **Organization Unit Name**, enter any value
+- **Common name**, this should correspond to the Fully Qualified Domain Name (FQDN) of your Inway,
+  we will use `my-organization.nl` for this guide. For an Outway this FQDN does not have to be resolvable. It is possible to use the Inway certificate for the Outway and NLX Management.
+- **Email Address**, enter any value
+- **Organization Serial Number** (optional), enter a serial number with a maximum length of 20 characters. Also make sure this value is unique for the network in the [directory overview](https://directory.demo.nlx.io) as we do not check for uniqueness.
+- **A challenge password**, leave empty
+
+The output should contain the answers you've provided when you created the certificate.
+
+Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl/serialNumber=01234567890123456789`.
+
+The value after `serialNumber=` in the Subject's CN field is the primary way to identify your organization on NLX.
+For details about this, see the [organization identification](/reference-information/organization-identification) page.
+
+## In sum
+
+All required certificates are available now. So far, we have:
+
+- Generated the internal certificates for internal communication between components like Inway and Management API
+- Downloaded the NLX Demo CA root certificate
+- Generated our own certificate and private key, so we are allowed to communicate with the API's on the NLX network.
+
+Now let's [get up and running](./getting-up-and-running) to make sure you have all software installed to get started.
