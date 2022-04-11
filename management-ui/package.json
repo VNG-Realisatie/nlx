@@ -14,9 +14,6 @@
     "eject": "react-scripts eject",
     "generate-api-client": "openapi-generator-cli generate"
   },
-  "eslintConfig": {
-    "extends": "@commonground/eslint-config-cra-standard-prettier"
-  },
   "browserslist": {
     "production": [
       ">1%",
