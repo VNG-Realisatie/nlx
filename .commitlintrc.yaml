@@ -3,6 +3,9 @@ extends:
   - "@commitlint/config-conventional"
 
 rules:
+  references-empty:
+    - 2
+    - never
   type-enum:
     - 2
     - always
@@ -32,3 +35,8 @@ rules:
       - management
       - outway
       - txlog
+
+parser-preset:
+  - parser-opts:
+      issue-prefixes:
+        - 'nlx#'
