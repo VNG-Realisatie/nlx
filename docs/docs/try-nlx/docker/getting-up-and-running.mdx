@@ -12,9 +12,32 @@ Now we have prepared all the requirements to run NLX, we can start all component
 
 Set the hostname of the Inway (where `my-organization.nl:8443` should be replaced with your own hostname).
 
+<Tabs
+    groupId="operating-systems-environment-variables"
+    defaultValue="mac-linux"
+    values={[
+      { label: 'Mac & Linux', value: 'mac-linux' },
+      { label: 'Windows', value: 'windows' },
+    ]}
+  >
+<TabItem value="mac-linux">
+
 ```bash
 export INWAY_SELF_ADDRESS="my-organization.nl:8443"
 ```
+
+</TabItem>
+
+<TabItem value="windows">
+
+```bash
+$env:INWAY_SELF_ADDRESS = 'my-organization.nl:8443'
+```
+
+</TabItem>
+
+
+</Tabs>
 
 Start all components by running:
 
