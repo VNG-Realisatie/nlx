@@ -96,10 +96,9 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.test.js', ',*.test.jsx', ',*.test.ts', ',*.test.tsx'],
+      files: ['*.test.js', ',*.test.jsx'],
       rules: {
         'react/display-name': 0,
-        '@typescript-eslint/no-empty-function': 0,
       },
     },
   ],
