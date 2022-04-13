@@ -19,6 +19,7 @@
       "^\\.gitlab/ci/.*\\.yml$"
     ]
   },
+  "commitBody": "Issue: nlx#1171",
   "ignoreDeps": [],
   "packageRules": [
     {
