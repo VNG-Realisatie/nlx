@@ -19,6 +19,7 @@ import (
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 var errNoInwaysAvailable = errors.New("no inways available")
@@ -135,7 +136,7 @@ func (s *RoundRobinLoadBalancedHTTPService) GetProxies() []*httputil.ReverseProx
 func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWriter, r *http.Request, e error) {
 	msg := fmt.Sprintf("failed request to '%s', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/", r.URL.String())
 	s.logger.Error(msg, zap.Error(e))
-	http.Error(w, msg, http.StatusServiceUnavailable)
+	http.Error(w, msg, httperrors.StatusNLXNetworkError)
 }
 
 // GetInwayAddresses returns the possible inwayaddresses of the httpservice

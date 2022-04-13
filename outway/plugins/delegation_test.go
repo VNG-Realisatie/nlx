@@ -20,6 +20,7 @@ import (
 	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api"
 	mock "go.nlx.io/nlx/management-api/api/mock"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 var testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -36,8 +37,8 @@ func TestDelegationPlugin(t *testing.T) {
 	}{
 		"missing_order_reference_returns_an_errors": {
 			wantErr:            true,
-			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to parse delegation metadata\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantMessage:        "nlx-outway: failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 			},
@@ -45,8 +46,8 @@ func TestDelegationPlugin(t *testing.T) {
 
 		"missing_delegator_returns_an_errors": {
 			wantErr:            true,
-			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to parse delegation metadata\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantMessage:        "nlx-outway: failed to parse delegation metadata\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
@@ -54,8 +55,8 @@ func TestDelegationPlugin(t *testing.T) {
 
 		"error_while_retrieving_claim_returns_an_error": {
 			wantErr:            true,
-			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "message: failed to retrieve claim, source: something went wrong\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantMessage:        "nlx-outway: failed to retrieve claim: something went wrong\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -74,8 +75,8 @@ func TestDelegationPlugin(t *testing.T) {
 
 		"error_when_retrieving_invalid_jwt": {
 			wantErr:            true,
-			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "message: failed to parse JWT, source: token contains an invalid number of segments\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantMessage:        "nlx-outway: failed to parse JWT: token contains an invalid number of segments\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -116,8 +117,8 @@ func TestDelegationPlugin(t *testing.T) {
 
 		"order_has_been_revoked": {
 			wantErr:            true,
-			wantHTTPStatusCode: http.StatusInternalServerError,
-			wantMessage:        "failed to request claim from 00000000000000000001: order is revoked\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantMessage:        "nlx-outway: failed to request claim from 00000000000000000001: order is revoked\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")

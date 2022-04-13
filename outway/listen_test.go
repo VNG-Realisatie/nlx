@@ -27,6 +27,7 @@ import (
 	"go.nlx.io/nlx/common/transactionlog"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	mock "go.nlx.io/nlx/outway/mock"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 	"go.nlx.io/nlx/outway/plugins"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
@@ -100,7 +101,7 @@ func TestOutwayListen(t *testing.T) {
 
 	mockFailService.EXPECT().ProxyHTTPRequest(gomock.Any(), gomock.Any()).Do(
 		func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(httperrors.StatusNLXNetworkError)
 		},
 	)
 
@@ -151,17 +152,17 @@ func TestOutwayListen(t *testing.T) {
 	}{
 		"when_invalid_path": {
 			fmt.Sprintf("%s/invalidpath", mockServer.URL),
-			http.StatusBadRequest,
-			"nlx outway: invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]\n",
 		},
 		"when_service_not_found": {
 			fmt.Sprintf("%s/00000000000000000001/nonexistingservice/add/", mockServer.URL),
-			http.StatusBadRequest,
-			"nlx outway: invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]\n",
 		},
 		"when_service_fails": {
 			fmt.Sprintf("%s/00000000000000000001/mockservicefail/", mockServer.URL),
-			http.StatusInternalServerError,
+			httperrors.StatusNLXNetworkError,
 			"",
 		},
 		"happy_flow": {
@@ -234,8 +235,8 @@ func TestOutwayAsProxy(t *testing.T) {
 		}, {
 			"request invalid url",
 			"http://invalid.mockservice.00000000000000000001.services.nlx.local",
-			http.StatusBadRequest,
-			"nlx outway: no valid url expecting: service.serialNumber.service.nlx.local/apipath\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: no valid url expecting: service.serialNumber.service.nlx.local/apipath\n",
 			"",
 			outway.handleHTTPRequestAsProxy,
 		}, {
@@ -248,8 +249,8 @@ func TestOutwayAsProxy(t *testing.T) {
 		}, {
 			"outway is running without the use-as-http-proxy flag",
 			"http://mockservice.00000000000000000001.services.nlx.local",
-			http.StatusInternalServerError,
-			"please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.00000000000000000001.services.nlx.local/\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.00000000000000000001.services.nlx.local/\n",
 			"",
 			outway.handleHTTPRequest,
 		},
@@ -297,14 +298,14 @@ func TestHandleConnectMethodException(t *testing.T) {
 	req := httptest.NewRequest(http.MethodConnect, "http://mockservice.00000000000000000001.services.nlx.local", nil)
 	outway.handleHTTPRequestAsProxy(logger, recorder, req)
 
-	assert.Equal(t, http.StatusNotImplemented, recorder.Code)
+	assert.Equal(t, httperrors.StatusNLXNetworkError, recorder.Code)
 
 	bytes, err := ioutil.ReadAll(recorder.Body)
 	if err != nil {
 		t.Fatal("error parsing result.body", err)
 	}
 
-	assert.Equal(t, "CONNECT method is not supported\n", string(bytes))
+	assert.Equal(t, "nlx-outway: CONNECT method is not supported\n", string(bytes))
 }
 
 type failingTransactionLogger struct {
@@ -335,22 +336,22 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 			true,
 			&transactionlog.DiscardTransactionLogger{},
 			"",
-			http.StatusInternalServerError,
-			"nlx outway: error authorizing request\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: error authorizing request\n",
 		},
 		"with failing transactionlogger": {
 			false,
 			&failingTransactionLogger{},
 			"",
-			http.StatusInternalServerError,
-			"nlx outway: server error\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: server error\n",
 		},
 		"with invalid datasubject header": {
 			false,
 			&transactionlog.DiscardTransactionLogger{},
 			"invalid",
-			http.StatusBadRequest,
-			"nlx outway: invalid data subject header\n",
+			httperrors.StatusNLXNetworkError,
+			"nlx-outway: invalid data subject header\n",
 		},
 	}
 
@@ -451,7 +452,7 @@ func TestFailingTransport(t *testing.T) {
 	}{
 		"when_request_to_inway_fails": {
 			fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL),
-			http.StatusServiceUnavailable,
+			httperrors.StatusNLXNetworkError,
 			"failed request to 'https://inway.00000000000000000001/mockservice/', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/\n",
 		},
 	}

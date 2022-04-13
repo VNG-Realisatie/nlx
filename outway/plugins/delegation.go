@@ -17,6 +17,7 @@ import (
 
 	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/management-api/api"
+	outway_http "go.nlx.io/nlx/outway/http"
 )
 
 const errMessageOrderRevoked = "order is revoked"
@@ -28,7 +29,7 @@ type delegationError struct {
 }
 
 func (err *delegationError) Error() string {
-	return fmt.Sprintf("message: %s, source: %s", err.message, err.source)
+	return fmt.Sprintf("%s: %s", err.message, err.source)
 }
 
 func newDelegationError(message string, source error) *delegationError {
@@ -83,7 +84,6 @@ func (plugin *DelegationPlugin) requestClaim(orderOrganizationSerialNumber, orde
 		ServiceName:                     serviceName,
 	})
 	if err != nil {
-		println(err)
 		st, ok := status.FromError(err)
 		if ok {
 			if st.Message() == errMessageOrderNotFound {
@@ -150,7 +150,8 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "failed to parse delegation metadata"
 
 			context.Logger.Error(msg, zap.Error(err))
-			http.Error(context.Response, msg, http.StatusInternalServerError)
+
+			outway_http.WriteError(context.Response, msg)
 
 			return nil
 		}
@@ -162,17 +163,11 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 		if err != nil {
 			msg := fmt.Sprintf("failed to request claim from %s: %s", serialNumber, err)
 
-			httpStatus := http.StatusInternalServerError
-
 			if delegationErr, ok := err.(*delegationError); ok {
 				msg = delegationErr.Error()
-
-				if delegationErr.message == errMessageOrderRevoked {
-					httpStatus = http.StatusUnauthorized
-				}
 			}
 
-			http.Error(context.Response, msg, httpStatus)
+			outway_http.WriteError(context.Response, msg)
 
 			return nil
 		}

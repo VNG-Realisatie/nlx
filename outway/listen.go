@@ -16,6 +16,7 @@ import (
 	"google.golang.org/grpc"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	outway_http "go.nlx.io/nlx/outway/http"
 	"go.nlx.io/nlx/outway/plugins"
 )
 
@@ -145,7 +146,7 @@ func (o *Outway) handleHTTPRequest(logger *zap.Logger, w http.ResponseWriter, r 
 	destination, err := parseURLPath(r.URL.Path)
 	if err != nil {
 		if isNLXUrl(r.URL) {
-			http.Error(w, fmt.Sprintf("please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: %s", r.URL.String()), http.StatusInternalServerError)
+			outway_http.WriteError(w, fmt.Sprintf("please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: %s", r.URL.String()))
 			return
 		}
 
@@ -163,7 +164,7 @@ func (o *Outway) handleHTTPRequest(logger *zap.Logger, w http.ResponseWriter, r 
 func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodConnect {
 		logger.Error("CONNECT method not supported")
-		http.Error(w, "CONNECT method is not supported", http.StatusNotImplemented)
+		outway_http.WriteError(w, "CONNECT method is not supported")
 
 		return
 	}
@@ -176,7 +177,7 @@ func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWri
 	destination, err := parseLocalNLXURL(r.URL)
 	if err != nil {
 		logger.Error("error parsing desination", zap.Error(err))
-		http.Error(w, "nlx outway: no valid url expecting: service.serialNumber.service.nlx.local/apipath", http.StatusBadRequest)
+		outway_http.WriteError(w, "no valid url expecting: service.serialNumber.service.nlx.local/apipath")
 
 		return
 	}
@@ -197,7 +198,7 @@ func (o *Outway) handleOnNLX(logger *zap.Logger, destination *plugins.Destinatio
 	if service == nil {
 		logger.Warn("received request for unknown service")
 
-		o.helpUser(w, "nlx outway: unknown service", destination, r.URL.Path)
+		o.helpUser(w, "unknown service", destination, r.URL.Path)
 
 		return
 	}

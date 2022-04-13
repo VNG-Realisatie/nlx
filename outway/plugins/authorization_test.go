@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 //nolint:funlen // this is a test
@@ -34,8 +35,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 				Result: true,
 			},
 			authServerResponseStatusCode: http.StatusUnauthorized,
-			wantHTTPStatusCode:           http.StatusInternalServerError,
-			wantError:                    "nlx outway: error authorizing request\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-outway: error authorizing request\n",
 		},
 		"when_auth_server_returns_invalid_response": {
 			args: &authRequest{
@@ -51,8 +52,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 				Invalid: "this is an invalid response",
 			},
 			authServerResponseStatusCode: http.StatusOK,
-			wantHTTPStatusCode:           http.StatusUnauthorized,
-			wantError:                    "nlx outway: authorization server denied request.\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-outway: authorization server denied request\n",
 		},
 		"when_auth_server_fails": {
 			args: &authRequest{
@@ -63,8 +64,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 				},
 			},
 			authServerResponseStatusCode: http.StatusInternalServerError,
-			wantHTTPStatusCode:           http.StatusInternalServerError,
-			wantError:                    "nlx outway: error authorizing request\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-outway: error authorizing request\n",
 		},
 		"when_auth_server_returns_no_access": {
 			args: &authRequest{
@@ -78,8 +79,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 				Result: false,
 			},
 			authServerResponseStatusCode: http.StatusOK,
-			wantHTTPStatusCode:           http.StatusUnauthorized,
-			wantError:                    "nlx outway: authorization server denied request.\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-outway: authorization server denied request\n",
 		},
 		"happy_flow": {
 			args: &authRequest{

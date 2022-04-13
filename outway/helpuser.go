@@ -4,10 +4,12 @@
 package outway
 
 import (
+	"fmt"
 	"net/http"
 	"sort"
 	"strings"
 
+	outway_http "go.nlx.io/nlx/outway/http"
 	"go.nlx.io/nlx/outway/plugins"
 )
 
@@ -64,10 +66,7 @@ func (o *Outway) helpUserOrg(w http.ResponseWriter, serialNumber string) {
 	}
 
 	msg := createList(suggestion)
-	http.Error(
-		w,
-		"nlx outway: invalid /serialNumber/service/ url: valid organization serial numbers : ["+msg+"]",
-		http.StatusBadRequest)
+	outway_http.WriteError(w, fmt.Sprintf("invalid /serialNumber/service/ url: valid organization serial numbers : [%s]", msg))
 }
 
 func (o *Outway) helpUserService(
@@ -110,10 +109,7 @@ func (o *Outway) helpUserService(
 		msg = createList(services)
 	}
 
-	http.Error(
-		w,
-		"nlx outway: invalid serialNumber/service path: valid services : ["+msg+"]",
-		http.StatusBadRequest)
+	outway_http.WriteError(w, fmt.Sprintf("invalid serialNumber/service path: valid services : [%s]", msg))
 }
 
 func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *plugins.Destination, urlPath string) {
@@ -146,7 +142,7 @@ func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *plugins.Desti
 	}
 
 	if urlPath == "" {
-		http.Error(w, "nlx outway: missing urlpath for service"+msg, http.StatusBadRequest)
+		outway_http.WriteError(w, fmt.Sprintf("missing urlpath for service %s", msg))
 		return
 	}
 }
