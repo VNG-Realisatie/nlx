@@ -60,9 +60,9 @@ module.exports = {
     // react
     'react/no-unsafe': 'warn',
     'react/forbid-prop-types': ['error', { forbid: ['any'] }],
-    'react/jsx-handler-names': 'warn', // TODO: change to ERROR after migration of all projects
+    'react/jsx-handler-names': 'error',
     'react/jsx-pascal-case': ['error', { allowAllCaps: true }],
-    'react/sort-comp': 'warn', // TODO: change to ERROR after migration of all projects
+    'react/sort-comp': 'error',
 
     // import
     'import/order': 'error',
