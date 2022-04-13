@@ -72,4 +72,6 @@ export const StyledLink = styled(NavLink)`
 export const StyledIcon = styled(Icon)`
   display: block;
   margin: 0 auto 2px;
+  width: ${(p) => p.theme.tokens.iconSizeXLarge};
+  height: ${(p) => p.theme.tokens.iconSizeXLarge};
 `
