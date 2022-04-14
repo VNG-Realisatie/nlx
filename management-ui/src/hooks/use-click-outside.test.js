@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import { fireEvent } from '@testing-library/react'
-import { renderHook } from '@testing-library/react-hooks'
+import renderHook from '../test-utils/render-hook'
 import useClickOutside from './use-click-outside'
 
 test('a click inside component should do nothing', async () => {

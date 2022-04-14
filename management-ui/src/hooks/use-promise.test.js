@@ -2,8 +2,9 @@
 // Licensed under the EUPL
 //
 
-import { renderHook, act } from '@testing-library/react-hooks'
+import { act, waitFor } from '@testing-library/react'
 import deferredPromise from '../utils/deferred-promise'
+import renderHook from '../test-utils/render-hook'
 import usePromise from './use-promise'
 
 test('with a resolving promise', async () => {
@@ -57,9 +58,7 @@ test('with a rejecting promise', async () => {
 
 test('with an argument', async () => {
   const handler = async (argument) => argument
-  const { result, waitForNextUpdate } = renderHook(() =>
-    usePromise(handler, 'arbitrary argument'),
-  )
+  const { result } = renderHook(() => usePromise(handler, 'arbitrary argument'))
 
   expect(result.current).toEqual({
     error: null,
@@ -68,14 +67,14 @@ test('with an argument', async () => {
     reload: expect.any(Function),
   })
 
-  await waitForNextUpdate()
-
-  expect(result.current).toEqual({
-    error: null,
-    isReady: true,
-    result: 'arbitrary argument',
-    reload: expect.any(Function),
-  })
+  await waitFor(() =>
+    expect(result.current).toEqual({
+      error: null,
+      isReady: true,
+      result: 'arbitrary argument',
+      reload: expect.any(Function),
+    }),
+  )
 })
 
 test('reloading a resource', async () => {
@@ -83,7 +82,7 @@ test('reloading a resource', async () => {
     .fn()
     .mockResolvedValueOnce('first-result')
     .mockResolvedValueOnce('second-result')
-  const { result, waitForNextUpdate } = renderHook(() => usePromise(handler))
+  const { result } = renderHook(() => usePromise(handler))
 
   expect(result.current).toEqual({
     error: null,
@@ -92,22 +91,25 @@ test('reloading a resource', async () => {
     reload: expect.any(Function),
   })
 
-  await waitForNextUpdate()
-
-  expect(result.current).toEqual({
-    error: null,
-    isReady: true,
-    result: 'first-result',
-    reload: expect.any(Function),
-  })
+  await waitFor(() =>
+    expect(result.current).toEqual({
+      error: null,
+      isReady: true,
+      result: 'first-result',
+      reload: expect.any(Function),
+    }),
+  )
 
   act(() => result.current.reload())
-  await waitForNextUpdate()
-  expect(result.current).toEqual({
-    error: null,
-    isReady: true,
-    result: 'second-result',
-    reload: expect.any(Function),
-  })
+
+  await waitFor(() =>
+    expect(result.current).toEqual({
+      error: null,
+      isReady: true,
+      result: 'second-result',
+      reload: expect.any(Function),
+    }),
+  )
+
   expect(handler).toBeCalledTimes(2)
 })
