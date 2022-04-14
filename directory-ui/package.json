@@ -7,12 +7,12 @@
     "@fontsource/source-sans-pro": "4.5.6",
     "dayjs": "1.11.0",
     "formik": "2.2.9",
-    "mobx": "6.3.2",
+    "mobx": "6.5.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.0",
-    "styled-components": "5.3.0"
+    "styled-components": "5.3.5"
   },
   "scripts": {
     "start": "EXTEND_ESLINT=true BROWSER=none PORT=3001 react-scripts start",
@@ -30,7 +30,7 @@
     "@types/react": "17.0.43",
     "@types/react-dom": "17.0.14",
     "@types/react-router-dom": "5.3.3",
-    "@types/styled-components": "5.1.24",
+    "@types/styled-components": "5.1.25",
     "eslint-config-prettier": "8.5.0",
     "eslint-config-react-app": "7.0.1",
     "eslint-plugin-header": "3.1.1",
