@@ -12,26 +12,24 @@ import ParticipantsPage from './pages/participants'
 import theme from './theme'
 import '@fontsource/source-sans-pro/latin.css'
 
-const App: React.FC = () => (
-  <>
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <BrowserRouter>
-        <DomainNavigation
-          activeDomain="NLX"
-          gitLabLink="https://gitlab.com/commonground/nlx/nlx"
-        />
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <GlobalStyles />
+    <BrowserRouter>
+      <DomainNavigation
+        activeDomain="NLX"
+        gitLabLink="https://gitlab.com/commonground/nlx/nlx"
+      />
 
-        <Header />
+      <Header />
 
-        <Routes>
-          <Route path="/participants" element={<ParticipantsPage />} />
-          <Route path="*" element={<ServiceOverviewPage />} />
-        </Routes>
-      </BrowserRouter>
-      <VersionLogger />
-    </ThemeProvider>
-  </>
+      <Routes>
+        <Route path="/participants" element={<ParticipantsPage />} />
+        <Route path="*" element={<ServiceOverviewPage />} />
+      </Routes>
+    </BrowserRouter>
+    <VersionLogger />
+  </ThemeProvider>
 )
 
 export default App
