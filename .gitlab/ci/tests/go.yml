@@ -27,6 +27,7 @@ Go tests (unit & integration):
     expire_in: 1 month
     paths:
       - tmp-coverage-reports/coverage.html
+  needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
@@ -52,6 +53,7 @@ Go linter:
       codequality: gl-code-quality-report.json
     paths:
       - gl-code-quality-report.json
+  needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
@@ -66,6 +68,7 @@ Go go.mod tidy test:
     - /usr/local/go/bin/go mod download
     - /usr/local/go/bin/go mod tidy
     - diff go.mod.orig go.mod
+  needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:

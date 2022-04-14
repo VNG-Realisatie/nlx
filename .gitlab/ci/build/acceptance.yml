@@ -10,6 +10,8 @@
     - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export GIT_TAG_NAME=$(git describe --tags --abbrev=1)
+    - export SEMANTIC_RELEASE_NEXT_VERSION=$(cat ci_semantic_release_next_version.txt)
+    - export COMPONENT_VERSION="${SEMANTIC_RELEASE_NEXT_VERSION}-acc-${CI_COMMIT_SHORT_SHA}"
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export REVIEW_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
@@ -27,7 +29,7 @@
       -f ${DOCKERFILE}
       --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
       --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
-      --build-arg GIT_TAG_NAME=${GIT_TAG_NAME}
+      --build-arg GIT_TAG_NAME=${COMPONENT_VERSION}
       -t ${IMG_GIT_TAG}
       -t ${IMG_LATEST}
       -t ${IMG_REF_SLUG}

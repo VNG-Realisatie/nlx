@@ -12,6 +12,7 @@ Helm lint:
       done
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  needs: []
   tags:
     - docker
     - linux

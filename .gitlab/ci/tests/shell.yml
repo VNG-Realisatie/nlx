@@ -11,6 +11,7 @@ Shell lint:
     - find **/*.sh | grep -v 'node_modules' | xargs shellcheck
   rules:
     - if: '$CI_COMMIT_BRANCH' # do not run for tags
+  needs: []
   tags:
     - docker
     - linux

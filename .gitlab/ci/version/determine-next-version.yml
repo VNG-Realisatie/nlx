@@ -1,0 +1,15 @@
+Determine next version:
+  extends: .node-base
+  stage: Version
+  script:
+    - apk --no-cache add git
+    - install_npm_dependencies
+    - start_section release "Running semantic release"
+    - npx semantic-release --dry-run --branches $CI_COMMIT_BRANCH | grep -o 'The next release version is .*' | sed 's/The next release version is //' > ci_semantic_release_next_version.txt
+    - stop_section release
+  artifacts:
+    paths:
+      - ci_semantic_release_next_version.txt
+  tags:
+    - docker
+    - linux

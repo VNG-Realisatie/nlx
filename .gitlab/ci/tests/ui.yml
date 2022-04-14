@@ -17,6 +17,7 @@ Directory-ui linter and tests:
       - directory-ui/coverage
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  needs: []
   tags:
     - docker
     - linux
@@ -52,6 +53,7 @@ Management-ui linter and tests:
       - management-ui/coverage
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  needs: []
   tags:
     - docker
     - linux
