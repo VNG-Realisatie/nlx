@@ -170,13 +170,13 @@ test('the form values of the onSubmitHandler', async () => {
     </StoreProvider>,
   )
 
-  userEvent.type(getByLabelText(/Order description/), 'my-description')
-  userEvent.type(getByLabelText(/Reference/), 'my-reference')
-  userEvent.type(
+  await userEvent.type(getByLabelText(/Order description/), 'my-description')
+  await userEvent.type(getByLabelText(/Reference/), 'my-reference')
+  await userEvent.type(
     getByLabelText(/Delegated organization/),
     '01234567890123456789',
   )
-  userEvent.type(getByLabelText(/Public key PEM/), 'my-public-key-pem')
+  await userEvent.type(getByLabelText(/Public key PEM/), 'my-public-key-pem')
   fireEvent.change(getByLabelText(/Valid from/), {
     target: { value: '2021-01-01' },
   })
@@ -188,7 +188,7 @@ test('the form values of the onSubmitHandler', async () => {
     /service-a - organization-a \(00000000000000000001\) - via outway-a \(h\+jpuLAMFzM09tOZpb0Ehslhje4S\/IsIxSWsS4E16Yc=\)/,
   )
 
-  userEvent.click(getByText('Add order'))
+  await userEvent.click(getByText('Add order'))
 
   await waitFor(() =>
     expect(onSubmitHandlerMock).toHaveBeenCalledWith({

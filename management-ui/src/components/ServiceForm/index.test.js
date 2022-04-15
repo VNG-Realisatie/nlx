@@ -117,15 +117,15 @@ test('the form values of the onSubmitHandler', async () => {
   )
 
   // invalid form - name is missing
-  userEvent.click(getByText('Submit'))
+  await userEvent.click(getByText('Submit'))
 
   const nameError = await findByTestId('error-name')
   expect(nameError).not.toBeNull()
   expect(onSubmitHandlerSpy).not.toHaveBeenCalled()
 
   // fill-in required fields
-  userEvent.type(getByLabelText('Service name'), 'my-service')
-  userEvent.click(getByText('Submit'))
+  await userEvent.type(getByLabelText('Service name'), 'my-service')
+  await userEvent.click(getByText('Submit'))
 
   await waitFor(() =>
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
@@ -423,12 +423,12 @@ describe('when showing inways', () => {
     const monthly = getByLabelText('Monthly costs (in Euro)')
     const request = getByLabelText('Cost per request (in Euro)')
 
-    userEvent.clear(oneTime)
-    userEvent.type(oneTime, '10.5')
-    userEvent.clear(monthly)
-    userEvent.type(monthly, '5')
-    userEvent.clear(request)
-    userEvent.type(request, '1.25')
+    await userEvent.clear(oneTime)
+    await userEvent.type(oneTime, '10.5')
+    await userEvent.clear(monthly)
+    await userEvent.type(monthly, '5')
+    await userEvent.clear(request)
+    await userEvent.type(request, '1.25')
 
     fireEvent.submit(getByTestId('form'))
 

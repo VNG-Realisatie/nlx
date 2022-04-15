@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../test-utils'
 import Filters from './index'
 
-test('should call the onQueryChanged handler with the query', () => {
+test('should call the onQueryChanged handler with the query', async () => {
   const onQueryChangedSpy = jest.fn()
 
   const { getByPlaceholderText } = renderWithProviders(
@@ -16,8 +16,8 @@ test('should call the onQueryChanged handler with the query', () => {
 
   const input = getByPlaceholderText('Zoeken…')
 
-  userEvent.clear(input)
-  userEvent.type(input, 'abc')
+  await userEvent.clear(input)
+  await userEvent.type(input, 'abc')
 
   expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
 })

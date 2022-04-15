@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../test-utils'
 import Filters from './index'
 
-test('should call the onQueryChanged handler with the query', () => {
+test('should call the onQueryChanged handler with the query', async () => {
   const onQueryChangedSpy = jest.fn()
 
   const { getByPlaceholderText } = renderWithProviders(
@@ -16,13 +16,13 @@ test('should call the onQueryChanged handler with the query', () => {
 
   const input = getByPlaceholderText('Zoeken…')
 
-  userEvent.clear(input)
-  userEvent.type(input, 'abc')
+  await userEvent.clear(input)
+  await userEvent.type(input, 'abc')
 
   expect(onQueryChangedSpy).toHaveBeenCalledWith('abc')
 })
 
-test('should call the onStatusFilterChanged handler with the checked state', () => {
+test('should call the onStatusFilterChanged handler with the checked state', async () => {
   const onStatusFilterChangedSpy = jest.fn()
 
   const { getByLabelText } = renderWithProviders(
@@ -31,7 +31,7 @@ test('should call the onStatusFilterChanged handler with the checked state', () 
 
   const input = getByLabelText('Toon offline services')
 
-  userEvent.click(input)
+  await userEvent.click(input)
 
   expect(onStatusFilterChangedSpy).toHaveBeenCalledWith(false)
 })
