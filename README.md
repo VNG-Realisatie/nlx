@@ -68,6 +68,7 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     directory-api.shared.nlx.local
 
 127.0.0.1     management-api.organization-a.nlx.local
+127.0.0.1     management-proxy.organization-a.nlx.local
 127.0.0.1     inway.organization-a.nlx.local
 127.0.0.1     outway.organization-a.nlx.local
 127.0.0.1     outway-2.organization-a.nlx.local
@@ -75,6 +76,7 @@ Update the `/etc/hosts` file on your system:
 127.0.0.1     txlog-api.organization-a.nlx.local
 
 127.0.0.1     management-api.organization-b.nlx.local
+127.0.0.1     management-proxy.organization-b.nlx.local
 127.0.0.1     inway.organization-b.nlx.local
 127.0.0.1     management.organization-b.nlx.local
 
@@ -103,18 +105,6 @@ Update the `/etc/hosts` file on your system:
 </br>
 
 To start the services in development daemons with up-to-date databases, run: `./scripts/start-development.sh`. Make sure Docker is running.
-
-This will start the following services:
-
-Service                         | gRPC | HTTP
-------------------------------- | ---- | ----
-[S] directory-api               | 7904 | 7905
-[S] directory-monitor           |
-[A] management-api              | 7911 | 7912
-[A] inway                       | 7913
-[A] outway                      |      | 7917
-[B] management-api              | 7921 | 7922
-[B] inway                       | 7923 |
 
 During the starting routines of the services, you might see a few services erroring that are dependent on a service that has not yet been started.
 This is expected behavior and will resolve itself within 5 seconds.

@@ -6,7 +6,9 @@
   },
   "hosts": [
     "inway.organization-b.nlx.local",
-    "inway.organization-b.nlx.minikube"
+    "inway.organization-b.nlx.minikube",
+    "management-proxy.organization-b.nlx.local",
+    "management-proxy.organization-b.nlx.minikube"
   ],
   "serialnumber":"12345678901234567891",
   "names": [
