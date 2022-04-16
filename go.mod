@@ -29,7 +29,7 @@ require (
 	github.com/huandu/xstrings v1.3.2
 	github.com/jackc/pgtype v1.10.0
 	github.com/jessevdk/go-flags v1.5.0
-	github.com/jmoiron/sqlx v1.3.4
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/jpillora/backoff v1.0.0
 	github.com/lib/pq v1.10.5
 	github.com/mitchellh/go-homedir v1.1.0
