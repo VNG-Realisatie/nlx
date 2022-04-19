@@ -8,12 +8,12 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"net/http"
 
 	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/delegation"
+	inway_http "go.nlx.io/nlx/inway/http"
 )
 
 var (
@@ -85,34 +85,34 @@ func handleJWTValidationError(context *Context, claims *delegation.JWTClaims, er
 	validationError, ok := err.(*jwt.ValidationError)
 	if !ok {
 		context.Logger.Error("casting error to jwt validation error failed", zap.Error(err))
-		http.Error(context.Response, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
+		inway_http.WriteError(context.Response, "unable to verify claim")
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
 		context.Logger.Info("requesting organization public key is not the public key found in order", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access. organization serialnumber does not match the delegatee organization serialnumber of the order", http.StatusUnauthorized)
+		inway_http.WriteError(context.Response, "no access. organization serialnumber does not match the delegatee organization serialnumber of the order")
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationPublicKeyNotFoundInOrder) {
 		context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access. public key of the connection does not match the delegatee public key of the order", http.StatusUnauthorized)
+		inway_http.WriteError(context.Response, "no access. public key of the connection does not match the delegatee public key of the order")
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
 		context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		http.Error(context.Response, "nlx-inway: no access. delegator does not have access to the service for the public key in the claim", http.StatusUnauthorized)
+		inway_http.WriteError(context.Response, "no access. delegator does not have access to the service for the public key in the claim")
 
 		return
 	}
 
 	context.Logger.Error("failed to parse jwt", zap.Error(err))
-	http.Error(context.Response, "nlx-inway: unable to verify claim", http.StatusInternalServerError)
+	inway_http.WriteError(context.Response, "unable to verify claim")
 }
 
 func parsePublicKeyFromPEM(publicKeyPEM string) (crypto.PublicKey, error) {

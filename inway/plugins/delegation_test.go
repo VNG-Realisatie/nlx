@@ -18,6 +18,7 @@ import (
 	"go.nlx.io/nlx/common/delegation"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/inway/plugins"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
@@ -67,7 +68,7 @@ func TestDelegationPlugin(t *testing.T) {
 			args: &args{
 				claim: "invalid-claim",
 			},
-			wantStatusCode:        http.StatusInternalServerError,
+			wantStatusCode:        httperrors.StatusNLXNetworkError,
 			wantMessage:           "nlx-inway: unable to verify claim\n",
 			wantDelegationSuccess: false,
 		},
@@ -80,7 +81,7 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateePublicKeyFingerprint: "public-key-fingerprint",
 				delegateeSerialNumber:         "00000000000000000099",
 			},
-			wantStatusCode:        http.StatusUnauthorized,
+			wantStatusCode:        httperrors.StatusNLXNetworkError,
 			wantMessage:           "nlx-inway: no access. organization serialnumber does not match the delegatee organization serialnumber of the order\n",
 			wantDelegationSuccess: false,
 		},
@@ -112,7 +113,7 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
 				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
-			wantStatusCode:        http.StatusUnauthorized,
+			wantStatusCode:        httperrors.StatusNLXNetworkError,
 			wantMessage:           "nlx-inway: no access. public key of the connection does not match the delegatee public key of the order\n",
 			wantDelegationSuccess: false,
 		},
@@ -126,7 +127,7 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
 				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
-			wantStatusCode:        http.StatusUnauthorized,
+			wantStatusCode:        httperrors.StatusNLXNetworkError,
 			wantMessage:           "nlx-inway: no access. delegator does not have access to the service for the public key in the claim\n",
 			wantDelegationSuccess: false,
 		},

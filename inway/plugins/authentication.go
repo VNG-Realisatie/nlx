@@ -4,11 +4,10 @@
 package plugins
 
 import (
-	"net/http"
-
 	"go.uber.org/zap"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	inway_http "go.nlx.io/nlx/inway/http"
 )
 
 type AuthenticationPlugin struct {
@@ -28,8 +27,9 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 		peerCertificates := context.Request.TLS.PeerCertificates
 
 		if len(peerCertificates) == 0 {
-			http.Error(context.Response, "nlx-inway: invalid connection: missing peer certificates", http.StatusBadRequest)
-			logger.Warn("received request no certificates")
+			logger.Warn("received request does not contain certificates")
+
+			inway_http.WriteError(context.Response, "invalid connection: missing peer certificates")
 
 			return nil
 		}
@@ -39,8 +39,9 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		if len(organizations) == 0 {
 			msg := "invalid certificate provided: missing organizations attribute in subject"
-			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
 			logger.Warn(msg)
+
+			inway_http.WriteError(context.Response, msg)
 
 			return nil
 		}
@@ -49,8 +50,9 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		if requesterOrganizationName == "" {
 			msg := "invalid certificate provided: missing value for organization in subject"
-			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
 			logger.Warn(msg)
+
+			inway_http.WriteError(context.Response, msg)
 
 			return nil
 		}
@@ -60,16 +62,18 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 		err := common_tls.ValidateSerialNumber(requesterOrganizationSerialNumber)
 		if err != nil {
 			msg := "invalid certificate provided: missing value for serial number in subject"
-			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
 			logger.Warn(msg)
+
+			inway_http.WriteError(context.Response, msg)
 
 			return nil
 		}
 
 		if len(peerCertificate.Issuer.Organization) == 0 {
 			msg := "invalid certificate provided: missing value for issuer organization in issuer"
-			http.Error(context.Response, "nlx-inway: "+msg, http.StatusBadRequest)
 			logger.Warn(msg)
+
+			inway_http.WriteError(context.Response, msg)
 
 			return nil
 		}

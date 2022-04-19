@@ -79,7 +79,7 @@ func (c *CertificateBundle) PublicKeyPEM() (string, error) {
 	return string(publicKeyPEM), nil
 }
 
-// TLSConfig returns a new tls.Config with the certifcate and root ca
+// TLSConfig returns a new tls.Config with the certificate and root ca
 func (c *CertificateBundle) TLSConfig(options ...ConfigOption) *tls.Config {
 	config := NewConfig(options...)
 	config.Certificates = []tls.Certificate{*c.keyPair}

@@ -5,7 +5,7 @@ package inway
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"sync"
@@ -15,6 +15,7 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/inway/plugins"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 func TestInwayProxy(t *testing.T) {
@@ -26,12 +27,12 @@ func TestInwayProxy(t *testing.T) {
 	}{
 		"empty_path": {
 			path:             "",
-			wantStatusCode:   http.StatusBadRequest,
+			wantStatusCode:   httperrors.StatusNLXNetworkError,
 			wantErrorMessage: "nlx-inway: path cannot be empty, must at least contain the service name.\n",
 		},
 		"service_does_not_exist": {
 			path:             "/non-existing-service/",
-			wantStatusCode:   http.StatusBadRequest,
+			wantStatusCode:   httperrors.StatusNLXNetworkError,
 			wantErrorMessage: "nlx-inway: no endpoint for service 'non-existing-service'\n",
 		},
 		"happy_flow": {
@@ -76,7 +77,7 @@ func TestInwayProxy(t *testing.T) {
 
 			url := fmt.Sprintf("%s%s", "http://localhost", tc.path)
 
-			req, err := http.NewRequest("GET", url, nil)
+			req, err := http.NewRequest("GET", url, http.NoBody)
 			assert.Nil(t, err)
 
 			responseRecorder := httptest.NewRecorder()
@@ -85,11 +86,37 @@ func TestInwayProxy(t *testing.T) {
 			result := responseRecorder.Result()
 			defer result.Body.Close()
 
-			bytes, err := ioutil.ReadAll(responseRecorder.Body)
+			bytes, err := io.ReadAll(responseRecorder.Body)
 			assert.Nil(t, err)
 
 			assert.Equal(t, tc.wantStatusCode, result.StatusCode)
 			assert.Equal(t, tc.wantErrorMessage, string(bytes))
 		})
 	}
+}
+
+func TestInwayProxyEndpointNotReachable(t *testing.T) {
+	i := &Inway{
+		logger: zap.NewNop(),
+		services: map[string]*plugins.Service{
+			"mock-service": {EndpointURL: "http://non-existing-url"},
+		},
+		servicesLock: sync.RWMutex{},
+		plugins:      []plugins.Plugin{},
+	}
+
+	req, err := http.NewRequest("GET", "http://localhost/mock-service", http.NoBody)
+	assert.Nil(t, err)
+
+	responseRecorder := httptest.NewRecorder()
+	i.handleProxyRequest(responseRecorder, req)
+
+	result := responseRecorder.Result()
+	defer result.Body.Close()
+
+	bytes, err := io.ReadAll(responseRecorder.Body)
+	assert.Nil(t, err)
+
+	assert.Equal(t, httperrors.StatusNLXNetworkError, result.StatusCode)
+	assert.Equal(t, "nlx-inway: failed internal API request to http://non-existing-url try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/\n", string(bytes))
 }

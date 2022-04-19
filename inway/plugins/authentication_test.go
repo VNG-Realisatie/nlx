@@ -15,6 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/inway/plugins"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
@@ -35,7 +36,7 @@ func TestAuthenticationPlugin(t *testing.T) {
 
 				return cert.Certificate()
 			}(),
-			expectedStatusCode: http.StatusBadRequest,
+			expectedStatusCode: httperrors.StatusNLXNetworkError,
 			expectedMessage:    "nlx-inway: invalid certificate provided: missing organizations attribute in subject\n",
 		},
 		"invalid_certificate_without_serial_number": {
@@ -45,7 +46,7 @@ func TestAuthenticationPlugin(t *testing.T) {
 
 				return cert.Certificate()
 			}(),
-			expectedStatusCode: http.StatusBadRequest,
+			expectedStatusCode: httperrors.StatusNLXNetworkError,
 			expectedMessage:    "nlx-inway: invalid certificate provided: missing value for serial number in subject\n",
 		},
 		"happy_flow": {

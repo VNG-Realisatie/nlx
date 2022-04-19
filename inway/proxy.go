@@ -12,6 +12,7 @@ import (
 
 	"go.uber.org/zap"
 
+	inway_http "go.nlx.io/nlx/inway/http"
 	"go.nlx.io/nlx/inway/plugins"
 )
 
@@ -22,8 +23,8 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if r.URL.Path == "" {
-		http.Error(w, "nlx-inway: path cannot be empty, must at least contain the service name.", http.StatusBadRequest)
 		logger.Warn("received request with invalid path")
+		inway_http.WriteError(w, "path cannot be empty, must at least contain the service name.")
 
 		return
 	}
@@ -45,8 +46,8 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	i.servicesLock.RUnlock()
 
 	if !exists {
-		http.Error(w, fmt.Sprintf("nlx-inway: no endpoint for service '%s'", serviceName), http.StatusBadRequest)
 		logger.Warn("received request for service with no known endpoint")
+		inway_http.WriteError(w, fmt.Sprintf("no endpoint for service '%s'", serviceName))
 
 		return
 	}
@@ -103,15 +104,14 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	if err := chain(context); err != nil {
 		logger.Error("error executing plugin chain", zap.Error(err))
-		http.Error(w, "inway: error executing plugin chain", http.StatusInternalServerError)
+
+		inway_http.WriteError(w, "error executing plugin chain")
 	}
 }
 
 func (i *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, e error) {
-	msg := ("nlx-inway: failed internal API request to " +
-		r.URL.String() +
-		" try again later / service api down/unreachable." +
-		" check A1 error at https://docs.nlx.io/support/common-errors/")
+	msg := fmt.Sprintf("failed internal API request to %s try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/", r.URL.String())
 	i.logger.Error(msg)
-	http.Error(w, msg, http.StatusServiceUnavailable)
+
+	inway_http.WriteError(w, msg)
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"go.nlx.io/nlx/inway/plugins"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 //nolint:funlen // this is a test
@@ -46,8 +47,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerEnabled:            true,
 			authServerResponseStatusCode: http.StatusUnauthorized,
-			wantHTTPStatusCode:           http.StatusInternalServerError,
-			wantError:                    "nlx inway: error authorizing request\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-inway: error authorizing request\n",
 		},
 		"when_auth_server_returns_invalid_response": {
 			args: &plugins.AuthRequest{
@@ -72,8 +73,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerEnabled:            true,
 			authServerResponseStatusCode: http.StatusOK,
-			wantHTTPStatusCode:           http.StatusUnauthorized,
-			wantError:                    "nlx inway: authorization server denied request.\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-inway: authorization server denied request.\n",
 		},
 		"when_auth_server_fails": {
 			args: &plugins.AuthRequest{
@@ -93,8 +94,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerEnabled:            true,
 			authServerResponseStatusCode: http.StatusInternalServerError,
-			wantHTTPStatusCode:           http.StatusInternalServerError,
-			wantError:                    "nlx inway: error authorizing request\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-inway: error authorizing request\n",
 		},
 		"when_auth_server_returns_no_access": {
 			args: &plugins.AuthRequest{
@@ -117,8 +118,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 				Result: false,
 			},
 			authServerResponseStatusCode: http.StatusOK,
-			wantHTTPStatusCode:           http.StatusUnauthorized,
-			wantError:                    "nlx inway: authorization server denied request.\n",
+			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
+			wantError:                    "nlx-inway: authorization server denied request.\n",
 		},
 		"when_access_grant_not_found": {
 			args: &plugins.AuthRequest{
@@ -132,7 +133,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 					},
 				},
 			},
-			wantHTTPStatusCode: http.StatusForbidden,
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
 			wantError:          "nlx-inway: permission denied, organization \"00000000000000000001\" or public key fingerprint \"mock-public-key-fingerprint\" is not allowed access.\n",
 		},
 		"happy_flow_with_auth_server": {

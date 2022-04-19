@@ -16,6 +16,7 @@ import (
 	"go.nlx.io/nlx/common/transactionlog"
 	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/plugins"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 //nolint:funlen // this is a test
@@ -35,7 +36,7 @@ func TestLoginPlugin(t *testing.T) {
 
 				return db
 			},
-			expectedStatusCode: http.StatusBadRequest,
+			expectedStatusCode: httperrors.StatusNLXNetworkError,
 			expectedMessage:    "nlx-inway: missing logrecord id\n",
 		},
 		"transaction_log_db_fails": {
@@ -55,8 +56,8 @@ func TestLoginPlugin(t *testing.T) {
 				}).Return(fmt.Errorf("arbitrary error"))
 				return db
 			},
-			expectedStatusCode: http.StatusInternalServerError,
-			expectedMessage:    "nlx inway: server error\n",
+			expectedStatusCode: httperrors.StatusNLXNetworkError,
+			expectedMessage:    "nlx-inway: server error\n",
 		},
 		"happy_flow": {
 			headers: map[string]string{
