@@ -2,7 +2,7 @@ Run semantic release:
   extends: .node-base
   stage: Tools
   variables:
-    HELM_VERSION: v3.8.1
+    HELM_VERSION: v3.8.2
   script:
     - apk --no-cache add git
     - wget https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz
