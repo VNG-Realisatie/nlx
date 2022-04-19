@@ -691,7 +691,7 @@
           }
         },
         "tags" : [ "Management" ],
-        "x-codegen-request-body-name" : "body"
+        "x-codegen-request-body-name" : "inway"
       }
     },
     "/api/v1/orders/incoming" : {

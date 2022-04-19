@@ -1,3 +1,5 @@
+VERSION 0.5
+
 FROM registry.gitlab.com/commonground/nlx/earthly-base-image:latest
 
 WORKDIR /src

@@ -187,7 +187,7 @@ export interface ManagementSendAccessRequestRequest {
 
 export interface ManagementUpdateInwayRequest {
     name: string;
-    body: ManagementInway;
+    inway: ManagementInway;
 }
 
 export interface ManagementUpdateOutgoingOrderOperationRequest {
@@ -1070,8 +1070,8 @@ export class ManagementApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementUpdateInway.');
         }
 
-        if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementUpdateInway.');
+        if (requestParameters.inway === null || requestParameters.inway === undefined) {
+            throw new runtime.RequiredError('inway','Required parameter requestParameters.inway was null or undefined when calling managementUpdateInway.');
         }
 
         const queryParameters: any = {};
@@ -1085,7 +1085,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementInwayToJSON(requestParameters.body),
+            body: ManagementInwayToJSON(requestParameters.inway),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInwayFromJSON(jsonValue));

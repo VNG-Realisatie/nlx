@@ -1554,12 +1554,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders", runtime.WithHTTPPathPattern("/api/v1/orders/synchronize"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders", runtime.WithHTTPPathPattern("/api/v1/orders/synchronize"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_SynchronizeOrders_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_SynchronizeOrders_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1577,12 +1578,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled", runtime.WithHTTPPathPattern("/api/v1/finance/enabled"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled", runtime.WithHTTPPathPattern("/api/v1/finance/enabled"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_IsFinanceEnabled_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_IsFinanceEnabled_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1600,12 +1602,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/IsTXLogEnabled", runtime.WithHTTPPathPattern("/api/v1/txlog/enabled"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/IsTXLogEnabled", runtime.WithHTTPPathPattern("/api/v1/txlog/enabled"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_IsTXLogEnabled_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_IsTXLogEnabled_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1623,12 +1626,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport", runtime.WithHTTPPathPattern("/api/v1/finance/export"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport", runtime.WithHTTPPathPattern("/api/v1/finance/export"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_DownloadFinanceExport_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_DownloadFinanceExport_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1646,12 +1650,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListServices", runtime.WithHTTPPathPattern("/api/v1/services"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListServices", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListServices_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListServices_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1669,12 +1674,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_GetService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_GetService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1692,12 +1698,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateService", runtime.WithHTTPPathPattern("/api/v1/services"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateService", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_CreateService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_CreateService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1715,12 +1722,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_UpdateService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_UpdateService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1738,12 +1746,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_DeleteService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_DeleteService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1761,12 +1770,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices", runtime.WithHTTPPathPattern("/api/v1/statistics/services"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices", runtime.WithHTTPPathPattern("/api/v1/statistics/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_GetStatisticsOfServices_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_GetStatisticsOfServices_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1784,12 +1794,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListInways", runtime.WithHTTPPathPattern("/api/v1/inways"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListInways", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListInways_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListInways_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1807,12 +1818,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_GetInway_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_GetInway_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1830,12 +1842,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterInway", runtime.WithHTTPPathPattern("/api/v1/inways"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterInway", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_RegisterInway_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_RegisterInway_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1853,12 +1866,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_UpdateInway_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_UpdateInway_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1876,12 +1890,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/DeleteInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_DeleteInway_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_DeleteInway_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1899,12 +1914,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway", runtime.WithHTTPPathPattern("/api/v1/outways"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_RegisterOutway_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_RegisterOutway_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1922,12 +1938,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutways", runtime.WithHTTPPathPattern("/api/v1/outways"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutways", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListOutways_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListOutways_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1945,12 +1962,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListIncomingAccessRequests_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListIncomingAccessRequests_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1968,12 +1986,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ApproveIncomingAccessRequest_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ApproveIncomingAccessRequest_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -1991,12 +2010,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_RejectIncomingAccessRequest_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_RejectIncomingAccessRequest_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2014,12 +2034,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_CreateAccessRequest_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_CreateAccessRequest_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2037,12 +2058,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{accessRequestID}/send"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{accessRequestID}/send"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_SendAccessRequest_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_SendAccessRequest_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2060,12 +2082,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_GetSettings_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_GetSettings_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2083,12 +2106,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_UpdateSettings_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_UpdateSettings_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2106,12 +2130,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListAccessGrantsForService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListAccessGrantsForService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2129,12 +2154,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_RevokeAccessGrant_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_RevokeAccessGrant_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2152,12 +2178,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs", runtime.WithHTTPPathPattern("/api/v1/audit-logs"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs", runtime.WithHTTPPathPattern("/api/v1/audit-logs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListAuditLogs_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListAuditLogs_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2175,12 +2202,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder", runtime.WithHTTPPathPattern("/api/v1/retrieve-claim"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder", runtime.WithHTTPPathPattern("/api/v1/retrieve-claim"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_RetrieveClaimForOrder_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_RetrieveClaimForOrder_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2198,12 +2226,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_CreateOutgoingOrder_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_CreateOutgoingOrder_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2221,12 +2250,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/UpdateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_UpdateOutgoingOrder_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_UpdateOutgoingOrder_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2244,12 +2274,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_RevokeOutgoingOrder_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_RevokeOutgoingOrder_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2267,12 +2298,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListOutgoingOrders_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListOutgoingOrders_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2290,12 +2322,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/incoming"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/incoming"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_ListIncomingOrders_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_ListIncomingOrders_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2313,12 +2346,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetTermsOfServiceStatus", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/GetTermsOfServiceStatus", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_GetTermsOfServiceStatus_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_GetTermsOfServiceStatus_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2336,12 +2370,13 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/AcceptTermsOfService", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/AcceptTermsOfService", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Management_AcceptTermsOfService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Management_AcceptTermsOfService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2368,12 +2403,13 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/ListServices", runtime.WithHTTPPathPattern("/api/v1/directory/services"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/ListServices", runtime.WithHTTPPathPattern("/api/v1/directory/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Directory_ListServices_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Directory_ListServices_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2391,12 +2427,13 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Directory_GetOrganizationService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Directory_GetOrganizationService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2414,12 +2451,13 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Directory_RequestAccessToService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Directory_RequestAccessToService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2437,12 +2475,13 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetTermsOfService", runtime.WithHTTPPathPattern("/api/v1/directory/terms-of-service"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetTermsOfService", runtime.WithHTTPPathPattern("/api/v1/directory/terms-of-service"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Directory_GetTermsOfService_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Directory_GetTermsOfService_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2469,12 +2508,13 @@ func RegisterTXLogHandlerServer(ctx context.Context, mux *runtime.ServeMux, serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.TXLog/ListRecords", runtime.WithHTTPPathPattern("/api/v1/txlog/records"))
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.TXLog/ListRecords", runtime.WithHTTPPathPattern("/api/v1/txlog/records"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TXLog_ListRecords_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TXLog_ListRecords_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -2531,12 +2571,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders", runtime.WithHTTPPathPattern("/api/v1/orders/synchronize"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOrders", runtime.WithHTTPPathPattern("/api/v1/orders/synchronize"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_SynchronizeOrders_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_SynchronizeOrders_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2551,12 +2592,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled", runtime.WithHTTPPathPattern("/api/v1/finance/enabled"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/IsFinanceEnabled", runtime.WithHTTPPathPattern("/api/v1/finance/enabled"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_IsFinanceEnabled_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_IsFinanceEnabled_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2571,12 +2613,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/IsTXLogEnabled", runtime.WithHTTPPathPattern("/api/v1/txlog/enabled"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/IsTXLogEnabled", runtime.WithHTTPPathPattern("/api/v1/txlog/enabled"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_IsTXLogEnabled_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_IsTXLogEnabled_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2591,12 +2634,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport", runtime.WithHTTPPathPattern("/api/v1/finance/export"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DownloadFinanceExport", runtime.WithHTTPPathPattern("/api/v1/finance/export"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_DownloadFinanceExport_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_DownloadFinanceExport_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2611,12 +2655,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListServices", runtime.WithHTTPPathPattern("/api/v1/services"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListServices", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListServices_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListServices_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2631,12 +2676,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_GetService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_GetService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2651,12 +2697,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateService", runtime.WithHTTPPathPattern("/api/v1/services"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateService", runtime.WithHTTPPathPattern("/api/v1/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_CreateService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_CreateService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2671,12 +2718,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_UpdateService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_UpdateService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2691,12 +2739,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteService", runtime.WithHTTPPathPattern("/api/v1/services/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_DeleteService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_DeleteService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2711,12 +2760,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices", runtime.WithHTTPPathPattern("/api/v1/statistics/services"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetStatisticsOfServices", runtime.WithHTTPPathPattern("/api/v1/statistics/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_GetStatisticsOfServices_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_GetStatisticsOfServices_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2731,12 +2781,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListInways", runtime.WithHTTPPathPattern("/api/v1/inways"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListInways", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListInways_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListInways_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2751,12 +2802,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_GetInway_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_GetInway_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2771,12 +2823,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterInway", runtime.WithHTTPPathPattern("/api/v1/inways"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterInway", runtime.WithHTTPPathPattern("/api/v1/inways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_RegisterInway_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_RegisterInway_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2791,12 +2844,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_UpdateInway_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_UpdateInway_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2811,12 +2865,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/DeleteInway", runtime.WithHTTPPathPattern("/api/v1/inways/{name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_DeleteInway_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_DeleteInway_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2831,12 +2886,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway", runtime.WithHTTPPathPattern("/api/v1/outways"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RegisterOutway", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_RegisterOutway_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_RegisterOutway_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2851,12 +2907,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutways", runtime.WithHTTPPathPattern("/api/v1/outways"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutways", runtime.WithHTTPPathPattern("/api/v1/outways"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListOutways_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListOutways_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2871,12 +2928,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListIncomingAccessRequests_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListIncomingAccessRequests_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2891,12 +2949,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ApproveIncomingAccessRequest_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ApproveIncomingAccessRequest_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2911,12 +2970,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_RejectIncomingAccessRequest_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_RejectIncomingAccessRequest_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2931,12 +2991,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_CreateAccessRequest_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_CreateAccessRequest_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2951,12 +3012,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{accessRequestID}/send"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{accessRequestID}/send"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_SendAccessRequest_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_SendAccessRequest_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2971,12 +3033,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_GetSettings_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_GetSettings_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -2991,12 +3054,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateSettings", runtime.WithHTTPPathPattern("/api/v1/settings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_UpdateSettings_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_UpdateSettings_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3011,12 +3075,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListAccessGrantsForService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListAccessGrantsForService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3031,12 +3096,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_RevokeAccessGrant_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_RevokeAccessGrant_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3051,12 +3117,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs", runtime.WithHTTPPathPattern("/api/v1/audit-logs"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAuditLogs", runtime.WithHTTPPathPattern("/api/v1/audit-logs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListAuditLogs_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListAuditLogs_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3071,12 +3138,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder", runtime.WithHTTPPathPattern("/api/v1/retrieve-claim"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RetrieveClaimForOrder", runtime.WithHTTPPathPattern("/api/v1/retrieve-claim"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_RetrieveClaimForOrder_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_RetrieveClaimForOrder_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3091,12 +3159,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/CreateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_CreateOutgoingOrder_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_CreateOutgoingOrder_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3111,12 +3180,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/UpdateOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_UpdateOutgoingOrder_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_UpdateOutgoingOrder_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3131,12 +3201,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeOutgoingOrder", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_RevokeOutgoingOrder_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_RevokeOutgoingOrder_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3151,12 +3222,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListOutgoingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/outgoing"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListOutgoingOrders_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListOutgoingOrders_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3171,12 +3243,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/incoming"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingOrders", runtime.WithHTTPPathPattern("/api/v1/orders/incoming"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_ListIncomingOrders_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_ListIncomingOrders_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3191,12 +3264,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetTermsOfServiceStatus", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/GetTermsOfServiceStatus", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_GetTermsOfServiceStatus_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_GetTermsOfServiceStatus_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3211,12 +3285,13 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/AcceptTermsOfService", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/AcceptTermsOfService", runtime.WithHTTPPathPattern("/api/v1/terms-of-service"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Management_AcceptTermsOfService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Management_AcceptTermsOfService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3416,12 +3491,13 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/ListServices", runtime.WithHTTPPathPattern("/api/v1/directory/services"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/ListServices", runtime.WithHTTPPathPattern("/api/v1/directory/services"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Directory_ListServices_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_ListServices_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3436,12 +3512,13 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Directory_GetOrganizationService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_GetOrganizationService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3456,12 +3533,13 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Directory_RequestAccessToService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_RequestAccessToService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3476,12 +3554,13 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetTermsOfService", runtime.WithHTTPPathPattern("/api/v1/directory/terms-of-service"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetTermsOfService", runtime.WithHTTPPathPattern("/api/v1/directory/terms-of-service"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Directory_GetTermsOfService_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Directory_GetTermsOfService_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -3557,12 +3636,13 @@ func RegisterTXLogHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/nlx.management.TXLog/ListRecords", runtime.WithHTTPPathPattern("/api/v1/txlog/records"))
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.TXLog/ListRecords", runtime.WithHTTPPathPattern("/api/v1/txlog/records"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TXLog_ListRecords_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TXLog_ListRecords_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
