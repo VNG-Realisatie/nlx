@@ -34,6 +34,10 @@ test('Request Access Details', () => {
     },
   })
 
+  expect(screen.queryAllByText(/One time costs/)).toHaveLength(1)
+  expect(screen.queryAllByText(/Monthly costs/)).toHaveLength(1)
+  expect(screen.queryAllByText(/Cost per request/)).toHaveLength(1)
+
   expect(container).toHaveTextContent(/One time costs€ 5,00/)
   expect(container).toHaveTextContent(/Monthly costs€ 10,00/)
   expect(container).toHaveTextContent(/Cost per request€ 250,00/)

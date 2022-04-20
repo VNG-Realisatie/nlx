@@ -52,15 +52,6 @@ const RequestAccessDetails = ({
           </>
         ) : null}
 
-        {service.oneTimeCosts ? (
-          <>
-            <SectionHeader withoutIcon>{t('One time costs')}</SectionHeader>
-            <SectionContent>
-              {costFormatter.format(service.oneTimeCosts)}
-            </SectionContent>
-          </>
-        ) : null}
-
         {service.monthlyCosts ? (
           <>
             <SectionHeader withoutIcon>{t('Monthly costs')}</SectionHeader>
