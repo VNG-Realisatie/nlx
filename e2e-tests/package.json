@@ -8,7 +8,7 @@
     },
     "devDependencies": {
         "@axe-core/webdriverjs": "4.4.2",
-        "@cucumber/cucumber": "8.0.0",
+        "@cucumber/cucumber": "8.1.1",
         "@cucumber/html-formatter": "19.1.0",
         "@types/expect": "24.3.0",
         "@types/node": "17.0.9",
