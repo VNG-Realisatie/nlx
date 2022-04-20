@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/inway/plugins"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 

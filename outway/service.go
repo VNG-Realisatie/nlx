@@ -17,9 +17,9 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/net/http2"
 
+	"go.nlx.io/nlx/common/httperrors"
 	common_tls "go.nlx.io/nlx/common/tls"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 var errNoInwaysAvailable = errors.New("no inways available")

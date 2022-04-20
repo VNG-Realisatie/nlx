@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"go.nlx.io/nlx/outway/pkg/httperrors"
+	"go.nlx.io/nlx/common/httperrors"
 )
 
 func WriteError(w http.ResponseWriter, message string) {

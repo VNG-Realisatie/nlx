@@ -11,7 +11,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
+
+	"go.nlx.io/nlx/common/httperrors"
 )
 
 //nolint:funlen // this is a test

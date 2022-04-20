@@ -18,9 +18,9 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/management-api/api"
 	mock "go.nlx.io/nlx/management-api/api/mock"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 var testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +

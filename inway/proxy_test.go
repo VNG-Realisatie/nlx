@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/inway/plugins"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 func TestInwayProxy(t *testing.T) {

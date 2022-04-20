@@ -23,11 +23,11 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/transactionlog"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	mock "go.nlx.io/nlx/outway/mock"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 	"go.nlx.io/nlx/outway/plugins"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )

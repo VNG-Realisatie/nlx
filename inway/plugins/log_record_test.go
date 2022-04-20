@@ -13,10 +13,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/common/transactionlog"
 	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	"go.nlx.io/nlx/inway/plugins"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
 
 //nolint:funlen // this is a test
