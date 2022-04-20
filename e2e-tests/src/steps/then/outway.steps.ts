@@ -37,7 +37,7 @@ Then(
     const httpResponse = await this.scenarioContext.organizations[orgName]
       .httpResponse;
 
-    assert.equal(httpResponse?.status, 500);
+    assert.equal(httpResponse?.status, 540);
 
     const responseText = await httpResponse?.text();
     const containsRevokedText = responseText.includes("order is revoked");
@@ -58,7 +58,7 @@ Then(
     const httpResponse = await this.scenarioContext.organizations[orgName]
       .httpResponse;
 
-    assert.equal(httpResponse?.status, 403);
+    assert.equal(httpResponse?.status, 540);
 
     const responseText = await httpResponse?.text();
     const containsRevokedText = responseText.includes(
@@ -80,7 +80,7 @@ const isUnauthorizedRequest = async (
   init?: RequestInit
 ): Promise<boolean> => {
   const result = await fetch(input, init);
-  return Promise.resolve(result.status === 403);
+  return Promise.resolve(result.status === 540);
 };
 
 Then(
@@ -107,7 +107,7 @@ Then(
     });
 
     const httpResponse = await fetch(url);
-    assert.equal(httpResponse?.status, 403);
+    assert.equal(httpResponse?.status, 540);
 
     const responseText = await httpResponse?.text();
     const containsRevokedText = responseText.includes(

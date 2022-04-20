@@ -7,12 +7,14 @@ import fetch from "cross-fetch";
 import pWaitFor from "p-wait-for";
 const debug = logger("e2e-tests:outway");
 
-const isNotBadRequest = async (
+const isServiceKnownInServiceListOfOutway = async (
   input: RequestInfo,
   init?: RequestInit
 ): Promise<boolean> => {
   const result = await fetch(input, init);
-  return Promise.resolve(result.status !== 400);
+  const responseText = await result.text()
+  const responseContainsInvalidService = responseText.includes('nlx-outway: invalid serialNumber/service path: valid services')
+  return Promise.resolve(!responseContainsInvalidService)
 };
 
 When(
@@ -35,7 +37,7 @@ When(
     const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     // wait until the Outway has had the time to update its internal services list
-    await pWaitFor.default(async () => await isNotBadRequest(url), {
+    await pWaitFor.default(async () => await isServiceKnownInServiceListOfOutway(url), {
       interval: 1000,
       timeout: 1000 * 35,
     });
@@ -82,9 +84,7 @@ When(
     // wait until the Outway has had the time to update its internal services list
     await pWaitFor.default(
       async () =>
-        await isNotBadRequest(url, {
-          headers,
-        }),
+        await isServiceKnownInServiceListOfOutway(url),
       {
         interval: 1000,
         timeout: 1000 * 35,
