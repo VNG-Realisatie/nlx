@@ -12,16 +12,13 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/common/delegation"
+	"go.nlx.io/nlx/common/grpcerrors"
 	"go.nlx.io/nlx/management-api/api"
 	outway_http "go.nlx.io/nlx/outway/http"
+	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
-
-const errMessageOrderRevoked = "order is revoked"
-const errMessageOrderNotFound = "order not found"
 
 type delegationError struct {
 	source  error
@@ -84,22 +81,15 @@ func (plugin *DelegationPlugin) requestClaim(orderOrganizationSerialNumber, orde
 		ServiceName:                     serviceName,
 	})
 	if err != nil {
-		st, ok := status.FromError(err)
-		if ok {
-			if st.Message() == errMessageOrderNotFound {
-				return nil, "", fmt.Errorf("order does not exist for organization")
-			}
-
-			if st.Message() == errMessageOrderRevoked {
-				return nil, "", fmt.Errorf("order is revoked")
-			}
-
-			if st.Code() == codes.PermissionDenied {
-				return nil, "", fmt.Errorf("order can not be used")
-			}
+		if grpcerrors.Equal(err, api.ErrorReason_ORDER_NOT_FOUND) {
+			return nil, "", fmt.Errorf("order does not exist for organization")
 		}
 
-		return nil, "", newDelegationError("failed to retrieve claim", err)
+		if grpcerrors.Equal(err, api.ErrorReason_ORDER_REVOKED) {
+			return nil, "", fmt.Errorf("order is revoked")
+		}
+
+		return nil, "", httperrors.NewFromGRPCError(err)
 	}
 
 	parser := &jwt.Parser{}

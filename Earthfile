@@ -16,6 +16,7 @@ proto:
     BUILD +proto-txlog-api
     BUILD +proto-inway-test
     BUILD +proto-outway
+    BUILD +proto-grpc-errors
 
 mocks:
     BUILD +mocks-management-api
@@ -64,7 +65,7 @@ proto-management-api:
             --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist \
-            ./management.proto && \
+            ./*.proto && \
         cd external && \
         protoc \
             -I. \
@@ -75,7 +76,7 @@ proto-management-api:
             --go-grpc_out=/dist/external --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist/external --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist/external \
-            ./external.proto
+            ./*.proto
 
     RUN  npx @openapitools/openapi-generator-cli generate -i /dist/management.swagger.json -g openapi --additional-properties=outputFileName=management.swagger.json -o /openapi
     RUN  npx @openapitools/openapi-generator-cli generate -i /dist/external/external.swagger.json -g openapi --additional-properties=outputFileName=external.swagger.json -o /openapi
@@ -147,6 +148,25 @@ proto-outway:
     RUN goimports -w -local "go.nlx.io" /dist/
 
     SAVE ARTIFACT /dist/*.* AS LOCAL ./outway/api/
+
+proto-grpc-errors:
+    FROM +deps
+    COPY ./common/grpcerrors/errors/*.proto /src/
+
+    RUN mkdir -p /dist/external || true && \
+        protoc \
+            -I. \
+            -I/protobuf/include \
+            -I/protobuf/googleapis \
+            --go_out=/dist --go_opt=paths=source_relative \
+            --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
+            --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
+            --openapiv2_out=/dist \
+            ./*.proto
+
+    RUN goimports -w -local "go.nlx.io" /dist/
+
+    SAVE ARTIFACT /dist/*.* AS LOCAL ./common/grpcerrors/errors/
 
 mocks-management-api:
     FROM +deps

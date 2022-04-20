@@ -21,6 +21,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
 	outwayapi "go.nlx.io/nlx/outway/api"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
@@ -40,7 +41,7 @@ func TestRequestClaim(t *testing.T) {
 			setup: func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context {
 				return context.Background()
 			},
-			wantErr: status.Error(codes.Internal, "missing metadata from the management proxy"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_providing_an_empty_order_reference": {
 			setup: func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context {
@@ -50,7 +51,7 @@ func TestRequestClaim(t *testing.T) {
 				OrderReference: "",
 				ServiceName:    "service-name",
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an order reference must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_providing_an_empty_organization_serial_number": {
 			setup: func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context {
@@ -60,7 +61,7 @@ func TestRequestClaim(t *testing.T) {
 				OrderReference: "order-reference",
 				ServiceName:    "service-name",
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an organization serial number must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_providing_an_empty_service_name": {
 			setup: func(*testing.T, *common_tls.CertificateBundle, serviceMocks) context.Context {
@@ -70,7 +71,7 @@ func TestRequestClaim(t *testing.T) {
 				OrderReference: "order-reference",
 				ServiceName:    "",
 			},
-			wantErr: status.Error(codes.InvalidArgument, "a service name must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_requester_is_not_delegatee": {
 			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -93,7 +94,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.PermissionDenied, "order with reference 'order-reference' does not exist for your organization"),
+			wantErr: grpcerrors.New(codes.PermissionDenied, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG, "order does not exist for your organization", nil),
 		},
 		"when_public_key_is_invalid": {
 			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -128,7 +129,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.Internal, "invalid public key format"),
+			wantErr: grpcerrors.NewInternal("invalid public key format", nil),
 		},
 		"when_order_is revoked": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -169,7 +170,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.Unauthenticated, "order is revoked"),
+			wantErr: grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_REVOKED, "order is revoked", nil),
 		},
 		"when_order_is_no_longer_valid": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -206,7 +207,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.Unauthenticated, "order is no longer valid"),
+			wantErr: grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_EXPIRED, "order is expired", nil),
 		},
 		"when_service_not_found_in_access_proofs": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -237,7 +238,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "non-existing-service",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.NotFound, "order with reference 'order-reference' and organization serial number '00000000000000000002' and service name 'non-existing-service' not found"),
+			wantErr: grpcerrors.New(codes.NotFound, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE, "service not found in order", nil),
 		},
 		"when_outway_not_found": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -286,7 +287,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.Internal, "could not find outway"),
+			wantErr: grpcerrors.NewInternal("could not find outway", nil),
 		},
 		"when_outway_sign_call_fails": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -354,7 +355,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: status.Error(codes.Internal, "could not sign order claim via outway"),
+			wantErr: grpcerrors.NewInternal("could not sign order claim via outway", nil),
 		},
 		// nolint:dupl // this is a test
 		"happy_flow_with_short_valid_until": {
@@ -514,7 +515,11 @@ func TestRequestClaim(t *testing.T) {
 
 			actual, err := service.RequestClaim(ctx, tt.request)
 
-			assert.Equal(t, tt.wantErr, err)
+			if tt.wantErr != nil {
+				assert.Error(t, err)
+				assert.Equal(t, tt.wantErr.Error(), err.Error())
+			}
+
 			assert.Equal(t, tt.want, actual)
 		})
 	}

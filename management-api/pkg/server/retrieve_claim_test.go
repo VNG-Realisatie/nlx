@@ -16,6 +16,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
@@ -35,7 +36,7 @@ func TestRetrieveClaim(t *testing.T) {
 			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an order reference must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_providing_an_empty_order_organization_name": {
 			request: &api.RetrieveClaimForOrderRequest{
@@ -46,7 +47,7 @@ func TestRetrieveClaim(t *testing.T) {
 			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
-			wantErr: status.Error(codes.InvalidArgument, "an organization serial number of the order must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_providing_an_empty_service_name": {
 			request: &api.RetrieveClaimForOrderRequest{
@@ -57,7 +58,7 @@ func TestRetrieveClaim(t *testing.T) {
 			setup: func(*testing.T, *server.ManagementService, serviceMocks) context.Context {
 				return context.Background()
 			},
-			wantErr: status.Error(codes.InvalidArgument, "a service name must be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "request has invalid fields"),
 		},
 		"when_getting_the_organization_inway_proxy_address_fails": {
 			request: &api.RetrieveClaimForOrderRequest{
@@ -73,7 +74,7 @@ func TestRetrieveClaim(t *testing.T) {
 
 				return setProxyMetadata(t, context.Background())
 			},
-			wantErr: status.Error(codes.Internal, "unable to retrieve claim"),
+			wantErr: grpcerrors.NewInternal("unable to retrieve claim", nil),
 		},
 		// nolint dupl: linter is unable to detect difference in error message
 		"when_creating_the_management_client_fails": {
@@ -100,7 +101,7 @@ func TestRetrieveClaim(t *testing.T) {
 
 				return context.Background()
 			},
-			wantErr: status.Error(codes.Internal, "unable to retrieve claim"),
+			wantErr: grpcerrors.NewInternal("unable to retrieve claim", nil),
 		},
 		// nolint dupl: linter is unable to detect difference in error message
 		"when_order_is_revoked": {
@@ -123,11 +124,11 @@ func TestRetrieveClaim(t *testing.T) {
 						ServiceOrganizationSerialNumber: "00000000000000000002",
 						ServiceName:                     "service-name",
 					}).
-					Return(nil, status.Errorf(codes.Unauthenticated, "order is revoked"))
+					Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_REVOKED, "order is revoked", nil))
 
 				return context.Background()
 			},
-			wantErr: status.Error(codes.Unauthenticated, "order is revoked"),
+			wantErr: grpcerrors.New(codes.Unauthenticated, api.ErrorReason_ORDER_REVOKED, "order is revoked", nil),
 		},
 		"when_outway_is_unable_to_sign_claim": {
 			request: &api.RetrieveClaimForOrderRequest{
@@ -153,7 +154,7 @@ func TestRetrieveClaim(t *testing.T) {
 
 				return context.Background()
 			},
-			wantErr: status.Error(codes.Internal, "outway of delegator is unable to sign claim"),
+			wantErr: grpcerrors.NewInternal("outway of delegator is unable to sign claim", nil),
 		},
 	}
 
@@ -165,8 +166,11 @@ func TestRetrieveClaim(t *testing.T) {
 			ctx := tt.setup(t, service, mocks)
 
 			_, err := service.RetrieveClaimForOrder(ctx, tt.request)
-			assert.Error(t, err)
-			assert.ErrorIs(t, err, tt.wantErr)
+
+			if tt.wantErr != nil {
+				assert.Error(t, err)
+				assert.Equal(t, tt.wantErr.Error(), err.Error())
+			}
 		})
 	}
 }

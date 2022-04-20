@@ -5,6 +5,8 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
+
+	common_is "go.nlx.io/nlx/common/validation/is"
 )
 
 // nolint:gocritic // this is a valid regex pattern
@@ -33,23 +35,33 @@ func (req *RegisterOutwayRequest) Validate() error {
 }
 
 // Validate the service when creating a new one, check if all fields are valid
-func (s *CreateServiceRequest) Validate() error {
+func (req *CreateServiceRequest) Validate() error {
 	return validation.ValidateStruct(
-		s,
-		validation.Field(&s.Name, validation.Required, validation.Match(nameRegex)),
-		validation.Field(&s.EndpointURL, validation.Required, is.URL),
-		validation.Field(&s.DocumentationURL, is.URL),
-		validation.Field(&s.ApiSpecificationURL, is.URL),
+		req,
+		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
+		validation.Field(&req.EndpointURL, validation.Required, is.URL),
+		validation.Field(&req.DocumentationURL, is.URL),
+		validation.Field(&req.ApiSpecificationURL, is.URL),
 	)
 }
 
 // Validate the service when updating it, check if all fields are valid
-func (s *UpdateServiceRequest) Validate() error {
+func (req *UpdateServiceRequest) Validate() error {
 	return validation.ValidateStruct(
-		s,
-		validation.Field(&s.Name, validation.Required, validation.Match(nameRegex)),
-		validation.Field(&s.EndpointURL, validation.Required, is.URL),
-		validation.Field(&s.DocumentationURL, is.URL),
-		validation.Field(&s.ApiSpecificationURL, is.URL),
+		req,
+		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
+		validation.Field(&req.EndpointURL, validation.Required, is.URL),
+		validation.Field(&req.DocumentationURL, is.URL),
+		validation.Field(&req.ApiSpecificationURL, is.URL),
+	)
+}
+
+func (req *RetrieveClaimForOrderRequest) Validate() error {
+	return validation.ValidateStruct(
+		req,
+		validation.Field(&req.OrderReference, validation.Required),
+		validation.Field(&req.OrderOrganizationSerialNumber, validation.Required, common_is.SerialNumber),
+		validation.Field(&req.ServiceName, validation.Required),
+		validation.Field(&req.ServiceOrganizationSerialNumber, validation.Required, common_is.SerialNumber),
 	)
 }

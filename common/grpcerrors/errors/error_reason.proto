@@ -1,0 +1,19 @@
+// Copyright © VNG Realisatie 2021
+// Licensed under the EUPL
+
+syntax = "proto3";
+
+package nlx.common.grpcerrors.errors;
+
+option go_package = "go.nlx.io/nlx/common/grpcerrors/errors";
+
+enum ErrorReason {
+    // Do not use this default value.
+    ERROR_REASON_UNSPECIFIED = 0;
+
+    // Internal server error
+    INTERNAL_SERVER_ERROR = 1;
+
+    // One or multiple fields in the request are not valid, see BadRequest field for all field errors
+    INVALID_REQUEST = 2;
+}

@@ -56,7 +56,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"error_while_retrieving_claim_returns_an_error": {
 			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: failed to retrieve claim: something went wrong\n",
+			wantMessage:        "nlx-outway: failed to request claim from 00000000000000000001: something went wrong\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -118,7 +118,7 @@ func TestDelegationPlugin(t *testing.T) {
 		"order_has_been_revoked": {
 			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: failed to request claim from 00000000000000000001: order is revoked\n",
+			wantMessage:        "nlx-outway: failed to request claim from 00000000000000000001: rpc error: code = Unauthenticated desc = order is revoked\n",
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
