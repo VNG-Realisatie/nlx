@@ -8,7 +8,7 @@ var config = require(config_file).config;
 var command = "/usr/bin/env";
 
 process.argv[0] = "node";
-process.argv[1] = "./node_modules/@cucumber/cucumber/bin/cucumber-js";
+process.argv[1] = "./node_modules/@cucumber/cucumber/bin/cucumber";
 process.argv[2] = "features/**/*.feature";
 process.argv[3] = "--parallel";
 process.argv[4] = `${process.env.E2E_PARALLEL_COUNT || 8}`;
