@@ -84,6 +84,35 @@ func getReceivedAccessRequests() map[string]testCase {
 					Return(nil)
 			},
 		},
+		"happy_flow_when_revoked": {
+			request: accessRequest,
+			setupMocks: func(mocks schedulerMocks) {
+
+				mocks.directory.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
+					Return("hostname:7200", nil)
+
+				mocks.management.
+					EXPECT().
+					GetAccessRequestState(gomock.Any(), &external.GetAccessRequestStateRequest{
+						ServiceName: "service",
+					}, gomock.Any()).
+					Return(&external.GetAccessRequestStateResponse{
+						State: api.AccessRequestState_REVOKED,
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestApproved, uint(0), nil, gomock.Any()).
+					Return(nil)
+
+				mocks.management.
+					EXPECT().
+					Close().
+					Return(nil)
+			},
+		},
 		"happy_flow": {
 			request: accessRequest,
 			setupMocks: func(mocks schedulerMocks) {

@@ -322,6 +322,7 @@ enum AccessRequestState {
   RECEIVED = 3;
   APPROVED = 4;
   REJECTED = 5;
+  REVOKED = 6;
 }
 
 enum ErrorCode {

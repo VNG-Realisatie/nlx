@@ -293,6 +293,12 @@ func convertAccessRequestState(state api.AccessRequestState) (database.OutgoingA
 		return database.OutgoingAccessRequestReceived, nil
 	case api.AccessRequestState_FAILED:
 		return database.OutgoingAccessRequestFailed, nil
+		/*
+			If the returned state is revoked the outgoing access request state needs to be set to approved because it means the access proof still needs to be synced.
+			This can happen when an access request is rejected immediately after being approved.
+		*/
+	case api.AccessRequestState_REVOKED:
+		return database.OutgoingAccessRequestApproved, nil
 	default:
 		return "", fmt.Errorf("invalid state for outgoing access request: %s", state)
 	}

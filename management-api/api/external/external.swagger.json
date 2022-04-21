@@ -86,7 +86,7 @@
       },
       "managementAccessRequestState" : {
         "default" : "UNSPECIFIED",
-        "enum" : [ "UNSPECIFIED", "FAILED", "CREATED", "RECEIVED", "APPROVED", "REJECTED" ],
+        "enum" : [ "UNSPECIFIED", "FAILED", "CREATED", "RECEIVED", "APPROVED", "REJECTED", "REVOKED" ],
         "type" : "string"
       },
       "managementIncomingOrder" : {
