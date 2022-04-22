@@ -27,7 +27,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	github.com/huandu/xstrings v1.3.2
-	github.com/jackc/pgtype v1.10.0
+	github.com/jackc/pgtype v1.11.0
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/jpillora/backoff v1.0.0
