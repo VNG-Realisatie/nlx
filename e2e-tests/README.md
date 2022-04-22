@@ -44,6 +44,7 @@ npm test
 
 The following tags can be used:
 
+- `@only`: run a single Feature / Scenario (using `npm run test:single)
 - `@ignore`: this Feature / Scenario won't be executed
 - `@execution:serial`: this Feature / Scenario will run serially
 - `@unauthenticated`: logout for every organization before executing the Feature / Scenario. Should only be used for serial tests.
