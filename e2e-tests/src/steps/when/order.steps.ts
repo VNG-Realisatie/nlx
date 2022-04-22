@@ -97,3 +97,37 @@ When(
     );
   }
 );
+
+When(
+  "{string} revokes the order {string} for {string}",
+  async function (
+    this: CustomWorld,
+    delegatorOrgName: string,
+    orderReference: string,
+    delegateeOrgName: string
+  ) {
+    orderReference = `${orderReference}-${this.id}`;
+
+    const { driver } = this;
+
+    const delegator = getOrgByName(delegatorOrgName);
+    const delegatee = getOrgByName(delegateeOrgName);
+
+    await driver.get(`${delegator.management.url}/orders/outgoing/${delegatee.serialNumber}/${orderReference}`);
+
+    await driver.findElement(
+      By.xpath("//button[text()='Intrekken']")
+    ).click()
+
+    const buttonRevoke = await driver.findElement(
+      By.xpath(
+        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Intrekken']"
+      )
+    );
+    await buttonRevoke.click();
+
+    await driver
+      .findElement(By.xpath("//*[text()='Opdracht is ingetrokken']"));
+  }
+);
+
