@@ -1,3 +1,24 @@
+# [0.128.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.127.0...v0.128.0) (2022-04-25)
+
+
+### Bug Fixes
+
+* **management:** handle access request being revoked before access proof is synced ([1850f9e](https://gitlab.com/commonground/nlx/nlx/commit/1850f9ed30cc5346e43f9e8e2e264e4d26200606)), closes [nlx#1526](https://gitlab.com/nlx/issues/1526)
+* **management:** remove duplicate 'One time cost' field from the request access dialog ([78ce73d](https://gitlab.com/commonground/nlx/nlx/commit/78ce73de0af232c450461e963d869c2e8151fc01)), closes [nlx#1525](https://gitlab.com/nlx/issues/1525)
+
+
+### Features
+
+* **inway:** created separation between nlx errors and other errors ([8c3b406](https://gitlab.com/commonground/nlx/nlx/commit/8c3b40667b2c3045b2b51d5f6cc4b6f9f047051d)), closes [nlx#1521](https://gitlab.com/nlx/issues/1521)
+* **inway:** enable specifying the Management API Proxy address ([5ba951c](https://gitlab.com/commonground/nlx/nlx/commit/5ba951cc92f4c80db37ff7b16981ffb5a56a5b6c)), closes [nlx#1503](https://gitlab.com/nlx/issues/1503)
+* **management:** auto sync organization email address to directory ([d38f57f](https://gitlab.com/commonground/nlx/nlx/commit/d38f57fd56eb264e0c1d73f8cb52f4adec17ef37)), closes [#1444](https://gitlab.com/commonground/nlx/nlx/issues/1444)
+* **outway:** return 540 as HTTP status code for all NLX related errors ([7dbfbe9](https://gitlab.com/commonground/nlx/nlx/commit/7dbfbe97864ccb42a721cb48747941641a8f4f4a)), closes [nlx#1521](https://gitlab.com/nlx/issues/1521)
+
+
+### Reverts
+
+* remove authorization server from local setup ([ca81620](https://gitlab.com/commonground/nlx/nlx/commit/ca8162064575d36c60f5093053ba0859e2d53601)), closes [nlx#1527](https://gitlab.com/nlx/issues/1527) [nlx#1466](https://gitlab.com/nlx/issues/1466)
+
 # [0.127.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.126.0...v0.127.0) (2022-04-04)
 
 
