@@ -36,7 +36,7 @@ services:
       - "443:443"
       - "8443:8443"
 
-  auth-org-b:
+  auth-inway-org-b:
       image: openpolicyagent/opa:0.40.0
       ports:
         - 127.0.0.1:8181:8181
@@ -62,7 +62,7 @@ services:
         - ./pki/internal/organization-b:/pki/internal/organization-b
       restart: on-failure
 
-  auth-org-c:
+  auth-outway-org-c:
     image: openpolicyagent/opa:0.40.0
     ports:
       - 127.0.0.1:8182:8181
