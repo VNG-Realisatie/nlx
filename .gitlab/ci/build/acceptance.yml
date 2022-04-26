@@ -28,7 +28,6 @@
       --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
       --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
       --build-arg GIT_TAG_NAME=${COMPONENT_VERSION}
-      -t ${IMG_GIT_TAG}
       -t ${IMG_LATEST}
       -t ${IMG_REF_SLUG}
       --cache-from ${REVIEW_REGISTRY}/nlxio/${IMAGE}:review-latest
