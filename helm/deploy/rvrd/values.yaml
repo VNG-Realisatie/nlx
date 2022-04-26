@@ -279,6 +279,12 @@ ca:
       commonName: nlxctl
       issuerRef:
         name: rvrd
+    txlog-api:
+      commonName: rvrd-nlx-txlog-api
+      dnsNames:
+        - rvrd-nlx-txlog-api
+      issuerRef:
+        name: rvrd
 
 ################
 ## Sub-charts ##
@@ -291,6 +297,7 @@ nlx-management:
       discoveryURL: http://dex.rvrd.nlx.minikube
       redirectURL: http://nlx-management.rvrd.nlx.minikube/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
+    txlogAPIAddress: rvrd-nlx-txlog-api:8443
   tls:
     organization:
       existingSecret: rvrd-organization-tls
@@ -374,3 +381,14 @@ nlx-inway:
       existingSecret: rvrd-inway-tls
   service:
     type: ClusterIP
+
+nlx-txlog-api:
+  txlogdb:
+    hostname: rvrd-postgresql
+    database: "rvrd-transaction-log"
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  tls:
+    existingSecret: rvrd-txlog-api-tls
