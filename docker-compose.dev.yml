@@ -57,8 +57,8 @@ services:
         - /rego
         - /data
       volumes:
-        - ./auth-opa/rego:/rego
-        - ./auth-opa/data:/data
+        - ./auth-opa/inway/rego:/rego
+        - ./auth-opa/inway/data:/data
         - ./pki/internal/organization-b:/pki/internal/organization-b
       restart: on-failure
 
@@ -83,8 +83,8 @@ services:
       - /rego
       - /data
     volumes:
-      - ./auth-opa/rego:/rego
-      - ./auth-opa/data:/data
+      - ./auth-opa/outway/rego:/rego
+      - ./auth-opa/outway/data:/data
       - ./pki/internal/organization-c:/pki/internal/organization-c
     restart: on-failure
 
