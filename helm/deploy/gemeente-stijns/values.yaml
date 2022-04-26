@@ -183,7 +183,6 @@ ca:
       commonName: gemeente-stijns-nlx-inway
       dnsNames:
         - gemeente-stijns-nlx-inway
-        - gemeente-stijns-auth-service
       issuerRef:
         name: shared
     organization-outway-2:

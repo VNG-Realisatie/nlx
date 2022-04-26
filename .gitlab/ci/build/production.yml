@@ -55,13 +55,6 @@ Trigger charts build:
     - cg
     - shell
 
-Build production auth-service:
-  extends: .build-production-base
-  variables:
-    IMAGE: auth-service
-    CONTEXT: .
-    DOCKERFILE: auth-service/Dockerfile
-
 Build production ca-certportal:
   extends: .build-production-base
   variables:

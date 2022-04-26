@@ -43,19 +43,6 @@
     - docker
     - linux
 
-Build acceptance auth-service:
-  extends: .build-acceptance-base
-  variables:
-    IMAGE: auth-service
-    CONTEXT: .
-    DOCKERFILE: auth-service/Dockerfile
-  # Only create artifacts once because these are the same for all build jobs
-  artifacts:
-    paths:
-      - ci_build_image_registry.txt
-      - ci_build_image_tag.txt
-      - ci_build_image_version.txt
-
 Build acceptance ca-certportal:
   extends: .build-acceptance-base
   variables:

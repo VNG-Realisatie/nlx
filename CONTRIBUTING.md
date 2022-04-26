@@ -50,7 +50,6 @@ The type must be one of the following:
 The available scopes are:
 
 - apps-overview
-- auth-service
 - ca-certportal
 - ca-cfssl-unsafe
 - common
