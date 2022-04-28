@@ -1,4 +1,4 @@
-@management @accessibility
+@management @accessibility @ignore
 Feature: Accessibility
 
     Scenario: 404 page
