@@ -53,6 +53,27 @@ Then(
 );
 
 Then(
+  "{string} receives a delegator does not have access response",
+  async function (this: CustomWorld, orgName: string) {
+    const httpResponse = await this.scenarioContext.organizations[orgName]
+      .httpResponse;
+
+    assert.equal(httpResponse?.status, 540);
+
+    const responseText = await httpResponse?.text();
+    const containsDelegatorNoAccessText = responseText.includes("nlx-inway: no access. delegator does not have access to the service for the public key in the claim");
+
+    if (!containsDelegatorNoAccessText) {
+      throw new Error(
+        `the response of the HTTP request seems not to be about a delegator without access: ${responseText}`
+      );
+    }
+
+    assert.equal(containsDelegatorNoAccessText, true);
+  }
+);
+
+Then(
   "{string} receives an unauthorized response",
   async function (this: CustomWorld, orgName: string) {
     const httpResponse = await this.scenarioContext.organizations[orgName]

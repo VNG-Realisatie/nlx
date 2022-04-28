@@ -15,11 +15,10 @@ const isInwayAddressInDirectory = async (
   const res = await fetch(url);
 
   assert.equal(res.status >= 400, false);
-
-  const inway = await res.json();
+  const response = await res.json();
   if (
-    inway.address === undefined ||
-    inway.address !== org.defaultInway.managementAPIProxyAddress
+    response.address === undefined ||
+    response.address !== org.defaultInway.managementAPIProxyAddress
   ) {
     return Promise.resolve(false);
   }

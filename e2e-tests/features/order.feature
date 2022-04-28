@@ -27,6 +27,16 @@ Feature: Order
         When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basisregister-fictieve-kentekens" of "RvRD" via the order of "Gemeente Stijns" with reference "order-ref-1"
         Then "Vergunningsoftware BV" receives an order revoked response
 
+    Scenario: Use an order to access a service when access of delegator is revoked
+        Given "Vergunningsoftware BV" is up and running
+            And "RvRD" is up and running
+            And "Gemeente Stijns" is up and running
+            And the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" has access to "basisregister-fictieve-kentekens" of "RvRD"
+            And "Vergunningsoftware BV" has an active order for Outway "vergunningsoftware-bv-nlx-outway" with reference "order-ref-1" from "Gemeente Stijns" for service "basisregister-fictieve-kentekens" of "RvRD" via Outway "gemeente-stijns-nlx-outway"
+            And "RvRD" revokes access of Outway "gemeente-stijns-nlx-outway" from "Gemeente Stijns" to "basisregister-fictieve-kentekens"
+        When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basisregister-fictieve-kentekens" of "RvRD" via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives a delegator does not have access response
+
     Scenario: Revoke an order
         Given "Gemeente Stijns" is up and running
             And "RvRD" is up and running

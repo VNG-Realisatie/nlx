@@ -53,7 +53,7 @@ export const organizations: Organizations = {
       name: process.env.E2E_GEMEENTE_STIJNS_DEFAULT_INWAY_NAME || "Inway-01",
       managementAPIProxyAddress:
         process.env.E2E_GEMEENTE_STIJNS_DEFAULT_MANAGEMENT_API_PROXY_ADDRESS ||
-        "inway.organization-a.nlx.local:7914",
+        "management-proxy.organization-a.nlx.local:8443",
     },
     outways: {
       [process.env.E2E_GEMEENTE_STIJNS_OUTWAY_1_NAME ||
@@ -100,7 +100,7 @@ export const organizations: Organizations = {
       name: process.env.E2E_RVRD_DEFAULT_INWAY_NAME || "Inway-01",
       managementAPIProxyAddress:
         process.env.E2E_RVRD_DEFAULT_MANAGEMENT_API_PROXY_ADDRESS ||
-        "inway.organization-b.nlx.local:7926",
+        "management-proxy.organization-b.nlx.local:8443",
     },
     outways: {},
     management: {
