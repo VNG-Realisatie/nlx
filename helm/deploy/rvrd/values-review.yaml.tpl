@@ -5,6 +5,9 @@
 postgresql:
   storageSize: 256Mi
 
+opa:
+  enabled: true
+
 ################
 ## Sub-charts ##
 ################

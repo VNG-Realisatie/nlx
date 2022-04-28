@@ -63,6 +63,17 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
+Return the name of the opa image
+*/}}
+{{- define "rvrd.opa.image" -}}
+{{- $registryName := default .Values.opa.image.registry .Values.global.imageRegistry -}}
+{{- $repositoryName := .Values.opa.image.repository -}}
+{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.opa.image.tag .Values.global.imageTag) -}}
+
+{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+
+{{/*
 Return the name of the nlxctl image
 */}}
 {{- define "rvrd.nlxctl.image" -}}

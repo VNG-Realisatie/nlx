@@ -85,6 +85,18 @@ Return the image name for transaction log database job
 {{- end -}}
 
 {{/*
+Return the name of the opa image
+*/}}
+{{- define "vergunningsoftware-bv.opa.image" -}}
+{{- $registryName := default .Values.opa.image.registry .Values.global.imageRegistry -}}
+{{- $repositoryName := .Values.opa.image.repository -}}
+{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.opa.image.tag .Values.global.imageTag) -}}
+
+{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+
+
+{{/*
 Return the secret name of the transaction log database
 */}}
 {{- define "vergunningsoftware-bv.transactionLog.secret" -}}

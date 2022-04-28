@@ -50,6 +50,9 @@ outway:
     tls:
       secretName: vgs-bv-nlx-outway-ingress-tls
 
+opa:
+  enabled: true
+
 ################
 ## Sub-charts ##
 ################

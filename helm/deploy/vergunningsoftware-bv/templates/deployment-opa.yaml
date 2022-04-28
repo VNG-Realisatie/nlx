@@ -1,0 +1,57 @@
+{{- if .Values.opa.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vergunningsoftware-bv.fullname" . }}-opa
+  labels:
+    {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "vergunningsoftware-bv.selectorLabels" . | nindent 6 }}
+      opa-auth-service: opa-auth-service
+  template:
+    metadata:
+      labels:
+        {{- include "vergunningsoftware-bv.selectorLabels" . | nindent 8 }}
+        opa-auth-service: opa-auth-service
+    spec:
+      containers:
+        - name: opa
+          image:  {{ template "vergunningsoftware-bv.opa.image" . }}
+          imagePullPolicy: {{ .Values.opa.image.pullPolicy }}
+          args: [
+            "run",
+            "--log-level",
+            "debug",
+            "-w",
+            "--server",
+            "--addr",
+            ":8181",
+            "--tls-ca-cert-file",
+            "/certificate/ca.crt",
+            "--tls-cert-file",
+            "/certificate/tls.crt",
+            "--tls-private-key-file",
+            "/certificate/tls.key",
+            "/rego",
+            "/data"]
+          ports:
+            - name: https
+              containerPort: 8181
+              protocol: TCP
+          volumeMounts:
+            - name: certificate
+              mountPath: /certificate
+      volumes:
+        - name: certificate
+          secret:
+            secretName: {{ .Values.opa.tls.existingSecret }}
+            defaultMode: 0640
+{{- end }}

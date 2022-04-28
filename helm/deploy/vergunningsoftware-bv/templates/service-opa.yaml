@@ -1,0 +1,18 @@
+{{- if .Values.opa.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vergunningsoftware-bv.fullname" . }}-opa
+  labels:
+    {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "vergunningsoftware-bv.selectorLabels" . | nindent 4 }}
+    opa-auth-service: opa-auth-service
+  type: ClusterIP
+  ports:
+    - name: https
+      port: 8181
+      targetPort: 8181
+      protocol: TCP
+{{- end }}

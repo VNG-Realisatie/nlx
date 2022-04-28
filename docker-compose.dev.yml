@@ -37,9 +37,11 @@ services:
       - "8443:8443"
 
   auth-inway-org-b:
-      image: openpolicyagent/opa:0.40.0
+      build:
+        context: ./auth-opa
+        dockerfile: Dockerfile
       ports:
-        - 127.0.0.1:8181:8181
+        - "127.0.0.1:8181:8181"
       command:
         - run
         - --log-level
@@ -49,7 +51,7 @@ services:
         - --addr
         - :8181
         - --tls-ca-cert-file
-        - /pki/internal/organization-b/ca/root.pem
+        - /pki/internal/organization-b/ca/intermediate.pem
         - --tls-cert-file
         - /pki/internal/organization-b/certs/auth/cert.pem
         - --tls-private-key-file
@@ -57,15 +59,15 @@ services:
         - /rego
         - /data
       volumes:
-        - ./auth-opa/inway/rego:/rego
-        - ./auth-opa/inway/data:/data
         - ./pki/internal/organization-b:/pki/internal/organization-b
       restart: on-failure
 
   auth-outway-org-c:
-    image: openpolicyagent/opa:0.40.0
+    build:
+      context: ./auth-opa
+      dockerfile: Dockerfile
     ports:
-      - 127.0.0.1:8182:8181
+      - "127.0.0.1:8182:8181"
     command:
       - run
       - --log-level
@@ -75,7 +77,7 @@ services:
       - --addr
       - :8181
       - --tls-ca-cert-file
-      - /pki/internal/organization-c/ca/root.pem
+      - /pki/internal/organization-c/ca/intermediate.pem
       - --tls-cert-file
       - /pki/internal/organization-c/certs/auth/cert.pem
       - --tls-private-key-file
@@ -83,8 +85,6 @@ services:
       - /rego
       - /data
     volumes:
-      - ./auth-opa/outway/rego:/rego
-      - ./auth-opa/outway/data:/data
       - ./pki/internal/organization-c:/pki/internal/organization-c
     restart: on-failure
 

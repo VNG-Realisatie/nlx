@@ -10,6 +10,9 @@ outway:
     enabled: true
     host: nlx-outway-vgs-bv-{{DOMAIN_SUFFIX}}
 
+opa:
+  enabled: true
+
 ################
 ## Sub-charts ##
 ################

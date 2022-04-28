@@ -195,6 +195,12 @@ ca:
         - vergunningsoftware-bv-nlx-management-api
       issuerRef:
         name: vergunningsoftware-bv
+    opa:
+      commonName: vergunningsoftware-bv-opa
+      dnsNames:
+        - vergunningsoftware-bv-opa
+      issuerRef:
+        name: vergunningsoftware-bv
     nlxctl:
       commonName: nlxctl
       issuerRef:
@@ -242,6 +248,15 @@ managementAPI:
       usernameKey: username
       passwordKey: password
 
+opa:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: nlxio/auth-opa
+    pullPolicy: IfNotPresent
+  tls:
+    existingSecret: vergunningsoftware-bv-opa-tls
+
 outway:
   ingress:
     enabled: false
@@ -255,6 +270,9 @@ nlx-outway:
     directoryHostname: shared-nlx-directory-api
     managementAPI:
       address: vergunningsoftware-bv-nlx-management-api:443
+    authorizationService:
+      enabled: true
+      url: https://vergunningsoftware-bv-opa:8181/v1/data/httpapi/outway/allow
   transactionLog:
     enabled: true
     hostname: vergunningsoftware-bv-postgresql

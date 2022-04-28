@@ -94,8 +94,10 @@ nlx-inway:
   config:
     selfAddress: inway.demo.rvrd.nl:443
     directoryHostname: directory-api.demo.nlx.io
+    authorizationService:
+      enabled: false
   service:
     annotations:
-      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
     loadBalancerIP: 51.138.9.186
     type: LoadBalancer

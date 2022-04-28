@@ -43,6 +43,19 @@
     - docker
     - linux
 
+Build review auth-opa:
+  extends: .build-review-base
+  variables:
+    IMAGE: auth-opa
+    CONTEXT: auth-opa
+    DOCKERFILE: auth-opa/Dockerfile
+  # Only create artifacts once because these are the same for all build jobs
+  artifacts:
+    paths:
+      - ci_build_image_registry.txt
+      - ci_build_image_tag.txt
+      - ci_build_image_version.txt
+
 Build review ca-certportal:
   extends: .build-review-base
   variables:

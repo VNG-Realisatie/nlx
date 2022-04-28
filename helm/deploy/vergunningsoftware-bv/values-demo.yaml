@@ -48,6 +48,8 @@ global:
 nlx-outway:
   config:
     directoryHostname: directory-api.demo.nlx.io
+    authorizationService:
+      enabled: false
 
 nlx-management:
   config:

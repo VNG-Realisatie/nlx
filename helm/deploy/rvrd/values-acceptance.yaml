@@ -38,6 +38,9 @@ global:
         fW8ljrrTdfPZShlgVPSJAjXDMgq/EMSHmuumLjfV
         -----END CERTIFICATE-----
 
+opa:
+  enabled: true
+
 ################
 ## Sub-charts ##
 ################

@@ -102,6 +102,15 @@ transactionLog:
     passwordKey: password
   resetDatabase: false
 
+opa:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: nlxio/auth-opa
+    pullPolicy: IfNotPresent
+  tls:
+    existingSecret: rvrd-opa-tls
+
 nlxctl:
   image:
     registry: docker.io
@@ -275,6 +284,12 @@ ca:
         - rvrd-nlx-management-api
       issuerRef:
         name: rvrd
+    opa:
+      commonName: rvrd-opa
+      dnsNames:
+        - rvrd-opa
+      issuerRef:
+        name: rvrd
     nlxctl:
       commonName: nlxctl
       issuerRef:
@@ -367,6 +382,9 @@ nlx-inway:
     directoryHostname: shared-nlx-directory-api
     managementAPI:
       address: rvrd-nlx-management-api:443
+    authorizationService:
+      enabled: true
+      url: https://rvrd-opa:8181/v1/data/httpapi/inway/allow
   transactionLog:
     hostname: rvrd-postgresql
     database: rvrd-transaction-log
