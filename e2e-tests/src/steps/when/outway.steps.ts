@@ -18,7 +18,7 @@ const isServiceKnownInServiceListOfOutway = async (
 };
 
 When(
-  "the Outway {string} of {string} calls the service {string} from {string}",
+  "the Outway {string} of {string} calls the service {string} from {string} with valid authorization",
   async function (
     this: CustomWorld,
     outwayName: string,
@@ -42,8 +42,12 @@ When(
       timeout: 1000 * 35,
     });
 
+    const headers =  {"Proxy-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"}
+
     scenarioContext.organizations[orgNameConsumer].httpResponse = await fetch(
-      url
+      url,{
+        headers
+      }
     );
   }
 );
