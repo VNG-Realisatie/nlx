@@ -62,3 +62,17 @@ set
     inway_id = $1
 where
     serial_number = $2;
+
+-- name: SetOrganizationEmail :exec
+insert into
+    directory.organizations
+    (serial_number, name, email_address)
+values
+    ($1, $2, $3)
+    on conflict
+on constraint organizations_uq_serial_number
+    do update set
+        serial_number = excluded.serial_number,
+        name 		  = excluded.name,
+        email_address = excluded.email_address
+    returning id;

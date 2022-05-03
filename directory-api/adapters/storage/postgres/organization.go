@@ -9,6 +9,7 @@ import (
 	"errors"
 
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
+	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
@@ -41,5 +42,13 @@ func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organiz
 	return r.queries.SetOrganizationInway(ctx, &queries.SetOrganizationInwayParams{
 		InwayID:      sql.NullInt32{Int32: inway.InwayID, Valid: true},
 		SerialNumber: organizationSerialNumber,
+	})
+}
+
+func (r *PostgreSQLRepository) SetOrganizationEmailAddress(ctx context.Context, organization *domain.Organization, emailAddress string) error {
+	return r.queries.SetOrganizationEmail(ctx, &queries.SetOrganizationEmailParams{
+		SerialNumber: organization.SerialNumber(),
+		Name:         organization.Name(),
+		EmailAddress: sql.NullString{String: emailAddress, Valid: true},
 	})
 }

@@ -161,6 +161,32 @@ func (q *Queries) SelectInwayByAddress(ctx context.Context, arg *SelectInwayByAd
 	return &i, err
 }
 
+const setOrganizationEmail = `-- name: SetOrganizationEmail :exec
+insert into
+    directory.organizations
+    (serial_number, name, email_address)
+values
+    ($1, $2, $3)
+    on conflict
+on constraint organizations_uq_serial_number
+    do update set
+        serial_number = excluded.serial_number,
+        name 		  = excluded.name,
+        email_address = excluded.email_address
+    returning id
+`
+
+type SetOrganizationEmailParams struct {
+	SerialNumber string
+	Name         string
+	EmailAddress sql.NullString
+}
+
+func (q *Queries) SetOrganizationEmail(ctx context.Context, arg *SetOrganizationEmailParams) error {
+	_, err := q.exec(ctx, q.setOrganizationEmailStmt, setOrganizationEmail, arg.SerialNumber, arg.Name, arg.EmailAddress)
+	return err
+}
+
 const setOrganizationInway = `-- name: SetOrganizationInway :exec
 update
     directory.organizations
