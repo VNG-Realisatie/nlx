@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "ma_error_reason.proto",
+    "title": "management_api_error_reason.proto",
     "version": "version not set"
   },
   "consumes": [

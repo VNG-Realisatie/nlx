@@ -60,7 +60,7 @@ func New(domain string, grpcCode codes.Code, code Code, msg string, md *Metadata
 
 func NewFromValidationError(domain string, err error) error {
 	if e, ok := err.(validation.InternalError); ok {
-		return New(domain, codes.Internal, errors.ErrorReason_VALIDATION_ERROR, e.InternalError().Error(), nil)
+		return New(domain, codes.Internal, errors.ErrorReason_INVALID_REQUEST, e.InternalError().Error(), nil)
 	}
 
 	if e, ok := err.(validation.Errors); ok {
@@ -80,7 +80,7 @@ func NewFromValidationError(domain string, err error) error {
 		})
 	}
 
-	return New(domain, codes.Internal, errors.ErrorReason_VALIDATION_ERROR, "invalid validation error type", nil)
+	return New(domain, codes.Internal, errors.ErrorReason_INTERNAL_SERVER_ERROR, "unable to validate request", nil)
 }
 
 func NewInternal(domain, msg string, md *Metadata) error {

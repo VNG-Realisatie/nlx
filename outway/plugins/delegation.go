@@ -53,82 +53,6 @@ func NewDelegationPlugin(managementClient api.ManagementClient) *DelegationPlugi
 	}
 }
 
-func isDelegatedRequest(r *http.Request) bool {
-	return r.Header.Get(delegation.HTTPHeaderDelegator) != "" ||
-		r.Header.Get(delegation.HTTPHeaderOrderReference) != ""
-}
-
-func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string, err error) {
-	serialNumber = r.Header.Get(delegation.HTTPHeaderDelegator)
-	orderReference = r.Header.Get(delegation.HTTPHeaderOrderReference)
-
-	if serialNumber == "" {
-		return "", "", errors.New("missing organization serial number in delegation headers")
-	}
-
-	if orderReference == "" {
-		return "", "", errors.New("missing order-reference in delegation headers")
-	}
-
-	return
-}
-
-func (plugin *DelegationPlugin) requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName string) (*delegation.JWTClaims, string, error) {
-	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
-		OrderOrganizationSerialNumber:   orderOrganizationSerialNumber,
-		OrderReference:                  orderReference,
-		ServiceOrganizationSerialNumber: serviceOrganizationSerialNumber,
-		ServiceName:                     serviceName,
-	})
-	if err != nil {
-		if grpcerrors.Equal(err, api.ErrorReason_ORDER_NOT_FOUND) {
-			return nil, "", fmt.Errorf("order does not exist for organization")
-		}
-
-		if grpcerrors.Equal(err, api.ErrorReason_ORDER_REVOKED) {
-			return nil, "", fmt.Errorf("order is revoked")
-		}
-
-		return nil, "", httperrors.NewFromGRPCError(err)
-	}
-
-	parser := &jwt.Parser{}
-
-	token, _, err := parser.ParseUnverified(response.Claim, &delegation.JWTClaims{})
-	if err != nil {
-		return nil, "", newDelegationError("failed to parse JWT", err)
-	}
-
-	if err := token.Claims.Valid(); err != nil {
-		return nil, "", newDelegationError("failed to validate JWT claims", err)
-	}
-
-	return token.Claims.(*delegation.JWTClaims), token.Raw, nil
-}
-
-func (plugin *DelegationPlugin) getOrRequestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName string) (*claimData, error) {
-	claimKey := fmt.Sprintf("%s/%s/%s", orderOrganizationSerialNumber, orderReference, serviceName)
-
-	value, ok := plugin.claims.Load(claimKey)
-	if !ok || value.(*claimData).Valid() != nil {
-		claim, raw, err := plugin.requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName)
-		if err != nil {
-			return nil, err
-		}
-
-		data := &claimData{
-			Raw:       raw,
-			JWTClaims: *claim,
-		}
-
-		plugin.claims.Store(claimKey, data)
-
-		return data, nil
-	}
-
-	return value.(*claimData), nil
-}
-
 func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 	return func(context *Context) error {
 		if !isDelegatedRequest(context.Request) {
@@ -166,4 +90,80 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		return next(context)
 	}
+}
+
+func isDelegatedRequest(r *http.Request) bool {
+	return r.Header.Get(delegation.HTTPHeaderDelegator) != "" ||
+		r.Header.Get(delegation.HTTPHeaderOrderReference) != ""
+}
+
+func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string, err error) {
+	serialNumber = r.Header.Get(delegation.HTTPHeaderDelegator)
+	orderReference = r.Header.Get(delegation.HTTPHeaderOrderReference)
+
+	if serialNumber == "" {
+		return "", "", errors.New("missing organization serial number in delegation headers")
+	}
+
+	if orderReference == "" {
+		return "", "", errors.New("missing order-reference in delegation headers")
+	}
+
+	return
+}
+
+func (plugin *DelegationPlugin) getOrRequestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName string) (*claimData, error) {
+	claimKey := fmt.Sprintf("%s/%s/%s", orderOrganizationSerialNumber, orderReference, serviceName)
+
+	value, ok := plugin.claims.Load(claimKey)
+	if !ok || value.(*claimData).Valid() != nil {
+		claim, raw, err := plugin.requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName)
+		if err != nil {
+			return nil, err
+		}
+
+		data := &claimData{
+			Raw:       raw,
+			JWTClaims: *claim,
+		}
+
+		plugin.claims.Store(claimKey, data)
+
+		return data, nil
+	}
+
+	return value.(*claimData), nil
+}
+
+func (plugin *DelegationPlugin) requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName string) (*delegation.JWTClaims, string, error) {
+	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
+		OrderOrganizationSerialNumber:   orderOrganizationSerialNumber,
+		OrderReference:                  orderReference,
+		ServiceOrganizationSerialNumber: serviceOrganizationSerialNumber,
+		ServiceName:                     serviceName,
+	})
+	if err != nil {
+		if grpcerrors.Equal(err, api.ErrorReason_ORDER_NOT_FOUND) {
+			return nil, "", fmt.Errorf("order does not exist for organization")
+		}
+
+		if grpcerrors.Equal(err, api.ErrorReason_ORDER_REVOKED) {
+			return nil, "", fmt.Errorf("order is revoked")
+		}
+
+		return nil, "", httperrors.NewFromGRPCError(err)
+	}
+
+	parser := &jwt.Parser{}
+
+	token, _, err := parser.ParseUnverified(response.Claim, &delegation.JWTClaims{})
+	if err != nil {
+		return nil, "", newDelegationError("failed to parse JWT", err)
+	}
+
+	if err := token.Claims.Valid(); err != nil {
+		return nil, "", newDelegationError("failed to validate JWT claims", err)
+	}
+
+	return token.Claims.(*delegation.JWTClaims), token.Raw, nil
 }

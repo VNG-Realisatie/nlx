@@ -51,6 +51,10 @@ func (s *ManagementService) RetrieveClaimForOrder(ctx context.Context, req *api.
 				return nil, grpcerrors.New(codes.NotFound, api.ErrorReason_ORDER_NOT_FOUND, "order not found", nil)
 			}
 
+			if common_grpcerrors.Equal(err, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE) {
+				return nil, grpcerrors.New(codes.NotFound, api.ErrorReason_ORDER_NOT_FOUND, "order not found", nil)
+			}
+
 			if common_grpcerrors.Equal(err, external.ErrorReason_ORDER_REVOKED) {
 				return nil, grpcerrors.New(codes.Unauthenticated, api.ErrorReason_ORDER_REVOKED, "order is revoked", nil)
 			}

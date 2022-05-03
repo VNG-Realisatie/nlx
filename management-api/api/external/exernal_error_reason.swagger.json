@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "ma_ex_error_reason.proto",
+    "title": "exernal_error_reason.proto",
     "version": "version not set"
   },
   "consumes": [
