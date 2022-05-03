@@ -129,3 +129,53 @@ func (q *Queries) GetService(ctx context.Context, id int32) (*GetServiceRow, err
 	)
 	return &i, err
 }
+
+const selectInwayByAddress = `-- name: SelectInwayByAddress :one
+select
+    i.id as inway_id,
+    i.organization_id
+from
+    directory.inways as i
+         inner join directory.organizations o
+             on o.id = i.organization_id
+where
+    i.address = $1
+  and
+    o.serial_number = $2
+`
+
+type SelectInwayByAddressParams struct {
+	Address      string
+	SerialNumber string
+}
+
+type SelectInwayByAddressRow struct {
+	InwayID        int32
+	OrganizationID int32
+}
+
+func (q *Queries) SelectInwayByAddress(ctx context.Context, arg *SelectInwayByAddressParams) (*SelectInwayByAddressRow, error) {
+	row := q.queryRow(ctx, q.selectInwayByAddressStmt, selectInwayByAddress, arg.Address, arg.SerialNumber)
+	var i SelectInwayByAddressRow
+	err := row.Scan(&i.InwayID, &i.OrganizationID)
+	return &i, err
+}
+
+const setOrganizationInway = `-- name: SetOrganizationInway :exec
+update
+    directory.organizations
+set
+    inway_id = $1
+where
+    serial_number = $2
+`
+
+type SetOrganizationInwayParams struct {
+	InwayID      sql.NullInt32
+	SerialNumber string
+}
+
+func (q *Queries) SetOrganizationInway(ctx context.Context, arg *SetOrganizationInwayParams) error {
+	_, err := q.exec(ctx, q.setOrganizationInwayStmt, setOrganizationInway, arg.InwayID, arg.SerialNumber)
+	return err
+}

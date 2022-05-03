@@ -25,8 +25,6 @@ type PostgreSQLRepository struct {
 	queries                                              *queries.Queries
 	registerInwayStmt                                    *sqlx.NamedStmt
 	registerServiceStmt                                  *sqlx.NamedStmt
-	selectInwayByAddressStmt                             *sqlx.NamedStmt
-	setOrganizationInwayStmt                             *sqlx.NamedStmt
 	selectOrganizationInwayAddressStmt                   *sqlx.NamedStmt
 	selectOrganizationInwayManagementAPIProxyAddressStmt *sqlx.NamedStmt
 	setOrganizationEmailAddressStmt                      *sqlx.NamedStmt
@@ -61,16 +59,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	registerServiceStmt, err := prepareRegisterServiceStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare register service statement: %s", err)
-	}
-
-	selectInwayByAddressStmt, err := prepareSelectInwayByAddressStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare select inway by address statement: %s", err)
-	}
-
-	setOrganizationInwayStmt, err := prepareSetOrganizationInwayStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare set organization inway statement: %s", err)
 	}
 
 	selectOrganizationInwayAddressStmt, err := prepareSelectOrganizationInwayAddressStatement(db)
@@ -124,8 +112,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		queries:                            querier,
 		registerInwayStmt:                  registerInwayStmt,
 		registerServiceStmt:                registerServiceStmt,
-		selectInwayByAddressStmt:           selectInwayByAddressStmt,
-		setOrganizationInwayStmt:           setOrganizationInwayStmt,
 		setOrganizationEmailAddressStmt:    setOrganizationEmailAddressStmt,
 		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
 		selectOrganizationInwayManagementAPIProxyAddressStmt: selectOrganizationInwayManagementAPIProxyAddressStmt,

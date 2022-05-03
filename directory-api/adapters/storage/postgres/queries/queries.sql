@@ -41,3 +41,24 @@ from directory.services
               on services.organization_id = organizations.id
 where
         services.id = $1;
+
+-- name: SelectInwayByAddress :one
+select
+    i.id as inway_id,
+    i.organization_id
+from
+    directory.inways as i
+         inner join directory.organizations o
+             on o.id = i.organization_id
+where
+    i.address = $1
+  and
+    o.serial_number = $2;
+
+-- name: SetOrganizationInway :exec
+update
+    directory.organizations
+set
+    inway_id = $1
+where
+    serial_number = $2;
