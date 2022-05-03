@@ -25,7 +25,6 @@ type PostgreSQLRepository struct {
 	queries                                              *queries.Queries
 	registerInwayStmt                                    *sqlx.NamedStmt
 	registerServiceStmt                                  *sqlx.NamedStmt
-	getServiceStmt                                       *sqlx.NamedStmt
 	selectInwayByAddressStmt                             *sqlx.NamedStmt
 	setOrganizationInwayStmt                             *sqlx.NamedStmt
 	selectOrganizationInwayAddressStmt                   *sqlx.NamedStmt
@@ -62,11 +61,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	registerServiceStmt, err := prepareRegisterServiceStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare register service statement: %s", err)
-	}
-
-	getServiceStmt, err := prepareGetServiceStmt(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare get service statement: %s", err)
 	}
 
 	selectInwayByAddressStmt, err := prepareSelectInwayByAddressStatement(db)
@@ -130,7 +124,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		queries:                            querier,
 		registerInwayStmt:                  registerInwayStmt,
 		registerServiceStmt:                registerServiceStmt,
-		getServiceStmt:                     getServiceStmt,
 		selectInwayByAddressStmt:           selectInwayByAddressStmt,
 		setOrganizationInwayStmt:           setOrganizationInwayStmt,
 		setOrganizationEmailAddressStmt:    setOrganizationEmailAddressStmt,

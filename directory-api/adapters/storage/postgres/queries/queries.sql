@@ -21,3 +21,23 @@ where
   and
     inways.name = $2;
 ;
+
+-- name: GetService :one
+select
+    services.id as id,
+    services.name as name,
+    documentation_url,
+    api_specification_type,
+    internal,
+    tech_support_contact,
+    public_support_contact,
+    organizations.serial_number as organization_serial_number,
+    organizations.name as organization_name,
+    one_time_costs,
+    monthly_costs,
+    request_costs
+from directory.services
+         join directory.organizations
+              on services.organization_id = organizations.id
+where
+        services.id = $1;

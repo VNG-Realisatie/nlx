@@ -7,6 +7,7 @@ package queries
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -69,6 +70,62 @@ func (q *Queries) GetInway(ctx context.Context, arg *GetInwayParams) (*GetInwayR
 		&i.UpdatedAt,
 		&i.OrganizationSerialNumber,
 		&i.OrganizationName,
+	)
+	return &i, err
+}
+
+const getService = `-- name: GetService :one
+select
+    services.id as id,
+    services.name as name,
+    documentation_url,
+    api_specification_type,
+    internal,
+    tech_support_contact,
+    public_support_contact,
+    organizations.serial_number as organization_serial_number,
+    organizations.name as organization_name,
+    one_time_costs,
+    monthly_costs,
+    request_costs
+from directory.services
+         join directory.organizations
+              on services.organization_id = organizations.id
+where
+        services.id = $1
+`
+
+type GetServiceRow struct {
+	ID                       int32
+	Name                     string
+	DocumentationUrl         sql.NullString
+	ApiSpecificationType     sql.NullString
+	Internal                 bool
+	TechSupportContact       sql.NullString
+	PublicSupportContact     sql.NullString
+	OrganizationSerialNumber string
+	OrganizationName         string
+	OneTimeCosts             int32
+	MonthlyCosts             int32
+	RequestCosts             int32
+}
+
+func (q *Queries) GetService(ctx context.Context, id int32) (*GetServiceRow, error) {
+	row := q.queryRow(ctx, q.getServiceStmt, getService, id)
+	var i GetServiceRow
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.DocumentationUrl,
+		&i.ApiSpecificationType,
+		&i.Internal,
+		&i.TechSupportContact,
+		&i.PublicSupportContact,
+		&i.OrganizationSerialNumber,
+		&i.OrganizationName,
+		&i.OneTimeCosts,
+		&i.MonthlyCosts,
+		&i.RequestCosts,
 	)
 	return &i, err
 }
