@@ -7,6 +7,7 @@ package queries
 
 import (
 	"context"
+	"time"
 )
 
 const clearOrganizationInway = `-- name: ClearOrganizationInway :execrows
@@ -21,4 +22,53 @@ func (q *Queries) ClearOrganizationInway(ctx context.Context, serialNumber strin
 		return 0, err
 	}
 	return result.RowsAffected()
+}
+
+const getInway = `-- name: GetInway :one
+select
+    inways.name as name,
+    address,
+    version as nlx_version,
+    inways.created_at as created_at,
+    updated_at,
+    organizations.serial_number as organization_serial_number,
+    organizations.name as organization_name
+from
+    directory.inways
+        join directory.organizations
+            on directory.inways.organization_id = directory.organizations.id
+where
+    organizations.serial_number = $1
+  and
+    inways.name = $2
+`
+
+type GetInwayParams struct {
+	SerialNumber string
+	Name         string
+}
+
+type GetInwayRow struct {
+	Name                     string
+	Address                  string
+	NlxVersion               string
+	CreatedAt                time.Time
+	UpdatedAt                time.Time
+	OrganizationSerialNumber string
+	OrganizationName         string
+}
+
+func (q *Queries) GetInway(ctx context.Context, arg *GetInwayParams) (*GetInwayRow, error) {
+	row := q.queryRow(ctx, q.getInwayStmt, getInway, arg.SerialNumber, arg.Name)
+	var i GetInwayRow
+	err := row.Scan(
+		&i.Name,
+		&i.Address,
+		&i.NlxVersion,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.OrganizationSerialNumber,
+		&i.OrganizationName,
+	)
+	return &i, err
 }

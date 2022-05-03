@@ -27,6 +27,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.clearOrganizationInwayStmt, err = db.PrepareContext(ctx, clearOrganizationInway); err != nil {
 		return nil, fmt.Errorf("error preparing query ClearOrganizationInway: %w", err)
 	}
+	if q.getInwayStmt, err = db.PrepareContext(ctx, getInway); err != nil {
+		return nil, fmt.Errorf("error preparing query GetInway: %w", err)
+	}
 	return &q, nil
 }
 
@@ -35,6 +38,11 @@ func (q *Queries) Close() error {
 	if q.clearOrganizationInwayStmt != nil {
 		if cerr := q.clearOrganizationInwayStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing clearOrganizationInwayStmt: %w", cerr)
+		}
+	}
+	if q.getInwayStmt != nil {
+		if cerr := q.getInwayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getInwayStmt: %w", cerr)
 		}
 	}
 	return err
@@ -77,6 +85,7 @@ type Queries struct {
 	db                         DBTX
 	tx                         *sql.Tx
 	clearOrganizationInwayStmt *sql.Stmt
+	getInwayStmt               *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
@@ -84,5 +93,6 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		db:                         tx,
 		tx:                         tx,
 		clearOrganizationInwayStmt: q.clearOrganizationInwayStmt,
+		getInwayStmt:               q.getInwayStmt,
 	}
 }
