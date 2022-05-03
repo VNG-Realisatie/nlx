@@ -52,3 +52,16 @@ func (r *PostgreSQLRepository) SetOrganizationEmailAddress(ctx context.Context, 
 		EmailAddress: sql.NullString{String: emailAddress, Valid: true},
 	})
 }
+
+func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
+	inwayAddress, err := r.queries.SelectOrganizationInwayAddress(ctx, organizationSerialNumber)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", storage.ErrNotFound
+		}
+
+		return "", err
+	}
+
+	return inwayAddress.String, nil
+}

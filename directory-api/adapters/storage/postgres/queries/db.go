@@ -36,6 +36,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.selectInwayByAddressStmt, err = db.PrepareContext(ctx, selectInwayByAddress); err != nil {
 		return nil, fmt.Errorf("error preparing query SelectInwayByAddress: %w", err)
 	}
+	if q.selectOrganizationInwayAddressStmt, err = db.PrepareContext(ctx, selectOrganizationInwayAddress); err != nil {
+		return nil, fmt.Errorf("error preparing query SelectOrganizationInwayAddress: %w", err)
+	}
 	if q.setOrganizationEmailStmt, err = db.PrepareContext(ctx, setOrganizationEmail); err != nil {
 		return nil, fmt.Errorf("error preparing query SetOrganizationEmail: %w", err)
 	}
@@ -65,6 +68,11 @@ func (q *Queries) Close() error {
 	if q.selectInwayByAddressStmt != nil {
 		if cerr := q.selectInwayByAddressStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing selectInwayByAddressStmt: %w", cerr)
+		}
+	}
+	if q.selectOrganizationInwayAddressStmt != nil {
+		if cerr := q.selectOrganizationInwayAddressStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing selectOrganizationInwayAddressStmt: %w", cerr)
 		}
 	}
 	if q.setOrganizationEmailStmt != nil {
@@ -114,25 +122,27 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                         DBTX
-	tx                         *sql.Tx
-	clearOrganizationInwayStmt *sql.Stmt
-	getInwayStmt               *sql.Stmt
-	getServiceStmt             *sql.Stmt
-	selectInwayByAddressStmt   *sql.Stmt
-	setOrganizationEmailStmt   *sql.Stmt
-	setOrganizationInwayStmt   *sql.Stmt
+	db                                 DBTX
+	tx                                 *sql.Tx
+	clearOrganizationInwayStmt         *sql.Stmt
+	getInwayStmt                       *sql.Stmt
+	getServiceStmt                     *sql.Stmt
+	selectInwayByAddressStmt           *sql.Stmt
+	selectOrganizationInwayAddressStmt *sql.Stmt
+	setOrganizationEmailStmt           *sql.Stmt
+	setOrganizationInwayStmt           *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                         tx,
-		tx:                         tx,
-		clearOrganizationInwayStmt: q.clearOrganizationInwayStmt,
-		getInwayStmt:               q.getInwayStmt,
-		getServiceStmt:             q.getServiceStmt,
-		selectInwayByAddressStmt:   q.selectInwayByAddressStmt,
-		setOrganizationEmailStmt:   q.setOrganizationEmailStmt,
-		setOrganizationInwayStmt:   q.setOrganizationInwayStmt,
+		db:                                 tx,
+		tx:                                 tx,
+		clearOrganizationInwayStmt:         q.clearOrganizationInwayStmt,
+		getInwayStmt:                       q.getInwayStmt,
+		getServiceStmt:                     q.getServiceStmt,
+		selectInwayByAddressStmt:           q.selectInwayByAddressStmt,
+		selectOrganizationInwayAddressStmt: q.selectOrganizationInwayAddressStmt,
+		setOrganizationEmailStmt:           q.setOrganizationEmailStmt,
+		setOrganizationInwayStmt:           q.setOrganizationInwayStmt,
 	}
 }

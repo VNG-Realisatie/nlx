@@ -25,7 +25,6 @@ type PostgreSQLRepository struct {
 	queries                                              *queries.Queries
 	registerInwayStmt                                    *sqlx.NamedStmt
 	registerServiceStmt                                  *sqlx.NamedStmt
-	selectOrganizationInwayAddressStmt                   *sqlx.NamedStmt
 	selectOrganizationInwayManagementAPIProxyAddressStmt *sqlx.NamedStmt
 	selectVersionStatisticsStmt                          *sqlx.Stmt
 	selectServicesStmt                                   *sqlx.Stmt
@@ -58,11 +57,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	registerServiceStmt, err := prepareRegisterServiceStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare register service statement: %s", err)
-	}
-
-	selectOrganizationInwayAddressStmt, err := prepareSelectOrganizationInwayAddressStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare select organization inway address statement: %s", err)
 	}
 
 	selectOrganizationInwayManagementAPIProxyAddressStmt, err := prepareSelectOrganizationInwayManagementAPIProxyAddressStatement(db)
@@ -101,12 +95,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	}
 
 	return &PostgreSQLRepository{
-		logger:                             logger.Named("postgres repository"),
-		db:                                 db,
-		queries:                            querier,
-		registerInwayStmt:                  registerInwayStmt,
-		registerServiceStmt:                registerServiceStmt,
-		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
+		logger:              logger.Named("postgres repository"),
+		db:                  db,
+		queries:             querier,
+		registerInwayStmt:   registerInwayStmt,
+		registerServiceStmt: registerServiceStmt,
 		selectOrganizationInwayManagementAPIProxyAddressStmt: selectOrganizationInwayManagementAPIProxyAddressStmt,
 		selectVersionStatisticsStmt:                          selectVersionStatisticsStmt,
 		selectServicesStmt:                                   selectServicesStatement,

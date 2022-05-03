@@ -76,3 +76,15 @@ on constraint organizations_uq_serial_number
         name 		  = excluded.name,
         email_address = excluded.email_address
     returning id;
+
+-- name: SelectOrganizationInwayAddress :one
+select
+    i.address
+from
+    directory.organizations o
+left join
+        directory.inways i
+            on
+                o.inway_id = i.id
+where
+    o.serial_number = $1;

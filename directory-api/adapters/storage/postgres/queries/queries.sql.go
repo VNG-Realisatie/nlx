@@ -161,6 +161,26 @@ func (q *Queries) SelectInwayByAddress(ctx context.Context, arg *SelectInwayByAd
 	return &i, err
 }
 
+const selectOrganizationInwayAddress = `-- name: SelectOrganizationInwayAddress :one
+select
+    i.address
+from
+    directory.organizations o
+left join
+        directory.inways i
+            on
+                o.inway_id = i.id
+where
+    o.serial_number = $1
+`
+
+func (q *Queries) SelectOrganizationInwayAddress(ctx context.Context, serialNumber string) (sql.NullString, error) {
+	row := q.queryRow(ctx, q.selectOrganizationInwayAddressStmt, selectOrganizationInwayAddress, serialNumber)
+	var address sql.NullString
+	err := row.Scan(&address)
+	return address, err
+}
+
 const setOrganizationEmail = `-- name: SetOrganizationEmail :exec
 insert into
     directory.organizations
