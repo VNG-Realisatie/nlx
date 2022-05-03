@@ -39,6 +39,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.selectOrganizationInwayAddressStmt, err = db.PrepareContext(ctx, selectOrganizationInwayAddress); err != nil {
 		return nil, fmt.Errorf("error preparing query SelectOrganizationInwayAddress: %w", err)
 	}
+	if q.selectOrganizationInwayManagementAPIProxyAddressStmt, err = db.PrepareContext(ctx, selectOrganizationInwayManagementAPIProxyAddress); err != nil {
+		return nil, fmt.Errorf("error preparing query SelectOrganizationInwayManagementAPIProxyAddress: %w", err)
+	}
 	if q.setOrganizationEmailStmt, err = db.PrepareContext(ctx, setOrganizationEmail); err != nil {
 		return nil, fmt.Errorf("error preparing query SetOrganizationEmail: %w", err)
 	}
@@ -73,6 +76,11 @@ func (q *Queries) Close() error {
 	if q.selectOrganizationInwayAddressStmt != nil {
 		if cerr := q.selectOrganizationInwayAddressStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing selectOrganizationInwayAddressStmt: %w", cerr)
+		}
+	}
+	if q.selectOrganizationInwayManagementAPIProxyAddressStmt != nil {
+		if cerr := q.selectOrganizationInwayManagementAPIProxyAddressStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing selectOrganizationInwayManagementAPIProxyAddressStmt: %w", cerr)
 		}
 	}
 	if q.setOrganizationEmailStmt != nil {
@@ -122,15 +130,16 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                                 DBTX
-	tx                                 *sql.Tx
-	clearOrganizationInwayStmt         *sql.Stmt
-	getInwayStmt                       *sql.Stmt
-	getServiceStmt                     *sql.Stmt
-	selectInwayByAddressStmt           *sql.Stmt
-	selectOrganizationInwayAddressStmt *sql.Stmt
-	setOrganizationEmailStmt           *sql.Stmt
-	setOrganizationInwayStmt           *sql.Stmt
+	db                                                   DBTX
+	tx                                                   *sql.Tx
+	clearOrganizationInwayStmt                           *sql.Stmt
+	getInwayStmt                                         *sql.Stmt
+	getServiceStmt                                       *sql.Stmt
+	selectInwayByAddressStmt                             *sql.Stmt
+	selectOrganizationInwayAddressStmt                   *sql.Stmt
+	selectOrganizationInwayManagementAPIProxyAddressStmt *sql.Stmt
+	setOrganizationEmailStmt                             *sql.Stmt
+	setOrganizationInwayStmt                             *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
@@ -142,7 +151,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getServiceStmt:                     q.getServiceStmt,
 		selectInwayByAddressStmt:           q.selectInwayByAddressStmt,
 		selectOrganizationInwayAddressStmt: q.selectOrganizationInwayAddressStmt,
-		setOrganizationEmailStmt:           q.setOrganizationEmailStmt,
-		setOrganizationInwayStmt:           q.setOrganizationInwayStmt,
+		selectOrganizationInwayManagementAPIProxyAddressStmt: q.selectOrganizationInwayManagementAPIProxyAddressStmt,
+		setOrganizationEmailStmt:                             q.setOrganizationEmailStmt,
+		setOrganizationInwayStmt:                             q.setOrganizationInwayStmt,
 	}
 }

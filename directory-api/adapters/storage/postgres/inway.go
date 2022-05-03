@@ -5,10 +5,13 @@ package pgadapter
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/directory-api/domain"
+	"go.nlx.io/nlx/directory-api/domain/directory/storage"
 )
 
 func (r *PostgreSQLRepository) GetInway(name, serialNumber string) (*domain.Inway, error) {
@@ -42,4 +45,30 @@ func convertInwayRowToModel(row *queries.GetInwayRow) (*domain.Inway, error) {
 	}
 
 	return model, nil
+}
+
+func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
+	inwayAddress, err := r.queries.SelectOrganizationInwayAddress(ctx, organizationSerialNumber)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", storage.ErrNotFound
+		}
+
+		return "", err
+	}
+
+	return inwayAddress.String, nil
+}
+
+func (r *PostgreSQLRepository) GetOrganizationInwayManagementAPIProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
+	inwayProxyAddress, err := r.queries.SelectOrganizationInwayAddress(ctx, organizationSerialNumber)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", storage.ErrNotFound
+		}
+
+		return "", err
+	}
+
+	return inwayProxyAddress.String, nil
 }

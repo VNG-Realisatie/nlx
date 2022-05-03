@@ -88,3 +88,15 @@ left join
                 o.inway_id = i.id
 where
     o.serial_number = $1;
+
+-- name: SelectOrganizationInwayManagementAPIProxyAddress :one
+select
+    i.management_api_proxy_address
+from
+    directory.organizations as o
+left join
+        directory.inways i
+            on
+                o.inway_id = i.id
+where
+    o.serial_number = $1;

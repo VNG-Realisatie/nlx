@@ -181,6 +181,26 @@ func (q *Queries) SelectOrganizationInwayAddress(ctx context.Context, serialNumb
 	return address, err
 }
 
+const selectOrganizationInwayManagementAPIProxyAddress = `-- name: SelectOrganizationInwayManagementAPIProxyAddress :one
+select
+    i.management_api_proxy_address
+from
+    directory.organizations as o
+left join
+        directory.inways i
+            on
+                o.inway_id = i.id
+where
+    o.serial_number = $1
+`
+
+func (q *Queries) SelectOrganizationInwayManagementAPIProxyAddress(ctx context.Context, serialNumber string) (sql.NullString, error) {
+	row := q.queryRow(ctx, q.selectOrganizationInwayManagementAPIProxyAddressStmt, selectOrganizationInwayManagementAPIProxyAddress, serialNumber)
+	var management_api_proxy_address sql.NullString
+	err := row.Scan(&management_api_proxy_address)
+	return management_api_proxy_address, err
+}
+
 const setOrganizationEmail = `-- name: SetOrganizationEmail :exec
 insert into
     directory.organizations
