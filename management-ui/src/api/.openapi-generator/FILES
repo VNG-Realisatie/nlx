@@ -48,7 +48,6 @@ models/ManagementOutgoingAccessRequest.ts
 models/ManagementOutgoingOrder.ts
 models/ManagementOutway.ts
 models/ManagementRegisterOutwayRequest.ts
-models/ManagementRetrieveClaimForOrderResponse.ts
 models/ManagementServiceStatistics.ts
 models/ManagementSettings.ts
 models/ManagementSynchronizeOrdersResponse.ts

@@ -35,6 +35,7 @@ import (
 	"go.nlx.io/nlx/common/transactionlog"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	managementapi "go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/outway/api"
 	"go.nlx.io/nlx/outway/pkg/server"
 	"go.nlx.io/nlx/outway/plugins"
@@ -183,7 +184,12 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 	}
 
 	o.plugins = []plugins.Plugin{
-		plugins.NewDelegationPlugin(args.ManagementClient),
+		plugins.NewDelegationPlugin(&plugins.NewDelegationPluginArgs{
+			Logger:                     o.logger,
+			OrgCertificate:             args.OrgCert,
+			DirectoryClient:            args.DirectoryClient,
+			CreateManagementClientFunc: management.NewClient,
+		}),
 		plugins.NewLogRecordPlugin(o.organization.serialNumber, o.txlogger),
 	}
 

@@ -51,7 +51,6 @@ type ManagementClient interface {
 	ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error)
 	RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
 	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
-	RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error)
 	CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -312,15 +311,6 @@ func (c *managementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
-func (c *managementClient) RetrieveClaimForOrder(ctx context.Context, in *RetrieveClaimForOrderRequest, opts ...grpc.CallOption) (*RetrieveClaimForOrderResponse, error) {
-	out := new(RetrieveClaimForOrderResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RetrieveClaimForOrder", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateOutgoingOrder", in, out, opts...)
@@ -415,7 +405,6 @@ type ManagementServer interface {
 	ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error)
 	RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error)
 	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
-	RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error)
 	CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error)
 	UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error)
 	RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error)
@@ -510,9 +499,6 @@ func (UnimplementedManagementServer) RevokeAccessGrant(context.Context, *RevokeA
 }
 func (UnimplementedManagementServer) ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuditLogs not implemented")
-}
-func (UnimplementedManagementServer) RetrieveClaimForOrder(context.Context, *RetrieveClaimForOrderRequest) (*RetrieveClaimForOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RetrieveClaimForOrder not implemented")
 }
 func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOutgoingOrder not implemented")
@@ -1034,24 +1020,6 @@ func _Management_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RetrieveClaimForOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RetrieveClaimForOrderRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ManagementServer).RetrieveClaimForOrder(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/nlx.management.Management/RetrieveClaimForOrder",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RetrieveClaimForOrder(ctx, req.(*RetrieveClaimForOrderRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Management_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateOutgoingOrderRequest)
 	if err := dec(in); err != nil {
@@ -1292,10 +1260,6 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAuditLogs",
 			Handler:    _Management_ListAuditLogs_Handler,
-		},
-		{
-			MethodName: "RetrieveClaimForOrder",
-			Handler:    _Management_RetrieveClaimForOrder_Handler,
 		},
 		{
 			MethodName: "CreateOutgoingOrder",

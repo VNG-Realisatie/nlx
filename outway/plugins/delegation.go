@@ -15,80 +15,133 @@ import (
 
 	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/common/grpcerrors"
-	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/common/tls"
+	directory_api "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	outway_http "go.nlx.io/nlx/outway/http"
-	"go.nlx.io/nlx/outway/pkg/httperrors"
 )
-
-type delegationError struct {
-	source  error
-	message string
-}
-
-func (err *delegationError) Error() string {
-	return fmt.Sprintf("%s: %s", err.message, err.source)
-}
-
-func newDelegationError(message string, source error) *delegationError {
-	return &delegationError{
-		source:  source,
-		message: message,
-	}
-}
 
 type claimData struct {
 	delegation.JWTClaims
 	Raw string
 }
 
+type createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
+
 type DelegationPlugin struct {
-	claims           sync.Map
-	managementClient api.ManagementClient
+	logger                     *zap.Logger
+	orgCertificate             *tls.CertificateBundle
+	claims                     sync.Map
+	directoryClient            directory_api.DirectoryClient
+	createManagementClientFunc createManagementClientFunc
 }
 
-func NewDelegationPlugin(managementClient api.ManagementClient) *DelegationPlugin {
+type NewDelegationPluginArgs struct {
+	Logger                     *zap.Logger
+	OrgCertificate             *tls.CertificateBundle
+	DirectoryClient            directory_api.DirectoryClient
+	CreateManagementClientFunc createManagementClientFunc
+}
+
+func NewDelegationPlugin(args *NewDelegationPluginArgs) *DelegationPlugin {
 	return &DelegationPlugin{
-		claims:           sync.Map{},
-		managementClient: managementClient,
+		logger:                     args.Logger,
+		claims:                     sync.Map{},
+		orgCertificate:             args.OrgCertificate,
+		directoryClient:            args.DirectoryClient,
+		createManagementClientFunc: args.CreateManagementClientFunc,
 	}
 }
 
 func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
-	return func(context *Context) error {
-		if !isDelegatedRequest(context.Request) {
-			return next(context)
+	return func(requestContext *Context) error {
+		if !isDelegatedRequest(requestContext.Request) {
+			return next(requestContext)
 		}
 
-		serialNumber, orderReference, err := parseRequestMetadata(context.Request)
+		delegatorSerialNumber, orderReference, err := parseRequestMetadata(requestContext.Request)
 		if err != nil {
 			msg := "failed to parse delegation metadata"
 
-			context.Logger.Error(msg, zap.Error(err))
+			requestContext.Logger.Error(msg, zap.Error(err))
 
-			outway_http.WriteError(context.Response, msg)
+			outway_http.WriteError(requestContext.Response, msg)
 
 			return nil
 		}
 
-		context.LogData["delegator"] = serialNumber
-		context.LogData["orderReference"] = orderReference
+		requestContext.LogData["delegator"] = delegatorSerialNumber
+		requestContext.LogData["orderReference"] = orderReference
 
-		claim, err := plugin.getOrRequestClaim(serialNumber, orderReference, context.Destination.OrganizationSerialNumber, context.Destination.Service)
-		if err != nil {
-			msg := fmt.Sprintf("failed to request claim from %s: %s", serialNumber, err)
+		claim := plugin.getClaimFromMemory(delegatorSerialNumber, orderReference, requestContext.Destination.Service)
+		if claim == nil {
+			externalManagementClient, err := plugin.setupExternalManagementClient(requestContext.Request.Context(), delegatorSerialNumber)
+			if err != nil {
+				plugin.logger.Error("unable to setup external management client", zap.String("delegatorSerialNumber", delegatorSerialNumber), zap.Error(err))
+				outway_http.WriteError(requestContext.Response, "unable to setup the external management client")
 
-			if delegationErr, ok := err.(*delegationError); ok {
-				msg = delegationErr.Error()
+				return nil
 			}
 
-			outway_http.WriteError(context.Response, msg)
+			response, err := externalManagementClient.RequestClaim(requestContext.Request.Context(), &external.RequestClaimRequest{
+				OrderReference:                  orderReference,
+				ServiceOrganizationSerialNumber: requestContext.Destination.OrganizationSerialNumber,
+				ServiceName:                     requestContext.Destination.Service,
+			})
+			if err != nil {
+				plugin.logger.Error("unable to request claim", zap.String("orderReference", orderReference), zap.String("serviceOrganizationSerialNumber", requestContext.Destination.OrganizationSerialNumber), zap.String("serviceName", requestContext.Destination.Service), zap.Error(err))
 
-			return nil
+				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND) {
+					outway_http.WriteError(requestContext.Response, "order not found")
+
+					return nil
+				}
+
+				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG) {
+					outway_http.WriteError(requestContext.Response, "order does not exist for your organization")
+
+					return nil
+				}
+
+				if grpcerrors.Equal(err, external.ErrorReason_ORDER_REVOKED) {
+					outway_http.WriteError(requestContext.Response, "order is revoked")
+
+					return nil
+				}
+
+				if grpcerrors.Equal(err, external.ErrorReason_ORDER_EXPIRED) {
+					outway_http.WriteError(requestContext.Response, "the order has expired")
+
+					return nil
+				}
+
+				if grpcerrors.Equal(err, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE) {
+					outway_http.WriteError(requestContext.Response, fmt.Sprintf("order does not contain the service '%s'", requestContext.Destination.Service))
+
+					return nil
+				}
+
+				outway_http.WriteError(requestContext.Response, fmt.Sprintf("unable to request claim from %s", delegatorSerialNumber))
+
+				return nil
+			}
+
+			claim, err = parseClaimFromResponse(response)
+			if err != nil {
+				plugin.logger.Error("unable to parse received claim", zap.String("claim", response.Claim), zap.Error(err))
+
+				outway_http.WriteError(requestContext.Response, fmt.Sprintf("received an invalid claim from %s", delegatorSerialNumber))
+
+				return nil
+			}
+
+			plugin.storeClaimInMemory(delegatorSerialNumber, orderReference, requestContext.Destination.Service, claim)
 		}
 
-		context.Request.Header.Add(delegation.HTTPHeaderClaim, claim.Raw)
+		requestContext.Request.Header.Add(delegation.HTTPHeaderClaim, claim.Raw)
 
-		return next(context)
+		return next(requestContext)
 	}
 }
 
@@ -112,58 +165,52 @@ func parseRequestMetadata(r *http.Request) (serialNumber, orderReference string,
 	return
 }
 
-func (plugin *DelegationPlugin) getOrRequestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName string) (*claimData, error) {
-	claimKey := fmt.Sprintf("%s/%s/%s", orderOrganizationSerialNumber, orderReference, serviceName)
-
-	value, ok := plugin.claims.Load(claimKey)
-	if !ok || value.(*claimData).Valid() != nil {
-		claim, raw, err := plugin.requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName)
-		if err != nil {
-			return nil, err
-		}
-
-		data := &claimData{
-			Raw:       raw,
-			JWTClaims: *claim,
-		}
-
-		plugin.claims.Store(claimKey, data)
-
-		return data, nil
-	}
-
-	return value.(*claimData), nil
-}
-
-func (plugin *DelegationPlugin) requestClaim(orderOrganizationSerialNumber, orderReference, serviceOrganizationSerialNumber, serviceName string) (*delegation.JWTClaims, string, error) {
-	response, err := plugin.managementClient.RetrieveClaimForOrder(context.Background(), &api.RetrieveClaimForOrderRequest{
-		OrderOrganizationSerialNumber:   orderOrganizationSerialNumber,
-		OrderReference:                  orderReference,
-		ServiceOrganizationSerialNumber: serviceOrganizationSerialNumber,
-		ServiceName:                     serviceName,
+func (plugin *DelegationPlugin) setupExternalManagementClient(ctx context.Context, delegatorSerialNumber string) (management.Client, error) {
+	response, err := plugin.directoryClient.GetOrganizationManagementAPIProxyAddress(ctx, &directory_api.GetOrganizationManagementAPIProxyAddressRequest{
+		OrganizationSerialNumber: delegatorSerialNumber,
 	})
 	if err != nil {
-		if grpcerrors.Equal(err, api.ErrorReason_ORDER_NOT_FOUND) {
-			return nil, "", fmt.Errorf("order does not exist for organization")
-		}
-
-		if grpcerrors.Equal(err, api.ErrorReason_ORDER_REVOKED) {
-			return nil, "", fmt.Errorf("order is revoked")
-		}
-
-		return nil, "", httperrors.NewFromGRPCError(err)
+		return nil, err
 	}
 
+	externalManagementClient, err := plugin.createManagementClientFunc(ctx, response.Address, plugin.orgCertificate)
+	if err != nil {
+		return nil, err
+	}
+
+	return externalManagementClient, nil
+}
+
+func parseClaimFromResponse(response *external.RequestClaimResponse) (*claimData, error) {
 	parser := &jwt.Parser{}
 
 	token, _, err := parser.ParseUnverified(response.Claim, &delegation.JWTClaims{})
 	if err != nil {
-		return nil, "", newDelegationError("failed to parse JWT", err)
+		return nil, err
 	}
 
 	if err := token.Claims.Valid(); err != nil {
-		return nil, "", newDelegationError("failed to validate JWT claims", err)
+		return nil, err
 	}
 
-	return token.Claims.(*delegation.JWTClaims), token.Raw, nil
+	return &claimData{
+		Raw:       token.Raw,
+		JWTClaims: *token.Claims.(*delegation.JWTClaims),
+	}, nil
+}
+
+func (plugin *DelegationPlugin) getClaimFromMemory(delegatorSerialNumber, orderReference, serviceName string) *claimData {
+	claimKey := fmt.Sprintf("%s/%s/%s", delegatorSerialNumber, orderReference, serviceName)
+
+	value, ok := plugin.claims.Load(claimKey)
+	if !ok || value.(*claimData).Valid() != nil {
+		return nil
+	}
+
+	return value.(*claimData)
+}
+
+func (plugin *DelegationPlugin) storeClaimInMemory(delegatorSerialNumber, orderReference, serviceName string, claimData *claimData) {
+	claimKey := fmt.Sprintf("%s/%s/%s", delegatorSerialNumber, orderReference, serviceName)
+	plugin.claims.Store(claimKey, claimData)
 }

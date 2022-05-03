@@ -960,59 +960,6 @@
         "x-codegen-request-body-name" : "body"
       }
     },
-    "/api/v1/retrieve-claim" : {
-      "get" : {
-        "operationId" : "Management_RetrieveClaimForOrder",
-        "parameters" : [ {
-          "in" : "query",
-          "name" : "orderReference",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "in" : "query",
-          "name" : "orderOrganizationSerialNumber",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "in" : "query",
-          "name" : "serviceOrganizationSerialNumber",
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "in" : "query",
-          "name" : "serviceName",
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/managementRetrieveClaimForOrderResponse"
-                }
-              }
-            },
-            "description" : "A successful response."
-          },
-          "default" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/rpcStatus"
-                }
-              }
-            },
-            "description" : "An unexpected error response."
-          }
-        },
-        "tags" : [ "Management" ]
-      }
-    },
     "/api/v1/services" : {
       "get" : {
         "operationId" : "Management_ListServices",
@@ -2305,14 +2252,6 @@
             "type" : "string"
           },
           "selfAddressAPI" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementRetrieveClaimForOrderResponse" : {
-        "properties" : {
-          "claim" : {
             "type" : "string"
           }
         },

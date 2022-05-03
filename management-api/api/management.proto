@@ -90,9 +90,6 @@ service Management {
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
   }
-  rpc RetrieveClaimForOrder (RetrieveClaimForOrderRequest) returns (RetrieveClaimForOrderResponse) {
-    option (google.api.http) = {get: "/api/v1/retrieve-claim"};
-  }
   rpc CreateOutgoingOrder (CreateOutgoingOrderRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/orders/outgoing" body: "*"};
   }
@@ -541,17 +538,6 @@ message AuditLogRecordMetadata {
 
 message ListAuditLogsResponse {
   repeated AuditLogRecord auditLogs = 1;
-}
-
-message RetrieveClaimForOrderRequest {
-  string orderReference = 1;
-  string orderOrganizationSerialNumber = 2;
-  string serviceOrganizationSerialNumber = 3;
-  string serviceName = 4;
-}
-
-message RetrieveClaimForOrderResponse {
-  string claim = 1;
 }
 
 message CreateOutgoingOrderRequest {

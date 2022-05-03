@@ -5,8 +5,6 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-
-	common_is "go.nlx.io/nlx/common/validation/is"
 )
 
 // nolint:gocritic // this is a valid regex pattern
@@ -53,15 +51,5 @@ func (req *UpdateServiceRequest) Validate() error {
 		validation.Field(&req.EndpointURL, validation.Required, is.URL),
 		validation.Field(&req.DocumentationURL, is.URL),
 		validation.Field(&req.ApiSpecificationURL, is.URL),
-	)
-}
-
-func (req *RetrieveClaimForOrderRequest) Validate() error {
-	return validation.ValidateStruct(
-		req,
-		validation.Field(&req.OrderReference, validation.Required),
-		validation.Field(&req.OrderOrganizationSerialNumber, validation.Required, common_is.SerialNumber),
-		validation.Field(&req.ServiceName, validation.Required),
-		validation.Field(&req.ServiceOrganizationSerialNumber, validation.Required, common_is.SerialNumber),
 	)
 }

@@ -362,7 +362,6 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 			recorder := httptest.NewRecorder()
 
 			outway.plugins = []plugins.Plugin{
-				plugins.NewDelegationPlugin(nil),
 				plugins.NewLogRecordPlugin("00000000000000000001", tt.txLogger),
 				plugins.NewStripHeadersPlugin("00000000000000000001"),
 			}

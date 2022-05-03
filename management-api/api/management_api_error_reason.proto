@@ -8,15 +8,9 @@ enum ErrorReason {
     // Do not use this default value.
     ERROR_REASON_UNSPECIFIED = 0;
 
-    // The order that is being used is revoked
-    ORDER_REVOKED = 1;
-
-    // The order could not be found
-    ORDER_NOT_FOUND = 2;
-
     // Something went wrong while trying to retrieve the claim
-    UNABLE_TO_RETRIEVE_CLAIM = 3;
+    UNABLE_TO_RETRIEVE_CLAIM = 1;
 
     // Something went wrong while trying to sign the claim
-    UNABLE_TO_SIGN_CLAIM = 4;
+    UNABLE_TO_SIGN_CLAIM = 2;
 }

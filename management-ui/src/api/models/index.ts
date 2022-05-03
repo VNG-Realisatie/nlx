@@ -45,7 +45,6 @@ export * from './ManagementOutgoingAccessRequest';
 export * from './ManagementOutgoingOrder';
 export * from './ManagementOutway';
 export * from './ManagementRegisterOutwayRequest';
-export * from './ManagementRetrieveClaimForOrderResponse';
 export * from './ManagementServiceStatistics';
 export * from './ManagementSettings';
 export * from './ManagementSynchronizeOrdersResponse';

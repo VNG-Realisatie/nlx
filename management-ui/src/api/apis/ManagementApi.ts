@@ -84,9 +84,6 @@ import {
     ManagementRegisterOutwayRequest,
     ManagementRegisterOutwayRequestFromJSON,
     ManagementRegisterOutwayRequestToJSON,
-    ManagementRetrieveClaimForOrderResponse,
-    ManagementRetrieveClaimForOrderResponseFromJSON,
-    ManagementRetrieveClaimForOrderResponseToJSON,
     ManagementSettings,
     ManagementSettingsFromJSON,
     ManagementSettingsToJSON,
@@ -163,13 +160,6 @@ export interface ManagementRegisterOutwayOperationRequest {
 export interface ManagementRejectIncomingAccessRequestRequest {
     serviceName: string;
     accessRequestID: string;
-}
-
-export interface ManagementRetrieveClaimForOrderRequest {
-    orderReference?: string;
-    orderOrganizationSerialNumber?: string;
-    serviceOrganizationSerialNumber?: string;
-    serviceName?: string;
 }
 
 export interface ManagementRevokeAccessGrantRequest {
@@ -908,46 +898,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementRejectIncomingAccessRequest(requestParameters: ManagementRejectIncomingAccessRequestRequest, initOverrides?: RequestInit): Promise<object> {
         const response = await this.managementRejectIncomingAccessRequestRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementRetrieveClaimForOrderRaw(requestParameters: ManagementRetrieveClaimForOrderRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementRetrieveClaimForOrderResponse>> {
-        const queryParameters: any = {};
-
-        if (requestParameters.orderReference !== undefined) {
-            queryParameters['orderReference'] = requestParameters.orderReference;
-        }
-
-        if (requestParameters.orderOrganizationSerialNumber !== undefined) {
-            queryParameters['orderOrganizationSerialNumber'] = requestParameters.orderOrganizationSerialNumber;
-        }
-
-        if (requestParameters.serviceOrganizationSerialNumber !== undefined) {
-            queryParameters['serviceOrganizationSerialNumber'] = requestParameters.serviceOrganizationSerialNumber;
-        }
-
-        if (requestParameters.serviceName !== undefined) {
-            queryParameters['serviceName'] = requestParameters.serviceName;
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/v1/retrieve-claim`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementRetrieveClaimForOrderResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementRetrieveClaimForOrder(requestParameters: ManagementRetrieveClaimForOrderRequest = {}, initOverrides?: RequestInit): Promise<ManagementRetrieveClaimForOrderResponse> {
-        const response = await this.managementRetrieveClaimForOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
