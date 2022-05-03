@@ -4,6 +4,7 @@
 package pgadapter
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -14,18 +15,20 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 	"go.uber.org/zap"
+
+	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 )
 
 type PostgreSQLRepository struct {
 	logger                                               *zap.Logger
 	db                                                   *sqlx.DB
+	queries                                              *queries.Queries
 	registerInwayStmt                                    *sqlx.NamedStmt
 	getInwayStmt                                         *sqlx.NamedStmt
 	registerServiceStmt                                  *sqlx.NamedStmt
 	getServiceStmt                                       *sqlx.NamedStmt
 	selectInwayByAddressStmt                             *sqlx.NamedStmt
 	setOrganizationInwayStmt                             *sqlx.NamedStmt
-	clearOrganizationInwayStmt                           *sqlx.NamedStmt
 	selectOrganizationInwayAddressStmt                   *sqlx.NamedStmt
 	selectOrganizationInwayManagementAPIProxyAddressStmt *sqlx.NamedStmt
 	setOrganizationEmailAddressStmt                      *sqlx.NamedStmt
@@ -45,6 +48,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 
 	if db == nil {
 		panic("missing db")
+	}
+
+	querier, err := queries.Prepare(context.Background(), db)
+	if err != nil {
+		return nil, err
 	}
 
 	registerInwayStmt, err := prepareRegisterInwayStmt(db)
@@ -75,11 +83,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	setOrganizationInwayStmt, err := prepareSetOrganizationInwayStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare set organization inway statement: %s", err)
-	}
-
-	clearOrganizationInwayStmt, err := prepareClearOrganizationInwayStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare clear organization inway statement: %s", err)
 	}
 
 	selectOrganizationInwayAddressStmt, err := prepareSelectOrganizationInwayAddressStatement(db)
@@ -130,6 +133,7 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	return &PostgreSQLRepository{
 		logger:                             logger.Named("postgres repository"),
 		db:                                 db,
+		queries:                            querier,
 		registerInwayStmt:                  registerInwayStmt,
 		getInwayStmt:                       getInwayStmt,
 		registerServiceStmt:                registerServiceStmt,
@@ -137,7 +141,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		selectInwayByAddressStmt:           selectInwayByAddressStmt,
 		setOrganizationInwayStmt:           setOrganizationInwayStmt,
 		setOrganizationEmailAddressStmt:    setOrganizationEmailAddressStmt,
-		clearOrganizationInwayStmt:         clearOrganizationInwayStmt,
 		selectOrganizationInwayAddressStmt: selectOrganizationInwayAddressStmt,
 		selectOrganizationInwayManagementAPIProxyAddressStmt: selectOrganizationInwayManagementAPIProxyAddressStmt,
 		selectVersionStatisticsStmt:                          selectVersionStatisticsStmt,

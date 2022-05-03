@@ -26,6 +26,7 @@ mocks:
 
 sqlc:
     BUILD +sqlc-txlog-api
+    BUILD +sqlc-directory-api
 
 deps:
     COPY go.mod go.sum /src/
@@ -244,15 +245,15 @@ mocks-txlog-api:
     SAVE ARTIFACT /dist/api/mock/mock_txlog.go AS LOCAL ./txlog-api/api/mock/mock_txlog.go
     SAVE ARTIFACT /dist/domain/txlog/storage/mock/repository.go AS LOCAL ./txlog-api/domain/txlog/storage/mock/repository.go
 
-sqlc-txlog-api:
+sqlc-directory-api:
     FROM +deps
-    COPY ./txlog-api/adapters/storage/postgres/queries /src/txlog-api/adapters/storage/postgres/queries
-    COPY ./txlog-db/migrations /src/txlog-db/migrations
+    COPY ./directory-api/adapters/storage/postgres/queries /src/directory-api/adapters/storage/postgres/queries
+    COPY ./directory-db/migrations /src/directory-db/migrations
 
-    WORKDIR /src/txlog-api/adapters/storage/postgres/queries
+    WORKDIR /src/directory-api/adapters/storage/postgres/queries
 
     RUN /usr/bin/sqlc generate
 
     RUN goimports -w -local "go.nlx.io" /src/
 
-    SAVE ARTIFACT /src/txlog-api/adapters/storage/postgres/queries/* AS LOCAL ./txlog-api/adapters/storage/postgres/queries/
+    SAVE ARTIFACT /src/directory-api/adapters/storage/postgres/queries/* AS LOCAL ./directory-api/adapters/storage/postgres/queries/
