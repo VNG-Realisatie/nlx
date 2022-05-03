@@ -42,6 +42,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.selectOrganizationInwayManagementAPIProxyAddressStmt, err = db.PrepareContext(ctx, selectOrganizationInwayManagementAPIProxyAddress); err != nil {
 		return nil, fmt.Errorf("error preparing query SelectOrganizationInwayManagementAPIProxyAddress: %w", err)
 	}
+	if q.selectVersionStatisticsStmt, err = db.PrepareContext(ctx, selectVersionStatistics); err != nil {
+		return nil, fmt.Errorf("error preparing query SelectVersionStatistics: %w", err)
+	}
 	if q.setOrganizationEmailStmt, err = db.PrepareContext(ctx, setOrganizationEmail); err != nil {
 		return nil, fmt.Errorf("error preparing query SetOrganizationEmail: %w", err)
 	}
@@ -81,6 +84,11 @@ func (q *Queries) Close() error {
 	if q.selectOrganizationInwayManagementAPIProxyAddressStmt != nil {
 		if cerr := q.selectOrganizationInwayManagementAPIProxyAddressStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing selectOrganizationInwayManagementAPIProxyAddressStmt: %w", cerr)
+		}
+	}
+	if q.selectVersionStatisticsStmt != nil {
+		if cerr := q.selectVersionStatisticsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing selectVersionStatisticsStmt: %w", cerr)
 		}
 	}
 	if q.setOrganizationEmailStmt != nil {
@@ -138,6 +146,7 @@ type Queries struct {
 	selectInwayByAddressStmt                             *sql.Stmt
 	selectOrganizationInwayAddressStmt                   *sql.Stmt
 	selectOrganizationInwayManagementAPIProxyAddressStmt *sql.Stmt
+	selectVersionStatisticsStmt                          *sql.Stmt
 	setOrganizationEmailStmt                             *sql.Stmt
 	setOrganizationInwayStmt                             *sql.Stmt
 }
@@ -152,6 +161,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		selectInwayByAddressStmt:           q.selectInwayByAddressStmt,
 		selectOrganizationInwayAddressStmt: q.selectOrganizationInwayAddressStmt,
 		selectOrganizationInwayManagementAPIProxyAddressStmt: q.selectOrganizationInwayManagementAPIProxyAddressStmt,
+		selectVersionStatisticsStmt:                          q.selectVersionStatisticsStmt,
 		setOrganizationEmailStmt:                             q.setOrganizationEmailStmt,
 		setOrganizationInwayStmt:                             q.setOrganizationInwayStmt,
 	}

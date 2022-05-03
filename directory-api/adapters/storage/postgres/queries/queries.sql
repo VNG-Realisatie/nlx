@@ -100,3 +100,26 @@ left join
                 o.inway_id = i.id
 where
     o.serial_number = $1;
+
+-- name: SelectVersionStatistics :many
+select
+    'outway' AS type,
+    version,
+    count(*) as amount
+from
+    directory.outways
+group by
+    version
+union
+select
+    'inway' AS type,
+    version,
+    count(*) as amount
+from
+    directory.inways
+group by
+    version
+order by
+    type,
+    version
+desc;

@@ -201,6 +201,59 @@ func (q *Queries) SelectOrganizationInwayManagementAPIProxyAddress(ctx context.C
 	return management_api_proxy_address, err
 }
 
+const selectVersionStatistics = `-- name: SelectVersionStatistics :many
+select
+    'outway' AS type,
+    version,
+    count(*) as amount
+from
+    directory.outways
+group by
+    version
+union
+select
+    'inway' AS type,
+    version,
+    count(*) as amount
+from
+    directory.inways
+group by
+    version
+order by
+    type,
+    version
+desc
+`
+
+type SelectVersionStatisticsRow struct {
+	Type    interface{}
+	Version string
+	Amount  int64
+}
+
+func (q *Queries) SelectVersionStatistics(ctx context.Context) ([]*SelectVersionStatisticsRow, error) {
+	rows, err := q.query(ctx, q.selectVersionStatisticsStmt, selectVersionStatistics)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*SelectVersionStatisticsRow{}
+	for rows.Next() {
+		var i SelectVersionStatisticsRow
+		if err := rows.Scan(&i.Type, &i.Version, &i.Amount); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const setOrganizationEmail = `-- name: SetOrganizationEmail :exec
 insert into
     directory.organizations
