@@ -201,6 +201,44 @@ func (q *Queries) SelectOrganizationInwayManagementAPIProxyAddress(ctx context.C
 	return management_api_proxy_address, err
 }
 
+const selectOrganizations = `-- name: SelectOrganizations :many
+select
+    serial_number,
+    name
+from
+    directory.organizations
+order by
+    name
+`
+
+type SelectOrganizationsRow struct {
+	SerialNumber string
+	Name         string
+}
+
+func (q *Queries) SelectOrganizations(ctx context.Context) ([]*SelectOrganizationsRow, error) {
+	rows, err := q.query(ctx, q.selectOrganizationsStmt, selectOrganizations)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*SelectOrganizationsRow{}
+	for rows.Next() {
+		var i SelectOrganizationsRow
+		if err := rows.Scan(&i.SerialNumber, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const selectVersionStatistics = `-- name: SelectVersionStatistics :many
 select
     'outway' AS type,

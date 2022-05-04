@@ -20,16 +20,15 @@ import (
 )
 
 type PostgreSQLRepository struct {
-	logger                  *zap.Logger
-	db                      *sqlx.DB
-	queries                 *queries.Queries
-	registerInwayStmt       *sqlx.NamedStmt
-	registerServiceStmt     *sqlx.NamedStmt
-	selectServicesStmt      *sqlx.Stmt
-	selectOrganizationsStmt *sqlx.Stmt
-	registerOutwayStmt      *sqlx.NamedStmt
-	getOutwayStmt           *sqlx.NamedStmt
-	selectParticipantsStmt  *sqlx.Stmt
+	logger                 *zap.Logger
+	db                     *sqlx.DB
+	queries                *queries.Queries
+	registerInwayStmt      *sqlx.NamedStmt
+	registerServiceStmt    *sqlx.NamedStmt
+	selectServicesStmt     *sqlx.Stmt
+	registerOutwayStmt     *sqlx.NamedStmt
+	getOutwayStmt          *sqlx.NamedStmt
+	selectParticipantsStmt *sqlx.Stmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -62,11 +61,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare select services statement: %s", err)
 	}
 
-	selectOrganizationsStmt, err := prepareSelectOrganizationsStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare select organizations statement: %s", err)
-	}
-
 	registerOutwayStmt, err := prepareRegisterOutwayStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare register outway statement: %s", err)
@@ -83,16 +77,15 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	}
 
 	return &PostgreSQLRepository{
-		logger:                  logger.Named("postgres repository"),
-		db:                      db,
-		queries:                 querier,
-		registerInwayStmt:       registerInwayStmt,
-		registerServiceStmt:     registerServiceStmt,
-		selectServicesStmt:      selectServicesStatement,
-		selectOrganizationsStmt: selectOrganizationsStmt,
-		registerOutwayStmt:      registerOutwayStmt,
-		getOutwayStmt:           getOutwayStmt,
-		selectParticipantsStmt:  selectParticipantsStmt,
+		logger:                 logger.Named("postgres repository"),
+		db:                     db,
+		queries:                querier,
+		registerInwayStmt:      registerInwayStmt,
+		registerServiceStmt:    registerServiceStmt,
+		selectServicesStmt:     selectServicesStatement,
+		registerOutwayStmt:     registerOutwayStmt,
+		getOutwayStmt:          getOutwayStmt,
+		selectParticipantsStmt: selectParticipantsStmt,
 	}, nil
 }
 

@@ -123,3 +123,12 @@ order by
     type,
     version
 desc;
+
+-- name: SelectOrganizations :many
+select
+    serial_number,
+    name
+from
+    directory.organizations
+order by
+    name;

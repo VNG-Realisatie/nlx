@@ -52,3 +52,23 @@ func (r *PostgreSQLRepository) SetOrganizationEmailAddress(ctx context.Context, 
 		EmailAddress: sql.NullString{String: emailAddress, Valid: true},
 	})
 }
+
+func (r *PostgreSQLRepository) ListOrganizations(ctx context.Context) ([]*domain.Organization, error) {
+	rows, err := r.queries.SelectOrganizations(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]*domain.Organization, len(rows))
+
+	for i, row := range rows {
+		org, err := domain.NewOrganization(row.Name, row.SerialNumber)
+		if err != nil {
+			return nil, err
+		}
+
+		result[i] = org
+	}
+
+	return result, nil
+}
