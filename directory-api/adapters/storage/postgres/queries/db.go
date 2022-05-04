@@ -30,6 +30,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getInwayStmt, err = db.PrepareContext(ctx, getInway); err != nil {
 		return nil, fmt.Errorf("error preparing query GetInway: %w", err)
 	}
+	if q.getOutwayStmt, err = db.PrepareContext(ctx, getOutway); err != nil {
+		return nil, fmt.Errorf("error preparing query GetOutway: %w", err)
+	}
 	if q.getServiceStmt, err = db.PrepareContext(ctx, getService); err != nil {
 		return nil, fmt.Errorf("error preparing query GetService: %w", err)
 	}
@@ -67,6 +70,11 @@ func (q *Queries) Close() error {
 	if q.getInwayStmt != nil {
 		if cerr := q.getInwayStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getInwayStmt: %w", cerr)
+		}
+	}
+	if q.getOutwayStmt != nil {
+		if cerr := q.getOutwayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getOutwayStmt: %w", cerr)
 		}
 	}
 	if q.getServiceStmt != nil {
@@ -150,6 +158,7 @@ type Queries struct {
 	tx                                                   *sql.Tx
 	clearOrganizationInwayStmt                           *sql.Stmt
 	getInwayStmt                                         *sql.Stmt
+	getOutwayStmt                                        *sql.Stmt
 	getServiceStmt                                       *sql.Stmt
 	selectInwayByAddressStmt                             *sql.Stmt
 	selectOrganizationInwayAddressStmt                   *sql.Stmt
@@ -166,6 +175,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		tx:                                 tx,
 		clearOrganizationInwayStmt:         q.clearOrganizationInwayStmt,
 		getInwayStmt:                       q.getInwayStmt,
+		getOutwayStmt:                      q.getOutwayStmt,
 		getServiceStmt:                     q.getServiceStmt,
 		selectInwayByAddressStmt:           q.selectInwayByAddressStmt,
 		selectOrganizationInwayAddressStmt: q.selectOrganizationInwayAddressStmt,

@@ -27,7 +27,6 @@ type PostgreSQLRepository struct {
 	registerServiceStmt    *sqlx.NamedStmt
 	selectServicesStmt     *sqlx.Stmt
 	registerOutwayStmt     *sqlx.NamedStmt
-	getOutwayStmt          *sqlx.NamedStmt
 	selectParticipantsStmt *sqlx.Stmt
 }
 
@@ -66,11 +65,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare register outway statement: %s", err)
 	}
 
-	getOutwayStmt, err := prepareGetOutwayStmt(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare get outway statement: %s", err)
-	}
-
 	selectParticipantsStmt, err := prepareSelectParticipantsStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare select participants statement: %s", err)
@@ -84,7 +78,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		registerServiceStmt:    registerServiceStmt,
 		selectServicesStmt:     selectServicesStatement,
 		registerOutwayStmt:     registerOutwayStmt,
-		getOutwayStmt:          getOutwayStmt,
 		selectParticipantsStmt: selectParticipantsStmt,
 	}, nil
 }

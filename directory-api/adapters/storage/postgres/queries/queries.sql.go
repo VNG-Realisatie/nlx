@@ -74,6 +74,52 @@ func (q *Queries) GetInway(ctx context.Context, arg *GetInwayParams) (*GetInwayR
 	return &i, err
 }
 
+const getOutway = `-- name: GetOutway :one
+select
+    outways.name as name,
+    version as nlx_version,
+    outways.created_at as created_at,
+    updated_at,
+    organizations.serial_number as organization_serial_number,
+    organizations.name as organization_name
+from
+    directory.outways
+         join directory.organizations
+              on outways.organization_id = organizations.id
+where
+    organizations.serial_number = $1
+  and
+    outways.name = $2
+`
+
+type GetOutwayParams struct {
+	SerialNumber string
+	Name         string
+}
+
+type GetOutwayRow struct {
+	Name                     string
+	NlxVersion               string
+	CreatedAt                time.Time
+	UpdatedAt                time.Time
+	OrganizationSerialNumber string
+	OrganizationName         string
+}
+
+func (q *Queries) GetOutway(ctx context.Context, arg *GetOutwayParams) (*GetOutwayRow, error) {
+	row := q.queryRow(ctx, q.getOutwayStmt, getOutway, arg.SerialNumber, arg.Name)
+	var i GetOutwayRow
+	err := row.Scan(
+		&i.Name,
+		&i.NlxVersion,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.OrganizationSerialNumber,
+		&i.OrganizationName,
+	)
+	return &i, err
+}
+
 const getService = `-- name: GetService :one
 select
     services.id as id,

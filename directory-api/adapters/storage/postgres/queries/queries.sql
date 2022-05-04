@@ -132,3 +132,20 @@ from
     directory.organizations
 order by
     name;
+
+-- name: GetOutway :one
+select
+    outways.name as name,
+    version as nlx_version,
+    outways.created_at as created_at,
+    updated_at,
+    organizations.serial_number as organization_serial_number,
+    organizations.name as organization_name
+from
+    directory.outways
+         join directory.organizations
+              on outways.organization_id = organizations.id
+where
+    organizations.serial_number = $1
+  and
+    outways.name = $2;
