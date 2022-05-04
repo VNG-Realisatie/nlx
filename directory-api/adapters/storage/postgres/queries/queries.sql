@@ -281,3 +281,36 @@ with organization as (
             last_announced = now(),
             active = true
     ) select id from service;
+
+-- name: SelectServices :many
+select
+    o.serial_number as organization_serial_number,
+    o.name AS organization_name,
+    s.name AS name,
+    s.internal as internal,
+    s.one_time_costs as one_time_costs,
+    s.monthly_costs as monthly_costs,
+    s.request_costs as request_costs,
+    array_remove(array_agg(i.address), NULL) as inway_addresses,
+    coalesce(s.documentation_url, '') as documentation_url,
+    coalesce(s.api_specification_type, '') as api_specification_type,
+    coalesce(s.public_support_contact, '') as public_support_contact,
+    array_remove(array_agg(a.healthy), NULL) as healthy_statuses
+from
+    directory.services s
+         inner join directory.availabilities a on a.service_id = s.id
+         inner join directory.organizations o on o.id = s.organization_id
+         inner join directory.inways i on i.id = a.inway_id
+where (
+    internal = false
+    or (
+        internal = true and
+        o.serial_number = $1
+   )
+)
+group by
+    s.id,
+    o.id
+order by
+    o.name,
+    s.name;

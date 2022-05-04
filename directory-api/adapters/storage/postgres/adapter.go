@@ -23,7 +23,6 @@ type PostgreSQLRepository struct {
 	logger             *zap.Logger
 	db                 *sqlx.DB
 	queries            *queries.Queries
-	selectServicesStmt *sqlx.Stmt
 	registerOutwayStmt *sqlx.NamedStmt
 }
 
@@ -42,11 +41,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, err
 	}
 
-	selectServicesStatement, err := prepareSelectServicesStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare select services statement: %s", err)
-	}
-
 	registerOutwayStmt, err := prepareRegisterOutwayStmt(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare register outway statement: %s", err)
@@ -56,7 +50,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		logger:             logger.Named("postgres repository"),
 		db:                 db,
 		queries:            querier,
-		selectServicesStmt: selectServicesStatement,
 		registerOutwayStmt: registerOutwayStmt,
 	}, nil
 }

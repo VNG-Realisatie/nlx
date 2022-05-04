@@ -515,6 +515,91 @@ func (q *Queries) SelectParticipants(ctx context.Context) ([]*SelectParticipants
 	return items, nil
 }
 
+const selectServices = `-- name: SelectServices :many
+select
+    o.serial_number as organization_serial_number,
+    o.name AS organization_name,
+    s.name AS name,
+    s.internal as internal,
+    s.one_time_costs as one_time_costs,
+    s.monthly_costs as monthly_costs,
+    s.request_costs as request_costs,
+    array_remove(array_agg(i.address), NULL) as inway_addresses,
+    coalesce(s.documentation_url, '') as documentation_url,
+    coalesce(s.api_specification_type, '') as api_specification_type,
+    coalesce(s.public_support_contact, '') as public_support_contact,
+    array_remove(array_agg(a.healthy), NULL) as healthy_statuses
+from
+    directory.services s
+         inner join directory.availabilities a on a.service_id = s.id
+         inner join directory.organizations o on o.id = s.organization_id
+         inner join directory.inways i on i.id = a.inway_id
+where (
+    internal = false
+    or (
+        internal = true and
+        o.serial_number = $1
+   )
+)
+group by
+    s.id,
+    o.id
+order by
+    o.name,
+    s.name
+`
+
+type SelectServicesRow struct {
+	OrganizationSerialNumber string
+	OrganizationName         string
+	Name                     string
+	Internal                 bool
+	OneTimeCosts             int32
+	MonthlyCosts             int32
+	RequestCosts             int32
+	InwayAddresses           interface{}
+	DocumentationUrl         string
+	ApiSpecificationType     string
+	PublicSupportContact     string
+	HealthyStatuses          interface{}
+}
+
+func (q *Queries) SelectServices(ctx context.Context, serialNumber string) ([]*SelectServicesRow, error) {
+	rows, err := q.query(ctx, q.selectServicesStmt, selectServices, serialNumber)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*SelectServicesRow{}
+	for rows.Next() {
+		var i SelectServicesRow
+		if err := rows.Scan(
+			&i.OrganizationSerialNumber,
+			&i.OrganizationName,
+			&i.Name,
+			&i.Internal,
+			&i.OneTimeCosts,
+			&i.MonthlyCosts,
+			&i.RequestCosts,
+			&i.InwayAddresses,
+			&i.DocumentationUrl,
+			&i.ApiSpecificationType,
+			&i.PublicSupportContact,
+			&i.HealthyStatuses,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const selectVersionStatistics = `-- name: SelectVersionStatistics :many
 select
     'outway' AS type,

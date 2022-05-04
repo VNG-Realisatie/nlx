@@ -9,6 +9,8 @@ import (
 	"errors"
 	"fmt"
 
+	"go.uber.org/zap"
+
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
@@ -78,4 +80,77 @@ func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 	model.SetID(uint(id))
 
 	return err
+}
+
+func (r *PostgreSQLRepository) ListServices(ctx context.Context, organizationSerialNumber string) ([]*domain.Service, error) {
+	rows, err := r.queries.SelectServices(ctx, organizationSerialNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	return convertServiceRowsToModel(r.logger, rows)
+}
+
+func convertServiceRowsToModel(logger *zap.Logger, rows []*queries.SelectServicesRow) ([]*domain.Service, error) {
+	result := make([]*domain.Service, len(rows))
+
+	for i, row := range rows {
+		inwayAddresses, ok := row.InwayAddresses.([]string)
+		if !ok {
+			return nil, errors.New("failed to convert inway addresses")
+		}
+
+		healthyStatuses, ok := row.HealthyStatuses.([]bool)
+		if !ok {
+			return nil, errors.New("failed to convert healthy statuses")
+		}
+
+		if len(inwayAddresses) != len(healthyStatuses) {
+			err := errors.New("length of the inwayadresses does not match healthchecks")
+			logger.Error("failed to convert service to domain model", zap.Error(err))
+
+			return nil, err
+		}
+
+		organization, err := domain.NewOrganization(row.OrganizationName, row.OrganizationSerialNumber)
+		if err != nil {
+			return nil, err
+		}
+
+		inways := make([]*domain.NewServiceInwayArgs, len(inwayAddresses))
+
+		for i, inwayAddress := range inwayAddresses {
+			inwayArgs := &domain.NewServiceInwayArgs{
+				Address: inwayAddress,
+				State:   domain.InwayDOWN,
+			}
+
+			if healthyStatuses[i] {
+				inwayArgs.State = domain.InwayUP
+			}
+
+			inways[i] = inwayArgs
+		}
+
+		result[i], err = domain.NewService(&domain.NewServiceArgs{
+			Name:                 row.Name,
+			Organization:         organization,
+			Internal:             row.Internal,
+			DocumentationURL:     row.DocumentationUrl,
+			APISpecificationType: domain.SpecificationType(row.ApiSpecificationType),
+			PublicSupportContact: row.PublicSupportContact,
+			TechSupportContact:   "",
+			Costs: &domain.NewServiceCostsArgs{
+				OneTime: uint(row.OneTimeCosts),
+				Monthly: uint(row.MonthlyCosts),
+				Request: uint(row.RequestCosts),
+			},
+			Inways: inways,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return result, nil
 }
