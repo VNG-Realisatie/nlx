@@ -245,6 +245,72 @@ func (q *Queries) RegisterInway(ctx context.Context, arg *RegisterInwayParams) e
 	return err
 }
 
+const registerOutway = `-- name: RegisterOutway :exec
+with organization as (
+    insert into
+        directory.organizations
+        (
+            serial_number,
+            name
+        )
+        values (
+            $1,
+            $2
+        )
+    on conflict on constraint organizations_uq_serial_number
+        do update set
+            serial_number = excluded.serial_number,
+            name          = excluded.name
+    returning id
+)
+insert into
+    directory.outways
+    (
+        name,
+        organization_id,
+        version,
+        created_at,
+        updated_at
+    )
+    select
+        $3,
+        organization.id,
+        nullif($4, ''),
+        $5,
+        $6
+    from
+        organization
+    on conflict (
+        name,
+        organization_id
+    )
+    do update set
+        name       = excluded.name,
+        version    = excluded.version,
+        updated_at = excluded.updated_at
+`
+
+type RegisterOutwayParams struct {
+	SerialNumber string
+	Name         string
+	Name_2       string
+	Column4      interface{}
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+}
+
+func (q *Queries) RegisterOutway(ctx context.Context, arg *RegisterOutwayParams) error {
+	_, err := q.exec(ctx, q.registerOutwayStmt, registerOutway,
+		arg.SerialNumber,
+		arg.Name,
+		arg.Name_2,
+		arg.Column4,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
+	return err
+}
+
 const registerService = `-- name: RegisterService :one
 with organization as (
     select

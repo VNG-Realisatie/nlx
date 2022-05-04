@@ -20,10 +20,9 @@ import (
 )
 
 type PostgreSQLRepository struct {
-	logger             *zap.Logger
-	db                 *sqlx.DB
-	queries            *queries.Queries
-	registerOutwayStmt *sqlx.NamedStmt
+	logger  *zap.Logger
+	db      *sqlx.DB
+	queries *queries.Queries
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -41,16 +40,10 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, err
 	}
 
-	registerOutwayStmt, err := prepareRegisterOutwayStmt(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare register outway statement: %s", err)
-	}
-
 	return &PostgreSQLRepository{
-		logger:             logger.Named("postgres repository"),
-		db:                 db,
-		queries:            querier,
-		registerOutwayStmt: registerOutwayStmt,
+		logger:  logger.Named("postgres repository"),
+		db:      db,
+		queries: querier,
 	}, nil
 }
 

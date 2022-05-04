@@ -314,3 +314,47 @@ group by
 order by
     o.name,
     s.name;
+
+-- name: RegisterOutway :exec
+with organization as (
+    insert into
+        directory.organizations
+        (
+            serial_number,
+            name
+        )
+        values (
+            $1,
+            $2
+        )
+    on conflict on constraint organizations_uq_serial_number
+        do update set
+            serial_number = excluded.serial_number,
+            name          = excluded.name
+    returning id
+)
+insert into
+    directory.outways
+    (
+        name,
+        organization_id,
+        version,
+        created_at,
+        updated_at
+    )
+    select
+        $3,
+        organization.id,
+        nullif($4, ''),
+        $5,
+        $6
+    from
+        organization
+    on conflict (
+        name,
+        organization_id
+    )
+    do update set
+        name       = excluded.name,
+        version    = excluded.version,
+        updated_at = excluded.updated_at;
