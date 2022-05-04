@@ -245,6 +245,116 @@ func (q *Queries) RegisterInway(ctx context.Context, arg *RegisterInwayParams) e
 	return err
 }
 
+const registerService = `-- name: RegisterService :one
+with organization as (
+    select
+        id
+    from
+        directory.organizations
+    where
+        organizations.serial_number = $1
+    ),
+    inway as (
+        select
+            inways.id
+        from
+            directory.inways,
+            organization
+        where
+            organization_id = organization.id
+    ),
+    service as (
+        insert into
+            directory.services
+            (
+                organization_id,
+                name,
+                internal,
+                documentation_url,
+                api_specification_type,
+                public_support_contact,
+                tech_support_contact,
+                request_costs,
+                monthly_costs,
+                one_time_costs
+            )
+            select
+                organization.id,
+                $2,
+                $3,
+                nullif($4, ''),
+                nullif($5, ''),
+                nullif($6, ''),
+                nullif($7, ''),
+                $8,
+                $9,
+                $10
+            from
+                organization
+            on conflict on constraint services_uq_name
+                do update set
+                    internal = excluded.internal,
+                    documentation_url = excluded.documentation_url,
+                    api_specification_type = excluded.api_specification_type,
+                    public_support_contact = excluded.public_support_contact,
+                    tech_support_contact = excluded.tech_support_contact,
+                    request_costs = excluded.request_costs,
+                    monthly_costs = excluded.monthly_costs,
+                    one_time_costs = excluded.one_time_costs
+            returning id
+    ),
+    availabilities as (
+        insert into
+            directory.availabilities (
+                inway_id,
+                service_id,
+                last_announced
+            )
+            select
+                inway.id,
+                service.id,
+                now()
+            from
+                inway,
+                service
+        on conflict on constraint availabilities_uq_inway_service
+        do update set
+            last_announced = now(),
+            active = true
+    ) select id from service
+`
+
+type RegisterServiceParams struct {
+	SerialNumber string
+	Name         string
+	Internal     bool
+	Column4      interface{}
+	Column5      interface{}
+	Column6      interface{}
+	Column7      interface{}
+	RequestCosts int32
+	MonthlyCosts int32
+	OneTimeCosts int32
+}
+
+func (q *Queries) RegisterService(ctx context.Context, arg *RegisterServiceParams) (int32, error) {
+	row := q.queryRow(ctx, q.registerServiceStmt, registerService,
+		arg.SerialNumber,
+		arg.Name,
+		arg.Internal,
+		arg.Column4,
+		arg.Column5,
+		arg.Column6,
+		arg.Column7,
+		arg.RequestCosts,
+		arg.MonthlyCosts,
+		arg.OneTimeCosts,
+	)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
 const selectInwayByAddress = `-- name: SelectInwayByAddress :one
 select
     i.id as inway_id,

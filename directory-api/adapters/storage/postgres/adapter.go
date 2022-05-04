@@ -20,12 +20,11 @@ import (
 )
 
 type PostgreSQLRepository struct {
-	logger              *zap.Logger
-	db                  *sqlx.DB
-	queries             *queries.Queries
-	registerServiceStmt *sqlx.NamedStmt
-	selectServicesStmt  *sqlx.Stmt
-	registerOutwayStmt  *sqlx.NamedStmt
+	logger             *zap.Logger
+	db                 *sqlx.DB
+	queries            *queries.Queries
+	selectServicesStmt *sqlx.Stmt
+	registerOutwayStmt *sqlx.NamedStmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -43,11 +42,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, err
 	}
 
-	registerServiceStmt, err := prepareRegisterServiceStmt(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare register service statement: %s", err)
-	}
-
 	selectServicesStatement, err := prepareSelectServicesStatement(db)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare select services statement: %s", err)
@@ -59,12 +53,11 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	}
 
 	return &PostgreSQLRepository{
-		logger:              logger.Named("postgres repository"),
-		db:                  db,
-		queries:             querier,
-		registerServiceStmt: registerServiceStmt,
-		selectServicesStmt:  selectServicesStatement,
-		registerOutwayStmt:  registerOutwayStmt,
+		logger:             logger.Named("postgres repository"),
+		db:                 db,
+		queries:            querier,
+		selectServicesStmt: selectServicesStatement,
+		registerOutwayStmt: registerOutwayStmt,
 	}, nil
 }
 

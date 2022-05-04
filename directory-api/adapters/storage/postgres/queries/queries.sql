@@ -203,3 +203,81 @@ insert into
         management_api_proxy_address = excluded.management_api_proxy_address,
         version                      = excluded.version,
         updated_at                   = excluded.updated_at;
+
+-- name: RegisterService :one
+with organization as (
+    select
+        id
+    from
+        directory.organizations
+    where
+        organizations.serial_number = $1
+    ),
+    inway as (
+        select
+            inways.id
+        from
+            directory.inways,
+            organization
+        where
+            organization_id = organization.id
+    ),
+    service as (
+        insert into
+            directory.services
+            (
+                organization_id,
+                name,
+                internal,
+                documentation_url,
+                api_specification_type,
+                public_support_contact,
+                tech_support_contact,
+                request_costs,
+                monthly_costs,
+                one_time_costs
+            )
+            select
+                organization.id,
+                $2,
+                $3,
+                nullif($4, ''),
+                nullif($5, ''),
+                nullif($6, ''),
+                nullif($7, ''),
+                $8,
+                $9,
+                $10
+            from
+                organization
+            on conflict on constraint services_uq_name
+                do update set
+                    internal = excluded.internal,
+                    documentation_url = excluded.documentation_url,
+                    api_specification_type = excluded.api_specification_type,
+                    public_support_contact = excluded.public_support_contact,
+                    tech_support_contact = excluded.tech_support_contact,
+                    request_costs = excluded.request_costs,
+                    monthly_costs = excluded.monthly_costs,
+                    one_time_costs = excluded.one_time_costs
+            returning id
+    ),
+    availabilities as (
+        insert into
+            directory.availabilities (
+                inway_id,
+                service_id,
+                last_announced
+            )
+            select
+                inway.id,
+                service.id,
+                now()
+            from
+                inway,
+                service
+        on conflict on constraint availabilities_uq_inway_service
+        do update set
+            last_announced = now(),
+            active = true
+    ) select id from service;
