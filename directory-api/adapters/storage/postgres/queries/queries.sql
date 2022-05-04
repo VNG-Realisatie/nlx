@@ -149,3 +149,14 @@ where
     organizations.serial_number = $1
   and
     outways.name = $2;
+
+-- name: SelectParticipants :many
+select
+    serial_number,
+    name,
+    created_at,
+    (select count(id) FROM directory.inways as i where i.organization_id = o.id) as inways,
+    (select count(id) FROM directory.outways as ow where ow.organization_id = o.id) as outways,
+    (select count(id) FROM directory.services as s where s.organization_id = o.id) as services
+from
+    directory.organizations as o;

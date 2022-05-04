@@ -20,14 +20,13 @@ import (
 )
 
 type PostgreSQLRepository struct {
-	logger                 *zap.Logger
-	db                     *sqlx.DB
-	queries                *queries.Queries
-	registerInwayStmt      *sqlx.NamedStmt
-	registerServiceStmt    *sqlx.NamedStmt
-	selectServicesStmt     *sqlx.Stmt
-	registerOutwayStmt     *sqlx.NamedStmt
-	selectParticipantsStmt *sqlx.Stmt
+	logger              *zap.Logger
+	db                  *sqlx.DB
+	queries             *queries.Queries
+	registerInwayStmt   *sqlx.NamedStmt
+	registerServiceStmt *sqlx.NamedStmt
+	selectServicesStmt  *sqlx.Stmt
+	registerOutwayStmt  *sqlx.NamedStmt
 }
 
 //nolint gocyclo: all checks in this function are necessary
@@ -65,20 +64,14 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 		return nil, fmt.Errorf("failed to prepare register outway statement: %s", err)
 	}
 
-	selectParticipantsStmt, err := prepareSelectParticipantsStatement(db)
-	if err != nil {
-		return nil, fmt.Errorf("failed to prepare select participants statement: %s", err)
-	}
-
 	return &PostgreSQLRepository{
-		logger:                 logger.Named("postgres repository"),
-		db:                     db,
-		queries:                querier,
-		registerInwayStmt:      registerInwayStmt,
-		registerServiceStmt:    registerServiceStmt,
-		selectServicesStmt:     selectServicesStatement,
-		registerOutwayStmt:     registerOutwayStmt,
-		selectParticipantsStmt: selectParticipantsStmt,
+		logger:              logger.Named("postgres repository"),
+		db:                  db,
+		queries:             querier,
+		registerInwayStmt:   registerInwayStmt,
+		registerServiceStmt: registerServiceStmt,
+		selectServicesStmt:  selectServicesStatement,
+		registerOutwayStmt:  registerOutwayStmt,
 	}, nil
 }
 

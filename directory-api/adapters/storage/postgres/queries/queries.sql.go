@@ -285,6 +285,57 @@ func (q *Queries) SelectOrganizations(ctx context.Context) ([]*SelectOrganizatio
 	return items, nil
 }
 
+const selectParticipants = `-- name: SelectParticipants :many
+select
+    serial_number,
+    name,
+    created_at,
+    (select count(id) FROM directory.inways as i where i.organization_id = o.id) as inways,
+    (select count(id) FROM directory.outways as ow where ow.organization_id = o.id) as outways,
+    (select count(id) FROM directory.services as s where s.organization_id = o.id) as services
+from
+    directory.organizations as o
+`
+
+type SelectParticipantsRow struct {
+	SerialNumber string
+	Name         string
+	CreatedAt    time.Time
+	Inways       int64
+	Outways      int64
+	Services     int64
+}
+
+func (q *Queries) SelectParticipants(ctx context.Context) ([]*SelectParticipantsRow, error) {
+	rows, err := q.query(ctx, q.selectParticipantsStmt, selectParticipants)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*SelectParticipantsRow{}
+	for rows.Next() {
+		var i SelectParticipantsRow
+		if err := rows.Scan(
+			&i.SerialNumber,
+			&i.Name,
+			&i.CreatedAt,
+			&i.Inways,
+			&i.Outways,
+			&i.Services,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const selectVersionStatistics = `-- name: SelectVersionStatistics :many
 select
     'outway' AS type,

@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
@@ -29,4 +30,41 @@ func (r *PostgreSQLRepository) ListVersionStatistics(ctx context.Context) ([]*do
 	}
 
 	return statistics, nil
+}
+
+func (r *PostgreSQLRepository) ListParticipants(ctx context.Context) ([]*domain.Participant, error) {
+	rows, err := r.queries.SelectParticipants(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return convertParticipantRowsToModels(rows)
+}
+
+func convertParticipantRowsToModels(rows []*queries.SelectParticipantsRow) ([]*domain.Participant, error) {
+	result := make([]*domain.Participant, len(rows))
+
+	for i, row := range rows {
+		org, err := domain.NewOrganization(row.Name, row.SerialNumber)
+		if err != nil {
+			return nil, err
+		}
+
+		p, err := domain.NewParticipant(&domain.NewParticipantArgs{
+			Organization: org,
+			Statistics: &domain.NewParticipantStatisticsArgs{
+				Inways:   uint(row.Inways),
+				Outways:  uint(row.Outways),
+				Services: uint(row.Services),
+			},
+			CreatedAt: row.CreatedAt,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		result[i] = p
+	}
+
+	return result, nil
 }
