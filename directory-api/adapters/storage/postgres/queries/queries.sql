@@ -160,3 +160,46 @@ select
     (select count(id) FROM directory.services as s where s.organization_id = o.id) as services
 from
     directory.organizations as o;
+
+-- name: RegisterInway :exec
+with organization as (
+    insert into directory.organizations
+                (serial_number, name)
+         values ($1, $2)
+    on conflict
+        on constraint organizations_uq_serial_number
+        do update
+            set
+                serial_number = excluded.serial_number,
+                name          = excluded.name
+        returning id
+)
+insert into
+    directory.inways (
+      name,
+      organization_id,
+      address,
+      management_api_proxy_address,
+      version,
+      created_at,
+      updated_at
+    )
+    select
+        $3,
+        organization.id,
+        $4,
+        $5,
+        nullif($6, ''),
+        $7,
+        $8
+    from
+        organization
+    on conflict (
+        name,
+        organization_id
+    ) do update set
+        name                         = excluded.name,
+        address                      = excluded.address,
+        management_api_proxy_address = excluded.management_api_proxy_address,
+        version                      = excluded.version,
+        updated_at                   = excluded.updated_at;

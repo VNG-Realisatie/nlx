@@ -72,3 +72,21 @@ func (r *PostgreSQLRepository) GetOrganizationInwayManagementAPIProxyAddress(ctx
 
 	return inwayProxyAddress.String, nil
 }
+
+func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
+	err := r.queries.RegisterInway(context.Background(), &queries.RegisterInwayParams{
+		SerialNumber:              model.Organization().SerialNumber(),
+		Name:                      model.Organization().Name(),
+		Name_2:                    model.Name(),
+		Address:                   model.Address(),
+		ManagementApiProxyAddress: sql.NullString{String: model.ManagementAPIProxyAddress(), Valid: true},
+		Column6:                   model.NlxVersion(),
+		CreatedAt:                 model.CreatedAt(),
+		UpdatedAt:                 model.UpdatedAt(),
+	})
+	if err != nil && err.Error() == "pq: duplicate key value violates unique constraint \"inways_uq_address\"" {
+		return storage.ErrDuplicateAddress
+	}
+
+	return err
+}

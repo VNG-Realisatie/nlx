@@ -176,6 +176,75 @@ func (q *Queries) GetService(ctx context.Context, id int32) (*GetServiceRow, err
 	return &i, err
 }
 
+const registerInway = `-- name: RegisterInway :exec
+with organization as (
+    insert into directory.organizations
+                (serial_number, name)
+         values ($1, $2)
+    on conflict
+        on constraint organizations_uq_serial_number
+        do update
+            set
+                serial_number = excluded.serial_number,
+                name          = excluded.name
+        returning id
+)
+insert into
+    directory.inways (
+      name,
+      organization_id,
+      address,
+      management_api_proxy_address,
+      version,
+      created_at,
+      updated_at
+    )
+    select
+        $3,
+        organization.id,
+        $4,
+        $5,
+        nullif($6, ''),
+        $7,
+        $8
+    from
+        organization
+    on conflict (
+        name,
+        organization_id
+    ) do update set
+        name                         = excluded.name,
+        address                      = excluded.address,
+        management_api_proxy_address = excluded.management_api_proxy_address,
+        version                      = excluded.version,
+        updated_at                   = excluded.updated_at
+`
+
+type RegisterInwayParams struct {
+	SerialNumber              string
+	Name                      string
+	Name_2                    string
+	Address                   string
+	ManagementApiProxyAddress sql.NullString
+	Column6                   interface{}
+	CreatedAt                 time.Time
+	UpdatedAt                 time.Time
+}
+
+func (q *Queries) RegisterInway(ctx context.Context, arg *RegisterInwayParams) error {
+	_, err := q.exec(ctx, q.registerInwayStmt, registerInway,
+		arg.SerialNumber,
+		arg.Name,
+		arg.Name_2,
+		arg.Address,
+		arg.ManagementApiProxyAddress,
+		arg.Column6,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
+	return err
+}
+
 const selectInwayByAddress = `-- name: SelectInwayByAddress :one
 select
     i.id as inway_id,
