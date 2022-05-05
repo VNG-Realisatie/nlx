@@ -41,11 +41,11 @@ func (r *PostgreSQLRepository) GetOutway(name, serialNumber string) (*domain.Out
 
 func (r *PostgreSQLRepository) RegisterOutway(model *domain.Outway) error {
 	return r.queries.RegisterOutway(context.Background(), &queries.RegisterOutwayParams{
-		SerialNumber: model.Organization().SerialNumber(),
-		Name:         model.Organization().Name(),
-		Name_2:       model.Name(),
-		Column4:      model.NlxVersion(),
-		CreatedAt:    model.CreatedAt(),
-		UpdatedAt:    model.UpdatedAt(),
+		OrganizationSerialNumber: model.Organization().SerialNumber(),
+		OrganizationName:         model.Organization().Name(),
+		Name:                     model.Name(),
+		Version:                  model.NlxVersion(),
+		CreatedAt:                model.CreatedAt(),
+		UpdatedAt:                model.UpdatedAt(),
 	})
 }

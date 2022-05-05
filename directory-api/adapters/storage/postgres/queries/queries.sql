@@ -324,8 +324,8 @@ with organization as (
             name
         )
         values (
-            $1,
-            $2
+            sqlc.arg(organization_serial_number)::text,
+            sqlc.arg(organization_name)::text
         )
     on conflict on constraint organizations_uq_serial_number
         do update set
@@ -343,11 +343,11 @@ insert into
         updated_at
     )
     select
-        $3,
+        sqlc.arg(name)::text,
         organization.id,
-        nullif($4, ''),
-        $5,
-        $6
+        nullif(sqlc.arg(version)::text, ''),
+        $1,
+        $2
     from
         organization
     on conflict (

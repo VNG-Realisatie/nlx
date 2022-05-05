@@ -254,8 +254,8 @@ with organization as (
             name
         )
         values (
-            $1,
-            $2
+            $5::text,
+            $6::text
         )
     on conflict on constraint organizations_uq_serial_number
         do update set
@@ -273,11 +273,11 @@ insert into
         updated_at
     )
     select
-        $3,
+        $3::text,
         organization.id,
-        nullif($4, ''),
-        $5,
-        $6
+        nullif($4::text, ''),
+        $1,
+        $2
     from
         organization
     on conflict (
@@ -291,22 +291,22 @@ insert into
 `
 
 type RegisterOutwayParams struct {
-	SerialNumber string
-	Name         string
-	Name_2       string
-	Column4      interface{}
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	CreatedAt                time.Time
+	UpdatedAt                time.Time
+	Name                     string
+	Version                  string
+	OrganizationSerialNumber string
+	OrganizationName         string
 }
 
 func (q *Queries) RegisterOutway(ctx context.Context, arg *RegisterOutwayParams) error {
 	_, err := q.exec(ctx, q.registerOutwayStmt, registerOutway,
-		arg.SerialNumber,
-		arg.Name,
-		arg.Name_2,
-		arg.Column4,
 		arg.CreatedAt,
 		arg.UpdatedAt,
+		arg.Name,
+		arg.Version,
+		arg.OrganizationSerialNumber,
+		arg.OrganizationName,
 	)
 	return err
 }
