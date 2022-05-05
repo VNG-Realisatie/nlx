@@ -19,11 +19,6 @@ import (
 func TestListParticipants(t *testing.T) {
 	t.Parallel()
 
-	type wantOrganization struct {
-		serialNumber string
-		name         string
-	}
-
 	tests := map[string]struct {
 		loadFixtures bool
 		want         []*domain.NewParticipantArgs

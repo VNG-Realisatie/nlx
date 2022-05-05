@@ -11,16 +11,11 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
 func TestRegisterOutway(t *testing.T) {
 	t.Parallel()
-
-	type args struct {
-		version nlxversion.Version
-	}
 
 	tests := map[string]struct {
 		loadFixtures bool
