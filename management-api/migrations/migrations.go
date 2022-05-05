@@ -22,7 +22,7 @@ type driver struct {
 	httpfs.PartialDriver
 }
 
-func (d *driver) Open(rawURL string) (source.Driver, error) {
+func (d *driver) Open(string) (source.Driver, error) {
 	err := d.PartialDriver.Init(http.FS(migrations), "sql")
 	if err != nil {
 		return nil, err
