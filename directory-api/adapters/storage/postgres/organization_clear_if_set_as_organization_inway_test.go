@@ -1,9 +1,9 @@
-// Copyright © VNG Realisatie 2021
+// Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 
 //go:build integration
 
-package storage_test
+package pgadapter_test
 
 import (
 	"context"

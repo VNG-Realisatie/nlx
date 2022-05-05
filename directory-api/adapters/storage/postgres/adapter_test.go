@@ -3,24 +3,72 @@
 
 //go:build integration
 
-package storage_test
+package pgadapter_test
 
 import (
 	"context"
+	"os"
+	"sync"
 	"testing"
 	"time"
 
+	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/huandu/xstrings"
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
 
-	pgadapter_test_setup "go.nlx.io/nlx/directory-api/adapters/storage/postgres/test_setup"
+	pgadapter "go.nlx.io/nlx/directory-api/adapters/storage/postgres"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
+	"go.nlx.io/nlx/testing/testingutils"
 )
 
+const dbName = "test_directory"
+const dbDriver = "txdb"
+
+var setupOnce sync.Once
+
+func setupDatabase(t *testing.T) {
+	dsnBase := os.Getenv("POSTGRES_DSN")
+	dsn, err := testingutils.CreateTestDatabase(dsnBase, dbName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", dbName)
+	err = pgadapter.PostgreSQLPerformMigrations(dsnForMigrations)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	txdb.Register(dbDriver, "postgres", dsn)
+
+	// This is necessary because the default BindVars for txdb isn't correct
+	sqlx.BindDriver(dbDriver, sqlx.DOLLAR)
+
+}
+
+func New(t *testing.T) (*pgadapter.PostgreSQLRepository, func() error) {
+	setupOnce.Do(func() {
+		setupDatabase(t)
+	})
+
+	db, err := sqlx.Open(dbDriver, t.Name())
+	require.NoError(t, err)
+
+	db.MapperFunc(xstrings.ToSnakeCase)
+
+	repo, err := pgadapter.New(zap.NewNop(), db)
+	require.NoError(t, err)
+
+	return repo, db.Close
+}
+
 func new(t *testing.T, enableFixtures bool) (storage.Repository, func() error) {
-	repo, close := pgadapter_test_setup.New(t)
+	repo, close := New(t)
 	if enableFixtures {
 		err := loadFixtures(repo)
 		require.NoError(t, err)

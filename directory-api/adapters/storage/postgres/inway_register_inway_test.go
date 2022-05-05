@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package storage_test
+package pgadapter_test
 
 import (
 	"testing"
