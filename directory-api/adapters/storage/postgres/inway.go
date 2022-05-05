@@ -75,12 +75,12 @@ func (r *PostgreSQLRepository) GetOrganizationInwayManagementAPIProxyAddress(ctx
 
 func (r *PostgreSQLRepository) RegisterInway(model *domain.Inway) error {
 	err := r.queries.RegisterInway(context.Background(), &queries.RegisterInwayParams{
-		SerialNumber:              model.Organization().SerialNumber(),
-		Name:                      model.Organization().Name(),
-		Name_2:                    model.Name(),
+		OrganizationSerialNumber:  model.Organization().SerialNumber(),
+		OrganizationName:          model.Organization().Name(),
+		Name:                      model.Name(),
 		Address:                   model.Address(),
-		ManagementApiProxyAddress: sql.NullString{String: model.ManagementAPIProxyAddress(), Valid: true},
-		Column6:                   model.NlxVersion(),
+		ManagementApiProxyAddress: model.ManagementAPIProxyAddress(),
+		Version:                   model.NlxVersion(),
 		CreatedAt:                 model.CreatedAt(),
 		UpdatedAt:                 model.UpdatedAt(),
 	})

@@ -72,9 +72,9 @@ func (r *PostgreSQLRepository) SetOrganizationInway(ctx context.Context, organiz
 
 func (r *PostgreSQLRepository) SetOrganizationEmailAddress(ctx context.Context, organization *domain.Organization, emailAddress string) error {
 	return r.queries.SetOrganizationEmail(ctx, &queries.SetOrganizationEmailParams{
-		SerialNumber: organization.SerialNumber(),
-		Name:         organization.Name(),
-		EmailAddress: sql.NullString{String: emailAddress, Valid: true},
+		OrganizationSerialNumber: organization.SerialNumber(),
+		OrganizationName:         organization.Name(),
+		EmailAddress:             emailAddress,
 	})
 }
 

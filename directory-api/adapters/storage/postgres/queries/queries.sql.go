@@ -182,7 +182,10 @@ const registerInway = `-- name: RegisterInway :exec
 with organization as (
     insert into directory.organizations
                 (serial_number, name)
-         values ($1, $2)
+         values (
+             $7::text,
+             $8::text
+         )
     on conflict
         on constraint organizations_uq_serial_number
         do update
@@ -202,13 +205,13 @@ insert into
       updated_at
     )
     select
-        $3,
+        $3::text,
         organization.id,
-        $4,
-        $5,
-        nullif($6, ''),
-        $7,
-        $8
+        $4::text,
+        $5::text,
+        nullif($6::text, ''),
+        $1,
+        $2
     from
         organization
     on conflict (
@@ -223,26 +226,26 @@ insert into
 `
 
 type RegisterInwayParams struct {
-	SerialNumber              string
-	Name                      string
-	Name_2                    string
-	Address                   string
-	ManagementApiProxyAddress sql.NullString
-	Column6                   interface{}
 	CreatedAt                 time.Time
 	UpdatedAt                 time.Time
+	Name                      string
+	Address                   string
+	ManagementApiProxyAddress string
+	Version                   string
+	OrganizationSerialNumber  string
+	OrganizationName          string
 }
 
 func (q *Queries) RegisterInway(ctx context.Context, arg *RegisterInwayParams) error {
 	_, err := q.exec(ctx, q.registerInwayStmt, registerInway,
-		arg.SerialNumber,
-		arg.Name,
-		arg.Name_2,
-		arg.Address,
-		arg.ManagementApiProxyAddress,
-		arg.Column6,
 		arg.CreatedAt,
 		arg.UpdatedAt,
+		arg.Name,
+		arg.Address,
+		arg.ManagementApiProxyAddress,
+		arg.Version,
+		arg.OrganizationSerialNumber,
+		arg.OrganizationName,
 	)
 	return err
 }
@@ -320,7 +323,7 @@ with organization as (
     from
         directory.organizations
     where
-        organizations.serial_number = $1
+        organizations.serial_number = $5::text
     ),
     inway as (
         select
@@ -348,15 +351,15 @@ with organization as (
             )
             select
                 organization.id,
+                $6::text,
+                $1,
+                nullif($7::text, ''),
+                nullif($8::text, ''),
+                nullif($9::text, ''),
+                nullif($10::text, ''),
                 $2,
                 $3,
-                nullif($4, ''),
-                nullif($5, ''),
-                nullif($6, ''),
-                nullif($7, ''),
-                $8,
-                $9,
-                $10
+                $4
             from
                 organization
             on conflict on constraint services_uq_name
@@ -393,30 +396,30 @@ with organization as (
 `
 
 type RegisterServiceParams struct {
-	SerialNumber string
-	Name         string
-	Internal     bool
-	Column4      interface{}
-	Column5      interface{}
-	Column6      interface{}
-	Column7      interface{}
-	RequestCosts int32
-	MonthlyCosts int32
-	OneTimeCosts int32
+	Internal                 bool
+	RequestCosts             int32
+	MonthlyCosts             int32
+	OneTimeCosts             int32
+	OrganizationSerialNumber string
+	Name                     string
+	DocumentationUrl         string
+	ApiSpecificationType     string
+	PublicSupportContact     string
+	TechSupportContact       string
 }
 
 func (q *Queries) RegisterService(ctx context.Context, arg *RegisterServiceParams) (int32, error) {
 	row := q.queryRow(ctx, q.registerServiceStmt, registerService,
-		arg.SerialNumber,
-		arg.Name,
 		arg.Internal,
-		arg.Column4,
-		arg.Column5,
-		arg.Column6,
-		arg.Column7,
 		arg.RequestCosts,
 		arg.MonthlyCosts,
 		arg.OneTimeCosts,
+		arg.OrganizationSerialNumber,
+		arg.Name,
+		arg.DocumentationUrl,
+		arg.ApiSpecificationType,
+		arg.PublicSupportContact,
+		arg.TechSupportContact,
 	)
 	var id int32
 	err := row.Scan(&id)
@@ -726,7 +729,11 @@ insert into
     directory.organizations
     (serial_number, name, email_address)
 values
-    ($1, $2, $3)
+    (
+        $1::text,
+        $2::text,
+        $3::text
+     )
     on conflict
 on constraint organizations_uq_serial_number
     do update set
@@ -737,13 +744,13 @@ on constraint organizations_uq_serial_number
 `
 
 type SetOrganizationEmailParams struct {
-	SerialNumber string
-	Name         string
-	EmailAddress sql.NullString
+	OrganizationSerialNumber string
+	OrganizationName         string
+	EmailAddress             string
 }
 
 func (q *Queries) SetOrganizationEmail(ctx context.Context, arg *SetOrganizationEmailParams) error {
-	_, err := q.exec(ctx, q.setOrganizationEmailStmt, setOrganizationEmail, arg.SerialNumber, arg.Name, arg.EmailAddress)
+	_, err := q.exec(ctx, q.setOrganizationEmailStmt, setOrganizationEmail, arg.OrganizationSerialNumber, arg.OrganizationName, arg.EmailAddress)
 	return err
 }
 

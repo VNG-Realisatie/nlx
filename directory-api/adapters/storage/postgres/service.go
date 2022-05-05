@@ -62,16 +62,16 @@ func convertServiceRowToModel(row *queries.GetServiceRow) (*domain.Service, erro
 
 func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 	id, err := r.queries.RegisterService(context.Background(), &queries.RegisterServiceParams{
-		SerialNumber: model.Organization().SerialNumber(),
-		Name:         model.Name(),
-		Internal:     model.Internal(),
-		Column4:      model.DocumentationURL(),
-		Column5:      model.APISpecificationType(),
-		Column6:      model.PublicSupportContact(),
-		Column7:      model.TechSupportContact(),
-		RequestCosts: int32(model.Costs().Request()),
-		MonthlyCosts: int32(model.Costs().Monthly()),
-		OneTimeCosts: int32(model.Costs().OneTime()),
+		OrganizationSerialNumber: model.Organization().SerialNumber(),
+		Name:                     model.Name(),
+		Internal:                 model.Internal(),
+		DocumentationUrl:         model.DocumentationURL(),
+		ApiSpecificationType:     string(model.APISpecificationType()),
+		PublicSupportContact:     model.PublicSupportContact(),
+		TechSupportContact:       model.TechSupportContact(),
+		RequestCosts:             int32(model.Costs().Request()),
+		MonthlyCosts:             int32(model.Costs().Monthly()),
+		OneTimeCosts:             int32(model.Costs().OneTime()),
 	})
 	if err != nil {
 		return err

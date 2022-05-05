@@ -68,7 +68,11 @@ insert into
     directory.organizations
     (serial_number, name, email_address)
 values
-    ($1, $2, $3)
+    (
+        sqlc.arg(organization_serial_number)::text,
+        sqlc.arg(organization_name)::text,
+        sqlc.arg(email_address)::text
+     )
     on conflict
 on constraint organizations_uq_serial_number
     do update set
@@ -165,7 +169,10 @@ from
 with organization as (
     insert into directory.organizations
                 (serial_number, name)
-         values ($1, $2)
+         values (
+             sqlc.arg(organization_serial_number)::text,
+             sqlc.arg(organization_name)::text
+         )
     on conflict
         on constraint organizations_uq_serial_number
         do update
@@ -185,13 +192,13 @@ insert into
       updated_at
     )
     select
-        $3,
+        sqlc.arg(name)::text,
         organization.id,
-        $4,
-        $5,
-        nullif($6, ''),
-        $7,
-        $8
+        sqlc.arg(address)::text,
+        sqlc.arg(management_api_proxy_address)::text,
+        nullif(sqlc.arg(version)::text, ''),
+        $1,
+        $2
     from
         organization
     on conflict (
@@ -211,7 +218,7 @@ with organization as (
     from
         directory.organizations
     where
-        organizations.serial_number = $1
+        organizations.serial_number = sqlc.arg(organization_serial_number)::text
     ),
     inway as (
         select
@@ -239,15 +246,15 @@ with organization as (
             )
             select
                 organization.id,
+                sqlc.arg(name)::text,
+                $1,
+                nullif(sqlc.arg(documentation_url)::text, ''),
+                nullif(sqlc.arg(api_specification_type)::text, ''),
+                nullif(sqlc.arg(public_support_contact)::text, ''),
+                nullif(sqlc.arg(tech_support_contact)::text, ''),
                 $2,
                 $3,
-                nullif($4, ''),
-                nullif($5, ''),
-                nullif($6, ''),
-                nullif($7, ''),
-                $8,
-                $9,
-                $10
+                $4
             from
                 organization
             on conflict on constraint services_uq_name
