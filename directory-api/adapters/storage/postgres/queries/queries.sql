@@ -291,11 +291,11 @@ select
     s.one_time_costs as one_time_costs,
     s.monthly_costs as monthly_costs,
     s.request_costs as request_costs,
-    array_remove(array_agg(i.address), NULL) as inway_addresses,
+    array_remove(array_agg(i.address), NULL)::text[] as inway_addresses,
     coalesce(s.documentation_url, '') as documentation_url,
     coalesce(s.api_specification_type, '') as api_specification_type,
     coalesce(s.public_support_contact, '') as public_support_contact,
-    array_remove(array_agg(a.healthy), NULL) as healthy_statuses
+    array_remove(array_agg(a.healthy), NULL)::bool[] as healthy_statuses
 from
     directory.services s
          inner join directory.availabilities a on a.service_id = s.id

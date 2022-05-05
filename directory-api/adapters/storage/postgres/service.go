@@ -95,17 +95,7 @@ func convertServiceRowsToModel(logger *zap.Logger, rows []*queries.SelectService
 	result := make([]*domain.Service, len(rows))
 
 	for i, row := range rows {
-		inwayAddresses, ok := row.InwayAddresses.([]string)
-		if !ok {
-			return nil, errors.New("failed to convert inway addresses")
-		}
-
-		healthyStatuses, ok := row.HealthyStatuses.([]bool)
-		if !ok {
-			return nil, errors.New("failed to convert healthy statuses")
-		}
-
-		if len(inwayAddresses) != len(healthyStatuses) {
+		if len(row.InwayAddresses) != len(row.HealthyStatuses) {
 			err := errors.New("length of the inwayadresses does not match healthchecks")
 			logger.Error("failed to convert service to domain model", zap.Error(err))
 
@@ -117,15 +107,15 @@ func convertServiceRowsToModel(logger *zap.Logger, rows []*queries.SelectService
 			return nil, err
 		}
 
-		inways := make([]*domain.NewServiceInwayArgs, len(inwayAddresses))
+		inways := make([]*domain.NewServiceInwayArgs, len(row.InwayAddresses))
 
-		for i, inwayAddress := range inwayAddresses {
+		for i, inwayAddress := range row.InwayAddresses {
 			inwayArgs := &domain.NewServiceInwayArgs{
 				Address: inwayAddress,
 				State:   domain.InwayDOWN,
 			}
 
-			if healthyStatuses[i] {
+			if row.HealthyStatuses[i] {
 				inwayArgs.State = domain.InwayUP
 			}
 
