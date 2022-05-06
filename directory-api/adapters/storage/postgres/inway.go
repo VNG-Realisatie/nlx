@@ -61,7 +61,7 @@ func (r *PostgreSQLRepository) GetOrganizationInwayAddress(ctx context.Context, 
 }
 
 func (r *PostgreSQLRepository) GetOrganizationInwayManagementAPIProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error) {
-	inwayProxyAddress, err := r.queries.SelectOrganizationInwayAddress(ctx, organizationSerialNumber)
+	inwayProxyAddress, err := r.queries.SelectOrganizationInwayManagementAPIProxyAddress(ctx, organizationSerialNumber)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return "", storage.ErrNotFound

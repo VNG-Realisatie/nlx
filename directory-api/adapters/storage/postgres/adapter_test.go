@@ -113,13 +113,14 @@ func loadFixtures(repo storage.Repository) error {
 
 	newInwaysArgs := []*domain.NewInwayArgs{
 		{
-			Name:                "fixture-inway-name-one",
-			Address:             "fixture-inway-address-one.com:443",
-			IsOrganizationInway: true,
-			Organization:        organizationsModels[0],
-			NlxVersion:          "1.0.0",
-			CreatedAt:           time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
-			UpdatedAt:           time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			Name:                      "fixture-inway-name-one",
+			Address:                   "fixture-inway-address-one.com:443",
+			ManagementAPIProxyAddress: "fixture-inway-proxy-address-one.com:8443",
+			IsOrganizationInway:       true,
+			Organization:              organizationsModels[0],
+			NlxVersion:                "1.0.0",
+			CreatedAt:                 time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			UpdatedAt:                 time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
 		},
 		{
 			Name:                "fixture-inway-name-two",
