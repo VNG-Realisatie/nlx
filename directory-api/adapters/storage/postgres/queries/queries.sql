@@ -1,8 +1,3 @@
--- name: ClearOrganizationInway :execrows
-UPDATE directory.organizations
-    SET inway_id = null
-WHERE serial_number = $1;
-
 -- name: GetInway :one
 select
     inways.name as name,
@@ -62,6 +57,14 @@ set
     inway_id = $1
 where
     serial_number = $2;
+
+-- name: ClearOrganizationInway :execrows
+update
+    directory.organizations
+set
+    inway_id = null
+where
+    serial_number = $1;
 
 -- name: SetOrganizationEmail :exec
 insert into

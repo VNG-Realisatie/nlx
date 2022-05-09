@@ -14,9 +14,12 @@ import (
 )
 
 const clearOrganizationInway = `-- name: ClearOrganizationInway :execrows
-UPDATE directory.organizations
-    SET inway_id = null
-WHERE serial_number = $1
+update
+    directory.organizations
+set
+    inway_id = null
+where
+    serial_number = $1
 `
 
 func (q *Queries) ClearOrganizationInway(ctx context.Context, serialNumber string) (int64, error) {
