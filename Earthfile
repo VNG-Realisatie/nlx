@@ -245,6 +245,19 @@ mocks-txlog-api:
     SAVE ARTIFACT /dist/api/mock/mock_txlog.go AS LOCAL ./txlog-api/api/mock/mock_txlog.go
     SAVE ARTIFACT /dist/domain/txlog/storage/mock/repository.go AS LOCAL ./txlog-api/domain/txlog/storage/mock/repository.go
 
+sqlc-txlog-api:
+    FROM +deps
+    COPY ./txlog-api/adapters/storage/postgres/queries /src/txlog-api/adapters/storage/postgres/queries
+    COPY ./txlog-db/migrations /src/txlog-db/migrations
+
+    WORKDIR /src/txlog-api/adapters/storage/postgres/queries
+
+    RUN /usr/bin/sqlc generate
+
+    RUN goimports -w -local "go.nlx.io" /src/
+
+    SAVE ARTIFACT /src/txlog-api/adapters/storage/postgres/queries/* AS LOCAL ./txlog-api/adapters/storage/postgres/queries/
+
 sqlc-directory-api:
     FROM +deps
     COPY ./directory-api/adapters/storage/postgres/queries /src/directory-api/adapters/storage/postgres/queries
