@@ -20,7 +20,6 @@ container_scanning:
     IMAGE_SUFFIXES: >
       ca-certportal
       ca-cfssl-unsafe
-      directory-db
       directory-api
       directory-monitor
       directory-ui

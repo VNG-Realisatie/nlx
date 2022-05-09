@@ -70,7 +70,6 @@ The following table lists the configurable parameters of the nlx-directory Chart
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no |
-| `image.databaseRepository` | Image repository | `nlxio/directory-db` | no |
 | `image.apiRepository` | Image repository | `nlxio/directory-api` | no |
 | `image.monitorRepository` | Image repository | `nlxio/directory-monitor` | no |
 | `image.uiRepository` | Image repository | `nlxio/directory-ui` | no |

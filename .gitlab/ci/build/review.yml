@@ -77,13 +77,6 @@ Build review docs:
     CONTEXT: docs
     DOCKERFILE: docs/Dockerfile
 
-Build review directory-db:
-  extends: .build-review-base
-  variables:
-    IMAGE: directory-db
-    CONTEXT: .
-    DOCKERFILE: directory-db/Dockerfile
-
 Build review directory-api:
   extends: .build-review-base
   variables:

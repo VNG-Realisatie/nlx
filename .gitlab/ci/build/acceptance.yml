@@ -77,13 +77,6 @@ Build acceptance docs:
     CONTEXT: docs
     DOCKERFILE: docs/Dockerfile
 
-Build acceptance directory-db:
-  extends: .build-acceptance-base
-  variables:
-    IMAGE: directory-db
-    CONTEXT: .
-    DOCKERFILE: directory-db/Dockerfile
-
 Build acceptance directory-api:
   extends: .build-acceptance-base
   variables:

@@ -15,6 +15,3 @@ dc build
 dc up -d postgres
 
 ./docker-wait.sh
-
-echo "appyling migrations"
-dc up directory-db

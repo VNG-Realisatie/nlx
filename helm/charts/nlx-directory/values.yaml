@@ -7,7 +7,6 @@ global:
 
 image:
   registry: docker.io
-  databaseRepository: nlxio/directory-db
   apiRepository: nlxio/directory-api
   monitorRepository: nlxio/directory-monitor
   uiRepository: nlxio/directory-ui

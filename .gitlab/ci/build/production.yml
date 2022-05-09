@@ -83,13 +83,6 @@ Build production docs:
     CONTEXT: docs
     DOCKERFILE: docs/Dockerfile
 
-Build production directory-db:
-  extends: .build-production-base
-  variables:
-    IMAGE: directory-db
-    CONTEXT: .
-    DOCKERFILE: directory-db/Dockerfile
-
 Build production directory-api:
   extends: .build-production-base
   variables:

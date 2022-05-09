@@ -49,11 +49,6 @@ Push production docs:
   variables:
     IMAGE: docs
 
-Push production directory-db:
-  extends: .push-production-base
-  variables:
-    IMAGE: directory-db
-
 Push production directory-api:
   extends: .push-production-base
   variables:
