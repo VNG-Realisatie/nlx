@@ -72,9 +72,9 @@ spec:
               value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}
             - name: TLS_NLX_ROOT_CERT
               value: /config/root.pem
-            - name: TLS_DIRECTORY_CERT
+            - name: TLS_ORG_CERT
               value: /certificate/tls.crt
-            - name: TLS_DIRECTORY_KEY
+            - name: TLS_ORG_KEY
               value: /certificate/tls.key
             - name: TERMS_OF_SERVICE_URL
               value: {{ .Values.config.termsOfServiceURL }}

@@ -23,7 +23,7 @@ ARG GIT_COMMIT_HASH=undefined
 
 RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
-        -o dist/bin/nlx-directory-api ./cmd/nlx-directory-api
+        -o dist/bin/nlx-directory-api ./
 
 FROM alpine:3.15.4
 
@@ -36,4 +36,4 @@ COPY --from=build /go/src/go.nlx.io/nlx/directory-api/dist/bin/nlx-directory-api
 RUN adduser -D -u 1001 appuser
 USER appuser
 
-CMD ["/usr/local/bin/nlx-directory-api"]
+CMD ["/usr/local/bin/nlx-directory-api", "serve"]
