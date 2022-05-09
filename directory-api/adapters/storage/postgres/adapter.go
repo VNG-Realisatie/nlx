@@ -28,7 +28,7 @@ type PostgreSQLRepository struct {
 //nolint gocyclo: all checks in this function are necessary
 func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	if logger == nil {
-		panic("missing logger")
+		return nil, errors.New("no logger provided")
 	}
 
 	if db == nil {
