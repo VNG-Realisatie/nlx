@@ -109,17 +109,17 @@ func convertServiceRowsToModel(logger *zap.Logger, rows []*queries.SelectService
 
 		inways := make([]*domain.NewServiceInwayArgs, len(row.InwayAddresses))
 
-		for i, inwayAddress := range row.InwayAddresses {
+		for j, inwayAddress := range row.InwayAddresses {
 			inwayArgs := &domain.NewServiceInwayArgs{
 				Address: inwayAddress,
 				State:   domain.InwayDOWN,
 			}
 
-			if row.HealthyStatuses[i] {
+			if row.HealthyStatuses[j] {
 				inwayArgs.State = domain.InwayUP
 			}
 
-			inways[i] = inwayArgs
+			inways[j] = inwayArgs
 		}
 
 		result[i], err = domain.NewService(&domain.NewServiceArgs{
