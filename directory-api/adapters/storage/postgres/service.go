@@ -9,8 +9,6 @@ import (
 	"errors"
 	"fmt"
 
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
@@ -88,20 +86,13 @@ func (r *PostgreSQLRepository) ListServices(ctx context.Context, organizationSer
 		return nil, err
 	}
 
-	return convertServiceRowsToModel(r.logger, rows)
+	return convertServiceRowsToModel(rows)
 }
 
-func convertServiceRowsToModel(logger *zap.Logger, rows []*queries.SelectServicesRow) ([]*domain.Service, error) {
+func convertServiceRowsToModel(rows []*queries.SelectServicesRow) ([]*domain.Service, error) {
 	result := make([]*domain.Service, len(rows))
 
 	for i, row := range rows {
-		if len(row.InwayAddresses) != len(row.HealthyStatuses) {
-			err := errors.New("length of the inwayadresses does not match healthchecks")
-			logger.Error("failed to convert service to domain model", zap.Error(err))
-
-			return nil, err
-		}
-
 		organization, err := domain.NewOrganization(row.OrganizationName, row.OrganizationSerialNumber)
 		if err != nil {
 			return nil, err
