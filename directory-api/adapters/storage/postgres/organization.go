@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"go.uber.org/zap"
 
@@ -89,7 +90,9 @@ func (r *PostgreSQLRepository) ListOrganizations(ctx context.Context) ([]*domain
 	for i, row := range rows {
 		org, err := domain.NewOrganization(row.Name, row.SerialNumber)
 		if err != nil {
-			return nil, err
+			if err != nil {
+				return nil, fmt.Errorf("invalid organization model in database: %v", err)
+			}
 		}
 
 		result[i] = org
