@@ -12,7 +12,6 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/cmd"
-	common_db "go.nlx.io/nlx/common/db"
 	nlxhttp "go.nlx.io/nlx/common/http"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
@@ -21,7 +20,6 @@ import (
 	pgadapter "go.nlx.io/nlx/directory-api/adapters/storage/postgres"
 	"go.nlx.io/nlx/directory-api/http"
 	"go.nlx.io/nlx/directory-api/pkg/directory"
-	"go.nlx.io/nlx/directory-db/dbversion"
 )
 
 var serveOpts struct {
@@ -86,8 +84,6 @@ var serveCommand = &cobra.Command{
 		if err != nil {
 			logger.Fatal("can not create db connection:", zap.Error(err))
 		}
-
-		common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 		storage, err := pgadapter.New(logger, db)
 		if err != nil {

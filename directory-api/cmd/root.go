@@ -17,4 +17,5 @@ func Execute() error {
 //nolint:gochecknoinits // this is the recommended way to use cobra
 func init() {
 	RootCmd.AddCommand(serveCommand)
+	RootCmd.AddCommand(migrateCommand)
 }

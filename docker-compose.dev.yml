@@ -61,6 +61,7 @@ services:
         - ./auth-opa/data:/data
         - ./pki/internal/organization-b:/pki/internal/organization-b
       restart: on-failure
+
   auth-org-c:
     image: openpolicyagent/opa:0.40.0
     ports:

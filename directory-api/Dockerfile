@@ -13,8 +13,7 @@ RUN go mod download
 
 # Only add code that we use for building director
 COPY directory-api  /go/src/go.nlx.io/nlx/directory-api
-COPY directory-db/dbversion      /go/src/go.nlx.io/nlx/directory-db/dbversion
-COPY common                      /go/src/go.nlx.io/nlx/common
+COPY common         /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/directory-api
 

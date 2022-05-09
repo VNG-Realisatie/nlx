@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -17,7 +18,12 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
+	"go.nlx.io/nlx/directory-api/migrations"
 )
+
+const driverName = "embed"
+
+var registerDriverOnce sync.Once
 
 type PostgreSQLRepository struct {
 	logger  *zap.Logger
@@ -69,10 +75,18 @@ func (r *PostgreSQLRepository) Shutdown() error {
 	return r.db.Close()
 }
 
+func setupMigrator(dsn string) (*migrate.Migrate, error) {
+	registerDriverOnce.Do(func() {
+		migrations.RegisterDriver(driverName)
+	})
+
+	return migrate.New(fmt.Sprintf("%s://", driverName), dsn)
+}
+
 func PostgreSQLPerformMigrations(dsn string) error {
-	migrator, err := migrate.New("file://../../../../directory-db/migrations", dsn)
+	migrator, err := setupMigrator(dsn)
 	if err != nil {
-		return fmt.Errorf("setup migrator: %v", err)
+		return err
 	}
 
 	err = migrator.Up()
@@ -81,4 +95,13 @@ func PostgreSQLPerformMigrations(dsn string) error {
 	}
 
 	return nil
+}
+
+func PostgresMigrationStatus(dsn string) (version uint, dirty bool, err error) {
+	migrator, err := setupMigrator(dsn)
+	if err != nil {
+		return 0, false, err
+	}
+
+	return migrator.Version()
 }

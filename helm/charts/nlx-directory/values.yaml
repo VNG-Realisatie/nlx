@@ -23,7 +23,6 @@ fullnameOverride: ""
 config:
   logType: live
   logLevel: info
-  resetDatabase: false
   termsOfServiceURL: ""
   monitor:
     offlineServiceTTL: 86400  # 24 hours
@@ -33,6 +32,7 @@ config:
 
 postgresql:
   hostname: postgresql
+  port: 5432
   database: nlx-directory
   username: ""
   password: ""

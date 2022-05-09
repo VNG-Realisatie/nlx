@@ -261,7 +261,7 @@ sqlc-txlog-api:
 sqlc-directory-api:
     FROM +deps
     COPY ./directory-api/adapters/storage/postgres/queries /src/directory-api/adapters/storage/postgres/queries
-    COPY ./directory-db/migrations /src/directory-db/migrations
+    COPY ./directory-api/migrations /src/directory-api/migrations
 
     WORKDIR /src/directory-api/adapters/storage/postgres/queries
 

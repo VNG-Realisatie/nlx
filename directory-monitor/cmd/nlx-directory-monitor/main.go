@@ -12,12 +12,10 @@ import (
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 
-	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
-	"go.nlx.io/nlx/directory-db/dbversion"
 	monitor "go.nlx.io/nlx/directory-monitor"
 )
 
@@ -53,8 +51,6 @@ func main() {
 	if err != nil {
 		logger.Fatal("could not open connection to postgres", zap.Error(err))
 	}
-
-	common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestDirectoryDBVersion)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.MonitorKeyFile); errValidate != nil {
 		logger.Warn("invalid private key permissions", zap.Error(errValidate), zap.String("file-path", options.MonitorKeyFile))
