@@ -9,6 +9,17 @@ paths:
   /:
     post:
       summary: Authorization request
+      parameters:
+        - in: header
+          name: X-NLX-Authorization
+          description: Request header contains the credentials to authenticate a user agent to the Outway. This header will be stripped
+          schema:
+            type: string
+        - in: header
+          name: Proxy-Authorization
+          description: Request header contains the credentials to authenticate a user agent to the Outway. This header will be stripped
+          schema:
+            type: string
       responses:
         200:
           description: The authorization request has been handled successfully. This does not mean the request is authorized, it means that the request has been processed successfully
