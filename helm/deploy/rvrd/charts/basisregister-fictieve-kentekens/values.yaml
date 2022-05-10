@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/basisregister-fictieve-kentekens
-  tag: "46207581"
+  tag: "46740640"
   pullPolicy: IfNotPresent
 
 nameOverride: ""
