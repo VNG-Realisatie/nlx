@@ -76,13 +76,12 @@ When(
     const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     const validAuthorizationDetails = {
-      "Proxy-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
-      "X-NLX-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+      "X-Nlx-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
     }
 
     const headers = {
-      "X-NLX-Request-Delegator": orgDelegator.serialNumber,
-      "X-NLX-Request-Order-Reference": orderReference,
+      "X-Nlx-Request-Delegator": orgDelegator.serialNumber,
+      "X-Nlx-Request-Order-Reference": orderReference,
       ...validAuthorizationDetails
     };
 

@@ -4,7 +4,7 @@ default allow = false
 
 # Allow users with valid token
 allow {
-    authValues := split(input.headers["Proxy-Authorization"][0], " ")
+    authValues := split(input.headers["X-Nlx-Authorization"][0], " ")
 
     count(authValues) == 2
 
