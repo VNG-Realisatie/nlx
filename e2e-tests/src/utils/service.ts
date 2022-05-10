@@ -8,6 +8,7 @@ import {
 import { default as logger } from "../debug";
 import pWaitFor from "p-wait-for";
 import { strict as assert } from "assert";
+import {isServiceKnownInServiceListOfOutway} from "../steps/when/outway.steps";
 const debug = logger("e2e-tests:service");
 
 const isAccessRequestApprovedForService = async (
@@ -184,6 +185,18 @@ export const getAccessToService = async (
   );
 
   const outway = await getOutwayByName(serviceConsumerOrgName, outwayName);
+
+  const url = `${outway.selfAddress}/${serviceProvider.serialNumber}/${uniqueServiceName}/get`;
+
+  // wait until the Outway has had the time to update its internal services list
+  await pWaitFor.default(
+    async () =>
+      await isServiceKnownInServiceListOfOutway(url),
+    {
+      interval: 1000,
+      timeout: 1000 * 60,
+    }
+  );
 
   // request access to new service
   const createAccessRequestResponse =

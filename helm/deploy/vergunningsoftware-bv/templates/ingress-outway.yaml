@@ -10,8 +10,6 @@ metadata:
   labels:
     {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
   annotations:
-    ingress.kubernetes.io/auth-header-field: Proxy-Authorization
-    ingress.kubernetes.io/auth-remove-header: "true"
   {{- with .Values.outway.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

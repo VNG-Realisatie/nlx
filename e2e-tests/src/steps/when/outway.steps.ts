@@ -7,7 +7,7 @@ import fetch from "cross-fetch";
 import pWaitFor from "p-wait-for";
 const debug = logger("e2e-tests:outway");
 
-const isServiceKnownInServiceListOfOutway = async (
+export const isServiceKnownInServiceListOfOutway = async (
   input: RequestInfo,
   init?: RequestInit
 ): Promise<boolean> => {
@@ -42,7 +42,7 @@ When(
       timeout: 1000 * 35,
     });
 
-    const headers =  {"Proxy-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"}
+    const headers =  {"X-Nlx-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"}
 
     scenarioContext.organizations[orgNameConsumer].httpResponse = await fetch(
       url,{
