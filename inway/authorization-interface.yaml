@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   description: |
-    The inway has the option to configure a authorization service. Once configured, the requests going through the inway will be authorized by this authorization service.
-    In order to enable communication between the inway and their authorization service, each organization is required to implement the interface described in this specification on their authorization service.
+    The Inway has the option to configure a authorization service. Once configured, the requests going through the Inway will be authorized by this authorization service.
+    In order to enable communication between the Inway and their authorization service, each organization is required to implement the interface described in this specification on their authorization service.
   version: "1.0.0"
   title: Authorization
 paths:
@@ -32,16 +32,16 @@ components:
                 type: array
                 items:
                   type: string
-              description: Contains the HTTP-headers of the request made to the inway
+              description: Contains the HTTP-headers of the request made to the Inway
             path:
               type: string
-              description: path of the request to the inway
+              description: path of the request to the Inway
             organization_serial_number:
               type: string
-              description: organization serial number targeted by the request send to the inway (this is the serial number of your own organization)
+              description: organization serial number targeted by the request send to the Inway (this is the serial number of your own organization)
             service:
               type: object
-              description: service targeted by the request send to the inway
+              description: service targeted by the request send to the Inway
               properties:
                 grants:
                   type: array
@@ -93,7 +93,7 @@ components:
       properties:
         result:
           type: boolean
-          description: true if the request is authorized. The inway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The inway will return a 401 to the requesting client.
+          description: true if the request is authorized. The Inway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The Inway will return a 401 to the requesting client.
   requestBodies:
     AuthorizationRequest:
       content:
