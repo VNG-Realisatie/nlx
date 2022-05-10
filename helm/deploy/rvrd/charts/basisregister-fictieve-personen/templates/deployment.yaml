@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: 8080
               protocol: TCP
           livenessProbe:
             tcpSocket:
@@ -37,6 +37,29 @@ spec:
           readinessProbe:
             tcpSocket:
               port: http
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.postgresql.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port number is required" .Values.postgresql.port | quote }}
+            - name: POSTGRES_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.postgresql.database }}
+            - name: PGSSLMODE
+              value: {{ .Values.postgresql.sslMode }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.postgresql.connectTimeout | quote }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "basisregister-fictieve-personen.postgresql.secret" . }}
+                  key: {{ .Values.postgresql.existingSecret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "basisregister-fictieve-personen.postgresql.secret" . }}
+                  key: {{ .Values.postgresql.existingSecret.passwordKey }}
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
     {{- with .Values.nodeSelector }}

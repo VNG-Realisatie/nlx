@@ -68,3 +68,10 @@ Return the image name
 {{- define "basisregister-fictieve-personen.image" -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (default .Chart.AppVersion .Values.image.tag) -}}
 {{- end -}}
+
+{{/*
+Return the secret name of the PostgreSQL username/password
+*/}}
+{{- define "basisregister-fictieve-personen.postgresql.secret" -}}
+{{- default (printf "%s-postgresql" (include "basisregister-fictieve-personen.fullname" .)) .Values.postgresql.existingSecret.name -}}
+{{- end -}}

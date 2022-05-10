@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/basisregister-fictieve-personen
-  tag: 29ebbf91
+  tag: "46207581"
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -33,3 +33,16 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+postgresql:
+  hostname: "postgresql"
+  port: 5432
+  database: "brfp"
+  username: ""
+  password: ""
+  sslMode: "require"
+  connectTimeout: 10
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"

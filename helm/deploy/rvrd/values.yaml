@@ -301,6 +301,18 @@ ca:
       issuerRef:
         name: rvrd
 
+basisregisterFictievePersonen:
+  postgresql:
+    hostname: rvrd-postgresql
+    port: 5432
+    database: "brfp"
+    sslMode: require
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+
 ################
 ## Sub-charts ##
 ################
@@ -356,7 +368,7 @@ dex:
     staticPasswords:
       - username: admin
         userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
-        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W  # password
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
         name: Admin User
         email: admin@example.com
     oauth2:
@@ -410,3 +422,12 @@ nlx-txlog-api:
       passwordKey: password
   tls:
     existingSecret: rvrd-txlog-api-tls
+
+basisregister-fictieve-personen:
+  postgresql:
+    hostname: rvrd-postgresql
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
