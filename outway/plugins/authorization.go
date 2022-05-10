@@ -16,6 +16,10 @@ import (
 	outway_http "go.nlx.io/nlx/outway/http"
 )
 
+const (
+	HTTPHeaderAuthorization = "X-NLX-Authorization"
+)
+
 type authRequest struct {
 	Input *authRequestInput `json:"input"`
 }

@@ -22,6 +22,7 @@ func TestStripHeadersPlugin(t *testing.T) {
 		"X-NLX-Request-User-Id",
 		"X-NLX-Logrecord-ID",
 		"X-NLX-Request-Data-Subject",
+		HTTPHeaderAuthorization,
 		"Proxy-Authorization",
 	}
 
@@ -46,25 +47,25 @@ func TestStripHeadersPlugin(t *testing.T) {
 		expectHeaders        []string
 		disallowedHeaders    []string
 	}{
-		"Different Organization": {
+		"different_organization": {
 			receiverOrganization: "00000000000000000002",
 			expectHeaders:        safeHeaders,
 			disallowedHeaders:    unsafeHeaders,
 		},
-		"Same Organization": {
+		"same_organization": {
 			receiverOrganization: "00000000000000000001",
 			expectHeaders:        append(safeHeaders, unsafeHeaders...),
 			disallowedHeaders:    nil,
 		},
-		"Do not pass Proxy-Authorization": {
+		"different_organization_do_not_pass_authorization_headers": {
 			receiverOrganization: "00000000000000000002",
 			expectHeaders:        nil,
-			disallowedHeaders:    []string{"Proxy-Authorization"},
+			disallowedHeaders:    []string{"Proxy-Authorization", "X-NLX-Authorization"},
 		},
-		"Never pass Proxy-Authorization": {
+		"same_organization_do_not_pass_authorization_headers": {
 			receiverOrganization: "00000000000000000001",
 			expectHeaders:        nil,
-			disallowedHeaders:    []string{"Proxy-Authorization"},
+			disallowedHeaders:    []string{"Proxy-Authorization", "X-NLX-Authorization"},
 		},
 	}
 	for name, tt := range tests {

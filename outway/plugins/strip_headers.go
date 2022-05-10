@@ -3,7 +3,9 @@
 
 package plugins
 
-import "go.nlx.io/nlx/common/delegation"
+import (
+	"go.nlx.io/nlx/common/delegation"
+)
 
 type StripHeadersPlugin struct {
 	organizationSerialNumber string
@@ -28,6 +30,7 @@ func (plugin *StripHeadersPlugin) Serve(next ServeFunc) ServeFunc {
 		}
 
 		context.Request.Header.Del("Proxy-Authorization")
+		context.Request.Header.Del(HTTPHeaderAuthorization)
 
 		return next(context)
 	}
