@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   description: |
-    The outway has the option to configure a authorization service. Once configured, the requests going through the outway will be authorized by this authorization service.
-    In order to enable communication between the outway and their authorization service, each organization is required to implement the interface described in this specification on their authorization service.
+    The Outway has the option to configure a authorization service. Once configured, the requests going through the Outway will be authorized by this authorization service.
+    In order to enable communication between the Outway and their authorization service, each organization is required to implement the interface described in this specification on their authorization service.
   version: "1.0.0"
   title: Authorization
 paths:
@@ -32,22 +32,22 @@ components:
                 type: array
                 items:
                   type: string
-              description: Contains the HTTP-headers of the request made to the outway
+              description: Contains the HTTP-headers of the request made to the Outway
             path:
               type: string
-              description: path of the request to the outway
+              description: path of the request to the Outway
             organization_serial_number:
               type: string
-              description: organization serial number targeted by the request send to the outway
+              description: organization serial number targeted by the request send to the Outway
             service:
               type: string
-              description: service targeted by the request send to the outway
+              description: service targeted by the request send to the Outway
     AuthorizationResponse:
       type: object
       properties:
         result:
           type: boolean
-          description: true if the request is authorized. The outway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The outway will return a 401 to the requesting client.
+          description: true if the request is authorized. The Outway will continue to send the request to the targeted service. false when the authorization has failed for whatever reason. The Outway will return a 401 to the requesting client.
   requestBodies:
     AuthorizationRequest:
       content:

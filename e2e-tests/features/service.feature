@@ -11,7 +11,7 @@ Feature: Service
             And "Gemeente Stijns" has a service named "MyServiceToDelete"
         When "Gemeente Stijns" removes the service "MyServiceToDelete"
         Then the service "MyServiceToDelete" of "Gemeente Stijns" is no longer available
-        
+
     Scenario: Revoke access to the service
         Given "RvRD" is up and running
             And "Gemeente Stijns" is up and running
