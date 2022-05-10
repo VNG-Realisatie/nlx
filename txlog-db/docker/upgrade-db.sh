@@ -1,5 +1,4 @@
 #!/bin/bash
-#shellcheck disable=SC2001
 #
 # Migrate the database for transactions to its latest state.
 #

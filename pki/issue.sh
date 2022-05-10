@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2044
 
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
