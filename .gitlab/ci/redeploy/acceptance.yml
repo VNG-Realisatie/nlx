@@ -39,7 +39,10 @@ Reset acc applications:
         helm upgrade ${CHART} ${CHART_DIRECTORY} \
           --install \
           --namespace ${K8S_NAMESPACE} \
-          --values ${CHART_DIRECTORY}/values-${CI_ENVIRONMENT_NAME}.yaml
+          --values ${CHART_DIRECTORY}/values-${CI_ENVIRONMENT_NAME}.yaml \
+          --set-string global.imageRegistry=${CI_REGISTRY_IMAGE} \
+          --set-string global.imageTag=${CI_COMMIT_REF_SLUG}
+
         stop_section deploy_${CHART}
       done
   dependencies:
