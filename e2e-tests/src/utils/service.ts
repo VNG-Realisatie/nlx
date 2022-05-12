@@ -194,7 +194,7 @@ export const getAccessToService = async (
       await isServiceKnownInServiceListOfOutway(url),
     {
       interval: 1000,
-      timeout: 1000 * 60,
+      timeout: 1000 * 90,
     }
   );
 
