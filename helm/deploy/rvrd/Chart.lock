@@ -2,5 +2,8 @@ dependencies:
 - name: dex
   repository: https://charts.helm.sh/stable
   version: 2.15.2
-digest: sha256:7ad401f73598cc7650fc2b9cad9c18dfb4dd9807804bf6a875756f8b1c783d0f
-generated: "2022-02-08T00:43:25.281678425Z"
+- name: basisregister-fictieve-personen
+  repository: https://charts.commonground.nl
+  version: 0.1.0
+digest: sha256:5076d6f4666286957ecf267a19d13d4ef83e7c19b38e91f008a4ea4ee60794f9
+generated: "2022-05-16T11:14:09.364865+02:00"
