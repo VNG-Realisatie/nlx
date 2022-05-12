@@ -186,3 +186,19 @@ websockets-chat-ui:
       - secretName: gemeentestijns-websockets-chat-ui-ingress-tls
         hosts:
           - websockets-chat-ui.acc.gemeentestijns.nl
+
+manage-citizens-ui:
+  enabled: true
+  basisregisterFictievePersonenApiBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/basisregister-fictieve-personen
+  organizationName: "Gemeente Stijns"
+  organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - manage-citizens.acc.gemeentestijns.nl
+    tls:
+      - secretName: gemeentestijns-manage-citizens-ui-ingress-tls
+        hosts:
+          - manage-citizens.acc.gemeentestijns.nl

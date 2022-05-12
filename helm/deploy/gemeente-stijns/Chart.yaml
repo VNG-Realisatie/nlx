@@ -26,3 +26,7 @@ dependencies:
     repository: "file://../../charts/nlx-outway"
     version: ">=0"
     condition: nlx-outway-2.enabled
+  - name: manage-citizens-ui
+    repository: "file://../../charts/manage-citizens-ui"
+    version: ">=0"
+    condition: manage-citizens-ui.enabled

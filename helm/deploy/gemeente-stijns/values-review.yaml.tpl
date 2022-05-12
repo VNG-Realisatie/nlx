@@ -76,3 +76,14 @@ websockets-chat-ui:
     hosts:
         # abbreviated name, because https://gitlab.com/commonground/nlx/nlx/-/blob/master/technical-docs/notes.md#1215-rename-current-organizations
       - nlx-ws-chat-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
+manage-citizens-ui:
+  enabled: true
+  organizationName: "Gemeente Stijns"
+  organizationLogo: "https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg"
+  basisregisterFictievePersonenApiBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/basisregister-fictieve-personen
+  ingress:
+    enabled: true
+    hosts:
+        # abbreviated name, because https://gitlab.com/commonground/nlx/nlx/-/blob/master/technical-docs/notes.md#1215-rename-current-organizations
+      - nlx-mc-ui-gemeente-stijns-{{DOMAIN_SUFFIX}}

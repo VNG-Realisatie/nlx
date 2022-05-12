@@ -14,5 +14,8 @@ dependencies:
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
   version: 0.128.2
-digest: sha256:ee66dad455d6188a1ee882d687a135529aaa79b1c4fff5fdf3db3642b605c178
-generated: "2022-04-26T09:39:51.608276415Z"
+- name: manage-citizens-ui
+  repository: file://../../charts/manage-citizens-ui
+  version: 0.128.2
+digest: sha256:22c8f826238086ab61b3583740b049f5a29588f5d0b200bf6bfcb085e2c41fe0
+generated: "2022-05-12T14:55:43.110289+02:00"

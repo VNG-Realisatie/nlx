@@ -434,3 +434,6 @@ parkeerrechten-api:
 
 parkeerrechten-viewer:
   enabled: false
+
+manage-citizens-ui:
+  enabled: false

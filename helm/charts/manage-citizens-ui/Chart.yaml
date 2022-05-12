@@ -1,0 +1,6 @@
+apiVersion: v2
+name: manage-citizens-ui
+description: A Helm chart for the Manage Citizens UI
+type: application
+version: 0.128.2
+appVersion: 0.128.2
