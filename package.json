@@ -10,7 +10,7 @@
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "9.2.1",
-    "glob": "8.0.1",
+    "glob": "8.0.2",
     "replace-in-file": "6.3.2",
     "semantic-release": "19.0.2"
   },
