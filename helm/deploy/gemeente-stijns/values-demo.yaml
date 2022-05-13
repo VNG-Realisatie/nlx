@@ -110,6 +110,7 @@ dex:
 nlx-inway:
   config:
     selfAddress: inway.demo.gemeentestijns.nl:443
+    managementAPIProxyAddress: inway.demo.gemeentestijns.nl:8443
     directoryHostname: directory-api.demo.nlx.io
   service:
     annotations:

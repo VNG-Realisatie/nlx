@@ -93,6 +93,7 @@ dex:
 nlx-inway:
   config:
     selfAddress: inway.demo.rvrd.nl:443
+    managementAPIProxyAddress: inway.demo.rvrd.nl:8443
     directoryHostname: directory-api.demo.nlx.io
     authorizationService:
       enabled: false
