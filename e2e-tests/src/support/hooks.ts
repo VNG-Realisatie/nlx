@@ -29,7 +29,7 @@ function createSession(config: any, caps: any): webdriver.ThenableWebDriver {
     .build();
 }
 
-setDefaultTimeout(process.env.PWDEBUG ? -1 : 60 * 1000);
+setDefaultTimeout(process.env.PWDEBUG ? -1 : 120 * 1000);
 
 Before({ tags: "@debug" }, async function (this: CustomWorld) {
   this.debug = true;
