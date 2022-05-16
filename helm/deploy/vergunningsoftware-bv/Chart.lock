@@ -3,7 +3,7 @@ dependencies:
   repository: https://charts.helm.sh/stable
   version: 2.15.2
 - name: parkeerrechten-admin
-  repository: file://../../charts/parkeerrechten-admin
-  version: 0.128.2
-digest: sha256:f3fa88e6800897c2f0173b60f9dea0a1d9d2f959c1cce8a6943be8cd77ceef86
-generated: "2022-04-26T09:39:59.12252178Z"
+  repository: https://charts.commonground.nl
+  version: 0.1.0
+digest: sha256:b9f6bb0aeca427b53fa212d92d6c726d6385ab8a72ae2d698ea52705ca849d23
+generated: "2022-05-16T16:38:32.314768+02:00"

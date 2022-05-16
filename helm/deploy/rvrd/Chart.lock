@@ -5,5 +5,8 @@ dependencies:
 - name: basisregister-fictieve-personen
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:5076d6f4666286957ecf267a19d13d4ef83e7c19b38e91f008a4ea4ee60794f9
-generated: "2022-05-16T11:14:09.364865+02:00"
+- name: basisregister-fictieve-kentekens
+  repository: https://charts.commonground.nl
+  version: 0.1.0
+digest: sha256:d2f09df69b95322cfc087490ca2434002849ff3c0242817c267331ec3e77ca3d
+generated: "2022-05-16T16:37:32.351589+02:00"

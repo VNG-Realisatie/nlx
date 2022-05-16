@@ -3,19 +3,25 @@ dependencies:
   repository: https://charts.helm.sh/stable
   version: 2.15.2
 - name: parkeerrechten-api
-  repository: file://../../charts/parkeerrechten-api
-  version: 0.128.2
+  repository: https://charts.commonground.nl
+  version: 0.1.0
 - name: parkeerrechten-viewer
-  repository: file://../../charts/parkeerrechten-viewer
-  version: 0.128.2
+  repository: https://charts.commonground.nl
+  version: 0.1.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
   version: 0.128.2
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
   version: 0.128.2
+- name: nginx-video-player-ui-proxy
+  repository: https://charts.commonground.nl
+  version: 0.1.0
+- name: nginx-websockets-proxy
+  repository: https://charts.commonground.nl
+  version: 0.1.0
 - name: manage-citizens-ui
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:07f3684928099125f6e7b320fea4048e3184b14335fdbb44ccd38dea3331cec7
-generated: "2022-05-16T14:03:01.59865+02:00"
+digest: sha256:afa6fb55455c737a22ab4f2c40449c5ec88c889c833b9227824a39b46bcbfec7
+generated: "2022-05-16T16:48:36.78461+02:00"

@@ -10,12 +10,12 @@ dependencies:
     version: 2.15.2
     repository: "@stable"
   - name: parkeerrechten-api
-    repository: "file://../../charts/parkeerrechten-api"
-    version: ">=0"
+    repository: https://charts.commonground.nl
+    version: 0.1.0
     condition: parkeerrechten-api.enabled
   - name: parkeerrechten-viewer
-    repository: "file://../../charts/parkeerrechten-viewer"
-    version: ">=0"
+    repository: https://charts.commonground.nl
+    version: 0.1.0
     condition: parkeerrechten-viewer.enabled
   - name: nlx-outway
     repository: "file://../../charts/nlx-outway"
@@ -26,6 +26,12 @@ dependencies:
     repository: "file://../../charts/nlx-outway"
     version: ">=0"
     condition: nlx-outway-2.enabled
-  - name: manage-citizens-ui
-    version: 0.1.0
+  - name: nginx-video-player-ui-proxy
     repository: https://charts.commonground.nl
+    version: 0.1.0
+  - name: nginx-websockets-proxy
+    repository: https://charts.commonground.nl
+    version: 0.1.0
+  - name: manage-citizens-ui
+    repository: https://charts.commonground.nl
+    version: 0.1.0

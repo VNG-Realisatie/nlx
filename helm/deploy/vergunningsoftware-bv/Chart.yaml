@@ -9,7 +9,7 @@ dependencies:
   - name: dex
     version: 2.15.2
     repository: "@stable"
-  - name: parkeerrechten-admin 
-    version: ">=0"
-    repository: "file://../../charts/parkeerrechten-admin"
-    condition: parkeerrechten-admin.enabled 
+  - name: parkeerrechten-admin
+    version: 0.1.0
+    repository: https://charts.commonground.nl
+    condition: parkeerrechten-admin.enabled
