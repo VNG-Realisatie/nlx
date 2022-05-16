@@ -81,13 +81,3 @@ sast:
 secret_detection:
   variables:
     SECRET_DETECTION_EXCLUDED_PATHS: "pki/,testing/"
-
-# this job is added in Security/Dependency-Scanning.gitlab-ci.yml
-# but missing a stage, which breaks the CI. Adding the stage here until the template is fixed
-bundler-audit-dependency_scanning:
-  stage: Security
-
-# this job is added in Security/Dependency-Scanning.gitlab-ci.yml
-# but missing a stage, which breaks the CI. Adding the stage here until the template is fixed
-retire-js-dependency_scanning:
-  stage: Security
