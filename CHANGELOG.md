@@ -1,3 +1,26 @@
+# [0.129.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.128.2...v0.129.0) (2022-05-17)
+
+
+### Bug Fixes
+
+* **directory:** return ManagementAPIProxyAddress instead of the regular address ([d71e063](https://gitlab.com/commonground/nlx/nlx/commit/d71e063762b5b82769696ca674665a9225318c60)), closes [nlx#1518](https://gitlab.com/nlx/issues/1518)
+* **docs:** fix link to try-nlx docker introduction page ([58d378d](https://gitlab.com/commonground/nlx/nlx/commit/58d378d36c96c59737087aae8ab3cbc313bd0950)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **docs:** re-enable tabs for OS specific commands for Getting up and running ([254bee3](https://gitlab.com/commonground/nlx/nlx/commit/254bee30f18d3866dcc4b0732561178baa0b44d2)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
+
+### Features
+
+* add structured errors for grpc endpoints in outway and management api ([0277122](https://gitlab.com/commonground/nlx/nlx/commit/0277122e693722df3bed6496bd76a886a9576ee7)), closes [nlx#1522](https://gitlab.com/nlx/issues/1522)
+* add the Manage Citizens UI to review, ACC and demo environment ([02c03c1](https://gitlab.com/commonground/nlx/nlx/commit/02c03c1e4e530728a44f21eed815f77a747a6eae)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **outway:** rename authorization header to X-Nlx-Autorization ([0e030b3](https://gitlab.com/commonground/nlx/nlx/commit/0e030b32b7e62347fba78075305e4a1bb1880bc3)), closes [nlx#1527](https://gitlab.com/nlx/issues/1527)
+* **outway:** strip authorization headers ([bd7a6b6](https://gitlab.com/commonground/nlx/nlx/commit/bd7a6b6d85bfce147a9cf58fc2d459065321d911)), closes [nlx#1527](https://gitlab.com/nlx/issues/1527)
+* remove custom implementation of the auth-service ([21ab9fe](https://gitlab.com/commonground/nlx/nlx/commit/21ab9fee6b53d463f6c83696aa0dc4e1069048c7)), closes [nlx#1527](https://gitlab.com/nlx/issues/1527)
+
+
+### Reverts
+
+* fix security jobs from GitLab without a stage ([96cea58](https://gitlab.com/commonground/nlx/nlx/commit/96cea58e6941e9877f7973573c6aed88b747ffdd)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.128.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.128.1...v0.128.2) (2022-04-26)
 
 ## [0.128.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.128.0...v0.128.1) (2022-04-25)
