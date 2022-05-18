@@ -4,7 +4,7 @@ Deploy review:
   variables:
     REVIEW_BASE_DOMAIN: nlx.reviews
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
-    HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns vergunningsoftware-bv"
+    HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns gemeente-riemer vergunningsoftware-bv"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:

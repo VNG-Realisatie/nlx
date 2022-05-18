@@ -1,0 +1,116 @@
+global:
+  imageRegistry: ""
+  imageTag: ""
+  tls:
+    organization:
+      rootCertificatePEM: ""
+    internal:
+      rootCertificatePEM: ""
+
+image:
+  registry: docker.io
+  apiRepository: nlxio/management-api
+  uiRepository: nlxio/management-ui
+  tag: ""
+  pullPolicy: Always
+  pullSecrets: []
+
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+config:
+  logType: live
+  logLevel: info
+  directoryHostname: ""
+  directoryInspectionHostname: ""
+  directoryRegistrationHostname: ""
+  sessionCookieSecure: false
+  enableBasicAuth: false
+  txlogAPIAddress: ""
+
+  oidc:
+    clientID: nlx-management
+    clientSecret: ""
+    discoveryURL: ""
+    redirectURL: ""
+    sessionSignKey: ""
+
+tls:
+  organization:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
+  internal:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+securityContext: {}
+
+podSecurityContext:
+  fsGroup: 1001
+
+service:
+  type: ClusterIP
+  apiPort: 80
+  apiConfigPort: 443
+  uiPort: 8080
+
+transactionLog:
+  enabled: false
+  hostname: ""
+  port: 5432
+  database: ""
+  username: ""
+  password: ""
+  sslMode: "require"
+  connectTimeout: 10
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
+
+postgresql:
+  hostname: "postgresql"
+  port: 5432
+  database: "nlx_management"
+  username: ""
+  password: ""
+  sslMode: "require"
+  connectTimeout: 10
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
+
+ingress:
+  enabled: false
+  class: ""
+  annotations: {}
+  hosts: []
+  tls:
+    []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+
+resources: {}
+
+nodeSelector: {}
+
+affinity: {}
+
+tolerations: []

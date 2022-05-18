@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "gemeente-riemer.fullname" . }}-create-admin
+  labels:
+    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  backoffLimit: 50
+  template:
+    metadata:
+      labels:
+        {{- include "gemeente-riemer.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: management-api-create-user
+          image: {{ template "gemeente-riemer.managementAPI.image" . }}
+          imagePullPolicy: {{ .Values.managementAPI.image.pullPolicy }}
+          command: ["/bin/sh"]
+          args:
+            - "-xc"
+            - |
+                nlx-management-api create-user --email admin@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port number is required" .Values.managementAPI.postgresql.port | quote }}
+            - name: PGSSLMODE
+              value: {{ required "PostgreSQL SSL mode is required" .Values.managementAPI.postgresql.sslMode }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL existing secret name is required" .Values.managementAPI.postgresql.existingSecret.name }}
+                  key: {{ required "PostgreSQL existing secret username key is required" .Values.managementAPI.postgresql.existingSecret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL existing secret name is required" .Values.managementAPI.postgresql.existingSecret.name }}
+                  key: {{ required "PostgreSQL existing secret password key is required" .Values.managementAPI.postgresql.existingSecret.passwordKey }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ required "PostgreSQL time-out is required" .Values.managementAPI.postgresql.connectTimeout | quote }}
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/nlx_management'
+

@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "gemeente-riemer.fullname" . }}-nlxctl
+  labels:
+    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "gemeente-riemer.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: nlxctl
+          image: {{ template "gemeente-riemer.nlxctl.image" . }}
+          imagePullPolicy: {{ .Values.nlxctl.image.pullPolicy }}
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - |
+                nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
+                echo "${SERVICE_PERSONEN_JSON}" > /tmp/service-personen.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME_PERSONEN; then
+                    nlxctl service create --config /tmp/service-personen.json
+                fi
+                nlxctl service list
+          env:
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ .Values.managementAPI.address | quote }}
+            - name: SERVICE_NAME_PERSONEN
+              value: {{ .Values.managementAPI.servicePersonen.name | quote }}
+            - name: SERVICE_PERSONEN_JSON
+              value: {{ .Values.managementAPI.servicePersonen | toJson | quote }}
+          volumeMounts:
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: certificate
+          secret:
+            secretName: {{ .Values.nlxctl.tls.existingSecret }}
+        - name: config
+          configMap:
+            name: {{ template "gemeente-riemer.fullname" . }}-nlxctl

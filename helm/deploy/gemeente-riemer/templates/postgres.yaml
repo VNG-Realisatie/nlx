@@ -1,0 +1,17 @@
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  name: {{ include "gemeente-riemer.fullname" . }}-postgresql
+  labels:
+    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+spec:
+  teamId: {{ include "gemeente-riemer.fullname" . }}
+  numberOfInstances: 1
+  users:
+    admin:
+      - superuser
+      - createdb
+  volume:
+    size: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
+  postgresql:
+    version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString | toRawJson }}

@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "gemeente-riemer.fullname" . }}-setup-brfp-api-db
+  labels:
+    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "gemeente-riemer.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: brfp-api-db
+          image: postgres:alpine
+          command: ["/bin/sh"]
+          args:
+            - "-exc"
+            - echo "SELECT 'CREATE DATABASE "${POSTGRES_DATABASE}"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '"${POSTGRES_DATABASE}"')\gexec" | psql --echo-errors "${POSTGRES_DSN}"
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.basisregisterFictievePersonen.postgresql.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port number is required" .Values.basisregisterFictievePersonen.postgresql.port | quote }}
+            - name: POSTGRES_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.basisregisterFictievePersonen.postgresql.database }}
+            - name: PGSSLMODE
+              value: {{ required "PostgreSQL SSL mode is required" .Values.basisregisterFictievePersonen.postgresql.sslMode }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL existing secret name is required" .Values.basisregisterFictievePersonen.postgresql.existingSecret.name }}
+                  key: {{ required "PostgreSQL existing secret username key is required" .Values.basisregisterFictievePersonen.postgresql.existingSecret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "PostgreSQL existing secret name is required" .Values.basisregisterFictievePersonen.postgresql.existingSecret.name }}
+                  key: {{ required "PostgreSQL existing secret password key is required" .Values.basisregisterFictievePersonen.postgresql.existingSecret.passwordKey }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ required "PostgreSQL time-out is required" .Values.basisregisterFictievePersonen.postgresql.connectTimeout | quote }}
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/postgres'

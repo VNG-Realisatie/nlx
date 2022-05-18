@@ -1,0 +1,95 @@
+global:
+  imageRegistry: ""
+  imageTag: ""
+  tls:
+    organization:
+      rootCertificatePEM: ""
+    internal:
+      rootCertificatePEM: ""
+
+image:
+  registry: docker.io
+  repository: nlxio/inway
+  tag: ""
+  pullPolicy: Always
+  pullSecrets: []
+
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Inway specific settings
+config:
+  logType: live
+  logLevel: info
+
+  name: ""
+  selfAddress: ""
+  managementAPIProxyAddress: ""
+  directoryHostname: ""
+  directoryRegistrationHostname: ""
+
+  authorizationService:
+    enabled: false
+    url: ""
+
+  managementAPI:
+    address: ""
+
+transactionLog:
+  enabled: true
+  hostname: ""
+  port: 5432
+  database: ""
+  username: ""
+  password: ""
+  connectTimeout: 10
+  sslMode: require
+  existingSecret:
+    name: ""
+    usernameKey: "username"
+    passwordKey: "password"
+
+tls:
+  organization:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
+  internal:
+    rootCertificatePEM: ""
+    certificatePEM: ""
+    keyPEM: ""
+    existingSecret: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+securityContext: {}
+
+podSecurityContext:
+  fsGroup: 1001
+
+service:
+  type: LoadBalancer
+  port: 443
+  portManagementAPIProxy: 8443
+  nodePort: 443
+  nodePortManagementAPIProxy: 8443
+  annotations: {}
+  loadBalancerIP: ""
+
+resources: {}
+
+nodeSelector: {}
+
+affinity: {}
+
+tolerations: []

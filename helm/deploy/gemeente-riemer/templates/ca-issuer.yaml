@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1beta1
+kind: Issuer
+metadata:
+  name: {{ include "gemeente-riemer.fullname" . }}
+  labels:
+    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ include "gemeente-riemer.fullname" . }}-ca-issuer

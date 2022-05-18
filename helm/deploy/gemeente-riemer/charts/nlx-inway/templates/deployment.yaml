@@ -1,0 +1,165 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlx-inway.fullname" . }}
+  labels:
+    {{- include "nlx-inway.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "nlx-inway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "nlx-inway.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret-postgresql: {{ include (print $.Template.BasePath "/secret-postgresql.yaml") . | sha256sum }}
+        checksum/secret-tls: {{ include (print $.Template.BasePath "/secret-tls.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "nlx-inway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: nlx-inway
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-inway.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            - name: management
+              containerPort: 8444
+              protocol: TCP
+            - name: monitoring
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: monitoring
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: monitoring
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          env:
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8443
+            - name: LISTEN_ADDRESS_MANAGEMENT_API_PROXY
+              value: 0.0.0.0:8444
+            - name: MONITORING_ADDRESS
+              value: 0.0.0.0:8081
+            - name: INWAY_NAME
+              value: {{ default (include "nlx-inway.fullname" .) .Values.config.name }}
+            - name: SELF_ADDRESS
+              value: {{ include "nlx-inway.selfAddress" . }}
+            - name: MANAGEMENT_API_PROXY_ADDRESS
+              value: {{ include "nlx-inway.managementAPIProxyAddress" . }}
+            - name: DIRECTORY_ADDRESS
+            {{- if .Values.config.directoryHostname }}
+              value: {{ .Values.config.directoryHostname }}:443
+            {{- else if .Values.config.directoryRegistrationHostname }}
+              value: {{ .Values.config.directoryRegistrationHostname }}:443
+            {{ else }}
+              value: {{ required "The field config.directoryHostname is required" .Values.config.directoryHostname }}:443
+            {{ end }}
+            - name: MANAGEMENT_API_ADDRESS
+              value: {{ required "Management API address is required" .Values.config.managementAPI.address }}
+            - name: TLS_ROOT_CERT
+              value: /config/root-internal.pem
+            - name: TLS_CERT
+              value: /certificate/tls.crt
+            - name: TLS_KEY
+              value: /certificate/tls.key
+          {{- if .Values.transactionLog.enabled }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-inway.transactionLog.secret" . }}
+                  key: {{ .Values.transactionLog.existingSecret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-inway.transactionLog.secret" . }}
+                  key: {{ .Values.transactionLog.existingSecret.passwordKey }}
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.transactionLog.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port number is required" .Values.transactionLog.port | quote }}
+            - name: POSTGRES_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.transactionLog.database }}
+            - name: PGSSLMODE
+              value: {{ .Values.transactionLog.sslMode }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.transactionLog.connectTimeout | quote }}
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
+          {{- else }}
+            - name: DISABLE_LOGDB
+              value: "1"
+          {{- end }}
+          {{- if .Values.config.authorizationService.enabled }}
+            - name: AUTHORIZATION_SERVICE_ADDRESS
+              value: {{ .Values.config.authorizationService.url }}
+            - name: AUTHORIZATION_ROOT_CA
+              value: /config/root-internal.pem
+          {{- end }}
+            - name: TLS_NLX_ROOT_CERT
+              value: "/config/root-organization.pem"
+            - name: TLS_ORG_CERT
+              value: "/certificate-organization/tls.crt"
+            - name: TLS_ORG_KEY
+              value: "/certificate-organization/tls.key"
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          volumeMounts:
+            - name: certificate-organization
+              mountPath: /certificate-organization
+            - name: certificate
+              mountPath: /certificate
+            - name: config
+              mountPath: /config
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: certificate-organization
+          secret:
+            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-inway.fullname" .)) .Values.tls.organization.existingSecret }}
+            defaultMode: 0640
+        - name: certificate
+          secret:
+            secretName: {{ default (printf "%s-tls" (include "nlx-inway.fullname" .)) .Values.tls.internal.existingSecret }}
+            defaultMode: 0640
+        - name: config
+          configMap:
+            name: {{ template "nlx-inway.fullname" . }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

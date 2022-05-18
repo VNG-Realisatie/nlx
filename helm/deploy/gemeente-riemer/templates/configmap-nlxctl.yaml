@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gemeente-riemer.fullname" . }}-nlxctl
+  labels:
+    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+data:
+  root.pem: {{ (required "Internal root certificate PEM is required" .Values.global.tls.internal.rootCertificatePEM) | quote }}

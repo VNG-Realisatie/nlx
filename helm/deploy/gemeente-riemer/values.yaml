@@ -1,0 +1,424 @@
+############
+## Global ##
+############
+global:
+  imageRegistry: ""
+  imageTag: ""
+  tls:
+    organization:
+      # pki/shared/ca/root.pem
+      rootCertificatePEM: |
+        # Subject: C=NL, O=NLX, CN=NLX Root CA
+        # Issuer: C=NL, O=NLX, CN=NLX Root CA
+        -----BEGIN CERTIFICATE-----
+        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
+        -----END CERTIFICATE-----
+    # pki/organization-b/ca/root.pem
+    internal:
+      rootCertificatePEM: |
+        # Subject: C=NL, O=Organization-D, CN=Organization-D Root CA
+        # Issuer: C=NL, O=Organization-D, CN=Organization-D Root CA
+        -----BEGIN CERTIFICATE-----
+        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
+        -----END CERTIFICATE-----
+
+###########
+## Chart ##
+###########
+nameOverride: ""
+fullnameOverride: ""
+
+ca:
+  issuer:
+    certificatePEM: |
+      # Subject: C=NL, O=Organization-D, CN=Organization-D Intermediate CA
+      # Issuer: C=NL, O=Organization-D, CN=Organization-D Root CA
+      -----BEGIN CERTIFICATE-----
+      MIIFijCCA3KgAwIBAgIUIn9CgyFHSV5bhBbmKhnRaBtGrzwwDQYJKoZIhvcNAQEN
+      BQAwRzELMAkGA1UEBhMCTkwxFzAVBgNVBAoTDk9yZ2FuaXphdGlvbi1EMR8wHQYD
+      VQQDExZPcmdhbml6YXRpb24tZCBSb290IENBMB4XDTIyMDUxODEzNTcwMFoXDTM3
+      MDUxMzEzNTcwMFowTzELMAkGA1UEBhMCTkwxFzAVBgNVBAoTDk9yZ2FuaXphdGlv
+      bi1EMScwJQYDVQQDEx5Pcmdhbml6YXRpb24tRCBJbnRlcm1lZGlhdGUgQ0EwggIi
+      MA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQC/fo1bPl/W1O45LPGlmKqmpaYa
+      wczMGnnmp7kV3NeEyaSRleHkprmBMsG9IDPducQrmqnmFsb60IyJxMDMsjm1Cq9T
+      jG1a1u79Mc+XiUpOF4hWsjDo3sEsqu54tPCDCZDCIywD2mf3SbvXUplOjP3zQOW+
+      pNiFSp+gvLnA23rOEm2+blhE9lfGdYHawurXjvx3jGFYibugSsCm53ZdMnyvBFs7
+      aH5O2nHdPrV6qxN0cxi4IJev2VwvGD0N0941yCvbU1w6u+a8VNHRWsWlcIkGizOv
+      w3F14WCDHycovZci3+Q8y9UB2AYRpZYkm4cNxVXXc9eem7XUiktwgtBFxtadeJ8X
+      rvAGF9zAKBre6+Vyca+BYViDNnjLFoNBgJN8dJrUc+pLrArRak/MV6N2AftviZy6
+      oqDwWW1gf8IO5CTJsIamHle4kLprAawfHwFsHXaTTy4c7xFZlrS2fUQdKKAU8wUM
+      bEZpH9ImN1C2gH8ZDENY4WUTui0un2XD2F4LenmaO4mGjgIs/VR84JrHk13W8EPM
+      VT9pEHlH8x3So9Uf76qnAZ26STeXzEUeeqXTtIrWMvQaK669Y38UyJBndsU160S5
+      KcN2IoSifzQV1kIAjlp6if5CX1/BT88PzU8R5oRpyaMEsn2hX8lgEkUp7lOdSO3a
+      iS4i22WKxaUqy9NQsQIDAQABo2YwZDAOBgNVHQ8BAf8EBAMCAYYwEgYDVR0TAQH/
+      BAgwBgEB/wIBADAdBgNVHQ4EFgQUd0Vl15DkZxoSkMOc7++hJEM790gwHwYDVR0j
+      BBgwFoAU6SHjOHBHWyTn6E6rfcpGPG22JdowDQYJKoZIhvcNAQENBQADggIBAFJ0
+      V2M0knz04ogE2+BUbcXbzb1EoCLBP4UnQFwqDHAFrM62b/wICeHedoCdvwSeKTgn
+      CqOtRNjSxdk35Q4qEzi0eeYrATz9+5waTtAB5+hSL932t3wb6A4uCmyO3yvpzaGb
+      sO9EQ8eVWYEiSTEglS7M/Z+XaJpyYEw6AnCWMAqU/Looe0RildR3q/GGkRyY8DYJ
+      NGiRIMxc4xjd8PU8tN/vvLQzfjMXsQsddbVOboHSyBgawDWrhdSsULyAErbD4TNd
+      SHxU56zhBqBw4XBgl8yk7+tlMS84TG0C7n8SLHnM9GL7fAkqrsrg+GJEGxSQzCQH
+      WfP516R5iXXTagsAjxgpQ7TdX6jSfeRknb3qMskAHsdkb5lXSwP4WkprcoZkKiFm
+      Fof0IucVhMkbvL75MbtdDbQKnQpMq685frhAUD9Bu0ntBncJPhC95TjdwRWwnZOh
+      WJHd0vjiFGPqItI7/4ExC7FRJ3L3AXbH6R+PNV2xv0M1g3c2GRBof22hibq+NEPd
+      b21LL1zYnZrSC+fZ1a857jEY78Oz/TDVcnWuANmg4jk+CFWDBMknz6jkH2bnlYu5
+      72J7qzuOjidBE/vEE3t3q6jcz4w6t2hjPGJ0yNQYYqsNFT/mTZ8H/AiJrOGgjAPB
+      CUKRPgDPz5X7ESRf3MqjTlJfD+p6P5cTKlnAAMfa
+      -----END CERTIFICATE-----
+    keyPEM: |
+      -----BEGIN RSA PRIVATE KEY-----
+      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
+      -----END RSA PRIVATE KEY-----
+  certificates:
+    organization:
+      subject:
+        organizations:
+          - Gemeente Riemer
+        serialNumber: "12345678901234567893"
+      commonName: gemeente-riemer-nlx-inway
+      dnsNames:
+        - gemeente-riemer-nlx-inway
+      issuerRef:
+        name: shared
+    inway:
+      commonName: gemeente-riemer-nlx-inway
+      dnsNames:
+        - gemeente-riemer-nlx-inway
+      issuerRef:
+        name: gemeente-riemer
+    outway:
+      commonName: gemeente-riemer-nlx-outway
+      dnsNames:
+        - gemeente-riemer-nlx-outway
+      issuerRef:
+        name: gemeente-riemer
+    management-api:
+      commonName: gemeente-riemer-nlx-management-api
+      dnsNames:
+        - gemeente-riemer-nlx-management-api
+      issuerRef:
+        name: gemeente-riemer
+    nlxctl:
+      commonName: nlxctl
+      issuerRef:
+        name: gemeente-riemer
+    txlog-api:
+      commonName: gemeente-riemer-nlx-txlog-api
+      dnsNames:
+        - gemeente-riemer-nlx-txlog-api
+      issuerRef:
+        name: gemeente-riemer
+
+postgresql:
+  version: "11"
+  storageSize: 8Gi
+
+transactionLog:
+  image:
+    registry: docker.io
+    repository: nlxio/txlog-db
+    tag: ""
+    pullPolicy: IfNotPresent
+  hostname: gemeente-riemer-postgresql
+  databaseName: gemeente-riemer-transaction-log
+  existingSecret:
+    name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+    usernameKey: username
+    passwordKey: password
+  resetDatabase: false
+
+nlxctl:
+  image:
+    registry: docker.io
+    repository: nlxio/nlxctl
+    tag: ""
+    pullPolicy: IfNotPresent
+  tls:
+    existingSecret: gemeente-riemer-nlxctl-tls
+
+managementAPI:
+  address: gemeente-riemer-nlx-management-api:443
+  image:
+    registry: docker.io
+    repository: nlxio/management-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  postgresql:
+    hostname: gemeente-riemer-postgresql
+    port: 5432
+    sslMode: require
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  servicePersonen:
+    name: basisregister-fictieve-personen
+    endpointURL: http://gemeente-riemer-basisregister-fictieve-personen
+    apiSpecificationURL: http://gemeente-riemer-basisregister-fictieve-personen/openapi.json
+    publicSupportContact: support@nlx.io
+    documentationUrl: https://docs.nlx.io
+    inways:
+      - gemeente-riemer-nlx-inway
+
+outway:
+  ingress:
+    enabled: false
+    host: ""
+
+basisregisterFictievePersonen:
+  postgresql:
+    hostname: gemeente-riemer-postgresql
+    port: 5432
+    database: "brfp"
+    sslMode: require
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+
+################
+## Sub-charts ##
+################
+nlx-outway:
+  enabled: true
+  config:
+    directoryHostname: shared-nlx-directory-api
+    managementAPI:
+      address: gemeente-riemer-nlx-management-api:443
+  transactionLog:
+    hostname: gemeente-riemer-postgresql
+    database: "gemeente-riemer-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  tls:
+    organization:
+      existingSecret: gemeente-riemer-organization-tls
+    internal:
+      existingSecret: gemeente-riemer-outway-tls
+
+nlx-inway:
+  config:
+    directoryHostname: shared-nlx-directory-api
+    managementAPI:
+      address: gemeente-riemer-nlx-management-api:443
+  transactionLog:
+    hostname: gemeente-riemer-postgresql
+    database: "gemeente-riemer-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  tls:
+    organization:
+      existingSecret: gemeente-riemer-organization-tls
+    internal:
+      existingSecret: gemeente-riemer-inway-tls
+  service:
+    type: ClusterIP
+
+nlx-management:
+  config:
+    directoryHostname: shared-nlx-directory-api
+    oidc:
+      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
+      discoveryURL: http://dex.gemeente-riemer.nlx.minikube
+      redirectURL: http://nlx-management.gemeente-riemer.nlx.minikube/oidc/callback
+      sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
+    txlogAPIAddress: gemeente-riemer-nlx-txlog-api:8443
+  tls:
+    organization:
+      existingSecret: gemeente-riemer-organization-tls
+    internal:
+      existingSecret: gemeente-riemer-management-api-tls
+  transactionLog:
+    enabled: true
+    hostname: gemeente-riemer-postgresql
+    database: "gemeente-riemer-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  ingress:
+    enabled: true
+    hosts:
+      - nlx-management.gemeente-riemer.nlx.minikube
+  postgresql:
+    hostname: gemeente-riemer-postgresql
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+
+nlx-txlog-api:
+  txlogdb:
+    hostname: gemeente-riemer-postgresql
+    database: "gemeente-riemer-transaction-log"
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
+  tls:
+    existingSecret: gemeente-riemer-txlog-api-tls
+
+dex:
+  config:
+    storage:
+      type: sqlite3
+      config:
+        file: ":memory:"
+    logger:
+      level: info
+    issuer: http://dex.gemeente-riemer.nlx.minikube
+    staticClients:
+      - id: nlx-management
+        name: NLX Management
+        secret: grGSl5W5HcKRETBr3OhmU6Tm
+        redirectURIs:
+          - http://nlx-management.gemeente-riemer.nlx.minikube/oidc/callback
+    enablePasswordDB: true
+    staticPasswords:
+      - username: admin
+        userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: Admin User
+        email: admin@example.com
+    oauth2:
+      skipApprovalScreen: false
+  ingress:
+    enabled: true
+    hosts:
+      - dex.gemeente-riemer.nlx.minikube
+  ports:
+    web:
+      servicePort: 80
+  grpc: false
+  certs:
+    web:
+      create: false
+    grpc:
+      create: false
+  rbac:
+    create: false
+
+manage-citizens-ui:
+  enabled: false
+  basisregisterFictievePersonenApiBaseUrl: http://gemeente-riemer-nlx-outway/12345678901234567893/basisregister-fictieve-personen
+  organizationName: "Gemeente Riemer"
+  organizationLogo: https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/riemer.svg
+
+basisregister-fictieve-personen:
+  municipality: gemeente-riemer
+  postgresql:
+    hostname: gemeente-riemer-postgresql
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
