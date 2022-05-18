@@ -11,7 +11,7 @@ image:
   monitorRepository: nlxio/directory-monitor
   uiRepository: nlxio/directory-ui
   tag: ""
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   pullSecrets: []
 
 replicaCount: 1

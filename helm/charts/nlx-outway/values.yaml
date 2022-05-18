@@ -11,7 +11,7 @@ image:
   registry: docker.io
   repository: nlxio/outway
   tag: ""
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   pullSecrets: []
 
 replicaCount: 1

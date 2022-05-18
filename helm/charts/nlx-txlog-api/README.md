@@ -62,7 +62,7 @@ The following table lists the configurable parameters of the nlx-txlog-api Chart
 | `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no |
 | `image.repository` | Image repository for the txlog API | `nlxio/txlog-api` | no |
 | `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | no |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` | no |
+| `image.pullPolicy` | Image pull policy | `Always` | no |
 | `image.pullSecrets` | Secrets for the image repository | `[]` | no |
 | `affinity` | Node affinity for pod assignment | `{}` | no |
 | `nodeSelector` | Node labels for pod assignment | `{}` | no |

@@ -1,6 +1,6 @@
-# ca-certportal 
+# ca-certportal
 
-This is the Chart for the NLX ca-certportal. It provides a 
+This is the Chart for the NLX ca-certportal. It provides a
 web interface that allows requesting a testing certificate easily.
 
 ## Prerequisites
@@ -26,27 +26,27 @@ The following table lists the configurable parameters of the ca-certportal Chart
 
 | Parameter | Description | Default | Required (yes/no) |
 | --------- | ----------- | ------- | -------- |
-| `nameOverride` | Override deployment name | `""` | no | 
+| `nameOverride` | Override deployment name | `""` | no |
 | `fullnameOverride` | Override full deployment name | `""` | no |
 
 ### Deployment parameters
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io` | no | 
-| `image.repository` | Image repository | `nlxio/ca-certportal` | no |
+| Parameter | Description | Default                         | Required (yes/no) |
+| --------- | ----------- |---------------------------------| -------- |
+| `image.registry` | Image registry (ignored if `global.imageRegistry` is set) | `docker.io`                     | no |
+| `image.repository` | Image repository | `nlxio/ca-certportal`           | no |
 | `image.tag` | Image tag (ignored if `global.imageTag` is set). When set to null, the AppVersion from the Chart is used | `The appVersion from the chart` | no |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` | no |
-| `image.pullSecrets` | Secrets for the image repository | `[]` | no |
-| `affinity` | Node affinity for pod assignment | `{}` | no |
-| `nodeSelector` | Node labels for pod assignment | `{}` | no |
-| `replicaCount` | Number of management replicas | `1` | no |
-| `resources` | Pod resource requests & limits | `{}` | no |
-| `tolerations` | Node tolerations for pod assignment | `[]` | no |
-| `serviceAccount.create` | If `true`, create a new service account | `true` | no |
-| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""` | no |
-| `serviceAccount.annotations` | Annotations to add to the service account | `{}` | no | 
-| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}` | no |
+| `image.pullPolicy` | Image pull policy | `Always`                        | no |
+| `image.pullSecrets` | Secrets for the image repository | `[]`                            | no |
+| `affinity` | Node affinity for pod assignment | `{}`                            | no |
+| `nodeSelector` | Node labels for pod assignment | `{}`                            | no |
+| `replicaCount` | Number of management replicas | `1`                             | no |
+| `resources` | Pod resource requests & limits | `{}`                            | no |
+| `tolerations` | Node tolerations for pod assignment | `[]`                            | no |
+| `serviceAccount.create` | If `true`, create a new service account | `true`                          | no |
+| `serviceAccount.name` | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `""`                            | no |
+| `serviceAccount.annotations` | Annotations to add to the service account | `{}`                            | no |
+| `securityContext` | Optional security context. The YAML block should adhere to the [SecurityContext spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#securitycontext-v1-core) | `{}`                            | no |
 
 ### CA Cert Portal parameters
 | Parameter | Description | Default | Required (yes/no) |
@@ -58,7 +58,7 @@ The following table lists the configurable parameters of the ca-certportal Chart
 ### Exposure parameters
 
 | Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- | 
+| --------- | ----------- | ------- | -------- |
 | `service.type` | Service type (ClusterIP, NodePort or LoadBalancer) | `ClusterIP` | no |
 | `service.httpPort` | Port exposed by the service | `8090` | no |
 | `ingress.enabled` | Enable Ingress | `false` | no |
@@ -69,7 +69,7 @@ The following table lists the configurable parameters of the ca-certportal Chart
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. 
+Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
 
 ```console
 $ helm install ca-certportal -f values.yaml .

@@ -13,7 +13,7 @@ replicaCount: 1
 image:
   registry: docker.io
   repository: nlxio/txlog-api
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
@@ -36,7 +36,7 @@ txlogdb:
     name: ""
     usernameKey: "username"
     passwordKey: "password"
-tls: 
+tls:
   rootCertificatePEM: ""
   certificatePEM: ""
   keyPEM: ""
@@ -69,7 +69,7 @@ service:
   https:
     type: ClusterIP
     port: 8443
-  http: 
+  http:
     type: ClusterIP
     port: 8080
 

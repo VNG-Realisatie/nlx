@@ -12,7 +12,7 @@ image:
   apiRepository: nlxio/management-api
   uiRepository: nlxio/management-ui
   tag: ""
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   pullSecrets: []
 
 replicaCount: 1
