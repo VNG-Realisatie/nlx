@@ -1,3 +1,10 @@
+# [0.130.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.129.0...v0.130.0) (2022-05-18)
+
+
+### Features
+
+* **helm:** use pull policy 'Always' as default for all NLX Helm charts ([3ca215e](https://gitlab.com/commonground/nlx/nlx/commit/3ca215ece513f9f04764f9522ba2304b2beb9275)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 # [0.129.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.128.2...v0.129.0) (2022-05-17)
 
 

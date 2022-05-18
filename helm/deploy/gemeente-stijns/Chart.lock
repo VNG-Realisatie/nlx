@@ -10,10 +10,10 @@ dependencies:
   version: 0.1.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.129.0
+  version: 0.130.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.129.0
+  version: 0.130.0
 - name: nginx-video-player-ui-proxy
   repository: https://charts.commonground.nl
   version: 0.1.0
@@ -23,5 +23,5 @@ dependencies:
 - name: manage-citizens-ui
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:34cba7abbb94512af649595e911003de2d1685d51f08516be372d36b806ed740
-generated: "2022-05-17T08:16:37.90983564Z"
+digest: sha256:b42f7f3dce3c20c89b7f83f5785eda2d3ddd563c6d3fd61b185e2cd2890d4343
+generated: "2022-05-18T09:56:51.409818387Z"
