@@ -28,10 +28,6 @@ spec:
                 if ! nlxctl service list | grep -q $SERVICE_NAME_KENTEKENS; then
                     nlxctl service create --config /tmp/service-kentekens.json
                 fi
-                echo "${SERVICE_PERSONEN_JSON}" > /tmp/service-personen.json
-                if ! nlxctl service list | grep -q $SERVICE_NAME_PERSONEN; then
-                    nlxctl service create --config /tmp/service-personen.json
-                fi
                 echo "${SERVICE_VIDEO_STREAM_JSON}" > /tmp/service-video-stream.json
                 if ! nlxctl service list | grep -q $SERVICE_NAME_VIDEO_STREAM; then
                     nlxctl service create --config /tmp/service-video-stream.json
@@ -46,10 +42,6 @@ spec:
               value: {{ .Values.managementAPI.serviceKentekens.name | quote }}
             - name: SERVICE_KENTEKENS_JSON
               value: {{ .Values.managementAPI.serviceKentekens | toJson | quote }}
-            - name: SERVICE_NAME_PERSONEN
-              value: {{ .Values.managementAPI.servicePersonen.name | quote }}
-            - name: SERVICE_PERSONEN_JSON
-              value: {{ .Values.managementAPI.servicePersonen | toJson | quote }}
             - name: SERVICE_NAME_VIDEO_STREAM
               value: {{ .Values.managementAPI.serviceVideoStream.name | quote }}
             - name: SERVICE_VIDEO_STREAM_JSON

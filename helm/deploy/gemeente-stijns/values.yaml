@@ -273,6 +273,14 @@ managementAPI:
       name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
       usernameKey: username
       passwordKey: password
+  servicePersonen:
+    name: basisregister-fictieve-personen
+    endpointURL: http://gemeente-stijns-nlx-inway-basisregister-fictieve-personen
+    apiSpecificationURL: http://gemeente-stijns-nlx-inway-basisregister-fictieve-personen/openapi.json
+    publicSupportContact: support@nlx.io
+    documentationUrl: https://docs.nlx.io
+    inways:
+      - gemeente-stijns-nlx-inway
 
 outway:
   ingress:
@@ -283,6 +291,18 @@ outway-2:
   ingress:
     enabled: false
     host: ""
+
+basisregisterFictievePersonen:
+  postgresql:
+    hostname: gemeente-stijns-postgresql
+    port: 5432
+    database: "brfp"
+    sslMode: require
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password
 
 ################
 ## Sub-charts ##
@@ -437,3 +457,13 @@ parkeerrechten-viewer:
 
 manage-citizens-ui:
   enabled: false
+
+basisregister-fictieve-personen:
+  municipality: gemeente-stijns
+  postgresql:
+    hostname: gemeente-stijns-postgresql
+    connectTimeout: 10
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
+      usernameKey: username
+      passwordKey: password

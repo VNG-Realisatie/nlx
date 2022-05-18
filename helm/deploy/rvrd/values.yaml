@@ -135,14 +135,6 @@ managementAPI:
     documentationUrl: https://docs.nlx.io
     inways:
       - rvrd-nlx-inway
-  servicePersonen:
-    name: basisregister-fictieve-personen
-    endpointURL: http://rvrd-basisregister-fictieve-personen
-    apiSpecificationURL: http://rvrd-basisregister-fictieve-personen/openapi.json
-    publicSupportContact: support@nlx.io
-    documentationUrl: https://docs.nlx.io
-    inways:
-      - rvrd-nlx-inway
   serviceVideoStream:
     name: voorbeeld-video-stream
     endpointURL: https://commondatastorage.googleapis.com/
@@ -301,18 +293,6 @@ ca:
       issuerRef:
         name: rvrd
 
-basisregisterFictievePersonen:
-  postgresql:
-    hostname: rvrd-postgresql
-    port: 5432
-    database: "brfp"
-    sslMode: require
-    connectTimeout: 10
-    existingSecret:
-      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
-      usernameKey: username
-      passwordKey: password
-
 ################
 ## Sub-charts ##
 ################
@@ -423,11 +403,3 @@ nlx-txlog-api:
   tls:
     existingSecret: rvrd-txlog-api-tls
 
-basisregister-fictieve-personen:
-  postgresql:
-    hostname: rvrd-postgresql
-    connectTimeout: 10
-    existingSecret:
-      name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
-      usernameKey: username
-      passwordKey: password

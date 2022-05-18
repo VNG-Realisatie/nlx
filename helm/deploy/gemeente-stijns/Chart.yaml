@@ -35,3 +35,6 @@ dependencies:
   - name: manage-citizens-ui
     repository: https://charts.commonground.nl
     version: 0.1.0
+  - name: basisregister-fictieve-personen
+    version: 0.1.0
+    repository: https://charts.commonground.nl

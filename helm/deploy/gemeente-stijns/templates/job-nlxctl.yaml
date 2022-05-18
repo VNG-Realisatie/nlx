@@ -1,4 +1,3 @@
-{{- if index .Values "parkeerrechten-api" "enabled" }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -25,18 +24,30 @@ spec:
             - "-exc"
             - |
                 nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
+{{- if index .Values "parkeerrechten-api" "enabled" }}
                 echo "${SERVICE_PARKEERRECHTEN_JSON}" > /tmp/service-parkeerrechten.json
                 if ! nlxctl service list | grep -q $SERVICE_NAME_PARKEERRECHTEN; then
                     nlxctl service create --config /tmp/service-parkeerrechten.json
+                fi
+{{- end }}
+                echo "${SERVICE_PERSONEN_JSON}" > /tmp/service-personen.json
+                if ! nlxctl service list | grep -q $SERVICE_NAME_PERSONEN; then
+                    nlxctl service create --config /tmp/service-personen.json
                 fi
                 nlxctl service list
           env:
             - name: MANAGEMENT_API_ADDRESS
               value: {{ .Values.managementAPI.address | quote }}
+{{- if index .Values "parkeerrechten-api" "enabled" }}
             - name: SERVICE_NAME_PARKEERRECHTEN
               value: {{ .Values.managementAPI.serviceParkeerrechten.name | quote }}
             - name: SERVICE_PARKEERRECHTEN_JSON
               value: {{ .Values.managementAPI.serviceParkeerrechten | toJson | quote }}
+{{- end }}
+            - name: SERVICE_NAME_PERSONEN
+              value: {{ .Values.managementAPI.servicePersonen.name | quote }}
+            - name: SERVICE_PERSONEN_JSON
+              value: {{ .Values.managementAPI.servicePersonen | toJson | quote }}
           volumeMounts:
             - name: certificate
               mountPath: /certificate
@@ -49,4 +60,3 @@ spec:
         - name: config
           configMap:
             name: {{ template "gemeente-stijns.fullname" . }}-nlxctl
-{{- end }}

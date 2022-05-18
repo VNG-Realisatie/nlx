@@ -9,9 +9,6 @@ dependencies:
   - name: dex
     version: 2.15.2
     repository: "@stable"
-  - name: basisregister-fictieve-personen
-    version: 0.1.0
-    repository: https://charts.commonground.nl
   - name: basisregister-fictieve-kentekens
     version: 0.1.0
     repository: https://charts.commonground.nl
