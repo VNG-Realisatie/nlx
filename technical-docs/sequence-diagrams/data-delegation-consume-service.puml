@@ -1,0 +1,44 @@
+@startuml
+title: Consume a service offered by a delegate
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "API Consumer"
+actor "Client" as clientConsumer
+participant "Outway" as outwayConsumer
+end box
+
+
+box "Saas Organization"
+participant "Inway" as inwaySaasOrganization
+participant "Service" as serviceSaasOrganization
+end box
+
+box "Municipality"
+participant "Inway" as inwayMunicipality
+participant "Management API" as managementAPIMunicipality
+end box
+
+inwaySaasOrganization -> inwayMunicipality: get claim for publishing service
+inwayMunicipality -> managementAPIMunicipality: get claim
+managementAPIMunicipality -> inwayMunicipality: return claim
+inwayMunicipality -> inwaySaasOrganization: return claim
+inwaySaasOrganization -> inwaySaasOrganization: store claim in memory
+
+clientConsumer -> outwayConsumer: call service
+outwayConsumer -> inwaySaasOrganization: get claim stating that the organization is allowed to  publish the service
+inwaySaasOrganization -> outwayConsumer: return claim
+outwayConsumer -> outwayConsumer: verify claim
+outwayConsumer -> inwayMunicipality: get claim stating API consumer has access
+inwayMunicipality -> managementAPIMunicipality: get claim
+managementAPIMunicipality -> inwayMunicipality: return claim
+inwayMunicipality -> outwayConsumer: return claim
+outwayConsumer -> outwayConsumer: store claim in memory
+outwayConsumer -> inwaySaasOrganization: call service with claim
+inwaySaasOrganization -> inwaySaasOrganization: validate claim
+inwaySaasOrganization -> inwaySaasOrganization: use delegator from claim to determine the service to call
+inwaySaasOrganization -> serviceSaasOrganization: call service
+
+@enduml

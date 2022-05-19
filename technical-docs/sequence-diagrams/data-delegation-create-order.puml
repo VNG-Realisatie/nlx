@@ -1,0 +1,40 @@
+@startuml
+title: Create an order to delegate offering a service
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "Saas Organization"
+actor "Administrator" as administratorSaasOrganization
+participant "Management UI" as managementUISaasOrganization
+participant "Management API" as managementAPISaasOrganization
+participant "Management database" as managementDatabaseSaasOrganization
+end box
+
+box "Municipality"
+actor "Administrator" as administratorMunicipality
+participant "Management UI" as managementUIMunicipality
+participant "Inway" as inwayMunicipality
+participant "Management API" as managementAPIMunicipality
+database "Management database" as managementDatabaseMunicipality
+end box
+
+administratorMunicipality -> managementUIMunicipality: create service
+managementUIMunicipality -> managementAPIMunicipality: create service
+managementAPIMunicipality -> managementDatabaseMunicipality: create service
+administratorMunicipality -> managementUIMunicipality: create delegation order for service
+managementUIMunicipality -> managementAPIMunicipality: create delegation order for service
+managementAPIMunicipality -> managementDatabaseMunicipality: create order
+
+administratorSaasOrganization -> managementUISaasOrganization: synchronize orders
+managementUISaasOrganization -> managementAPISaasOrganization: synchronize orders
+managementAPISaasOrganization -> inwayMunicipality: synchronize orders
+inwayMunicipality -> managementAPIMunicipality: get orders for Saas Organization
+managementAPIMunicipality -> managementDatabaseMunicipality:  get orders for Saas Organization
+managementDatabaseMunicipality -> managementAPIMunicipality: return orders
+managementAPIMunicipality -> inwayMunicipality: return orders
+inwayMunicipality -> managementAPISaasOrganization: return orders
+managementAPISaasOrganization -> managementDatabaseSaasOrganization: save orders
+
+@enduml

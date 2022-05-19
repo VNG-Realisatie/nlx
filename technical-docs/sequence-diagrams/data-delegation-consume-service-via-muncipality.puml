@@ -1,0 +1,30 @@
+@startuml
+title: Consume a service offered by a delegate
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "API Consumer"
+participant "Client" as clientConsumer
+participant "Outway" as outwayConsumer
+end box
+
+box "Municipality"
+participant "Inway" as inwayMunicipality
+participant "Management API" as managementAPIMunicipality
+end box
+
+box "Saas Organization"
+participant "Inway" as inwaySaasOrganization
+participant "Service" as serviceSaasOrganization
+end box
+
+clientConsumer -> outwayConsumer: call service
+outwayConsumer -> inwayMunicipality: call service
+inwayMunicipality -> inwayMunicipality: validate consumer has access
+inwayMunicipality -> inwaySaasOrganization: call service
+inwaySaasOrganization -> serviceSaasOrganization: call service
+serviceSaasOrganization -> outwayConsumer: service response
+
+@enduml
