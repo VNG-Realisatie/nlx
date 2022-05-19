@@ -79,9 +79,6 @@ websockets-chat-ui:
 
 manage-citizens-ui:
   enabled: true
-  organizationName: "Gemeente Stijns"
-  organizationLogo: "https://gitlab.com/commonground/nlx/demo/-/raw/c75d67e8e0b631efdb0edec4df74b227483744c0/assets/stijns.svg"
-  basisregisterFictievePersonenApiBaseUrl: http://gemeente-stijns-nlx-outway/12345678901234567891/basisregister-fictieve-personen
   ingress:
     enabled: true
     hosts:

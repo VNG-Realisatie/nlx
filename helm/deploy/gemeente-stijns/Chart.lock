@@ -26,5 +26,5 @@ dependencies:
 - name: basisregister-fictieve-personen
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:140b67602808a776a2265ce0f8f8117d55d3e554ab06d5f18eafc15dfb997079
-generated: "2022-05-19T06:47:53.021719368Z"
+digest: sha256:ef3e7fc279c68b53cc15b60cb32499b97a13a846b8c1c06b08a1079568a3f428
+generated: "2022-05-19T13:32:50.701721+02:00"
