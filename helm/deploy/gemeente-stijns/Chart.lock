@@ -10,10 +10,10 @@ dependencies:
   version: 0.1.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.130.0
+  version: 0.130.1
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.130.0
+  version: 0.130.1
 - name: nginx-video-player-ui-proxy
   repository: https://charts.commonground.nl
   version: 0.1.0
@@ -26,5 +26,5 @@ dependencies:
 - name: basisregister-fictieve-personen
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:4c4556e704fdb554dd1be3596aa26b93d675c70c60637eb9cd4e1451d790c9be
-generated: "2022-05-18T15:42:24.335268+02:00"
+digest: sha256:140b67602808a776a2265ce0f8f8117d55d3e554ab06d5f18eafc15dfb997079
+generated: "2022-05-19T06:47:53.021719368Z"
