@@ -8,11 +8,8 @@ Feature: inway
         When "Gemeente Stijns" removes the the inway "gemeente-stijns-nlx-inway"
         Then the inway is no longer visible in the inway overview of the management interface of "Gemeente Stijns"
 
-    @ignore
+    @serial
     Scenario: Unset organisation inway
-        Given "Gemeente Stijns" is logged in to NLX management
-            And "Gemeente Stijns" has an inway named "gemeente-stijns-nlx-inway" which is configured as organization inway
-            And in the directory the organization inway of "Gemeente Stijns" is set to the inway "gemeente-stijns-nlx-inway"
+        Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" unsets its organization inway
-        Then the organization inway is no longer set in the management interface of "Gemeente Stijns"
-            And the inway "gemeente-stijns-nlx-inway" is no longer the organization inway of "Gemeente Stijns" in the directory
+        Then the default inway of "Gemeente Stijns" is no longer the organization inway

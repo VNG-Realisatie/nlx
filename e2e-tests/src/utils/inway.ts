@@ -8,7 +8,7 @@ import fetch from "cross-fetch";
 import { strict as assert } from "assert";
 const debug = logger("e2e-tests:inway");
 
-const isInwayAddressInDirectory = async (
+export const isInwayAddressInDirectory = async (
   org: Organization
 ): Promise<boolean> => {
   const url = `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway/management-api-proxy-address`;
