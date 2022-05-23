@@ -2,10 +2,6 @@ module go.nlx.io/nlx
 
 go 1.18
 
-// Override the golang.org/x/text dependency, in version v0.3.3 a vulnerability is fixed.
-// See: https://nvd.nist.gov/vuln/detail/CVE-2020-14040.
-replace golang.org/x/text => golang.org/x/text v0.3.7
-
 require (
 	github.com/DATA-DOG/go-txdb v0.1.5
 	github.com/blang/semver/v4 v4.0.0
