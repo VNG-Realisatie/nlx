@@ -45,11 +45,6 @@ Deploy review:
           --values ${CHART_DIRECTORY}/values-review.yaml
         stop_section deploy_${CHART}
       done
-    - |
-      echo "export CYPRESS_INWAY_NAME=rvrd-nlx-inway" >> e2e_environment.sh
-      echo "export CYPRESS_LOGIN_ORGANIZATION_NAME=RvRD" >> e2e_environment.sh
-      echo "export CYPRESS_LOGIN_USERNAME=admin@example.com" >> e2e_environment.sh
-      echo "export CYPRESS_LOGIN_PASSWORD=password" >> e2e_environment.sh
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
