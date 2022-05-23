@@ -1,9 +1,12 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
-import {ManagementIncomingOrder, ManagementOutgoingOrder} from "../../../../management-ui/src/api/models";
+import {
+  ManagementIncomingOrder,
+  ManagementOutgoingOrder,
+} from "../../../../management-ui/src/api/models";
+import { default as logger } from "../../debug";
 import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "assert";
-import { default as logger } from "../../debug";
 const debug = logger("e2e-tests:order");
 
 Then(
@@ -50,7 +53,7 @@ Then(
     this: CustomWorld,
     delegateeOrgName: string,
     delegatorOrgName: string,
-    orderReference: string,
+    orderReference: string
   ) {
     orderReference = `${orderReference}-${this.id}`;
 
@@ -62,7 +65,10 @@ Then(
     const orderResponse =
       await delegatee.apiClients.management?.managementListIncomingOrders();
 
-    debug('incoming order', orderResponse?.orders?.find(order => order.reference === orderReference))
+    debug(
+      "incoming order",
+      orderResponse?.orders?.find((order) => order.reference === orderReference)
+    );
 
     assert.equal(
       orderResponse?.orders?.some(

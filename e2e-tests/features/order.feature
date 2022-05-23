@@ -46,12 +46,14 @@ Feature: Order
         When "Gemeente Stijns" revokes the order "order-ref-1" for "Vergunningsoftware BV"
         Then "Vergunningsoftware BV" has a revoked incoming order from "Gemeente Stijns" with reference "order-ref-1"
 
-    @ignore
     Scenario: Use an order to access service when order is expired
-        Given "Vergunningsoftware BV" has the Outway "vergunningsoftware-bv-nlx-outway" running
-            And "Vergunningsoftware BV" has an expired order with reference "order-ref-1" from "Gemeente Stijns" for service "basisregister-fictieve-kentekens" of "RvRD"
-        When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basisregister-fictieve-kentekens" via the order of "Gemeente Stijns" with reference "order-ref-1"
-        Then "Vergunningsoftware BV" receives a error response
+        Given "Vergunningsoftware BV" is up and running
+            And "RvRD" is up and running
+            And "Gemeente Stijns" is up and running
+            And the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" has access to "basisregister-fictieve-kentekens" of "RvRD"
+            And "Vergunningsoftware BV" has an expired order for Outway "vergunningsoftware-bv-nlx-outway" with reference "order-ref-1" from "Gemeente Stijns" for service "basisregister-fictieve-kentekens" of "RvRD" via Outway "gemeente-stijns-nlx-outway"
+        When the Outway "vergunningsoftware-bv-nlx-outway" of "Vergunningsoftware BV" calls the service "basisregister-fictieve-kentekens" of "RvRD" with valid authorization details via the order of "Gemeente Stijns" with reference "order-ref-1"
+        Then "Vergunningsoftware BV" receives an order expired response
 
     @ignore
     Scenario: Use an order to access service when delegator has no access to service

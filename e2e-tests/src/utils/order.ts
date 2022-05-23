@@ -13,7 +13,9 @@ export const createOrder = async (
   delegatorOrgName: string,
   serviceName: string,
   serviceProviderOrgName: string,
-  delegatorOutwayName: string
+  delegatorOutwayName: string,
+  validFrom: Date,
+  validUntil: Date
 ) => {
   serviceName = `${serviceName}-${world.id}`;
   orderReference = `${orderReference}-${world.id}`;
@@ -63,8 +65,8 @@ export const createOrder = async (
         description: "arbitrary description",
         delegatee: delegatee.serialNumber,
         publicKeyPEM: delegateeOutway.publicKeyPEM,
-        validFrom: dayjs().subtract(1, "day").toDate(),
-        validUntil: dayjs().add(1, "day").toDate(),
+        validFrom: validFrom,
+        validUntil: validUntil,
         accessProofIds: [`${accessStateForService?.accessProof?.id}`],
       },
     });
