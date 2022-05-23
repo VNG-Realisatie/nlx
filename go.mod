@@ -6,9 +6,6 @@ go 1.18
 // See: https://nvd.nist.gov/vuln/detail/CVE-2020-14040.
 replace golang.org/x/text => golang.org/x/text v0.3.7
 
-// Override the gopkg.in/yaml.v2 dependency. Versions before v2.2.3 are vulnerable to a Billion Laughs Attack.
-replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.4.0
-
 require (
 	github.com/DATA-DOG/go-txdb v0.1.5
 	github.com/blang/semver/v4 v4.0.0
