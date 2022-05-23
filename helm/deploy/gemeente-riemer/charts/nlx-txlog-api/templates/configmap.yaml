@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "nlx-txlog-api.fullname" . }}
-  labels:
-    {{- include "nlx-txlog-api.labels" . | nindent 4 }}
-data:
-  root-internal.pem: {{ (required "Internal root certificate PEM is required" (default .Values.global.tls.internal.rootCertificatePEM .Values.tls.rootCertificatePEM)) | quote }}

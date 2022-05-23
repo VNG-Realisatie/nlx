@@ -1,7 +1,0 @@
-apiVersion: v2
-name: nlx-management
-description: NLX management
-type: application
-version: 0.129.0
-appVersion: 0.129.0
-icon: https://docs.nlx.io/img/logo-light.svg
