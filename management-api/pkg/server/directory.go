@@ -6,8 +6,6 @@ package server
 import (
 	"context"
 
-	"github.com/golang/protobuf/ptypes/timestamp"
-
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -241,7 +239,7 @@ func getLatestAccessRequestStates(ctx context.Context, configDatabase database.C
 func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 	createdAt := timestamppb.New(accessProof.CreatedAt)
 
-	var revokedAt *timestamp.Timestamp
+	var revokedAt *timestamppb.Timestamp
 
 	if accessProof.RevokedAt.Valid {
 		revokedAt = timestamppb.New(accessProof.RevokedAt.Time)

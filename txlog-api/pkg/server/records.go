@@ -8,10 +8,10 @@ import (
 	"context"
 	"strings"
 
-	"github.com/golang/protobuf/ptypes/empty"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/txlog-api/api"
@@ -20,7 +20,7 @@ import (
 
 const maxAmountOfRecords = 100
 
-func (s *TXLogService) ListRecords(ctx context.Context, _ *empty.Empty) (*api.ListRecordsResponse, error) {
+func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.ListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
 	records, err := s.storage.ListRecords(ctx, maxAmountOfRecords)

@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -97,7 +96,7 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
 	createdAt := timestamppb.New(accessGrant.CreatedAt)
 
-	var revokedAt *timestamp.Timestamp
+	var revokedAt *timestamppb.Timestamp
 
 	if accessGrant.RevokedAt.Valid {
 		revokedAt = timestamppb.New(accessGrant.RevokedAt.Time)
