@@ -8,18 +8,16 @@ import fetch from "cross-fetch";
 import { strict as assert } from "assert";
 const debug = logger("e2e-tests:inway");
 
-export const isInwayAddressInDirectory = async (
-  org: Organization
+export const isManagementAPIProxyAddressForDirectoryEqualTo = async (
+  org: Organization,
+  address: string
 ): Promise<boolean> => {
   const url = `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway/management-api-proxy-address`;
   const res = await fetch(url);
 
   assert.equal(res.status >= 400, false);
   const response = await res.json();
-  if (
-    response.address === undefined ||
-    response.address !== org.defaultInway.managementAPIProxyAddress
-  ) {
+  if (response.address === undefined || response.address !== address) {
     return Promise.resolve(false);
   }
 
@@ -61,8 +59,15 @@ export const setDefaultInwayAsOrganizationInway = async (
   }
 
   // wait until the inway is set as organization inway in the directory
-  await pWaitFor.default(async () => await isInwayAddressInDirectory(org), {
-    interval: 200,
-    timeout: 1000 * 21,
-  });
+  await pWaitFor.default(
+    async () =>
+      await isManagementAPIProxyAddressForDirectoryEqualTo(
+        org,
+        org.defaultInway.managementAPIProxyAddress
+      ),
+    {
+      interval: 200,
+      timeout: 1000 * 21,
+    }
+  );
 };
