@@ -70,7 +70,8 @@ func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) 
 		err = tx.
 			WithContext(ctx).
 			Omit(clause.Associations).
-			Model(settings).
+			Model(&dbSettings{}).
+			Where("inway_id = ?", inway.ID).
 			Update("inway_id", nil).Error
 		if err != nil {
 			return err
