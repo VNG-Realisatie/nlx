@@ -45,10 +45,7 @@ const InwayDetailPageView = ({ inway, removeHandler }) => {
       </SubHeader>
 
       <StyledActionsBar>
-        <StyledRemoveButton
-          title={t('Remove service')}
-          onClick={handleRemove}
-        />
+        <StyledRemoveButton title={t('Remove inway')} onClick={handleRemove} />
       </StyledActionsBar>
 
       <StyledSpecList data-testid="inway-specs" alignValuesRight>

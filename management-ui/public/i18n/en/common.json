@@ -214,6 +214,7 @@
   "Rejecting this access request will refuse organizationName (organizationSerialNumber) access to serviceName. Are you sure?": "Rejecting this access request will refuse {{organizationName}} ({{organizationSerialNumber}}) access to {{serviceName}}. Are you sure?",
   "Rejecting this access request will refuse the organization access to the service. Are you sure?": "Rejecting this access request will refuse the organization access to the service. Are you sure?",
   "Remove": "Remove",
+  "Remove inway": "Remove inway",
   "Remove service": "Remove service",
   "Request": "Request",
   "Request access": "Request access",
