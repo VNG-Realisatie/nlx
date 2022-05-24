@@ -4,6 +4,6 @@ dependencies:
   version: 2.15.2
 - name: parkeerrechten-admin
   repository: https://charts.commonground.nl
-  version: 0.1.0
-digest: sha256:b9f6bb0aeca427b53fa212d92d6c726d6385ab8a72ae2d698ea52705ca849d23
-generated: "2022-05-16T16:38:32.314768+02:00"
+  version: 0.2.0
+digest: sha256:97322573ed39adc4a73682d929bac90afebdc543e234a7a84d43f19da541cf08
+generated: "2022-05-30T13:47:15.274137+02:00"
