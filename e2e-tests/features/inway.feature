@@ -8,7 +8,7 @@ Feature: inway
         When "Gemeente Stijns" removes the the inway "gemeente-stijns-nlx-inway"
         Then the inway is no longer visible in the inway overview of the management interface of "Gemeente Stijns"
 
-    @serial
+    @execution:serial
     Scenario: Unset organisation inway
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" unsets its organization inway
