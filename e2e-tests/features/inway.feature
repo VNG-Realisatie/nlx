@@ -1,12 +1,11 @@
 @inway
 Feature: inway
 
-    @ignore
+    @execution:serial
     Scenario: Delete an inway
-        Given "Gemeente Stijns" is logged in to NLX management
-            And "Gemeente stijns" has an inway named "gemeente-stijns-nlx-inway" which offer the service "parkeerrechten"
-        When "Gemeente Stijns" removes the the inway "gemeente-stijns-nlx-inway"
-        Then the inway is no longer visible in the inway overview of the management interface of "Gemeente Stijns"
+        Given "Gemeente Stijns" is up and running
+        When "Gemeente Stijns" removes its default inway
+        Then the default inway of "Gemeente Stijns" is removed
 
     @execution:serial
     Scenario: Unset organisation inway

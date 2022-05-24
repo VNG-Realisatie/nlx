@@ -26,19 +26,35 @@ export const isManagementAPIProxyAddressForDirectoryEqualTo = async (
   return Promise.resolve(false);
 };
 
+const isInwayRunning = async (
+  org: Organization,
+  inwayName: string
+): Promise<boolean> => {
+  try {
+    const response = await org.apiClients.management?.managementListInways();
+
+    const isPresent = response?.inways?.some(
+      (inway: ManagementInway) => inway.name === inwayName
+    );
+
+    return Promise.resolve(!!isPresent);
+  } catch (e) {
+    return Promise.resolve(false);
+  }
+};
+
 export const hasDefaultInwayRunning = async (
   world: CustomWorld,
   orgName: string
 ) => {
   const org = getOrgByName(orgName);
 
-  const response = await org.apiClients.management?.managementListInways();
-
-  assert.equal(
-    response?.inways?.some(
-      (inway: ManagementInway) => inway.name === org.defaultInway.name
-    ),
-    true
+  await pWaitFor.default(
+    async () => await isInwayRunning(org, org.defaultInway.name),
+    {
+      interval: 200,
+      timeout: 1000 * 11,
+    }
   );
 };
 

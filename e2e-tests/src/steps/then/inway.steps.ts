@@ -20,3 +20,25 @@ Then(
     await isManagementAPIProxyAddressForDirectoryEqualTo(org, "");
   }
 );
+
+Then(
+  "the default inway of {string} is removed",
+  async function (this: CustomWorld, orgName: string) {
+    const org = getOrgByName(orgName);
+
+    try {
+      await org.apiClients.management?.managementGetInway({
+        name: org.defaultInway.name,
+      });
+      throw new Error(
+        "this code should not be triggered, since we expect the inway to be removed"
+      );
+    } catch (error: any) {
+      if (error.status !== 404) {
+        throw new Error(
+          `unexpected status code '${error.status}' while getting a inway, expected 404`
+        );
+      }
+    }
+  }
+);
