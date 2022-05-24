@@ -6,9 +6,9 @@ import {
   ManagementIncomingAccessRequest,
 } from "../../../management-ui/src/api/models";
 import { default as logger } from "../debug";
+import { isServiceKnownInServiceListOfOutway } from "../steps/when/outway.steps";
 import pWaitFor from "p-wait-for";
 import { strict as assert } from "assert";
-import {isServiceKnownInServiceListOfOutway} from "../steps/when/outway.steps";
 const debug = logger("e2e-tests:service");
 
 const isAccessRequestApprovedForService = async (
@@ -148,6 +148,8 @@ export const createService = async (
     });
   assert.equal(createServiceResponse?.name, uniqueServiceName);
 
+  serviceProvider.createdItems[world.id].services.push(uniqueServiceName);
+
   debug(
     `successfully created service ${serviceName} for ${serviceProviderOrgName}`
   );
@@ -190,8 +192,7 @@ export const getAccessToService = async (
 
   // wait until the Outway has had the time to update its internal services list
   await pWaitFor.default(
-    async () =>
-      await isServiceKnownInServiceListOfOutway(url),
+    async () => await isServiceKnownInServiceListOfOutway(url),
     {
       interval: 1000,
       timeout: 1000 * 90,

@@ -25,6 +25,8 @@ When(
       .click();
     await driver.findElement(By.xpath("//button[@type='submit']")).click();
     await driver.findElement(By.linkText("Service toevoegen"));
+
+    org.createdItems[this.id].services.push(serviceName);
   }
 );
 

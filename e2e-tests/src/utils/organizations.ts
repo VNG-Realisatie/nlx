@@ -18,10 +18,17 @@ export interface Organization {
     management: ManagementApi | undefined;
     directory: DirectoryApi | undefined;
   };
+  createdItems: CreatedItems;
 }
 
 interface Organizations {
   [key: string]: Organization;
+}
+
+interface CreatedItems {
+  [testID: string]: {
+    services: string[];
+  };
 }
 
 export interface Outway {
@@ -93,6 +100,7 @@ export const organizations: Organizations = {
       management: undefined,
       directory: undefined,
     },
+    createdItems: {},
   },
   RvRD: {
     serialNumber: "12345678901234567891",
@@ -118,6 +126,7 @@ export const organizations: Organizations = {
       management: undefined,
       directory: undefined,
     },
+    createdItems: {},
   },
   "Vergunningsoftware BV": {
     serialNumber: "12345678901234567892",
@@ -156,6 +165,7 @@ export const organizations: Organizations = {
       management: undefined,
       directory: undefined,
     },
+    createdItems: {},
   },
 };
 

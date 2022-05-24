@@ -113,11 +113,11 @@ When(
     const delegator = getOrgByName(delegatorOrgName);
     const delegatee = getOrgByName(delegateeOrgName);
 
-    await driver.get(`${delegator.management.url}/orders/outgoing/${delegatee.serialNumber}/${orderReference}`);
+    await driver.get(
+      `${delegator.management.url}/orders/outgoing/${delegatee.serialNumber}/${orderReference}`
+    );
 
-    await driver.findElement(
-      By.xpath("//button[text()='Intrekken']")
-    ).click()
+    await driver.findElement(By.xpath("//button[text()='Intrekken']")).click();
 
     const buttonRevoke = await driver.findElement(
       By.xpath(
@@ -126,8 +126,6 @@ When(
     );
     await buttonRevoke.click();
 
-    await driver
-      .findElement(By.xpath("//*[text()='Opdracht is ingetrokken']"));
+    await driver.findElement(By.xpath("//*[text()='Opdracht is ingetrokken']"));
   }
 );
-

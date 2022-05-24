@@ -48,6 +48,12 @@ Before({ tags: "@unauthenticated" }, async function (this: CustomWorld) {
 Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   this.id = `${ulid()}-e2e`;
 
+  for (const [name] of Object.entries(organizations)) {
+    organizations[name].createdItems[this.id] = {
+      services: [],
+    };
+  }
+
   const time = new Date().toISOString().split(".")[0];
   this.testName =
     pickle.name.replace(/\W/g, "-") + "-" + time.replace(/:|T/g, "-");
@@ -91,6 +97,27 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
       await this.snapshot();
     }
   }
+
+  const requests = [];
+  for (const [name, org] of Object.entries(organizations)) {
+    debug(`cleaning created items of ${name}`);
+
+    for (const service of org.createdItems[this.id].services) {
+      debug(`deleting service: ${service}`);
+      requests.push(
+        org.apiClients.management?.managementDeleteService({
+          name: service,
+        })
+      );
+    }
+  }
+
+  try {
+    await Promise.all(requests);
+  } catch (e) {
+    debug(`error cleaning created items: ${e}`);
+  }
+
   await this.driver?.quit();
   debug(`done with ${this.testName}`);
 });
