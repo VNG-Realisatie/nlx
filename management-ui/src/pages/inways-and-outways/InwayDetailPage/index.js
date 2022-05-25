@@ -26,6 +26,12 @@ const InwayDetailPage = () => {
 
       close()
 
+      showToast({
+        title: inway.name,
+        body: t('The inway has been removed'),
+        variant: 'success',
+      })
+
       // Update isOrganizationInwaySet if needed, to trigger the warning banner
       const settings = await applicationStore.getGeneralSettings()
       applicationStore.updateOrganizationInway({
