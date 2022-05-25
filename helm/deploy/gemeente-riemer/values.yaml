@@ -285,7 +285,6 @@ basisregisterFictievePersonen:
 ## Sub-charts ##
 ################
 nlx-outway:
-  enabled: true
   config:
     directoryHostname: shared-nlx-directory-api
     managementAPI:

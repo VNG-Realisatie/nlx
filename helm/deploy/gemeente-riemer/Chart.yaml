@@ -9,10 +9,6 @@ dependencies:
   - name: dex
     version: 2.15.2
     repository: "@stable"
-  - name: nlx-outway
-    repository: "file://../../charts/nlx-outway"
-    version: ">=0"
-    condition: nlx-outway.enabled
   - name: basisregister-fictieve-personen
     version: 0.1.0
     repository: https://charts.commonground.nl

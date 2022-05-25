@@ -308,7 +308,6 @@ basisregisterFictievePersonen:
 ## Sub-charts ##
 ################
 nlx-outway:
-  enabled: true
   config:
     directoryHostname: shared-nlx-directory-api
     managementAPI:
@@ -327,7 +326,6 @@ nlx-outway:
       existingSecret: gemeente-stijns-outway-tls
 
 nlx-outway-2:
-  enabled: true
   config:
     directoryHostname: shared-nlx-directory-api
     managementAPI:

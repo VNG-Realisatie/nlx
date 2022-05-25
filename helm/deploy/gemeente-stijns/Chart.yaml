@@ -17,15 +17,6 @@ dependencies:
     repository: https://charts.commonground.nl
     version: 0.1.0
     condition: parkeerrechten-viewer.enabled
-  - name: nlx-outway
-    repository: "file://../../charts/nlx-outway"
-    version: ">=0"
-    condition: nlx-outway.enabled
-  - name: nlx-outway
-    alias: nlx-outway-2
-    repository: "file://../../charts/nlx-outway"
-    version: ">=0"
-    condition: nlx-outway-2.enabled
   - name: nginx-video-player-ui-proxy
     repository: https://charts.commonground.nl
     version: 0.1.0
@@ -39,3 +30,10 @@ dependencies:
   - name: basisregister-fictieve-personen
     version: 0.1.0
     repository: https://charts.commonground.nl
+  - name: nlx-outway
+    repository: "file://../../charts/nlx-outway"
+    version: ">=0"
+  - name: nlx-outway
+    alias: nlx-outway-2
+    repository: "file://../../charts/nlx-outway"
+    version: ">=0"

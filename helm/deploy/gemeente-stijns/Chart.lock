@@ -8,12 +8,6 @@ dependencies:
 - name: parkeerrechten-viewer
   repository: https://charts.commonground.nl
   version: 0.1.0
-- name: nlx-outway
-  repository: file://../../charts/nlx-outway
-  version: 0.130.2
-- name: nlx-outway
-  repository: file://../../charts/nlx-outway
-  version: 0.130.2
 - name: nginx-video-player-ui-proxy
   repository: https://charts.commonground.nl
   version: 0.1.0
@@ -26,5 +20,11 @@ dependencies:
 - name: basisregister-fictieve-personen
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:fcac737a68f6c02687d3965b7f1aba9500c2b1790e8e925576f812539de60d66
-generated: "2022-05-25T14:03:41.146545307Z"
+- name: nlx-outway
+  repository: file://../../charts/nlx-outway
+  version: 0.130.2
+- name: nlx-outway
+  repository: file://../../charts/nlx-outway
+  version: 0.130.2
+digest: sha256:b28e37ad63ab5b8b0020cca376a0a8e035e0562b2434bd3d48a813c37b1a9e97
+generated: "2022-05-25T17:49:25.942776+02:00"
