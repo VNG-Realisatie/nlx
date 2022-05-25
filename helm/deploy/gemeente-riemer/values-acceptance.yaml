@@ -97,8 +97,8 @@ manage-citizens-ui:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - manage-citizens.acc.gemeentestijns.nl
+      - manage-citizens.acc.gemeenteriemer.nl
     tls:
-      - secretName: gemeentestijns-manage-citizens-ui-ingress-tls
+      - secretName: gemeenteriemer-manage-citizens-ui-ingress-tls
         hosts:
-          - manage-citizens.acc.gemeentestijns.nl
+          - manage-citizens.acc.gemeenteriemer.nl
