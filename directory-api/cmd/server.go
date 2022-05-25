@@ -155,12 +155,11 @@ func setupGateway(tlsConfig *tls.Config) ([]grpc.DialOption, *runtime.ServeMux) 
 
 	gatewayMux := runtime.NewServeMux(
 		runtime.WithMetadata(gatewayMetadata),
-		// Change the default behavior of marshaling to JSON
-		// Emit empty fields by default
 		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.HTTPBodyMarshaler{
 			Marshaler: &runtime.JSONPb{
 				MarshalOptions: protojson.MarshalOptions{
-					UseProtoNames: true,
+					EmitUnpopulated: true,
+					UseProtoNames:   true,
 				},
 				UnmarshalOptions: protojson.UnmarshalOptions{},
 			},

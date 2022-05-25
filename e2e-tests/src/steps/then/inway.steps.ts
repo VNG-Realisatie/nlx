@@ -2,7 +2,6 @@ import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
 import { isManagementAPIProxyAddressForDirectoryEqualTo } from "../../utils/inway";
 import { Then } from "@cucumber/cucumber";
-import pWaitFor from "p-wait-for";
 import { strict as assert } from "assert";
 
 Then(
@@ -18,13 +17,6 @@ Then(
       `organization ${orgName} still has an inway set: '${resp?.organizationInway}'`
     );
 
-    // wait until the inway is unset as organization inway in the directory
-    await pWaitFor.default(
-      async () => await isManagementAPIProxyAddressForDirectoryEqualTo(org, ""),
-      {
-        interval: 200,
-        timeout: 1000 * 21,
-      }
-    );
+    await isManagementAPIProxyAddressForDirectoryEqualTo(org, "");
   }
 );

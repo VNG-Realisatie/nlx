@@ -15,13 +15,15 @@ export const isManagementAPIProxyAddressForDirectoryEqualTo = async (
   const url = `${env.directoryUrl}/api/directory/organizations/${org.serialNumber}/inway/management-api-proxy-address`;
   const res = await fetch(url);
 
-  assert.equal(res.status >= 400, false);
+  assert.equal(res.ok, true);
+
   const response = await res.json();
-  if (response.address === undefined || response.address !== address) {
-    return Promise.resolve(false);
+
+  if (response && response.address === address) {
+    return Promise.resolve(true);
   }
 
-  return Promise.resolve(true);
+  return Promise.resolve(false);
 };
 
 export const hasDefaultInwayRunning = async (
