@@ -10,6 +10,6 @@ dependencies:
     version: 2.15.2
     repository: "@stable"
   - name: parkeerrechten-admin
-    version: 0.1.0
+    version: 0.2.0
     repository: https://charts.commonground.nl
     condition: parkeerrechten-admin.enabled
