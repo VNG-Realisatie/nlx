@@ -111,6 +111,8 @@ service Management {
   rpc AcceptTermsOfService (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/terms-of-service"};
   }
+
+  rpc GetInwayConfig (GetInwayConfigRequest) returns (GetInwayConfigResponse) {}
 }
 
 message Organization {
@@ -251,7 +253,6 @@ message ServiceStatistics {
 }
 
 message ListServicesRequest {
-  string inwayName = 1;
 }
 
 message ListServicesResponse {
@@ -310,6 +311,37 @@ message UpdateInwayRequest {
 
 message DeleteInwayRequest {
   string name = 1;
+}
+
+message GetInwayConfigRequest {
+    string name = 1;
+}
+message GetInwayConfigResponse {
+    repeated Service services = 1;
+    bool isOrganizationInway = 2;
+
+    message Service {
+        string name = 1;
+        string endpointURL = 2;
+        string documentationURL = 3;
+        string apiSpecificationURL = 4;
+        bool internal = 5;
+        string techSupportContact = 6;
+        string publicSupportContact = 7;
+        AuthorizationSettings authorizationSettings = 8;
+        int32 oneTimeCosts = 9;
+        int32 monthlyCosts = 10;
+        int32 requestCosts = 11;
+
+        message AuthorizationSettings {
+            message Authorization  {
+                Organization organization = 1;
+                string publicKeyHash = 2;
+                string publicKeyPEM = 3;
+            }
+            repeated Authorization authorizations = 1;
+        }
+    }
 }
 
 enum AccessRequestState {

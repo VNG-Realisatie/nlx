@@ -6,284 +6,325 @@ package server_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"testing"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
 
-	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
-	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-type args struct {
-	peer     *peer.Peer
-	database *database.Inway
-	request  *api.Inway
-}
-
-var createInwayTests = []struct {
-	name string
-	args args
-	want *api.Inway
-}{
-	{
-		name: "ip address from context",
-		args: args{
-			database: &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"},
-			request:  &api.Inway{Name: "inway42.basic"},
-			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
-		},
-		want: &api.Inway{
-			Name:      "inway42.basic",
-			IpAddress: "127.1.1.1",
-		},
-	},
-	{
-		name: "ip address from request is ignored",
-		args: args{
-			database: &database.Inway{Name: "inway42.ignore-ip", IPAddress: "127.1.1.1"},
-			request:  &api.Inway{Name: "inway42.ignore-ip", IpAddress: "127.2.2.2"},
-			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
-		},
-		want: &api.Inway{
-			Name:      "inway42.ignore-ip",
-			IpAddress: "127.1.1.1",
-		},
-	},
-	{
-		name: "the connection context must contain an address",
-		args: args{
-			database: &database.Inway{Name: "inway42.ip-context-required"},
-			request:  &api.Inway{Name: "inway42.ip-context-required"},
-			peer:     &peer.Peer{Addr: nil},
-		},
-	},
-	{
-		name: "ipv6",
-		args: args{
-			database: &database.Inway{Name: "inway42.ipv6", IPAddress: "::1"},
-			request:  &api.Inway{Name: "inway42.ipv6"},
-			peer:     &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
-		},
-		want: &api.Inway{
-			Name:      "inway42.ipv6",
-			IpAddress: "::1",
-		},
-	},
-}
-
 func TestRegisterInway(t *testing.T) {
-	for _, tt := range createInwayTests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			logger := zaptest.Logger(t)
+	tests := map[string]struct {
+		peer       *peer.Peer
+		setupMocks func(mocks serviceMocks)
+		request    *api.Inway
+		wantErr    error
+		want       *api.Inway
+	}{
+		"peer_does_not_contain_address": {
+			peer:    &peer.Peer{Addr: nil},
+			request: &api.Inway{Name: "inway42.basic"},
+			wantErr: status.Error(codes.Internal, "peer addr is invalid"),
+		},
+		"register_inway_database_call_fails": {
+			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"}).Return(fmt.Errorf("arbitrary error"))
+			},
+			request: &api.Inway{Name: "inway42.basic"},
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"happy_flow_address_from_peer": {
+			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"})
+			},
+			request: &api.Inway{Name: "inway42.basic"},
+			want: &api.Inway{
+				Name:      "inway42.basic",
+				IpAddress: "127.1.1.1",
+			},
+		},
+		"happy_flow_ipv6_address_from_peer": {
+			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "::1"})
+			},
+			request: &api.Inway{Name: "inway42.basic"},
+			want: &api.Inway{
+				Name:      "inway42.basic",
+				IpAddress: "::1",
+			},
+		},
+		"happy_flow_ip_address_from_request_ignored": {
+			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"})
+			},
+			request: &api.Inway{Name: "inway42.basic", IpAddress: "127.2.2.2"},
+			want: &api.Inway{
+				Name:      "inway42.basic",
+				IpAddress: "127.1.1.1",
+			},
+		},
+	}
 
-			mockCtrl := gomock.NewController(t)
-			defer mockCtrl.Finish()
+	for name, test := range tests {
+		tt := test
 
-			ctx := peer.NewContext(context.Background(), tt.args.peer)
-			mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-			if tt.want != nil {
-				mockDatabase.EXPECT().RegisterInway(ctx, tt.args.database)
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
+
+			if tt.setupMocks != nil {
+				tt.setupMocks(mocks)
 			}
-			service := server.NewManagementService(
-				logger,
-				mock_directory.NewMockClient(mockCtrl),
-				nil,
-				nil,
-				nil,
-				mockDatabase,
-				nil,
-				mock_auditlog.NewMockLogger(mockCtrl),
-				management.NewClient,
-				outway.NewClient,
-			)
 
-			response, err := service.RegisterInway(ctx, tt.args.request)
-			if tt.want != nil {
-				assert.NoError(t, err, "could not create inway")
-				assert.Equal(t, tt.want, response)
-			} else {
-				assert.Error(t, err)
-			}
+			ctx := peer.NewContext(context.Background(), tt.peer)
+
+			response, err := service.RegisterInway(ctx, tt.request)
+
+			assert.Equal(t, tt.want, response)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
 
 func TestGetInway(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-		outway.NewClient,
-	)
-
-	getInwayRequest := &api.GetInwayRequest{
-		Name: "inway42.test",
-	}
-
-	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(nil, database.ErrNotFound)
-
-	_, actualError := service.GetInway(ctx, getInwayRequest)
-	expectedError := status.Error(codes.NotFound, "inway not found")
-	assert.Error(t, actualError)
-	assert.Equal(t, expectedError, actualError)
-
-	mockInwayResponse := &database.Inway{
-		Name:      "inway42.test",
-		IPAddress: "",
-		Services: []*database.Service{{
-			Name: "forty-two",
-		}},
-	}
-
-	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(mockInwayResponse, nil)
-
-	getInwayResponse, err := service.GetInway(ctx, getInwayRequest)
-	assert.NoError(t, err)
-
-	expectedResponse := &api.Inway{
-		Name:     "inway42.test",
-		Services: []*api.Inway_Service{{Name: "forty-two"}},
-	}
-
-	assert.Equal(t, expectedResponse, getInwayResponse)
-}
-
-func TestUpdateInway(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
-
-	mockInway := &database.Inway{
-		ID:   1,
-		Name: "inway42.test",
-	}
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().UpdateInway(ctx, mockInway)
-	mockDatabase.EXPECT().GetInway(ctx, "inway42.test").Return(mockInway, nil)
-
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-		outway.NewClient,
-	)
-
-	updateInwayRequest := &api.UpdateInwayRequest{
-		Name: "inway42.test",
-		Inway: &api.Inway{
-			Name: "inway42.test",
+	tests := map[string]struct {
+		ctx        context.Context
+		setupMocks func(mocks serviceMocks)
+		request    *api.GetInwayRequest
+		wantErr    error
+		want       *api.Inway
+	}{
+		"missing_required_permission": {
+			ctx:        testCreateUserWithoutPermissionsContext(),
+			setupMocks: func(mocks serviceMocks) {},
+			request: &api.GetInwayRequest{
+				Name: "inway42.test",
+			},
+			wantErr: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.inway.read\" to execute this request"),
+		},
+		"not_found": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(nil, database.ErrNotFound)
+			},
+			request: &api.GetInwayRequest{
+				Name: "inway42.test",
+			},
+			wantErr: status.Error(codes.NotFound, "inway not found"),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(&database.Inway{
+					Name:      "inway42.test",
+					IPAddress: "",
+					Services: []*database.Service{{
+						Name: "forty-two",
+					}},
+				}, nil)
+			},
+			request: &api.GetInwayRequest{
+				Name: "inway42.test",
+			},
+			want: &api.Inway{
+				Name:     "inway42.test",
+				Services: []*api.Inway_Service{{Name: "forty-two"}},
+			},
 		},
 	}
 
-	updateInwayResponse, err := service.UpdateInway(ctx, updateInwayRequest)
-	assert.NoError(t, err)
+	for name, test := range tests {
+		tt := test
 
-	expectedResponse := &api.Inway{
-		Name: "inway42.test",
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
+
+			tt.setupMocks(mocks)
+
+			response, err := service.GetInway(tt.ctx, tt.request)
+
+			assert.Equal(t, tt.want, response)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
+}
+
+//nolint:funlen // this is a test
+func TestUpdateInway(t *testing.T) {
+	tests := map[string]struct {
+		ctx        context.Context
+		setupMocks func(mocks serviceMocks)
+		request    *api.UpdateInwayRequest
+		wantErr    error
+		want       *api.Inway
+	}{
+		"missing_required_permission": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(nil, database.ErrNotFound)
+			},
+			request: &api.UpdateInwayRequest{
+				Name: "inway42.test",
+				Inway: &api.Inway{
+					Name: "inway42.test",
+				},
+			},
+			wantErr: status.Error(codes.NotFound, "inway with the name inway42.test does not exist"),
+		},
+		"inway_not_found": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(nil, database.ErrNotFound)
+			},
+			request: &api.UpdateInwayRequest{
+				Name: "inway42.test",
+				Inway: &api.Inway{
+					Name: "inway42.test",
+				},
+			},
+			wantErr: status.Error(codes.NotFound, "inway with the name inway42.test does not exist"),
+		},
+		"get_inway_from_database_fails": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(nil, fmt.Errorf("arbitrary error"))
+			},
+			request: &api.UpdateInwayRequest{
+				Name: "inway42.test",
+				Inway: &api.Inway{
+					Name: "inway42.test",
+				},
+			},
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"update_inway_fails": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mockInway := &database.Inway{
+					ID:   1,
+					Name: "inway42.test",
+				}
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(mockInway, nil)
+
+				mocks.db.EXPECT().UpdateInway(gomock.Any(), mockInway).Return(fmt.Errorf("arbitrary error"))
+			},
+			request: &api.UpdateInwayRequest{
+				Name: "inway42.test",
+				Inway: &api.Inway{
+					Name: "inway42.test",
+				},
+			},
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mockInway := &database.Inway{
+					ID:   1,
+					Name: "inway42.test",
+				}
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42.test").Return(mockInway, nil)
+
+				mocks.db.EXPECT().UpdateInway(gomock.Any(), mockInway)
+			},
+			request: &api.UpdateInwayRequest{
+				Name: "inway42.test",
+				Inway: &api.Inway{
+					Name: "inway42.test",
+				},
+			},
+			want: &api.Inway{
+				Name: "inway42.test",
+			},
+		},
 	}
 
-	assert.Equal(t, expectedResponse, updateInwayResponse)
+	for name, test := range tests {
+		tt := test
+
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
+
+			tt.setupMocks(mocks)
+
+			response, err := service.UpdateInway(tt.ctx, tt.request)
+
+			assert.Equal(t, tt.want, response)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
 }
 
 func TestDeleteInway(t *testing.T) {
 	tests := map[string]struct {
-		request       *api.DeleteInwayRequest
-		ctx           context.Context
-		setup         func(*common_tls.CertificateBundle, serviceMocks)
-		expectedError error
+		request *api.DeleteInwayRequest
+		ctx     context.Context
+		setup   func(serviceMocks)
+		wantErr error
 	}{
 		"failed_to_retrieve_user_info_from_context": {
 			ctx: context.Background(),
 			request: &api.DeleteInwayRequest{
 				Name: "my-inway",
 			},
-			expectedError: status.Error(codes.Internal, "could not retrieve user info to create audit log"),
+			wantErr: status.Error(codes.Internal, "could not retrieve user info to create audit log"),
+		},
+		"missing_required_permission": {
+			ctx: testCreateUserWithoutPermissionsContext(),
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+			wantErr: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.inway.delete\" to execute this request"),
 		},
 		"failed_to_create_audit_log": {
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.al.EXPECT().
-					InwayDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-inway").
+					InwayDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-inway").
 					Return(fmt.Errorf("error"))
 			},
 			request: &api.DeleteInwayRequest{
 				Name: "my-inway",
 			},
-			expectedError: status.Error(codes.Internal, "failed to write to auditlog"),
+			wantErr: status.Error(codes.Internal, "failed to write to auditlog"),
 		},
 		"failed_to_delete_inway_from_database": {
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.db.EXPECT().
 					DeleteInway(gomock.Any(), "my-inway").
 					Return(fmt.Errorf("error"))
 
 				mocks.al.EXPECT().
-					InwayDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-inway")
+					InwayDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-inway")
 			},
 			request: &api.DeleteInwayRequest{
 				Name: "my-inway",
 			},
-			expectedError: status.Error(codes.Internal, "database error"),
+			wantErr: status.Error(codes.Internal, "database error"),
 		},
 		"happy_flow": {
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					DeleteInway(gomock.Any(), "my-inway")
 
 				mocks.al.
 					EXPECT().
-					InwayDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-inway")
+					InwayDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-inway")
 			},
 			request: &api.DeleteInwayRequest{
 				Name: "my-inway",
@@ -295,41 +336,78 @@ func TestDeleteInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, bundle, mocks := newService(t)
+			service, _, mocks := newService(t)
 
 			if tt.setup != nil {
-				tt.setup(bundle, mocks)
+				tt.setup(mocks)
 			}
 
 			_, err := service.DeleteInway(tt.ctx, tt.request)
-			assert.Equal(t, tt.expectedError, err)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
 
 func TestListInways(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-
-	mockListInways := []*database.Inway{
-		{Name: "inway42.test"},
-		{Name: "inway43.test"},
-		{
-			Name:        "inway.test",
-			Version:     "1.0.0",
-			Hostname:    "inway.test.local",
-			SelfAddress: "inway.nlx",
-			Services: []*database.Service{
-				{
-					Name: "mock-service",
-					Inways: []*database.Inway{
-						{
-							Name: "inway.test",
+	tests := map[string]struct {
+		ctx     context.Context
+		setup   func(serviceMocks)
+		want    *api.ListInwaysResponse
+		wantErr error
+	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(mocks serviceMocks) {},
+			wantErr: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.inways.read\" to execute this request"),
+		},
+		"database_call_fails": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().ListInways(gomock.Any()).Return(nil, fmt.Errorf("arbitrary error"))
+			},
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().ListInways(gomock.Any()).Return([]*database.Inway{
+					{Name: "inway42.test"},
+					{Name: "inway43.test"},
+					{
+						Name:        "inway.test",
+						Version:     "1.0.0",
+						Hostname:    "inway.test.local",
+						SelfAddress: "inway.nlx",
+						Services: []*database.Service{
+							{
+								Name: "mock-service",
+								Inways: []*database.Inway{
+									{
+										Name: "inway.test",
+									},
+								},
+							},
+						},
+					},
+				}, nil)
+			},
+			want: &api.ListInwaysResponse{
+				Inways: []*api.Inway{
+					{
+						Name: "inway42.test",
+					},
+					{
+						Name: "inway43.test",
+					},
+					{
+						Name:        "inway.test",
+						Version:     "1.0.0",
+						Hostname:    "inway.test.local",
+						SelfAddress: "inway.nlx",
+						Services: []*api.Inway_Service{
+							{
+								Name: "mock-service",
+							},
 						},
 					},
 				},
@@ -337,44 +415,263 @@ func TestListInways(t *testing.T) {
 		},
 	}
 
-	mockDatabase.EXPECT().ListInways(ctx).Return(mockListInways, nil)
+	for name, tt := range tests {
+		tt := tt
 
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-		outway.NewClient,
-	)
-	actualResponse, err := service.ListInways(ctx, &api.ListInwaysRequest{})
-	assert.NoError(t, err)
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
 
-	expectedResponse := &api.ListInwaysResponse{
-		Inways: []*api.Inway{
-			{
-				Name: "inway42.test",
+			if tt.setup != nil {
+				tt.setup(mocks)
+			}
+
+			response, err := service.ListInways(tt.ctx, &api.ListInwaysRequest{})
+
+			assert.Equal(t, tt.want, response)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
+}
+
+//nolint:funlen // this is a test
+func TestGetInwayConfig(t *testing.T) {
+	tests := map[string]struct {
+		ctx        context.Context
+		setupMocks func(mocks serviceMocks)
+		request    *api.GetInwayConfigRequest
+		wantErr    error
+		want       *api.GetInwayConfigResponse
+	}{
+		"when_get_inway_database_call_fails": {
+			ctx: context.Background(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42").Return(nil, errors.New("arbitrary error"))
 			},
-			{
-				Name: "inway43.test",
+			request: &api.GetInwayConfigRequest{
+				Name: "inway42",
 			},
-			{
-				Name:        "inway.test",
-				Version:     "1.0.0",
-				Hostname:    "inway.test.local",
-				SelfAddress: "inway.nlx",
-				Services: []*api.Inway_Service{
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"when_get_settings_database_call_fails": {
+			ctx: context.Background(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42").Return(&database.Inway{
+					Services: []*database.Service{
+						{
+							Name: "service1",
+						},
+						{
+							Name: "service2",
+						},
+					},
+				}, nil)
+
+				mocks.db.EXPECT().GetSettings(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+			},
+			request: &api.GetInwayConfigRequest{
+				Name: "inway42",
+			},
+			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"when_inway_not_found": {
+			ctx: context.Background(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42").Return(nil, database.ErrNotFound)
+			},
+			request: &api.GetInwayConfigRequest{
+				Name: "inway42",
+			},
+			wantErr: status.Error(codes.NotFound, "inway not found"),
+		},
+		"happy_flow_when_not_org_inway": {
+			ctx: context.Background(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42").Return(&database.Inway{
+					Name: "inway42",
+					Services: []*database.Service{
+						{
+							Name: "service1",
+						},
+					},
+				}, nil)
+
+				settings, err := domain.NewSettings("inway99", "test@example.com")
+				assert.NoError(t, err)
+
+				mocks.db.EXPECT().GetSettings(gomock.Any()).Return(settings, nil)
+
+				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "service1").Return([]*database.AccessGrant{
 					{
-						Name: "mock-service",
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "1111",
+								Name:         "org1",
+							},
+							PublicKeyFingerprint: "abc",
+							PublicKeyPEM:         "def",
+						},
+					},
+				}, nil)
+			},
+			request: &api.GetInwayConfigRequest{
+				Name: "inway42",
+			},
+			want: &api.GetInwayConfigResponse{
+				IsOrganizationInway: false,
+				Services: []*api.GetInwayConfigResponse_Service{
+					{
+						Name: "service1",
+						AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
+							Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
+								{
+									Organization: &api.Organization{
+										SerialNumber: "1111",
+										Name:         "org1",
+									},
+									PublicKeyHash: "abc",
+									PublicKeyPEM:  "def",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"happy_flow": {
+			ctx: context.Background(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetInway(gomock.Any(), "inway42").Return(&database.Inway{
+					Name: "inway42",
+					Services: []*database.Service{
+						{
+							Name: "service1",
+						},
+						{
+							Name: "service2",
+						},
+					},
+				}, nil)
+
+				settings, err := domain.NewSettings("inway42", "test@example.com")
+				assert.NoError(t, err)
+
+				mocks.db.EXPECT().GetSettings(gomock.Any()).Return(settings, nil)
+
+				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "service1").Return([]*database.AccessGrant{
+					{
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "1111",
+								Name:         "org1",
+							},
+							PublicKeyFingerprint: "abc",
+							PublicKeyPEM:         "def",
+						},
+					},
+					{
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "2222",
+								Name:         "org2",
+							},
+							PublicKeyFingerprint: "uvw",
+							PublicKeyPEM:         "xyz",
+						},
+					},
+				}, nil)
+
+				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "service2").Return([]*database.AccessGrant{
+					{
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "3333",
+								Name:         "org3",
+							},
+							PublicKeyFingerprint: "ghi",
+							PublicKeyPEM:         "jkl",
+						},
+					},
+					{
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "4444",
+								Name:         "org4",
+							},
+							PublicKeyFingerprint: "mno",
+							PublicKeyPEM:         "pqr",
+						},
+					},
+				}, nil)
+			},
+			request: &api.GetInwayConfigRequest{
+				Name: "inway42",
+			},
+			want: &api.GetInwayConfigResponse{
+				IsOrganizationInway: true,
+				Services: []*api.GetInwayConfigResponse_Service{
+					{
+						Name: "service1",
+						AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
+							Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
+								{
+									Organization: &api.Organization{
+										SerialNumber: "1111",
+										Name:         "org1",
+									},
+									PublicKeyHash: "abc",
+									PublicKeyPEM:  "def",
+								},
+								{
+									Organization: &api.Organization{
+										SerialNumber: "2222",
+										Name:         "org2",
+									},
+									PublicKeyHash: "uvw",
+									PublicKeyPEM:  "xyz",
+								},
+							},
+						},
+					},
+					{
+						Name: "service2",
+						AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
+							Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
+								{
+									Organization: &api.Organization{
+										SerialNumber: "3333",
+										Name:         "org3",
+									},
+									PublicKeyHash: "ghi",
+									PublicKeyPEM:  "jkl",
+								},
+								{
+									Organization: &api.Organization{
+										SerialNumber: "4444",
+										Name:         "org4",
+									},
+									PublicKeyHash: "mno",
+									PublicKeyPEM:  "pqr",
+								},
+							},
+						},
 					},
 				},
 			},
 		},
 	}
 
-	assert.Equal(t, expectedResponse, actualResponse)
+	for name, test := range tests {
+		tt := test
+
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
+
+			tt.setupMocks(mocks)
+
+			response, err := service.GetInwayConfig(tt.ctx, tt.request)
+
+			assert.Equal(t, tt.want, response)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
 }

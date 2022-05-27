@@ -119,6 +119,11 @@ nlxctl:
     pullPolicy: IfNotPresent
   tls:
     existingSecret: rvrd-nlxctl-tls
+  clientID: "nlx-management"
+  clientSecret: "99DbIk7FqlUYqbyD3qSX4Wmf"
+  authorizationServerUrl: "http://dex.rvrd.nlx.minikube"
+  username: "admin@example.com"
+  password: "password"
 
 managementAPI:
   address: rvrd-nlx-management-api:443
@@ -344,6 +349,11 @@ dex:
         secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
           - http://nlx-management.rvrd.nlx.minikube/oidc/callback
+      - id: nlx-ctl
+        name: NLX CTL
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
+        redirectURIs:
+          - http://nlx-management.rvrd.nlx.minikube/oidc/callback
     enablePasswordDB: true
     staticPasswords:
       - username: admin
@@ -353,14 +363,20 @@ dex:
         email: admin@example.com
     oauth2:
       skipApprovalScreen: false
+      responseTypes: ["code", "token"]
+      passwordConnector: local
   ingress:
     enabled: true
     hosts:
-      - dex.rvrd.nlx.minikube
+      - host: dex.rvrd.nlx.minikube
+        path:
+          - path: /
+            pathType: ImplementationSpecific
   ports:
     web:
       servicePort: 80
-  grpc: false
+  grpc:
+    enabled: false
   certs:
     web:
       create: false
@@ -402,4 +418,3 @@ nlx-txlog-api:
       passwordKey: password
   tls:
     existingSecret: rvrd-txlog-api-tls
-

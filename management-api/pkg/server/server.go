@@ -6,6 +6,7 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
@@ -13,6 +14,7 @@ import (
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
@@ -62,6 +64,7 @@ func errIsNotFound(err error) bool {
 
 type auditLogInfoFromGRPC struct {
 	username  string
+	userEmail string
 	userAgent string
 }
 
@@ -76,6 +79,11 @@ func retrieveUserInfoFromGRPCContext(ctx context.Context) (*auditLogInfoFromGRPC
 		username = md.Get("username")[0]
 	}
 
+	userEmail := ""
+	if len(md.Get("user-email")) > 0 {
+		userEmail = md.Get("user-email")[0]
+	}
+
 	userAgent := ""
 	if len(md.Get("grpcgateway-user-agent")) > 0 {
 		userAgent = md.Get("grpcgateway-user-agent")[0]
@@ -83,6 +91,21 @@ func retrieveUserInfoFromGRPCContext(ctx context.Context) (*auditLogInfoFromGRPC
 
 	return &auditLogInfoFromGRPC{
 		username:  username,
+		userEmail: userEmail,
 		userAgent: userAgent,
 	}, nil
+}
+
+func retrieveUserFromContext(ctx context.Context) (*domain.User, error) {
+	user := ctx.Value(domain.UserKey)
+	if user == nil {
+		return nil, fmt.Errorf("no user in context")
+	}
+
+	convertedUser, ok := user.(*domain.User)
+	if !ok {
+		return nil, fmt.Errorf("user value in context is not a valid api user")
+	}
+
+	return convertedUser, nil
 }

@@ -13,14 +13,20 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 // GetTermsOfServiceStatus returns a Terms of Service status
 func (s *ManagementService) GetTermsOfServiceStatus(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceStatusResponse, error) {
+	err := s.authorize(ctx, permissions.ReadTermsOfServiceStatus)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger
 	logger.Info("rpc request GetTermsOfServiceStatus")
 
-	_, err := s.configDatabase.GetTermsOfServiceStatus(ctx)
+	_, err = s.configDatabase.GetTermsOfServiceStatus(ctx)
 	if err != nil {
 		if errIsNotFound(err) {
 			return &api.GetTermsOfServiceStatusResponse{
@@ -40,16 +46,21 @@ func (s *ManagementService) GetTermsOfServiceStatus(ctx context.Context, _ *empt
 
 // AcceptTermsOfService accepts the Terms of Service
 func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.AcceptTermsOfService)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger
 	logger.Info("rpc request AcceptTermsOfService")
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	alreadyAccepted, err := s.configDatabase.AcceptTermsOfService(ctx, userInfo.username, time.Now())
+	alreadyAccepted, err := s.configDatabase.AcceptTermsOfService(ctx, userInfo.Email, time.Now())
 	if err != nil {
 		logger.Error("error accepting Terms of Service from DB", zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
@@ -59,7 +70,7 @@ func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb
 		return &emptypb.Empty{}, nil
 	}
 
-	err = s.auditLogger.AcceptTermsOfService(ctx, userInfo.username, userInfo.userAgent)
+	err = s.auditLogger.AcceptTermsOfService(ctx, userInfo.Email, userInfo.UserAgent)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

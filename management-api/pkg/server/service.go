@@ -15,16 +15,22 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 var InwayNotFoundError = status.Error(codes.NotFound, "inway not found")
 
 // CreateService creates a new service
 func (s *ManagementService) CreateService(ctx context.Context, request *api.CreateServiceRequest) (*api.CreateServiceResponse, error) {
+	err := s.authorize(ctx, permissions.CreateService)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger.With(zap.String("name", request.Name))
 	logger.Info("rpc request Createrequest")
 
-	err := request.Validate()
+	err = request.Validate()
 	if err != nil {
 		logger.Error("invalid request", zap.Error(err))
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -43,13 +49,13 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 		RequestCosts:         int(request.RequestCosts),
 	}
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceCreate(ctx, userInfo.username, userInfo.userAgent, request.Name)
+	err = s.auditLogger.ServiceCreate(ctx, userInfo.Email, userInfo.UserAgent, request.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -66,6 +72,11 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 
 // GetService returns a specific service
 func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceRequest) (*api.GetServiceResponse, error) {
+	err := s.authorize(ctx, permissions.ReadService)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetService")
 
@@ -88,10 +99,15 @@ func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceR
 
 // UpdateService updates an existing service
 func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateServiceRequest) (*api.UpdateServiceResponse, error) {
+	err := s.authorize(ctx, permissions.UpdateService)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateService")
 
-	err := req.Validate()
+	err = req.Validate()
 	if err != nil {
 		logger.Error("invalid service", zap.Error(err))
 
@@ -119,13 +135,13 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	service.MonthlyCosts = int(req.MonthlyCosts)
 	service.RequestCosts = int(req.RequestCosts)
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceUpdate(ctx, userInfo.username, userInfo.userAgent, service.Name)
+	err = s.auditLogger.ServiceUpdate(ctx, userInfo.Email, userInfo.UserAgent, service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -146,21 +162,27 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 }
 
 func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.DeleteService)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceDelete(ctx, userInfo.username, userInfo.userAgent, req.Name)
+	err = s.auditLogger.ServiceDelete(ctx, userInfo.Email, userInfo.UserAgent, req.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
 	organizationSerialNumber := s.orgCert.Certificate().Subject.SerialNumber
+
 	err = s.configDatabase.DeleteService(ctx, req.Name, organizationSerialNumber)
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
@@ -171,33 +193,20 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 }
 
 func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServicesRequest) (*api.ListServicesResponse, error) {
+	err := s.authorize(ctx, permissions.ReadServices)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request ListServices")
 
-	var (
-		err      error
-		services []*database.Service
-	)
+	var services []*database.Service
 
-	if req.InwayName == "" {
-		services, err = s.configDatabase.ListServices(ctx)
-		if err != nil {
-			s.logger.Error("error getting services list from database", zap.Error(err))
+	services, err = s.configDatabase.ListServices(ctx)
+	if err != nil {
+		s.logger.Error("error getting services list from database", zap.Error(err))
 
-			return nil, status.Error(codes.Internal, "database error")
-		}
-	} else {
-		inway, err := s.configDatabase.GetInway(ctx, req.InwayName)
-		if err != nil {
-			if errIsNotFound(err) {
-				return nil, InwayNotFoundError
-			}
-
-			s.logger.Error("error getting inway from database", zap.String("name", req.InwayName), zap.Error(err))
-
-			return nil, status.Error(codes.Internal, "database error")
-		}
-
-		services = inway.Services
+		return nil, status.Error(codes.Internal, "database error")
 	}
 
 	response := &api.ListServicesResponse{}
@@ -240,6 +249,11 @@ func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServi
 
 // GetStatisticsOfServices return statistics per service
 func (s *ManagementService) GetStatisticsOfServices(ctx context.Context, request *api.GetStatisticsOfServicesRequest) (*api.GetStatisticsOfServicesResponse, error) {
+	err := s.authorize(ctx, permissions.ReadServicesStatistics)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request GetStatsOfServices")
 
 	countPerService, err := s.configDatabase.GetIncomingAccessRequestCountByService(ctx)

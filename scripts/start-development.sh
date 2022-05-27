@@ -31,9 +31,9 @@ go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@
 # Create admin users
 go run ./management-api create-user --email admin@nlx.local \
     --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
-go run ./management-api create-user --email admin@nlx.local --password development \
+go run ./management-api create-user --email admin@nlx.local --password development --role admin \
     --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
-go run ./management-api create-user --email admin@nlx.local --password development \
+go run ./management-api create-user --email admin@nlx.local --password development --role admin \
     --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_c?sslmode=disable"
 
 # start services

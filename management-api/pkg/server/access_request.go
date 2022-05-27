@@ -23,6 +23,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 type proxyMetadata struct {
@@ -55,7 +56,12 @@ func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState
 }
 
 func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req *api.ListIncomingAccessRequestsRequest) (*api.ListIncomingAccessRequestsResponse, error) {
-	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
+	err := s.authorize(ctx, permissions.ReadIncomingAccessRequests)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.configDatabase.GetService(ctx, req.ServiceName)
 	if err != nil {
 		if errIsNotFound(err) {
 			return nil, ErrServiceDoesNotExist
@@ -85,6 +91,11 @@ func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req 
 }
 
 func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.ApproveIncomingAccessRequest)
+	if err != nil {
+		return nil, err
+	}
+
 	accessRequest, err := s.getIncomingAccessRequest(ctx, req.AccessRequestID)
 	if err != nil {
 		return nil, err
@@ -94,13 +105,13 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, status.Error(codes.AlreadyExists, "access request is already approved")
 	}
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.Email, userInfo.UserAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -121,6 +132,11 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 }
 
 func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req *api.RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.RejectIncomingAccessRequest)
+	if err != nil {
+		return nil, err
+	}
+
 	accessRequest, err := s.getIncomingAccessRequest(ctx, req.AccessRequestID)
 	if err != nil {
 		s.logger.Error(
@@ -133,13 +149,13 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, err
 	}
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.username, userInfo.userAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.Email, userInfo.UserAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -173,13 +189,18 @@ func (s *ManagementService) getIncomingAccessRequest(ctx context.Context, access
 }
 
 func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	err := s.authorize(ctx, permissions.CreateOutgoingAccessRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.OutgoingAccessRequestCreate(ctx, userInfo.username, userInfo.userAgent, req.OrganizationSerialNumber, req.ServiceName)
+	err = s.auditLogger.OutgoingAccessRequestCreate(ctx, userInfo.Email, userInfo.UserAgent, req.OrganizationSerialNumber, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -213,6 +234,11 @@ func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.Cr
 }
 
 func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+	err := s.authorize(ctx, permissions.UpdateOutgoingAccessRequest)
+	if err != nil {
+		return nil, err
+	}
+
 	accessRequest, err := s.configDatabase.GetOutgoingAccessRequest(ctx, uint(req.AccessRequestID))
 	if err != nil {
 		if errIsNotFound(err) {
@@ -233,6 +259,8 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		s.logger.Error("access request cannot be updated", zap.Uint("id", accessRequest.ID), zap.Error(err))
 		return nil, status.Error(codes.Internal, "database error")
 	}
+
+	accessRequest.State = database.OutgoingAccessRequestCreated
 
 	return convertOutgoingAccessRequest(accessRequest), nil
 }

@@ -17,6 +17,7 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 // RegisterInway creates a new inway
@@ -65,6 +66,11 @@ func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayReque
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetInway")
 
+	err := s.authorize(ctx, permissions.ReadInway)
+	if err != nil {
+		return nil, err
+	}
+
 	inway, err := s.configDatabase.GetInway(ctx, req.Name)
 	if err != nil {
 		if errIsNotFound(err) {
@@ -103,7 +109,12 @@ func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwa
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateInway")
 
-	err := req.Inway.Validate()
+	err := s.authorize(ctx, permissions.UpdateInway)
+	if err != nil {
+		return nil, err
+	}
+
+	err = req.Inway.Validate()
 	if err != nil {
 		logger.Error("invalid inway", zap.Error(err))
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid inway: %s", err))
@@ -143,13 +154,18 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.InwayDelete(ctx, userInfo.username, userInfo.userAgent, req.Name)
+	err = s.authorize(ctx, permissions.DeleteInway)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.auditLogger.InwayDelete(ctx, userInfo.Email, userInfo.UserAgent, req.Name)
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 
@@ -169,6 +185,11 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 func (s *ManagementService) ListInways(ctx context.Context, req *api.ListInwaysRequest) (*api.ListInwaysResponse, error) {
 	s.logger.Info("rpc request ListInways")
 
+	err := s.authorize(ctx, permissions.ReadInways)
+	if err != nil {
+		return nil, err
+	}
+
 	inways, err := s.configDatabase.ListInways(ctx)
 	if err != nil {
 		s.logger.Error("error getting inway list from database", zap.Error(err))
@@ -183,6 +204,93 @@ func (s *ManagementService) ListInways(ctx context.Context, req *api.ListInwaysR
 	}
 
 	return response, nil
+}
+
+func (s *ManagementService) GetInwayConfig(ctx context.Context, req *api.GetInwayConfigRequest) (*api.GetInwayConfigResponse, error) {
+	s.logger.Info("rpc request GetInwayConfig")
+
+	var services []*database.Service
+
+	inway, err := s.configDatabase.GetInway(ctx, req.Name)
+	if err != nil {
+		if errIsNotFound(err) {
+			return nil, InwayNotFoundError
+		}
+
+		s.logger.Error("error getting inway from database", zap.String("name", req.Name), zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	settings, err := s.configDatabase.GetSettings(ctx)
+	if err != nil {
+		s.logger.Error("could not get the settings from the database", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	response := &api.GetInwayConfigResponse{
+		IsOrganizationInway: settings.OrganizationInwayName() == inway.Name,
+	}
+
+	services = inway.Services
+
+	if len(services) > 0 {
+		response.Services = []*api.GetInwayConfigResponse_Service{}
+
+		for _, service := range services {
+			protoService := convertFromDatabaseServiceToInwayService(service)
+
+			accessGrants, err := s.configDatabase.ListAccessGrantsForService(ctx, service.Name)
+			if err != nil {
+				s.logger.Error("error getting access grants for service from database", zap.String("servicename", service.Name), zap.Error(err))
+				continue
+			}
+
+			authorizations := make([]*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization, 0)
+
+			for _, accessGrant := range accessGrants {
+				if !accessGrant.RevokedAt.Valid {
+					authorizations = append(authorizations, convertAccessGrantToInwayAuthorizationSetting(accessGrant))
+				}
+			}
+
+			protoService.AuthorizationSettings.Authorizations = authorizations
+
+			response.Services = append(response.Services, protoService)
+		}
+	}
+
+	return response, nil
+}
+
+func convertFromDatabaseServiceToInwayService(model *database.Service) *api.GetInwayConfigResponse_Service {
+	service := &api.GetInwayConfigResponse_Service{
+		Name:                  model.Name,
+		EndpointURL:           model.EndpointURL,
+		DocumentationURL:      model.DocumentationURL,
+		ApiSpecificationURL:   model.APISpecificationURL,
+		Internal:              model.Internal,
+		TechSupportContact:    model.TechSupportContact,
+		PublicSupportContact:  model.PublicSupportContact,
+		OneTimeCosts:          int32(model.OneTimeCosts),
+		MonthlyCosts:          int32(model.MonthlyCosts),
+		RequestCosts:          int32(model.RequestCosts),
+		AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{},
+	}
+
+	return service
+}
+
+func convertAccessGrantToInwayAuthorizationSetting(accessGrant *database.AccessGrant) *api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization {
+	return &api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
+		Organization: &api.Organization{
+			Name:         accessGrant.IncomingAccessRequest.Organization.Name,
+			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
+		},
+		PublicKeyHash: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
+		PublicKeyPEM:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
+	}
 }
 
 func convertFromDatabaseInway(model *database.Inway) *api.Inway {

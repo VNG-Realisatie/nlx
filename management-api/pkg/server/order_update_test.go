@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -53,14 +52,26 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 	tests := map[string]struct {
 		request *api.UpdateOutgoingOrderRequest
 		setup   func(serviceMocks)
+		ctx     context.Context
 		wantErr error
 	}{
+		"missing_required_permission": {
+			ctx: testCreateUserWithoutPermissionsContext(),
+			request: func() *api.UpdateOutgoingOrderRequest {
+				request := validOutgoingOrderRequest()
+				request.Reference = ""
+				return &request
+			}(),
+			setup:   func(mocks serviceMocks) {},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_order.update\" to execute this request").Err(),
+		},
 		"when_providing_an_empty_reference": {
 			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Reference = ""
 				return &request
 			}(),
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -77,6 +88,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				request.Description = ""
 				return &request
 			}(),
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -93,6 +105,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				request.Description = "description-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd"
 				return &request
 			}(),
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -110,6 +123,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				request.ValidUntil = timestamppb.New(time.Now())
 				return &request
 			}(),
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -126,6 +140,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				request.AccessProofIds = []uint64{}
 				return &request
 			}(),
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -142,6 +157,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				request.PublicKeyPEM = "invalid"
 				return &request
 			}(),
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -154,10 +170,11 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		},
 		"when_updating_the_order_fails": {
 			wantErr: status.Error(codes.Internal, "failed to update outgoing order"),
+			ctx:     testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
+					OrderOutgoingUpdate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
@@ -211,6 +228,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		},
 		"when_the_order_is_not_found": {
 			wantErr: status.Error(codes.NotFound, "could not find outgoing order in management database"),
+			ctx:     testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -223,6 +241,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 			}(),
 		},
 		"when_updating_audit_log_fails": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -251,7 +270,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
+					OrderOutgoingUpdate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
@@ -269,10 +288,11 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "failed to write to auditlog"),
 		},
 		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OrderOutgoingUpdate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
+					OrderOutgoingUpdate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "a-reference", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "10000000000000000001",
@@ -337,12 +357,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			}))
-
-			response, err := service.UpdateOutgoingOrder(ctx, tt.request)
+			response, err := service.UpdateOutgoingOrder(tt.ctx, tt.request)
 
 			if tt.wantErr == nil {
 				assert.IsType(t, &emptypb.Empty{}, response)

@@ -4,10 +4,10 @@ package inway
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
@@ -33,7 +33,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 		"management_api_unavailable": {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
-				managementClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(nil, errManagementAPIUnavailable)
+				managementClient.EXPECT().GetInwayConfig(gomock.Any(), gomock.Any()).Return(nil, errManagementAPIUnavailable)
 
 				return managementClient
 			},
@@ -41,12 +41,10 @@ func TestStartConfigurationPolling(t *testing.T) {
 			expectedErrorMessage:      "managementAPI unavailable",
 			shouldBeOrganizationInway: false,
 		},
-		"get_settings_failed": {
+		"get_inway_config_arbitrary error": {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
-				managementClient.EXPECT().ListServices(gomock.Any(), gomock.Any()).Return(&api.ListServicesResponse{}, nil)
-
-				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("arbitrary error"))
+				managementClient.EXPECT().GetInwayConfig(gomock.Any(), gomock.Any()).Return(nil, errors.New("arbitrary error"))
 
 				return managementClient
 			},
@@ -58,12 +56,11 @@ func TestStartConfigurationPolling(t *testing.T) {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
 
-				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(&api.Settings{OrganizationInway: "mock-inway"}, nil)
-
-				managementClient.EXPECT().ListServices(gomock.Any(), &api.ListServicesRequest{
-					InwayName: "mock-inway",
-				}).Return(&api.ListServicesResponse{
-					Services: []*api.ListServicesResponse_Service{
+				managementClient.EXPECT().GetInwayConfig(gomock.Any(), &api.GetInwayConfigRequest{
+					Name: "mock-inway",
+				}).Return(&api.GetInwayConfigResponse{
+					IsOrganizationInway: true,
+					Services: []*api.GetInwayConfigResponse_Service{
 						{
 							Name:                 "mock-service",
 							EndpointURL:          "http://endpoint.mock",
@@ -72,8 +69,8 @@ func TestStartConfigurationPolling(t *testing.T) {
 							Internal:             false,
 							TechSupportContact:   "tech@support.mock",
 							PublicSupportContact: "public@support.mock",
-							AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
-								Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
+							AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
+								Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
 									{
 										Organization: &api.Organization{
 											SerialNumber: "00000000000000000001",
@@ -112,12 +109,11 @@ func TestStartConfigurationPolling(t *testing.T) {
 			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
 				managementClient := mock_api.NewMockManagementClient(ctrl)
 
-				managementClient.EXPECT().GetSettings(gomock.Any(), gomock.Any()).Return(&api.Settings{OrganizationInway: "mock-inway-different"}, nil)
-
-				managementClient.EXPECT().ListServices(gomock.Any(), &api.ListServicesRequest{
-					InwayName: "mock-inway",
-				}).Return(&api.ListServicesResponse{
-					Services: []*api.ListServicesResponse_Service{},
+				managementClient.EXPECT().GetInwayConfig(gomock.Any(), &api.GetInwayConfigRequest{
+					Name: "mock-inway",
+				}).Return(&api.GetInwayConfigResponse{
+					IsOrganizationInway: false,
+					Services:            []*api.GetInwayConfigResponse_Service{},
 				}, nil)
 				return managementClient
 			},

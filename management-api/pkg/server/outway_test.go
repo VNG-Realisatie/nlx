@@ -15,7 +15,6 @@ import (
 	"github.com/jackc/pgtype"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
@@ -180,62 +179,66 @@ func TestRegisterOutway(t *testing.T) {
 }
 
 func TestListOutways(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-
-	mockListOutways := []*database.Outway{
-		{Name: "outway42.test"},
-		{Name: "outway43.test"},
-		{
-			Name:                 "outway.test",
-			Version:              "1.0.0",
-			IPAddress:            mockIP(t, "127.1.1.1/32"),
-			PublicKeyPEM:         "mock-public-key-pem",
-			PublicKeyFingerprint: "mock-public-key-fingerprint",
-			SelfAddressAPI:       "self-address",
+	tests := map[string]struct {
+		ctx     context.Context
+		setup   func(*testing.T, serviceMocks)
+		want    *api.ListOutwaysResponse
+		wantErr error
+	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(t *testing.T, mocks serviceMocks) {},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outways.read\" to execute this request").Err(),
 		},
-	}
-
-	mockDatabase.EXPECT().ListOutways(ctx).Return(mockListOutways, nil)
-
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-		outway.NewClient,
-	)
-	actualResponse, err := service.ListOutways(ctx, &api.ListOutwaysRequest{})
-	assert.NoError(t, err)
-
-	expectedResponse := &api.ListOutwaysResponse{
-		Outways: []*api.Outway{
-			{
-				Name: "outway42.test",
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {
+				mocks.db.EXPECT().ListOutways(gomock.Any()).Return([]*database.Outway{
+					{Name: "outway42.test"},
+					{Name: "outway43.test"},
+					{
+						Name:                 "outway.test",
+						Version:              "1.0.0",
+						IPAddress:            mockIP(t, "127.1.1.1/32"),
+						PublicKeyPEM:         "mock-public-key-pem",
+						PublicKeyFingerprint: "mock-public-key-fingerprint",
+						SelfAddressAPI:       "self-address",
+					},
+				}, nil)
 			},
-			{
-				Name: "outway43.test",
-			},
-			{
-				Name:                 "outway.test",
-				IpAddress:            "127.1.1.1",
-				Version:              "1.0.0",
-				PublicKeyPEM:         "mock-public-key-pem",
-				PublicKeyFingerprint: "mock-public-key-fingerprint",
-				SelfAddressAPI:       "self-address",
+			want: &api.ListOutwaysResponse{
+				Outways: []*api.Outway{
+					{
+						Name: "outway42.test",
+					},
+					{
+						Name: "outway43.test",
+					},
+					{
+						Name:                 "outway.test",
+						IpAddress:            "127.1.1.1",
+						Version:              "1.0.0",
+						PublicKeyPEM:         "mock-public-key-pem",
+						PublicKeyFingerprint: "mock-public-key-fingerprint",
+						SelfAddressAPI:       "self-address",
+					},
+				},
 			},
 		},
 	}
 
-	assert.Equal(t, expectedResponse, actualResponse)
+	for name, tt := range tests {
+		tt := tt
+
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			service, _, mocks := newService(t)
+			tt.setup(t, mocks)
+
+			want, err := service.ListOutways(tt.ctx, nil)
+			assert.Equal(t, tt.want, want)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
 }

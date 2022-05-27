@@ -16,10 +16,16 @@ import (
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
 
 func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
+	err := s.authorize(ctx, permissions.SynchronizeIncomingOrders)
+	if err != nil {
+		return nil, err
+	}
+
 	response, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
 		s.logger.Error("failed to list response", zap.Error(err))

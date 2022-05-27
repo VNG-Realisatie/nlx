@@ -13,6 +13,7 @@ Deploy demo:
     - |
       start_section helm_repo "Update Helm repositories"
       helm repo add stable "https://charts.helm.sh/stable"
+      helm repo add dex https://charts.dexidp.io
       helm repo add commonground "https://charts.commonground.nl"
       helm repo update
       stop_section helm_repo

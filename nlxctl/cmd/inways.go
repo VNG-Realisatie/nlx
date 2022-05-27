@@ -124,8 +124,7 @@ var updateInwayCommand = &cobra.Command{
 			Inway: inway,
 		}
 
-		ctx := context.Background()
-		_, err = getManagementClient().UpdateInway(ctx, updateInwayRequest)
+		_, err = getManagementClient().UpdateInway(newRequestContext(), updateInwayRequest)
 		if err != nil {
 			panic(err)
 		}
@@ -138,13 +137,11 @@ var deleteInwayCommand = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete an inway",
 	Run: func(cmd *cobra.Command, arg []string) {
-		ctx := context.Background()
-
 		deleteInwayRequest := &api.DeleteInwayRequest{
 			Name: inwayOptions.name,
 		}
 
-		_, err := getManagementClient().DeleteInway(ctx, deleteInwayRequest)
+		_, err := getManagementClient().DeleteInway(newRequestContext(), deleteInwayRequest)
 		if err != nil {
 			panic(err)
 		}

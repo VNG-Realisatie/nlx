@@ -62,6 +62,7 @@ func (db *PostgresConfigDatabase) GetUser(ctx context.Context, email string) (*U
 		WithContext(ctx).
 		Where("email = ?", email).
 		Preload("Roles").
+		Preload("Roles.Permissions").
 		First(user).
 		Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -159,27 +160,15 @@ func (db *PostgresConfigDatabase) CreateUser(ctx context.Context, email, passwor
 }
 
 func getRoleRecords(ctx context.Context, dbWithTx *PostgresConfigDatabase, names []string) ([]Role, error) {
-	roles := []Role{}
+	roles := &[]Role{}
 
-	for _, name := range names {
-		role := &Role{}
-
-		if err := dbWithTx.
-			WithContext(ctx).
-			Where("code = ?", name).
-			First(role).
-			Error; err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, &RoleNotFoundError{
-					RoleName: name,
-				}
-			}
-
-			return nil, err
-		}
-
-		roles = append(roles, *role)
+	if err := dbWithTx.
+		WithContext(ctx).
+		Where("code in (?)", names).
+		Find(roles).
+		Error; err != nil {
+		return nil, err
 	}
 
-	return roles, nil
+	return *roles, nil
 }

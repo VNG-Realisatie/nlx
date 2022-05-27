@@ -8,6 +8,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -16,9 +17,14 @@ import (
 )
 
 func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *api.UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.UpdateOutgoingOrder)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request UpdateOutgoingOrder")
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -54,7 +60,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
 	}
 
-	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.username, userInfo.userAgent, orderInDB.Delegatee, orderInDB.Reference, accessProofsToAuditLogRecordServices(accessProofs))
+	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.Email, userInfo.UserAgent, orderInDB.Delegatee, orderInDB.Reference, accessProofsToAuditLogRecordServices(accessProofs))
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

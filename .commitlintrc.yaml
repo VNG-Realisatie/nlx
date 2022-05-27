@@ -34,8 +34,9 @@ rules:
       - management
       - outway
       - txlog
+      - nlxctl
 
 parser-preset:
   - parser-opts:
       issue-prefixes:
-        - 'nlx#'
+        - "nlx#"

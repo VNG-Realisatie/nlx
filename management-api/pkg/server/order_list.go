@@ -18,10 +18,16 @@ import (
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
 
 func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListOutgoingOrdersResponse, error) {
+	err := s.authorize(ctx, permissions.ReadOutgoingOrders)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request ListOutgoingOrders")
 
 	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
@@ -67,6 +73,11 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 }
 
 func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListIncomingOrdersResponse, error) {
+	err := s.authorize(ctx, permissions.ReadIncomingOrders)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request ListIncomingOrders")
 
 	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})

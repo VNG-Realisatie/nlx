@@ -11,6 +11,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	configName = ".nlxctl-config"
+	configType = "yaml"
+)
+
+var configLocation string
+
 var rootCmd = &cobra.Command{
 	Use:   "nlxctl",
 	Short: "nlxctl is a command line tool to communicate with the config API",
@@ -33,8 +40,10 @@ func initConfig() {
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 
 	viper.AddConfigPath(home)
-	viper.SetConfigName(".nlxctl-config")
-	viper.SetConfigType("yaml")
+	viper.SetConfigName(configName)
+	viper.SetConfigType(configType)
+
+	configLocation = fmt.Sprintf("%s/%s.%s", home, configName, configType)
 
 	err = viper.ReadInConfig()
 	if err == nil {

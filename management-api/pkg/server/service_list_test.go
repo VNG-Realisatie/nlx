@@ -38,130 +38,18 @@ func TestListServices(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		request          *api.ListServicesRequest
 		ctx              context.Context
 		setup            func(*common_tls.CertificateBundle, serviceMocks)
 		expectedResponse *api.ListServicesResponse
 		expectedError    error
 	}{
-		"happy_flow_for_a_specific_inway": {
-			request: &api.ListServicesRequest{
-				InwayName: "inway.mock",
-			},
-			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					GetInway(gomock.Any(), "inway.mock").
-					Return(&database.Inway{
-						Name: "inway.mock",
-						Services: []*database.Service{
-							{
-								Name: "my-service",
-								Inways: []*database.Inway{
-									{
-										Name: "inway.mock",
-									},
-								},
-							},
-						},
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					GetIncomingAccessRequestCountByService(gomock.Any()).
-					Return(map[string]int{}, nil)
-
-				mocks.db.
-					EXPECT().
-					ListAccessGrantsForService(gomock.Any(), "my-service").
-					Return([]*database.AccessGrant{{
-						ID:                      1,
-						IncomingAccessRequestID: 1,
-						IncomingAccessRequest: &database.IncomingAccessRequest{
-							ID: 1,
-							Organization: database.IncomingAccessRequestOrganization{
-								Name:         "mock-organization-name",
-								SerialNumber: "0123456789012346789",
-							},
-							ServiceID: 1,
-							Service: &database.Service{
-								ID:   1,
-								Name: "my-service",
-							},
-							PublicKeyFingerprint: "mock-publickey-fingerprint",
-						},
-					}}, nil)
-			},
-			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.ListServicesResponse_Service{
-					{
-						Name:   "my-service",
-						Inways: []string{"inway.mock"},
-						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
-							Mode: "whitelist",
-							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
-								{
-									Organization: &api.Organization{
-										Name:         "mock-organization-name",
-										SerialNumber: "0123456789012346789",
-									},
-									PublicKeyHash: "mock-publickey-fingerprint",
-								},
-							},
-						},
-					},
-				},
-			},
-			expectedError: nil,
+		"missing_required_permission": {
+			ctx:              testCreateUserWithoutPermissionsContext(),
+			setup:            func(_ *common_tls.CertificateBundle, mocks serviceMocks) {},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.services.read\" to execute this request").Err(),
 		},
-		"happy_flow_for_another_specific_inway": {
-			request: &api.ListServicesRequest{
-				InwayName: "another-inway.mock",
-			},
-			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					GetInway(gomock.Any(), "another-inway.mock").
-					Return(&database.Inway{
-						Name: "another-inway.mock",
-						Services: []*database.Service{
-							{
-								Name: "another-service",
-								Inways: []*database.Inway{
-									{
-										Name: "another-inway.mock",
-									},
-								},
-							},
-						},
-					}, nil)
-
-				mocks.db.
-					EXPECT().
-					GetIncomingAccessRequestCountByService(gomock.Any()).
-					Return(map[string]int{}, nil)
-
-				mocks.db.
-					EXPECT().
-					ListAccessGrantsForService(gomock.Any(), "another-service").
-					Return([]*database.AccessGrant{}, nil)
-			},
-			expectedResponse: &api.ListServicesResponse{
-				Services: []*api.ListServicesResponse_Service{
-					{
-						Name:   "another-service",
-						Inways: []string{"another-inway.mock"},
-						AuthorizationSettings: &api.ListServicesResponse_Service_AuthorizationSettings{
-							Mode:           "whitelist",
-							Authorizations: []*api.ListServicesResponse_Service_AuthorizationSettings_Authorization{},
-						},
-					},
-				},
-			},
-			expectedError: nil,
-		},
-		"happy_flow_without_inway filter": {
-			request: &api.ListServicesRequest{},
+		"happy_flow": {
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
@@ -171,6 +59,7 @@ func TestListServices(t *testing.T) {
 				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
 				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "third-service").Return([]*database.AccessGrant{}, nil)
 			},
+			ctx: testCreateAdminUserContext(),
 			expectedResponse: &api.ListServicesResponse{
 				Services: []*api.ListServicesResponse_Service{
 					{
@@ -202,7 +91,6 @@ func TestListServices(t *testing.T) {
 			expectedError: nil,
 		},
 		"happy flow with incoming access requests": {
-			request: &api.ListServicesRequest{},
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
@@ -216,6 +104,7 @@ func TestListServices(t *testing.T) {
 				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return([]*database.AccessGrant{}, nil)
 				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "third-service").Return([]*database.AccessGrant{}, nil)
 			},
+			ctx: testCreateAdminUserContext(),
 			expectedResponse: &api.ListServicesResponse{
 				Services: []*api.ListServicesResponse_Service{
 					{
@@ -250,15 +139,14 @@ func TestListServices(t *testing.T) {
 			expectedError: nil,
 		},
 		"when database call for service fails": {
-			request: &api.ListServicesRequest{},
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().ListServices(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 			},
+			ctx:              testCreateAdminUserContext(),
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		"when database for access grants fails": {
-			request: &api.ListServicesRequest{},
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().ListServices(gomock.Any()).Return(databaseServices, nil)
 
@@ -268,6 +156,7 @@ func TestListServices(t *testing.T) {
 				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "another-service").Return(nil, errors.New("arbitrary error"))
 				mocks.db.EXPECT().ListAccessGrantsForService(gomock.Any(), "third-service").Return(nil, errors.New("arbitrary error"))
 			},
+			ctx: testCreateAdminUserContext(),
 			expectedResponse: &api.ListServicesResponse{
 				Services: []*api.ListServicesResponse_Service{},
 			},
@@ -287,7 +176,7 @@ func TestListServices(t *testing.T) {
 				tt.setup(bundle, mocks)
 			}
 
-			response, err := service.ListServices(tt.ctx, tt.request)
+			response, err := service.ListServices(tt.ctx, nil)
 
 			assert.Equal(t, tt.expectedError, err)
 			assert.Equal(t, tt.expectedResponse, response)

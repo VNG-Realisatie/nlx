@@ -5,6 +5,7 @@ package server
 
 import (
 	"bytes"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
@@ -25,6 +26,11 @@ func (s *ManagementService) IsFinanceEnabled(ctx context.Context, request *empty
 }
 
 func (s *ManagementService) DownloadFinanceExport(ctx context.Context, request *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
+	err := s.authorize(ctx, permissions.ReadFinanceReport)
+	if err != nil {
+		return nil, err
+	}
+
 	services, err := s.configDatabase.ListServices(ctx)
 	if err != nil {
 		s.logger.Error("failed to list services", zap.Error(err))

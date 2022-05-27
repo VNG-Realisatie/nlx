@@ -12,7 +12,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -29,34 +28,34 @@ func TestListAccessGrantsForService(t *testing.T) {
 		}
 	}
 
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
+		ctx              context.Context
 		req              *api.ListAccessGrantsForServiceRequest
 		setup            func(context.Context, serviceMocks)
 		expectedResponse *api.ListAccessGrantsForServiceResponse
 		expectedErr      error
 	}{
-		{
-			"happy_flow",
-			&api.ListAccessGrantsForServiceRequest{
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			req: &api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					GetService(ctx, "test-service").
+					GetService(gomock.Any(), "test-service").
 					Return(&database.Service{
 						Name: "test-service",
 					}, nil)
 
 				mocks.db.
 					EXPECT().
-					ListAccessGrantsForService(ctx, "test-service").
+					ListAccessGrantsForService(gomock.Any(), "test-service").
 					Return([]*database.AccessGrant{
 						createDummyAccessGrant(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 					}, nil)
 			},
-			&api.ListAccessGrantsForServiceResponse{
+			expectedResponse: &api.ListAccessGrantsForServiceResponse{
 				AccessGrants: []*api.AccessGrant{
 					{
 						Id: 1,
@@ -70,67 +69,67 @@ func TestListAccessGrantsForService(t *testing.T) {
 					},
 				},
 			},
-			nil,
+			expectedErr: nil,
 		},
-		{
-			"service_not_found",
-			&api.ListAccessGrantsForServiceRequest{
+		"service_not_found": {
+			ctx: testCreateAdminUserContext(),
+			req: &api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					GetService(ctx, "test-service").
+					GetService(gomock.Any(), "test-service").
 					Return(nil, database.ErrNotFound)
 			},
-			nil,
-			status.Error(codes.NotFound, "service not found"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.NotFound, "service not found"),
 		},
-		{
-			"list_grants_database_error",
-			&api.ListAccessGrantsForServiceRequest{
+		"list_grants_database_error": {
+			ctx: testCreateAdminUserContext(),
+			req: &api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
-					GetService(ctx, "test-service").Return(&database.Service{
+					GetService(gomock.Any(), "test-service").Return(&database.Service{
 					Name: "test-service",
 				}, nil)
 
 				mocks.db.
 					EXPECT().
-					ListAccessGrantsForService(ctx, "test-service").
+					ListAccessGrantsForService(gomock.Any(), "test-service").
 					Return(nil, errors.New("arbitrary error"))
 			},
-			nil,
-			status.Error(codes.Internal, "database error"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.Internal, "database error"),
 		},
-		{
-			"get_service_database_error",
-			&api.ListAccessGrantsForServiceRequest{
+		"get_service_database_error": {
+			ctx: testCreateAdminUserContext(),
+			req: &api.ListAccessGrantsForServiceRequest{
 				ServiceName: "test-service",
 			},
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.db.EXPECT().
-					GetService(ctx, "test-service").
+					GetService(gomock.Any(), "test-service").
 					Return(nil, errors.New("arbitrary error"))
 			},
-			nil,
-			status.Error(codes.Internal, "database error"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.Internal, "database error"),
 		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
 
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
 
 			ctx := context.Background()
 			tt.setup(ctx, mocks)
 
-			actual, err := service.ListAccessGrantsForService(ctx, tt.req)
+			actual, err := service.ListAccessGrantsForService(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, actual)
 			assert.Equal(t, tt.expectedErr, err)
@@ -149,16 +148,15 @@ func TestRevokeAccessGrant(t *testing.T) {
 
 	createdAt := time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)
 
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
 		setup            func(context.Context, serviceMocks)
 		ctx              context.Context
 		req              *api.RevokeAccessGrantRequest
 		expectedResponse *api.AccessGrant
 		expectedErr      error
 	}{
-		{
-			name: "happy_flow",
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.db.EXPECT().
 					GetAccessGrant(gomock.Any(), uint(42)).Return(
@@ -179,7 +177,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 					EXPECT().
 					AccessGrantRevoke(
 						gomock.Any(),
-						"Jane Doe",
+						"admin@example.com",
 						"nlxctl",
 						"00000000000000000001",
 						"test-organization",
@@ -197,10 +195,6 @@ func TestRevokeAccessGrant(t *testing.T) {
 						},
 					}, nil)
 			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
 			req: &api.RevokeAccessGrantRequest{
 				AccessGrantID: 42,
 			},
@@ -212,10 +206,10 @@ func TestRevokeAccessGrant(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for name, tt := range tests {
 		tt := tt
 
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
 			tt.setup(tt.ctx, mocks)
 

@@ -19,6 +19,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.RegisterOutwayRequest) (*emptypb.Empty, error) {
@@ -77,6 +78,11 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 
 // ListInways returns a list of outways
 func (s *ManagementService) ListOutways(ctx context.Context, req *api.ListOutwaysRequest) (*api.ListOutwaysResponse, error) {
+	err := s.authorize(ctx, permissions.ReadOutways)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request ListInways")
 
 	outways, err := s.configDatabase.ListOutways(ctx)

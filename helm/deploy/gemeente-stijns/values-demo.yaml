@@ -59,6 +59,9 @@ managementAPI:
     inways:
       - gemeente-stijns-nlx-inway
 
+nlxctl:
+  authorizationServerUrl: https://dex.demo.gemeentestijns.nl
+
 ################
 ## Sub-charts ##
 ################
@@ -74,7 +77,7 @@ nlx-management:
   config:
     directoryHostname: directory-api.demo.nlx.io
     oidc:
-      clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
+      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
       discoveryURL: https://dex.demo.gemeentestijns.nl
       redirectURL: https://management.demo.gemeentestijns.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
@@ -82,7 +85,7 @@ nlx-management:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - management.demo.gemeentestijns.nl
+      - host: management.demo.gemeentestijns.nl
     tls:
       - secretName: gemeentestijns-nlx-management-ingress-tls
         hosts:
@@ -94,14 +97,17 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: J7VLST6DqlhFnrzKcpjKnfqr
+        secret: grGSl5W5HcKRETBr3OhmU6Tm
         redirectURIs:
           - https://management.demo.gemeentestijns.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.demo.gemeentestijns.nl
+      - host: dex.demo.gemeentestijns.nl
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
     tls:
       - secretName: gemeentestijns-dex-ingress-tls
         hosts:

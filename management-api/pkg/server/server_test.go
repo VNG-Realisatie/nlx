@@ -26,6 +26,8 @@ import (
 	mock_outway "go.nlx.io/nlx/management-api/pkg/outway/mock"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	mock_txlog "go.nlx.io/nlx/management-api/pkg/txlog/mock"
+	"go.nlx.io/nlx/management-api/pkg/txlogdb"
+	mock_txlogdb "go.nlx.io/nlx/management-api/pkg/txlogdb/mock"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
@@ -62,12 +64,13 @@ func setProxyMetadataWithCertBundle(t *testing.T, ctx context.Context, certBundl
 }
 
 type serviceMocks struct {
-	db *mock_database.MockConfigDatabase
-	al *mock_auditlog.MockLogger
-	dc *mock_directory.MockClient
-	tx *mock_txlog.MockClient
-	mc *mock_management.MockClient
-	oc *mock_outway.MockClient
+	db      *mock_database.MockConfigDatabase
+	dbTxLog *mock_txlogdb.MockTxlogDatabase
+	al      *mock_auditlog.MockLogger
+	dc      *mock_directory.MockClient
+	tx      *mock_txlog.MockClient
+	mc      *mock_management.MockClient
+	oc      *mock_outway.MockClient
 }
 
 func newService(t *testing.T) (*server.ManagementService, *common_tls.CertificateBundle, serviceMocks) {
@@ -79,14 +82,44 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 	})
 
 	mocks := serviceMocks{
-		dc: mock_directory.NewMockClient(ctrl),
-		tx: mock_txlog.NewMockClient(ctrl),
-		al: mock_auditlog.NewMockLogger(ctrl),
-		db: mock_database.NewMockConfigDatabase(ctrl),
-		mc: mock_management.NewMockClient(ctrl),
-		oc: mock_outway.NewMockClient(ctrl),
+		dc:      mock_directory.NewMockClient(ctrl),
+		tx:      mock_txlog.NewMockClient(ctrl),
+		al:      mock_auditlog.NewMockLogger(ctrl),
+		db:      mock_database.NewMockConfigDatabase(ctrl),
+		dbTxLog: mock_txlogdb.NewMockTxlogDatabase(ctrl),
+		mc:      mock_management.NewMockClient(ctrl),
+		oc:      mock_outway.NewMockClient(ctrl),
 	}
 
+	s, orgCert := newServer(t, mocks)
+
+	return s, orgCert, mocks
+}
+
+func newServiceWithoutTXLog(t *testing.T) (*server.ManagementService, *common_tls.CertificateBundle, serviceMocks) {
+	ctrl := gomock.NewController(t)
+
+	t.Cleanup(func() {
+		t.Helper()
+		ctrl.Finish()
+	})
+
+	mocks := serviceMocks{
+		dc:      mock_directory.NewMockClient(ctrl),
+		tx:      mock_txlog.NewMockClient(ctrl),
+		al:      mock_auditlog.NewMockLogger(ctrl),
+		dbTxLog: nil,
+		db:      mock_database.NewMockConfigDatabase(ctrl),
+		mc:      mock_management.NewMockClient(ctrl),
+		oc:      mock_outway.NewMockClient(ctrl),
+	}
+
+	s, orgCert := newServer(t, mocks)
+
+	return s, orgCert, mocks
+}
+
+func newServer(t *testing.T, mocks serviceMocks) (*server.ManagementService, *common_tls.CertificateBundle) {
 	logger := zaptest.Logger(t)
 
 	orgCert, err := newCertificateBundle()
@@ -97,14 +130,19 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 	internalCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.NLXTestInternal)
 	require.NoError(t, err)
 
-	s := server.NewManagementService(
+	var txLog txlogdb.TxlogDatabase = nil
+	if mocks.dbTxLog != nil {
+		txLog = mocks.dbTxLog
+	}
+
+	return server.NewManagementService(
 		logger,
 		mocks.dc,
 		mocks.tx,
 		orgCert,
 		internalCert,
 		mocks.db,
-		nil,
+		txLog,
 		mocks.al,
 		func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
 			return mocks.mc, nil
@@ -112,7 +150,5 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		func(context.Context, string, *common_tls.CertificateBundle) (outway.Client, error) {
 			return mocks.oc, nil
 		},
-	)
-
-	return s, orgCert, mocks
+	), orgCert
 }

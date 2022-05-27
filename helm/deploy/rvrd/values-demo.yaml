@@ -50,6 +50,9 @@ ca:
       dnsNames:
         - inway.demo.rvrd.nl
 
+nlxctl:
+  authorizationServerUrl: https://dex.demo.rvrd.nl
+
 ################
 ## Sub-charts ##
 ################
@@ -84,7 +87,10 @@ dex:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.demo.rvrd.nl
+      - host: dex.demo.rvrd.nl
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
     tls:
       - secretName: rvrd-dex-ingress-tls
         hosts:

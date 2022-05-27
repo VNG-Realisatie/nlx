@@ -69,13 +69,16 @@ outway-2:
     tls:
       secretName: gemeentestijns-nlx-outway-2-ingress-tls
 
+nlxctl:
+  authorizationServerUrl: https://dex.acc.gemeentestijns.nl
+
 ################
 ## Sub-charts ##
 ################
 nlx-management:
   config:
     oidc:
-      clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
+      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
       discoveryURL: https://dex.acc.gemeentestijns.nl
       redirectURL: https://management.acc.gemeentestijns.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
@@ -95,14 +98,17 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: J7VLST6DqlhFnrzKcpjKnfqr
+        secret: grGSl5W5HcKRETBr3OhmU6Tm
         redirectURIs:
           - https://management.acc.gemeentestijns.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.acc.gemeentestijns.nl
+      - host: dex.acc.gemeentestijns.nl
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
     tls:
       - secretName: gemeentestijns-dex-ingress-tls
         hosts:

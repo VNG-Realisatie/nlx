@@ -12,7 +12,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -27,21 +26,16 @@ func TestDeleteService(t *testing.T) {
 		setup         func(*common_tls.CertificateBundle, serviceMocks)
 		expectedError error
 	}{
-		"failed_to_retrieve_user_info_from_context": {
-			ctx: context.Background(),
-			request: &api.DeleteServiceRequest{
-				Name: "my-service",
-			},
-			expectedError: status.Error(codes.Internal, "could not retrieve user info to create audit log"),
+		"missing_required_permission": {
+			ctx:           testCreateUserWithoutPermissionsContext(),
+			setup:         func(_ *common_tls.CertificateBundle, mocks serviceMocks) {},
+			expectedError: status.New(codes.PermissionDenied, "user needs the permission \"permissions.service.delete\" to execute this request").Err(),
 		},
 		"failed_to_create_audit_log": {
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.al.EXPECT().
-					ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service").
+					ServiceDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-service").
 					Return(fmt.Errorf("error"))
 			},
 			request: &api.DeleteServiceRequest{
@@ -50,17 +44,14 @@ func TestDeleteService(t *testing.T) {
 			expectedError: status.Error(codes.Internal, "could not create audit log"),
 		},
 		"failed_to_delete_service_from_database": {
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.EXPECT().
 					DeleteService(gomock.Any(), "my-service", "00000000000000000001").
 					Return(fmt.Errorf("error"))
 
 				mocks.al.EXPECT().
-					ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
+					ServiceDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-service")
 			},
 			request: &api.DeleteServiceRequest{
 				Name: "my-service",
@@ -68,10 +59,7 @@ func TestDeleteService(t *testing.T) {
 			expectedError: status.Error(codes.Internal, "database error"),
 		},
 		"happy_flow": {
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			setup: func(_ *common_tls.CertificateBundle, mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
@@ -79,7 +67,7 @@ func TestDeleteService(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ServiceDelete(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
+					ServiceDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-service")
 			},
 			request: &api.DeleteServiceRequest{
 				Name: "my-service",

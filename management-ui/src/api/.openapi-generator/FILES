@@ -4,7 +4,6 @@ apis/TXLogApi.ts
 apis/index.ts
 index.ts
 models/AuditLogRecordActionType.ts
-models/AuthorizationSettingsAuthorization.ts
 models/DirectoryServiceAccessState.ts
 models/DirectoryServiceState.ts
 models/ManagementAccessGrant.ts
@@ -22,6 +21,10 @@ models/ManagementDirectoryService.ts
 models/ManagementDownloadFinanceExportResponse.ts
 models/ManagementErrorCode.ts
 models/ManagementErrorDetails.ts
+models/ManagementGetInwayConfigResponse.ts
+models/ManagementGetInwayConfigResponseService.ts
+models/ManagementGetInwayConfigResponseServiceAuthorizationSettings.ts
+models/ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization.ts
 models/ManagementGetServiceResponse.ts
 models/ManagementGetStatisticsOfServicesResponse.ts
 models/ManagementGetTermsOfServiceResponse.ts
@@ -41,6 +44,8 @@ models/ManagementListOutgoingOrdersResponse.ts
 models/ManagementListOutwaysResponse.ts
 models/ManagementListServicesResponse.ts
 models/ManagementListServicesResponseService.ts
+models/ManagementListServicesResponseServiceAuthorizationSettings.ts
+models/ManagementListServicesResponseServiceAuthorizationSettingsAuthorization.ts
 models/ManagementOrderService.ts
 models/ManagementOrganization.ts
 models/ManagementOutgoingAccessRequest.ts
@@ -62,6 +67,5 @@ models/ManagementUpdateServiceResponse.ts
 models/ManagementUpdateSettingsRequest.ts
 models/ProtobufAny.ts
 models/RpcStatus.ts
-models/ServiceAuthorizationSettings.ts
 models/index.ts
 runtime.ts

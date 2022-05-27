@@ -16,10 +16,16 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 // GetSettings returns the settings for the organization
 func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (*api.Settings, error) {
+	err := s.authorize(ctx, permissions.ReadOrganizationSettings)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger.With(zap.String("handler", "get-settings"))
 
 	settings, err := s.configDatabase.GetSettings(ctx)
@@ -42,9 +48,14 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (
 
 // UpdateSettings updates the settings for the organization
 func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.UpdateOrganizationSettings)
+	if err != nil {
+		return nil, err
+	}
+
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -55,7 +66,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	err = s.auditLogger.OrganizationSettingsUpdate(ctx, userInfo.username, userInfo.userAgent)
+	err = s.auditLogger.OrganizationSettingsUpdate(ctx, userInfo.Email, userInfo.UserAgent)
 	if err != nil {
 		logger.Error("could not create audit log", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not create audit log")

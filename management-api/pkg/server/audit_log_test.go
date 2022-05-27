@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -30,16 +31,24 @@ func TestListAuditLogs(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		setup   func(context.Context, serviceMocks)
+		ctx     context.Context
+		setup   func(serviceMocks)
 		req     *emptypb.Empty
 		want    *api.ListAuditLogsResponse
 		wantErr error
 	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(serviceMocks) {},
+			want:    nil,
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.audit_logs.read\" to execute this request").Err(),
+		},
 		"when_error_occurs_while_retrieving_organizations": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			req:     &emptypb.Empty{},
@@ -47,15 +56,16 @@ func TestListAuditLogs(t *testing.T) {
 			wantErr: status.New(codes.Internal, "failed to retrieve audit logs").Err(),
 		},
 		"when_error_occurs_while_retrieving_logs": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
-					ListAll(ctx).
+					ListAll(gomock.Any()).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			req:     &emptypb.Empty{},
@@ -63,15 +73,16 @@ func TestListAuditLogs(t *testing.T) {
 			wantErr: status.New(codes.Internal, "failed to retrieve audit logs").Err(),
 		},
 		"when_no_logs_are_available": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
-					ListAll(ctx).
+					ListAll(gomock.Any()).
 					Return([]*auditlog.Record{}, nil)
 			},
 			req: &emptypb.Empty{},
@@ -81,19 +92,20 @@ func TestListAuditLogs(t *testing.T) {
 			wantErr: nil,
 		},
 		"with_a_single_log_created_via_the_browser": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
-					ListAll(ctx).
+					ListAll(gomock.Any()).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
-							Username:   "Jane Doe",
+							Username:   "admin@example.com",
 							ActionType: auditlog.LoginSuccess,
 							UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
 							CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -105,7 +117,7 @@ func TestListAuditLogs(t *testing.T) {
 				AuditLogs: []*api.AuditLogRecord{
 					{
 						Id:              1,
-						User:            "Jane Doe",
+						User:            "admin@example.com",
 						Action:          api.AuditLogRecord_loginSuccess,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
@@ -118,15 +130,16 @@ func TestListAuditLogs(t *testing.T) {
 			wantErr: nil,
 		},
 		"with_a_single_log_created_via_nlxctl": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
-					ListAll(ctx).
+					ListAll(gomock.Any()).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
@@ -155,10 +168,11 @@ func TestListAuditLogs(t *testing.T) {
 			wantErr: nil,
 		},
 		"with_a_single_log_created_via_the_browser_with_order_metadata": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -170,11 +184,11 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(ctx).
+					ListAll(gomock.Any()).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
-							Username:   "Jane Doe",
+							Username:   "admin@example.com",
 							ActionType: auditlog.OrderOutgoingRevoke,
 							UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
 							CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -190,7 +204,7 @@ func TestListAuditLogs(t *testing.T) {
 				AuditLogs: []*api.AuditLogRecord{
 					{
 						Id:              1,
-						User:            "Jane Doe",
+						User:            "admin@example.com",
 						Action:          api.AuditLogRecord_orderOutgoingRevoke,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
@@ -210,19 +224,20 @@ func TestListAuditLogs(t *testing.T) {
 			wantErr: nil,
 		},
 		"with_a_single_log_created_via_the_browser_with_inway_metadata": {
-			setup: func(ctx context.Context, mocks serviceMocks) {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
-					ListAll(ctx).
+					ListAll(gomock.Any()).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
-							Username:   "Jane Doe",
+							Username:   "admin@example.com",
 							ActionType: auditlog.InwayDelete,
 							UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
 							CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
@@ -237,7 +252,7 @@ func TestListAuditLogs(t *testing.T) {
 				AuditLogs: []*api.AuditLogRecord{
 					{
 						Id:              1,
-						User:            "Jane Doe",
+						User:            "admin@example.com",
 						Action:          api.AuditLogRecord_inwayDelete,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
@@ -259,11 +274,10 @@ func TestListAuditLogs(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
-			ctx := context.Background()
 
-			tt.setup(ctx, mocks)
+			tt.setup(mocks)
 
-			actual, err := service.ListAuditLogs(ctx, tt.req)
+			actual, err := service.ListAuditLogs(tt.ctx, tt.req)
 			assert.Equal(t, tt.want, actual)
 			assert.Equal(t, tt.wantErr, err)
 		})

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"time"
@@ -83,7 +82,7 @@ var approveAccessRequestCommand = &cobra.Command{
 	Use:   "approve",
 	Short: "Approve an existing incoming access request",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := getManagementClient().ApproveIncomingAccessRequest(context.Background(), &api.ApproveIncomingAccessRequestRequest{
+		_, err := getManagementClient().ApproveIncomingAccessRequest(newRequestContext(), &api.ApproveIncomingAccessRequestRequest{
 			ServiceName:     accessRequestOptions.serviceName,
 			AccessRequestID: accessRequestOptions.id,
 		})
@@ -99,7 +98,7 @@ var createAccessRequestCommand = &cobra.Command{
 	Use:   "create",
 	Short: "Request access to another service",
 	Run: func(cmd *cobra.Command, args []string) {
-		accessRequest, err := getManagementClient().CreateAccessRequest(context.Background(), &api.CreateAccessRequestRequest{
+		accessRequest, err := getManagementClient().CreateAccessRequest(newRequestContext(), &api.CreateAccessRequestRequest{
 			OrganizationSerialNumber: accessRequestOptions.organizationSerialNumber,
 			ServiceName:              accessRequestOptions.serviceName,
 		})
@@ -127,7 +126,7 @@ var listAccessRequestCommand = &cobra.Command{
 	Use:   "list",
 	Short: "List incoming access requests",
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getManagementClient().ListIncomingAccessRequests(context.Background(), &api.ListIncomingAccessRequestsRequest{
+		response, err := getManagementClient().ListIncomingAccessRequests(newRequestContext(), &api.ListIncomingAccessRequestsRequest{
 			ServiceName: listAccessRequestsOptions.serviceName,
 		})
 		if err != nil {

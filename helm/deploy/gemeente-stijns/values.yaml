@@ -256,6 +256,11 @@ nlxctl:
     pullPolicy: IfNotPresent
   tls:
     existingSecret: gemeente-stijns-nlxctl-tls
+  clientID: "nlx-management"
+  clientSecret: "grGSl5W5HcKRETBr3OhmU6Tm"
+  authorizationServerUrl: "http://dex.gemeente-stijns.nlx.minikube"
+  username: "admin@example.com"
+  password: "password"
 
 managementAPI:
   address: gemeente-stijns-nlx-management-api:443
@@ -430,15 +435,21 @@ dex:
         name: Admin User
         email: admin@example.com
     oauth2:
+      responseTypes: ["code", "token"]
       skipApprovalScreen: false
+      passwordConnector: local
   ingress:
     enabled: true
     hosts:
-      - dex.gemeente-stijns.nlx.minikube
+      - host: dex.gemeente-stijns.nlx.minikube
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
   ports:
     web:
       servicePort: 80
-  grpc: false
+  grpc:
+    enabled: false
   certs:
     web:
       create: false

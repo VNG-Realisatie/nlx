@@ -145,10 +145,6 @@ export interface ManagementListIncomingAccessRequestsRequest {
     serviceName: string;
 }
 
-export interface ManagementListServicesRequest {
-    inwayName?: string;
-}
-
 export interface ManagementRegisterInwayRequest {
     body: ManagementInway;
 }
@@ -781,12 +777,8 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListServicesRaw(requestParameters: ManagementListServicesRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementListServicesResponse>> {
+    async managementListServicesRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementListServicesResponse>> {
         const queryParameters: any = {};
-
-        if (requestParameters.inwayName !== undefined) {
-            queryParameters['inwayName'] = requestParameters.inwayName;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -802,8 +794,8 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListServices(requestParameters: ManagementListServicesRequest = {}, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementListServicesResponse> {
-        const response = await this.managementListServicesRaw(requestParameters, initOverrides);
+    async managementListServices(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementListServicesResponse> {
+        const response = await this.managementListServicesRaw(initOverrides);
         return await response.value();
     }
 

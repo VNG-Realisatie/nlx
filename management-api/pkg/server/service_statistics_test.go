@@ -6,65 +6,59 @@ package server_test
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
-	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestGetStatisticsOfServices(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
+	tests := map[string]struct {
+		ctx     context.Context
+		setup   func(*testing.T, serviceMocks)
+		want    *api.GetStatisticsOfServicesResponse
+		wantErr error
+	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(t *testing.T, mocks serviceMocks) {},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.services_statistics.read\" to execute this request").Err(),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequestCountByService(gomock.Any()).Return(map[string]int{
+					"service-a": 3,
+				}, nil)
+			},
 
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().GetIncomingAccessRequestCountByService(ctx).Return(map[string]int{
-		"service-a": 3,
-	}, nil)
-
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-		outway.NewClient,
-	)
-
-	requestGetStatisticsOfServices := &api.GetStatisticsOfServicesRequest{}
-
-	responseService, err := service.GetStatisticsOfServices(ctx, requestGetStatisticsOfServices)
-	if err != nil {
-		t.Error("could not get stats for services", err)
-	}
-
-	assert.Equal(t, &api.GetStatisticsOfServicesResponse{
-		Services: []*api.ServiceStatistics{
-			{
-				Name:                       "service-a",
-				IncomingAccessRequestCount: 3,
+			want: &api.GetStatisticsOfServicesResponse{
+				Services: []*api.ServiceStatistics{
+					{
+						Name:                       "service-a",
+						IncomingAccessRequestCount: 3,
+					},
+				},
 			},
 		},
-	}, responseService)
+	}
 
-	mockDatabase.EXPECT().GetIncomingAccessRequestCountByService(ctx).Return(nil, errors.New("arbitrary error"))
+	for name, tt := range tests {
+		tt := tt
 
-	_, err = service.GetStatisticsOfServices(ctx, requestGetStatisticsOfServices)
-	assert.Error(t, err)
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			service, _, mocks := newService(t)
+			tt.setup(t, mocks)
+
+			want, err := service.GetStatisticsOfServices(tt.ctx, nil)
+			assert.Equal(t, tt.want, want)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
 }

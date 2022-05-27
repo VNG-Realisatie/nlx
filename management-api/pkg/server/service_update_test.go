@@ -10,75 +10,70 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
-	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
-	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestUpdateService(t *testing.T) {
-	logger := zap.NewNop()
+	tests := map[string]struct {
+		ctx     context.Context
+		setup   func(*testing.T, serviceMocks)
+		request *api.UpdateServiceRequest
+		want    *api.UpdateServiceResponse
+		wantErr error
+	}{
+		"missing_required_permission": {
+			ctx:   testCreateUserWithoutPermissionsContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {},
+			request: &api.UpdateServiceRequest{
+				Name:        "my-service",
+				EndpointURL: "my-service.test",
+				Inways:      []string{},
+			},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.service.update\" to execute this request").Err(),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {
+				mocks.al.EXPECT().ServiceUpdate(gomock.Any(), "admin@example.com", "nlxctl", "my-service")
 
-	databaseService := &database.Service{
-		Name:        "my-service",
-		EndpointURL: "my-service.test",
+				dbService := &database.Service{
+					Name:        "my-service",
+					EndpointURL: "my-service.test",
+				}
+
+				mocks.db.EXPECT().GetService(gomock.Any(), "my-service").Return(dbService, nil)
+
+				mocks.db.EXPECT().UpdateServiceWithInways(gomock.Any(), dbService, []string{})
+			},
+			request: &api.UpdateServiceRequest{
+				Name:        "my-service",
+				EndpointURL: "my-service.test",
+				Inways:      []string{},
+			},
+			want: &api.UpdateServiceResponse{
+				Name:        "my-service",
+				EndpointURL: "my-service.test",
+				Inways:      []string{},
+			},
+		},
 	}
 
-	ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-		"username":               "Jane Doe",
-		"grpcgateway-user-agent": "nlxctl",
-	}))
+	for name, tt := range tests {
+		tt := tt
 
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	mockDatabase.EXPECT().GetService(ctx, "my-service").Return(databaseService, nil)
-	mockDatabase.EXPECT().GetService(ctx, "other-service").Return(nil, database.ErrNotFound)
-	mockDatabase.EXPECT().UpdateServiceWithInways(ctx, databaseService, []string{})
+			service, _, mocks := newService(t)
+			tt.setup(t, mocks)
 
-	auditLogger := mock_auditlog.NewMockLogger(mockCtrl)
-	auditLogger.EXPECT().ServiceUpdate(gomock.Any(), "Jane Doe", "nlxctl", "my-service")
-
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		auditLogger,
-		management.NewClient,
-		outway.NewClient,
-	)
-
-	updateServiceRequest := &api.UpdateServiceRequest{
-		Name:        "my-service",
-		EndpointURL: "my-service.test",
-		Inways:      []string{},
+			want, err := service.UpdateService(tt.ctx, tt.request)
+			assert.Equal(t, tt.want, want)
+			assert.Equal(t, tt.wantErr, err)
+		})
 	}
-
-	updateServiceResponse, err := service.UpdateService(ctx, updateServiceRequest)
-	assert.NoError(t, err)
-
-	expectedResponse := &api.UpdateServiceResponse{
-		Name:        "my-service",
-		EndpointURL: "my-service.test",
-		Inways:      []string{},
-	}
-
-	assert.Equal(t, expectedResponse, updateServiceResponse)
-
-	updateServiceRequest.Name = "other-service"
-
-	_, err = service.UpdateService(ctx, updateServiceRequest)
-	assert.EqualError(t, err, "rpc error: code = NotFound desc = service not found")
 }

@@ -6,6 +6,7 @@ package server_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"path/filepath"
 	"testing"
 	"time"
@@ -19,13 +20,14 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/domain"
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
@@ -52,26 +54,61 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 	require.NoError(t, err)
 
 	tests := map[string]struct {
-		setup   func(*testing.T, serviceMocks) context.Context
+		ctx     context.Context
+		setup   func(*testing.T, serviceMocks)
 		request *api.CreateAccessRequestRequest
 		want    *api.OutgoingAccessRequest
 		wantErr error
 	}{
-		"without_an_active_access_request": {
-			setup: func(t *testing.T, mocks serviceMocks) context.Context {
-				ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-					"username":               "Jane Doe",
-					"grpcgateway-user-agent": "nlxctl",
-				}))
-
+		"missing_required_permission": {
+			ctx:   testCreateUserWithoutPermissionsContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {},
+			request: &api.CreateAccessRequestRequest{
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "test-service",
+				PublicKeyPEM:             arbitraryPublicKeyPEM,
+			},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_access_request.create\" to execute this request").Err(),
+		},
+		"with_an_active_access_request": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
-					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "00000000000000000001", "test-service").
+					OutgoingAccessRequestCreate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "test-service").
 					Return(nil)
 
 				mocks.db.
 					EXPECT().
-					CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
+					CreateOutgoingAccessRequest(gomock.Any(), &database.OutgoingAccessRequest{
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+						},
+						ServiceName:          "test-service",
+						PublicKeyFingerprint: fingerprint,
+						PublicKeyPEM:         arbitraryPublicKeyPEM,
+						State:                database.OutgoingAccessRequestCreated,
+					}).
+					Return(nil, database.ErrActiveAccessRequest)
+			},
+			request: &api.CreateAccessRequestRequest{
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "test-service",
+				PublicKeyPEM:             arbitraryPublicKeyPEM,
+			},
+			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					OutgoingAccessRequestCreate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "test-service").
+					Return(nil)
+
+				mocks.db.
+					EXPECT().
+					CreateOutgoingAccessRequest(gomock.Any(), &database.OutgoingAccessRequest{
 						Organization: database.Organization{
 							SerialNumber: "00000000000000000001",
 						},
@@ -93,8 +130,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 						CreatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 						UpdatedAt:            time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 					}, nil)
-
-				return ctx
 			},
 			request: &api.CreateAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
@@ -114,40 +149,6 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 				UpdatedAt:            createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 			},
 		},
-		"with_an_active_access_request": {
-			setup: func(t *testing.T, mocks serviceMocks) context.Context {
-				ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-					"username":               "Jane Doe",
-					"grpcgateway-user-agent": "nlxctl",
-				}))
-
-				mocks.al.
-					EXPECT().
-					OutgoingAccessRequestCreate(ctx, "Jane Doe", "nlxctl", "00000000000000000001", "test-service").
-					Return(nil)
-
-				mocks.db.
-					EXPECT().
-					CreateOutgoingAccessRequest(ctx, &database.OutgoingAccessRequest{
-						Organization: database.Organization{
-							SerialNumber: "00000000000000000001",
-						},
-						ServiceName:          "test-service",
-						PublicKeyFingerprint: fingerprint,
-						PublicKeyPEM:         arbitraryPublicKeyPEM,
-						State:                database.OutgoingAccessRequestCreated,
-					}).
-					Return(nil, database.ErrActiveAccessRequest)
-
-				return ctx
-			},
-			request: &api.CreateAccessRequestRequest{
-				OrganizationSerialNumber: "00000000000000000001",
-				ServiceName:              "test-service",
-				PublicKeyPEM:             arbitraryPublicKeyPEM,
-			},
-			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
-		},
 	}
 
 	for name, tt := range tests {
@@ -157,9 +158,9 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 			t.Parallel()
 
 			service, _, mocks := newService(t)
-			ctx := tt.setup(t, mocks)
+			tt.setup(t, mocks)
 
-			actual, err := service.CreateAccessRequest(ctx, tt.request)
+			actual, err := service.CreateAccessRequest(tt.ctx, tt.request)
 
 			assert.Equal(t, tt.want, actual)
 			assert.Equal(t, tt.wantErr, err)
@@ -167,84 +168,102 @@ mcD90I7Z/cRQjWP3P93B3V06cJkd00cEIRcIQqF8N+lE01H88Fi+wePhZRy92NP5
 	}
 }
 
-//nolint:funlen // this is a test
+//nolint:funlen,dupl // this is a test
 func TestSendAccessRequest(t *testing.T) {
-	tests := []struct {
-		name             string
-		request          *api.SendAccessRequestRequest
-		accessRequest    *database.OutgoingAccessRequest
-		accessRequestErr error
-		updateMock       func(mock *gomock.Call)
-		response         *api.OutgoingAccessRequest
-		responseErr      error
+	tests := map[string]struct {
+		ctx         context.Context
+		setupMocks  func(mocks serviceMocks)
+		request     *api.SendAccessRequestRequest
+		response    *api.OutgoingAccessRequest
+		responseErr error
 	}{
-		{
-			"non_existing",
-			&api.SendAccessRequestRequest{
+		"missing_required_permission": {
+			ctx:        testCreateUserWithoutPermissionsContext(),
+			setupMocks: func(mocks serviceMocks) {},
+			request: &api.SendAccessRequestRequest{
 				AccessRequestID: 1,
 			},
-			nil,
-			database.ErrNotFound,
-			func(mock *gomock.Call) {
-				mock.MaxTimes(0)
-			},
-			nil,
-			status.New(codes.NotFound, "access request not found").Err(),
+			response:    nil,
+			responseErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_access_request.update\" to execute this request").Err(),
 		},
-		{
-			"database_error",
-			&api.SendAccessRequestRequest{
+		"non_existing": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingAccessRequest(gomock.Any(), uint(1)).
+					Return(nil, database.ErrNotFound)
+			},
+			request: &api.SendAccessRequestRequest{
 				AccessRequestID: 1,
 			},
-			nil,
-			errors.New("an error"),
-			func(mock *gomock.Call) {
-				mock.MaxTimes(0)
-			},
-			nil,
-			status.New(codes.Internal, "database error").Err(),
+			response:    nil,
+			responseErr: status.New(codes.NotFound, "access request not found").Err(),
 		},
-		{
-			"update_failed",
-			&api.SendAccessRequestRequest{
+		"database_error": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingAccessRequest(gomock.Any(), uint(1)).
+					Return(nil, errors.New("an error"))
+			},
+			request: &api.SendAccessRequestRequest{
 				AccessRequestID: 1,
 			},
-			&database.OutgoingAccessRequest{
+			response:    nil,
+			responseErr: status.New(codes.Internal, "database error").Err(),
+		},
+		"update_failed": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingAccessRequest(gomock.Any(), uint(1)).
+					Return(&database.OutgoingAccessRequest{
+						ID: 1,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization",
+						},
+						ServiceName: "test-service",
+						State:       database.OutgoingAccessRequestCreated,
+					}, nil)
 
-				ID: 1,
-				Organization: database.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				ServiceName: "test-service",
-				State:       database.OutgoingAccessRequestCreated,
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestCreated, uint(0), nil, gomock.Any()).Return(fmt.Errorf("arbitrary error"))
 			},
-			nil,
-			func(mock *gomock.Call) {
-				mock.Return(errors.New("an error"))
-			},
-			nil,
-			status.New(codes.Internal, "database error").Err(),
-		},
-		{
-			"created_state",
-			&api.SendAccessRequestRequest{
+			request: &api.SendAccessRequestRequest{
 				AccessRequestID: 1,
 			},
-			&database.OutgoingAccessRequest{
-				ID: 1,
-				Organization: database.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				ServiceName: "test-service",
-				State:       database.OutgoingAccessRequestCreated,
+			response:    nil,
+			responseErr: status.New(codes.Internal, "database error").Err(),
+		},
+		"happy_flow_created_state": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingAccessRequest(gomock.Any(), uint(1)).
+					Return(&database.OutgoingAccessRequest{
+						ID: 1,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization",
+						},
+						ServiceName: "test-service",
+						State:       database.OutgoingAccessRequestCreated,
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestCreated, uint(0), nil, gomock.Any()).Return(nil)
 			},
-			nil,
-			func(mock *gomock.Call) {
-				mock.Return(nil)
+			request: &api.SendAccessRequestRequest{
+				AccessRequestID: 1,
 			},
-			&api.OutgoingAccessRequest{
+			response: &api.OutgoingAccessRequest{
 				Id: 1,
 				Organization: &api.Organization{
 					SerialNumber: "00000000000000000001",
@@ -255,27 +274,32 @@ func TestSendAccessRequest(t *testing.T) {
 				CreatedAt:   createTimestamp(time.Time{}),
 				UpdatedAt:   createTimestamp(time.Time{}),
 			},
-			nil,
+			responseErr: nil,
 		},
-		{
-			"failed_state",
-			&api.SendAccessRequestRequest{
+		"happy_flow_failed_state": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetOutgoingAccessRequest(gomock.Any(), uint(1)).
+					Return(&database.OutgoingAccessRequest{
+						ID: 1,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "test-organization",
+						},
+						ServiceName: "test-service",
+						State:       database.OutgoingAccessRequestFailed,
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(gomock.Any(), uint(1), database.OutgoingAccessRequestCreated, uint(0), nil, gomock.Any()).Return(nil)
+			},
+			request: &api.SendAccessRequestRequest{
 				AccessRequestID: 1,
 			},
-			&database.OutgoingAccessRequest{
-				ID: 1,
-				Organization: database.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				ServiceName: "test-service",
-				State:       database.OutgoingAccessRequestFailed,
-			},
-			nil,
-			func(mock *gomock.Call) {
-				mock.Return(nil)
-			},
-			&api.OutgoingAccessRequest{
+			response: &api.OutgoingAccessRequest{
 				Id: 1,
 				Organization: &api.Organization{
 					SerialNumber: "00000000000000000001",
@@ -286,32 +310,18 @@ func TestSendAccessRequest(t *testing.T) {
 				CreatedAt:   createTimestamp(time.Time{}),
 				UpdatedAt:   createTimestamp(time.Time{}),
 			},
-			nil,
+			responseErr: nil,
 		},
 	}
 
-	for _, test := range tests {
+	for name, test := range tests {
 		test := test
 
-		t.Run(test.name, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
-			ctx := context.Background()
 
-			mocks.db.
-				EXPECT().
-				GetOutgoingAccessRequest(ctx, uint(test.request.AccessRequestID)).
-				Return(test.accessRequest, test.accessRequestErr)
-
-			updateMock := mocks.db.
-				EXPECT().
-				UpdateOutgoingAccessRequestState(ctx, uint(test.request.AccessRequestID), database.OutgoingAccessRequestCreated, uint(0), nil, gomock.Any()).
-				Do(func(_ context.Context, _ uint, state database.OutgoingAccessRequestState, _ uint, errorDetails *diagnostics.ErrorDetails, synchronizeAt time.Time) error {
-					test.accessRequest.State = state
-					return nil
-				})
-			test.updateMock(updateMock)
-
-			response, err := service.SendAccessRequest(ctx, test.request)
+			test.setupMocks(mocks)
+			response, err := service.SendAccessRequest(test.ctx, test.request)
 
 			assert.Equal(t, test.response, response)
 			assert.Equal(t, test.responseErr, err)
@@ -321,148 +331,212 @@ func TestSendAccessRequest(t *testing.T) {
 
 //nolint:funlen // this is a test
 func TestApproveIncomingAccessRequest(t *testing.T) {
-	tests := []struct {
-		name             string
-		auditLog         func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
-		ctx              context.Context
-		request          *api.ApproveIncomingAccessRequestRequest
-		accessRequest    *database.IncomingAccessRequest
-		accessRequestErr error
-		expectUpdateCall bool
-		updateErr        error
-		response         *emptypb.Empty
-		err              error
+	tests := map[string]struct {
+		auditLog func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
+		ctx      func() context.Context
+		setup    func(serviceMocks)
+		request  *api.ApproveIncomingAccessRequestRequest
+		response *emptypb.Empty
+		err      error
 	}{
-		{
-			"unknown_access_request",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				return auditLogger
-			},
-			context.Background(),
-			&api.ApproveIncomingAccessRequestRequest{
-				ServiceName:     "test-service",
-				AccessRequestID: 1,
-			},
 
-			nil,
-			database.ErrNotFound,
-			false,
-			nil,
-			nil,
-			status.Error(codes.NotFound, "access request not found"),
-		},
-		{
-			"access_request_already_approved",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+		"unknown_access_request": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
 				return auditLogger
 			},
-			context.Background(),
-			&api.ApproveIncomingAccessRequestRequest{
+			ctx: testCreateAdminUserContext,
+			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
-			&database.IncomingAccessRequest{
-				ServiceID: 1,
-				Service: &database.Service{
-					Name: "test-service",
-				},
-				State: database.IncomingAccessRequestApproved,
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(nil, database.ErrNotFound)
 			},
-			nil,
-			false,
-			nil,
-			nil,
-			status.Error(codes.AlreadyExists, "access request is already approved"),
+			err: status.Error(codes.NotFound, "access request not found"),
 		},
-		{
-			"update_state_fails",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+		"access_request_already_approved": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
 				return auditLogger
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.ApproveIncomingAccessRequestRequest{
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(&database.IncomingAccessRequest{
+					ServiceID: 1,
+					Service: &database.Service{
+						Name: "test-service",
+					},
+					State: database.IncomingAccessRequestApproved,
+				}, nil)
+			},
+			ctx: testCreateAdminUserContext,
+			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
-			&database.IncomingAccessRequest{
-				Organization: database.IncomingAccessRequestOrganization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				Service: &database.Service{
-					Name: "test-service",
-				},
-			},
-			nil,
-			true,
-			errors.New("arbitrary error"),
-			nil,
-			status.Error(codes.Internal, "database error"),
+			err: status.Error(codes.AlreadyExists, "access request is already approved"),
 		},
-		{
-			"happy_flow",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+		"missing_required_permission": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
 				return auditLogger
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.ApproveIncomingAccessRequestRequest{
+			setup: func(mocks serviceMocks) {
+
+			},
+			ctx: func() context.Context {
+				ctx := context.Background()
+				return context.WithValue(ctx, domain.UserKey, &domain.User{
+					Email:       "admin@example.com",
+					Permissions: map[permissions.Permission]bool{},
+				})
+			},
+			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
-			&database.IncomingAccessRequest{
-				Organization: database.IncomingAccessRequestOrganization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				Service: &database.Service{
-					Name: "test-service",
-				},
+			err: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.incoming_access_request.approve\" to execute this request"),
+		},
+		"update_state_fails": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+				return auditLogger
 			},
-			nil,
-			true,
-			nil,
-			&emptypb.Empty{},
-			nil,
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(&database.IncomingAccessRequest{
+					ID: 1,
+					Organization: database.IncomingAccessRequestOrganization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization",
+					},
+					Service: &database.Service{
+						Name: "test-service",
+					},
+				}, nil)
+				mocks.db.EXPECT().UpdateIncomingAccessRequestState(gomock.Any(), uint(1), database.IncomingAccessRequestApproved).Return(fmt.Errorf("arbitrary error"))
+			},
+			ctx: testCreateAdminUserContext,
+			request: &api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: 1,
+			},
+			response: nil,
+			err:      status.Error(codes.Internal, "database error"),
+		},
+		"happy_flow": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestAccept(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+				return auditLogger
+			},
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(&database.IncomingAccessRequest{
+					ID: 1,
+					Organization: database.IncomingAccessRequestOrganization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization",
+					},
+					Service: &database.Service{
+						Name: "test-service",
+					},
+				}, nil)
+
+				mocks.db.EXPECT().UpdateIncomingAccessRequestState(gomock.Any(), uint(1), database.IncomingAccessRequestApproved).Return(nil)
+
+				mocks.db.EXPECT().CreateAccessGrant(gomock.Any(), &database.IncomingAccessRequest{
+					ID: 1,
+					Organization: database.IncomingAccessRequestOrganization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization",
+					},
+					Service: &database.Service{
+						Name: "test-service",
+					},
+				})
+			},
+			ctx: testCreateAdminUserContext,
+			request: &api.ApproveIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: 1,
+			},
+			response: &emptypb.Empty{},
+			err:      nil,
 		},
 	}
 
-	for _, test := range tests {
+	for name, test := range tests {
 		test := test
-		t.Run(test.name, func(t *testing.T) {
+
+		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
 			test.auditLog(*mocks.al)
 
-			mocks.db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
+			test.setup(mocks)
 
-			if test.response != nil {
-				mocks.db.EXPECT().CreateAccessGrant(test.ctx, test.accessRequest)
-			}
-
-			if test.expectUpdateCall {
-				mocks.db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestApproved).Return(test.updateErr)
-			}
-
-			actual, err := service.ApproveIncomingAccessRequest(test.ctx, test.request)
+			actual, err := service.ApproveIncomingAccessRequest(test.ctx(), test.request)
 			assert.Equal(t, test.response, actual)
 			assert.Equal(t, test.err, err)
 		})
 	}
 }
 
+func testCreateAdminUserContext() context.Context {
+	ctx := context.Background()
+
+	return context.WithValue(ctx, domain.UserKey, &domain.User{
+		Email:     "admin@example.com",
+		UserAgent: "nlxctl",
+		Permissions: map[permissions.Permission]bool{
+			permissions.ApproveIncomingAccessRequest: true,
+			permissions.RejectIncomingAccessRequest:  true,
+			permissions.ReadIncomingAccessRequests:   true,
+			permissions.CreateOutgoingAccessRequest:  true,
+			permissions.UpdateOutgoingAccessRequest:  true,
+			permissions.ReadAccessGrants:             true,
+			permissions.RevokeAccessGrant:            true,
+			permissions.ReadAuditLogs:                true,
+			permissions.ReadFinanceReport:            true,
+			permissions.ReadInway:                    true,
+			permissions.UpdateInway:                  true,
+			permissions.DeleteInway:                  true,
+			permissions.ReadInways:                   true,
+			permissions.CreateOutgoingOrder:          true,
+			permissions.UpdateOutgoingOrder:          true,
+			permissions.RevokeOutgoingOrder:          true,
+			permissions.ReadOutgoingOrders:           true,
+			permissions.ReadIncomingOrders:           true,
+			permissions.SynchronizeIncomingOrders:    true,
+			permissions.ReadOutways:                  true,
+			permissions.CreateService:                true,
+			permissions.ReadService:                  true,
+			permissions.UpdateService:                true,
+			permissions.DeleteService:                true,
+			permissions.ReadServices:                 true,
+			permissions.ReadServicesStatistics:       true,
+			permissions.ReadOrganizationSettings:     true,
+			permissions.UpdateOrganizationSettings:   true,
+			permissions.AcceptTermsOfService:         true,
+			permissions.ReadTermsOfServiceStatus:     true,
+			permissions.ReadTransactionLogs:          true,
+		},
+	})
+}
+
+func testCreateUserWithoutPermissionsContext() context.Context {
+	ctx := context.Background()
+	ctx = metadata.NewIncomingContext(ctx, metadata.New(map[string]string{
+		"username":               "admin@example.com",
+		"grpcgateway-user-agent": "nlxctl",
+	}))
+
+	return context.WithValue(ctx, domain.UserKey, &domain.User{
+		Email:       "admin@example.com",
+		Permissions: map[permissions.Permission]bool{},
+	})
+}
+
 //nolint:funlen // this is a test
 func TestRejectIncomingAccessRequest(t *testing.T) {
-	tests := []struct {
-		name             string
+	tests := map[string]struct {
 		auditLog         func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger
 		ctx              context.Context
+		setup            func(mocks serviceMocks)
 		request          *api.RejectIncomingAccessRequestRequest
 		accessRequest    *database.IncomingAccessRequest
 		accessRequestErr error
@@ -471,101 +545,97 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		response         *emptypb.Empty
 		err              error
 	}{
-		{
-			"unknown_access_request",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+		"missing_required_permission": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
 				return auditLogger
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RejectIncomingAccessRequestRequest{
+			ctx:   testCreateUserWithoutPermissionsContext(),
+			setup: func(mocks serviceMocks) {},
+			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
-			nil,
-			database.ErrNotFound,
-			false,
-			nil,
-			nil,
-			status.Error(codes.NotFound, "access request not found"),
+			err: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.incoming_access_request.reject\" to execute this request"),
 		},
-		{
-			"update_state_fails",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+		"unknown_access_request": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
 				return auditLogger
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RejectIncomingAccessRequestRequest{
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(nil, database.ErrNotFound)
+			},
+			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
-			&database.IncomingAccessRequest{
-				Organization: database.IncomingAccessRequestOrganization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				Service: &database.Service{
-					Name: "other-service",
-				},
-			},
-			nil,
-			true,
-			errors.New("arbitrary error"),
-			nil,
-			status.Error(codes.Internal, "database error"),
+			err: status.Error(codes.NotFound, "access request not found"),
 		},
-		{
-			"happy_flow",
-			func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
-				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+		"update_state_fails": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "test-organization", "test-service")
 				return auditLogger
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RejectIncomingAccessRequestRequest{
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(&database.IncomingAccessRequest{
+					ID: 1,
+					Organization: database.IncomingAccessRequestOrganization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization",
+					},
+					Service: &database.Service{
+						Name: "other-service",
+					},
+				}, nil)
+
+				mocks.db.EXPECT().UpdateIncomingAccessRequestState(gomock.Any(), uint(1), database.IncomingAccessRequestRejected).Return(fmt.Errorf("arbitrary error"))
+			},
+			ctx: testCreateAdminUserContext(),
+			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
 			},
-			&database.IncomingAccessRequest{
-				Organization: database.IncomingAccessRequestOrganization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
-				},
-				Service: &database.Service{
-					Name: "other-service",
-				},
+			err: status.Error(codes.Internal, "database error"),
+		},
+		"happy_flow": {
+			auditLog: func(auditLogger mock_auditlog.MockLogger) mock_auditlog.MockLogger {
+				auditLogger.EXPECT().IncomingAccessRequestReject(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", "test-organization", "test-service")
+				return auditLogger
 			},
-			nil,
-			true,
-			nil,
-			&emptypb.Empty{},
-			nil,
+			setup: func(mocks serviceMocks) {
+				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(&database.IncomingAccessRequest{
+					ID: 1,
+					Organization: database.IncomingAccessRequestOrganization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization",
+					},
+					Service: &database.Service{
+						Name: "other-service",
+					},
+				}, nil)
+
+				mocks.db.EXPECT().UpdateIncomingAccessRequestState(gomock.Any(), uint(1), database.IncomingAccessRequestRejected).Return(nil)
+			},
+			ctx: testCreateAdminUserContext(),
+			request: &api.RejectIncomingAccessRequestRequest{
+				ServiceName:     "test-service",
+				AccessRequestID: 1,
+			},
+			response: &emptypb.Empty{},
+			err:      nil,
 		},
 	}
 
-	for _, test := range tests {
+	for name, test := range tests {
 		test := test
-		t.Run(test.name, func(t *testing.T) {
+
+		t.Run(name, func(t *testing.T) {
 			service, _, mocks := newService(t)
+			test.setup(mocks)
 
 			test.auditLog(*mocks.al)
 
-			mocks.db.EXPECT().GetIncomingAccessRequest(test.ctx, uint(test.request.AccessRequestID)).Return(test.accessRequest, test.accessRequestErr)
-
-			if test.expectUpdateCall {
-				mocks.db.EXPECT().UpdateIncomingAccessRequestState(test.ctx, test.accessRequest.ID, database.IncomingAccessRequestRejected).Return(test.updateErr)
-			}
-
 			actual, err := service.RejectIncomingAccessRequest(test.ctx, test.request)
-
 			assert.Equal(t, test.response, actual)
 			assert.Equal(t, test.err, err)
 		})
@@ -876,16 +946,26 @@ func TestListIncomingAccessRequests(t *testing.T) {
 
 	tests := map[string]struct {
 		setup   func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context
+		ctx     context.Context
 		want    *api.ListIncomingAccessRequestsResponse
 		wantErr error
 	}{
+		"missing_required_permission": {
+			ctx: testCreateUserWithoutPermissionsContext(),
+			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
+				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
+				return ctx
+			},
+			wantErr: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.incoming_access_requests.read\" to execute this request"),
+		},
 		"when_retrieving_the_service_fails": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
 				db.
 					EXPECT().
-					GetService(ctx, "service").
+					GetService(gomock.Any(), "service").
 					Return(nil, errors.New("error"))
 
 				return ctx
@@ -893,12 +973,13 @@ func TestListIncomingAccessRequests(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "database error"),
 		},
 		"when_the_service_does_not_exists": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
 				db.
 					EXPECT().
-					GetService(ctx, "service").
+					GetService(gomock.Any(), "service").
 					Return(nil, database.ErrNotFound)
 
 				return ctx
@@ -906,18 +987,19 @@ func TestListIncomingAccessRequests(t *testing.T) {
 			wantErr: server.ErrServiceDoesNotExist,
 		},
 		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
 				db.
 					EXPECT().
-					GetService(ctx, "service").
+					GetService(gomock.Any(), "service").
 					Return(&database.Service{}, nil)
 
 				db.
 					EXPECT().
 					ListIncomingAccessRequests(
-						ctx,
+						gomock.Any(),
 						"service",
 					).
 					Return([]*database.IncomingAccessRequest{
@@ -970,9 +1052,9 @@ func TestListIncomingAccessRequests(t *testing.T) {
 			t.Parallel()
 
 			service, certBundle, mocks := newService(t)
-			ctx := tt.setup(t, mocks.db, certBundle)
+			_ = tt.setup(t, mocks.db, certBundle)
 
-			actual, err := service.ListIncomingAccessRequests(ctx, &api.ListIncomingAccessRequestsRequest{
+			actual, err := service.ListIncomingAccessRequests(tt.ctx, &api.ListIncomingAccessRequestsRequest{
 				ServiceName: "service",
 			})
 

@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -53,14 +52,21 @@ func TestCreateOutgoingOrder(t *testing.T) {
 	tests := map[string]struct {
 		request *api.CreateOutgoingOrderRequest
 		setup   func(serviceMocks)
+		ctx     context.Context
 		wantErr error
 	}{
+		"missing_required_permission": {
+			setup:   func(mocks serviceMocks) {},
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_order.create\" to execute this request").Err(),
+		},
 		"when_providing_an_empty_reference": {
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				request.Reference = ""
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: cannot be blank."),
 		},
 		"when_providing_a_reference_which_is_too_long": {
@@ -69,6 +75,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.Reference = "reference-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdea"
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Reference: the length must be between 1 and 100."),
 		},
 		"when_providing_an_empty_description": {
@@ -77,6 +84,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.Description = ""
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: cannot be blank."),
 		},
 		"when_providing_a_description_which_is_too_long": {
@@ -85,6 +93,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.Description = "description-with-length-of-101-chars-abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcd"
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Description: the length must be between 1 and 100."),
 		},
 		"when_providing_an_invalid_delegatee": {
@@ -93,6 +102,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.Delegatee = "00000000000000000000000001_too_long"
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: Delegatee: organization serial number must be in a valid format: too long, max 20 bytes."),
 		},
 		"when_providing_an_end_date_which_is_before_the_start_date": {
@@ -102,6 +112,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.ValidUntil = timestamppb.New(time.Now())
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: ValidUntil: order can not expire before the start date."),
 		},
 		"when_providing_an_empty_list_of_access_proofs": {
@@ -110,6 +121,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.AccessProofIds = []uint64{}
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: AccessProofIds: cannot be blank."),
 		},
 		"when_providing_an_invalid_public_key": {
@@ -118,6 +130,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				request.PublicKeyPEM = "invalid"
 				return &request
 			}(),
+			ctx:     testCreateAdminUserContext(),
 			wantErr: status.Error(codes.InvalidArgument, "invalid outgoing order: PublicKeyPEM: expect public key as pem."),
 		},
 		"when_a_record_with_the_same_reference_for_the_same_organization_already_exists": {
@@ -139,7 +152,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "00000000000000000001",
@@ -162,6 +175,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(database.ErrDuplicateOutgoingOrder)
 			},
+			ctx: testCreateAdminUserContext(),
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
@@ -188,7 +202,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "00000000000000000001",
@@ -211,6 +225,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(errors.New("arbitrary error"))
 			},
+			ctx: testCreateAdminUserContext(),
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
@@ -223,6 +238,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					GetAccessProofs(gomock.Any(), []uint64{1, 2, 3}).
 					Return(nil, errors.New("arbitrary error"))
 			},
+			ctx: testCreateAdminUserContext(),
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
@@ -248,7 +264,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "00000000000000000001",
@@ -259,6 +275,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(errors.New("arbitrary error"))
 			},
+			ctx: testCreateAdminUserContext(),
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
@@ -309,6 +326,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 						},
 					}, nil)
 			},
+			ctx: testCreateAdminUserContext(),
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
@@ -334,7 +352,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					OrderCreate(gomock.Any(), "Jane Doe", "nlxctl", "00000000000000000001", []auditlog.RecordService{
+					OrderCreate(gomock.Any(), "admin@example.com", "nlxctl", "00000000000000000001", []auditlog.RecordService{
 						{
 							Organization: auditlog.RecordServiceOrganization{
 								SerialNumber: "00000000000000000001",
@@ -357,6 +375,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 					}).
 					Return(nil)
 			},
+			ctx: testCreateAdminUserContext(),
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
 				return &request
@@ -374,12 +393,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			ctx := metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			}))
-
-			response, err := service.CreateOutgoingOrder(ctx, tt.request)
+			response, err := service.CreateOutgoingOrder(tt.ctx, tt.request)
 
 			if tt.wantErr == nil {
 				assert.IsType(t, &emptypb.Empty{}, response)

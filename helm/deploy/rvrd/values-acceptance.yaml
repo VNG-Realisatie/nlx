@@ -41,6 +41,12 @@ global:
 opa:
   enabled: true
 
+###########
+## Chart ##
+###########
+nlxctl:
+  authorizationServerUrl: https://dex.acc.rvrd.nl
+
 ################
 ## Sub-charts ##
 ################
@@ -74,7 +80,10 @@ dex:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.acc.rvrd.nl
+      - host: dex.acc.rvrd.nl
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
     tls:
       - secretName: rvrd-dex-ingress-tls
         hosts:

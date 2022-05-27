@@ -15,10 +15,16 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 //nolint dupl: we have both incoming and outgoing orders
 func (s *ManagementService) RevokeOutgoingOrder(ctx context.Context, request *api.RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.RevokeOutgoingOrder)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request RevokeOutgoingOrder")
 
 	if request.Delegatee == "" {
@@ -29,13 +35,13 @@ func (s *ManagementService) RevokeOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.InvalidArgument, "reference is required")
 	}
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.OrderOutgoingRevoke(ctx, userInfo.username, userInfo.userAgent, request.Delegatee, request.Reference)
+	err = s.auditLogger.OrderOutgoingRevoke(ctx, userInfo.Email, userInfo.UserAgent, request.Delegatee, request.Reference)
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

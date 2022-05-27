@@ -10,66 +10,56 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
-	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestGetService(t *testing.T) {
-	logger := zap.NewNop()
-	ctx := context.Background()
-
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-
-	mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
-	service := server.NewManagementService(
-		logger,
-		mock_directory.NewMockClient(mockCtrl),
-		nil,
-		nil,
-		nil,
-		mockDatabase,
-		nil,
-		mock_auditlog.NewMockLogger(mockCtrl),
-		management.NewClient,
-		outway.NewClient,
-	)
-
-	getServiceRequest := &api.GetServiceRequest{
-		Name: "my-service",
+	tests := map[string]struct {
+		ctx     context.Context
+		setup   func(*testing.T, serviceMocks)
+		req     *api.GetServiceRequest
+		want    *api.GetServiceResponse
+		wantErr error
+	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(t *testing.T, mocks serviceMocks) {},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.service.read\" to execute this request").Err(),
+		},
+		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(t *testing.T, mocks serviceMocks) {
+				mocks.db.EXPECT().GetService(gomock.Any(), "my-service").Return(&database.Service{
+					Name:   "my-service",
+					Inways: []*database.Inway{},
+				}, nil)
+			},
+			req: &api.GetServiceRequest{
+				Name: "my-service",
+			},
+			want: &api.GetServiceResponse{
+				Name:   "my-service",
+				Inways: []string{},
+			},
+		},
 	}
 
-	mockDatabase.EXPECT().GetService(ctx, "my-service").Return(nil, database.ErrNotFound)
+	for name, tt := range tests {
+		tt := tt
 
-	_, actualError := service.GetService(ctx, getServiceRequest)
-	expectedError := status.Error(codes.NotFound, "service not found")
-	assert.Error(t, actualError)
-	assert.Equal(t, expectedError, actualError)
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 
-	databaseService := &database.Service{
-		Name:   "my-service",
-		Inways: []*database.Inway{},
+			service, _, mocks := newService(t)
+			tt.setup(t, mocks)
+
+			want, err := service.GetService(tt.ctx, tt.req)
+			assert.Equal(t, tt.want, want)
+			assert.Equal(t, tt.wantErr, err)
+		})
 	}
-
-	mockDatabase.EXPECT().GetService(ctx, "my-service").Return(databaseService, nil)
-
-	getServiceResponse, err := service.GetService(ctx, getServiceRequest)
-	assert.NoError(t, err)
-
-	expectedResponse := &api.GetServiceResponse{
-		Name:   "my-service",
-		Inways: []string{},
-	}
-
-	assert.Equal(t, expectedResponse, getServiceResponse)
 }

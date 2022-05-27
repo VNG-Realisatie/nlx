@@ -26,11 +26,18 @@ func TestSynchronizeOrders(t *testing.T) {
 
 	tests := map[string]struct {
 		setup   func(mocks serviceMocks)
+		ctx     context.Context
 		wantErr bool
 		want    *api.SynchronizeOrdersResponse
 	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(mocks serviceMocks) {},
+			wantErr: true,
+		},
 		"synchronize_fails_when_directory_list_organization_errors": {
 			wantErr: true,
+			ctx:     testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
@@ -40,6 +47,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 		"synchronize_does_not_fail_when_directory_get_organization_inway_proxy_address_errors": {
 			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
+			ctx:  testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
@@ -60,6 +68,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 		"synchronization_does_not_fail_when_management_list_orders_errors": {
 			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
+			ctx:  testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
@@ -86,6 +95,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 		"synchronization_fails_when_database_synchronize_order_error": {
 			wantErr: true,
+			ctx:     testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -181,6 +191,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					},
 				},
 			},
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
@@ -275,6 +286,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					},
 				},
 			},
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -363,7 +375,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 			tt.setup(mocks)
 
-			orders, err := service.SynchronizeOrders(context.Background(), &emptypb.Empty{})
+			orders, err := service.SynchronizeOrders(tt.ctx, &emptypb.Empty{})
 
 			if tt.wantErr {
 				assert.Error(t, err)

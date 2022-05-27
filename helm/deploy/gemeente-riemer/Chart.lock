@@ -1,12 +1,12 @@
 dependencies:
 - name: dex
-  repository: https://charts.helm.sh/stable
-  version: 2.15.2
+  repository: https://charts.dexidp.io
+  version: 0.9.0
 - name: basisregister-fictieve-personen
   repository: https://charts.commonground.nl
   version: 0.1.0
 - name: manage-citizens-ui
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:cdbf80d9feabb886386ae9b01345d9687adb1063e26ddd1331a84e68d2abb1f9
-generated: "2022-05-25T16:52:49.593386+02:00"
+digest: sha256:721c8e3a9c0fc4ac36e79579e6b10f453dd780980cdb9b41684591b813c84530
+generated: "2022-06-27T13:32:30.069453+02:00"

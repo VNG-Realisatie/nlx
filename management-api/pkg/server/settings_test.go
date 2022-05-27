@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -35,9 +34,18 @@ import (
 func TestManagementService_GetSettings(t *testing.T) {
 	tests := map[string]struct {
 		db               func(ctrl *gomock.Controller) database.ConfigDatabase
+		ctx              context.Context
 		expectedResponse *api.Settings
 		expectedError    error
 	}{
+		"missing_required_permission": {
+			ctx: testCreateUserWithoutPermissionsContext(),
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				return mock_database.NewMockConfigDatabase(ctrl)
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.read\" to execute this request").Err(),
+		},
 		"when_the_database_call_fails": {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				db := mock_database.NewMockConfigDatabase(ctrl)
@@ -45,7 +53,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 
 				return db
 			},
-
+			ctx:              testCreateAdminUserContext(),
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
@@ -58,7 +66,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 
 				return db
 			},
-
+			ctx: testCreateAdminUserContext(),
 			expectedResponse: &api.Settings{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -78,7 +86,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 			d := mock_directory.NewMockClient(ctrl)
 
 			h := server.NewManagementService(l, d, nil, nil, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl), management.NewClient, outway.NewClient)
-			got, err := h.GetSettings(context.Background(), &emptypb.Empty{})
+			got, err := h.GetSettings(tt.ctx, &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
@@ -97,6 +105,24 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
+		"missing_required_permission": {
+			ctx: testCreateUserWithoutPermissionsContext(),
+			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
+				return mock_database.NewMockConfigDatabase(ctrl)
+			},
+			directoryClient: func(ctrl *gomock.Controller) directory.Client {
+				return mock_directory.NewMockClient(ctrl)
+			},
+			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
+				return mock_auditlog.NewMockLogger(ctrl)
+			},
+			req: &api.UpdateSettingsRequest{
+				OrganizationInway:        "inway-name",
+				OrganizationEmailAddress: "mock@email.com",
+			},
+			expectedResponse: nil,
+			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.update\" to execute this request").Err(),
+		},
 		"when_writing_audit_log_fails": {
 			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
 				return mock_database.NewMockConfigDatabase(ctrl)
@@ -106,13 +132,10 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
 				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl").Return(fmt.Errorf("arbitrary error"))
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl").Return(fmt.Errorf("arbitrary error"))
 				return auditLogger
 			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -141,17 +164,14 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
 				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
 				return auditLogger
 			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx:              testCreateAdminUserContext(),
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
@@ -176,13 +196,10 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
 				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
 				return auditLogger
 			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -205,13 +222,10 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
 				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
 				return auditLogger
 			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -240,13 +254,10 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			},
 			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
 				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "Jane Doe", "nlxctl")
+				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
 				return auditLogger
 			},
-			ctx: metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
+			ctx: testCreateAdminUserContext(),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",

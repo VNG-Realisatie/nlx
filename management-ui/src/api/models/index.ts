@@ -1,7 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AuditLogRecordActionType';
-export * from './AuthorizationSettingsAuthorization';
 export * from './DirectoryServiceAccessState';
 export * from './DirectoryServiceState';
 export * from './ManagementAccessGrant';
@@ -19,6 +18,10 @@ export * from './ManagementDirectoryService';
 export * from './ManagementDownloadFinanceExportResponse';
 export * from './ManagementErrorCode';
 export * from './ManagementErrorDetails';
+export * from './ManagementGetInwayConfigResponse';
+export * from './ManagementGetInwayConfigResponseService';
+export * from './ManagementGetInwayConfigResponseServiceAuthorizationSettings';
+export * from './ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization';
 export * from './ManagementGetServiceResponse';
 export * from './ManagementGetStatisticsOfServicesResponse';
 export * from './ManagementGetTermsOfServiceResponse';
@@ -38,6 +41,8 @@ export * from './ManagementListOutgoingOrdersResponse';
 export * from './ManagementListOutwaysResponse';
 export * from './ManagementListServicesResponse';
 export * from './ManagementListServicesResponseService';
+export * from './ManagementListServicesResponseServiceAuthorizationSettings';
+export * from './ManagementListServicesResponseServiceAuthorizationSettingsAuthorization';
 export * from './ManagementOrderService';
 export * from './ManagementOrganization';
 export * from './ManagementOutgoingAccessRequest';
@@ -59,4 +64,3 @@ export * from './ManagementUpdateServiceResponse';
 export * from './ManagementUpdateSettingsRequest';
 export * from './ProtobufAny';
 export * from './RpcStatus';
-export * from './ServiceAuthorizationSettings';

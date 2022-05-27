@@ -16,10 +16,16 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req *api.ListAccessGrantsForServiceRequest) (*api.ListAccessGrantsForServiceResponse, error) {
-	_, err := s.configDatabase.GetService(ctx, req.ServiceName)
+	err := s.authorize(ctx, permissions.ReadAccessGrants)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.configDatabase.GetService(ctx, req.ServiceName)
 	if err != nil {
 		if errIsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "service not found")
@@ -49,7 +55,12 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 }
 
 func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	err := s.authorize(ctx, permissions.RevokeAccessGrant)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -66,7 +77,7 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
-	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.username, userInfo.userAgent, accessGrant.IncomingAccessRequest.Organization.SerialNumber, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
+	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.Email, userInfo.UserAgent, accessGrant.IncomingAccessRequest.Organization.SerialNumber, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

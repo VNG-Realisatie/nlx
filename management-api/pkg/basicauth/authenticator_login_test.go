@@ -58,6 +58,11 @@ func Test_Login(t *testing.T) {
 					EXPECT().
 					VerifyUserCredentials(gomock.Any(), "hoi@nlx.io", "password").
 					Return(true, nil)
+
+				mocks.auditLogger.
+					EXPECT().
+					LoginSuccess(gomock.Any(), "hoi@nlx.io", "Go-http-client/1.1").
+					Return(nil)
 			},
 			formData: url.Values{
 				"email":    {"hoi@nlx.io"},

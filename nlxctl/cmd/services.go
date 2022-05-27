@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -69,7 +68,7 @@ var listServicesCommand = &cobra.Command{
 	Use:   "list",
 	Short: "List services",
 	Run: func(cmd *cobra.Command, args []string) {
-		response, err := getManagementClient().ListServices(context.Background(), &api.ListServicesRequest{})
+		response, err := getManagementClient().ListServices(newRequestContext(), &api.ListServicesRequest{})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -93,13 +92,13 @@ var createServiceCommand = &cobra.Command{
 		serviceConfigs := splitConfigString(string(configBytes))
 		for _, configString := range serviceConfigs {
 			service := &api.CreateServiceRequest{}
+
 			err = json.Unmarshal([]byte(configString), service)
 			if err != nil {
 				panic(err)
 			}
 
-			ctx := context.Background()
-			_, err = getManagementClient().CreateService(ctx, service)
+			_, err = getManagementClient().CreateService(newRequestContext(), service)
 			if err != nil {
 				panic(err)
 			}
@@ -136,8 +135,7 @@ var updateServiceCommand = &cobra.Command{
 			Inways:               service.Inways,
 		}
 
-		ctx := context.Background()
-		_, err = getManagementClient().UpdateService(ctx, updateServiceRequest)
+		_, err = getManagementClient().UpdateService(newRequestContext(), updateServiceRequest)
 		if err != nil {
 			panic(err)
 		}
@@ -150,13 +148,11 @@ var deleteServiceCommand = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete a service",
 	Run: func(cmd *cobra.Command, arg []string) {
-		ctx := context.Background()
-
 		deleteServiceRequest := &api.DeleteServiceRequest{
 			Name: serviceOptions.name,
 		}
 
-		_, err := getManagementClient().DeleteService(ctx, deleteServiceRequest)
+		_, err := getManagementClient().DeleteService(newRequestContext(), deleteServiceRequest)
 		if err != nil {
 			panic(err)
 		}

@@ -10,12 +10,14 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/management-api/pkg/api"
+	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/basicauth"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 )
 
 type authenticatorMocks struct {
 	configDatabase *mock_database.MockConfigDatabase
+	auditLogger    *mock_auditlog.MockLogger
 }
 
 func newAuthenticator(t *testing.T) (api.Authenticator, authenticatorMocks) {
@@ -28,9 +30,10 @@ func newAuthenticator(t *testing.T) (api.Authenticator, authenticatorMocks) {
 
 	mocks := authenticatorMocks{
 		configDatabase: mock_database.NewMockConfigDatabase(ctrl),
+		auditLogger:    mock_auditlog.NewMockLogger(ctrl),
 	}
 
-	authenticator := basicauth.NewAuthenticator(mocks.configDatabase, zap.NewNop())
+	authenticator := basicauth.NewAuthenticator(mocks.configDatabase, mocks.auditLogger, zap.NewNop())
 
 	return authenticator, mocks
 }

@@ -26,12 +26,14 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/outway"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
@@ -67,6 +69,8 @@ type NewAPIArgs struct {
 type Authenticator interface {
 	MountRoutes(router chi.Router)
 	OnlyAuthenticated(h http.Handler) http.Handler
+	UnaryServerInterceptor(configDatabase database.ConfigDatabase, getUserFromDatabase func(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error)) grpc.UnaryServerInterceptor
+	StreamServerInterceptor(configDatabase database.ConfigDatabase, getUserFromDatabase func(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error)) grpc.StreamServerInterceptor
 }
 
 //nolint:gocyclo // parameter validation
@@ -113,7 +117,7 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 		outway.NewClient,
 	)
 
-	grpcServer := newGRPCServer(args.Logger, args.InternalCert)
+	grpcServer := newGRPCServer(args.Logger, args.InternalCert, args.DB, args.Authenticator)
 
 	api.RegisterManagementServer(grpcServer, managementService)
 	external.RegisterAccessRequestServiceServer(grpcServer, managementService)
@@ -149,7 +153,7 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 		}),
 		// Detect HTTP headers with user information and include the data in the gRPC calls.
 		// This data is needed for auditlogging
-		runtime.WithIncomingHeaderMatcher(UserDataMatcher),
+		runtime.WithIncomingHeaderMatcher(runtime.DefaultHeaderMatcher),
 	)
 
 	a := &API{
@@ -168,10 +172,9 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 	return a, nil
 }
 
-func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc.Server {
+func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle, db database.ConfigDatabase, authenticator Authenticator) *grpc.Server {
 	// setup zap connection for global grpc logging
 	// grpc_zap.ReplaceGrpcLogger(logger)
-
 	tlsConfig := cert.TLSConfig(cert.WithTLSClientAuth())
 	transportCredentials := credentials.NewTLS(tlsConfig)
 
@@ -188,22 +191,44 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle) *grpc
 			grpc_ctxtags.StreamServerInterceptor(),
 			grpc_zap.StreamServerInterceptor(logger),
 			grpc_recovery.StreamServerInterceptor(recoveryOptions...),
+			authenticator.StreamServerInterceptor(db, getUserFromDatabase),
 		),
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(),
 			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_recovery.UnaryServerInterceptor(recoveryOptions...),
+			authenticator.UnaryServerInterceptor(db, getUserFromDatabase),
 		),
 	}
 
 	return grpc.NewServer(opts...)
 }
 
-func UserDataMatcher(key string) (string, bool) {
-	switch key {
-	case "Username":
-		return key, true
-	default:
-		return runtime.DefaultHeaderMatcher(key)
+func getUserFromDatabase(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error) {
+	userInDB, err := configDatabase.GetUser(ctx, email)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, status.Errorf(codes.Internal, "user %q not found in database while authorizing user", email)
+		}
+
+		return nil, status.Error(codes.Internal, "could not retrieve user from database while authorizing user")
 	}
+
+	user := &domain.User{
+		Email:       userInDB.Email,
+		Permissions: make(map[permissions.Permission]bool),
+	}
+
+	for _, role := range userInDB.Roles {
+		for _, permission := range role.Permissions {
+			p, err := permissions.PermissionString(permission.Code)
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, "invalid permission code %q", permission.Code)
+			}
+
+			user.Permissions[p] = true
+		}
+	}
+
+	return user, nil
 }

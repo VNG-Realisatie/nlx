@@ -633,6 +633,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListOutways(ctx interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOutways", reflect.TypeOf((*MockConfigDatabase)(nil).ListOutways), ctx)
 }
 
+// ListPermissions mocks base method.
+func (m *MockConfigDatabase) ListPermissions(ctx context.Context) ([]database.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPermissions", ctx)
+	ret0, _ := ret[0].([]database.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPermissions indicates an expected call of ListPermissions.
+func (mr *MockConfigDatabaseMockRecorder) ListPermissions(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPermissions", reflect.TypeOf((*MockConfigDatabase)(nil).ListPermissions), ctx)
+}
+
 // ListServices mocks base method.
 func (m *MockConfigDatabase) ListServices(ctx context.Context) ([]*database.Service, error) {
 	m.ctrl.T.Helper()

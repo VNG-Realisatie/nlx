@@ -37,7 +37,7 @@ func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*domain.Sett
 		Preload("Inway").
 		First(organizationSettings).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
+			return domain.NewSettings("", "")
 		}
 
 		return nil, err

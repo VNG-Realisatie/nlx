@@ -8,6 +8,9 @@ postgresql:
 opa:
   enabled: true
 
+nlxctl:
+  authorizationServerUrl: https://dex-rvrd-{{DOMAIN_SUFFIX}}
+
 ################
 ## Sub-charts ##
 ################
@@ -33,4 +36,7 @@ dex:
           - https://nlx-management-rvrd-{{DOMAIN_SUFFIX}}/oidc/callback
   ingress:
     hosts:
-      - dex-rvrd-{{DOMAIN_SUFFIX}}
+      - host: dex-rvrd-{{DOMAIN_SUFFIX}}
+        paths:
+          - path: /
+            pathType: ImplementationSpecific

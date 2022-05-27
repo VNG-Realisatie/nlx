@@ -218,6 +218,26 @@ func (mr *MockManagementClientMockRecorder) GetInway(ctx, in interface{}, opts .
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockManagementClient)(nil).GetInway), varargs...)
 }
 
+// GetInwayConfig mocks base method.
+func (m *MockManagementClient) GetInwayConfig(ctx context.Context, in *api.GetInwayConfigRequest, opts ...grpc.CallOption) (*api.GetInwayConfigResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetInwayConfig", varargs...)
+	ret0, _ := ret[0].(*api.GetInwayConfigResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInwayConfig indicates an expected call of GetInwayConfig.
+func (mr *MockManagementClientMockRecorder) GetInwayConfig(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInwayConfig", reflect.TypeOf((*MockManagementClient)(nil).GetInwayConfig), varargs...)
+}
+
 // GetService mocks base method.
 func (m *MockManagementClient) GetService(ctx context.Context, in *api.GetServiceRequest, opts ...grpc.CallOption) (*api.GetServiceResponse, error) {
 	m.ctrl.T.Helper()
@@ -874,6 +894,21 @@ func (m *MockManagementServer) GetInway(arg0 context.Context, arg1 *api.GetInway
 func (mr *MockManagementServerMockRecorder) GetInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInway", reflect.TypeOf((*MockManagementServer)(nil).GetInway), arg0, arg1)
+}
+
+// GetInwayConfig mocks base method.
+func (m *MockManagementServer) GetInwayConfig(arg0 context.Context, arg1 *api.GetInwayConfigRequest) (*api.GetInwayConfigResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInwayConfig", arg0, arg1)
+	ret0, _ := ret[0].(*api.GetInwayConfigResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInwayConfig indicates an expected call of GetInwayConfig.
+func (mr *MockManagementServerMockRecorder) GetInwayConfig(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInwayConfig", reflect.TypeOf((*MockManagementServer)(nil).GetInwayConfig), arg0, arg1)
 }
 
 // GetService mocks base method.

@@ -51,13 +51,16 @@ managementAPI:
     inways:
       - gemeente-riemer-nlx-inway
 
+nlxctl:
+  authorizationServerUrl: "https://dex.acc.gemeenteriemer.nl"
+
 ################
 ## Sub-charts ##
 ################
 nlx-management:
   config:
     oidc:
-      clientSecret: J7VLST6DqlhFnrzKcpjKnfqr
+      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
       discoveryURL: https://dex.acc.gemeenteriemer.nl
       redirectURL: https://management.acc.gemeenteriemer.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
@@ -77,14 +80,17 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: J7VLST6DqlhFnrzKcpjKnfqr
+        secret: grGSl5W5HcKRETBr3OhmU6Tm
         redirectURIs:
           - https://management.acc.gemeenteriemer.nl/oidc/callback
   ingress:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - dex.acc.gemeenteriemer.nl
+      - host: dex.acc.gemeenteriemer.nl
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
     tls:
       - secretName: gemeenteriemer-dex-ingress-tls
         hosts:

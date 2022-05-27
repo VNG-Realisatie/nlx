@@ -19,9 +19,15 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+	err := s.authorize(ctx, permissions.CreateOutgoingOrder)
+	if err != nil {
+		return nil, err
+	}
+
 	s.logger.Info("rpc request CreateOutgoingOrder")
 
 	order := &database.CreateOutgoingOrder{
@@ -38,7 +44,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outgoing order: %s", err))
 	}
 
-	userInfo, err := retrieveUserInfoFromGRPCContext(ctx)
+	userInfo, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -63,7 +69,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		services[key] = true
 	}
 
-	err = s.auditLogger.OrderCreate(ctx, userInfo.username, userInfo.userAgent, order.Delegatee, accessProofsToAuditLogRecordServices(accessProofs))
+	err = s.auditLogger.OrderCreate(ctx, userInfo.Email, userInfo.UserAgent, order.Delegatee, accessProofsToAuditLogRecordServices(accessProofs))
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

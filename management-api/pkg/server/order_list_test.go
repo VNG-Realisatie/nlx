@@ -38,11 +38,18 @@ func TestListOutgoingOrders(t *testing.T) {
 	accessRequestCreatedAt := time.Now()
 
 	tests := map[string]struct {
+		ctx          context.Context
 		setup        func(serviceMocks)
 		wantResponse *api.ListOutgoingOrdersResponse
 		wantErr      error
 	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(mocks serviceMocks) {},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_orders.read\" to execute this request").Err(),
+		},
 		"when_retrieval_of_organizations_from_directory_fails": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -52,6 +59,7 @@ func TestListOutgoingOrders(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "internal error"),
 		},
 		"when_retrieval_of_orders_from_database_fails": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -66,6 +74,7 @@ func TestListOutgoingOrders(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "internal error"),
 		},
 		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -163,7 +172,7 @@ func TestListOutgoingOrders(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			response, err := service.ListOutgoingOrders(context.Background(), &emptypb.Empty{})
+			response, err := service.ListOutgoingOrders(tt.ctx, &emptypb.Empty{})
 
 			if tt.wantErr == nil {
 				assert.Equal(t, tt.wantResponse, response)
@@ -183,11 +192,18 @@ func TestListIncomingOrders(t *testing.T) {
 	revokedAt := time.Now()
 
 	tests := map[string]struct {
+		ctx          context.Context
 		setup        func(serviceMocks)
 		wantResponse *api.ListIncomingOrdersResponse
 		wantErr      error
 	}{
+		"missing_required_permission": {
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(mocks serviceMocks) {},
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.incoming_orders.read\" to execute this request").Err(),
+		},
 		"when_retrieval_of_participants_from_directory_fails": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -197,6 +213,7 @@ func TestListIncomingOrders(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "internal error"),
 		},
 		"when_retrieval_of_orders_from_database_fails": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
@@ -210,6 +227,7 @@ func TestListIncomingOrders(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "failed to retrieve received orders"),
 		},
 		"happy_flow": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				services := []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("service-a", "00000000000000000001", "organization-a"),
@@ -271,6 +289,7 @@ func TestListIncomingOrders(t *testing.T) {
 		},
 
 		"happy_flow_revoked": {
+			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				services := []domain.IncomingOrderService{
 					domain.NewIncomingOrderService("service-a", "00000000000000000001", "organization-a"),
@@ -343,7 +362,7 @@ func TestListIncomingOrders(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			response, err := service.ListIncomingOrders(context.Background(), &emptypb.Empty{})
+			response, err := service.ListIncomingOrders(tt.ctx, &emptypb.Empty{})
 
 			if tt.wantErr == nil {
 				assert.Equal(t, tt.wantResponse, response)

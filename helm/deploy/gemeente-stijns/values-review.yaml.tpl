@@ -25,6 +25,9 @@ outway-2:
     enabled: true
     host: nlx-outway-2-gemeente-stijns-{{DOMAIN_SUFFIX}}
 
+nlxctl:
+  authorizationServerUrl: https://dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
 ################
 ## Sub-charts ##
 ################
@@ -50,8 +53,10 @@ dex:
           - https://nlx-management-gemeente-stijns-{{DOMAIN_SUFFIX}}/oidc/callback
   ingress:
     hosts:
-      - dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
-
+      - host: dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
 parkeerrechten-api:
   enabled: true
   postgres:

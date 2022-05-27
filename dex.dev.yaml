@@ -9,6 +9,10 @@ storage:
 web:
   http: 0.0.0.0:5556
 
+oauth2:
+  responseTypes: [ "code" , "token"]
+  passwordConnector: local
+
 staticClients:
   - id: nlx-management-a
     name: 'NLX Management (A)'

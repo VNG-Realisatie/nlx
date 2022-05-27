@@ -9,6 +9,7 @@ import (
 	"log"
 	"time"
 
+	oidc_server "github.com/coreos/go-oidc/v3/oidc"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -189,9 +190,28 @@ var serveCommand = &cobra.Command{
 		var authenticator api.Authenticator
 
 		if serveOpts.EnableBasicAuth {
-			authenticator = basicauth.NewAuthenticator(db, logger)
+			authenticator = basicauth.NewAuthenticator(db, auditLogger, logger)
 		} else {
-			authenticator = oidc.NewAuthenticator(db, auditLogger, logger, &serveOpts.oidcOptions)
+			oidcProvider, errProv := oidc_server.NewProvider(context.Background(), serveOpts.oidcOptions.DiscoveryURL)
+			if errProv != nil {
+				logger.Fatal("could not initialize OIDC provider", zap.Error(errProv))
+			}
+
+			oidcConfig := &oidc_server.Config{
+				ClientID: serveOpts.oidcOptions.ClientID,
+			}
+
+			verifier := oidcProvider.Verifier(oidcConfig)
+
+			authenticator = oidc.NewAuthenticator(db, auditLogger, logger, oidcProvider, verifier, func(idToken *oidc_server.IDToken) (*oidc.IDTokenClaims, error) {
+				claims := &oidc.IDTokenClaims{}
+				err = idToken.Claims(claims)
+				if err != nil {
+					return nil, err
+				}
+
+				return claims, nil
+			}, &serveOpts.oidcOptions)
 		}
 
 		a, err := api.NewAPI(

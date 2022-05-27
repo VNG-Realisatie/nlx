@@ -963,13 +963,6 @@
     "/api/v1/services" : {
       "get" : {
         "operationId" : "Management_ListServices",
-        "parameters" : [ {
-          "in" : "query",
-          "name" : "inwayName",
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
         "responses" : {
           "200" : {
             "content" : {
@@ -1358,20 +1351,6 @@
         "enum" : [ "loginSuccess", "loginFail", "logout", "incomingAccessRequestAccept", "incomingAccessRequestReject", "accessGrantRevoke", "outgoingAccessRequestCreate", "outgoingAccessRequestFail", "serviceCreate", "serviceUpdate", "serviceDelete", "organizationSettingsUpdate", "orderCreate", "orderOutgoingRevoke", "orderIncomingRevoke", "inwayDelete", "orderOutgoingUpdate", "acceptTermsOfService" ],
         "type" : "string"
       },
-      "AuthorizationSettingsAuthorization" : {
-        "properties" : {
-          "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
-          },
-          "publicKeyHash" : {
-            "type" : "string"
-          },
-          "publicKeyPEM" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
       "DirectoryServiceAccessState" : {
         "properties" : {
           "accessRequest" : {
@@ -1387,20 +1366,6 @@
         "default" : "unknown",
         "enum" : [ "unknown", "up", "down", "degraded" ],
         "type" : "string"
-      },
-      "ServiceAuthorizationSettings" : {
-        "properties" : {
-          "mode" : {
-            "type" : "string"
-          },
-          "authorizations" : {
-            "items" : {
-              "$ref" : "#/components/schemas/AuthorizationSettingsAuthorization"
-            },
-            "type" : "array"
-          }
-        },
-        "type" : "object"
       },
       "managementAccessGrant" : {
         "properties" : {
@@ -1750,6 +1715,86 @@
         },
         "type" : "object"
       },
+      "managementGetInwayConfigResponse" : {
+        "properties" : {
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementGetInwayConfigResponseService"
+            },
+            "type" : "array"
+          },
+          "isOrganizationInway" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetInwayConfigResponseService" : {
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "endpointURL" : {
+            "type" : "string"
+          },
+          "documentationURL" : {
+            "type" : "string"
+          },
+          "apiSpecificationURL" : {
+            "type" : "string"
+          },
+          "internal" : {
+            "type" : "boolean"
+          },
+          "techSupportContact" : {
+            "type" : "string"
+          },
+          "publicSupportContact" : {
+            "type" : "string"
+          },
+          "authorizationSettings" : {
+            "$ref" : "#/components/schemas/managementGetInwayConfigResponseServiceAuthorizationSettings"
+          },
+          "oneTimeCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "monthlyCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "requestCosts" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetInwayConfigResponseServiceAuthorizationSettings" : {
+        "properties" : {
+          "authorizations" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization" : {
+        "properties" : {
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "publicKeyHash" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "managementGetServiceResponse" : {
         "properties" : {
           "name" : {
@@ -2047,7 +2092,7 @@
             "type" : "string"
           },
           "authorizationSettings" : {
-            "$ref" : "#/components/schemas/ServiceAuthorizationSettings"
+            "$ref" : "#/components/schemas/managementListServicesResponseServiceAuthorizationSettings"
           },
           "inways" : {
             "items" : {
@@ -2070,6 +2115,34 @@
           "requestCosts" : {
             "format" : "int32",
             "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListServicesResponseServiceAuthorizationSettings" : {
+        "properties" : {
+          "mode" : {
+            "type" : "string"
+          },
+          "authorizations" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementListServicesResponseServiceAuthorizationSettingsAuthorization"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementListServicesResponseServiceAuthorizationSettingsAuthorization" : {
+        "properties" : {
+          "organization" : {
+            "$ref" : "#/components/schemas/managementOrganization"
+          },
+          "publicKeyHash" : {
+            "type" : "string"
+          },
+          "publicKeyPEM" : {
+            "type" : "string"
           }
         },
         "type" : "object"

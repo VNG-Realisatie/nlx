@@ -9,6 +9,7 @@ metadata:
     helm.sh/hook-weight: "2"
     helm.sh/hook-delete-policy: "before-hook-creation,hook-succeeded"
 spec:
+  backoffLimit: 2
   template:
     metadata:
       labels:
@@ -24,6 +25,8 @@ spec:
             - "-exc"
             - |
                 nlxctl init --address "${MANAGEMENT_API_ADDRESS}" --cert /certificate/tls.crt --key /certificate/tls.key --ca /config/root.pem
+                nlxctl login --auth-method "oidc" -c "${CLIENT_ID}" -s "${CLIENT_SECRET}" -a "${AUTHORIZATION_SERVER_URL}" -u "${USERNAME}" -p "${PASSWORD}"
+
                 echo "${SERVICE_KENTEKENS_JSON}" > /tmp/service-kentekens.json
                 if ! nlxctl service list | grep -q $SERVICE_NAME_KENTEKENS; then
                     nlxctl service create --config /tmp/service-kentekens.json
@@ -52,6 +55,16 @@ spec:
               value: {{ .Values.managementAPI.serviceWebsockets | toJson | quote }}
             - name: MANAGEMENT_API_ADDRESS
               value: {{ .Values.managementAPI.address | quote }}
+            - name: CLIENT_ID
+              value: {{ required "Client ID is required" .Values.nlxctl.clientID }}
+            - name: CLIENT_SECRET
+              value: {{ required "Client secret is required" .Values.nlxctl.clientSecret }}
+            - name: AUTHORIZATION_SERVER_URL
+              value: {{ required "Authorization server URL is required" .Values.nlxctl.authorizationServerUrl }}
+            - name: USERNAME
+              value: {{ required "Username is required" .Values.nlxctl.username }}
+            - name: PASSWORD
+              value: {{ required "Password is required" .Values.nlxctl.password }}
           volumeMounts:
             - name: certificate
               mountPath: /certificate

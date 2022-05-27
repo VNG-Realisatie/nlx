@@ -58,6 +58,7 @@ type ManagementClient interface {
 	ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error)
 	GetTermsOfServiceStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error)
 	AcceptTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetInwayConfig(ctx context.Context, in *GetInwayConfigRequest, opts ...grpc.CallOption) (*GetInwayConfigResponse, error)
 }
 
 type managementClient struct {
@@ -374,6 +375,15 @@ func (c *managementClient) AcceptTermsOfService(ctx context.Context, in *emptypb
 	return out, nil
 }
 
+func (c *managementClient) GetInwayConfig(ctx context.Context, in *GetInwayConfigRequest, opts ...grpc.CallOption) (*GetInwayConfigResponse, error) {
+	out := new(GetInwayConfigResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetInwayConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ManagementServer is the server API for Management service.
 // All implementations must embed UnimplementedManagementServer
 // for forward compatibility
@@ -412,6 +422,7 @@ type ManagementServer interface {
 	ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error)
 	GetTermsOfServiceStatus(context.Context, *emptypb.Empty) (*GetTermsOfServiceStatusResponse, error)
 	AcceptTermsOfService(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error)
 	mustEmbedUnimplementedManagementServer()
 }
 
@@ -520,6 +531,9 @@ func (UnimplementedManagementServer) GetTermsOfServiceStatus(context.Context, *e
 }
 func (UnimplementedManagementServer) AcceptTermsOfService(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptTermsOfService not implemented")
+}
+func (UnimplementedManagementServer) GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInwayConfig not implemented")
 }
 func (UnimplementedManagementServer) mustEmbedUnimplementedManagementServer() {}
 
@@ -1146,6 +1160,24 @@ func _Management_AcceptTermsOfService_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Management_GetInwayConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInwayConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).GetInwayConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/GetInwayConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).GetInwayConfig(ctx, req.(*GetInwayConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Management_ServiceDesc is the grpc.ServiceDesc for Management service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1288,6 +1320,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AcceptTermsOfService",
 			Handler:    _Management_AcceptTermsOfService_Handler,
+		},
+		{
+			MethodName: "GetInwayConfig",
+			Handler:    _Management_GetInwayConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

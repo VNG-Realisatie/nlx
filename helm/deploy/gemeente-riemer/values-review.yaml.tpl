@@ -5,6 +5,8 @@
 postgresql:
   storageSize: 256Mi
 
+nlxctl:
+  authorizationServerUrl: https://dex-gemeente-riemer-{{DOMAIN_SUFFIX}}
 
 ################
 ## Sub-charts ##
@@ -31,8 +33,10 @@ dex:
           - https://nlx-management-gemeente-riemer-{{DOMAIN_SUFFIX}}/oidc/callback
   ingress:
     hosts:
-      - dex-gemeente-riemer-{{DOMAIN_SUFFIX}}
-
+      - host: dex-gemeente-riemer-{{DOMAIN_SUFFIX}}
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
 manage-citizens-ui:
   enabled: true
   ingress:

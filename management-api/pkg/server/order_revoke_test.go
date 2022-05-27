@@ -11,7 +11,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -28,13 +27,23 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 		expectedResponse *emptypb.Empty
 		expectedErr      error
 	}{
+		"missing_required_permission": {
+			setup: func(ctx context.Context, mocks serviceMocks) {},
+			ctx:   testCreateUserWithoutPermissionsContext(),
+			req: &api.RevokeOutgoingOrderRequest{
+				Delegatee: "00000000000000000001",
+				Reference: "test-reference",
+			},
+			expectedResponse: nil,
+			expectedErr:      status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_order.revoke\" to execute this request").Err(),
+		},
 		"when_revoking_order_fails": {
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
 					OrderOutgoingRevoke(
 						gomock.Any(),
-						"Jane Doe",
+						"admin@example.com",
 						"nlxctl",
 						"00000000000000000001",
 						"test-reference",
@@ -45,48 +54,42 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 					RevokeOutgoingOrderByReference(ctx, "00000000000000000001", "test-reference", gomock.Any()).
 					Return(errors.New("arbitrary error"))
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RevokeOutgoingOrderRequest{
+			ctx: testCreateAdminUserContext(),
+			req: &api.RevokeOutgoingOrderRequest{
 				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
-			nil,
-			status.Errorf(codes.Internal, "failed to revoke outgoing order"),
+			expectedResponse: nil,
+			expectedErr:      status.Errorf(codes.Internal, "failed to revoke outgoing order"),
 		},
 		"when_writing_audit_logs_fails": {
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
 					OrderOutgoingRevoke(
 						gomock.Any(),
-						"Jane Doe",
+						"admin@example.com",
 						"nlxctl",
 						"00000000000000000001",
 						"test-reference",
 					).
 					Return(errors.New("arbitrary error"))
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RevokeOutgoingOrderRequest{
+			ctx: testCreateAdminUserContext(),
+			req: &api.RevokeOutgoingOrderRequest{
 				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
-			nil,
-			status.Error(codes.Internal, "failed to write to auditlog"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.Internal, "failed to write to auditlog"),
 		},
 		"when_order_not_found": {
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
 					OrderOutgoingRevoke(
 						gomock.Any(),
-						"Jane Doe",
+						"admin@example.com",
 						"nlxctl",
 						"00000000000000000001",
 						"test-reference",
@@ -97,50 +100,41 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 					RevokeOutgoingOrderByReference(ctx, "00000000000000000001", "test-reference", gomock.Any()).
 					Return(database.ErrNotFound)
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RevokeOutgoingOrderRequest{
+			ctx: testCreateAdminUserContext(),
+			req: &api.RevokeOutgoingOrderRequest{
 				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
-			nil,
-			status.Error(codes.NotFound, "outgoing order with delegatee 00000000000000000001 and reference test-reference does not exist"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.NotFound, "outgoing order with delegatee 00000000000000000001 and reference test-reference does not exist"),
 		},
 		"when_delegatee_missing": {
-			func(ctx context.Context, mocks serviceMocks) {},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RevokeOutgoingOrderRequest{
+			setup: func(ctx context.Context, mocks serviceMocks) {},
+			ctx:   testCreateAdminUserContext(),
+			req: &api.RevokeOutgoingOrderRequest{
 				Delegatee: "",
 				Reference: "test-reference",
 			},
-			nil,
-			status.Error(codes.InvalidArgument, "delegatee is required"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.InvalidArgument, "delegatee is required"),
 		},
 		"when_reference_missing": {
-			func(ctx context.Context, mocks serviceMocks) {},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RevokeOutgoingOrderRequest{
+			setup: func(ctx context.Context, mocks serviceMocks) {},
+			ctx:   testCreateAdminUserContext(),
+			req: &api.RevokeOutgoingOrderRequest{
 				Delegatee: "00000000000000000001",
 				Reference: "",
 			},
-			nil,
-			status.Error(codes.InvalidArgument, "reference is required"),
+			expectedResponse: nil,
+			expectedErr:      status.Error(codes.InvalidArgument, "reference is required"),
 		},
 		"happy_flow": {
-			func(ctx context.Context, mocks serviceMocks) {
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				mocks.al.
 					EXPECT().
 					OrderOutgoingRevoke(
 						gomock.Any(),
-						"Jane Doe",
+						"admin@example.com",
 						"nlxctl",
 						"00000000000000000001",
 						"test-reference",
@@ -151,16 +145,13 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 					RevokeOutgoingOrderByReference(ctx, "00000000000000000001", "test-reference", gomock.Any()).
 					Return(nil)
 			},
-			metadata.NewIncomingContext(context.Background(), metadata.New(map[string]string{
-				"username":               "Jane Doe",
-				"grpcgateway-user-agent": "nlxctl",
-			})),
-			&api.RevokeOutgoingOrderRequest{
+			ctx: testCreateAdminUserContext(),
+			req: &api.RevokeOutgoingOrderRequest{
 				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
-			&emptypb.Empty{},
-			nil,
+			expectedResponse: &emptypb.Empty{},
+			expectedErr:      nil,
 		},
 	}
 

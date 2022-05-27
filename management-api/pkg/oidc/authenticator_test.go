@@ -4,15 +4,17 @@
 package oidc
 
 import (
+	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/fgrosse/zaptest"
 	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/stretchr/testify/assert"
@@ -20,7 +22,7 @@ import (
 
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_authenticator "go.nlx.io/nlx/management-api/pkg/oidc/mock"
+	mock_oidc "go.nlx.io/nlx/management-api/pkg/oidc/mock"
 )
 
 // client is a special client that does not follow redirects automatically
@@ -30,142 +32,50 @@ var client = &http.Client{
 	},
 }
 
+const testToken = "token"
+
+//nolint:funlen // this is a test
 func TestOnlyAuthenticated(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
-	mockStore := mock_authenticator.NewMockStore(ctrl)
-
-	authenticator := Authenticator{
-		logger:       zaptest.Logger(t),
-		oauth2Config: mockOAuth2Config,
-		store:        mockStore,
-	}
-
-	mockHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "This is only visible when authenticated.")
-	})
-
-	srv := httptest.NewServer(authenticator.OnlyAuthenticated(mockHandler))
-	defer srv.Close()
-
 	tests := map[string]struct {
-		session        func() *sessions.Session
+		setupMocks     func(store *mock_oidc.MockStore)
 		expectedStatus int
-		expectedBody   string
+		expectedHeader http.Header
 	}{
-		"unauthorized_request_should_fail": {
-			func() *sessions.Session {
-				return &sessions.Session{}
+		"when_no_session": {
+			setupMocks: func(store *mock_oidc.MockStore) {
+				store.
+					EXPECT().
+					Get(gomock.Any(), "nlx_management_session").
+					Return(nil, errors.New("arbitrary error"))
 			},
-			http.StatusUnauthorized,
-			"unauthorized request\n",
+			expectedStatus: http.StatusUnauthorized,
+			expectedHeader: http.Header{},
 		},
-		"should_return_unauthorized_when_expired": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:   "arbitrary-user-id",
-					ExpiresAt: time.Now().Add(-10 * time.Second).Unix(),
-				}
-
-				return session
+		"when_no_token": {
+			setupMocks: func(store *mock_oidc.MockStore) {
+				store.
+					EXPECT().
+					Get(gomock.Any(), "nlx_management_session").
+					Return(sessions.NewSession(store, "nlx_management_session"), nil)
 			},
-			http.StatusUnauthorized,
-			"unauthorized request\n",
+			expectedStatus: http.StatusUnauthorized,
+			expectedHeader: http.Header{},
 		},
-		"should_return_authorized_when_not_expired": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:   "arbitrary-user-id",
-					ExpiresAt: time.Now().Add(10 * time.Second).Unix(),
-				}
+		"happy_flow": {
+			setupMocks: func(store *mock_oidc.MockStore) {
+				session := sessions.NewSession(store, "nlx_management_session")
 
-				return session
-			},
-			http.StatusOK,
-			"This is only visible when authenticated.\n",
-		},
-		"should_return_unauthorized_when_used_before_not_before": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:   "arbitrary-user-id",
-					NotBefore: time.Now().Add(10 * time.Second).Unix(),
-				}
+				session.Values[tokenName] = testToken
 
-				return session
+				store.
+					EXPECT().
+					Get(gomock.Any(), "nlx_management_session").
+					Return(session, nil)
 			},
-			http.StatusUnauthorized,
-			"unauthorized request\n",
-		},
-		"should_return_authorized_when_used_after_not_before": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:   "arbitrary-user-id",
-					NotBefore: time.Now().Add(-10 * time.Second).Unix(),
-				}
-
-				return session
+			expectedStatus: http.StatusOK,
+			expectedHeader: http.Header{
+				"Authorization": []string{"Bearer token"},
 			},
-			http.StatusOK,
-			"This is only visible when authenticated.\n",
-		},
-		"should_return_unauthorized_when_used_before_issued": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:  "arbitrary-user-id",
-					IssuedAt: time.Now().Add(10 * time.Second).Unix(),
-				}
-
-				return session
-			},
-			http.StatusUnauthorized,
-			"unauthorized request\n",
-		},
-		"should_return_authorized_when_used_after_issued": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:  "arbitrary-user-id",
-					IssuedAt: time.Now().Add(-10 * time.Second).Unix(),
-				}
-
-				return session
-			},
-			http.StatusOK,
-			"This is only visible when authenticated.\n",
-		},
-		"should_return_authorized_for_successful_request_without_optional_claims": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject: "arbitrary-user-id",
-				}
-
-				return session
-			},
-			http.StatusOK,
-			"This is only visible when authenticated.\n",
-		},
-		"should_return_authorized_for_successful_request_with_optional_claims": {
-			func() *sessions.Session {
-				session := sessions.NewSession(mockStore, "nlx_management_session")
-				session.Values["claims"] = &Claims{
-					Subject:   "arbitrary-user-id",
-					IssuedAt:  time.Now().Add(-10 * time.Second).Unix(),
-					NotBefore: time.Now().Add(-10 * time.Second).Unix(),
-					ExpiresAt: time.Now().Add(10 * time.Second).Unix(),
-				}
-
-				return session
-			},
-			http.StatusOK,
-			"This is only visible when authenticated.\n",
 		},
 	}
 
@@ -173,10 +83,28 @@ func TestOnlyAuthenticated(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			mockStore.
-				EXPECT().
-				Get(gomock.Any(), "nlx_management_session").
-				Return(tt.session(), nil)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockOAuth2Config := mock_oidc.NewMockOAuth2Config(ctrl)
+			mockStore := mock_oidc.NewMockStore(ctrl)
+
+			authenticator := Authenticator{
+				logger:       zaptest.Logger(t),
+				oauth2Config: mockOAuth2Config,
+				store:        mockStore,
+			}
+
+			var req *http.Request
+			mockHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				req = r
+				fmt.Fprintln(w, "unauthorized request")
+			})
+
+			srv := httptest.NewServer(authenticator.OnlyAuthenticated(mockHandler))
+			defer srv.Close()
+
+			tt.setupMocks(mockStore)
 
 			resp, err := client.Get(srv.URL)
 			assert.NoError(t, err)
@@ -185,9 +113,12 @@ func TestOnlyAuthenticated(t *testing.T) {
 
 			assert.Equal(t, tt.expectedStatus, resp.StatusCode)
 
-			bodyBytes, err := ioutil.ReadAll(resp.Body)
-			assert.NoError(t, err)
-			assert.Equal(t, tt.expectedBody, string(bodyBytes))
+			for header, value := range tt.expectedHeader {
+				v, ok := req.Header[header]
+				assert.True(t, ok)
+
+				assert.Equal(t, value, v)
+			}
 		})
 	}
 }
@@ -196,19 +127,20 @@ func TestAuthenticateEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
-	mockStore := mock_authenticator.NewMockStore(ctrl)
+	mockOAuth2Config := mock_oidc.NewMockOAuth2Config(ctrl)
+	mockStore := mock_oidc.NewMockStore(ctrl)
 	mockDB := mock_database.NewMockConfigDatabase(ctrl)
+	mockVerifier := mock_oidc.NewMockVerifier(ctrl)
 
-	session := &sessions.Session{
-		Values: map[interface{}]interface{}{},
-	}
+	session := sessions.NewSession(mockStore, "nlx_management_session")
+	session.Values[tokenName] = testToken
 
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
 		oauth2Config: mockOAuth2Config,
 		store:        mockStore,
 		db:           mockDB,
+		oidcVerifier: mockVerifier,
 	}
 
 	router := chi.NewRouter()
@@ -221,10 +153,14 @@ func TestAuthenticateEndpoint(t *testing.T) {
 		EXPECT().
 		Get(gomock.Any(), "nlx_management_session").
 		Return(session, nil)
+	mockVerifier.
+		EXPECT().
+		Verify(gomock.Any(), testToken).
+		Return(nil, errors.New("arbitrary error"))
 	mockStore.
 		EXPECT().
-		Get(gomock.Any(), "nlx_management_session").
-		Return(session, nil)
+		Save(gomock.Any(), gomock.Any(), gomock.Any()).
+		Return(nil)
 	mockOAuth2Config.
 		EXPECT().
 		AuthCodeURL("").
@@ -233,7 +169,7 @@ func TestAuthenticateEndpoint(t *testing.T) {
 	resp, err := client.Get(fmt.Sprintf("%s/oidc/authenticate", srv.URL))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusFound, resp.StatusCode)
-	assert.Equal(t, resp.Header.Get("Location"), "https://example.com/some-redirect-url")
+	assert.Equal(t, "https://example.com/some-redirect-url", resp.Header.Get("Location"))
 	resp.Body.Close()
 }
 
@@ -241,8 +177,8 @@ func TestMeEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
-	mockStore := mock_authenticator.NewMockStore(ctrl)
+	mockOAuth2Config := mock_oidc.NewMockOAuth2Config(ctrl)
+	mockStore := mock_oidc.NewMockStore(ctrl)
 
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
@@ -268,8 +204,8 @@ func TestCallbackEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
-	mockStore := mock_authenticator.NewMockStore(ctrl)
+	mockOAuth2Config := mock_oidc.NewMockOAuth2Config(ctrl)
+	mockStore := mock_oidc.NewMockStore(ctrl)
 
 	auditLogger := mock_auditlog.NewMockLogger(ctrl)
 	auditLogger.EXPECT().LoginFail(gomock.Any(), "Go-http-client/1.1")
@@ -302,17 +238,34 @@ func TestLogoutEndpoint(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockOAuth2Config := mock_authenticator.NewMockOAuth2Config(ctrl)
-	mockStore := mock_authenticator.NewMockStore(ctrl)
+	mockOAuth2Config := mock_oidc.NewMockOAuth2Config(ctrl)
+	mockStore := mock_oidc.NewMockStore(ctrl)
 
 	auditLogger := mock_auditlog.NewMockLogger(ctrl)
-	auditLogger.EXPECT().LogoutSuccess(gomock.Any(), "Jane Doe", "Go-http-client/1.1")
+
+	verifier := mock_oidc.NewMockVerifier(ctrl)
+	verifier.EXPECT().Verify(gomock.Any(), gomock.Any()).Return(&oidc.IDToken{
+		Issuer:          "",
+		Audience:        nil,
+		Subject:         "",
+		Expiry:          time.Time{},
+		IssuedAt:        time.Time{},
+		Nonce:           "",
+		AccessTokenHash: "",
+	}, nil)
 
 	authenticator := Authenticator{
 		logger:       zaptest.Logger(t),
 		oauth2Config: mockOAuth2Config,
 		auditLogger:  auditLogger,
 		store:        mockStore,
+		oidcVerifier: verifier,
+		getClaims: func(idToken *oidc.IDToken) (*IDTokenClaims, error) {
+			return &IDTokenClaims{
+				RegisteredClaims: jwt.RegisteredClaims{},
+				Email:            "admin@example.com",
+			}, nil
+		},
 	}
 
 	router := chi.NewRouter()
@@ -322,13 +275,12 @@ func TestLogoutEndpoint(t *testing.T) {
 	defer srv.Close()
 
 	mockSession := sessions.NewSession(mockStore, "nlx_management_session")
-	mockSession.Values["claims"] = &Claims{
-		Subject: "42",
-		Name:    "Jane Doe",
-	}
+	mockSession.Values["authorization"] = testToken
 
 	mockStore.EXPECT().Get(gomock.Any(), "nlx_management_session").Return(mockSession, nil).AnyTimes()
 	mockStore.EXPECT().Save(gomock.Any(), gomock.Any(), mockSession).Return(nil).AnyTimes()
+
+	auditLogger.EXPECT().LogoutSuccess(gomock.Any(), "admin@example.com", "Go-http-client/1.1")
 
 	resp, err := client.Post(fmt.Sprintf("%s/oidc/logout", srv.URL), "application/x-www-form-urlencoded", nil)
 	assert.NoError(t, err)

@@ -18,6 +18,7 @@ import (
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
@@ -40,6 +41,11 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 }
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
+	err := s.authorize(ctx, permissions.ReadAuditLogs)
+	if err != nil {
+		return nil, err
+	}
+
 	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
 		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))

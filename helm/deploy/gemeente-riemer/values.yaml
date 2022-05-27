@@ -238,6 +238,11 @@ nlxctl:
     pullPolicy: IfNotPresent
   tls:
     existingSecret: gemeente-riemer-nlxctl-tls
+  clientID: "nlx-management"
+  clientSecret: "grGSl5W5HcKRETBr3OhmU6Tm"
+  authorizationServerUrl: "http://dex.gemeente-riemer.nlx.minikube"
+  username: "admin@example.com"
+  password: "password"
 
 managementAPI:
   address: gemeente-riemer-nlx-management-api:443
@@ -390,14 +395,20 @@ dex:
         email: admin@example.com
     oauth2:
       skipApprovalScreen: false
+      responseTypes: ["code", "token"]
+      passwordConnector: local
   ingress:
     enabled: true
     hosts:
-      - dex.gemeente-riemer.nlx.minikube
+      - host: dex.gemeente-riemer.nlx.minikube
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
   ports:
     web:
       servicePort: 80
-  grpc: false
+  grpc:
+   enabled: false
   certs:
     web:
       create: false

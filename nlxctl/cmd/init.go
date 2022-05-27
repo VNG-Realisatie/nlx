@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"fmt"
+	"bytes"
 	"log"
-
-	"github.com/mitchellh/go-homedir"
+	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -46,7 +46,14 @@ var initCommand = &cobra.Command{
 	Short: "initialize nlx-ctl",
 	Long:  `use init to initialize the nlx-ctl with the address of the NLX management API and cert key pair`,
 	Run: func(cmd *cobra.Command, args []string) {
-		home, err := homedir.Dir()
+		data, err := os.ReadFile(configLocation)
+		if err != nil {
+			if !strings.Contains(err.Error(), "no such file or directory") {
+				log.Panic(err)
+			}
+		}
+
+		err = viper.ReadConfig(bytes.NewBuffer(data))
 		if err != nil {
 			log.Panic(err)
 		}
@@ -55,7 +62,7 @@ var initCommand = &cobra.Command{
 		viper.Set("key-path", initOptions.key)
 		viper.Set("cert-path", initOptions.cert)
 		viper.Set("ca-path", initOptions.ca)
-		err = viper.WriteConfigAs(fmt.Sprintf("%s/.nlxctl-config.yaml", home))
+		err = viper.WriteConfigAs(configLocation)
 		if err != nil {
 			log.Panic(err)
 		}
