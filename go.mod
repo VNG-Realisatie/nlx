@@ -41,7 +41,7 @@ require (
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/square/go-jose.v2 v2.6.0
-	gopkg.in/yaml.v3 v3.0.0
+	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.3.6
 	gorm.io/gorm v1.23.5
 	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
