@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   chrome:
-    image: selenium/standalone-chrome:4.1.4
+    image: selenium/standalone-chrome:4.2.0
     shm_size: 2gb
     network_mode: host
     environment:
