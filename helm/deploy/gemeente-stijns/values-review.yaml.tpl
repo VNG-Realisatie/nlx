@@ -5,6 +5,16 @@
 postgresql:
   storageSize: 256Mi
 
+managementAPI:
+  serviceParkeerrechten:
+      name: parkeerrechten
+      endpointURL: http://gemeente-stijns-parkeerrechten-api:8000
+      apiSpecificationURL: http://gemeente-stijns-parkeerrechten-api:8000/schema?format=openapi-json
+      publicSupportContact: support@nlx.io
+      documentationUrl: https://docs.nlx.io
+      inways:
+        - gemeente-stijns-nlx-inway
+
 outway:
   ingress:
     enabled: true
@@ -41,6 +51,14 @@ dex:
   ingress:
     hosts:
       - dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
+
+parkeerrechten-api:
+  enabled: true
+  postgres:
+    hostname: gemeente-stijns-postgresql
+    database: parkeerrechten
+    existingSecret:
+      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
 
 nginx-video-player-ui-proxy:
   organizationName: "Gemeente Stijns"
