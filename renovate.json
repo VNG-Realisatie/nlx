@@ -43,6 +43,11 @@
       "groupName": "React v18 - these dependencies support v18 but break support for v17",
       "packageNames": ["@testing-library/react"],
       "enabled": false
+    },
+    {
+      "groupName": "Parkeerrechten Admin - WIP",
+      "matchPackageNames": ["parkeerrechten-admin"],
+      "allowedVersions": "0.1.0"
     }
   ]
 }
