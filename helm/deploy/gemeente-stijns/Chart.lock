@@ -22,9 +22,9 @@ dependencies:
   version: 0.1.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.130.2
+  version: 0.130.3
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.130.2
-digest: sha256:b28e37ad63ab5b8b0020cca376a0a8e035e0562b2434bd3d48a813c37b1a9e97
-generated: "2022-05-25T17:49:25.942776+02:00"
+  version: 0.130.3
+digest: sha256:622677d5506dd7f64e8e3b0ef583703aca9216a404746892d80232094ea7ca04
+generated: "2022-05-30T09:56:07.857004494Z"

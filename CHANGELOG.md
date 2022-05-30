@@ -1,3 +1,10 @@
+## [0.130.3](https://gitlab.com/commonground/nlx/nlx/compare/v0.130.2...v0.130.3) (2022-05-30)
+
+
+### Reverts
+
+* update helm release parkeerrechten-admin to v0.2.0 ([a0eac3b](https://gitlab.com/commonground/nlx/nlx/commit/a0eac3b94b2c3674e1af1cd6687041053cc8ffeb)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.130.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.130.1...v0.130.2) (2022-05-25)
 
 ## [0.130.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.130.0...v0.130.1) (2022-05-19)
