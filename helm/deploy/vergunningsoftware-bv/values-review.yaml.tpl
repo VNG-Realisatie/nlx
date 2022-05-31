@@ -48,7 +48,7 @@ parkeerrechten-admin:
     - organization: "Stijns"
       baseUrl: "http://vergunningsoftware-bv-nlx-outway/12345678901234567890/parkeerrechten"
   kentekenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567891/basisregister-fictieve-kentekens
-  personenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567892/basisregister-fictieve-personen
+  personenApiBaseUrl: http://vergunningsoftware-bv-nlx-outway/12345678901234567890/basisregister-fictieve-personen
   ingress:
     enabled: true
     hosts:
