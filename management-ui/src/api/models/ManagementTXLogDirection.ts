@@ -12,15 +12,17 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 
  * @export
- * @enum {string}
  */
-export enum ManagementTXLogDirection {
-    IN = 'IN',
-    OUT = 'OUT'
-}
+export const ManagementTXLogDirection = {
+    IN: 'IN',
+    OUT: 'OUT'
+} as const;
+export type ManagementTXLogDirection = typeof ManagementTXLogDirection[keyof typeof ManagementTXLogDirection];
+
 
 export function ManagementTXLogDirectionFromJSON(json: any): ManagementTXLogDirection {
     return ManagementTXLogDirectionFromJSONTyped(json, false);

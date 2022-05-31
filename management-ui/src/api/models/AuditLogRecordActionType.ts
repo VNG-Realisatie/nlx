@@ -12,31 +12,33 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 
  * @export
- * @enum {string}
  */
-export enum AuditLogRecordActionType {
-    LOGIN_SUCCESS = 'loginSuccess',
-    LOGIN_FAIL = 'loginFail',
-    LOGOUT = 'logout',
-    INCOMING_ACCESS_REQUEST_ACCEPT = 'incomingAccessRequestAccept',
-    INCOMING_ACCESS_REQUEST_REJECT = 'incomingAccessRequestReject',
-    ACCESS_GRANT_REVOKE = 'accessGrantRevoke',
-    OUTGOING_ACCESS_REQUEST_CREATE = 'outgoingAccessRequestCreate',
-    OUTGOING_ACCESS_REQUEST_FAIL = 'outgoingAccessRequestFail',
-    SERVICE_CREATE = 'serviceCreate',
-    SERVICE_UPDATE = 'serviceUpdate',
-    SERVICE_DELETE = 'serviceDelete',
-    ORGANIZATION_SETTINGS_UPDATE = 'organizationSettingsUpdate',
-    ORDER_CREATE = 'orderCreate',
-    ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke',
-    ORDER_INCOMING_REVOKE = 'orderIncomingRevoke',
-    INWAY_DELETE = 'inwayDelete',
-    ORDER_OUTGOING_UPDATE = 'orderOutgoingUpdate',
-    ACCEPT_TERMS_OF_SERVICE = 'acceptTermsOfService'
-}
+export const AuditLogRecordActionType = {
+    LOGIN_SUCCESS: 'loginSuccess',
+    LOGIN_FAIL: 'loginFail',
+    LOGOUT: 'logout',
+    INCOMING_ACCESS_REQUEST_ACCEPT: 'incomingAccessRequestAccept',
+    INCOMING_ACCESS_REQUEST_REJECT: 'incomingAccessRequestReject',
+    ACCESS_GRANT_REVOKE: 'accessGrantRevoke',
+    OUTGOING_ACCESS_REQUEST_CREATE: 'outgoingAccessRequestCreate',
+    OUTGOING_ACCESS_REQUEST_FAIL: 'outgoingAccessRequestFail',
+    SERVICE_CREATE: 'serviceCreate',
+    SERVICE_UPDATE: 'serviceUpdate',
+    SERVICE_DELETE: 'serviceDelete',
+    ORGANIZATION_SETTINGS_UPDATE: 'organizationSettingsUpdate',
+    ORDER_CREATE: 'orderCreate',
+    ORDER_OUTGOING_REVOKE: 'orderOutgoingRevoke',
+    ORDER_INCOMING_REVOKE: 'orderIncomingRevoke',
+    INWAY_DELETE: 'inwayDelete',
+    ORDER_OUTGOING_UPDATE: 'orderOutgoingUpdate',
+    ACCEPT_TERMS_OF_SERVICE: 'acceptTermsOfService'
+} as const;
+export type AuditLogRecordActionType = typeof AuditLogRecordActionType[keyof typeof AuditLogRecordActionType];
+
 
 export function AuditLogRecordActionTypeFromJSON(json: any): AuditLogRecordActionType {
     return AuditLogRecordActionTypeFromJSONTyped(json, false);

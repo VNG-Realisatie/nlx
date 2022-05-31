@@ -30,7 +30,7 @@ export class TXLogApi extends runtime.BaseAPI {
 
     /**
      */
-    async tXLogListRecordsRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
+    async tXLogListRecordsRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -47,7 +47,7 @@ export class TXLogApi extends runtime.BaseAPI {
 
     /**
      */
-    async tXLogListRecords(initOverrides?: RequestInit): Promise<ManagementTXLogListRecordsResponse> {
+    async tXLogListRecords(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementTXLogListRecordsResponse> {
         const response = await this.tXLogListRecordsRaw(initOverrides);
         return await response.value();
     }

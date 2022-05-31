@@ -12,20 +12,22 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 
  * @export
- * @enum {string}
  */
-export enum ManagementAccessRequestState {
-    UNSPECIFIED = 'UNSPECIFIED',
-    FAILED = 'FAILED',
-    CREATED = 'CREATED',
-    RECEIVED = 'RECEIVED',
-    APPROVED = 'APPROVED',
-    REJECTED = 'REJECTED',
-    REVOKED = 'REVOKED'
-}
+export const ManagementAccessRequestState = {
+    UNSPECIFIED: 'UNSPECIFIED',
+    FAILED: 'FAILED',
+    CREATED: 'CREATED',
+    RECEIVED: 'RECEIVED',
+    APPROVED: 'APPROVED',
+    REJECTED: 'REJECTED',
+    REVOKED: 'REVOKED'
+} as const;
+export type ManagementAccessRequestState = typeof ManagementAccessRequestState[keyof typeof ManagementAccessRequestState];
+
 
 export function ManagementAccessRequestStateFromJSON(json: any): ManagementAccessRequestState {
     return ManagementAccessRequestStateFromJSONTyped(json, false);

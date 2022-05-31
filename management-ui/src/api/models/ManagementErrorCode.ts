@@ -12,15 +12,17 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 
  * @export
- * @enum {string}
  */
-export enum ManagementErrorCode {
-    INTERNAL = 'INTERNAL',
-    NO_INWAY_SELECTED = 'NO_INWAY_SELECTED'
-}
+export const ManagementErrorCode = {
+    INTERNAL: 'INTERNAL',
+    NO_INWAY_SELECTED: 'NO_INWAY_SELECTED'
+} as const;
+export type ManagementErrorCode = typeof ManagementErrorCode[keyof typeof ManagementErrorCode];
+
 
 export function ManagementErrorCodeFromJSON(json: any): ManagementErrorCode {
     return ManagementErrorCodeFromJSONTyped(json, false);

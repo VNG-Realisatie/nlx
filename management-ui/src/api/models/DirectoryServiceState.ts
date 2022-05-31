@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 
  * @export
- * @enum {string}
  */
-export enum DirectoryServiceState {
-    UNKNOWN = 'unknown',
-    UP = 'up',
-    DOWN = 'down',
-    DEGRADED = 'degraded'
-}
+export const DirectoryServiceState = {
+    UNKNOWN: 'unknown',
+    UP: 'up',
+    DOWN: 'down',
+    DEGRADED: 'degraded'
+} as const;
+export type DirectoryServiceState = typeof DirectoryServiceState[keyof typeof DirectoryServiceState];
+
 
 export function DirectoryServiceStateFromJSON(json: any): DirectoryServiceState {
     return DirectoryServiceStateFromJSONTyped(json, false);
