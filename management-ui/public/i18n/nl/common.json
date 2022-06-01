@@ -97,6 +97,7 @@
   "Failed to reject access request": "Fout bij het weigeren van het toegangsverzoek",
   "Failed to remove the inway": "Fout bij het verwijderen van de inway",
   "Failed to remove the service": "Fout bij het verwijderen van de service",
+  "Failed to request access": "Fout bij het aanvragen van toegang",
   "Failed to revoke access grant": "Fout bij het intrekken van toegang",
   "Failed to revoke the order": "Fout bij het intrekken van de opdracht",
   "Failed to update the order": "De opdracht kan niet worden bijgewerkt",

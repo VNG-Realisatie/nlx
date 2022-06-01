@@ -5,7 +5,7 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { configure } from 'mobx'
-import { renderWithProviders } from '../../../../../../../test-utils'
+import { renderWithAllProviders } from '../../../../../../../test-utils'
 import { DirectoryApi, ManagementApi } from '../../../../../../../api'
 import { RootStore, StoreProvider } from '../../../../../../../stores'
 import { ACCESS_REQUEST_STATES } from '../../../../../../../stores/models/OutgoingAccessRequestModel'
@@ -61,7 +61,7 @@ test('Outways without access section', async () => {
   const onShowConfirmRequestAccessModalHandler = jest.fn()
   const onHideConfirmRequestAccessModalHandler = jest.fn()
 
-  const { container } = renderWithProviders(
+  const { container } = renderWithAllProviders(
     <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OutwaysWithoutAccessSection
@@ -153,7 +153,7 @@ test('Retry requesting access', async () => {
 
   jest.spyOn(service, 'retryRequestAccess').mockResolvedValue()
 
-  renderWithProviders(
+  renderWithAllProviders(
     <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <OutwaysWithoutAccessSection service={service} />

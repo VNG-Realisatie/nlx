@@ -98,6 +98,7 @@
   "Failed to reject access request": "Failed to reject access request",
   "Failed to remove the inway": "Failed to remove the inway",
   "Failed to remove the service": "Failed to remove the service",
+  "Failed to request access": "Failed to request access",
   "Failed to revoke access grant": "Failed to revoke access grant",
   "Failed to revoke the order": "Failed to revoke the order",
   "Failed to update the order": "Failed to update the order",

@@ -5,7 +5,7 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
-import { renderWithProviders } from '../../../../../test-utils'
+import { renderWithAllProviders } from '../../../../../test-utils'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { DirectoryApi, ManagementApi } from '../../../../../api'
@@ -57,7 +57,7 @@ test('can request access', async () => {
 
   await rootStore.outwayStore.fetchAll()
 
-  renderWithProviders(
+  renderWithAllProviders(
     <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <DirectoryDetailView service={serviceModel} />
@@ -142,7 +142,7 @@ test('display error when requesting access failed', async () => {
     'Test organization',
   )
 
-  renderWithProviders(
+  renderWithAllProviders(
     <MemoryRouter>
       <StoreProvider rootStore={rootStore}>
         <DirectoryDetailView service={serviceModel} />

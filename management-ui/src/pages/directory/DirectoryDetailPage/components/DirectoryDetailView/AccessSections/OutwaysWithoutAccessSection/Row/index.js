@@ -1,10 +1,11 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useContext } from 'react'
 import { arrayOf, func, instanceOf, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
+import { ToasterContext } from '@commonground/design-system'
 import Table from '../../../../../../../../components/Table'
 import { OutwayName, Outways } from '../../components/index.styles'
 import AccessState from '../../components/AccessState'
@@ -22,6 +23,7 @@ const Row = ({
   onHideConfirmRequestAccessModalHandler,
 }) => {
   const { t } = useTranslation()
+  const { showToast } = useContext(ToasterContext)
   const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
     title: t('Request access'),
     okText: t('Send'),
@@ -38,7 +40,15 @@ const Row = ({
     onShowConfirmRequestAccessModalHandler()
 
     if (await confirmRequest()) {
-      await service.requestAccess(publicKeyPEM)
+      try {
+        await service.requestAccess(publicKeyPEM)
+      } catch (error) {
+        showToast({
+          variant: 'error',
+          title: t('Failed to request access'),
+          body: error.message,
+        })
+      }
     }
 
     onHideConfirmRequestAccessModalHandler()
