@@ -45,32 +45,32 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 	}
 }
 
-func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
-	s.logger.Info("rpc request ListServices")
+func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.DirectoryService {
+	serviceState := DetermineDirectoryServiceState(s.Inways)
 
-	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
-	if err != nil {
-		s.logger.Error("error getting services list from directory", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "directory error")
+	service := &api.DirectoryService{
+		ServiceName:          s.Name,
+		ApiSpecificationType: s.ApiSpecificationType,
+		DocumentationURL:     s.DocumentationUrl,
+		PublicSupportContact: s.PublicSupportContact,
+		State:                serviceState,
 	}
 
-	services := make([]*api.DirectoryService, len(resp.Services))
-
-	for i, service := range resp.Services {
-		convertedService := convertDirectoryService(service)
-
-		accessRequestStates, err := getLatestAccessRequestStates(ctx, s.configDatabase, convertedService.Organization.SerialNumber, convertedService.ServiceName)
-		if err != nil {
-			s.logger.Error("error getting latest access request states", zap.Error(err))
-			return nil, status.Errorf(codes.Internal, "database error")
+	if s.Organization != nil {
+		service.Organization = &api.Organization{
+			SerialNumber: s.Organization.SerialNumber,
+			Name:         s.Organization.Name,
 		}
-
-		convertedService.AccessStates = accessRequestStates
-
-		services[i] = convertedService
 	}
 
-	return &api.DirectoryListServicesResponse{Services: services}, nil
+	// @TODO: Use costs object in api.DirectoryService
+	if s.Costs != nil {
+		service.OneTimeCosts = s.Costs.OneTime
+		service.MonthlyCosts = s.Costs.Monthly
+		service.RequestCosts = s.Costs.Request
+	}
+
+	return service
 }
 
 func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
@@ -179,34 +179,6 @@ func DetermineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryS
 	}
 
 	return serviceState
-}
-
-func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.DirectoryService {
-	serviceState := DetermineDirectoryServiceState(s.Inways)
-
-	service := &api.DirectoryService{
-		ServiceName:          s.Name,
-		ApiSpecificationType: s.ApiSpecificationType,
-		DocumentationURL:     s.DocumentationUrl,
-		PublicSupportContact: s.PublicSupportContact,
-		State:                serviceState,
-	}
-
-	if s.Organization != nil {
-		service.Organization = &api.Organization{
-			SerialNumber: s.Organization.SerialNumber,
-			Name:         s.Organization.Name,
-		}
-	}
-
-	// @TODO: Use costs object in api.DirectoryService
-	if s.Costs != nil {
-		service.OneTimeCosts = s.Costs.OneTime
-		service.MonthlyCosts = s.Costs.Monthly
-		service.RequestCosts = s.Costs.Request
-	}
-
-	return service
 }
 
 func getLatestAccessRequestStates(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
