@@ -281,6 +281,7 @@
   "To NLX Docs": "Naar NLX Docs",
   "Transaction log": "Transactie log",
   "Transaction log created at": "{{date, D MMMM YYYY [om] HH:mm:ss.SSS}}",
+  "Transaction log ID": "Transactie ID",
   "Transaction log page": "Transactie log pagina",
   "Transaction logs": "Transactie logs",
   "Transaction logs of your inway and outways": "De laatste 100 transactie logs van jouw inways en outways",

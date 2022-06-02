@@ -31,6 +31,7 @@ test('fetching, getting and updating from server', async () => {
     .mockResolvedValueOnce({
       records: [
         {
+          transactionID: '2d37d10f3b6515b4075278877629d116',
           direction: 'IN',
           source: {
             serialNumber: '00000000000000000001',
@@ -47,6 +48,7 @@ test('fetching, getting and updating from server', async () => {
     .mockResolvedValue({
       records: [
         {
+          transactionID: '2d37d10f3b6515b4075278877629d116',
           direction: 'IN',
           source: {
             serialNumber: '00000000000000000001',
@@ -59,6 +61,7 @@ test('fetching, getting and updating from server', async () => {
           },
         },
         {
+          transactionID: '70c5cb7ef23af6a416b2b47a377dd39f',
           direction: 'OUT',
           source: {
             serialNumber: '00000000000000000001',
@@ -83,10 +86,16 @@ test('fetching, getting and updating from server', async () => {
   const intialTransactionLog = transactionLogStore.transactionLogs[0]
   expect(intialTransactionLog).toBeInstanceOf(TransactionLogModel)
   expect(intialTransactionLog.serviceName).toEqual('my-service')
+  expect(intialTransactionLog.transactionID).toEqual(
+    '2d37d10f3b6515b4075278877629d116',
+  )
 
   await transactionLogStore.fetchAll()
 
   expect(transactionLogStore.transactionLogs).toHaveLength(2)
   const secondTransactionLog = transactionLogStore.transactionLogs[1]
   expect(secondTransactionLog.serviceName).toEqual('my-service2')
+  expect(secondTransactionLog.transactionID).toEqual(
+    '70c5cb7ef23af6a416b2b47a377dd39f',
+  )
 })

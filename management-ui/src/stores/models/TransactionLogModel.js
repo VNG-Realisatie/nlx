@@ -25,6 +25,7 @@ class Order {
 }
 
 class TransactionLogModel {
+  transactionID = null
   direction = null
   source = null
   destination = null
@@ -44,6 +45,10 @@ class TransactionLogModel {
   }
 
   update = (transactionLog) => {
+    if (transactionLog.transactionID) {
+      this.transactionID = transactionLog.transactionID
+    }
+
     if (transactionLog.direction) {
       this.direction = transactionLog.direction
     }

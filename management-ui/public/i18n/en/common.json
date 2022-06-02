@@ -283,6 +283,7 @@
   "To NLX Docs": "To NLX Docs",
   "Transaction log": "Transaction log",
   "Transaction log created at": "{{date, D MMMM YYYY [at] HH:mm:ss.SSS}}",
+  "Transaction log ID": "Transaction ID",
   "Transaction log page": "Transaction log page",
   "Transaction logs": "Transaction logs",
   "Transaction logs of your inway and outways": "The latest 100 transaction logs of your inways and outways",

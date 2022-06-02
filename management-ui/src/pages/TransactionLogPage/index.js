@@ -51,6 +51,7 @@ const TransactionLogPage = () => {
           <thead>
             <Table.TrHead>
               <Table.Th>{t('Time')}</Table.Th>
+              <Table.Th>{t('Transaction log ID')}</Table.Th>
               <Table.Th>{t('Direction')}</Table.Th>
               <Table.Th>{t('Organization')}</Table.Th>
               <Table.Th>{t('Service')}</Table.Th>

@@ -14,6 +14,7 @@ const TransactionLogRow = ({ transactionLog, ...props }) => {
       <Table.Td>
         {t('Transaction log created at', { date: transactionLog.createdAt })}
       </Table.Td>
+      <Table.Td>{transactionLog.transactionID}</Table.Td>
       <Table.Td>
         {transactionLog.direction === DIRECTION_IN
           ? t('Incoming from')
