@@ -73,28 +73,6 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 	return service
 }
 
-func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
-	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
-	logger.Info("rpc request GetOrganizationService")
-
-	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)
-	if err != nil {
-		return nil, err
-	}
-
-	directoryService := convertDirectoryService(service)
-
-	accessRequestStates, err := getLatestAccessRequestStates(ctx, s.configDatabase, directoryService.Organization.SerialNumber, directoryService.ServiceName)
-	if err != nil {
-		s.logger.Error("error getting latest access request states", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "database error")
-	}
-
-	directoryService.AccessStates = accessRequestStates
-
-	return directoryService, nil
-}
-
 func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationSerialNumber, serviceName string) (*directoryapi.ListServicesResponse_Service, error) {
 	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
 	if err != nil {
