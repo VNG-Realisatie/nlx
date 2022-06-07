@@ -1,3 +1,18 @@
+# [0.131.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.130.3...v0.131.0) (2022-06-07)
+
+
+### Bug Fixes
+
+* **management:** fix unsetting org inway when deleting inway ([5312610](https://gitlab.com/commonground/nlx/nlx/commit/531261063b12eb18a998887e71e65186f1f636d4)), closes [nlx#1458](https://gitlab.com/nlx/issues/1458)
+* **management:** fix wrong title for inway delete button ([a477092](https://gitlab.com/commonground/nlx/nlx/commit/a4770924aabf365a4b42789feb6231973c28f639)), closes [nlx#1458](https://gitlab.com/nlx/issues/1458)
+
+
+### Features
+
+* **management:** display transaction id in the transaction log ([ef8f56a](https://gitlab.com/commonground/nlx/nlx/commit/ef8f56a15d017479d74a764192be1b2c25dc4b28)), closes [nlx#1554](https://gitlab.com/nlx/issues/1554)
+* **management:** show error message when requesting access fails ([935b25f](https://gitlab.com/commonground/nlx/nlx/commit/935b25f3a71dbd67d6e95d44530165ecd5ac5523)), closes [nlx#1545](https://gitlab.com/nlx/issues/1545)
+* **management:** show toaster when succesfully deleted inway in management ui ([01f9071](https://gitlab.com/commonground/nlx/nlx/commit/01f907128d4fa741893521c25a30881ecf7392d9)), closes [nlx#1458](https://gitlab.com/nlx/issues/1458)
+
 ## [0.130.3](https://gitlab.com/commonground/nlx/nlx/compare/v0.130.2...v0.130.3) (2022-05-30)
 
 
