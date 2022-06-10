@@ -34,9 +34,9 @@ Then(
         "this code should not be triggered, since we expect the inway to be removed"
       );
     } catch (error: any) {
-      if (error.status !== 404) {
+      if (error.response.status !== 404) {
         throw new Error(
-          `unexpected status code '${error.status}' while getting a inway, expected 404`
+          `unexpected status code '${error.response.status}' while getting a inway, expected 404: ${error}`
         );
       }
     }
