@@ -11,17 +11,18 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"go.nlx.io/nlx/management-api/api"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 )
 
+//nolint:funlen // its a unittest
 func TestGetOrganizationService(t *testing.T) {
 	ctx := context.Background()
 
