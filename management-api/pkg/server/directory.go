@@ -46,7 +46,7 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 }
 
 func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.DirectoryService {
-	serviceState := DetermineDirectoryServiceState(s.Inways)
+	serviceState := determineDirectoryServiceState(s.Inways)
 
 	service := &api.DirectoryService{
 		ServiceName:          s.Name,
@@ -90,7 +90,7 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	return nil, status.Error(codes.NotFound, "service not found")
 }
 
-func DetermineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {
+func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {
 	serviceState := api.DirectoryService_unknown
 
 	if len(inways) == 0 {
