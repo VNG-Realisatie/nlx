@@ -90,21 +90,6 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	return nil, status.Error(codes.NotFound, "service not found")
 }
 
-func (s DirectoryService) GetTermsOfService(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
-	s.logger.Info("rpc request GetTermsOfService")
-
-	response, err := s.directoryClient.GetTermsOfService(ctx, &emptypb.Empty{})
-	if err != nil {
-		s.logger.Debug("unable to get terms of service from directory", zap.Error(err))
-		return nil, status.Error(codes.Internal, "unable to get terms of service from directory")
-	}
-
-	return &api.GetTermsOfServiceResponse{
-		Enabled: response.Enabled,
-		Url:     response.Url,
-	}, nil
-}
-
 func DetermineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {
 	serviceState := api.DirectoryService_unknown
 
