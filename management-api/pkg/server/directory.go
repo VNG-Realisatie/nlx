@@ -90,36 +90,6 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	return nil, status.Error(codes.NotFound, "service not found")
 }
 
-func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
-	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
-	logger.Info("rpc request RequestAccessToService")
-
-	ar := &database.OutgoingAccessRequest{
-		Organization: database.Organization{
-			SerialNumber: request.OrganizationSerialNumber,
-		},
-		ServiceName: request.ServiceName,
-	}
-
-	accessRequest, err := s.configDatabase.CreateOutgoingAccessRequest(ctx, ar)
-	if err != nil {
-		return nil, err
-	}
-
-	response := convertOutgoingAccessRequest(accessRequest)
-
-	service, err := s.getService(ctx, logger, request.OrganizationSerialNumber, request.ServiceName)
-	if err != nil {
-		return nil, err
-	}
-
-	logger = logger.With(zap.Any("service", service))
-
-	logger.Debug("send access request to inway")
-
-	return response, nil
-}
-
 func (s DirectoryService) GetTermsOfService(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
 	s.logger.Info("rpc request GetTermsOfService")
 
