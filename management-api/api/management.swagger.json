@@ -1112,49 +1112,10 @@
           }
         } ],
         "requestBody" : {
-          "$ref" : "#/components/requestBodies/inline_object",
           "content" : {
             "application/json" : {
               "schema" : {
-                "properties" : {
-                  "endpointURL" : {
-                    "type" : "string"
-                  },
-                  "documentationURL" : {
-                    "type" : "string"
-                  },
-                  "apiSpecificationURL" : {
-                    "type" : "string"
-                  },
-                  "internal" : {
-                    "type" : "boolean"
-                  },
-                  "techSupportContact" : {
-                    "type" : "string"
-                  },
-                  "publicSupportContact" : {
-                    "type" : "string"
-                  },
-                  "inways" : {
-                    "items" : {
-                      "type" : "string"
-                    },
-                    "type" : "array"
-                  },
-                  "oneTimeCosts" : {
-                    "format" : "int32",
-                    "type" : "integer"
-                  },
-                  "monthlyCosts" : {
-                    "format" : "int32",
-                    "type" : "integer"
-                  },
-                  "requestCosts" : {
-                    "format" : "int32",
-                    "type" : "integer"
-                  }
-                },
-                "type" : "object"
+                "$ref" : "#/components/schemas/Management_UpdateService_request"
               }
             }
           },
@@ -1391,18 +1352,6 @@
     }
   },
   "components" : {
-    "requestBodies" : {
-      "inline_object" : {
-        "content" : {
-          "application/json" : {
-            "schema" : {
-              "$ref" : "#/components/schemas/inline_object"
-            }
-          }
-        },
-        "required" : true
-      }
-    },
     "schemas" : {
       "AuditLogRecordActionType" : {
         "default" : "loginSuccess",
@@ -2480,7 +2429,7 @@
         },
         "type" : "object"
       },
-      "inline_object" : {
+      "Management_UpdateService_request" : {
         "properties" : {
           "endpointURL" : {
             "type" : "string"
