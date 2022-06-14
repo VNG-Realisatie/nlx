@@ -4,39 +4,50 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
-import { DIRECTION_IN } from '../../../stores/models/TransactionLogModel'
+import TransactionLogModel, {
+  DIRECTION_IN,
+} from '../../../stores/models/TransactionLogModel'
 import TransactionLogRow from './index'
 
 test('transaction row should render expected data', () => {
-  const transactionLogRecord = {
-    source: {
-      serialNumber: '00000000000000000001',
+  const model = new TransactionLogModel({
+    transactionLogData: {
+      source: {
+        serialNumber: '00000000000000000001',
+        name: 'Organization One',
+      },
+      destination: {
+        serialNumber: '00000000000000000002',
+        name: 'Organization Two',
+      },
+      service: {
+        name: 'my-service',
+      },
+      direction: DIRECTION_IN,
+      createdAt: new Date(),
     },
-    destination: {
-      serialNumber: '00000000000000000002',
-    },
-    serviceName: 'my-service',
-    direction: DIRECTION_IN,
-    createdAt: new Date(),
-  }
+  })
 
   const { queryByText, rerender } = renderWithProviders(
     <table>
       <tbody>
         <MemoryRouter>
-          <TransactionLogRow transactionLog={transactionLogRecord} />
+          <TransactionLogRow transactionLog={model} />
         </MemoryRouter>
       </tbody>
     </table>,
   )
 
   expect(queryByText('my-service')).toBeInTheDocument()
-  expect(queryByText('00000000000000000001')).toBeInTheDocument()
+  expect(queryByText('Organization One')).toBeInTheDocument()
 
-  const transactionLogWithOrder = Object.assign({}, transactionLogRecord, {
+  model.update({
     order: {
       reference: 'ref-1',
-      delegator: '00000000000000000002',
+      delegator: {
+        serialNumber: '00000000000000000002',
+        name: 'Organization Two',
+      },
     },
   })
 
@@ -44,13 +55,13 @@ test('transaction row should render expected data', () => {
     <table>
       <tbody>
         <MemoryRouter>
-          <TransactionLogRow transactionLog={transactionLogWithOrder} />
+          <TransactionLogRow transactionLog={model} />
         </MemoryRouter>
       </tbody>
     </table>,
   )
 
   expect(
-    queryByText(`00000000000000000001 On behalf of 00000000000000000002`),
+    queryByText(`Organization One On behalf of Organization Two`),
   ).toBeInTheDocument()
 })

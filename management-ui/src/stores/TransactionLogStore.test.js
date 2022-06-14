@@ -35,9 +35,11 @@ test('fetching, getting and updating from server', async () => {
           direction: 'IN',
           source: {
             serialNumber: '00000000000000000001',
+            name: 'Organization One',
           },
           destination: {
             serialNumber: '00000000000000000002',
+            name: 'Organization Two',
           },
           service: {
             name: 'my-service',
@@ -52,9 +54,11 @@ test('fetching, getting and updating from server', async () => {
           direction: 'IN',
           source: {
             serialNumber: '00000000000000000001',
+            name: 'Organization One',
           },
           destination: {
             serialNumber: '00000000000000000002',
+            name: 'Organization Two',
           },
           service: {
             name: 'my-service3',
@@ -65,9 +69,11 @@ test('fetching, getting and updating from server', async () => {
           direction: 'OUT',
           source: {
             serialNumber: '00000000000000000001',
+            name: 'Organization One',
           },
           destination: {
             serialNumber: '00000000000000000002',
+            name: 'Organization Two',
           },
           service: {
             name: 'my-service2',

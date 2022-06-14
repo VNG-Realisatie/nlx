@@ -2,10 +2,12 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { instanceOf, shape, string } from 'prop-types'
+import { instanceOf } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Table from '../../../components/Table'
-import { DIRECTION_IN } from '../../../stores/models/TransactionLogModel'
+import TransactionLogModel, {
+  DIRECTION_IN,
+} from '../../../stores/models/TransactionLogModel'
 
 const TransactionLogRow = ({ transactionLog, ...props }) => {
   const { t } = useTranslation()
@@ -21,11 +23,13 @@ const TransactionLogRow = ({ transactionLog, ...props }) => {
           : t('Outgoing to')}
       </Table.Td>
       <Table.Td>
-        {transactionLog.order && transactionLog.order.delegator
-          ? `${transactionLog.source.serialNumber} ${t('On behalf of')} ${
-              transactionLog.order.delegator
+        {transactionLog.order &&
+        transactionLog.order.delegator &&
+        transactionLog.order.delegator.serialNumber
+          ? `${transactionLog.source.name} ${t('On behalf of')} ${
+              transactionLog.order.delegator.name
             }`
-          : transactionLog.source.serialNumber}
+          : transactionLog.source.name}
       </Table.Td>
       <Table.Td>{transactionLog.serviceName}</Table.Td>
     </Table.Tr>
@@ -33,17 +37,7 @@ const TransactionLogRow = ({ transactionLog, ...props }) => {
 }
 
 TransactionLogRow.propTypes = {
-  transactionLog: shape({
-    direction: string,
-    source: shape({
-      serialNumber: string,
-    }),
-    createdAt: instanceOf(Date),
-    order: shape({
-      delegator: string,
-      reference: string,
-    }),
-  }),
+  transactionLog: instanceOf(TransactionLogModel),
 }
 
 export default TransactionLogRow

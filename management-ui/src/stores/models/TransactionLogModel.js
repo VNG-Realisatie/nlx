@@ -8,19 +8,21 @@ export const DIRECTION_OUT = 'OUT'
 
 class Organization {
   serialNumber = ''
+  name = ''
 
-  constructor(serialNumber) {
+  constructor(serialNumber, name) {
     this.serialNumber = serialNumber
+    this.name = name
   }
 }
 
 class Order {
-  delegator = ''
+  delegator = null
   reference = ''
 
   constructor({ delegator, reference }) {
-    this.delegator = delegator
     this.reference = reference
+    this.delegator = new Organization(delegator.serialNumber, delegator.name)
   }
 }
 
@@ -54,12 +56,16 @@ class TransactionLogModel {
     }
 
     if (transactionLog.source) {
-      this.source = new Organization(transactionLog.source.serialNumber)
+      this.source = new Organization(
+        transactionLog.source.serialNumber,
+        transactionLog.source.name,
+      )
     }
 
     if (transactionLog.destination) {
       this.destination = new Organization(
         transactionLog.destination.serialNumber,
+        transactionLog.destination.name,
       )
     }
 
