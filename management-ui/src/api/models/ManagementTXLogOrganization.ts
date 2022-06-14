@@ -25,6 +25,12 @@ export interface ManagementTXLogOrganization {
      * @memberof ManagementTXLogOrganization
      */
     serialNumber?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementTXLogOrganization
+     */
+    name?: string;
 }
 
 export function ManagementTXLogOrganizationFromJSON(json: any): ManagementTXLogOrganization {
@@ -38,6 +44,7 @@ export function ManagementTXLogOrganizationFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'serialNumber': !exists(json, 'serialNumber') ? undefined : json['serialNumber'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
     };
 }
 
@@ -51,6 +58,7 @@ export function ManagementTXLogOrganizationToJSON(value?: ManagementTXLogOrganiz
     return {
         
         'serialNumber': value.serialNumber,
+        'name': value.name,
     };
 }
 

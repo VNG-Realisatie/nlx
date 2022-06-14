@@ -129,7 +129,7 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 	api.RegisterDirectoryServer(grpcServer, directoryService)
 
 	if args.TXLogAddress != "" {
-		txlogService := server.NewTXLogService(args.Logger, txlogClient)
+		txlogService := server.NewTXLogService(args.Logger, txlogClient, directoryClient)
 		api.RegisterTXLogServer(grpcServer, txlogService)
 	}
 

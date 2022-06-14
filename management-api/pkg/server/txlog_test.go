@@ -17,7 +17,9 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
@@ -69,13 +71,28 @@ func TestTXLogListRecords(t *testing.T) {
 	now := time.Now()
 
 	tests := map[string]struct {
-		setup   func(context.Context, *mock_txlog.MockClient)
+		setup   func(context.Context, *txlogServiceMocks)
 		want    *api.TXLogListRecordsResponse
 		wantErr error
 	}{
-		"when_txlog_error": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockClient) {
-				mocks.
+		"when_directory_client_errors": {
+			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
+				mocks.d.
+					EXPECT().
+					ListParticipants(ctx, &emptypb.Empty{}).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			want:    nil,
+			wantErr: status.Error(codes.Internal, "txlog error"),
+		},
+		"when_txlogclient_errors": {
+			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
+				mocks.d.
+					EXPECT().
+					ListParticipants(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{Participants: nil}, nil)
+
+				mocks.m.
 					EXPECT().
 					ListRecords(ctx, &emptypb.Empty{}).
 					Return(nil, errors.New("arbitrary error"))
@@ -84,25 +101,50 @@ func TestTXLogListRecords(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "txlog error"),
 		},
 		"happy_flow": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockClient) {
-				mocks.
+			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
+				mocks.d.
+					EXPECT().
+					ListParticipants(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{
+						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+							},
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000002",
+									Name:         "Organization Two",
+								},
+							},
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000003",
+									Name:         "Organization Three",
+								},
+							},
+						}}, nil)
+
+				mocks.m.
 					EXPECT().
 					ListRecords(ctx, &emptypb.Empty{}).
 					Return(&txlogapi.ListRecordsResponse{
 						Records: []*txlogapi.Record{
 							{
 								Source: &txlogapi.Organization{
-									SerialNumber: "0001",
+									SerialNumber: "00000000000000000001",
 								},
 								Destination: &txlogapi.Organization{
-									SerialNumber: "0002",
+									SerialNumber: "00000000000000000002",
 								},
 								Direction: txlogapi.Direction_IN,
 								Service: &txlogapi.Service{
 									Name: "test-service",
 								},
 								Order: &txlogapi.Order{
-									Delegator: "0003",
+									Delegator: "00000000000000000003",
 									Reference: "test-reference",
 								},
 								Data:          `{"test":"data"}`,
@@ -116,17 +158,22 @@ func TestTXLogListRecords(t *testing.T) {
 				Records: []*api.TXLogRecord{
 					{
 						Source: &api.TXLogOrganization{
-							SerialNumber: "0001",
+							SerialNumber: "00000000000000000001",
+							Name:         "Organization One",
 						},
 						Destination: &api.TXLogOrganization{
-							SerialNumber: "0002",
+							SerialNumber: "00000000000000000002",
+							Name:         "Organization Two",
 						},
 						Direction: api.TXLogDirection_IN,
 						Service: &api.TXLogService{
 							Name: "test-service",
 						},
 						Order: &api.TXLogOrder{
-							Delegator: "0003",
+							Delegator: &api.TXLogOrganization{
+								SerialNumber: "00000000000000000003",
+								Name:         "Organization Three",
+							},
 							Reference: "test-reference",
 						},
 						Data:          `{"test":"data"}`,
@@ -155,7 +202,12 @@ func TestTXLogListRecords(t *testing.T) {
 	}
 }
 
-func newTXLogService(t *testing.T) (s *server.TXLogService, m *mock_txlog.MockClient) {
+type txlogServiceMocks struct {
+	m *mock_txlog.MockClient
+	d *mock_directory.MockClient
+}
+
+func newTXLogService(t *testing.T) (s *server.TXLogService, mocks *txlogServiceMocks) {
 	logger := zaptest.Logger(t)
 
 	ctrl := gomock.NewController(t)
@@ -164,9 +216,12 @@ func newTXLogService(t *testing.T) (s *server.TXLogService, m *mock_txlog.MockCl
 		ctrl.Finish()
 	})
 
-	m = mock_txlog.NewMockClient(ctrl)
+	mocks = &txlogServiceMocks{
+		m: mock_txlog.NewMockClient(ctrl),
+		d: mock_directory.NewMockClient(ctrl),
+	}
 
-	s = server.NewTXLogService(logger, m)
+	s = server.NewTXLogService(logger, mocks.m, mocks.d)
 
 	return
 }

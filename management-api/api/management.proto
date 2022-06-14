@@ -612,6 +612,7 @@ enum TXLogDirection {
 
 message TXLogOrganization {
   string serialNumber = 1;
+  string name = 2;
 }
 
 message TXLogService {
@@ -619,7 +620,7 @@ message TXLogService {
 }
 
 message TXLogOrder {
-  string delegator = 1;
+  TXLogOrganization delegator = 1;
   string reference = 2;
 }
 

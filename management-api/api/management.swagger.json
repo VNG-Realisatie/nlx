@@ -2259,7 +2259,7 @@
       "managementTXLogOrder" : {
         "properties" : {
           "delegator" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/managementTXLogOrganization"
           },
           "reference" : {
             "type" : "string"
@@ -2270,6 +2270,9 @@
       "managementTXLogOrganization" : {
         "properties" : {
           "serialNumber" : {
+            "type" : "string"
+          },
+          "name" : {
             "type" : "string"
           }
         },

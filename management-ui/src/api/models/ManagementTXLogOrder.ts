@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ManagementTXLogOrganization,
+    ManagementTXLogOrganizationFromJSON,
+    ManagementTXLogOrganizationFromJSONTyped,
+    ManagementTXLogOrganizationToJSON,
+} from './ManagementTXLogOrganization';
+
 /**
  * 
  * @export
@@ -21,10 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface ManagementTXLogOrder {
     /**
      * 
-     * @type {string}
+     * @type {ManagementTXLogOrganization}
      * @memberof ManagementTXLogOrder
      */
-    delegator?: string;
+    delegator?: ManagementTXLogOrganization;
     /**
      * 
      * @type {string}
@@ -43,7 +50,7 @@ export function ManagementTXLogOrderFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'delegator': !exists(json, 'delegator') ? undefined : json['delegator'],
+        'delegator': !exists(json, 'delegator') ? undefined : ManagementTXLogOrganizationFromJSON(json['delegator']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
     };
 }
@@ -57,7 +64,7 @@ export function ManagementTXLogOrderToJSON(value?: ManagementTXLogOrder | null):
     }
     return {
         
-        'delegator': value.delegator,
+        'delegator': ManagementTXLogOrganizationToJSON(value.delegator),
         'reference': value.reference,
     };
 }
