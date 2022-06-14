@@ -18,8 +18,7 @@ import (
 type TXLogService struct {
 	api.UnimplementedTXLogServer
 
-	logger *zap.Logger
-
+	logger      *zap.Logger
 	txlogClient txlog.Client
 }
 
@@ -30,13 +29,12 @@ func NewTXLogService(logger *zap.Logger, txlogClient txlog.Client) *TXLogService
 	}
 }
 
-func (s *ManagementService) IsTXLogEnabled(ctx context.Context, request *emptypb.Empty) (*api.IsTXLogEnabledResponse, error) {
+func (s *ManagementService) IsTXLogEnabled(context.Context, *emptypb.Empty) (*api.IsTXLogEnabledResponse, error) {
 	return &api.IsTXLogEnabledResponse{
 		Enabled: s.txlogClient != nil,
 	}, nil
 }
 
-// ListRecords returns transaction log records
 func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
