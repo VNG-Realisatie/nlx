@@ -12,13 +12,13 @@ import OrderDetailView from './OrderDetailView'
 import EditRevoke from './EditRevoke'
 
 const OrderDetailPage = () => {
-  const { delegatee, reference } = useParams()
+  const { delegateeSerialNumber, reference } = useParams()
   const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
   const navigate = useNavigate()
   const orderStore = useOrderStore()
 
-  const order = orderStore.getOutgoing(delegatee, reference)
+  const order = orderStore.getOutgoing(delegateeSerialNumber, reference)
 
   const close = () => navigate('/orders/outgoing')
 
@@ -47,7 +47,7 @@ const OrderDetailPage = () => {
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the order for delegatee', {
             reference,
-            delegatee,
+            delegateeSerialNumber,
           })}
         </Alert>
       )
@@ -67,7 +67,9 @@ const OrderDetailPage = () => {
 
         {order && (
           <SubTitle>
-            {t('Issued to delegatee', { delegatee: order.delegatee })}
+            {t('Issued to delegatee', {
+              delegatee: order.delegatee.name,
+            })}
           </SubTitle>
         )}
 

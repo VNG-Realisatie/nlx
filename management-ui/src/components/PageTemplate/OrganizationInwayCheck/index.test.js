@@ -37,7 +37,7 @@ test('providing services but no organization inway', async () => {
   ).toBeInTheDocument()
 })
 
-test('having outgoing orders but no organization inway', async () => {
+test('having outgoing orders but no organization Inway', async () => {
   const managementApiClient = new ManagementApi()
   managementApiClientWithOutgoingOrder(managementApiClient)
 
@@ -120,6 +120,14 @@ function managementApiClientWithOutgoingOrder(managementApiClient) {
   managementApiClient.managementListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
-      orders: [{ reference: 'reference' }],
+      orders: [
+        {
+          reference: 'reference',
+          delegatee: {
+            serialNumber: '00000000000000000001',
+            name: 'Organization One',
+          },
+        },
+      ],
     })
 }

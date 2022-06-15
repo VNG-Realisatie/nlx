@@ -15,7 +15,7 @@ const OrderRow = ({ order }) => {
   return (
     <Table.Tr
       to={`/orders/outgoing/${encodeURIComponent(
-        order.delegatee,
+        order.delegatee.serialNumber,
       )}/${encodeURIComponent(order.reference)}`}
     >
       <Cell>
@@ -30,16 +30,16 @@ const OrderRow = ({ order }) => {
         />
       </Cell>
       <Cell>{order.description}</Cell>
-      <Cell>{order.delegatee}</Cell>
+      <Cell>{order.delegatee.name}</Cell>
       <CellServices>
         <List>
           {order.accessProofs.map((accessProof, i) => (
             <Item
               key={i}
-              title={`${accessProof.organization.serialNumber} - ${accessProof.serviceName}`}
+              title={`${accessProof.organization.name} - ${accessProof.serviceName}`}
             >
               <OrganizationName>
-                {accessProof.organization.serialNumber}
+                {accessProof.organization.name}
               </OrganizationName>
               <Separator> - </Separator>
               {accessProof.serviceName}

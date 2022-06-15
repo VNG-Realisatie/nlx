@@ -10,12 +10,12 @@ import { SubTitle } from './index.styles'
 import OrderDetailView from './OrderDetailView'
 
 const OrderDetailPage = () => {
-  const { delegator, reference } = useParams()
+  const { delegatorSerialNumber, reference } = useParams()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const orderStore = useOrderStore()
 
-  const order = orderStore.getIncoming(delegator, reference)
+  const order = orderStore.getIncoming(delegatorSerialNumber, reference)
   const close = () => navigate('/orders/incoming')
 
   return (
@@ -29,7 +29,9 @@ const OrderDetailPage = () => {
 
       {order && (
         <SubTitle>
-          {t('Issued by delegator', { delegator: order.delegator })}
+          {t('Issued by delegator', {
+            delegator: order.delegator.name,
+          })}
         </SubTitle>
       )}
 
@@ -38,7 +40,7 @@ const OrderDetailPage = () => {
           <Alert variant="error" data-testid="error-message">
             {t('Failed to load the order issued by delegator', {
               reference,
-              delegator,
+              delegatorSerialNumber,
             })}
           </Alert>
         ) : (

@@ -8,6 +8,7 @@ import (
 
 	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
+
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -16,7 +17,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-func newDirectoryService(t *testing.T) (s *server.DirectoryService, m *mock_directory.MockClient, db *mock_database.MockConfigDatabase) {
+func newDirectoryService(t *testing.T) (*server.DirectoryService, directoryServiceMocks) {
 	logger := zaptest.Logger(t)
 
 	ctrl := gomock.NewController(t)
@@ -25,13 +26,19 @@ func newDirectoryService(t *testing.T) (s *server.DirectoryService, m *mock_dire
 		ctrl.Finish()
 	})
 
-	db = mock_database.NewMockConfigDatabase(ctrl)
+	mocks := directoryServiceMocks{
+		d:  mock_directory.NewMockClient(ctrl),
+		db: mock_database.NewMockConfigDatabase(ctrl),
+	}
 
-	m = mock_directory.NewMockClient(ctrl)
+	s := server.NewDirectoryService(logger, &environment.Environment{}, mocks.d, mocks.db)
 
-	s = server.NewDirectoryService(logger, &environment.Environment{}, m, db)
+	return s, mocks
+}
 
-	return
+type directoryServiceMocks struct {
+	d  *mock_directory.MockClient
+	db *mock_database.MockConfigDatabase
 }
 
 var directoryServiceStateTests = []struct {

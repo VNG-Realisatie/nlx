@@ -27,11 +27,17 @@ test('fetch outgoing orders', async () => {
     .mockResolvedValue({
       orders: [
         {
-          delegatee: 'delegatee 1',
+          delegatee: {
+            serialNumber: '00000000000000000001',
+            name: 'Organization One',
+          },
           reference: 'reference',
         },
         {
-          delegatee: 'delegatee 2',
+          delegatee: {
+            serialNumber: '00000000000000000002',
+            name: 'Organization Two',
+          },
           reference: 'reference',
         },
       ],
@@ -51,7 +57,7 @@ test('fetch outgoing orders', async () => {
   await waitFor(() => expect(store.isLoading).toBe(false))
   expect(store.outgoingOrders).toHaveLength(2)
 
-  const firstOrder = store.getOutgoing('delegatee 1', 'reference')
+  const firstOrder = store.getOutgoing('00000000000000000001', 'reference')
   expect(firstOrder).toBeInstanceOf(OutgoingOrderModel)
 })
 
@@ -64,7 +70,10 @@ test('revoke outgoing order', async () => {
     .mockResolvedValue({
       orders: [
         {
-          delegatee: 'delegatee 1',
+          delegatee: {
+            serialNumber: '00000000000000000001',
+            name: 'Organization One',
+          },
           reference: 'reference',
         },
       ],
@@ -81,14 +90,14 @@ test('revoke outgoing order', async () => {
 
   await store.fetchOutgoing()
 
-  const firstOrder = store.getOutgoing('delegatee 1', 'reference')
+  const firstOrder = store.getOutgoing('00000000000000000001', 'reference')
 
   jest.spyOn(store, 'revokeOutgoing')
 
   await store.revokeOutgoing(firstOrder)
 
   expect(managementApiClient.managementRevokeOutgoingOrder).toBeCalledWith({
-    delegatee: 'delegatee 1',
+    delegatee: '00000000000000000001',
     reference: 'reference',
   })
 
@@ -107,13 +116,16 @@ test('creating an outgoing order', async () => {
   })
   const orderStore = rootStore.orderStore
 
-  const order = await orderStore.create({
-    delegatee: 'delegatee',
-    reference: 'my-reference',
-  })
-
-  expect(order).toBeInstanceOf(OutgoingOrderModel)
-  expect(orderStore.getOutgoing('delegatee', 'my-reference')).toBe(order)
+  expect(
+    async () =>
+      await orderStore.create({
+        delegatee: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
+        reference: 'my-reference',
+      }),
+  ).not.toThrow()
 })
 
 test('fetch incoming orders', async () => {
@@ -125,11 +137,17 @@ test('fetch incoming orders', async () => {
     .mockResolvedValue({
       orders: [
         {
-          delegator: '01234567890123456789',
+          delegator: {
+            serialNumber: '00000000000000000001',
+            name: 'Organization One',
+          },
           reference: 'reference',
         },
         {
-          delegator: '01234567890123456780',
+          delegator: {
+            serialNumber: '00000000000000000002',
+            name: 'Organization Two',
+          },
           reference: 'reference',
         },
       ],
@@ -149,6 +167,6 @@ test('fetch incoming orders', async () => {
   await waitFor(() => expect(store.isLoading).toBe(false))
   expect(store.incomingOrders).toHaveLength(2)
 
-  const firstOrder = store.getIncoming('01234567890123456789', 'reference')
+  const firstOrder = store.getIncoming('00000000000000000001', 'reference')
   expect(firstOrder).toBeInstanceOf(IncomingOrderModel)
 })

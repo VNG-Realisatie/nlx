@@ -20,6 +20,14 @@ import (
 )
 
 func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
+	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	if err != nil {
+		s.logger.Error("error getting participants from directory", zap.Error(err))
+		return nil, status.Errorf(codes.Internal, "internal error")
+	}
+
+	oinToOrgNameHash := convertParticipantsToHash(participants)
+
 	response, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
 		s.logger.Error("failed to list response", zap.Error(err))
@@ -76,7 +84,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 		orders = append(orders, &database.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
-			Delegator:   order.Delegator,
+			Delegator:   order.Delegator.SerialNumber,
 			RevokedAt:   convert.ProtoToSQLTimestamp(order.RevokedAt),
 			ValidFrom:   order.ValidFrom.AsTime(),
 			ValidUntil:  order.ValidUntil.AsTime(),
@@ -99,11 +107,14 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 		incomingOrders[i] = &api.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
-			Delegator:   order.Delegator,
-			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
-			ValidFrom:   timestamppb.New(order.ValidFrom),
-			ValidUntil:  timestamppb.New(order.ValidUntil),
-			Services:    convertIncomingOrderServices(order.Services),
+			Delegator: &api.Organization{
+				SerialNumber: order.Delegator,
+				Name:         oinToOrgNameHash[order.Delegator],
+			},
+			RevokedAt:  convert.SQLToProtoTimestamp(order.RevokedAt),
+			ValidFrom:  timestamppb.New(order.ValidFrom),
+			ValidUntil: timestamppb.New(order.ValidUntil),
+			Services:   convertIncomingOrderServices(order.Services, oinToOrgNameHash),
 		}
 	}
 

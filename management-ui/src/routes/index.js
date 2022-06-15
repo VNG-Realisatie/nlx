@@ -76,7 +76,7 @@ const AllRoutes = ({ authorizationPageElement, tos }) => (
                       />
 
                       <Route
-                        path="/orders/outgoing/:delegatee/:reference/edit"
+                        path="/orders/outgoing/:delegateeSerialNumber/:reference/edit"
                         element={<EditOrderPage />}
                       />
 

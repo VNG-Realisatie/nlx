@@ -24,7 +24,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 
 	directoryService := convertDirectoryService(service)
 
-	accessRequestStates, err := getLatestAccessRequestStates(ctx, s.configDatabase, directoryService.Organization.SerialNumber, directoryService.ServiceName)
+	accessRequestStates, err := getLatestAccessRequestStates(ctx, s.directoryClient, s.configDatabase, directoryService.Organization.SerialNumber, directoryService.ServiceName)
 	if err != nil {
 		s.logger.Error("error getting latest access request states", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "database error")

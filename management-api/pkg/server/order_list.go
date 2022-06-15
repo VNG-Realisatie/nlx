@@ -24,6 +24,14 @@ import (
 func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListOutgoingOrdersResponse, error) {
 	s.logger.Info("rpc request ListOutgoingOrders")
 
+	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	if err != nil {
+		s.logger.Error("error getting participants from directory", zap.Error(err))
+		return nil, status.Errorf(codes.Internal, "internal error")
+	}
+
+	oinToOrgNameHash := convertParticipantsToHash(participants)
+
 	orders, err := s.configDatabase.ListOutgoingOrders(ctx)
 	if err != nil {
 		s.logger.Error("error getting outgoing orders from database", zap.Error(err))
@@ -36,6 +44,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 		accessProofs := make([]*api.AccessProof, len(order.OutgoingOrderAccessProofs))
 
 		for j, outgoingOrderAccessProofs := range order.OutgoingOrderAccessProofs {
+			outgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest.Organization.Name = oinToOrgNameHash[outgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest.Organization.SerialNumber]
 			accessProofs[j] = convertAccessProof(outgoingOrderAccessProofs.AccessProof)
 		}
 
@@ -43,7 +52,10 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 			Reference:    order.Reference,
 			PublicKeyPem: order.PublicKeyPEM,
 			Description:  order.Description,
-			Delegatee:    order.Delegatee,
+			Delegatee: &api.Organization{
+				SerialNumber: order.Delegatee,
+				Name:         oinToOrgNameHash[order.Delegatee],
+			},
 			RevokedAt:    convert.SQLToProtoTimestamp(order.RevokedAt),
 			ValidFrom:    timestamppb.New(order.ValidFrom),
 			ValidUntil:   timestamppb.New(order.ValidUntil),
@@ -56,6 +68,14 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 
 func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListIncomingOrdersResponse, error) {
 	s.logger.Info("rpc request ListIncomingOrders")
+
+	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	if err != nil {
+		s.logger.Error("error getting participants from directory", zap.Error(err))
+		return nil, status.Errorf(codes.Internal, "internal error")
+	}
+
+	oinToOrgNameHash := convertParticipantsToHash(participants)
 
 	orders, err := s.configDatabase.ListIncomingOrders(ctx)
 	if err != nil {
@@ -75,11 +95,14 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 		incomingOrders[i] = &api.IncomingOrder{
 			Reference:   order.Reference(),
 			Description: order.Description(),
-			Delegator:   order.Delegator(),
-			RevokedAt:   revokedAt,
-			ValidFrom:   timestamppb.New(order.ValidFrom()),
-			ValidUntil:  timestamppb.New(order.ValidUntil()),
-			Services:    convertDomainIncomingOrderServices(order.Services()),
+			Delegator: &api.Organization{
+				SerialNumber: order.Delegator(),
+				Name:         oinToOrgNameHash[order.Delegator()],
+			},
+			RevokedAt:  revokedAt,
+			ValidFrom:  timestamppb.New(order.ValidFrom()),
+			ValidUntil: timestamppb.New(order.ValidUntil()),
+			Services:   convertDomainIncomingOrderServices(order.Services(), oinToOrgNameHash),
 		}
 	}
 
@@ -104,25 +127,27 @@ func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*
 		incomingOrders[i] = &api.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
-			Delegator:   s.orgCert.Certificate().Subject.SerialNumber,
-			RevokedAt:   convert.SQLToProtoTimestamp(order.RevokedAt),
-			ValidFrom:   timestamppb.New(order.ValidFrom),
-			ValidUntil:  timestamppb.New(order.ValidUntil),
-			Services:    convertOutgoingAccessProofsToOrderServices(order.OutgoingOrderAccessProofs),
+			Delegator: &api.Organization{
+				SerialNumber: s.orgCert.Certificate().Subject.SerialNumber,
+			},
+			RevokedAt:  convert.SQLToProtoTimestamp(order.RevokedAt),
+			ValidFrom:  timestamppb.New(order.ValidFrom),
+			ValidUntil: timestamppb.New(order.ValidUntil),
+			Services:   convertOutgoingAccessProofsToOrderServices(order.OutgoingOrderAccessProofs),
 		}
 	}
 
 	return &external.ListOrdersResponse{Orders: incomingOrders}, nil
 }
 
-func convertIncomingOrderServices(services []database.IncomingOrderService) []*api.OrderService {
+func convertIncomingOrderServices(services []database.IncomingOrderService, oinToOrgNameHash map[string]string) []*api.OrderService {
 	protoServices := make([]*api.OrderService, len(services))
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
 			Organization: &api.Organization{
 				SerialNumber: service.Organization.SerialNumber,
-				Name:         service.Organization.Name,
+				Name:         oinToOrgNameHash[service.Organization.SerialNumber],
 			},
 			Service: service.Service,
 		}
@@ -157,14 +182,14 @@ func convertOutgoingAccessProofsToOrderServices(outgoingOrderAccessProofs []*dat
 
 	return protoServices
 }
-func convertDomainIncomingOrderServices(services []domain.IncomingOrderService) []*api.OrderService {
+func convertDomainIncomingOrderServices(services []domain.IncomingOrderService, oinToOrgNameHash map[string]string) []*api.OrderService {
 	protoServices := make([]*api.OrderService, len(services))
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
 			Organization: &api.Organization{
 				SerialNumber: service.OrganizationSerialNumber(),
-				Name:         service.OrganizationName(),
+				Name:         oinToOrgNameHash[service.OrganizationSerialNumber()],
 			},
 			Service: service.Service(),
 		}

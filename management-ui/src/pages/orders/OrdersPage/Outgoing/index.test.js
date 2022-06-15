@@ -28,7 +28,10 @@ test('displays an order row for each order', () => {
       orderData: {
         reference: 'ref1',
         description: 'my own description',
-        delegator: '01234567890123456789',
+        delegatee: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         validUntil: '2021-05-10',
         accessProofIds: [],
       },
@@ -38,7 +41,10 @@ test('displays an order row for each order', () => {
       orderData: {
         reference: 'ref2',
         description: 'my own description',
-        delegator: '01234567890123456789',
+        delegatee: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         validUntil: '2021-05-05',
         accessProofIds: [],
       },
@@ -85,7 +91,10 @@ test('content should render expected data', async () => {
         {
           reference: 'ref1',
           description: 'my own description',
-          delegatee: '10000000000000000000',
+          delegatee: {
+            serialNumber: '00000000000000000001',
+            name: 'Organization One',
+          },
           validFrom: new Date(new Date().getTime() - oneDay).toISOString(),
           validUntil: new Date(new Date().getTime() + oneDay).toISOString(),
           revokedAt: null,
@@ -93,8 +102,8 @@ test('content should render expected data', async () => {
             {
               id: 1,
               organization: {
-                serialNumber: '00000000000000000001',
-                name: '',
+                serialNumber: '0000000000000000000',
+                name: 'Organization Two',
               },
               serviceName: 'service A',
               publicKeyFingerprint: 'public-key-fingerprint-a',
@@ -102,8 +111,8 @@ test('content should render expected data', async () => {
             {
               id: 2,
               organization: {
-                serialNumber: '00000000000000000002',
-                name: '',
+                serialNumber: '00000000000000000003',
+                name: 'Organization Three',
               },
               serviceName: 'service B',
               publicKeyFingerprint: 'public-key-fingerprint-b',
@@ -146,12 +155,12 @@ test('content should render expected data', async () => {
   const firstOrder = within(firstOrderEl)
   expect(firstOrder.getByTitle('Active')).toBeInTheDocument()
   expect(firstOrder.getByText('my own description')).toBeInTheDocument()
-  expect(firstOrder.getByText('10000000000000000000')).toBeInTheDocument()
+  expect(firstOrder.getByText('Organization One')).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('00000000000000000001 - service A'),
+    firstOrder.getByTitle('Organization Two - service A'),
   ).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('00000000000000000002 - service B'),
+    firstOrder.getByTitle('Organization Three - service B'),
   ).toBeInTheDocument()
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
@@ -159,6 +168,6 @@ test('content should render expected data', async () => {
 
   fireEvent.click(firstOrderEl)
   expect(history.location.pathname).toEqual(
-    '/orders/outgoing/10000000000000000000/ref1',
+    '/orders/outgoing/00000000000000000001/ref1',
   )
 })

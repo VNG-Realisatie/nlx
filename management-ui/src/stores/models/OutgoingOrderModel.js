@@ -10,6 +10,16 @@ function throwErrorWhenNotInstanceOf(object, model) {
   }
 }
 
+class Organization {
+  serialNumber = ''
+  name = ''
+
+  constructor(serialNumber, name) {
+    this.serialNumber = serialNumber
+    this.name = name
+  }
+}
+
 class OutgoingOrderModel {
   _description = null
   _delegatee = null
@@ -81,7 +91,10 @@ class OutgoingOrderModel {
     }
 
     if (orderData.delegatee) {
-      this._delegatee = orderData.delegatee
+      this._delegatee = new Organization(
+        orderData.delegatee.serialNumber,
+        orderData.delegatee.name,
+      )
     }
 
     if (orderData.publicKeyPem) {

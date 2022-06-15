@@ -37,7 +37,7 @@ func TestListDirectoryServices(t *testing.T) {
 			Name: "test-service-1",
 			Organization: &directoryapi.Organization{
 				SerialNumber: "00000000000000000001",
-				Name:         "test-organization-a",
+				Name:         "Organization One",
 			},
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationUrl:     "https://example.com",
@@ -55,6 +55,20 @@ func TestListDirectoryServices(t *testing.T) {
 		ListServices(ctx, &emptypb.Empty{}).
 		Return(&directoryapi.ListServicesResponse{Services: clientServices}, nil)
 
+	client.
+		EXPECT().
+		ListParticipants(ctx, &emptypb.Empty{}).
+		Return(&directoryapi.ListParticipantsResponse{
+			Participants: []*directoryapi.ListParticipantsResponse_Participant{
+				{
+					Organization: &directoryapi.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "Organization One",
+					},
+				},
+			},
+		}, nil)
+
 	db := mock_database.NewMockConfigDatabase(mockCtrl)
 	service := clientServices[0]
 
@@ -65,7 +79,6 @@ func TestListDirectoryServices(t *testing.T) {
 				ID: 1,
 				Organization: database.Organization{
 					SerialNumber: "00000000000000000001",
-					Name:         "test-organization-a",
 				},
 				ServiceName:          "test-service-1",
 				State:                database.OutgoingAccessRequestCreated,
@@ -84,7 +97,6 @@ func TestListDirectoryServices(t *testing.T) {
 				ID: 1,
 				Organization: database.Organization{
 					SerialNumber: "00000000000000000001",
-					Name:         "test-organization-a",
 				},
 				ServiceName:          "test-service-1",
 				State:                database.OutgoingAccessRequestCreated,
@@ -105,7 +117,7 @@ func TestListDirectoryServices(t *testing.T) {
 			ServiceName: "test-service-1",
 			Organization: &api.Organization{
 				SerialNumber: "00000000000000000001",
-				Name:         "test-organization-a",
+				Name:         "Organization One",
 			},
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationURL:     "https://example.com",
@@ -121,7 +133,7 @@ func TestListDirectoryServices(t *testing.T) {
 						Id: 1,
 						Organization: &api.Organization{
 							SerialNumber: "00000000000000000001",
-							Name:         "test-organization-a",
+							Name:         "Organization One",
 						},
 						ServiceName:          "test-service-1",
 						PublicKeyFingerprint: "public-key-fingerprint",
@@ -133,7 +145,7 @@ func TestListDirectoryServices(t *testing.T) {
 						Id: 1,
 						Organization: &api.Organization{
 							SerialNumber: "00000000000000000001",
-							Name:         "test-organization-a",
+							Name:         "Organization One",
 						},
 						ServiceName:          "test-service-1",
 						AccessRequestId:      1,

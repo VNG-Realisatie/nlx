@@ -38,7 +38,10 @@ const Outgoing = ({ orders }) => {
         </Table>
       </Wrapper>
       <Routes>
-        <Route path=":delegatee/:reference" element={<OrderDetailPage />} />
+        <Route
+          path=":delegateeSerialNumber/:reference"
+          element={<OrderDetailPage />}
+        />
       </Routes>
     </>
   ) : (

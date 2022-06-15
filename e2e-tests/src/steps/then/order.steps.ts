@@ -33,7 +33,7 @@ Then(
       orderResponse?.orders?.some(
         (order: ManagementOutgoingOrder) =>
           order.reference === orderReference &&
-          order.delegatee === delegatee.serialNumber &&
+          order.delegatee?.serialNumber === delegatee.serialNumber &&
           order.revokedAt === undefined &&
           order.accessProofs?.some(
             (accessProof) =>
@@ -74,11 +74,11 @@ Then(
       orderResponse?.orders?.some(
         (order: ManagementIncomingOrder) =>
           order.reference === orderReference &&
-          order.delegator === delegator.serialNumber &&
+          order.delegator?.serialNumber === delegator.serialNumber &&
           order.revokedAt !== undefined
       ),
       true,
-      `cannot find order, values used: reference: ${orderReference}, delegator: ${delegator.serialNumber}, org: ${delegatee.serialNumber}`
+      `cannot find incoming order, values used: reference: ${orderReference}, delegator: ${delegator.serialNumber}, org: ${delegatee.serialNumber}`
     );
   }
 );

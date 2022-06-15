@@ -21,6 +21,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/domain"
@@ -43,12 +44,35 @@ func TestListOutgoingOrders(t *testing.T) {
 	}{
 		"when_retrieval_of_orders_from_database_fails": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.EXPECT().ListOutgoingOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(nil, errors.New("arbitrary error"))
 			},
-			wantErr: status.Error(codes.Internal, "failed to retrieve outgoing orders"),
+			wantErr: status.Error(codes.Internal, "internal error"),
 		},
 		"happy_flow": {
 			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{
+						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+							},
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000002",
+									Name:         "Organization Two",
+								},
+							},
+						},
+					}, nil)
+
 				mocks.db.
 					EXPECT().
 					ListOutgoingOrders(gomock.Any()).
@@ -57,7 +81,7 @@ func TestListOutgoingOrders(t *testing.T) {
 							ID:           1,
 							Reference:    "reference",
 							Description:  "description",
-							Delegatee:    "10000000000000000001",
+							Delegatee:    "00000000000000000001",
 							PublicKeyPEM: "public_key",
 							ValidFrom:    validFrom,
 							ValidUntil:   validUntil,
@@ -72,7 +96,7 @@ func TestListOutgoingOrders(t *testing.T) {
 										OutgoingAccessRequest: &database.OutgoingAccessRequest{
 											ID: 100,
 											Organization: database.Organization{
-												SerialNumber: "00000000000000000001",
+												SerialNumber: "00000000000000000002",
 											},
 											ServiceName:          "test-service",
 											ReferenceID:          0,
@@ -92,15 +116,21 @@ func TestListOutgoingOrders(t *testing.T) {
 			wantResponse: &api.ListOutgoingOrdersResponse{
 				Orders: []*api.OutgoingOrder{
 					{
-						Reference:    "reference",
-						Description:  "description",
-						Delegatee:    "10000000000000000001",
+						Reference:   "reference",
+						Description: "description",
+						Delegatee: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "Organization One",
+						},
 						PublicKeyPem: "public_key",
 						ValidFrom:    timestamppb.New(validFrom),
 						ValidUntil:   timestamppb.New(validUntil),
 						AccessProofs: []*api.AccessProof{{
-							Id:                   10,
-							Organization:         &api.Organization{SerialNumber: "00000000000000000001"},
+							Id: 10,
+							Organization: &api.Organization{
+								SerialNumber: "00000000000000000002",
+								Name:         "Organization Two",
+							},
 							ServiceName:          "test-service",
 							PublicKeyFingerprint: "public-key-fingerprint",
 							CreatedAt:            timestamppb.New(accessProofCreatedAt),
@@ -147,9 +177,25 @@ func TestListIncomingOrders(t *testing.T) {
 		wantResponse *api.ListIncomingOrdersResponse
 		wantErr      error
 	}{
+		"when_retrieval_of_participants_from_directory_fails": {
+			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			wantErr: status.Error(codes.Internal, "internal error"),
+		},
 		"when_retrieval_of_orders_from_database_fails": {
 			setup: func(mocks serviceMocks) {
-				mocks.db.EXPECT().ListIncomingOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{}, nil)
+
+				mocks.db.
+					EXPECT().
+					ListIncomingOrders(gomock.Any()).Return(nil, errors.New("arbitrary error"))
 			},
 			wantErr: status.Error(codes.Internal, "failed to retrieve received orders"),
 		},
@@ -170,6 +216,20 @@ func TestListIncomingOrders(t *testing.T) {
 					},
 				)
 
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{
+						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+							},
+						},
+					}, nil)
+
 				mocks.db.
 					EXPECT().
 					ListIncomingOrders(gomock.Any()).
@@ -182,14 +242,17 @@ func TestListIncomingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "00000000000000000001",
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
+						Delegator: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "Organization One",
+						},
+						ValidFrom:  timestamppb.New(validFrom),
+						ValidUntil: timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",
 								Organization: &api.Organization{
-									Name:         "organization-a",
+									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},
 							},
@@ -216,6 +279,20 @@ func TestListIncomingOrders(t *testing.T) {
 					},
 				)
 
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{
+						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+							},
+						},
+					}, nil)
+
 				mocks.db.
 					EXPECT().
 					ListIncomingOrders(gomock.Any()).
@@ -228,15 +305,18 @@ func TestListIncomingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "00000000000000000001",
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
-						RevokedAt:   timestamppb.New(revokedAt),
+						Delegator: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "Organization One",
+						},
+						ValidFrom:  timestamppb.New(validFrom),
+						ValidUntil: timestamppb.New(validUntil),
+						RevokedAt:  timestamppb.New(revokedAt),
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",
 								Organization: &api.Organization{
-									Name:         "organization-a",
+									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},
 							},
@@ -322,8 +402,8 @@ func TestListOrders(t *testing.T) {
 										OutgoingAccessRequest: &database.OutgoingAccessRequest{
 											ServiceName: "service-a",
 											Organization: database.Organization{
-												Name:         "organization-a",
-												SerialNumber: "00000000000000000001"},
+												SerialNumber: "00000000000000000001",
+											},
 										},
 									},
 								},
@@ -338,14 +418,15 @@ func TestListOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "00000000000000000001",
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
+						Delegator: &api.Organization{
+							SerialNumber: "00000000000000000001",
+						},
+						ValidFrom:  timestamppb.New(validFrom),
+						ValidUntil: timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",
 								Organization: &api.Organization{
-									Name:         "organization-a",
 									SerialNumber: "00000000000000000001",
 								},
 							},
@@ -385,8 +466,9 @@ func TestListOrders(t *testing.T) {
 										OutgoingAccessRequest: &database.OutgoingAccessRequest{
 											ServiceName: "service-a",
 											Organization: database.Organization{
-												Name:         "organization-a",
-												SerialNumber: "00000000000000000001"},
+												SerialNumber: "00000000000000000001",
+												Name:         "Organization One",
+											},
 										},
 									},
 								},
@@ -401,16 +483,18 @@ func TestListOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator:   "00000000000000000001",
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
-						RevokedAt:   timestamppb.New(revokedAt),
+						Delegator: &api.Organization{
+							SerialNumber: "00000000000000000001",
+						},
+						ValidFrom:  timestamppb.New(validFrom),
+						ValidUntil: timestamppb.New(validUntil),
+						RevokedAt:  timestamppb.New(revokedAt),
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",
 								Organization: &api.Organization{
-									Name:         "organization-a",
 									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
 								},
 							},
 						},

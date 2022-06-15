@@ -32,6 +32,11 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronize_fails_when_directory_list_organization_errors": {
 			wantErr: true,
 			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{}, nil)
+
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(nil, errors.New("directory fails"))
@@ -41,6 +46,11 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronize_does_not_fail_when_directory_get_organization_inway_proxy_address_errors": {
 			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
 			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{}, nil)
+
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
@@ -61,6 +71,11 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronization_does_not_fail_when_management_list_orders_errors": {
 			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
 			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{}, nil)
+
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
@@ -87,7 +102,13 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronization_fails_when_database_synchronize_order_error": {
 			wantErr: true,
 			setup: func(mocks serviceMocks) {
-				mocks.dc.EXPECT().
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{}, nil)
+
+				mocks.dc.
+					EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
@@ -109,10 +130,13 @@ func TestSynchronizeOrders(t *testing.T) {
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator:   "00000000000000000001",
-								RevokedAt:   nil,
-								ValidFrom:   timestamppb.New(validFrom),
-								ValidUntil:  timestamppb.New(validUntil),
+								Delegator: &api.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+								RevokedAt:  nil,
+								ValidFrom:  timestamppb.New(validFrom),
+								ValidUntil: timestamppb.New(validUntil),
 								Services: []*api.OrderService{
 									{
 										Organization: &api.Organization{
@@ -158,14 +182,17 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
-						Delegator:   "00000000000000000001",
-						RevokedAt:   nil,
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
+						Delegator: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "Organization One",
+						},
+						RevokedAt:  nil,
+						ValidFrom:  timestamppb.New(validFrom),
+						ValidUntil: timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
 								Organization: &api.Organization{
-									Name:         "organization-a",
+									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},
 								Service: "service-1",
@@ -175,13 +202,27 @@ func TestSynchronizeOrders(t *testing.T) {
 				},
 			},
 			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{
+						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+							},
+						},
+					}, nil)
+
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
-								Name:         "nlx-test",
+								Name:         "Organization One",
 							},
 						},
 					}, nil)
@@ -197,14 +238,17 @@ func TestSynchronizeOrders(t *testing.T) {
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator:   "00000000000000000001",
-								RevokedAt:   nil,
-								ValidFrom:   timestamppb.New(validFrom),
-								ValidUntil:  timestamppb.New(validUntil),
+								Delegator: &api.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+								RevokedAt:  nil,
+								ValidFrom:  timestamppb.New(validFrom),
+								ValidUntil: timestamppb.New(validUntil),
 								Services: []*api.OrderService{
 									{
 										Organization: &api.Organization{
-											Name:         "organization-a",
+											Name:         "Organization One",
 											SerialNumber: "00000000000000000001",
 										},
 										Service: "service-1",
@@ -226,7 +270,7 @@ func TestSynchronizeOrders(t *testing.T) {
 							Services: []database.IncomingOrderService{
 								{
 									Organization: database.IncomingOrderServiceOrganization{
-										Name:         "organization-a",
+										Name:         "Organization One",
 										SerialNumber: "00000000000000000001",
 									},
 									Service: "service-1",
@@ -246,14 +290,17 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
-						Delegator:   "00000000000000000001",
-						RevokedAt:   timestamppb.New(revokedAt),
-						ValidFrom:   timestamppb.New(validFrom),
-						ValidUntil:  timestamppb.New(validUntil),
+						Delegator: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "Organization One",
+						},
+						RevokedAt:  timestamppb.New(revokedAt),
+						ValidFrom:  timestamppb.New(validFrom),
+						ValidUntil: timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
 								Organization: &api.Organization{
-									Name:         "organization-a",
+									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},
 								Service: "service-1",
@@ -263,13 +310,27 @@ func TestSynchronizeOrders(t *testing.T) {
 				},
 			},
 			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListParticipantsResponse{
+						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+							{
+								Organization: &directoryapi.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+							},
+						},
+					}, nil)
+
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
 								SerialNumber: "00000000000000000001",
-								Name:         "nlx-test",
+								Name:         "Organization One",
 							},
 						},
 					}, nil)
@@ -285,14 +346,17 @@ func TestSynchronizeOrders(t *testing.T) {
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator:   "00000000000000000001",
-								RevokedAt:   timestamppb.New(revokedAt),
-								ValidFrom:   timestamppb.New(validFrom),
-								ValidUntil:  timestamppb.New(validUntil),
+								Delegator: &api.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+								RevokedAt:  timestamppb.New(revokedAt),
+								ValidFrom:  timestamppb.New(validFrom),
+								ValidUntil: timestamppb.New(validUntil),
 								Services: []*api.OrderService{
 									{
 										Organization: &api.Organization{
-											Name:         "organization-a",
+											Name:         "Organization One",
 											SerialNumber: "00000000000000000001",
 										},
 										Service: "service-1",
@@ -317,7 +381,7 @@ func TestSynchronizeOrders(t *testing.T) {
 							Services: []database.IncomingOrderService{
 								{
 									Organization: database.IncomingOrderServiceOrganization{
-										Name:         "organization-a",
+										Name:         "Organization One",
 										SerialNumber: "00000000000000000001",
 									},
 									Service: "service-1",

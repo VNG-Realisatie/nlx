@@ -19,6 +19,12 @@ import {
     ManagementAccessProofFromJSONTyped,
     ManagementAccessProofToJSON,
 } from './ManagementAccessProof';
+import {
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
+} from './ManagementOrganization';
 
 /**
  * 
@@ -40,10 +46,10 @@ export interface ManagementOutgoingOrder {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {ManagementOrganization}
      * @memberof ManagementOutgoingOrder
      */
-    delegatee?: string;
+    delegatee?: ManagementOrganization;
     /**
      * 
      * @type {Date}
@@ -88,7 +94,7 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
+        'delegatee': !exists(json, 'delegatee') ? undefined : ManagementOrganizationFromJSON(json['delegatee']),
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
         'accessProofs': !exists(json, 'accessProofs') ? undefined : ((json['accessProofs'] as Array<any>).map(ManagementAccessProofFromJSON)),
@@ -108,7 +114,7 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         
         'reference': value.reference,
         'description': value.description,
-        'delegatee': value.delegatee,
+        'delegatee': ManagementOrganizationToJSON(value.delegatee),
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
         'accessProofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ManagementAccessProofToJSON)),

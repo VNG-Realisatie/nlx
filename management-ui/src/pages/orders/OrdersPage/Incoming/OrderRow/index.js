@@ -16,7 +16,7 @@ const OrderRow = ({ order }) => {
   return (
     <Table.Tr
       to={`/orders/incoming/${encodeURIComponent(
-        order.delegator,
+        order.delegator.serialNumber,
       )}/${encodeURIComponent(order.reference)}`}
     >
       <Cell>
@@ -31,17 +31,15 @@ const OrderRow = ({ order }) => {
         />
       </Cell>
       <Cell>{order.description}</Cell>
-      <Cell>{order.delegator}</Cell>
+      <Cell>{order.delegator.name}</Cell>
       <CellServices>
         <List>
           {order.services.map((service, i) => (
             <Item
               key={i}
-              title={`${service.organization.serialNumber} - ${service.service}`}
+              title={`${service.organization.name} - ${service.service}`}
             >
-              <OrganizationName>
-                {service.organization.serialNumber}
-              </OrganizationName>
+              <OrganizationName>{service.organization.name}</OrganizationName>
               <Separator> - </Separator>
               {service.service}
             </Item>

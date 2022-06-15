@@ -3,6 +3,16 @@
 //
 import { makeAutoObservable } from 'mobx'
 
+class Organization {
+  serialNumber = ''
+  name = ''
+
+  constructor(serialNumber, name) {
+    this.serialNumber = serialNumber
+    this.name = name
+  }
+}
+
 class IncomingOrderModel {
   _description = null
   _delegator = null
@@ -61,7 +71,10 @@ class IncomingOrderModel {
     }
 
     if (orderData.delegator) {
-      this._delegator = orderData.delegator
+      this._delegator = new Organization(
+        orderData.delegator.serialNumber,
+        orderData.delegator.name,
+      )
     }
 
     if (orderData.services) {

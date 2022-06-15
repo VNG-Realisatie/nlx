@@ -45,9 +45,7 @@ const AccessProofs = ({ accessProofs }) => {
                     key={`${organization.serialNumber}_${serviceName}`}
                   >
                     <Table.Td>
-                      <OrganizationName>
-                        {organization.serialNumber}
-                      </OrganizationName>
+                      <OrganizationName>{organization.name}</OrganizationName>
                       <Separator> - </Separator>
                       <small>{serviceName}</small>
                       <br />

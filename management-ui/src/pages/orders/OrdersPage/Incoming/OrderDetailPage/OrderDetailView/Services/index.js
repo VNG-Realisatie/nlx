@@ -42,9 +42,7 @@ const Services = ({ services }) => {
                   key={`${organization.serialNumber}_${service}`}
                 >
                   <Table.Td>
-                    <OrganizationName>
-                      {organization.serialNumber}
-                    </OrganizationName>
+                    <OrganizationName>{organization.name}</OrganizationName>
                     <Separator> - </Separator>
                     <small>{service}</small>
                   </Table.Td>

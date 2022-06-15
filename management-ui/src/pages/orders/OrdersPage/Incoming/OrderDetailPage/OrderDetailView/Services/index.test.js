@@ -41,7 +41,7 @@ test('listing the services', async () => {
       service: 'My Service',
       organization: {
         serialNumber: '00000000000000000001',
-        name: 'My Organization',
+        name: 'Organization One',
       },
     },
   ])
@@ -50,7 +50,7 @@ test('listing the services', async () => {
 
   const service = await screen.findByText('My Service')
   expect(service).toBeInTheDocument()
-  expect(await screen.findByText('00000000000000000001')).toBeInTheDocument()
+  expect(await screen.findByText('Organization One')).toBeInTheDocument()
 
   fireEvent.click(service)
 

@@ -16,20 +16,19 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
 )
 
 func TestGetTermsOfService(t *testing.T) {
 	ctx := context.Background()
 
 	tests := map[string]struct {
-		directoryClient func(directoryClient *mock_directory.MockClient)
-		wantResult      *api.GetTermsOfServiceResponse
-		wantErr         error
+		setup      func(context.Context, directoryServiceMocks)
+		wantResult *api.GetTermsOfServiceResponse
+		wantErr    error
 	}{
 		"failed_to_fetch_from_directory_client": {
-			directoryClient: func(directoryClient *mock_directory.MockClient) {
-				directoryClient.
+			setup: func(ctx context.Context, mocks directoryServiceMocks) {
+				mocks.d.
 					EXPECT().
 					GetTermsOfService(gomock.Any(), gomock.Any()).
 					Return(nil, errors.New("arbitrary error"))
@@ -38,11 +37,14 @@ func TestGetTermsOfService(t *testing.T) {
 			wantErr:    status.Error(codes.Internal, "unable to get terms of service from directory"),
 		},
 		"happy_flow": {
-			directoryClient: func(directoryClient *mock_directory.MockClient) {
-				directoryClient.EXPECT().GetTermsOfService(gomock.Any(), gomock.Any()).Return(&directoryapi.GetTermsOfServiceResponse{
-					Enabled: true,
-					Url:     "https://example.com",
-				}, nil)
+			setup: func(ctx context.Context, mocks directoryServiceMocks) {
+				mocks.d.
+					EXPECT().
+					GetTermsOfService(gomock.Any(), gomock.Any()).
+					Return(&directoryapi.GetTermsOfServiceResponse{
+						Enabled: true,
+						Url:     "https://example.com",
+					}, nil)
 			},
 			wantResult: &api.GetTermsOfServiceResponse{
 				Enabled: true,
@@ -56,9 +58,9 @@ func TestGetTermsOfService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mockDirectoryClient, _ := newDirectoryService(t)
+			service, mocks := newDirectoryService(t)
 
-			tt.directoryClient(mockDirectoryClient)
+			tt.setup(ctx, mocks)
 
 			result, err := service.GetTermsOfService(ctx, &emptypb.Empty{})
 

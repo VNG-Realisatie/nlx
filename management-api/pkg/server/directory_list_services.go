@@ -28,7 +28,7 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*
 	for i, service := range resp.Services {
 		convertedService := convertDirectoryService(service)
 
-		accessRequestStates, err := getLatestAccessRequestStates(ctx, s.configDatabase, convertedService.Organization.SerialNumber, convertedService.ServiceName)
+		accessRequestStates, err := getLatestAccessRequestStates(ctx, s.directoryClient, s.configDatabase, convertedService.Organization.SerialNumber, convertedService.ServiceName)
 		if err != nil {
 			s.logger.Error("error getting latest access request states", zap.Error(err))
 			return nil, status.Errorf(codes.Internal, "database error")

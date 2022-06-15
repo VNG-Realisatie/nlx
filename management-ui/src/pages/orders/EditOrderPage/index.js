@@ -13,7 +13,7 @@ import OrderForm from '../components/OrderForm'
 
 const EditOrderPage = () => {
   const { t } = useTranslation()
-  const { delegatee, reference } = useParams()
+  const { delegateeSerialNumber, reference } = useParams()
   const { directoryServicesStore, orderStore } = useStores()
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [error, setError] = useState(null)
@@ -29,11 +29,14 @@ const EditOrderPage = () => {
           directoryServicesStore.fetchAll(),
         ])
 
-        const orderModel = orderStore.getOutgoing(delegatee, reference)
+        const orderModel = orderStore.getOutgoing(
+          delegateeSerialNumber,
+          reference,
+        )
 
         if (!orderModel) {
           throw new Error(
-            `unable to find outgoing order for delegatee '${delegatee}' with reference '${reference}'`,
+            `unable to find outgoing order for delegatee '${delegateeSerialNumber}' with reference '${reference}'`,
           )
         }
 
@@ -55,10 +58,10 @@ const EditOrderPage = () => {
       setUpdatedError(null)
       await orderStore.updateOutgoing({
         ...formData,
-        delegatee,
+        delegateeSerialNumber,
         reference,
       })
-      navigate(`/orders/outgoing/${delegatee}/${reference}`)
+      navigate(`/orders/outgoing/${delegateeSerialNumber}/${reference}`)
     } catch (err) {
       window.scrollTo(0, 0)
       setUpdatedError(err.message)
@@ -68,7 +71,7 @@ const EditOrderPage = () => {
   return (
     <PageTemplate>
       <PageTemplate.HeaderWithBackNavigation
-        backButtonTo={`/orders/outgoing/${delegatee}/${reference}`}
+        backButtonTo={`/orders/outgoing/${delegateeSerialNumber}/${reference}`}
         title={t('Edit order')}
       />
       {error ? (
@@ -98,7 +101,7 @@ const EditOrderPage = () => {
             initialValues={{
               description: order.description,
               reference: order.reference,
-              delegatee: order.delegatee,
+              delegatee: order.delegatee.serialNumber,
               publicKeyPEM: order.publicKeyPEM,
               validFrom: order.validFrom,
               validUntil: order.validUntil,

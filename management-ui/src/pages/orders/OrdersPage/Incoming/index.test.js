@@ -28,7 +28,10 @@ test('displays an order row for each order', () => {
       orderData: {
         reference: 'ref1',
         description: 'description',
-        delegator: '01234567890123456789',
+        delegator: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         services: [],
         validUntil: '2021-05-10',
         validFrom: '2021-05-10',
@@ -39,7 +42,10 @@ test('displays an order row for each order', () => {
       orderData: {
         reference: 'ref2',
         description: 'description',
-        delegator: '01234567890123456789',
+        delegator: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         services: [],
         validUntil: '2021-05-05',
         validFrom: '2021-05-05',
@@ -85,19 +91,22 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref1',
         description: 'my own description',
-        delegator: '10000000000000000000',
+        delegator: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         services: [
           {
             organization: {
-              serialNumber: '00000000000000000001',
-              name: 'organization X',
+              serialNumber: '00000000000000000002',
+              name: 'Organization Two',
             },
             service: 'service Y',
           },
           {
             organization: {
-              serialNumber: '00000000000000000002',
-              name: 'organization Y',
+              serialNumber: '00000000000000000003',
+              name: 'Organization Three',
             },
             service: 'service Z',
           },
@@ -112,12 +121,15 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref2',
         description: 'my own description',
-        delegator: '10000000000000000000',
+        delegator: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         services: [
           {
             organization: {
               serialNumber: '00000000000000000002',
-              name: 'organization X',
+              name: 'Organization Two',
             },
             service: 'service Y',
           },
@@ -132,12 +144,15 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref3',
         description: 'my own description',
-        delegator: '10000000000000000000',
+        delegator: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         services: [
           {
             organization: {
               serialNumber: '00000000000000000003',
-              name: 'organization X',
+              name: 'Organization Three',
             },
             service: 'service Y',
           },
@@ -152,12 +167,15 @@ test('content should render expected data', () => {
       orderData: {
         reference: 'ref4',
         description: 'my own description',
-        delegator: '10000000000000000000',
+        delegator: {
+          serialNumber: '00000000000000000001',
+          name: 'Organization One',
+        },
         services: [
           {
             organization: {
               serialNumber: '00000000000000000004',
-              name: 'organization X',
+              name: 'Organization Four',
             },
             service: 'service Y',
           },
@@ -185,13 +203,13 @@ test('content should render expected data', () => {
   const firstOrder = within(firstOrderEl)
   expect(firstOrder.getByTitle('Active')).toBeInTheDocument()
   expect(firstOrder.getByText('my own description')).toBeInTheDocument()
-  expect(firstOrder.getByText('10000000000000000000')).toBeInTheDocument()
+  expect(firstOrder.getByText('Organization One')).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('00000000000000000001 - service Y'),
+    firstOrder.getByTitle('Organization Two - service Y'),
   ).toBeInTheDocument()
   expect(
-    firstOrder.getByTitle('00000000000000000002 - service Z'),
-  ).toHaveTextContent('00000000000000000002 - service Z')
+    firstOrder.getByTitle('Organization Three - service Z'),
+  ).toHaveTextContent('Organization Three - service Z')
 
   const secondOrder = container.querySelectorAll('tbody tr')[1]
   expect(within(secondOrder).getByTitle('Inactive')).toBeInTheDocument()
@@ -204,6 +222,6 @@ test('content should render expected data', () => {
 
   fireEvent.click(firstOrderEl)
   expect(history.location.pathname).toEqual(
-    '/orders/incoming/10000000000000000000/ref1',
+    '/orders/incoming/00000000000000000001/ref1',
   )
 })

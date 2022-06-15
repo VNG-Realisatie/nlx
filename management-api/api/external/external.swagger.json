@@ -98,7 +98,7 @@
             "type" : "string"
           },
           "delegator" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/managementOrganization"
           },
           "validFrom" : {
             "format" : "date-time",

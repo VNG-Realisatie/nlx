@@ -48,7 +48,7 @@ test('listing the access proofs', async () => {
       serviceName: 'My Service',
       organization: {
         serialNumber: '00000000000000000001',
-        name: 'My Organization',
+        name: 'Organization One',
       },
       publicKeyFingerprint: 'public-key-fingerprint',
     },
@@ -58,7 +58,7 @@ test('listing the access proofs', async () => {
 
   const service = await screen.findByText('My Service')
   expect(service).toBeInTheDocument()
-  expect(screen.getByText('00000000000000000001')).toBeInTheDocument()
+  expect(screen.getByText('Organization One')).toBeInTheDocument()
   expect(screen.getByText('public-key-fingerprint')).toBeInTheDocument()
 
   fireEvent.click(service)

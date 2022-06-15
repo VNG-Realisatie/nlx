@@ -42,18 +42,6 @@ class OrderStore {
           accessProofIds: formData.accessProofIds,
         },
       })
-
-      const order = new OutgoingOrderModel({
-        orderStore: this,
-        orderData: formData,
-      })
-
-      this._outgoingOrders.set(
-        getOutgoingKey(order.delegatee, order.reference),
-        order,
-      )
-
-      return order
     } catch (response) {
       const err = yield response.json()
       throw new Error(err.message)
@@ -81,7 +69,7 @@ class OrderStore {
         })
 
         this._outgoingOrders.set(
-          getOutgoingKey(order.delegatee, order.reference),
+          getOutgoingKey(order.delegatee.serialNumber, order.reference),
           orderModel,
         )
       })
@@ -106,14 +94,16 @@ class OrderStore {
     this._isLoading = false
   })
 
-  getOutgoing = (delegatee, reference) => {
-    return this._outgoingOrders.get(getOutgoingKey(delegatee, reference))
+  getOutgoing = (delegateeSerialNumber, reference) => {
+    return this._outgoingOrders.get(
+      getOutgoingKey(delegateeSerialNumber, reference),
+    )
   }
 
   revokeOutgoing = flow(function* revokeOutgoing(order) {
     try {
       yield this._managementApiClient.managementRevokeOutgoingOrder({
-        delegatee: order.delegatee,
+        delegatee: order.delegatee.serialNumber,
         reference: order.reference,
       })
 
@@ -137,7 +127,7 @@ class OrderStore {
         })
 
         this._incomingOrders.set(
-          getIncomingKey(order.delegator, order.reference),
+          getIncomingKey(order.delegator.serialNumber, order.reference),
           orderModel,
         )
       })
@@ -149,8 +139,10 @@ class OrderStore {
     this._isLoading = false
   }).bind(this)
 
-  getIncoming = (delegator, reference) => {
-    return this._incomingOrders.get(getIncomingKey(delegator, reference))
+  getIncoming = (delegatorSerialNumber, reference) => {
+    return this._incomingOrders.get(
+      getIncomingKey(delegatorSerialNumber, reference),
+    )
   }
 
   updateIncoming = flow(function* updateIncoming() {
@@ -167,7 +159,7 @@ class OrderStore {
         })
 
         this._incomingOrders.set(
-          getIncomingKey(order.delegator, order.reference),
+          getIncomingKey(order.delegator.serialNumber, order.reference),
           orderModel,
         )
       })
@@ -180,12 +172,12 @@ class OrderStore {
   }).bind(this)
 }
 
-const getOutgoingKey = (delegatee, reference) => {
-  return `${delegatee}_${reference}`
+const getOutgoingKey = (delegateeSerialNumber, reference) => {
+  return `${delegateeSerialNumber}_${reference}`
 }
 
-const getIncomingKey = (delegator, reference) => {
-  return `${delegator}_${reference}`
+const getIncomingKey = (delegatorSerialNumber, reference) => {
+  return `${delegatorSerialNumber}_${reference}`
 }
 
 export default OrderStore

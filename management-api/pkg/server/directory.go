@@ -114,15 +114,24 @@ func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryS
 	return serviceState
 }
 
-func getLatestAccessRequestStates(ctx context.Context, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
+func getLatestAccessRequestStates(ctx context.Context, directoryClient directory.Client, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
 	outgoingAccessRequests, err := configDatabase.ListLatestOutgoingAccessRequests(ctx, organizationSerialNumber, serviceName)
 	if err != nil {
 		return nil, err
 	}
 
+	participants, err := directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	if err != nil {
+		return nil, err
+	}
+
+	oinToOrgNameHash := convertParticipantsToHash(participants)
+
 	accessRequestStates := make([]*api.DirectoryService_AccessState, len(outgoingAccessRequests))
 
 	for i, outgoingAccessRequest := range outgoingAccessRequests {
+		outgoingAccessRequest.Organization.Name = oinToOrgNameHash[outgoingAccessRequest.Organization.SerialNumber]
+
 		accessRequestState := &api.DirectoryService_AccessState{
 			AccessRequest: convertOutgoingAccessRequest(outgoingAccessRequest),
 		}
@@ -134,6 +143,7 @@ func getLatestAccessRequestStates(ctx context.Context, configDatabase database.C
 		}
 
 		if accessProof != nil {
+			accessProof.OutgoingAccessRequest.Organization.Name = oinToOrgNameHash[accessProof.OutgoingAccessRequest.Organization.SerialNumber]
 			accessRequestState.AccessProof = convertAccessProof(accessProof)
 		}
 	}

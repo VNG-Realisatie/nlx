@@ -18,7 +18,10 @@ test('creating instance', () => {
   const order = new OutgoingOrderModel({
     orderData: {
       reference: 'my-reference',
-      delegatee: 'Vergunningsoftware BV',
+      delegatee: {
+        serialNumber: '00000000000000000001',
+        name: 'Organization One',
+      },
       description: 'description',
       revokedAt: '2020-10-03T12:00:00Z',
       validFrom: '2020-10-01T12:00:00Z',
@@ -28,7 +31,8 @@ test('creating instance', () => {
   })
 
   expect(order.reference).toEqual('my-reference')
-  expect(order.delegatee).toBe('Vergunningsoftware BV')
+  expect(order.delegatee.serialNumber).toBe('00000000000000000001')
+  expect(order.delegatee.name).toBe('Organization One')
   expect(order.description).toBe('description')
   expect(order.revokedAt).toEqual(new Date('2020-10-03T12:00:00Z'))
   expect(order.validFrom).toEqual(new Date('2020-10-01T12:00:00Z'))
