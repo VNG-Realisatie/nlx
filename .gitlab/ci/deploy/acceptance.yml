@@ -9,6 +9,7 @@ Deploy acceptance:
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
+    - kubectl config use-context commonground/nlx/nlx:nlx-prod
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)

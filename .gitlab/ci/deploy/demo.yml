@@ -9,6 +9,7 @@ Deploy demo:
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
+    - kubectl config use-context commonground/nlx/nlx:nlx-prod
     - |
       start_section helm_repo "Update Helm repositories"
       helm repo add stable "https://charts.helm.sh/stable"
