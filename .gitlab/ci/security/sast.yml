@@ -73,6 +73,8 @@ dependency_scanning:
 
 sast:
   stage: Security
+  variables:
+    SAST_EXCLUDED_PATHS: "e2e-tests/,management-ui/src/api/"
 
 # Override the template from 'Secret-Detection.gitlab-ci.yml'
 .secret-analyzer:
@@ -80,7 +82,7 @@ sast:
 
 secret_detection:
   variables:
-    SECRET_DETECTION_EXCLUDED_PATHS: "pki/,testing/"
+    SECRET_DETECTION_EXCLUDED_PATHS: "**/*_test.go,helm/deploy/**/values.yaml,helm/deploy/**/values-demo.yaml,helm/deploy/**/values-acceptance.yaml,helm/deploy/**/values-review.yaml.tpl,pki/,testing/,modd.conf,scripts/start-development.sh,technical-docs/nlx-helm-installation-guide/nlx-management-values.yaml"
 
 # this job is added in Security/Dependency-Scanning.gitlab-ci.yml
 # but missing a stage, which breaks the CI. Adding the stage here until the template is fixed
