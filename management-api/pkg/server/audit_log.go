@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"xojoc.pw/useragent"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 )
@@ -39,12 +40,20 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 }
 
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	if err != nil {
+		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
+		return nil, status.Error(codes.Internal, "failed to retrieve audit logs")
+	}
+
+	oinToOrgNameHash := convertOrganizationsToHash(organizations)
+
 	auditLogs, err := s.auditLogger.ListAll(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to retrieve audit logs")
 	}
 
-	responseModels, err := convertAuditLogModelToResponseAuditLog(auditLogs)
+	responseModels, err := convertAuditLogModelToResponseAuditLog(auditLogs, oinToOrgNameHash)
 	if err != nil {
 		s.logger.Error("failed to convert audit log records to response models", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to convert audit log records to response models")
@@ -55,7 +64,7 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty)
 	}, nil
 }
 
-func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.AuditLogRecord, error) {
+func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record, oinToOrgNameHash map[string]string) ([]*api.AuditLogRecord, error) {
 	convertedRecords := make([]*api.AuditLogRecord, len(records))
 
 	for i, record := range records {
@@ -87,7 +96,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 			}
 		}
 
-		metadata := convertAuditLogMetadataFromDatabaseToModel(record.Data)
+		metadata := convertAuditLogMetadataFromDatabaseToModel(record.Data, oinToOrgNameHash)
 
 		convertedRecords[i] = &api.AuditLogRecord{
 			Id:              record.ID,
@@ -105,7 +114,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 			convertedRecords[i].Services[j] = &api.AuditLogRecord_Service{
 				Organization: &api.Organization{
 					SerialNumber: service.Organization.SerialNumber,
-					Name:         service.Organization.Name,
+					Name:         oinToOrgNameHash[service.Organization.SerialNumber],
 				},
 				Service: service.Service,
 			}
@@ -113,6 +122,18 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record) ([]*api.
 	}
 
 	return convertedRecords, nil
+}
+
+func convertOrganizationsToHash(organizations *directoryapi.ListOrganizationsResponse) map[string]string {
+	result := map[string]string{
+		"": "",
+	}
+
+	for _, organization := range organizations.Organizations {
+		result[organization.SerialNumber] = organization.Name
+	}
+
+	return result
 }
 
 func convertAuditLogActionTypeFromDatabaseToModel(actionType auditlog.ActionType) (api.AuditLogRecord_ActionType, error) {
@@ -124,17 +145,23 @@ func convertAuditLogActionTypeFromDatabaseToModel(actionType auditlog.ActionType
 	return value, nil
 }
 
-func convertAuditLogMetadataFromDatabaseToModel(data *auditlog.RecordData) *api.AuditLogRecordMetadata {
+func convertAuditLogMetadataFromDatabaseToModel(data *auditlog.RecordData, oinToOrgNameHash map[string]string) *api.AuditLogRecordMetadata {
 	var metadata *api.AuditLogRecordMetadata
 	if data != nil {
 		metadata = &api.AuditLogRecordMetadata{}
 
 		if data.Delegatee != nil {
-			metadata.Delegatee = *data.Delegatee
+			metadata.Delegatee = &api.Organization{
+				SerialNumber: *data.Delegatee,
+				Name:         oinToOrgNameHash[*data.Delegatee],
+			}
 		}
 
 		if data.Delegator != nil {
-			metadata.Delegator = *data.Delegator
+			metadata.Delegator = &api.Organization{
+				SerialNumber: *data.Delegator,
+				Name:         oinToOrgNameHash[*data.Delegator],
+			}
 		}
 
 		if data.Reference != nil {

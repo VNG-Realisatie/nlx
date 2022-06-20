@@ -19,6 +19,12 @@ import {
     ManagementOrderServiceFromJSONTyped,
     ManagementOrderServiceToJSON,
 } from './ManagementOrderService';
+import {
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
+} from './ManagementOrganization';
 
 /**
  * 
@@ -40,10 +46,10 @@ export interface ManagementIncomingOrder {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {ManagementOrganization}
      * @memberof ManagementIncomingOrder
      */
-    delegator?: string;
+    delegator?: ManagementOrganization;
     /**
      * 
      * @type {Date}
@@ -82,7 +88,7 @@ export function ManagementIncomingOrderFromJSONTyped(json: any, ignoreDiscrimina
         
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'delegator': !exists(json, 'delegator') ? undefined : json['delegator'],
+        'delegator': !exists(json, 'delegator') ? undefined : ManagementOrganizationFromJSON(json['delegator']),
         'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
         'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
@@ -101,7 +107,7 @@ export function ManagementIncomingOrderToJSON(value?: ManagementIncomingOrder | 
         
         'reference': value.reference,
         'description': value.description,
-        'delegator': value.delegator,
+        'delegator': ManagementOrganizationToJSON(value.delegator),
         'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),

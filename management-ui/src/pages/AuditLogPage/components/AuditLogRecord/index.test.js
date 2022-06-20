@@ -61,7 +61,7 @@ test.concurrent.each([
       ],
     }),
     'check.svg',
-    'John Doe has approved the access request from Gemeente Stijns (00000000000000000001) for Kadaster',
+    'John Doe has approved the access request from Gemeente Stijns for Kadaster',
   ],
   [
     createModel({
@@ -77,7 +77,7 @@ test.concurrent.each([
       ],
     }),
     'close.svg',
-    'John Doe has rejected the access request from 00000000000000000001 for Kadaster',
+    'John Doe has rejected the access request from Gemeente Stijns for Kadaster',
   ],
   [
     createModel({
@@ -109,7 +109,7 @@ test.concurrent.each([
       ],
     }),
     'key.svg',
-    'John Doe has requested access to Kadaster from 00000000000000000001',
+    'John Doe has requested access to Kadaster from Gemeente Stijns',
   ],
   [
     createModel({
@@ -125,7 +125,7 @@ test.concurrent.each([
       ],
     }),
     'key.svg',
-    'John Doe failed to request access to Kadaster from Gemeente Stijns (00000000000000000001)',
+    'John Doe failed to request access to Kadaster from Gemeente Stijns',
   ],
   [
     createModel({
@@ -202,22 +202,28 @@ test.concurrent.each([
         },
       ],
       data: {
-        delegatee: 'Vergunningsoftware BV',
+        delegatee: {
+          serialNumber: '00000000000000000001',
+          name: 'Vergunningsoftware BV',
+        },
       },
     }),
     'cog.svg',
-    'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD (00000000000000000002)), vakantieverhuur (Gemeente Amsterdam (00000000000000000003))',
+    'John Doe gave Vergunningsoftware BV the order to consume the services fictieve-kentekens (RvRD), vakantieverhuur (Gemeente Amsterdam)',
   ],
   [
     createModel({
       action: ACTION_ORDER_OUTGOING_REVOKE,
       data: {
-        delegatee: '00000000000000000001',
+        delegatee: {
+          serialNumber: '00000000000000000001',
+          name: 'Vergunningsoftware BV',
+        },
         reference: '0123456AB',
       },
     }),
     'revoke.svg',
-    'John Doe has revoked the outgoing order for 00000000000000000001 with reference 0123456AB',
+    'John Doe has revoked the outgoing order for Vergunningsoftware BV with reference 0123456AB',
   ],
   [
     createModel({

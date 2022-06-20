@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ManagementOrganization,
+    ManagementOrganizationFromJSON,
+    ManagementOrganizationFromJSONTyped,
+    ManagementOrganizationToJSON,
+} from './ManagementOrganization';
+
 /**
  * 
  * @export
@@ -21,16 +28,16 @@ import { exists, mapValues } from '../runtime';
 export interface ManagementAuditLogRecordMetadata {
     /**
      * 
-     * @type {string}
+     * @type {ManagementOrganization}
      * @memberof ManagementAuditLogRecordMetadata
      */
-    delegatee?: string;
+    delegatee?: ManagementOrganization;
     /**
      * 
-     * @type {string}
+     * @type {ManagementOrganization}
      * @memberof ManagementAuditLogRecordMetadata
      */
-    delegator?: string;
+    delegator?: ManagementOrganization;
     /**
      * 
      * @type {string}
@@ -55,8 +62,8 @@ export function ManagementAuditLogRecordMetadataFromJSONTyped(json: any, ignoreD
     }
     return {
         
-        'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
-        'delegator': !exists(json, 'delegator') ? undefined : json['delegator'],
+        'delegatee': !exists(json, 'delegatee') ? undefined : ManagementOrganizationFromJSON(json['delegatee']),
+        'delegator': !exists(json, 'delegator') ? undefined : ManagementOrganizationFromJSON(json['delegator']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'inwayName': !exists(json, 'inwayName') ? undefined : json['inwayName'],
     };
@@ -71,8 +78,8 @@ export function ManagementAuditLogRecordMetadataToJSON(value?: ManagementAuditLo
     }
     return {
         
-        'delegatee': value.delegatee,
-        'delegator': value.delegator,
+        'delegatee': ManagementOrganizationToJSON(value.delegatee),
+        'delegator': ManagementOrganizationToJSON(value.delegator),
         'reference': value.reference,
         'inwayName': value.inwayName,
     };

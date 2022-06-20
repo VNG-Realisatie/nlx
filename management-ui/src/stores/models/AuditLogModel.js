@@ -26,6 +26,16 @@ export const ACTION_INWAY_DELETE = 'inwayDelete'
 export const ACTION_ORDER_OUTGOING_UPDATE = 'orderOutgoingUpdate'
 export const ACTION_ACCEPT_TERMS_OF_SERVICE = 'acceptTermsOfService'
 
+class Organization {
+  serialNumber = ''
+  name = ''
+
+  constructor(serialNumber, name) {
+    this.serialNumber = serialNumber
+    this.name = name
+  }
+}
+
 class AuditLogModel {
   id = null
   action = null
@@ -36,7 +46,11 @@ class AuditLogModel {
   operatingSystem = null
   browser = null
   client = null
-  data = {}
+  data = {
+    delegatee: null,
+    reference: '',
+    inwayName: '',
+  }
 
   constructor({ auditLogData }) {
     makeAutoObservable(this)
@@ -81,11 +95,17 @@ class AuditLogModel {
     }
 
     if (auditLogData.data) {
-      this.data = {
-        delegatee: auditLogData.data.delegatee,
-        reference: auditLogData.data.reference,
-        inwayName: auditLogData.data.inwayName,
+      const { delegatee, reference, inwayName } = auditLogData.data
+
+      if (delegatee) {
+        this.data.delegatee = new Organization(
+          delegatee.serialNumber,
+          delegatee.name,
+        )
       }
+
+      this.data.reference = reference
+      this.data.inwayName = inwayName
     }
   }
 }

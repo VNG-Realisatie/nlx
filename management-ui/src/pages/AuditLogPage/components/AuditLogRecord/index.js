@@ -79,19 +79,19 @@ const AuditLogRecord = ({ model, ...props }) => {
     organization = model.services[0].organization
     service = model.services[0].service
     servicesList = model.services
-      .map(
-        (service) =>
-          `${service.service} (${service.organization.name} (${service.organization.serialNumber}))`,
-      )
+      .map((service) => `${service.service} (${service.organization.name})`)
       .join(', ')
   }
 
-  const dataDelegatee = model.data.delegatee
+  let dataDelegatee = ''
+  if (model.data.delegatee) {
+    dataDelegatee = model.data.delegatee.name
+  }
+
   const dataReference = model.data.reference
 
   const dataInwayName = model.data.inwayName
 
-  const organizationSerialNumber = organization.serialNumber
   const organizationName = organization.name
 
   const user = model.user
@@ -110,48 +110,34 @@ const AuditLogRecord = ({ model, ...props }) => {
       ) : action === ACTION_LOGIN_FAIL ? (
         <Trans>Failed login attempt</Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_ACCEPT ? (
-        <Trans
-          values={{ user, organizationSerialNumber, organizationName, service }}
-        >
+        <Trans values={{ user, organizationName, service }}>
           <strong>{{ user }}</strong> has approved the access request from{' '}
-          <strong>
-            {{ organizationName }} ({{ organizationSerialNumber }})
-          </strong>{' '}
-          for <strong>{{ service }}</strong>
+          <strong>{{ organizationName }}</strong> for{' '}
+          <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_INCOMING_ACCESS_REQUEST_REJECT ? (
-        <Trans values={{ user, organization, service }}>
+        <Trans values={{ user, organizationName, service }}>
           <strong>{{ user }}</strong> has rejected the access request from{' '}
-          <strong>{{ organizationSerialNumber }}</strong> for{' '}
+          <strong>{{ organizationName }}</strong> for{' '}
           <strong>{{ service }}</strong>
         </Trans>
       ) : action === ACTION_ACCESS_GRANT_REVOKE ? (
-        <Trans
-          values={{ user, organizationSerialNumber, organizationName, service }}
-        >
+        <Trans values={{ user, organizationName, service }}>
           <strong>{{ user }}</strong> has revoked access for{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>
-            {{ organizationName }} ({{ organizationSerialNumber }})
-          </strong>
+          <strong>{{ organizationName }}</strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_CREATE ? (
-        <Trans
-          values={{ user, organizationSerialNumber, organizationName, service }}
-        >
+        <Trans values={{ user, organizationName, service }}>
           <strong>{{ user }}</strong> has requested access to{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>{{ organizationSerialNumber }}</strong>
+          <strong>{{ organizationName }}</strong>
         </Trans>
       ) : action === ACTION_OUTGOING_ACCESS_REQUEST_FAIL ? (
-        <Trans
-          values={{ user, organizationSerialNumber, organizationName, service }}
-        >
+        <Trans values={{ user, organizationName, service }}>
           <strong>{{ user }}</strong> failed to request access to{' '}
           <strong>{{ service }}</strong> from{' '}
-          <strong>
-            {{ organizationName }} ({{ organizationSerialNumber }})
-          </strong>
+          <strong>{{ organizationName }}</strong>
         </Trans>
       ) : action === ACTION_SERVICE_CREATE ? (
         <Trans values={{ user, service }}>

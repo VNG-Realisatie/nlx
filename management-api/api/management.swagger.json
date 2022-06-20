@@ -1488,9 +1488,6 @@
           "user" : {
             "type" : "string"
           },
-          "delegatee" : {
-            "type" : "string"
-          },
           "services" : {
             "items" : {
               "$ref" : "#/components/schemas/managementAuditLogRecordService"
@@ -1510,10 +1507,10 @@
       "managementAuditLogRecordMetadata" : {
         "properties" : {
           "delegatee" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/managementOrganization"
           },
           "delegator" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/managementOrganization"
           },
           "reference" : {
             "type" : "string"

@@ -76,12 +76,6 @@ export interface ManagementAuditLogRecord {
     user?: string;
     /**
      * 
-     * @type {string}
-     * @memberof ManagementAuditLogRecord
-     */
-    delegatee?: string;
-    /**
-     * 
      * @type {Array<ManagementAuditLogRecordService>}
      * @memberof ManagementAuditLogRecord
      */
@@ -116,7 +110,6 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         'browser': !exists(json, 'browser') ? undefined : json['browser'],
         'client': !exists(json, 'client') ? undefined : json['client'],
         'user': !exists(json, 'user') ? undefined : json['user'],
-        'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementAuditLogRecordServiceFromJSON)),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'data': !exists(json, 'data') ? undefined : ManagementAuditLogRecordMetadataFromJSON(json['data']),
@@ -138,7 +131,6 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         'browser': value.browser,
         'client': value.client,
         'user': value.user,
-        'delegatee': value.delegatee,
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementAuditLogRecordServiceToJSON)),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'data': ManagementAuditLogRecordMetadataToJSON(value.data),

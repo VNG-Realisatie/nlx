@@ -17,9 +17,11 @@ test('creating AuditLog instance', () => {
         },
       ],
       data: {
-        delegatee: 'Kadaster',
+        delegatee: {
+          serialNumber: '00000000000000000001',
+          name: 'Kadaster',
+        },
         reference: '030394AB',
-
         inwayName: 'my-inway',
       },
     },
@@ -35,9 +37,8 @@ test('creating AuditLog instance', () => {
       service: 'vakantieverhuur',
     },
   ])
-  expect(auditLog.data).toStrictEqual({
-    delegatee: 'Kadaster',
-    reference: '030394AB',
-    inwayName: 'my-inway',
-  })
+  expect(auditLog.data.delegatee.serialNumber).toEqual('00000000000000000001')
+  expect(auditLog.data.delegatee.name).toEqual('Kadaster')
+  expect(auditLog.data.reference).toEqual('030394AB')
+  expect(auditLog.data.inwayName).toEqual('my-inway')
 })
