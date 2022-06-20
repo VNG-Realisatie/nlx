@@ -8,6 +8,7 @@ Deploy review:
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
+    - kubectl config use-context commonground/nlx/nlx:nlx-review
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)
@@ -70,6 +71,7 @@ Remove review:
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
+    - kubectl config use-context commonground/nlx/nlx:nlx-review
     - |
       for RELEASE in $(helm list --all --short --namespace "${K8S_NAMESPACE}"); do
         start_section "uninstall_${RELEASE}" "Uninstall relasese ${RELEASE}"
