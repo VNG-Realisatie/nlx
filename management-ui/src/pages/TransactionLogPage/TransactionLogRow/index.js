@@ -23,13 +23,15 @@ const TransactionLogRow = ({ transactionLog, ...props }) => {
           : t('Outgoing to')}
       </Table.Td>
       <Table.Td>
-        {transactionLog.order &&
-        transactionLog.order.delegator &&
-        transactionLog.order.delegator.serialNumber
-          ? `${transactionLog.source.name} ${t('On behalf of')} ${
-              transactionLog.order.delegator.name
-            }`
-          : transactionLog.source.name}
+        {transactionLog.direction === DIRECTION_IN
+          ? transactionLog.order &&
+            transactionLog.order.delegator &&
+            transactionLog.order.delegator.serialNumber
+            ? `${transactionLog.source.name} ${t('On behalf of')} ${
+                transactionLog.order.delegator.name
+              }`
+            : transactionLog.source.name
+          : transactionLog.destination.name}
       </Table.Td>
       <Table.Td>{transactionLog.serviceName}</Table.Td>
     </Table.Tr>
