@@ -20,19 +20,13 @@ import (
 )
 
 func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
-	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
-	if err != nil {
-		s.logger.Error("error getting participants from directory", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "internal error")
-	}
-
-	oinToOrgNameHash := convertParticipantsToHash(participants)
-
 	response, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
 		s.logger.Error("failed to list response", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to list response")
 	}
+
+	oinToOrgNameHash := convertOrganizationsToHash(response)
 
 	ordersChan := make(chan *api.IncomingOrder)
 

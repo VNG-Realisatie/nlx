@@ -79,7 +79,7 @@ func TestTXLogListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListParticipants(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &emptypb.Empty{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			want:    nil,
@@ -89,8 +89,8 @@ func TestTXLogListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListParticipants(ctx, &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{Participants: nil}, nil)
+					ListOrganizations(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.m.
 					EXPECT().
@@ -104,26 +104,20 @@ func TestTXLogListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListParticipants(ctx, &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+					ListOrganizations(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
+								SerialNumber: "00000000000000000001",
+								Name:         "Organization One",
 							},
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000002",
-									Name:         "Organization Two",
-								},
+								SerialNumber: "00000000000000000002",
+								Name:         "Organization Two",
 							},
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000003",
-									Name:         "Organization Three",
-								},
+								SerialNumber: "00000000000000000003",
+								Name:         "Organization Three",
 							},
 						}}, nil)
 

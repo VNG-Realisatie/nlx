@@ -57,14 +57,12 @@ func TestListDirectoryServices(t *testing.T) {
 
 	client.
 		EXPECT().
-		ListParticipants(ctx, &emptypb.Empty{}).
-		Return(&directoryapi.ListParticipantsResponse{
-			Participants: []*directoryapi.ListParticipantsResponse_Participant{
+		ListOrganizations(ctx, &emptypb.Empty{}).
+		Return(&directoryapi.ListOrganizationsResponse{
+			Organizations: []*directoryapi.Organization{
 				{
-					Organization: &directoryapi.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "Organization One",
-					},
+					SerialNumber: "00000000000000000001",
+					Name:         "Organization One",
 				},
 			},
 		}, nil)

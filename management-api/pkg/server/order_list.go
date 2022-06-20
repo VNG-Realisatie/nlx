@@ -24,18 +24,18 @@ import (
 func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListOutgoingOrdersResponse, error) {
 	s.logger.Info("rpc request ListOutgoingOrders")
 
-	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
-		s.logger.Error("error getting participants from directory", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "internal error")
+		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
+		return nil, status.Error(codes.Internal, "internal error")
 	}
 
-	oinToOrgNameHash := convertParticipantsToHash(participants)
+	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
 	orders, err := s.configDatabase.ListOutgoingOrders(ctx)
 	if err != nil {
 		s.logger.Error("error getting outgoing orders from database", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "failed to retrieve outgoing orders")
+		return nil, status.Errorf(codes.Internal, "internal error")
 	}
 
 	outgoingOrders := make([]*api.OutgoingOrder, len(orders))
@@ -69,13 +69,13 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListIncomingOrdersResponse, error) {
 	s.logger.Info("rpc request ListIncomingOrders")
 
-	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
-		s.logger.Error("error getting participants from directory", zap.Error(err))
+		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "internal error")
 	}
 
-	oinToOrgNameHash := convertParticipantsToHash(participants)
+	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
 	orders, err := s.configDatabase.ListIncomingOrders(ctx)
 	if err != nil {

@@ -11,7 +11,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
@@ -42,13 +41,13 @@ func (s *ManagementService) IsTXLogEnabled(context.Context, *emptypb.Empty) (*ap
 func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
-	participants, err := s.directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
-		s.logger.Error("error getting participants from directory", zap.Error(err))
+		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "txlog error")
 	}
 
-	oinToOrgNameHash := convertParticipantsToHash(participants)
+	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
 	resp, err := s.txlogClient.ListRecords(ctx, &emptypb.Empty{})
 	if err != nil {
@@ -91,16 +90,4 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 	}
 
 	return &api.TXLogListRecordsResponse{Records: records}, nil
-}
-
-func convertParticipantsToHash(participants *directoryapi.ListParticipantsResponse) map[string]string {
-	result := map[string]string{
-		"": "",
-	}
-
-	for _, participant := range participants.Participants {
-		result[participant.Organization.SerialNumber] = participant.Organization.Name
-	}
-
-	return result
 }

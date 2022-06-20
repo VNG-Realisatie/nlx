@@ -120,12 +120,12 @@ func getLatestAccessRequestStates(ctx context.Context, directoryClient directory
 		return nil, err
 	}
 
-	participants, err := directoryClient.ListParticipants(ctx, &emptypb.Empty{})
+	organizations, err := directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, err
 	}
 
-	oinToOrgNameHash := convertParticipantsToHash(participants)
+	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
 	accessRequestStates := make([]*api.DirectoryService_AccessState, len(outgoingAccessRequests))
 

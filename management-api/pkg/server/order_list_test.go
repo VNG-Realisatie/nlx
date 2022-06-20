@@ -42,11 +42,25 @@ func TestListOutgoingOrders(t *testing.T) {
 		wantResponse *api.ListOutgoingOrdersResponse
 		wantErr      error
 	}{
+		"when_retrieval_of_organizations_from_directory_fails": {
+			setup: func(mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			wantErr: status.Error(codes.Internal, "internal error"),
+		},
 		"when_retrieval_of_orders_from_database_fails": {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{}, nil)
+
+				mocks.db.
+					EXPECT().
+					ListOutgoingOrders(gomock.Any()).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			wantErr: status.Error(codes.Internal, "internal error"),
@@ -55,20 +69,16 @@ func TestListOutgoingOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
+								SerialNumber: "00000000000000000001",
+								Name:         "Organization One",
 							},
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000002",
-									Name:         "Organization Two",
-								},
+								SerialNumber: "00000000000000000002",
+								Name:         "Organization Two",
 							},
 						},
 					}, nil)
@@ -181,7 +191,7 @@ func TestListIncomingOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			wantErr: status.Error(codes.Internal, "internal error"),
@@ -190,8 +200,8 @@ func TestListIncomingOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{}, nil)
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.db.
 					EXPECT().
@@ -218,14 +228,12 @@ func TestListIncomingOrders(t *testing.T) {
 
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
+								SerialNumber: "00000000000000000001",
+								Name:         "Organization One",
 							},
 						},
 					}, nil)
@@ -281,14 +289,12 @@ func TestListIncomingOrders(t *testing.T) {
 
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
+								SerialNumber: "00000000000000000001",
+								Name:         "Organization One",
 							},
 						},
 					}, nil)

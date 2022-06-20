@@ -38,14 +38,13 @@ func TestGetOrganizationService(t *testing.T) {
 			},
 			setup: func(ctx context.Context, mocks directoryServiceMocks) {
 				mocks.d.
-					EXPECT().ListParticipants(ctx, &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
+					EXPECT().
+					ListOrganizations(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
 							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
+								SerialNumber: "00000000000000000001",
+								Name:         "Organization One",
 							},
 						},
 					}, nil)
@@ -140,10 +139,9 @@ func TestGetOrganizationService(t *testing.T) {
 			},
 			setup: func(ctx context.Context, mocks directoryServiceMocks) {
 				mocks.d.
-					EXPECT().ListParticipants(ctx, &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{},
-					}, nil)
+					EXPECT().
+					ListOrganizations(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.db.
 					EXPECT().
@@ -220,8 +218,9 @@ func TestGetOrganizationService(t *testing.T) {
 			},
 			setup: func(ctx context.Context, mocks directoryServiceMocks) {
 				mocks.d.
-					EXPECT().ListParticipants(ctx, &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{}, nil)
+					EXPECT().
+					ListOrganizations(ctx, &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.db.
 					EXPECT().

@@ -32,11 +32,6 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronize_fails_when_directory_list_organization_errors": {
 			wantErr: true,
 			setup: func(mocks serviceMocks) {
-				mocks.dc.
-					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{}, nil)
-
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(nil, errors.New("directory fails"))
@@ -46,11 +41,6 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronize_does_not_fail_when_directory_get_organization_inway_proxy_address_errors": {
 			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
 			setup: func(mocks serviceMocks) {
-				mocks.dc.
-					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{}, nil)
-
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
@@ -71,11 +61,6 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronization_does_not_fail_when_management_list_orders_errors": {
 			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
 			setup: func(mocks serviceMocks) {
-				mocks.dc.
-					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{}, nil)
-
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
@@ -102,11 +87,6 @@ func TestSynchronizeOrders(t *testing.T) {
 		"synchronization_fails_when_database_synchronize_order_error": {
 			wantErr: true,
 			setup: func(mocks serviceMocks) {
-				mocks.dc.
-					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{}, nil)
-
 				mocks.dc.
 					EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
@@ -202,20 +182,6 @@ func TestSynchronizeOrders(t *testing.T) {
 				},
 			},
 			setup: func(mocks serviceMocks) {
-				mocks.dc.
-					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
-							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
-							},
-						},
-					}, nil)
-
 				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
@@ -312,19 +278,6 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListParticipants(gomock.Any(), &emptypb.Empty{}).
-					Return(&directoryapi.ListParticipantsResponse{
-						Participants: []*directoryapi.ListParticipantsResponse_Participant{
-							{
-								Organization: &directoryapi.Organization{
-									SerialNumber: "00000000000000000001",
-									Name:         "Organization One",
-								},
-							},
-						},
-					}, nil)
-
-				mocks.dc.EXPECT().
 					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
@@ -335,11 +288,13 @@ func TestSynchronizeOrders(t *testing.T) {
 						},
 					}, nil)
 
-				mocks.dc.EXPECT().
+				mocks.dc.
+					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("localhost:1234", nil)
 
-				mocks.mc.EXPECT().
+				mocks.mc.
+					EXPECT().
 					ListOrders(gomock.Any(), &emptypb.Empty{}).
 					Return(&external.ListOrdersResponse{
 						Orders: []*api.IncomingOrder{
@@ -366,7 +321,8 @@ func TestSynchronizeOrders(t *testing.T) {
 						},
 					}, nil)
 
-				mocks.db.EXPECT().
+				mocks.db.
+					EXPECT().
 					SynchronizeOrders(gomock.Any(), []*database.IncomingOrder{
 						{
 							Reference:   "ref-order-1",
@@ -391,7 +347,10 @@ func TestSynchronizeOrders(t *testing.T) {
 					}).
 					Return(nil)
 
-				mocks.mc.EXPECT().Close().Return(nil)
+				mocks.mc.
+					EXPECT().
+					Close().
+					Return(nil)
 			},
 		},
 	}
