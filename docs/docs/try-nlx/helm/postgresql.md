@@ -16,7 +16,7 @@ helm repo update
 helm install \
   postgresql bitnami/postgresql \
   --namespace nlx \
-  --version 10.6.0 \
+  --version 10.16.2 \
   --set postgresqlDatabase=nlx_management
 ```
 
