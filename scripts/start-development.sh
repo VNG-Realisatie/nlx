@@ -5,7 +5,9 @@
 sh ./pki/fix-permissions.sh
 
 # Start docker-compose
-docker-compose -f docker-compose.dev.yml up -d --remove-orphans
+# Note: the --build flag is needed to rebuild the auth-opa containers,
+# since changes to the content of the files do not trigger a rebuild automatically
+docker-compose -f docker-compose.dev.yml up -d --remove-orphans --build
 
 # Wait for postgres to accept connections
 until docker-compose -f docker-compose.dev.yml exec postgres pg_isready
