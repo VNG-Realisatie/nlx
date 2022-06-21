@@ -1,14 +1,15 @@
 image:
   # Version should be updated to the most recent version upon deployment, this is just an example.
   # We use git tags to release a new version so you can get the most recent version by looking at the latest tag https://gitlab.com/commonground/nlx/nlx/-/tags
-  tag: "v0.121.1"
+  tag: "v0.131.1"
 
 # Inway specific settings
 config:
   # Must be alphanumeric and may contain dashes.
   name: <inway-name>
   # The adres on which the inway can be reached. Make sure to include the port 8443
-  selfAddress: <self-address>
+  selfAddress: <self-address:443>
+  managementAPIProxyAddress: <self-address:8443>
   directoryHostname: "directory-api.demo.nlx.io"
   managementAPI:
     address: "management-nlx-management-api:443"
