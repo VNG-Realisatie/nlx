@@ -100,7 +100,7 @@ class AuditLogModel {
       if (delegatee) {
         this.data.delegatee = new Organization(
           delegatee.serialNumber,
-          delegatee.name,
+          delegatee.name || delegatee.serialNumber,
         )
       }
 

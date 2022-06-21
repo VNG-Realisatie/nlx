@@ -22,34 +22,36 @@ class AccessGrantModel {
     this.update(accessGrantData)
   }
 
-  update = (accessProofData) => {
-    if (!accessProofData) {
+  update = (accessGrantData) => {
+    if (!accessGrantData) {
       throw Error('Data required to update accessProof')
     }
 
-    if (accessProofData.id) {
-      this.id = accessProofData.id
+    if (accessGrantData.id) {
+      this.id = accessGrantData.id
     }
 
-    if (accessProofData.organization) {
-      this.organization.name = accessProofData.organization.name
-      this.organization.serialNumber = accessProofData.organization.serialNumber
+    if (accessGrantData.organization) {
+      this.organization.name =
+        accessGrantData.organization.name ||
+        accessGrantData.organization.serialNumber
+      this.organization.serialNumber = accessGrantData.organization.serialNumber
     }
 
-    if (accessProofData.serviceName) {
-      this.serviceName = accessProofData.serviceName
+    if (accessGrantData.serviceName) {
+      this.serviceName = accessGrantData.serviceName
     }
 
-    if (accessProofData.publicKeyFingerprint) {
-      this.publicKeyFingerprint = accessProofData.publicKeyFingerprint
+    if (accessGrantData.publicKeyFingerprint) {
+      this.publicKeyFingerprint = accessGrantData.publicKeyFingerprint
     }
 
-    if (accessProofData.createdAt) {
-      this.createdAt = new Date(accessProofData.createdAt)
+    if (accessGrantData.createdAt) {
+      this.createdAt = new Date(accessGrantData.createdAt)
     }
 
-    if (accessProofData.revokedAt) {
-      this.revokedAt = new Date(accessProofData.revokedAt)
+    if (accessGrantData.revokedAt) {
+      this.revokedAt = new Date(accessGrantData.revokedAt)
     }
   }
 

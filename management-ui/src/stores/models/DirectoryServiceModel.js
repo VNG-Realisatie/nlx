@@ -81,8 +81,9 @@ class DirectoryServiceModel {
     }
 
     if (serviceData.organization) {
-      this.organization.name = serviceData.organization.name
       this.organization.serialNumber = serviceData.organization.serialNumber
+      this.organization.name =
+        serviceData.organization.name || serviceData.organization.serialNumber
     }
 
     if (accessStates) {

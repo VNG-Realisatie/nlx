@@ -33,7 +33,9 @@ class AccessProofModel {
 
     if (accessProofData.organization) {
       this.organization.serialNumber = accessProofData.organization.serialNumber
-      this.organization.name = accessProofData.organization.name
+      this.organization.name =
+        accessProofData.organization.name ||
+        accessProofData.organization.serialNumber
     }
 
     if (accessProofData.serviceName) {

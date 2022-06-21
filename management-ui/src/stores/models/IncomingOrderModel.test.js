@@ -2,6 +2,7 @@
 // Licensed under the EUPL
 //
 import IncomingOrderModel from './IncomingOrderModel'
+import AccessGrantModel from './AccessGrantModel'
 
 test('creating instance', () => {
   const order = new IncomingOrderModel({
@@ -27,4 +28,19 @@ test('creating instance', () => {
   expect(order.revokedAt).toEqual(new Date('2020-10-03T12:00:00Z'))
   expect(order.validFrom).toEqual(new Date('2020-10-01T12:00:00Z'))
   expect(order.validUntil).toEqual(new Date('2020-10-02T12:00:00Z'))
+})
+
+test('organization name is empty', () => {
+  const model = new AccessGrantModel({
+    accessGrantStore: {},
+    accessGrantData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
 })

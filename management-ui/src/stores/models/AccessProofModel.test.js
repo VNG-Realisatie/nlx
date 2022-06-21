@@ -2,35 +2,57 @@
 // Licensed under the EUPL
 //
 import AccessProofModel from './AccessProofModel'
-
-let accessProofData
-
-beforeEach(() => {
-  accessProofData = {
-    id: 'abcd',
-    organization: {
-      serialNumber: '00000000000000000001',
-      name: 'Organization',
-    },
-    serviceName: 'Service',
-    createdAt: '2020-10-01',
-    revokedAt: null,
-    publicKeyFingerprint: 'public-key-fingerprint',
-  }
-})
+import AccessGrantModel from './AccessGrantModel'
 
 test('should properly construct object', () => {
-  const accessProof = new AccessProofModel({ accessProofData })
+  const model = new AccessProofModel({
+    accessProofData: {
+      id: '42',
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: 'Organization One',
+      },
+      serviceName: 'Service',
+      createdAt: '2020-10-01',
+      revokedAt: null,
+      publicKeyFingerprint: 'public-key-fingerprint',
+    },
+  })
 
-  expect(accessProof.id).toBe(accessProofData.id)
-  expect(accessProof.organization.serialNumber).toBe(
-    accessProofData.organization.serialNumber,
-  )
-  expect(accessProof.organization.name).toBe(accessProofData.organization.name)
-  expect(accessProof.serviceName).toBe(accessProofData.serviceName)
-  expect(accessProof.createdAt).toEqual(new Date(accessProofData.createdAt))
-  expect(accessProof.revokedAt).toEqual(accessProofData.revokedAt)
-  expect(accessProof.publicKeyFingerprint).toEqual(
-    accessProofData.publicKeyFingerprint,
-  )
+  expect(model.id).toBe('42')
+  expect(model.organization.name).toBe('Organization One')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
+  expect(model.serviceName).toBe('Service')
+  expect(model.publicKeyFingerprint).toBe('public-key-fingerprint')
+  expect(model.createdAt).toEqual(new Date('2020-10-01'))
+  expect(model.revokedAt).toEqual(null)
+})
+
+test('organization name is empty', () => {
+  const model = new AccessProofModel({
+    accessProofData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
+})
+
+test('organization name is empty', () => {
+  const model = new AccessGrantModel({
+    accessGrantStore: {},
+    accessGrantData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
 })

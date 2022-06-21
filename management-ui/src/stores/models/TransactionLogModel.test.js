@@ -39,3 +39,34 @@ test('initialize and update the transactionLog', async () => {
   expect(transactionLogModel.destination.name).toBe('Organization Two')
   expect(transactionLogModel.order.delegator.name).toBe('Organization Three')
 })
+
+test('organization name is empty', () => {
+  const model = new TransactionLogModel({
+    transactionLogStore: {},
+    transactionLogData: {
+      source: {
+        serialNumber: '00000000000000000001',
+        name: '',
+      },
+      destination: {
+        serialNumber: '00000000000000000002',
+        name: '',
+      },
+      order: {
+        delegator: {
+          serialNumber: '00000000000000000003',
+          name: '',
+        },
+      },
+    },
+  })
+
+  expect(model.source.name).toBe('00000000000000000001')
+  expect(model.source.serialNumber).toBe('00000000000000000001')
+
+  expect(model.destination.name).toBe('00000000000000000002')
+  expect(model.destination.serialNumber).toBe('00000000000000000002')
+
+  expect(model.order.delegator.name).toBe('00000000000000000003')
+  expect(model.order.delegator.serialNumber).toBe('00000000000000000003')
+})

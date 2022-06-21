@@ -15,7 +15,7 @@ test('creating instance', () => {
     },
   })
 
-  const order = new OutgoingOrderModel({
+  const model = new OutgoingOrderModel({
     orderData: {
       reference: 'my-reference',
       delegatee: {
@@ -30,14 +30,14 @@ test('creating instance', () => {
     accessProofs: [accessProof],
   })
 
-  expect(order.reference).toEqual('my-reference')
-  expect(order.delegatee.serialNumber).toBe('00000000000000000001')
-  expect(order.delegatee.name).toBe('Organization One')
-  expect(order.description).toBe('description')
-  expect(order.revokedAt).toEqual(new Date('2020-10-03T12:00:00Z'))
-  expect(order.validFrom).toEqual(new Date('2020-10-01T12:00:00Z'))
-  expect(order.validUntil).toEqual(new Date('2020-10-02T12:00:00Z'))
-  expect(order.accessProofs).toEqual([accessProof])
+  expect(model.reference).toEqual('my-reference')
+  expect(model.delegatee.serialNumber).toBe('00000000000000000001')
+  expect(model.delegatee.name).toBe('Organization One')
+  expect(model.description).toBe('description')
+  expect(model.revokedAt).toEqual(new Date('2020-10-03T12:00:00Z'))
+  expect(model.validFrom).toEqual(new Date('2020-10-01T12:00:00Z'))
+  expect(model.validUntil).toEqual(new Date('2020-10-02T12:00:00Z'))
+  expect(model.accessProofs).toEqual([accessProof])
 })
 
 test('revoke order', async () => {
@@ -59,4 +59,19 @@ test('revoke order', async () => {
   await order.revoke()
 
   expect(store.revokeOutgoing).toBeCalledWith(order)
+})
+
+test('organization name is empty', () => {
+  const model = new OutgoingOrderModel({
+    orderStore: {},
+    orderData: {
+      delegatee: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.delegatee.name).toBe('00000000000000000001')
+  expect(model.delegatee.serialNumber).toBe('00000000000000000001')
 })

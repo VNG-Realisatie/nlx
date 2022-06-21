@@ -117,3 +117,17 @@ test('returns proper isResolved value', () => {
   accessRequest.update({ state: STATES.REJECTED })
   expect(accessRequest.isResolved).toBe(true)
 })
+
+test('organization name is empty', () => {
+  const model = new IncomingAccessRequestModel({
+    accessRequestData: {
+      organization: {
+        serialNumber: '00000000000000000001',
+        name: '',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
+})

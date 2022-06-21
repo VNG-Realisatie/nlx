@@ -57,3 +57,18 @@ test('calling retry should pass instance to store', () => {
 
   expect(storeRetryMock).toHaveBeenCalledWith(accessRequest)
 })
+
+test('organization name is empty', () => {
+  const model = new OutgoingAccessRequestModel({
+    outgoingAccessRequestStore: {},
+    accessRequestData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
+})

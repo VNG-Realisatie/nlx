@@ -47,7 +47,9 @@ class OutgoingAccessRequestModel {
     if (accessRequestData.organization) {
       this.organization.serialNumber =
         accessRequestData.organization.serialNumber
-      this.organization.name = accessRequestData.organization.name
+      this.organization.name =
+        accessRequestData.organization.name ||
+        accessRequestData.organization.serialNumber
     }
 
     if (accessRequestData.serviceName) {

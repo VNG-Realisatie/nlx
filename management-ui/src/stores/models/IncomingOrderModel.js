@@ -73,7 +73,7 @@ class IncomingOrderModel {
     if (orderData.delegator) {
       this._delegator = new Organization(
         orderData.delegator.serialNumber,
-        orderData.delegator.name,
+        orderData.delegator.name || orderData.delegator.serialNumber,
       )
     }
 

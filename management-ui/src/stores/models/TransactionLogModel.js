@@ -22,7 +22,10 @@ class Order {
 
   constructor({ delegator, reference }) {
     this.reference = reference
-    this.delegator = new Organization(delegator.serialNumber, delegator.name)
+    this.delegator = new Organization(
+      delegator.serialNumber,
+      delegator.name || delegator.serialNumber,
+    )
   }
 }
 
@@ -58,14 +61,15 @@ class TransactionLogModel {
     if (transactionLog.source) {
       this.source = new Organization(
         transactionLog.source.serialNumber,
-        transactionLog.source.name,
+        transactionLog.source.name || transactionLog.source.serialNumber,
       )
     }
 
     if (transactionLog.destination) {
       this.destination = new Organization(
         transactionLog.destination.serialNumber,
-        transactionLog.destination.name,
+        transactionLog.destination.name ||
+          transactionLog.destination.serialNumber,
       )
     }
 

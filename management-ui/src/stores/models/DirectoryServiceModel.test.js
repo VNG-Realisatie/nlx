@@ -10,7 +10,6 @@ import DirectoryServiceModel from './DirectoryServiceModel'
 import AccessProofModel from './AccessProofModel'
 
 test('initializing the model', () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   const directoryService = new DirectoryServiceModel({
     directoryServicesStore: {},
     serviceData: {
@@ -23,9 +22,6 @@ test('initializing the model', () => {
       apiSpecificationType: 'API',
     },
   })
-
-  expect(errorSpy).not.toHaveBeenCalled()
-  errorSpy.mockRestore()
 
   expect(directoryService.organization.name).toEqual('Organization')
   expect(directoryService.organization.serialNumber).toEqual(
@@ -334,4 +330,19 @@ test('access states with access', () => {
   })
 
   expect(directoryService.accessStatesWithAccess).toHaveLength(1)
+})
+
+test('organization name is empty', () => {
+  const model = new DirectoryServiceModel({
+    directoryServicesStore: {},
+    serviceData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
 })

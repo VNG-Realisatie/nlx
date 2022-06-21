@@ -3,54 +3,55 @@
 //
 import AccessGrantModel from './AccessGrantModel'
 
-let accessGrantStore
-let accessGrantData
-
-beforeEach(() => {
-  accessGrantStore = {}
-  accessGrantData = {
-    id: 'abcd',
-    organization: {
-      name: 'Organization',
-      serialName: '00000000000000000001',
-    },
-    serviceName: 'Service',
-    publicKeyFingerprint: 'f1ng3r',
-    createdAt: '2020-10-01',
-    revokedAt: null,
-  }
-})
-
 test('should properly construct object', () => {
-  const accessProof = new AccessGrantModel({
-    accessGrantStore,
-    accessGrantData,
+  const model = new AccessGrantModel({
+    accessGrantStore: {},
+    accessGrantData: {
+      id: '42',
+      organization: {
+        name: 'Organization One',
+        serialNumber: '00000000000000000001',
+      },
+      serviceName: 'Service',
+      publicKeyFingerprint: 'f1ng3r',
+      createdAt: '2020-10-01',
+      revokedAt: null,
+    },
   })
 
-  expect(accessProof.id).toBe(accessGrantData.id)
-  expect(accessProof.organization.name).toBe(accessGrantData.organization.name)
-  expect(accessProof.organization.serialNumber).toBe(
-    accessGrantData.organization.serialNumber,
-  )
-  expect(accessProof.serviceName).toBe(accessGrantData.serviceName)
-  expect(accessProof.publicKeyFingerprint).toBe(
-    accessGrantData.publicKeyFingerprint,
-  )
-  expect(accessProof.createdAt).toEqual(new Date(accessGrantData.createdAt))
-  expect(accessProof.revokedAt).toEqual(accessGrantData.revokedAt)
+  expect(model.id).toBe('42')
+  expect(model.organization.name).toBe('Organization One')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
+  expect(model.serviceName).toBe('Service')
+  expect(model.publicKeyFingerprint).toBe('f1ng3r')
+  expect(model.createdAt).toEqual(new Date('2020-10-01'))
+  expect(model.revokedAt).toEqual(null)
+})
+
+test('organization name is empty', () => {
+  const model = new AccessGrantModel({
+    accessGrantStore: {},
+    accessGrantData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  expect(model.organization.name).toBe('00000000000000000001')
+  expect(model.organization.serialNumber).toBe('00000000000000000001')
 })
 
 test('rejecting request handles as expected', async () => {
   const revokeAccessGrant = jest.fn().mockResolvedValue(null)
 
-  accessGrantStore = {
-    revokeAccessGrant,
-    fetchForService: jest.fn(),
-  }
-
   const accessGrant = new AccessGrantModel({
-    accessGrantStore,
-    accessGrantData,
+    accessGrantStore: {
+      revokeAccessGrant,
+      fetchForService: jest.fn(),
+    },
+    accessGrantData: {},
   })
 
   accessGrant.revoke()

@@ -93,7 +93,7 @@ class OutgoingOrderModel {
     if (orderData.delegatee) {
       this._delegatee = new Organization(
         orderData.delegatee.serialNumber,
-        orderData.delegatee.name,
+        orderData.delegatee.name || orderData.delegatee.serialNumber,
       )
     }
 
