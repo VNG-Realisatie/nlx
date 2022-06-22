@@ -1,6 +1,4 @@
 image:
-  # Version should be updated to the most recent version upon deployment, this is just an example.
-  # We use git tags to release a new version so you can get the most recent version by looking at the latest tag https://gitlab.com/commonground/nlx/nlx/-/tags
   tag: "v0.131.1"
 
 # Inway specific settings

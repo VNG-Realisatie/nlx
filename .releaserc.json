@@ -19,6 +19,9 @@
     ["./scripts/semantic-release-helm", {
       "charts": "helm/{charts,deploy}/*"
     }],
+    ["./scripts/semantic-release-installation-guide-yaml", {
+      "files": "technical-docs/nlx-helm-installation-guide/*.{yml,yaml}"
+    }],
     ["@semantic-release/exec", {
       "prepareCmd": "./scripts/update-conditional-helm-deps.sh"
     }],
