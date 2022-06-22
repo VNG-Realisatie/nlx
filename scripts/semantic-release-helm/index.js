@@ -44,7 +44,7 @@ async function prepare(pluginConfig, context) {
     results = await replace(options)
   } catch (error) {
     throw new SemanticReleaseError(
-      'Faild to replace versions',
+      'Failed to replace versions',
       'EFAILEDREPLACEVERSION',
       error,
     )
