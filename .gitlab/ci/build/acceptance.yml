@@ -22,6 +22,7 @@
   script:
     - export IMG_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:acc-latest
     - export IMG_REF_SLUG=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
+    - export IMG_COMPONENT_VERSION=${IMAGE_PREFIX}nlxio/${IMAGE}:${COMPONENT_VERSION}
     - "docker build ${CONTEXT}
       -f ${DOCKERFILE}
       --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
@@ -35,7 +36,7 @@
       --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
     - docker push ${IMG_LATEST}
     - docker push ${IMG_REF_SLUG}
-    - docker push ${COMPONENT_VERSION}
+    - docker push ${IMG_COMPONENT_VERSION}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
@@ -55,7 +56,6 @@ Build acceptance auth-opa:
     paths:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
-      - ci_build_image_version.txt
 
 Build acceptance ca-certportal:
   extends: .build-acceptance-base
