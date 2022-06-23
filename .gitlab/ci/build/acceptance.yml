@@ -14,7 +14,7 @@
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - export REVIEW_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
-    - echo -n "${CI_COMMIT_REF_SLUG}" > ci_build_image_tag.txt
+    - echo -n "${COMPONENT_VERSION}" > ci_build_image_tag.txt
   variables:
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
@@ -29,11 +29,13 @@
       --build-arg GIT_TAG_NAME=${COMPONENT_VERSION}
       -t ${IMG_LATEST}
       -t ${IMG_REF_SLUG}
+      -t ${COMPONENT_VERSION}
       --cache-from ${REVIEW_REGISTRY}/nlxio/${IMAGE}:review-latest
       --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
       --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
     - docker push ${IMG_LATEST}
     - docker push ${IMG_REF_SLUG}
+    - docker push ${COMPONENT_VERSION}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
