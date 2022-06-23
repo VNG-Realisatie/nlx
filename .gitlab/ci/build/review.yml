@@ -14,7 +14,6 @@
     - export IMAGE_PREFIX="${IMAGE_REGISTRY}/"
     - echo -n "${IMAGE_REGISTRY}" > ci_build_image_registry.txt
     - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
-    - echo -n "${GIT_TAG_NAME}" > ci_build_image_version.txt
   variables:
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1

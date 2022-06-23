@@ -13,7 +13,6 @@ Deploy acceptance:
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)
-      export IMAGE_VERSION=$(cat ci_build_image_version.txt)
       echo -e -n "" > ci_environment_url.txt
     - |
       echo "image registry: ${IMAGE_REGISTRY}"

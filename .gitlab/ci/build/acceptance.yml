@@ -15,7 +15,6 @@
     - export REVIEW_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${CI_COMMIT_REF_SLUG}" > ci_build_image_tag.txt
-    - echo -n "${CI_COMMIT_REF_SLUG}" > ci_build_image_version.txt
   variables:
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1

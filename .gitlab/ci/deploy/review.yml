@@ -12,7 +12,6 @@ Deploy review:
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)
-      export IMAGE_VERSION=$(cat ci_build_image_version.txt)
       export DOMAIN_SUFFIX="${K8S_NAMESPACE}.${REVIEW_BASE_DOMAIN}"
       echo -e -n "${DOMAIN_SUFFIX}" > ci_environment_url.txt
     - |
