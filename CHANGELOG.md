@@ -1,3 +1,19 @@
+# [0.132.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.131.1...v0.132.0) (2022-06-27)
+
+
+### Bug Fixes
+
+* **management:** show destination organization for outgoing transactions ([79a5905](https://gitlab.com/commonground/nlx/nlx/commit/79a59058f8287633f9791540297eb7df91e9c961)), closes [nlx#1555](https://gitlab.com/nlx/issues/1555)
+
+
+### Features
+
+* **management:** display organization name instead of OIN for the audit log page ([1bb1be0](https://gitlab.com/commonground/nlx/nlx/commit/1bb1be0879cc68b4b9292b9c03344b7bcdbc9ff9)), closes [nlx#1555](https://gitlab.com/nlx/issues/1555)
+* **management:** display organization name instead of OIN for the orders page ([51f9b7b](https://gitlab.com/commonground/nlx/nlx/commit/51f9b7b89466ff22dd1f0b2960741cf7337672ce)), closes [nlx#1555](https://gitlab.com/nlx/issues/1555)
+* **management:** display organization name instead of OIN for the transaction log page ([665a13c](https://gitlab.com/commonground/nlx/nlx/commit/665a13c0a0bce0f1d771fab40c31130a0871c4f1)), closes [nlx#1555](https://gitlab.com/nlx/issues/1555)
+* **management:** return organization name with serial number for the transaction log service ([4e171f8](https://gitlab.com/commonground/nlx/nlx/commit/4e171f8ccffa3aa504e624d488f72730641d89fd)), closes [nlx#1555](https://gitlab.com/nlx/issues/1555)
+* **management:** show OIN instead of name if the organization name is not available ([a9fb881](https://gitlab.com/commonground/nlx/nlx/commit/a9fb8813e7bf3a32720b9e1925d7dcfe41a3f944)), closes [nlx#1555](https://gitlab.com/nlx/issues/1555)
+
 ## [0.131.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.131.0...v0.131.1) (2022-06-10)
 
 # [0.131.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.130.3...v0.131.0) (2022-06-07)
