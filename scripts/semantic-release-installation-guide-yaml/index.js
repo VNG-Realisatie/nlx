@@ -2,7 +2,6 @@
 // Licensed under the EUPL
 //
 const SemanticReleaseError = require('@semantic-release/error')
-const AggregateError = require('aggregate-error')
 const glob = require('glob')
 const replace = require('replace-in-file')
 
@@ -23,11 +22,11 @@ function verifyConditions(pluginConfig, context) {
 }
 
 async function prepare(pluginConfig, context) {
-  const { dryRun, files } = pluginConfig
+  const { dryRun } = pluginConfig
   const { version } = context.nextRelease
 
   const options = {
-    files: files,
+    files: filePaths,
     from: [
       /^(\s*)image: (.*)nlxio\/(.*):v.*$/m,
       /^(\s*)tag: "v.*"$/m
