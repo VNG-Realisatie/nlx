@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "EXTEND_ESLINT=true BROWSER=none PORT=3001 react-scripts start",
-    "build": "EXTEND_ESLINT=true react-scripts build",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' EXTEND_ESLINT=true react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint src/",
     "eject": "react-scripts eject"
