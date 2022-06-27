@@ -26,7 +26,7 @@ async function prepare(pluginConfig, context) {
   const { version } = context.nextRelease
 
   const options = {
-    files: files,
+    files: filePaths,
     from: [
       /^(\s*)image: (.*)nlxio\/(.*):v.*$/m,
       /^(\s*)tag: "v.*"$/m
@@ -35,11 +35,14 @@ async function prepare(pluginConfig, context) {
       `$1image: $2nlxio/$3:v${version}`,
       `$1tag: "v${version}"`
     ],
+    disableGlobs: true,
+    countMatches: true,
     dry: dryRun
   }
 
   try {
-    await replace(options)
+    const result = await replace(options)
+    console.log('result: ', result)
   } catch (error) {
     throw new SemanticReleaseError(
       'Failed to replace versions',
