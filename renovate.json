@@ -16,7 +16,7 @@
   ],
   "gitlabci": {
     "fileMatch": [
-      "^\\.gitlab/ci/.*\\.yml$"
+      "^\\.gitlab\\/ci\\/.*\\.yml$"
     ]
   },
   "commitBody": "Issue: nlx#1171",
