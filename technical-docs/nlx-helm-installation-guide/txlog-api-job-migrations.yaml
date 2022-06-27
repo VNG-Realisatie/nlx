@@ -8,7 +8,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: txlog-db
-          image: docker.io/nlxio/txlog-db:v0.131.1
+          image: docker.io/nlxio/txlog-db:v0.132.1
           imagePullPolicy: IfNotPresent
           command:
             - /usr/local/bin/upgrade-db.sh
