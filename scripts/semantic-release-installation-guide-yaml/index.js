@@ -16,17 +16,17 @@ function verifyConditions(pluginConfig, context) {
 
   filePaths = glob.sync(`${files}`)
 
-  if (!files.length) {
+  if (!filePaths.length) {
     throw new SemanticReleaseError('No yaml files found.', 'ENOFILES')
   }
 }
 
 async function prepare(pluginConfig, context) {
-  const { dryRun } = pluginConfig
+  const { dryRun, files } = pluginConfig
   const { version } = context.nextRelease
 
   const options = {
-    files: filePaths,
+    files: files,
     from: [
       /^(\s*)image: (.*)nlxio\/(.*):v.*$/m,
       /^(\s*)tag: "v.*"$/m
@@ -35,9 +35,7 @@ async function prepare(pluginConfig, context) {
       `$1image: $2nlxio/$3:v${version}`,
       `$1tag: "v${version}"`
     ],
-    disableGlobs: true,
-    countMatches: true,
-    dry: dryRun,
+    dry: dryRun
   }
 
   try {
