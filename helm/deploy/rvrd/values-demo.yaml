@@ -80,7 +80,7 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: gKV1nhAtGx2fJLMbx0ao
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
           - https://management.demo.rvrd.nl/oidc/callback
   ingress:
