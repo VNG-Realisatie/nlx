@@ -85,7 +85,7 @@ nlx-management:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - host: management.demo.gemeentestijns.nl
+      - management.demo.gemeentestijns.nl
     tls:
       - secretName: gemeentestijns-nlx-management-ingress-tls
         hosts:
