@@ -2,6 +2,6 @@ apiVersion: v2
 name: nlx-outway
 description: NLX outway
 type: application
-version: 0.133.1
-appVersion: 0.133.1
+version: 0.133.2
+appVersion: 0.133.2
 icon: https://docs.nlx.io/img/logo-light.svg
