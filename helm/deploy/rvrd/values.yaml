@@ -119,11 +119,11 @@ nlxctl:
     pullPolicy: IfNotPresent
   tls:
     existingSecret: rvrd-nlxctl-tls
-  clientID: "nlx-management"
-  clientSecret: "99DbIk7FqlUYqbyD3qSX4Wmf"
-  authorizationServerUrl: "http://dex.rvrd.nlx.minikube"
-  username: "admin@example.com"
-  password: "password"
+  clientID: nlx-management
+  clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
+  authorizationServerUrl: http://dex.rvrd.nlx.minikube
+  username: admin@example.com
+  password: password
 
 managementAPI:
   address: rvrd-nlx-management-api:443
@@ -346,11 +346,6 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
-        redirectURIs:
-          - http://nlx-management.rvrd.nlx.minikube/oidc/callback
-      - id: nlx-ctl
-        name: NLX CTL
         secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
           - http://nlx-management.rvrd.nlx.minikube/oidc/callback

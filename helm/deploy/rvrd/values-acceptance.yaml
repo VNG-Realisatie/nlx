@@ -53,7 +53,7 @@ nlxctl:
 nlx-management:
   config:
     oidc:
-      clientSecret: gKV1nhAtGx2fJLMbx0ao
+      clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
       discoveryURL: https://dex.acc.rvrd.nl
       redirectURL: https://management.acc.rvrd.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4

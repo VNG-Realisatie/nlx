@@ -73,7 +73,7 @@ nlx-management:
   config:
     directoryHostname: directory-api.demo.nlx.io
     oidc:
-      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
+      clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
       discoveryURL: https://dex.demo.gemeenteriemer.nl
       redirectURL: https://management.demo.gemeenteriemer.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4
@@ -93,7 +93,7 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: grGSl5W5HcKRETBr3OhmU6Tm
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
           - https://management.demo.gemeenteriemer.nl/oidc/callback
   ingress:

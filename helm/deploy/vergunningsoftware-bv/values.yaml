@@ -289,12 +289,8 @@ nlx-outway:
 
 nlx-management:
   config:
+    enableBasicAuth: true
     directoryHostname: shared-nlx-directory-api
-    oidc:
-      clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
-      discoveryURL: http://dex.vergunningsoftware-bv.nlx.minikube
-      redirectURL: http://nlx-management.vergunningsoftware-bv.nlx.minikube/oidc/callback
-      sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
     txlogAPIAddress: vergunningsoftware-bv-nlx-txlog-api:8443
   tls:
     organization:
@@ -320,45 +316,6 @@ nlx-management:
       usernameKey: username
       passwordKey: password
     sslMode: require
-dex:
-  config:
-    storage:
-      type: sqlite3
-      config:
-        file: ":memory:"
-    logger:
-      level: info
-    issuer: http://dex.vergunningsoftware-bv.nlx.minikube
-    staticClients:
-      - id: nlx-management
-        name: NLX Management
-        secret: ZXhhbXBsZS1hcHAtc2VjcmV0
-        redirectURIs:
-          - http://nlx-management.vergunningsoftware-bv.nlx.minikube/oidc/callback
-    enablePasswordDB: true
-    staticPasswords:
-      - username: admin
-        userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
-        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W  # password
-        name: Admin User
-        email: admin@example.com
-    oauth2:
-      skipApprovalScreen: false
-  ingress:
-    enabled: true
-    hosts:
-      - dex.vergunningsoftware-bv.nlx.minikube
-  ports:
-    web:
-      servicePort: 80
-  grpc: false
-  certs:
-    web:
-      create: false
-    grpc:
-      create: false
-  rbac:
-    create: false
 
 parkeerrechten-admin:
   enabled: false

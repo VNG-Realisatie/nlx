@@ -67,25 +67,6 @@ nlx-management:
         hosts:
           - management.demo.vergunningsoftware.nl
 
-dex:
-  config:
-    issuer: https://dex.demo.vergunningsoftware.nl
-    staticClients:
-      - id: nlx-management
-        name: NLX Management
-        secret: N6Gr4v8wZKlLuKrMSV1I
-        redirectURIs:
-          - https://management.demo.vergunningsoftware.nl/oidc/callback
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - dex.demo.vergunningsoftware.nl
-    tls:
-      - secretName: vergunningsoftware-bv-dex-ingress-tls
-        hosts:
-          - dex.demo.vergunningsoftware.nl
-
 parkeerrechten-admin:
   enabled: true
   organizationName: "Vergunningsoftware BV"

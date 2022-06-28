@@ -60,7 +60,7 @@ nlx-management:
   config:
     directoryHostname: directory-api.demo.nlx.io
     oidc:
-      clientSecret: gKV1nhAtGx2fJLMbx0ao
+      clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
       discoveryURL: https://dex.demo.rvrd.nl
       redirectURL: https://management.demo.rvrd.nl/oidc/callback
       sessionSignKey: wXDSJYQjSLCsigtnRCbBMWjnvEhHFdu4

@@ -34,7 +34,7 @@ nlxctl:
 nlx-management:
   config:
     oidc:
-      clientSecret: grGSl5W5HcKRETBr3OhmU6Tm
+      clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
       discoveryURL: https://dex-gemeente-stijns-{{DOMAIN_SUFFIX}}
       redirectURL: https://nlx-management-gemeente-stijns-{{DOMAIN_SUFFIX}}/oidc/callback
       sessionSignKey: 0Xn2DBfb4L4hwN3XosbwoKZalLBU68UU
@@ -48,7 +48,7 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: grGSl5W5HcKRETBr3OhmU6Tm
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
           - https://nlx-management-gemeente-stijns-{{DOMAIN_SUFFIX}}/oidc/callback
   ingress:

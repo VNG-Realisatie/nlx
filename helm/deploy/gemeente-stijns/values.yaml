@@ -256,11 +256,11 @@ nlxctl:
     pullPolicy: IfNotPresent
   tls:
     existingSecret: gemeente-stijns-nlxctl-tls
-  clientID: "nlx-management"
-  clientSecret: "grGSl5W5HcKRETBr3OhmU6Tm"
-  authorizationServerUrl: "http://dex.gemeente-stijns.nlx.minikube"
-  username: "admin@example.com"
-  password: "password"
+  clientID: nlx-management
+  clientSecret: 99DbIk7FqlUYqbyD3qSX4Wmf
+  authorizationServerUrl: http://dex.gemeente-stijns.nlx.minikube
+  username: admin@example.com
+  password: password
 
 managementAPI:
   address: gemeente-stijns-nlx-management-api:443
@@ -424,7 +424,7 @@ dex:
     staticClients:
       - id: nlx-management
         name: NLX Management
-        secret: grGSl5W5HcKRETBr3OhmU6Tm
+        secret: 99DbIk7FqlUYqbyD3qSX4Wmf
         redirectURIs:
           - http://nlx-management.gemeente-stijns.nlx.minikube/oidc/callback
     enablePasswordDB: true
