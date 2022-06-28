@@ -3,6 +3,7 @@
 //
 import React from 'react'
 import { render } from '@testing-library/react'
+import { any } from 'prop-types'
 
 // code from https://github.com/testing-library/react-hooks-testing-library/issues/654#issuecomment-1097276573
 // this code can be removed once https://github.com/testing-library/react-testing-library/pull/991
@@ -19,6 +20,11 @@ function renderHook(renderCallback, options = {}) {
     })
 
     return null
+  }
+
+  TestComponent.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    renderCallbackProps: any,
   }
 
   const { rerender: baseRerender, unmount } = render(

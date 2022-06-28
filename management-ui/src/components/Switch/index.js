@@ -1,7 +1,15 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { oneOfType, string, number, bool, arrayOf, func } from 'prop-types'
+import {
+  oneOfType,
+  string,
+  number,
+  bool,
+  arrayOf,
+  func,
+  node,
+} from 'prop-types'
 
 const Switch = ({ test, children }) => {
   const matchedCase = children.find((child) => {
@@ -27,6 +35,7 @@ const Default = ({ children }) => children()
 
 Switch.propTypes = {
   test: oneOfType([string, number, bool]).isRequired,
+  children: node,
 }
 
 Case.propTypes = {
