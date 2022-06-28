@@ -22,7 +22,7 @@ function verifyConditions(pluginConfig, context) {
 }
 
 async function prepare(pluginConfig, context) {
-  const { dryRun, files } = pluginConfig
+  const { dryRun } = pluginConfig
   const { version } = context.nextRelease
 
   const options = {
@@ -36,13 +36,11 @@ async function prepare(pluginConfig, context) {
       `$1tag: "v${version}"`
     ],
     disableGlobs: true,
-    countMatches: true,
     dry: dryRun
   }
 
   try {
-    const result = await replace(options)
-    console.log('result: ', result)
+    await replace(options)
   } catch (error) {
     throw new SemanticReleaseError(
       'Failed to replace versions',
