@@ -1,5 +1,5 @@
 image:
-  tag: "v0.133.0"
+  tag: "v0.133.1"
 
 txlogdb:
   hostname: postgres
