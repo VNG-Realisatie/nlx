@@ -1,3 +1,10 @@
+# [0.133.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.132.2...v0.133.0) (2022-06-28)
+
+
+### Features
+
+* **management:** add rbac permission system ([90f3049](https://gitlab.com/commonground/nlx/nlx/commit/90f304918cd7c3fa4f9d21de2b4901a82377c56f)), closes [nlx#1545](https://gitlab.com/nlx/issues/1545)
+
 ## [0.132.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.132.1...v0.132.2) (2022-06-27)
 
 ## [0.132.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.132.0...v0.132.1) (2022-06-27)
