@@ -1,3 +1,4 @@
+{{if not .Values.service.separateServices.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -27,3 +28,50 @@ spec:
       {{- if and  (eq .Values.service.type "NodePort") .Values.service.nodePortManagementAPIProxy }}
       nodePort: {{ .Values.service.nodePortManagementAPIProxy }}
       {{- end }}
+{{ else }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nlx-inway.fullname" . }}-data
+  labels:
+    {{- include "nlx-inway.labels" . | nindent 4 }}
+  annotations: {{ .Values.service.separateServices.inway.annotations | toJson }}
+spec:
+  type: {{ .Values.service.separateServices.inway.type }}
+  {{if .Values.service.separateServices.inway.loadBalancerIP}}
+  loadBalancerIP: {{ .Values.service.separateServices.inway.loadBalancerIP }}
+  {{end}}
+  selector:
+    {{- include "nlx-inway.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: data
+      protocol: TCP
+      port: {{ .Values.service.separateServices.inway.port }}
+      targetPort: https
+      {{- if and (eq .Values.service.separateServices.inway.type "NodePort") .Values.service.separateServices.inway.nodePort }}
+      nodePort: {{ .Values.service.separateServices.inway.nodePort }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nlx-inway.fullname" . }}-management
+  labels:
+    {{- include "nlx-inway.labels" . | nindent 4 }}
+  annotations: {{ .Values.service.separateServices.managementAPIProxy.annotations | toJson }}
+spec:
+  type: {{ .Values.service.separateServices.managementAPIProxy.type }}
+  {{if .Values.service.separateServices.managementAPIProxy.loadBalancerIP}}
+  loadBalancerIP: {{ .Values.service.separateServices.managementAPIProxy.loadBalancerIP }}
+  {{end}}
+  selector:
+    {{- include "nlx-inway.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: management
+      protocol: TCP
+      port: {{ .Values.service.separateServices.managementAPIProxy.port }}
+      targetPort: management
+      {{- if and  (eq .Values.service.separateServices.managementAPIProxy.type "NodePort") .Values.service.separateServices.managementAPIProxy.nodePort }}
+      nodePort: {{ .Values.service.separateServices.managementAPIProxy.nodePort }}
+      {{- end }}
+{{- end }}

@@ -23,7 +23,6 @@ fullnameOverride: ""
 config:
   logType: live
   logLevel: info
-
   name: ""
   selfAddress: ""
   managementAPIProxyAddress: ""
@@ -79,12 +78,26 @@ podSecurityContext:
 
 service:
   type: LoadBalancer
-  port: 443
-  portManagementAPIProxy: 8443
-  nodePort: 443
-  nodePortManagementAPIProxy: 8443
   annotations: {}
+  port: 443
+  nodePort: 443
   loadBalancerIP: ""
+  portManagementAPIProxy: 8443
+  nodePortManagementAPIProxy: 8443
+  separateServices:
+    enabled: false
+    inway:
+      port: 443
+      nodePort: 443
+      type: LoadBalancer
+      annotations: {}
+      loadBalancerIP: ""
+    managementAPIProxy:
+      port: 8443
+      nodePort: 8443
+      type: LoadBalancer
+      annotations: {}
+      loadBalancerIP:
 
 resources: {}
 

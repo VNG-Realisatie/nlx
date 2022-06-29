@@ -87,7 +87,11 @@ Return the self address of the inway
 {{- if .Values.config.selfAddress -}}
   {{- .Values.config.selfAddress -}}
 {{- else }}
-  {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.port | int) -}}
+  {{- if .Values.service.separateServices.enabled -}}
+      {{- printf "%s-data:%d" (include "nlx-inway.fullname" .) (.Values.service.separateServices.inway.port | int) -}}
+  {{- else }}
+     {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.port | int) -}}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -98,6 +102,10 @@ Return the management API proxy address of the inway
 {{- if .Values.config.managementAPIProxyAddress -}}
   {{- .Values.config.managementAPIProxyAddress -}}
 {{- else }}
-  {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.portManagementAPIProxy | int) -}}
+   {{- if .Values.service.separateServices.enabled -}}
+      {{- printf "%s-management:%d" (include "nlx-inway.fullname" .) (.Values.service.separateServices.managementAPIProxy.port | int) -}}
+    {{- else }}
+      {{- printf "%s:%d" (include "nlx-inway.fullname" .) (.Values.service.portManagementAPIProxy | int) -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
