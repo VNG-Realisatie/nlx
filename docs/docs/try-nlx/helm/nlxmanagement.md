@@ -18,7 +18,8 @@ kubectl -n nlx apply -f management-internal-tls.yaml
 
 ## NLX management chart
 
-We are now going to create a configuration file for the NLX management installation. Open the file `nlx-management-values.yaml` in an editor (e.g. nano, nvim, notepad, etc), edit the values below and then save the file:
+We are now going to create a configuration file for the NLX management installation.
+Open the file `nlx-management-values.yaml` in a text editor and edit the values below:
 
 - `<hostname nlx-management>` replace this with the hostname on which your NLX management should run eg: management.mijn-organization.nl
    **IMPORTANT: this DNS entry must already exist and resolve to the ingress controller**
@@ -28,7 +29,7 @@ We are now going to create a configuration file for the NLX management installat
    - Paste the content between the start and end lines and make sure the alignment is the same as the start and end lines
    - Save the modified file
 
-Next, we install NLX Management:
+Make sure to save the file. Next, let's install NLX Management:
 
 ```
 helm repo add commonground https://charts.commonground.nl

@@ -35,9 +35,12 @@ cd your-directory
 * [Git](https://git-scm.com/docs/git-archive)
 
 **MacOS users**
-Openssl on Mac OS is not suitable for creating V3 CA certificates. Therefore only for Mac OS users:` brew install openssl@1.1`
+
+The default installation of OpenSSL on Mac OS is not suitable for creating V3 CA certificates.
+Therefore install v1.1 using `brew install openssl@1.1`.
 
 **Windows users**
+
 Install OpenSSL with the following command: `choco install OpenSSL.Light`
 
 ## Download base files

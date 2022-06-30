@@ -104,13 +104,13 @@ For macOS & Linux:
 
 ```bash
 docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./init-organization-certs.sh
-``` 
+```
 
 For Windows:
 
 ```bash
 docker run --rm -it -v %cd%:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./init-organization-certs.sh
-``` 
+```
 
 See [OpenSSL questions](#openssl-questions) to know what to fill in the OpenSSL questions asked by the script.
 
@@ -133,8 +133,8 @@ Then create a Kubernetes TLS secret by running:
 
 ```
 kubectl create secret tls external-tls \
-   --cert=org.crt \
-   --key=org.key \
+   --cert=certs/org.crt \
+   --key=certs/org.key \
    --namespace=nlx
 ```
 
@@ -147,7 +147,7 @@ The Subject Serial Number of your certificate, added by the Certificate Portal, 
 To obtain your serial number, see the Subject part of the certificate by running:
 
 ```bash
-openssl x509 -in org.crt -text | grep Subject:
+openssl x509 -in certs/org.crt -text | grep Subject:
 ```
 
 Example of the output: `Subject: C=nl, ST=zuid-holland, L=gemeente-stijns, O=my-organization, OU=my-organization-unit, CN=an-awesome-organization.nl/serialNumber=01234567890123456789`.
