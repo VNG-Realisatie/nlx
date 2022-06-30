@@ -48,10 +48,16 @@ For Linux:
 openssl req -x509 -new -nodes -key ca.key -subj "/CN=NLX" -days 3650 -reqexts v3_req -extensions v3_ca -out ca.crt
 ```
 
-For macOS:
+For macOS (Intel based):
 
 ```
 openssl req -x509 -new -nodes -key ca.key -subj "/CN=NLX" -days 3650 -reqexts v3_req -extensions v3_ca -out ca.crt -config /usr/local/etc/openssl@1.1/openssl.cnf
+```
+
+For macOS (arm based, eg. M1):
+
+```
+/opt/homebrew/Cellar/openssl@1.1/1.1.1p/bin/openssl req -x509 -new -nodes -key ca.key -subj "/CN=NLX" -days 3650 -reqexts v3_req -extensions v3_ca -out ca.crt
 ```
 
 Check if `ca.crt` is created by running:
