@@ -16,8 +16,8 @@ helm repo update
 helm install \
   postgresql bitnami/postgresql \
   --namespace nlx \
-  --version 10.16.2 \
-  --set postgresqlDatabase=nlx_management
+  --version 11.6.11 \
+  --set auth.database=nlx_management
 ```
 
 Then check if PostgreSQL is running properly by running:
@@ -36,7 +36,7 @@ postgresql-postgresql-0   1/1     Running   0          ?s
 Make sure you get the password for PostgreSQL and write it down somewhere, we'll need this password later in this guide. Get the password with the following command:
 
 ```
-kubectl get secret --namespace nlx postgresql -o jsonpath="{.data.postgresql-password}" | base64 -d
+kubectl get secret --namespace nlx postgresql -o jsonpath="{.data.postgres-password}" | base64 -d
 ```
 
 *Save this password somewhere without the closing `%` sign*
