@@ -1,0 +1,54 @@
+@startuml
+title: Request access to a service offered by a delegate
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "API Consumer"
+actor "Administrator" as administratorConsumer
+participant "Management UI" as managementUIConsumer
+participant "Management API" as managementAPIConsumer
+end box
+
+box "Municipality"
+actor "Administrator" as administratorMunicipality
+participant "Management UI" as managementUIMunicipality
+participant "Inway" as inwayMunicipality
+participant "Management API" as managementAPIMunicipality
+participant "Management Database" as managementDatabaseMunicipality
+end box
+
+box "Saas Organization"
+participant "Inway" as inwaySaasOrganization
+participant "Management API" as managementAPISaasOrganization
+participant "Management Database" as managementDatabaseSaasOrganization
+end box
+
+administratorConsumer -> managementUIConsumer: request access to service
+managementUIConsumer -> managementAPIConsumer: request access to service
+managementAPIConsumer -> inwayMunicipality: request access to service
+inwayMunicipality -> managementAPIMunicipality: request access to service
+managementAPIMunicipality -> managementDatabaseMunicipality: store access request
+administratorMunicipality -> managementUIMunicipality: view pending access requests
+managementUIMunicipality -> managementAPIMunicipality: get pending access request
+managementAPIMunicipality -> managementDatabaseMunicipality: get pending access requests
+managementDatabaseMunicipality -> managementAPIMunicipality: return pending access requests
+managementAPIMunicipality -> managementUIMunicipality: return pending access requests
+managementUIMunicipality -> administratorMunicipality: display pending access requests
+administratorMunicipality -> managementUIMunicipality: approve access request
+managementUIMunicipality -> managementAPIMunicipality: approve access request
+managementAPIMunicipality -> inwaySaasOrganization: create access grant
+inwaySaasOrganization -> managementAPISaasOrganization: create access grant
+managementAPISaasOrganization -> managementDatabaseSaasOrganization: store access grant
+administratorMunicipality -> managementUIMunicipality: View access grants for service
+managementUIMunicipality -> managementAPIMunicipality: get access grants for service
+managementAPIMunicipality -> inwaySaasOrganization: get access grants for service
+inwaySaasOrganization -> managementAPISaasOrganization: get access grants for service
+managementAPISaasOrganization -> managementDatabaseSaasOrganization: get access grants for service
+managementDatabaseSaasOrganization -> managementAPISaasOrganization: return access grants for service
+managementAPISaasOrganization -> inwaySaasOrganization: return access grants for service
+inwaySaasOrganization -> managementAPIMunicipality: return access grants for service
+managementAPIMunicipality -> managementUIMunicipality: return access grants for service
+managementUIMunicipality -> administratorMunicipality: display access grants for service
+@enduml
