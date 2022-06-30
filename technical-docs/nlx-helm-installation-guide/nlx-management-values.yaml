@@ -1,5 +1,5 @@
 image:
-  tag: "v0.133.2"
+  tag: "v0.134.0"
 config:
   directoryHostname: directory-api.demo.nlx.io
   enableBasicAuth: true

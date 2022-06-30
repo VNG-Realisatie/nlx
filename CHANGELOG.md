@@ -1,3 +1,10 @@
+# [0.134.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.133.2...v0.134.0) (2022-06-30)
+
+
+### Features
+
+* **inway:** add split service ability to the helm chart ([e18a442](https://gitlab.com/commonground/nlx/nlx/commit/e18a442430ca5825be56a9df2ec251eac5408a6d)), closes [nlx#1563](https://gitlab.com/nlx/issues/1563)
+
 ## [0.133.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.133.1...v0.133.2) (2022-06-28)
 
 ## [0.133.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.133.0...v0.133.1) (2022-06-28)
