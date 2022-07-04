@@ -31,6 +31,8 @@ const DirectoryDetailView = ({ service }) => {
       <ExternalLinkSection service={service} />
 
       <SectionGroup>
+        <ContactSection service={service} />
+
         <OutwaysWithoutAccessSection
           service={service}
           onShowConfirmRequestAccessModalHandler={
@@ -42,8 +44,6 @@ const DirectoryDetailView = ({ service }) => {
         />
 
         <OutwaysWithAccessSection service={service} />
-
-        <ContactSection service={service} />
 
         <CostsSection
           oneTimeCosts={service.oneTimeCosts}
