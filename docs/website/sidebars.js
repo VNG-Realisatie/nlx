@@ -85,6 +85,7 @@ module.exports = {
         'reference-information/environment-variables',
         'reference-information/ip-addresses',
         'reference-information/oidc',
+        'reference-information/rewrite-base-url',
       ],
     },
     {
