@@ -26,10 +26,13 @@ export const AccessMessageWrapper = styled.div`
   justify-content: flex-end;
 `
 
-export const WarnMessage = styled.span`
+export const Message = styled.span`
   flex: 1;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+`
+
+export const WarnMessage = styled(Message)`
   color: ${(p) => p.theme.tokens.colorWarning};
 `

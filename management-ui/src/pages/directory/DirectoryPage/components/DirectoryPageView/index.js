@@ -28,7 +28,7 @@ const DirectoryPageView = ({
           <Table.Th>{t('Service')}</Table.Th>
           <Table.Th>{t('State')}</Table.Th>
           <Table.Th>{t('API Type')}</Table.Th>
-          <Table.Th></Table.Th>
+          <Table.Th>{t('Access')}</Table.Th>
         </Table.TrHead>
       </thead>
       <tbody>

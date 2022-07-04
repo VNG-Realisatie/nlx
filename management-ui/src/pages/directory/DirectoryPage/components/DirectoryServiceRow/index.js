@@ -9,10 +9,12 @@ import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
 import StateIndicator from '../../../../../components/StateIndicator'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
+import { IconCheck } from '../../../../../icons'
 import {
   StyledTd,
   AccessMessageWrapper,
   StyledTdAccess,
+  Message,
   WarnMessage,
 } from './index.styles'
 
@@ -21,6 +23,8 @@ const DirectoryServiceRow = ({ service, ownService, ...props }) => {
   const { t } = useTranslation()
 
   const failingAccessStates = service.getFailingAccessStates()
+  const hasAccessWithAtLeastOneOutway =
+    service.accessStatesWithAccess.length >= 1
 
   const ownServiceColor = theme.tokens.colorBrand1
 
@@ -43,6 +47,10 @@ const DirectoryServiceRow = ({ service, ownService, ...props }) => {
         <AccessMessageWrapper>
           {failingAccessStates.length ? (
             <WarnMessage>{t('Request could not be sent')}</WarnMessage>
+          ) : hasAccessWithAtLeastOneOutway ? (
+            <Message>
+              <IconCheck title={t('Approved')} inline />
+            </Message>
           ) : null}
         </AccessMessageWrapper>
       </StyledTdAccess>
