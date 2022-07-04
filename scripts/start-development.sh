@@ -16,9 +16,9 @@ do
 done;
 
 # Migrate databases
-docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations"     --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable up
-docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations"     --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable up
-docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations"     --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_c?sslmode=disable up
+docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations" --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable up
+docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations" --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable up
+docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations" --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_c?sslmode=disable up
 
 # Migrate directory database
 go run ./directory-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disable"
@@ -29,12 +29,20 @@ go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@
 go run ./management-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_c?sslmode=disable"
 
 # Create admin users
-go run ./management-api create-user --email admin@nlx.local \
-    --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+go run ./management-api create-user --email admin@nlx.local --role admin \
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
 go run ./management-api create-user --email admin@nlx.local --password development --role admin \
-    --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
 go run ./management-api create-user --email admin@nlx.local --password development --role admin \
-    --role admin --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_c?sslmode=disable"
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_c?sslmode=disable"
+
+# Create readonly users
+go run ./management-api create-user --email readonly@nlx.local --role readonly \
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+go run ./management-api create-user --email readonly@nlx.local --password development --role readonly \
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_b?sslmode=disable"
+go run ./management-api create-user --email readonly@nlx.local --password development --role readonly \
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_c?sslmode=disable"
 
 # start services
 TXLOG_A=1 TXLOG_B=1 TXLOG_C=1 modd
