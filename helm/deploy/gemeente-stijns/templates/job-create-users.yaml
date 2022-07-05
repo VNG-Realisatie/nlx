@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "gemeente-riemer.fullname" . }}-create-admin
+  name: {{ include "gemeente-stijns.fullname" . }}-create-admin
   labels:
-    {{- include "gemeente-riemer.labels" . | nindent 4 }}
+    {{- include "gemeente-stijns.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "2"
@@ -13,12 +13,12 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "gemeente-riemer.selectorLabels" . | nindent 8 }}
+        {{- include "gemeente-stijns.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: management-api-create-user
-          image: {{ template "gemeente-riemer.managementAPI.image" . }}
+          image: {{ template "gemeente-stijns.managementAPI.image" . }}
           imagePullPolicy: {{ .Values.managementAPI.image.pullPolicy }}
           command: ["/bin/sh"]
           args:
@@ -28,7 +28,16 @@ spec:
                   return_code=$?
 
                 if [ $return_code -eq 128 ]; then
-                  echo "failed to create user, a user with this email address already exists"
+                  echo "failed to create user admin@example.com, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+
+                nlx-management-api create-user --email readonly@example.com --role readonly; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user readonly@example.com, a user with this email address already exists"
                 elif [ ! $return_code -eq 0 ]; then
                   exit 1
                 fi
@@ -53,4 +62,3 @@ spec:
               value: {{ required "PostgreSQL time-out is required" .Values.managementAPI.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
               value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/nlx_management'
-

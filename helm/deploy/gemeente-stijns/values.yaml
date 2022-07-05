@@ -434,6 +434,11 @@ dex:
         hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
         name: Admin User
         email: admin@example.com
+      - username: readonly
+        userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bd
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: Readonly User
+        email: readonly@example.com
     oauth2:
       responseTypes: ["code", "token"]
       skipApprovalScreen: false

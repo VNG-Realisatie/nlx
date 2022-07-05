@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "rvrd.fullname" . }}-create-admin
+  name: {{ include "vergunningsoftware-bv.fullname" . }}-create-admin
   labels:
-    {{- include "rvrd.labels" . | nindent 4 }}
+    {{- include "vergunningsoftware-bv.labels" . | nindent 4 }}
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "2"
@@ -13,22 +13,31 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "rvrd.selectorLabels" . | nindent 8 }}
+        {{- include "vergunningsoftware-bv.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: management-api-create-user
-          image: {{ template "rvrd.managementAPI.image" . }}
+          image: {{ template "vergunningsoftware-bv.managementAPI.image" . }}
           imagePullPolicy: {{ .Values.managementAPI.image.pullPolicy }}
           command: ["/bin/sh"]
           args:
             - "-xc"
             - |
-                nlx-management-api create-user --email admin@example.com --role admin; \
+                nlx-management-api create-user --email admin@example.com --password password --role admin; \
                   return_code=$?
 
                 if [ $return_code -eq 128 ]; then
-                  echo "failed to create user, a user with this email address already exists"
+                  echo "failed to create user admin@example.cos, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+
+                nlx-management-api create-user --email readonly@example.com --password password --role readonly; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user readonly@example.com, a user with this email address already exists"
                 elif [ ! $return_code -eq 0 ]; then
                   exit 1
                 fi
