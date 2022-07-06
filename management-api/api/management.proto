@@ -109,7 +109,7 @@ service Management {
     option (google.api.http) = {get: "/api/v1/terms-of-service"};
   }
   rpc AcceptTermsOfService (google.protobuf.Empty) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/api/v1/terms-of-service"};
+    option (google.api.http) = {post: "/api/v1/terms-of-service" response_body: '*'};
   }
 
   rpc GetInwayConfig (GetInwayConfigRequest) returns (GetInwayConfigResponse) {}

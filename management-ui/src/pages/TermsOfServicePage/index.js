@@ -3,7 +3,7 @@
 //
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@commonground/design-system'
+import { Button, ToasterContext } from '@commonground/design-system'
 import { useNavigate } from 'react-router-dom'
 import ToSContext from '../../tos-context'
 import {
@@ -16,14 +16,28 @@ import {
 
 const TermsOfServicePage = () => {
   const { t } = useTranslation()
+  const { showToast } = useContext(ToasterContext)
   const navigate = useNavigate()
   const tosContext = useContext(ToSContext)
 
   const tos = tosContext.tos
 
   const handleAcceptToS = async () => {
-    await tosContext.accept()
-    navigate('/')
+    try {
+      await tosContext.accept()
+      navigate('/')
+    } catch (err) {
+      const message =
+        err.response.status === 403
+          ? t(`You don't have permission to accept the Terms of Service.`)
+          : ''
+
+      showToast({
+        title: t('Failed to accept Terms of Service'),
+        body: message,
+        variant: 'error',
+      })
+    }
   }
 
   return !tos ? null : (

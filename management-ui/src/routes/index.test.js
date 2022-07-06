@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import { act, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
-import { renderWithProviders } from '../test-utils'
+import { renderWithAllProviders, renderWithProviders } from '../test-utils'
 import { UserContextProvider } from '../user-context'
 import Routes from './index'
 
@@ -62,7 +62,7 @@ test('when authenticated and not accepted the ToS', async () => {
   const history = createMemoryHistory()
 
   await act(async () => {
-    renderWithProviders(
+    renderWithAllProviders(
       <HistoryRouter history={history}>
         <UserContextProvider user={{ id: '42' }}>
           <Routes
