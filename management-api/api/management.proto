@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 
 service Management {
   rpc SynchronizeOrders(google.protobuf.Empty) returns (SynchronizeOrdersResponse) {
-    option (google.api.http) = {post: "/api/v1/orders/synchronize"};
+    option (google.api.http) = {post: "/api/v1/orders/synchronize" response_body: '*'};
   }
   rpc IsFinanceEnabled (google.protobuf.Empty) returns (IsFinanceEnabledResponse) {
     option (google.api.http) = {get: "/api/v1/finance/enabled"};
@@ -28,13 +28,13 @@ service Management {
     option (google.api.http) = {get: "/api/v1/services/{name}"};
   }
   rpc CreateService (CreateServiceRequest) returns (CreateServiceResponse) {
-    option (google.api.http) = {post: "/api/v1/services" body: "*"};
+    option (google.api.http) = {post: "/api/v1/services" body: "*" response_body: '*'};
   }
   rpc UpdateService (UpdateServiceRequest) returns (UpdateServiceResponse) {
-    option (google.api.http) = {put: "/api/v1/services/{name}" body: "*"};
+    option (google.api.http) = {put: "/api/v1/services/{name}" body: "*" response_body: '*'};
   }
   rpc DeleteService (DeleteServiceRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/services/{name}"};
+    option (google.api.http) = {delete: "/api/v1/services/{name}" response_body: '*'};
   }
   rpc GetStatisticsOfServices (GetStatisticsOfServicesRequest) returns (GetStatisticsOfServicesResponse) {
     option (google.api.http) = {get: "/api/v1/statistics/services"};
@@ -52,7 +52,7 @@ service Management {
     option (google.api.http) = {put: "/api/v1/inways/{name}" body: "inway"};
   }
   rpc DeleteInway (DeleteInwayRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/inways/{name}"};
+    option (google.api.http) = {delete: "/api/v1/inways/{name}" response_body: '*'};
   }
   rpc RegisterOutway (RegisterOutwayRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/outways" body: "*"};
@@ -64,40 +64,40 @@ service Management {
     option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
   }
   rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"};
+    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve" response_body: '*'};
   }
   rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"};
+    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject" response_body: '*'};
   }
   rpc CreateAccessRequest (CreateAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/access-requests" body: "*"};
+    option (google.api.http) = {post: "/api/v1/access-requests" body: "*" response_body: '*'};
   }
   rpc SendAccessRequest (SendAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{accessRequestID}/send"};
+    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{accessRequestID}/send" response_body: '*'};
   }
   rpc GetSettings (google.protobuf.Empty) returns (Settings) {
     option (google.api.http) = {get: "/api/v1/settings"};
   }
   rpc UpdateSettings(UpdateSettingsRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {put: "/api/v1/settings", body: "*"};
+    option (google.api.http) = {put: "/api/v1/settings", body: "*" response_body: '*'};
   }
   rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
     option (google.api.http) = {get: "/api/v1/access-grants/services/{serviceName}"};
   }
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
-    option (google.api.http) = {post: "/api/v1/access-grants/{accessGrantID}/revoke"};
+    option (google.api.http) = {post: "/api/v1/access-grants/{accessGrantID}/revoke" response_body: '*'};
   }
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
   }
   rpc CreateOutgoingOrder (CreateOutgoingOrderRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/api/v1/orders/outgoing" body: "*"};
+    option (google.api.http) = {post: "/api/v1/orders/outgoing" body: "*" response_body: '*'};
   }
   rpc UpdateOutgoingOrder (UpdateOutgoingOrderRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {put: "/api/v1/orders/outgoing" body: "*"};
+    option (google.api.http) = {put: "/api/v1/orders/outgoing" body: "*" response_body: '*'};
   }
   rpc RevokeOutgoingOrder (RevokeOutgoingOrderRequest) returns (google.protobuf.Empty){
-    option (google.api.http) = {put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"};
+    option (google.api.http) = {put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke" response_body: '*'};
   }
   rpc ListOutgoingOrders (google.protobuf.Empty) returns (ListOutgoingOrdersResponse) {
     option (google.api.http) = {get: "/api/v1/orders/outgoing"};

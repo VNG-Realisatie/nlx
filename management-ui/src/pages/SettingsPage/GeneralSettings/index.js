@@ -41,8 +41,15 @@ const GeneralSettings = () => {
         variant: 'success',
       })
     } catch (err) {
+      let message = ''
+
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       showToast({
-        body: t('Failed to update the settings'),
+        title: t('Failed to update the settings'),
+        body: message,
         variant: 'error',
       })
     }

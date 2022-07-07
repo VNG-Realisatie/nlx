@@ -87,26 +87,25 @@ describe('the general settings', () => {
     })
 
     describe('when an unexpected error happens', () => {
-      it('GGG should throw an error', async () => {
+      it('should throw an error', async () => {
         const managementApiClient = new ManagementApi()
+
         managementApiClient.managementUpdateSettings = jest
           .fn()
-          .mockRejectedValue('arbitrary error')
+          .mockRejectedValue(new Error('arbitrary error'))
 
         const applicationStore = new ApplicationStore({
           rootStore: {},
           managementApiClient,
         })
 
-        try {
-          await applicationStore.updateGeneralSettings()
-        } catch (e) {}
+        await expect(applicationStore.updateGeneralSettings()).rejects.toThrow(
+          'arbitrary error',
+        )
 
         expect(
           managementApiClient.managementUpdateSettings,
         ).toHaveBeenCalledTimes(1)
-
-        expect(applicationStore.error).toEqual('arbitrary error')
       })
     })
   })

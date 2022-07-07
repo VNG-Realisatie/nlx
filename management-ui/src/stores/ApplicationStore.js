@@ -67,17 +67,9 @@ class ApplicationStore {
   }
 
   async updateGeneralSettings(settings) {
-    try {
-      const response = await this._managementApiClient.managementUpdateSettings(
-        {
-          body: settings,
-        },
-      )
-      return response
-    } catch (e) {
-      this.error = e
-      throw new Error(e)
-    }
+    return await this._managementApiClient.managementUpdateSettings({
+      body: settings,
+    })
   }
 }
 
