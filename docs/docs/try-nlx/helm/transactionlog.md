@@ -15,7 +15,7 @@ Start by downloading the required files
 curl --location \
     --remote-name https://gitlab.com/commonground/nlx/nlx/-/raw/master/technical-docs/nlx-helm-installation-guide/txlog-api-internal-tls.yaml \
     --remote-name https://gitlab.com/commonground/nlx/nlx/-/raw/master/technical-docs/nlx-helm-installation-guide/txlog-api-job-mmigrations.yaml \
-    --remote-name https://gitlab.com/commonground/nlx/nlx/-/raw/master/technical-docs/nlx-helm-installation-guide/txlog-api-values.yaml 
+    --remote-name https://gitlab.com/commonground/nlx/nlx/-/raw/master/technical-docs/nlx-helm-installation-guide/txlog-api-values.yaml
 ```
 
 ## Certificate
@@ -63,7 +63,7 @@ helm repo add commonground https://charts.commonground.nl
 
 helm repo update
 
-helm -n nlx upgrade --install txlog-api -f nlx-management-values.yaml commonground/nlx-txlog-api
+helm -n nlx upgrade --install txlog-api -f txlog-api-values.yaml commonground/nlx-txlog-api
 ```
 
 Check if the Transaction Log API is running:
@@ -80,7 +80,7 @@ txlog-api-nlx-txlog-api-7ff48948f8-pkdfm   1/1     Running     1          1m30s
 
 ## Update the NLX deployment
 
-Now that the Transaction Log API is running, we need to update our existing NLX components so they start using the Transaction Log. 
+Now that the Transaction Log API is running, we need to update our existing NLX components so they start using the Transaction Log.
 
 Open the `nlx-management-values.yaml` file in an editor, uncomment the line `#txlogAPIAddress: txlog-api-nlx-txlog-api:8443` and save it. The first view lines of the file should now look like this:
 
@@ -91,13 +91,13 @@ config:
   txlogAPIAddress: txlog-api-nlx-txlog-api:8443
 ```
 
-Update the NLX Management deployment: 
+Update the NLX Management deployment:
 
 ```
 helm -n nlx upgrade --install management -f nlx-management-values.yaml commonground/nlx-management
 ```
 
-Open a browser and go to NLX Management. In the menu, on the left side of the screen, select `Transactie logs`, if everything is configured correctly you should now see an empty overview. 
+Open a browser and go to NLX Management. In the menu, on the left side of the screen, select `Transactie logs`, if everything is configured correctly you should now see an empty overview.
 
 The next step will be to update the Outway and Inway deployments so that these components will write to the transaction log after receiving a request.
 
@@ -145,6 +145,6 @@ outway-nlx-outway-5c69944c9-4jzrr                 1/1     Running     0         
 
 ## Test the transaction log
 
-Now we will make a request through our Outway to fill the transaction log we just setup. To make a request please repeat the step ['Query API' of the step 'Access API through a client'](./accessapi.md#query-api). 
+Now we will make a request through our Outway to fill the transaction log we just setup. To make a request please repeat the step ['Query API' of the step 'Access API through a client'](./accessapi.md#query-api).
 
 After making the request open your browser and navigate to NLX Management, login and open the `Transaction logs`. You should now see two entries, one of the Outway sending the request and one of the Inway receiving the request.
