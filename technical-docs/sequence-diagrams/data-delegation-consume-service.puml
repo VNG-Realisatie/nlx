@@ -22,23 +22,23 @@ participant "Management API" as managementAPIMunicipality
 end box
 
 inwaySaasOrganization -> inwayMunicipality: get claim for publishing service
-inwayMunicipality -> managementAPIMunicipality: get claim
-managementAPIMunicipality -> inwayMunicipality: return claim
-inwayMunicipality -> inwaySaasOrganization: return claim
-inwaySaasOrganization -> inwaySaasOrganization: store claim in memory
+inwayMunicipality -> managementAPIMunicipality: get publication-claim
+managementAPIMunicipality -> inwayMunicipality: return publication-claim
+inwayMunicipality -> inwaySaasOrganization: return publication-claim
+inwaySaasOrganization -> inwaySaasOrganization: store publication-claim in memory
 
 clientConsumer -> outwayConsumer: call service
-outwayConsumer -> inwaySaasOrganization: get claim stating that the organization is allowed to  publish the service
-inwaySaasOrganization -> outwayConsumer: return claim
-outwayConsumer -> outwayConsumer: verify claim
-outwayConsumer -> inwayMunicipality: get claim stating API consumer has access
-inwayMunicipality -> managementAPIMunicipality: get claim
-managementAPIMunicipality -> inwayMunicipality: return claim
-inwayMunicipality -> outwayConsumer: return claim
-outwayConsumer -> outwayConsumer: store claim in memory
-outwayConsumer -> inwaySaasOrganization: call service with claim
-inwaySaasOrganization -> inwaySaasOrganization: validate claim
-inwaySaasOrganization -> inwaySaasOrganization: use delegator from claim to determine the service to call
+outwayConsumer -> inwaySaasOrganization: get publication-claim stating that the organization is allowed to  publish the service
+inwaySaasOrganization -> outwayConsumer: return publication-claim
+outwayConsumer -> outwayConsumer: verify publication-claim
+outwayConsumer -> inwayMunicipality: get access-claim stating API consumer has access
+inwayMunicipality -> managementAPIMunicipality: get access-claim
+managementAPIMunicipality -> inwayMunicipality: return access-claim
+inwayMunicipality -> outwayConsumer: return access-claim
+outwayConsumer -> outwayConsumer: store access-claim in memory
+outwayConsumer -> inwaySaasOrganization: call service with access-claim
+inwaySaasOrganization -> inwaySaasOrganization: validate access-claim
+inwaySaasOrganization -> inwaySaasOrganization: use delegator from access-claim to determine the service to call
 inwaySaasOrganization -> serviceSaasOrganization: call service
 
 @enduml

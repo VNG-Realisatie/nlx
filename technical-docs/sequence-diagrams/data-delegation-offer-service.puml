@@ -34,19 +34,19 @@ managementAPISaasOrganization -> managementDatabaseSaasOrganization: get service
 managementDatabaseSaasOrganization -> managementAPISaasOrganization: return services and orders
 managementAPISaasOrganization -> inwaySaasOrganization: return config
 
-inwaySaasOrganization -> inwayMunicipality: get claim for publicing the service
-inwayMunicipality -> managementAPIMunicipality: get claim for publicing the service
+inwaySaasOrganization -> inwayMunicipality: get claim for publishing the service
+inwayMunicipality -> managementAPIMunicipality: get claim for publishing the service
 managementAPIMunicipality -> managementDatabaseMunicipality: get order
 managementDatabaseMunicipality -> managementAPIMunicipality: return order
 managementAPIMunicipality -> managementAPIMunicipality: validate order
-managementAPIMunicipality -> managementAPIMunicipality: create claim
-managementAPIMunicipality -> inwayMunicipality: return claim
-inwayMunicipality -> inwaySaasOrganization: return claim
-inwaySaasOrganization -> inwaySaasOrganization: store claim in memory
-inwaySaasOrganization -> directoryAPI: register service with claim
+managementAPIMunicipality -> managementAPIMunicipality: create publication-claim
+managementAPIMunicipality -> inwayMunicipality: return publication-claim
+inwayMunicipality -> inwaySaasOrganization: return publication-claim
+inwaySaasOrganization -> inwaySaasOrganization: store publication-claim in memory
+inwaySaasOrganization -> directoryAPI: register service with publication-claim
 directoryAPI -> inwayMunicipality: get public key of the municipality
 inwayMunicipality -> directoryAPI: return public key
-directoryAPI -> directoryAPI: validate claim
+directoryAPI -> directoryAPI: validate publication-claim
 directoryAPI -> directoryDatabase: register service
 
 @enduml

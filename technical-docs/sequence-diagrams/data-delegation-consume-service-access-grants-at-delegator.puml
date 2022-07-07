@@ -24,20 +24,20 @@ participant "Management API" as managementAPIMunicipality
 end box
 
 inwaySaasOrganization -> inwayMunicipality: get claim for publishing service
-inwayMunicipality -> managementAPIMunicipality: get claim
-managementAPIMunicipality -> inwayMunicipality: return claim
-inwayMunicipality -> inwaySaasOrganization: return claim
-inwaySaasOrganization -> inwaySaasOrganization: store claim in memory
+inwayMunicipality -> managementAPIMunicipality: get publication-claim
+managementAPIMunicipality -> inwayMunicipality: return publication-claim
+inwayMunicipality -> inwaySaasOrganization: return publication-claim
+inwaySaasOrganization -> inwaySaasOrganization: store publication-claim in memory
 inwaySaasOrganization -> managementAPISaasOrganization: get access grants
 managementAPISaasOrganization -> managementDatabaseSaasOrganization: get access grants
 managementDatabaseSaasOrganization -> managementAPISaasOrganization: return access grants
 managementAPISaasOrganization -> inwaySaasOrganization: store access grants in memory
 
 clientConsumer -> outwayConsumer: call service
-outwayConsumer -> inwaySaasOrganization: get claim stating that the organization is allowed to  publish the service
-inwaySaasOrganization -> outwayConsumer: return claim
-outwayConsumer -> outwayConsumer: verify claim
-outwayConsumer -> outwayConsumer: store claim in memory
+outwayConsumer -> inwaySaasOrganization: get publication-claim stating that the organization is allowed to  publish the service
+inwaySaasOrganization -> outwayConsumer: return publication-claim
+outwayConsumer -> outwayConsumer: verify publication-claim
+outwayConsumer -> outwayConsumer: store publication-claim in memory
 outwayConsumer -> inwaySaasOrganization: call service
 inwaySaasOrganization -> inwaySaasOrganization: validate consumer has an access grant
 inwaySaasOrganization -> serviceSaasOrganization: call service
