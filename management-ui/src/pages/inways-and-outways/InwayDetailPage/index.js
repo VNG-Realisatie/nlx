@@ -37,11 +37,16 @@ const InwayDetailPage = () => {
       applicationStore.updateOrganizationInway({
         isOrganizationInwaySet: !!settings.organizationInway,
       })
-    } catch (err) {
-      console.warn(err)
+    } catch (error) {
+      let message = error.message
+
+      if (error.response && error.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       showToast({
         title: t('Failed to remove the inway'),
-        body: err.message,
+        body: message,
         variant: 'error',
       })
     }

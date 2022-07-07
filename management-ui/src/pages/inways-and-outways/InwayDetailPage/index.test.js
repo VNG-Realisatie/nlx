@@ -90,11 +90,16 @@ test('remove an Inway', async () => {
     ],
   })
 
+  managementApiClient.managementDeleteInway = jest
+    .fn()
+    .mockRejectedValueOnce({ response: { status: 403 } })
+    .mockResolvedValue({})
+
   const rootStore = new RootStore({
     managementApiClient,
   })
 
-  jest.spyOn(rootStore.inwayStore, 'removeInway').mockResolvedValue()
+  jest.spyOn(rootStore.inwayStore, 'removeInway')
 
   await rootStore.inwayStore.fetchInways()
 
@@ -102,6 +107,10 @@ test('remove an Inway', async () => {
     <StoreProvider rootStore={rootStore}>
       <MemoryRouter initialEntries={['/my-inway']}>
         <Routes>
+          <Route
+            path="/inways-and-outways/inways"
+            element={<div>inways page</div>}
+          />
           <Route path=":name" element={<InwayDetailPage />} />
         </Routes>
       </MemoryRouter>
@@ -110,12 +119,27 @@ test('remove an Inway', async () => {
 
   fireEvent.click(screen.getByTitle('Remove inway'))
 
-  const confirmModal = screen.getByRole('dialog')
-  const okButton = within(confirmModal).getByText('Remove')
+  let confirmModal = screen.getByRole('dialog')
+  let okButton = within(confirmModal).getByText('Remove')
 
   fireEvent.click(okButton)
 
+  expect(
+    await screen.findByText('Failed to remove the inway'),
+  ).toBeInTheDocument()
+
   await waitFor(() =>
-    expect(rootStore.inwayStore.removeInway).toHaveBeenCalled(),
+    expect(rootStore.inwayStore.removeInway).toHaveBeenCalledWith('my-inway'),
   )
+
+  fireEvent.click(screen.getByTitle('Remove inway'))
+
+  confirmModal = screen.getByRole('dialog')
+  okButton = within(confirmModal).getByText('Remove')
+
+  fireEvent.click(okButton)
+
+  expect(
+    await screen.findByText('The inway has been removed'),
+  ).toBeInTheDocument()
 })
