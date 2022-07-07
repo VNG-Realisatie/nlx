@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { act, fireEvent } from '@testing-library/react'
+import { act, fireEvent, screen } from '@testing-library/react'
 import {
   MemoryRouter,
   Routes,
@@ -93,18 +93,14 @@ describe('the AddServicePage', () => {
     managementApiClient.managementCreateService = jest
       .fn()
       .mockResolvedValue({ name: 'my-service' })
-      .mockRejectedValueOnce({
-        json: () => {
-          return { message: 'arbitrary error' }
-        },
-      })
+      .mockRejectedValueOnce(new Error('arbitrary error'))
 
     const rootStore = new RootStore({
       managementApiClient,
     })
 
     const history = createMemoryHistory()
-    const { findByTestId, queryByRole } = renderWithProviders(
+    renderWithProviders(
       <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
@@ -114,14 +110,15 @@ describe('the AddServicePage', () => {
       </HistoryRouter>,
     )
 
-    const addComponentForm = await findByTestId('form')
+    const addComponentForm = await screen.findByTestId('form')
 
     await act(async () => {
       fireEvent.submit(addComponentForm)
     })
 
     expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(1)
-    expect(queryByRole('alert').textContent).toBe(
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
       'Failed adding servicearbitrary error',
     )
 
@@ -129,22 +126,20 @@ describe('the AddServicePage', () => {
       fireEvent.submit(addComponentForm)
     })
 
-    expect(queryByRole('alert')).toBeTruthy()
+    expect(screen.queryByRole('alert')).toBeTruthy()
 
     expect(managementApiClient.managementCreateService).toHaveBeenCalledTimes(2)
     expect(history.location.pathname).toEqual('/services/my-service')
     expect(history.location.search).toEqual('?lastAction=added')
   })
 
-  it('submitting when the HTTP response is not ok', async () => {
+  it('submitting when insufficient permissions', async () => {
     const managementApiClient = new ManagementApi()
-    managementApiClient.managementCreateService = jest
-      .fn()
-      .mockRejectedValueOnce({
-        json: () => {
-          return { message: 'arbitrary error' }
-        },
-      })
+    managementApiClient.managementCreateService = jest.fn().mockRejectedValue({
+      response: {
+        status: 403,
+      },
+    })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -165,7 +160,7 @@ describe('the AddServicePage', () => {
     })
 
     expect(queryByRole('alert').textContent).toBe(
-      'Failed adding servicearbitrary error',
+      "Failed adding serviceYou don't have the required permission.",
     )
   })
 })

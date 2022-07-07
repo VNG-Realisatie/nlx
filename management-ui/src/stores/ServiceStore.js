@@ -112,34 +112,31 @@ class ServiceStore {
     monthlyCosts,
     requestCosts,
   }) {
-    try {
-      const serviceData =
-        yield this._managementApiClient.managementCreateService({
-          body: {
-            name,
-            endpointURL,
-            documentationURL,
-            apiSpecificationURL,
-            internal,
-            techSupportContact,
-            publicSupportContact,
-            inways,
-            oneTimeCosts: oneTimeCosts * 100,
-            monthlyCosts: monthlyCosts * 100,
-            requestCosts: requestCosts * 100,
-          },
-        })
-      const service = new ServiceModel({
-        servicesStore: this,
-        serviceData,
-      })
+    const serviceData = yield this._managementApiClient.managementCreateService(
+      {
+        body: {
+          name,
+          endpointURL,
+          documentationURL,
+          apiSpecificationURL,
+          internal,
+          techSupportContact,
+          publicSupportContact,
+          inways,
+          oneTimeCosts: oneTimeCosts * 100,
+          monthlyCosts: monthlyCosts * 100,
+          requestCosts: requestCosts * 100,
+        },
+      },
+    )
+    const service = new ServiceModel({
+      servicesStore: this,
+      serviceData,
+    })
 
-      this.services.push(service)
-      return service
-    } catch (response) {
-      const err = yield response.json()
-      throw new Error(err.message)
-    }
+    this.services.push(service)
+
+    return service
   }).bind(this)
 
   update = flow(function* update({

@@ -22,9 +22,15 @@ const AddServicePage = () => {
       navigate(
         `/services/${addedService.name}?lastAction=${serviceActions.ADDED}`,
       )
-    } catch (err) {
+    } catch (error) {
+      let message = error.message
+
+      if (error.response && error.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       window.scrollTo(0, 0)
-      setError(err.message)
+      setError(message)
     }
   }
 
