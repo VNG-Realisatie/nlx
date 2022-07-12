@@ -186,10 +186,17 @@ func main() {
 	defer cancel()
 
 	ow.Shutdown(gracefulCtx)
-	conn.Close()
+
+	err = conn.Close()
+	if err != nil {
+		logger.Error("could not close grpc connection", zap.Error(err))
+	}
 
 	if logDB != nil {
-		logDB.Close()
+		err := logDB.Close()
+		if err != nil {
+			logger.Error("could not close log db", zap.Error(err))
+		}
 	}
 }
 
