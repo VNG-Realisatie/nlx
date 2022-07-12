@@ -200,9 +200,15 @@ func (h *HealthChecker) loadAvailabilities() error {
 }
 
 func (h *HealthChecker) Shutdown() error {
-	h.listener.Close()
+	err := h.listener.Close()
+
 	close(h.shutdownNotificationListener)
 	close(h.shutdown)
+
+	// close error here so channels can be closed
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
