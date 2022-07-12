@@ -388,16 +388,41 @@ dex:
           - http://nlx-management.gemeente-riemer.nlx.minikube/oidc/callback
     enablePasswordDB: true
     staticPasswords:
-      - username: admin
+      - email: admin@example.com
+        username: admin
         userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bc
         hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
         name: Admin User
-        email: admin@example.com
-      - username: readonly
+      - email: readonly@example.com
+        username: readonly
         userID: 23b027bf-b1b1-4a08-b95b-921d4afc38bd
         hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
         name: Readonly User
-        email: readonly@example.com
+      - email: "edward@example.com"
+        username: "edward"
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: "Edward van Gelderen"
+        userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
+      - email: "eelco@example.com"
+        username: "eelco"
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: "Eelco Hotting"
+        userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
+      - email: "ronald@example.com"
+        username: "ronald"
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: "Ronald Koster"
+        userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
+      - email: "niels@example.com"
+        username: "niels"
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: "Niels Dequeker"
+        userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
+      - email: "henk@example.com"
+        username: "henk"
+        hash: $2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W # password
+        name: "Henk van Maanen"
+        userID: "23b027bf-b1b1-4a08-b95b-921d4afc38bc"
     oauth2:
       skipApprovalScreen: false
       responseTypes: ["code", "token"]
@@ -413,7 +438,7 @@ dex:
     web:
       servicePort: 80
   grpc:
-   enabled: false
+    enabled: false
   certs:
     web:
       create: false

@@ -41,6 +41,51 @@ spec:
                 elif [ ! $return_code -eq 0 ]; then
                   exit 1
                 fi
+
+                nlx-management-api create-user --email edward@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user edward@example.com, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+
+                nlx-management-api create-user --email eelco@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user eelco@example.com, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+
+                nlx-management-api create-user --email ronald@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user ronald@example.com, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+
+                nlx-management-api create-user --email niels@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user niels@example.com, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
+
+                nlx-management-api create-user --email henk@example.com --role admin; \
+                  return_code=$?
+
+                if [ $return_code -eq 128 ]; then
+                  echo "failed to create user henk@example.com, a user with this email address already exists"
+                elif [ ! $return_code -eq 0 ]; then
+                  exit 1
+                fi
           env:
             - name: POSTGRES_HOST
               value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
