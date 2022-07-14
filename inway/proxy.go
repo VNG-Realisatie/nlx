@@ -109,9 +109,9 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (i *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, e error) {
+func (i *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, err error) {
 	msg := fmt.Sprintf("failed internal API request to %s try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/", r.URL.String())
-	i.logger.Error(msg)
+	i.logger.Error(msg, zap.Error(err))
 
 	inway_http.WriteError(w, msg)
 }
