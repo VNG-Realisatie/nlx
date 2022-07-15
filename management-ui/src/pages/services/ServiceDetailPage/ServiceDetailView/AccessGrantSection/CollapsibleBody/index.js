@@ -28,10 +28,13 @@ const CollapsibleBody = ({
         title: t('Access revoked'),
         variant: 'success',
       })
-    } catch (e) {
+    } catch (err) {
       showToast({
         title: t('Failed to revoke access grant'),
-        body: t('Please try again'),
+        body:
+          err.response && err.response.status === 403
+            ? t(`You don't have the required permission.`)
+            : err.message,
         variant: 'error',
       })
     }

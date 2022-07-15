@@ -42,11 +42,14 @@ const Row = ({
     if (await confirmRequest()) {
       try {
         await service.requestAccess(publicKeyPEM)
-      } catch (error) {
+      } catch (err) {
         showToast({
-          variant: 'error',
           title: t('Failed to request access'),
-          body: error.message,
+          body:
+            err.response && err.response.status === 403
+              ? t(`You don't have the required permission.`)
+              : err.message,
+          variant: 'error',
         })
       }
     }

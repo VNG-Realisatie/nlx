@@ -35,10 +35,13 @@ const CollapsibleBody = ({
       })
 
       await onApproveOrRejectCallbackHandler()
-    } catch (error) {
+    } catch (err) {
       showToast({
         title: t('Failed to approve access request'),
-        body: t('Please try again'),
+        body:
+          err.response && err.response.status === 403
+            ? t(`You don't have the required permission.`)
+            : err.message,
         variant: 'error',
       })
     }
@@ -58,10 +61,13 @@ const CollapsibleBody = ({
       })
 
       await onApproveOrRejectCallbackHandler()
-    } catch (error) {
+    } catch (err) {
       showToast({
         title: t('Failed to reject access request'),
-        body: t('Please try again'),
+        body:
+          err.response && err.response.status === 403
+            ? t(`You don't have the required permission.`)
+            : err.message,
         variant: 'error',
       })
     }

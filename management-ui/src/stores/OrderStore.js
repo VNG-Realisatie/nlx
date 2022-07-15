@@ -30,22 +30,17 @@ class OrderStore {
   }
 
   create = flow(function* create(formData) {
-    try {
-      yield this._managementApiClient.managementCreateOutgoingOrder({
-        body: {
-          reference: formData.reference,
-          description: formData.description,
-          publicKeyPEM: formData.publicKeyPEM,
-          delegatee: formData.delegatee,
-          validFrom: formData.validFrom,
-          validUntil: formData.validUntil,
-          accessProofIds: formData.accessProofIds,
-        },
-      })
-    } catch (response) {
-      const err = yield response.json()
-      throw new Error(err.message)
-    }
+    yield this._managementApiClient.managementCreateOutgoingOrder({
+      body: {
+        reference: formData.reference,
+        description: formData.description,
+        publicKeyPEM: formData.publicKeyPEM,
+        delegatee: formData.delegatee,
+        validFrom: formData.validFrom,
+        validUntil: formData.validUntil,
+        accessProofIds: formData.accessProofIds,
+      },
+    })
   }).bind(this)
 
   fetchOutgoing = flow(function* fetchOutgoing() {
@@ -86,9 +81,9 @@ class OrderStore {
       yield this._managementApiClient.managementUpdateOutgoingOrder({
         body: order,
       })
-    } catch (error) {
+    } catch (err) {
       this._isLoading = false
-      throw new Error(error.message)
+      throw err
     }
 
     this._isLoading = false
@@ -101,16 +96,12 @@ class OrderStore {
   }
 
   revokeOutgoing = flow(function* revokeOutgoing(order) {
-    try {
-      yield this._managementApiClient.managementRevokeOutgoingOrder({
-        delegatee: order.delegatee.serialNumber,
-        reference: order.reference,
-      })
+    yield this._managementApiClient.managementRevokeOutgoingOrder({
+      delegatee: order.delegatee.serialNumber,
+      reference: order.reference,
+    })
 
-      order.update({ orderData: { revokedAt: new Date() } })
-    } catch (error) {
-      throw new Error(error.message)
-    }
+    order.update({ orderData: { revokedAt: new Date() } })
   }).bind(this)
 
   fetchIncoming = flow(function* fetchIncoming() {
@@ -165,7 +156,7 @@ class OrderStore {
       })
     } catch (error) {
       this._isLoading = false
-      throw new Error(error.message)
+      throw error
     }
 
     this._isLoading = false

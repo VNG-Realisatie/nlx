@@ -31,7 +31,10 @@ const ServiceDetailPage = () => {
     } catch (err) {
       showToast({
         title: t('Failed to remove the service'),
-        body: err.message,
+        body:
+          err.response.status === 403
+            ? t(`You don't have the required permission.`)
+            : err.message,
         variant: 'error',
       })
     }

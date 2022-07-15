@@ -1,10 +1,11 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 //
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
+import { ToasterContext } from '@commonground/design-system'
 import useStores from '../../../hooks/use-stores'
 import PageTemplate from '../../../components/PageTemplate'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -20,6 +21,7 @@ const EditOrderPage = () => {
   const [updateError, setUpdatedError] = useState(null)
   const [order, setOrder] = useState(null)
   const navigate = useNavigate()
+  const { showToast } = useContext(ToasterContext)
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -63,8 +65,25 @@ const EditOrderPage = () => {
       })
       navigate(`/orders/outgoing/${delegateeSerialNumber}/${reference}`)
     } catch (err) {
-      window.scrollTo(0, 0)
-      setUpdatedError(err.message)
+      let message = ''
+
+      if (err.response) {
+        const res = await err.response.json()
+        message = res.message
+
+        if (err.response.status === 403) {
+          message = t(`You don't have the required permission.`)
+        } else {
+          window.scrollTo(0, 0)
+          setError(message)
+        }
+      }
+
+      showToast({
+        title: t('Failed to update the order'),
+        body: message,
+        variant: 'error',
+      })
     }
   }
 

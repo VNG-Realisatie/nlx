@@ -66,7 +66,22 @@ const OrdersPage = () => {
     setRefreshLoading(true)
 
     const totalIncomingOrders = orderStore.incomingOrders?.length
-    await orderStore.updateIncoming()
+
+    try {
+      await orderStore.updateIncoming()
+    } catch (err) {
+      setRefreshLoading(false)
+      showToast({
+        title: t('Failed to update the order overview'),
+        body:
+          err.response && err.response.status === 403
+            ? t(`You don't have the required permission.`)
+            : err.message,
+        variant: 'error',
+      })
+
+      return
+    }
 
     const newIncomingOrders =
       orderStore.incomingOrders?.length - totalIncomingOrders

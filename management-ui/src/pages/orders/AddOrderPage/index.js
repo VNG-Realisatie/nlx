@@ -1,10 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Alert } from '@commonground/design-system'
+import { Alert, ToasterContext } from '@commonground/design-system'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import useStores, { useOrderStore } from '../../../hooks/use-stores'
@@ -16,6 +16,7 @@ const AddOrderPage = () => {
   const navigate = useNavigate()
   const [error, setError] = useState(null)
   const { directoryServicesStore } = useStores()
+  const { showToast } = useContext(ToasterContext)
 
   useEffect(() => {
     directoryServicesStore.fetchAll()
@@ -33,8 +34,25 @@ const AddOrderPage = () => {
       await create(formData)
       navigate(`/orders?lastAction=added`)
     } catch (err) {
-      window.scrollTo(0, 0)
-      setError(err.message)
+      let message = ''
+
+      if (err.response) {
+        const res = await err.response.json()
+        message = res.message
+
+        if (err.response.status === 403) {
+          message = t(`You don't have the required permission.`)
+        } else {
+          window.scrollTo(0, 0)
+          setError(message)
+        }
+      }
+
+      showToast({
+        title: t('Failed to add order'),
+        body: message,
+        variant: 'error',
+      })
     }
   }
 

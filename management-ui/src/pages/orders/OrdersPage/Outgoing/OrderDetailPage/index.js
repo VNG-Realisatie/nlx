@@ -34,7 +34,10 @@ const OrderDetailPage = () => {
       } catch (err) {
         showToast({
           title: t('Failed to revoke the order'),
-          body: err.message,
+          body:
+            err.response && err.response.status === 403
+              ? t(`You don't have the required permission.`)
+              : err.message,
           variant: 'error',
         })
       }

@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import EditServicePage from './index'
@@ -52,7 +52,7 @@ describe('the EditServicePage', () => {
     })
 
     const userContext = { user: { id: '42' } }
-    renderWithProviders(
+    renderWithAllProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
@@ -80,7 +80,7 @@ describe('the EditServicePage', () => {
     })
 
     const userContext = { user: { id: '42' } }
-    renderWithProviders(
+    renderWithAllProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
@@ -111,7 +111,7 @@ describe('the EditServicePage', () => {
     await rootStore.servicesStore.fetchAll()
 
     const userContext = { user: { id: '42' } }
-    renderWithProviders(
+    renderWithAllProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
@@ -145,7 +145,7 @@ describe('the EditServicePage', () => {
       initialEntries: ['/mock-service/edit-service'],
     })
 
-    renderWithProviders(
+    renderWithAllProviders(
       <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
@@ -190,7 +190,7 @@ describe('the EditServicePage', () => {
       initialEntries: ['/mock-service/edit-service'],
     })
 
-    renderWithProviders(
+    renderWithAllProviders(
       <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
@@ -239,7 +239,7 @@ describe('the EditServicePage', () => {
 
     await rootStore.servicesStore.fetchAll()
 
-    renderWithProviders(
+    renderWithAllProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
