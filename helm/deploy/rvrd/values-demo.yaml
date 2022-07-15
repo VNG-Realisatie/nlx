@@ -53,6 +53,9 @@ ca:
 nlxctl:
   authorizationServerUrl: https://dex.demo.rvrd.nl
 
+opa:
+  enabled: true
+
 ################
 ## Sub-charts ##
 ################
