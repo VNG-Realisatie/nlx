@@ -86,6 +86,7 @@ module.exports = {
         'reference-information/ip-addresses',
         'reference-information/oidc',
         'reference-information/rewrite-base-url',
+        'reference-information/add-headers-with-proxy',
       ],
     },
     {
