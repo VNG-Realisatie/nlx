@@ -22,6 +22,11 @@ test('rendering the add order page', async () => {
 
   managementApiClient.managementCreateOutgoingOrder = jest
     .fn()
+    .mockRejectedValueOnce({
+      response: {
+        status: 403,
+      },
+    })
     .mockResolvedValue()
 
   managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
@@ -119,6 +124,13 @@ test('rendering the add order page', async () => {
     validUntil: new Date('2021-01-31T00:00:00.000Z'),
     accessProofIds: ['1'],
   })
+
+  expect(screen.queryByRole('alert').textContent).toBe(
+    "Failed to add orderYou don't have the required permission.",
+  )
+
+  await userEvent.click(screen.getByText('Add order'))
+
   expect(history.location.pathname).toEqual('/orders')
   expect(history.location.search).toEqual('?lastAction=added')
 })
