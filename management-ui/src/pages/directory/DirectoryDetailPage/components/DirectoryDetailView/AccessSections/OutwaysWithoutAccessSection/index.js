@@ -78,4 +78,11 @@ OutwaysWithoutAccessSection.propTypes = {
   onHideConfirmRequestAccessModalHandler: func,
 }
 
+const noop = () => {}
+
+OutwaysWithoutAccessSection.defaultProps = {
+  onShowConfirmRequestAccessModalHandler: noop,
+  onHideConfirmRequestAccessModalHandler: noop,
+}
+
 export default observer(OutwaysWithoutAccessSection)
