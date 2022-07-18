@@ -1,3 +1,21 @@
+# [0.135.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.134.1...v0.135.0) (2022-07-18)
+
+
+### Bug Fixes
+
+* **directory:** handle closing pg conn error ([d605e71](https://gitlab.com/commonground/nlx/nlx/commit/d605e71fbf0e75e0e382f1c128e465a370053644)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* enable opa for rvrd demo environment ([91cc0dc](https://gitlab.com/commonground/nlx/nlx/commit/91cc0dc640605833226680fff0f889db9933bd57)), closes [nlx#1577](https://gitlab.com/nlx/issues/1577)
+* **outway:** handle closing log db connection error ([b32d81a](https://gitlab.com/commonground/nlx/nlx/commit/b32d81a79499bda1747ad204ab32eeb12ac5620d)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* update demo video application url ([47483fb](https://gitlab.com/commonground/nlx/nlx/commit/47483fb50b1203f4658c3d782fee0de2b3dc6f50)), closes [nlx#1577](https://gitlab.com/nlx/issues/1577)
+* use correct service endpoint url for demo video api ([7ef9d7a](https://gitlab.com/commonground/nlx/nlx/commit/7ef9d7aaf1319cf1c3ba2d0280aee1e0a0eaef00)), closes [nlx#1577](https://gitlab.com/nlx/issues/1577)
+
+
+### Features
+
+* **management:** introduce readonly role ([ca0c638](https://gitlab.com/commonground/nlx/nlx/commit/ca0c638bacb5e21c2daa345b72868b5e55b4dc7c)), closes [nlx#1547](https://gitlab.com/nlx/issues/1547)
+* **management:** move contact section to the top + convert to collapsible ([f7cb253](https://gitlab.com/commonground/nlx/nlx/commit/f7cb253a0c0d1005efeb14e0ed90428f3333675b)), closes [nlx#1576](https://gitlab.com/nlx/issues/1576)
+* **management:** reintroduce access icon for the Directory page ([d38d2ee](https://gitlab.com/commonground/nlx/nlx/commit/d38d2ee45116b3630a4d0b3e58169474eb759253)), closes [nlx#1576](https://gitlab.com/nlx/issues/1576)
+
 ## [0.134.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.134.0...v0.134.1) (2022-06-30)
 
 # [0.134.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.133.2...v0.134.0) (2022-06-30)

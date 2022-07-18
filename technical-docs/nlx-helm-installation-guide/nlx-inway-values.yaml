@@ -1,5 +1,5 @@
 image:
-  tag: "v0.134.1"
+  tag: "v0.135.0"
 
 # Inway specific settings
 config:
