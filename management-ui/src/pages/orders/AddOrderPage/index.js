@@ -1,10 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Alert, ToasterContext } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import { observer } from 'mobx-react'
 import PageTemplate from '../../../components/PageTemplate'
 import useStores, { useOrderStore } from '../../../hooks/use-stores'
@@ -12,11 +12,10 @@ import OrderForm from '../components/OrderForm'
 
 const AddOrderPage = () => {
   const { t } = useTranslation()
-  const { create } = useOrderStore()
+  const orderStore = useOrderStore()
   const navigate = useNavigate()
   const [error, setError] = useState(null)
   const { directoryServicesStore } = useStores()
-  const { showToast } = useContext(ToasterContext)
 
   useEffect(() => {
     directoryServicesStore.fetchAll()
@@ -31,28 +30,17 @@ const AddOrderPage = () => {
 
   const submitOrder = async (formData) => {
     try {
-      await create(formData)
+      await orderStore.create(formData)
       navigate(`/orders?lastAction=added`)
     } catch (err) {
-      let message = ''
+      let message = err.message
 
-      if (err.response) {
-        const res = await err.response.json()
-        message = res.message
-
-        if (err.response.status === 403) {
-          message = t(`You don't have the required permission.`)
-        } else {
-          window.scrollTo(0, 0)
-          setError(message)
-        }
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
       }
 
-      showToast({
-        title: t('Failed to add order'),
-        body: message,
-        variant: 'error',
-      })
+      window.scrollTo(0, 0)
+      setError(message)
     }
   }
 
@@ -82,7 +70,6 @@ const AddOrderPage = () => {
       )}
 
       <OrderForm
-        services={servicesWithAccess}
         submitButtonText={t('Add order')}
         onSubmitHandler={submitOrder}
       />
