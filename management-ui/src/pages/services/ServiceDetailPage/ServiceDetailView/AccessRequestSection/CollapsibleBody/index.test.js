@@ -2,8 +2,9 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { fireEvent, within, waitFor } from '@testing-library/react'
+import { fireEvent, within, waitFor, screen, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../../../../test-utils'
 import IncomingAccessRequestModel, {
   STATES,
@@ -20,6 +21,8 @@ test('when no access requests are available', async () => {
 })
 
 test('approving an incoming access request', async () => {
+  configure({ safeDescriptors: false })
+
   const accessRequest = new IncomingAccessRequestModel({
     accessRequestData: {
       id: '1',
@@ -32,11 +35,18 @@ test('approving an incoming access request', async () => {
     },
   })
 
-  const approveSpy = jest.fn()
-  accessRequest.approve = approveSpy
+  const approveSpy = jest
+    .spyOn(accessRequest, 'approve')
+    .mockRejectedValueOnce({
+      response: {
+        status: 403,
+      },
+    })
+    .mockResolvedValue()
 
   const onApproveOrRejectHandler = jest.fn()
-  const { getByTitle, getByRole, findByText } = renderWithAllProviders(
+
+  renderWithAllProviders(
     <MemoryRouter>
       <CollapsibleBody
         accessRequests={[accessRequest]}
@@ -45,20 +55,37 @@ test('approving an incoming access request', async () => {
     </MemoryRouter>,
   )
 
-  fireEvent.click(getByTitle('Approve'))
+  act(() => {
+    fireEvent.click(screen.getByTitle('Approve'))
+  })
 
-  const confirmModal = getByRole('dialog')
-  const okButton = within(confirmModal).getByText('Approve')
+  let confirmModal = screen.getByRole('dialog')
+  let okButton = within(confirmModal).getByText('Approve')
   fireEvent.click(okButton)
 
   await waitFor(() => expect(approveSpy).toHaveBeenCalled())
-  expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
+
+  expect(screen.queryByRole('alert')).toHaveTextContent(
+    "Failed to approve access requestYou don't have the required permission.",
+  )
+
+  act(() => {
+    fireEvent.click(screen.getByTitle('Approve'))
+  })
+
+  confirmModal = screen.getByRole('dialog')
+  okButton = within(confirmModal).getByText('Approve')
+  fireEvent.click(okButton)
 
   // toast
-  expect(await findByText('Access request approved')).toBeInTheDocument()
+  expect(await screen.findByText('Access request approved')).toBeInTheDocument()
+
+  expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 })
 
 test('rejecting an incoming access request', async () => {
+  configure({ safeDescriptors: false })
+
   const accessRequest = new IncomingAccessRequestModel({
     accessRequestData: {
       id: '1',
@@ -71,8 +98,14 @@ test('rejecting an incoming access request', async () => {
     },
   })
 
-  const rejectSpy = jest.fn()
-  accessRequest.reject = rejectSpy
+  const rejectSpy = jest
+    .spyOn(accessRequest, 'reject')
+    .mockRejectedValueOnce({
+      response: {
+        status: 403,
+      },
+    })
+    .mockResolvedValue()
 
   const onApproveOrRejectHandler = jest.fn()
   const { getByTitle, getByRole, findByText } = renderWithAllProviders(
@@ -86,13 +119,24 @@ test('rejecting an incoming access request', async () => {
 
   fireEvent.click(getByTitle('Reject'))
 
-  const confirmModal = getByRole('dialog')
-  const okButton = within(confirmModal).getByText('Reject')
+  let confirmModal = getByRole('dialog')
+  let okButton = within(confirmModal).getByText('Reject')
   fireEvent.click(okButton)
 
   await waitFor(() => expect(rejectSpy).toHaveBeenCalled())
-  expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
+
+  expect(screen.queryByRole('alert')).toHaveTextContent(
+    "Failed to reject access requestYou don't have the required permission.",
+  )
+
+  fireEvent.click(getByTitle('Reject'))
+
+  confirmModal = getByRole('dialog')
+  okButton = within(confirmModal).getByText('Reject')
+  fireEvent.click(okButton)
 
   // toast
   expect(await findByText('Access request rejected')).toBeInTheDocument()
+
+  expect(onApproveOrRejectHandler).toHaveBeenCalledTimes(1)
 })

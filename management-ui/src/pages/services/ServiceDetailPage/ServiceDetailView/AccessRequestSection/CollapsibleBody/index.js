@@ -25,6 +25,7 @@ const CollapsibleBody = ({
   const approveHandler = async (accessRequest) => {
     try {
       await accessRequest.approve()
+
       showToast({
         title: t('Access request approved'),
         body: t('Organization has access to service', {
@@ -36,12 +37,15 @@ const CollapsibleBody = ({
 
       await onApproveOrRejectCallbackHandler()
     } catch (err) {
+      let message = err.message
+
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       showToast({
         title: t('Failed to approve access request'),
-        body:
-          err.response && err.response.status === 403
-            ? t(`You don't have the required permission.`)
-            : err.message,
+        body: message,
         variant: 'error',
       })
     }
@@ -62,12 +66,15 @@ const CollapsibleBody = ({
 
       await onApproveOrRejectCallbackHandler()
     } catch (err) {
+      let message = err.message
+
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       showToast({
         title: t('Failed to reject access request'),
-        body:
-          err.response && err.response.status === 403
-            ? t(`You don't have the required permission.`)
-            : err.message,
+        body: message,
         variant: 'error',
       })
     }
