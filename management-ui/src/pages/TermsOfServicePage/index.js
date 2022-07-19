@@ -27,10 +27,11 @@ const TermsOfServicePage = () => {
       await tosContext.accept()
       navigate('/')
     } catch (err) {
-      const message =
-        err.response.status === 403
-          ? t(`You don't have permission to accept the Terms of Service.`)
-          : ''
+      let message = err.message
+
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
 
       showToast({
         title: t('Failed to accept Terms of Service'),

@@ -47,9 +47,9 @@ test('TermsOfService page', async () => {
     1,
   )
 
-  expect(
-    await screen.findByText('Failed to accept Terms of Service'),
-  ).toBeInTheDocument()
+  expect(screen.queryByRole('alert')).toHaveTextContent(
+    "Failed to accept Terms of ServiceYou don't have the required permission.",
+  )
 
   await act(async () => {
     fireEvent.click(confirmButton)
