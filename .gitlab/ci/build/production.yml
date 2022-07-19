@@ -55,6 +55,20 @@ Trigger charts build:
     - cg
     - shell
 
+Build production apps-overview:
+  extends: .build-production-base
+  variables:
+    IMAGE: apps-overview
+    CONTEXT: apps-overview
+    DOCKERFILE: apps-overview/Dockerfile
+
+Build production auth-opa:
+  extends: .build-production-base
+  variables:
+    IMAGE: auth-opa
+    CONTEXT: auth-opa
+    DOCKERFILE: auth-opa/Dockerfile
+
 Build production ca-certportal:
   extends: .build-production-base
   variables:
@@ -131,13 +145,6 @@ Build production outway:
     IMAGE: outway
     CONTEXT: .
     DOCKERFILE: outway/Dockerfile
-
-Build production apps-overview:
-  extends: .build-production-base
-  variables:
-    IMAGE: apps-overview
-    CONTEXT: apps-overview
-    DOCKERFILE: apps-overview/Dockerfile
 
 Build production txlog-db:
   extends: .build-production-base

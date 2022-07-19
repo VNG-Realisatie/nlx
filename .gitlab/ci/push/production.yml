@@ -29,6 +29,11 @@ Push production apps-overview:
   variables:
     IMAGE: apps-overview
 
+Push production auth-opa:
+  extends: .push-production-base
+  variables:
+    IMAGE: auth-opa
+
 Push production ca-certportal:
   extends: .push-production-base
   variables:

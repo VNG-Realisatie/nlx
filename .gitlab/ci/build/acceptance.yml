@@ -45,17 +45,24 @@
     - docker
     - linux
 
+Build acceptance apps-overview:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: apps-overview
+    CONTEXT: apps-overview
+    DOCKERFILE: apps-overview/Dockerfile
+  # Only create artifacts once because these are the same for all build jobs
+  artifacts:
+    paths:
+      - ci_build_image_registry.txt
+      - ci_build_image_tag.txt
+
 Build acceptance auth-opa:
   extends: .build-acceptance-base
   variables:
     IMAGE: auth-opa
     CONTEXT: auth-opa
     DOCKERFILE: auth-opa/Dockerfile
-  # Only create artifacts once because these are the same for all build jobs
-  artifacts:
-    paths:
-      - ci_build_image_registry.txt
-      - ci_build_image_tag.txt
 
 Build acceptance ca-certportal:
   extends: .build-acceptance-base
@@ -133,13 +140,6 @@ Build acceptance outway:
     IMAGE: outway
     CONTEXT: .
     DOCKERFILE: outway/Dockerfile
-
-Build acceptance apps-overview:
-  extends: .build-acceptance-base
-  variables:
-    IMAGE: apps-overview
-    CONTEXT: apps-overview
-    DOCKERFILE: apps-overview/Dockerfile
 
 Build acceptance txlog-db:
   extends: .build-acceptance-base

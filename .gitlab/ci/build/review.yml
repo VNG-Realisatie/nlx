@@ -42,17 +42,23 @@
     - docker
     - linux
 
+Build review apps-overview:
+  extends: .build-review-base
+  variables:
+    IMAGE: apps-overview
+    CONTEXT: apps-overview
+    DOCKERFILE: apps-overview/Dockerfile
+  # Only create artifacts once because these are the same for all build jobs
+  artifacts:
+    paths:
+      - ci_build_image_registry.txt
+      - ci_build_image_tag.txt
 Build review auth-opa:
   extends: .build-review-base
   variables:
     IMAGE: auth-opa
     CONTEXT: auth-opa
     DOCKERFILE: auth-opa/Dockerfile
-  # Only create artifacts once because these are the same for all build jobs
-  artifacts:
-    paths:
-      - ci_build_image_registry.txt
-      - ci_build_image_tag.txt
 
 Build review ca-certportal:
   extends: .build-review-base
@@ -130,13 +136,6 @@ Build review outway:
     IMAGE: outway
     CONTEXT: .
     DOCKERFILE: outway/Dockerfile
-
-Build review apps-overview:
-  extends: .build-review-base
-  variables:
-    IMAGE: apps-overview
-    CONTEXT: apps-overview
-    DOCKERFILE: apps-overview/Dockerfile
 
 Build review txlog-db:
   extends: .build-review-base
