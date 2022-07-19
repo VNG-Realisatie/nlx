@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -97,5 +97,5 @@ func getAPISpecsViaInway(h *http.Client, inwayAddress, serviceName string) ([]by
 
 	defer res.Body.Close()
 
-	return ioutil.ReadAll(res.Body)
+	return io.ReadAll(res.Body)
 }

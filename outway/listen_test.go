@@ -6,10 +6,10 @@ package outway
 import (
 	"context"
 	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -35,9 +35,9 @@ import (
 var pkiDir = filepath.Join("..", "testing", "pki")
 
 func testRequests(t *testing.T, tests map[string]struct {
-	url          string
-	statusCode   int
-	errorMessage string
+	url        string
+	statusCode int
+	wantErr    *httperrors.NLXNetworkError
 }) {
 	client := http.Client{}
 
@@ -57,13 +57,19 @@ func testRequests(t *testing.T, tests map[string]struct {
 			defer resp.Body.Close()
 
 			assert.Equal(t, tt.statusCode, resp.StatusCode)
-			bytes, err := io.ReadAll(resp.Body)
+			contents, err := io.ReadAll(resp.Body)
 
 			if err != nil {
 				t.Fatal("error reading response body", err)
 			}
 
-			assert.Equal(t, tt.errorMessage, string(bytes))
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			}
 		})
 	}
 }
@@ -146,34 +152,41 @@ func TestOutwayListen(t *testing.T) {
 
 	// Test http responses
 	tests := map[string]struct {
-		url          string
-		statusCode   int
-		errorMessage string
+		url        string
+		statusCode int
+		wantErr    *httperrors.NLXNetworkError
 	}{
 		"when_invalid_path": {
-			fmt.Sprintf("%s/invalidpath", mockServer.URL),
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]\n",
+			url:        fmt.Sprintf("%s/invalidpath", mockServer.URL),
+			statusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.InvalidURL,
+				Message:  "invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]",
+			},
 		},
 		"when_service_not_found": {
-			fmt.Sprintf("%s/00000000000000000001/nonexistingservice/add/", mockServer.URL),
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]\n",
+			url:        fmt.Sprintf("%s/00000000000000000001/nonexistingservice/add/", mockServer.URL),
+			statusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.InvalidURL,
+				Message:  "invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]",
+			},
 		},
 		"when_service_fails": {
-			fmt.Sprintf("%s/00000000000000000001/mockservicefail/", mockServer.URL),
-			httperrors.StatusNLXNetworkError,
-			"",
+			url:        fmt.Sprintf("%s/00000000000000000001/mockservicefail/", mockServer.URL),
+			statusCode: httperrors.StatusNLXNetworkError,
 		},
 		"happy_flow": {
-			fmt.Sprintf("%s/00000000000000000001/mockservice0/", mockServer.URL),
-			http.StatusOK,
-			"",
+			url:        fmt.Sprintf("%s/00000000000000000001/mockservice0/", mockServer.URL),
+			statusCode: http.StatusOK,
 		},
 		"happy_flow_without_trailing_slash": {
-			fmt.Sprintf("%s/00000000000000000001/mockservice0", mockServer.URL),
-			http.StatusOK,
-			"",
+			url:        fmt.Sprintf("%s/00000000000000000001/mockservice0", mockServer.URL),
+			statusCode: http.StatusOK,
 		},
 	}
 
@@ -217,42 +230,48 @@ func TestOutwayAsProxy(t *testing.T) {
 	defer mockPublicServer.Close()
 
 	// Test http responses
-	tests := []struct {
-		description       string
+	tests := map[string]struct {
 		url               string
 		statusCode        int
-		errorMessage      string
+		wantErr           *httperrors.NLXNetworkError
 		dataSubjectHeader string
 		httpHandler       loggerHTTPHandler
 	}{
-		{
-			"request using a services.nlx.local URL",
-			"http://mockservice.00000000000000000001.services.nlx.local",
-			http.StatusOK,
-			"",
-			"",
-			outway.handleHTTPRequestAsProxy,
-		}, {
-			"request invalid url",
-			"http://invalid.mockservice.00000000000000000001.services.nlx.local",
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: no valid url expecting: service.serialNumber.service.nlx.local/apipath\n",
-			"",
-			outway.handleHTTPRequestAsProxy,
-		}, {
-			"request to public internet",
-			mockPublicServer.URL,
-			http.StatusOK,
-			"",
-			"",
-			outway.handleHTTPRequestAsProxy,
-		}, {
-			"outway is running without the use-as-http-proxy flag",
-			"http://mockservice.00000000000000000001.services.nlx.local",
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.00000000000000000001.services.nlx.local/\n",
-			"",
-			outway.handleHTTPRequest,
+		"request using a services.nlx.local URL": {
+			url:               "http://mockservice.00000000000000000001.services.nlx.local",
+			statusCode:        http.StatusOK,
+			dataSubjectHeader: "",
+			httpHandler:       outway.handleHTTPRequestAsProxy,
+		},
+		"request invalid url": {
+			url:        "http://invalid.mockservice.00000000000000000001.services.nlx.local",
+			statusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.InvalidURL,
+				Message:  "no valid url expecting: service.serialNumber.service.nlx.local/apipath",
+			},
+			dataSubjectHeader: "",
+			httpHandler:       outway.handleHTTPRequestAsProxy,
+		},
+		"request to public internet": {
+			url:               mockPublicServer.URL,
+			statusCode:        http.StatusOK,
+			dataSubjectHeader: "",
+			httpHandler:       outway.handleHTTPRequestAsProxy,
+		},
+		"outway is running without the use-as-http-proxy flag": {
+			url:        "http://mockservice.00000000000000000001.services.nlx.local",
+			statusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.ProxyModeDisabled,
+				Message:  "please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.00000000000000000001.services.nlx.local/",
+			},
+			dataSubjectHeader: "",
+			httpHandler:       outway.handleHTTPRequest,
 		},
 	}
 
@@ -261,15 +280,15 @@ func TestOutwayAsProxy(t *testing.T) {
 
 	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(outwayURL)}}
 
-	for _, test := range tests {
-		outway.requestHTTPHandler = test.httpHandler
+	for _, tt := range tests {
+		outway.requestHTTPHandler = tt.httpHandler
 
-		req, err := http.NewRequest("GET", test.url, nil)
+		req, err := http.NewRequest("GET", tt.url, http.NoBody)
 		if err != nil {
 			t.Fatal("error creating http request", err)
 		}
 
-		req.Header.Add("X-NLX-Request-Data-Subject", test.dataSubjectHeader)
+		req.Header.Add("X-NLX-Request-Data-Subject", tt.dataSubjectHeader)
 		resp, err := client.Do(req)
 
 		if err != nil {
@@ -277,14 +296,20 @@ func TestOutwayAsProxy(t *testing.T) {
 		}
 		defer resp.Body.Close()
 
-		assert.Equal(t, test.statusCode, resp.StatusCode)
+		assert.Equal(t, tt.statusCode, resp.StatusCode)
 
-		bytes, err := ioutil.ReadAll(resp.Body)
+		contents, err := io.ReadAll(resp.Body)
 		if err != nil {
 			t.Fatal("error parsing result.body", err)
 		}
 
-		assert.Equal(t, test.errorMessage, string(bytes))
+		if tt.wantErr != nil {
+			gotError := &httperrors.NLXNetworkError{}
+			err := json.Unmarshal(contents, gotError)
+			assert.NoError(t, err)
+
+			assert.Equal(t, tt.wantErr, gotError)
+		}
 	}
 }
 
@@ -300,12 +325,21 @@ func TestHandleConnectMethodException(t *testing.T) {
 
 	assert.Equal(t, httperrors.StatusNLXNetworkError, recorder.Code)
 
-	bytes, err := ioutil.ReadAll(recorder.Body)
+	contents, err := io.ReadAll(recorder.Body)
 	if err != nil {
 		t.Fatal("error parsing result.body", err)
 	}
 
-	assert.Equal(t, "nlx-outway: CONNECT method is not supported\n", string(bytes))
+	gotError := &httperrors.NLXNetworkError{}
+	err = json.Unmarshal(contents, gotError)
+	assert.NoError(t, err)
+
+	assert.Equal(t, &httperrors.NLXNetworkError{
+		Source:   httperrors.Outway,
+		Location: httperrors.C1,
+		Code:     httperrors.UnsupportedMethod,
+		Message:  "CONNECT method is not supported",
+	}, gotError)
 }
 
 type failingTransactionLogger struct {
@@ -326,32 +360,47 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 	outway.servicesHTTP["00000000000000000001.mockservice"] = mockService
 
 	tests := map[string]struct {
-		authEnabled          bool
-		txLogger             transactionlog.TransactionLogger
-		dataSubjectHeader    string
-		expectedStatusCode   int
-		exectpedErrorMessage string
+		authEnabled        bool
+		txLogger           transactionlog.TransactionLogger
+		dataSubjectHeader  string
+		wantHTTPStatusCode int
+		wantErr            *httperrors.NLXNetworkError
 	}{
 		"with failing auth settings": {
-			true,
-			&transactionlog.DiscardTransactionLogger{},
-			"",
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: error authorizing request\n",
+			authEnabled:        true,
+			txLogger:           &transactionlog.DiscardTransactionLogger{},
+			dataSubjectHeader:  "",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.OAS1,
+				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Message:  "error authorizing request",
+			},
 		},
 		"with failing transactionlogger": {
-			false,
-			&failingTransactionLogger{},
-			"",
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: server error\n",
+			authEnabled:        false,
+			txLogger:           &failingTransactionLogger{},
+			dataSubjectHeader:  "",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.ServerError,
+				Message:  "server error: unable to add record to database: cannot add transaction record",
+			},
 		},
 		"with invalid datasubject header": {
-			false,
-			&transactionlog.DiscardTransactionLogger{},
-			"invalid",
-			httperrors.StatusNLXNetworkError,
-			"nlx-outway: invalid data subject header\n",
+			authEnabled:        false,
+			txLogger:           &transactionlog.DiscardTransactionLogger{},
+			dataSubjectHeader:  "invalid",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.InvalidDataSubjectHeader,
+				Message:  "invalid data subject header",
+			},
 		},
 	}
 
@@ -387,14 +436,20 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 				Path:                     "/",
 			}, recorder, req)
 
-			assert.Equal(t, tt.expectedStatusCode, recorder.Code)
+			assert.Equal(t, tt.wantHTTPStatusCode, recorder.Code)
 
-			bytes, err := ioutil.ReadAll(recorder.Body)
+			contents, err := io.ReadAll(recorder.Body)
 			if err != nil {
 				t.Fatal("error parsing result.body", err)
 			}
 
-			assert.Equal(t, tt.exectpedErrorMessage, string(bytes))
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			}
 		})
 	}
 }
@@ -445,14 +500,19 @@ func TestFailingTransport(t *testing.T) {
 	defer mockServer.Close()
 
 	tests := map[string]struct {
-		url          string
-		statusCode   int
-		errorMessage string
+		url        string
+		statusCode int
+		wantErr    *httperrors.NLXNetworkError
 	}{
 		"when_request_to_inway_fails": {
-			fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL),
-			httperrors.StatusNLXNetworkError,
-			"failed request to 'https://inway.00000000000000000001/mockservice/', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/\n",
+			url:        fmt.Sprintf("%s/00000000000000000001/mockservice/", mockServer.URL),
+			statusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.ServiceUnreachable,
+				Message:  "failed request to 'https://inway.00000000000000000001/mockservice/', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/",
+			},
 		},
 	}
 

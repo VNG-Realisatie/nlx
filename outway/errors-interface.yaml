@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  description: |
+    When calling the Outway it is possible that something went wrong on the NLX network plane. The schema of these errors can be found in this document.
+  version: "1.0.0"
+  title: Errors
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        source:
+          type: string
+          description: origin of the error, can be 'inway' or 'outway' depending on where the error originated
+          enum:
+            - inway
+            - outway
+        location:
+          type: string
+          description: location of error, a graphical overview can be found [here](https://docs.nlx.io/support/common-errors/)
+          enum:
+            - A1
+            - C1
+            - M1
+            - O1
+        code:
+          type: string
+          description: "stable error code, all possible errors can be found [here](https://gitlab.com/commonground/nlx/nlx/-/blob/master/common/httperrors/httperrors.go)"
+        message:
+          type: string
+          description: description of error

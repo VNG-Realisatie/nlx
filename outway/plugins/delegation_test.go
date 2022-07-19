@@ -5,9 +5,10 @@ package plugins
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -34,37 +35,49 @@ var testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
 	"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ." +
 	"SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
+//nolint:funlen // this is a test
 func TestDelegationPlugin(t *testing.T) {
 	tests := map[string]struct {
-		wantErr                    bool
-		wantMessage                string
+		wantErr                    *httperrors.NLXNetworkError
 		wantHTTPStatusCode         int
 		setup                      func(*mock_directory.MockDirectoryClient, *mock_management.MockClient, *DelegationPlugin)
 		createManagementClientFunc func(client management.Client) createManagementClientFunc
 		setHeaders                 func(*http.Request)
 	}{
 		"missing_order_reference_returns_an_errors": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: failed to parse delegation metadata\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.UnableToParseDelegationMetadata,
+				Message:  "failed to parse delegation metadata",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 			},
 		},
 
 		"missing_delegator_returns_an_errors": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: failed to parse delegation metadata\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.C1,
+				Code:     httperrors.UnableToParseDelegationMetadata,
+				Message:  "failed to parse delegation metadata",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
 			},
 		},
 
 		"creating_management_client_errors": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: unable to setup the external management client\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.UnableToSetupManagementClient,
+				Message:  "unable to setup the external management client",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -80,9 +93,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"getting_organization_management_proxy_errors": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: unable to setup the external management client\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.UnableToSetupManagementClient,
+				Message:  "unable to setup the external management client",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -93,9 +110,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"error_while_retrieving_claim_returns_an_error": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: unable to request claim from 00000000000000000001\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.UnableToRequestClaim,
+				Message:  "unable to request claim from 00000000000000000001",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -119,9 +140,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"error_when_retrieving_invalid_jwt": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: received an invalid claim from 00000000000000000001\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.ReceivedInvalidClaim,
+				Message:  "received an invalid claim from 00000000000000000001",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -148,9 +173,13 @@ func TestDelegationPlugin(t *testing.T) {
 
 		//nolint:dupl // this is a test
 		"order_not_found": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: order not found\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.OrderNotFound,
+				Message:  "order not found",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -172,9 +201,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		//nolint:dupl // this is a test
 		"order_not_found_for_org": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: order does not exist for your organization\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.OrderDoesNotExistForYourOrganization,
+				Message:  "order does not exist for your organization",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -196,9 +229,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		//nolint:dupl // this is a test
 		"order_has_expired": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: the order has expired\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.OrderExpired,
+				Message:  "the order has expired",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -220,9 +257,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 		//nolint:dupl // this is a test
 		"order_does_not_contain_service": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: order does not contain the service 'service-name'\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.OrderDoesNotContainService,
+				Message:  "order does not contain the service 'service-name'",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -244,9 +285,13 @@ func TestDelegationPlugin(t *testing.T) {
 		},
 
 		"order_has_been_revoked": {
-			wantErr:            true,
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantMessage:        "nlx-outway: order is revoked\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.O1,
+				Code:     httperrors.OrderRevoked,
+				Message:  "order is revoked",
+			},
 			setHeaders: func(r *http.Request) {
 				r.Header.Add(delegation.HTTPHeaderDelegator, "00000000000000000001")
 				r.Header.Add(delegation.HTTPHeaderOrderReference, "test-ref-123")
@@ -398,11 +443,15 @@ func TestDelegationPlugin(t *testing.T) {
 
 			defer response.Body.Close()
 
-			contents, err := ioutil.ReadAll(response.Body)
+			contents, err := io.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			if tt.wantErr {
-				assert.Equal(t, tt.wantMessage, string(contents))
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
 			} else if tt.setHeaders != nil {
 				assert.Equal(t, "00000000000000000001", requestContext.LogData["delegator"])
 				assert.Equal(t, "test-ref-123", requestContext.LogData["orderReference"])

@@ -13,6 +13,7 @@ import (
 
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/httperrors"
 	outway_http "go.nlx.io/nlx/outway/http"
 )
 
@@ -61,7 +62,7 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 		if authErr != nil {
 			context.Logger.Error("error authorizing request", zap.Error(authErr))
 
-			outway_http.WriteError(context.Response, "error authorizing request")
+			outway_http.WriteError(context.Response, httperrors.OAS1, httperrors.ErrorWhileAuthorizingRequest, "error authorizing request")
 
 			return nil
 		}
@@ -72,7 +73,7 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 		)
 
 		if !authResponse.Result {
-			outway_http.WriteError(context.Response, "authorization server denied request")
+			outway_http.WriteError(context.Response, httperrors.OAS1, httperrors.Unauthorized, "authorization server denied request")
 
 			return nil
 		}

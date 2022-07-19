@@ -21,7 +21,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 		args                         *authRequest
 		authServerResponse           interface{}
 		authServerResponseStatusCode int
-		wantError                    string
+		wantErr                      *httperrors.NLXNetworkError
 		wantHTTPStatusCode           int
 	}{
 		"when_auth_server_returns_non_OK_status": {
@@ -37,7 +37,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerResponseStatusCode: http.StatusUnauthorized,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-outway: error authorizing request\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.OAS1,
+				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Message:  "error authorizing request",
+			},
 		},
 		"when_auth_server_returns_invalid_response": {
 			args: &authRequest{
@@ -54,7 +59,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerResponseStatusCode: http.StatusOK,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-outway: authorization server denied request\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.OAS1,
+				Code:     httperrors.Unauthorized,
+				Message:  "authorization server denied request",
+			},
 		},
 		"when_auth_server_fails": {
 			args: &authRequest{
@@ -66,7 +76,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerResponseStatusCode: http.StatusInternalServerError,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-outway: error authorizing request\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.OAS1,
+				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Message:  "error authorizing request",
+			},
 		},
 		"when_auth_server_returns_no_access": {
 			args: &authRequest{
@@ -81,7 +96,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerResponseStatusCode: http.StatusOK,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-outway: authorization server denied request\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Outway,
+				Location: httperrors.OAS1,
+				Code:     httperrors.Unauthorized,
+				Message:  "authorization server denied request",
+			},
 		},
 		"happy_flow": {
 			args: &authRequest{
@@ -151,10 +171,15 @@ func TestAuthorizationPlugin(t *testing.T) {
 			contents, err := io.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			assert.Equal(t, tt.wantError, string(contents))
 			assert.Equal(t, tt.wantHTTPStatusCode, response.StatusCode)
 
-			if tt.wantError == "" {
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			} else {
 				wantAuthorizationServiceRequest, err := json.Marshal(tt.args)
 				assert.NoError(t, err)
 

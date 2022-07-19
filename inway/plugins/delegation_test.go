@@ -4,7 +4,8 @@
 package plugins_test
 
 import (
-	"io/ioutil"
+	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -61,15 +62,20 @@ func TestDelegationPlugin(t *testing.T) {
 	tests := map[string]struct {
 		args                  *args
 		wantStatusCode        int
-		wantMessage           string
+		wantErr               *httperrors.NLXNetworkError
 		wantDelegationSuccess bool
 	}{
 		"invalid_claim_format": {
 			args: &args{
 				claim: "invalid-claim",
 			},
-			wantStatusCode:        httperrors.StatusNLXNetworkError,
-			wantMessage:           "nlx-inway: unable to verify claim\n",
+			wantStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.UnableToVerifyClaim,
+				Message:  "unable to verify claim",
+			},
 			wantDelegationSuccess: false,
 		},
 		"delegatee_is_not_requesting_organization": {
@@ -81,8 +87,13 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateePublicKeyFingerprint: "public-key-fingerprint",
 				delegateeSerialNumber:         "00000000000000000099",
 			},
-			wantStatusCode:        httperrors.StatusNLXNetworkError,
-			wantMessage:           "nlx-inway: no access. organization serialnumber does not match the delegatee organization serialnumber of the order\n",
+			wantStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.RequestingOrganizationIsNotDelegatee,
+				Message:  "no access. organization serialnumber does not match the delegatee organization serialnumber of the order",
+			},
 			wantDelegationSuccess: false,
 		},
 		"delegatee_pub_key_fingerprint_not_found_in_order": {
@@ -113,8 +124,13 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
 				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
-			wantStatusCode:        httperrors.StatusNLXNetworkError,
-			wantMessage:           "nlx-inway: no access. public key of the connection does not match the delegatee public key of the order\n",
+			wantStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.RequestingOrganizationIsNotDelegatee,
+				Message:  "no access. public key of the connection does not match the delegatee public key of the order",
+			},
 			wantDelegationSuccess: false,
 		},
 		"delegator_does_not_have_access_to_service": {
@@ -127,8 +143,13 @@ func TestDelegationPlugin(t *testing.T) {
 				delegateeSerialNumber:         delegateeCertBundle.Certificate().Subject.SerialNumber,
 				delegateePublicKeyFingerprint: delegateeCertBundle.PublicKeyFingerprint(),
 			},
-			wantStatusCode:        httperrors.StatusNLXNetworkError,
-			wantMessage:           "nlx-inway: no access. delegator does not have access to the service for the public key in the claim\n",
+			wantStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.DelegatorDoesNotHaveAccessToService,
+				Message:  "no access. delegator does not have access to the service for the public key in the claim",
+			},
 			wantDelegationSuccess: false,
 		},
 		"happy_flow": {
@@ -179,10 +200,9 @@ func TestDelegationPlugin(t *testing.T) {
 			response := context.Response.(*httptest.ResponseRecorder).Result()
 			defer response.Body.Close()
 
-			contents, err := ioutil.ReadAll(response.Body)
+			contents, err := io.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			assert.Equal(t, tt.wantMessage, string(contents))
 			assert.Equal(t, tt.wantStatusCode, response.StatusCode)
 
 			if tt.wantDelegationSuccess {
@@ -191,6 +211,14 @@ func TestDelegationPlugin(t *testing.T) {
 
 				assert.Equal(t, delegatorCertBundle.Certificate().Subject.SerialNumber, context.AuthInfo.OrganizationSerialNumber)
 				assert.Equal(t, delegatorCertBundle.PublicKeyFingerprint(), context.AuthInfo.PublicKeyFingerprint)
+			}
+
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
 			}
 		})
 	}

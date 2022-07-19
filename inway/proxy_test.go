@@ -4,6 +4,7 @@
 package inway
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -22,47 +23,54 @@ func TestInwayProxy(t *testing.T) {
 	tests := map[string]struct {
 		path             string
 		wantStatusCode   int
-		wantErrorMessage string
+		wantErr          *httperrors.NLXNetworkError
 		wantEndpointPath string
 	}{
 		"empty_path": {
-			path:             "",
-			wantStatusCode:   httperrors.StatusNLXNetworkError,
-			wantErrorMessage: "nlx-inway: path cannot be empty, must at least contain the service name.\n",
+			path:           "",
+			wantStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.EmptyPath,
+				Message:  "path cannot be empty, must at least contain the service name.",
+			},
 		},
 		"service_does_not_exist": {
-			path:             "/non-existing-service/",
-			wantStatusCode:   httperrors.StatusNLXNetworkError,
-			wantErrorMessage: "nlx-inway: no endpoint for service 'non-existing-service'\n",
+			path:           "/non-existing-service/",
+			wantStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.ServiceDoesNotExist,
+				Message:  "no endpoint for service 'non-existing-service'",
+			},
 		},
 		"happy_flow": {
 			path:             "/mock-service/",
 			wantStatusCode:   http.StatusOK,
-			wantErrorMessage: "",
 			wantEndpointPath: "/",
 		},
 		"happy_flow_with_path": {
 			path:             "/mock-service/custom/path",
 			wantStatusCode:   http.StatusOK,
-			wantErrorMessage: "",
 			wantEndpointPath: "/custom/path",
 		},
 		"happy_flow_with_path_and_trailing_slash": {
 			path:             "/mock-service/custom/path/",
 			wantStatusCode:   http.StatusOK,
-			wantErrorMessage: "",
 			wantEndpointPath: "/custom/path/",
 		},
 	}
 
-	for name, test := range tests {
-		tc := test
+	for name, tt := range tests {
+		tt := tt
 
 		t.Run(name, func(t *testing.T) {
 			mockEndPoint := httptest.NewServer(
 				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					w.WriteHeader(http.StatusOK)
-					assert.Equal(t, tc.wantEndpointPath, r.URL.Path)
+					assert.Equal(t, tt.wantEndpointPath, r.URL.Path)
 				}))
 			defer mockEndPoint.Close()
 
@@ -75,7 +83,7 @@ func TestInwayProxy(t *testing.T) {
 				plugins:      []plugins.Plugin{},
 			}
 
-			url := fmt.Sprintf("%s%s", "http://localhost", tc.path)
+			url := fmt.Sprintf("%s%s", "http://localhost", tt.path)
 
 			req, err := http.NewRequest("GET", url, http.NoBody)
 			assert.Nil(t, err)
@@ -86,11 +94,18 @@ func TestInwayProxy(t *testing.T) {
 			result := responseRecorder.Result()
 			defer result.Body.Close()
 
-			bytes, err := io.ReadAll(responseRecorder.Body)
+			contents, err := io.ReadAll(responseRecorder.Body)
 			assert.Nil(t, err)
 
-			assert.Equal(t, tc.wantStatusCode, result.StatusCode)
-			assert.Equal(t, tc.wantErrorMessage, string(bytes))
+			assert.Equal(t, tt.wantStatusCode, result.StatusCode)
+
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			}
 		})
 	}
 }
@@ -114,9 +129,19 @@ func TestInwayProxyEndpointNotReachable(t *testing.T) {
 	result := responseRecorder.Result()
 	defer result.Body.Close()
 
-	bytes, err := io.ReadAll(responseRecorder.Body)
+	contents, err := io.ReadAll(responseRecorder.Body)
 	assert.Nil(t, err)
 
 	assert.Equal(t, httperrors.StatusNLXNetworkError, result.StatusCode)
-	assert.Equal(t, "nlx-inway: failed internal API request to http://non-existing-url try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/\n", string(bytes))
+
+	gotError := &httperrors.NLXNetworkError{}
+	err = json.Unmarshal(contents, gotError)
+	assert.NoError(t, err)
+
+	assert.Equal(t, &httperrors.NLXNetworkError{
+		Source:   httperrors.Inway,
+		Location: httperrors.A1,
+		Code:     httperrors.ServiceUnreachable,
+		Message:  "failed internal API request to http://non-existing-url try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/",
+	}, gotError)
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/common/transactionlog"
 	inway_http "go.nlx.io/nlx/inway/http"
 )
@@ -32,7 +33,7 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 		if logRecordID == "" {
 			context.Logger.Warn("Received request with missing logrecord id", zap.String("organization_serial_number", context.AuthInfo.OrganizationSerialNumber))
 
-			inway_http.WriteError(context.Response, "missing logrecord id")
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.MissingLogRecordID, "missing logrecord id")
 
 			return nil
 		}
@@ -41,7 +42,7 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 		if err != nil {
 			context.Logger.Error("failed to store transactionlog record", zap.Error(err))
 
-			inway_http.WriteError(context.Response, "server error")
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.ServerError, "server error")
 
 			return nil
 		}

@@ -6,6 +6,7 @@ package plugins
 import (
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/httperrors"
 	common_tls "go.nlx.io/nlx/common/tls"
 	inway_http "go.nlx.io/nlx/inway/http"
 )
@@ -29,7 +30,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 		if len(peerCertificates) == 0 {
 			logger.Warn("received request does not contain certificates")
 
-			inway_http.WriteError(context.Response, "invalid connection: missing peer certificates")
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.MissingPeerCertificate, "invalid connection: missing peer certificates")
 
 			return nil
 		}
@@ -41,7 +42,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing organizations attribute in subject"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
 
 			return nil
 		}
@@ -52,7 +53,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing value for organization in subject"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
 
 			return nil
 		}
@@ -61,10 +62,10 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		err := common_tls.ValidateSerialNumber(requesterOrganizationSerialNumber)
 		if err != nil {
-			msg := "invalid certificate provided: missing value for serial number in subject"
+			msg := "invalid certificate provided: missing or invalid value for serial number in subject"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
 
 			return nil
 		}
@@ -73,7 +74,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing value for issuer organization in issuer"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
 
 			return nil
 		}

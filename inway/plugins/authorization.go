@@ -13,6 +13,7 @@ import (
 
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/httperrors"
 	inway_http "go.nlx.io/nlx/inway/http"
 )
 
@@ -66,7 +67,7 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 		}
 
 		if !foundValidGrant {
-			inway_http.WriteError(context.Response, fmt.Sprintf(`permission denied, organization %q or public key fingerprint %q is not allowed access.`, context.AuthInfo.OrganizationSerialNumber, context.AuthInfo.PublicKeyFingerprint))
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.AccessDenied, fmt.Sprintf(`permission denied, organization %q or public key fingerprint %q is not allowed access.`, context.AuthInfo.OrganizationSerialNumber, context.AuthInfo.PublicKeyFingerprint))
 			context.Logger.Info("unauthorized request blocked, permission denied", zap.String("organization-serial-number", context.AuthInfo.OrganizationSerialNumber), zap.String("certificate-fingerprint", context.AuthInfo.PublicKeyFingerprint))
 
 			return nil
@@ -76,7 +77,7 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 			authResponse, authErr := plugin.authorizeRequest(context.Request.Header, context.Destination)
 			if authErr != nil {
 				context.Logger.Error("error authorizing request", zap.Error(authErr))
-				inway_http.WriteError(context.Response, "error authorizing request")
+				inway_http.WriteError(context.Response, httperrors.IAS1, httperrors.ErrorWhileAuthorizingRequest, "error authorizing request")
 
 				return nil
 			}
@@ -89,6 +90,8 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 			if !authResponse.Result {
 				inway_http.WriteError(
 					context.Response,
+					httperrors.IAS1,
+					httperrors.Unauthorized,
 					"authorization server denied request.")
 
 				return nil

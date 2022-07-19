@@ -5,7 +5,7 @@ package inway
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -45,7 +45,7 @@ func TestHealth(t *testing.T) {
 			response := recorder.Result()
 			assert.Equal(t, http.StatusOK, response.StatusCode)
 
-			bytes, err := ioutil.ReadAll(response.Body)
+			bytes, err := io.ReadAll(response.Body)
 			assert.Nil(t, err)
 
 			response.Body.Close()

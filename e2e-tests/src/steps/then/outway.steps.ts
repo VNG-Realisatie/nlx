@@ -83,7 +83,7 @@ Then(
 
     const responseText = await httpResponse?.text();
     const containsDelegatorNoAccessText = responseText.includes(
-      "nlx-inway: no access. delegator does not have access to the service for the public key in the claim"
+      "DELEGATOR_DOES_NOT_HAVE_ACCESS_TO_SERVICE"
     );
 
     if (!containsDelegatorNoAccessText) {
@@ -105,9 +105,7 @@ Then(
     assert.equal(httpResponse?.status, 540);
 
     const responseText = await httpResponse?.text();
-    const containsRevokedText = responseText.includes(
-      "nlx-inway: permission denied"
-    );
+    const containsRevokedText = responseText.includes("ACCESS_DENIED");
 
     if (!containsRevokedText) {
       throw new Error(
@@ -124,7 +122,13 @@ const isUnauthorizedRequest = async (
   init?: RequestInit
 ): Promise<boolean> => {
   const result = await fetch(input, init);
-  return Promise.resolve(result.status === 540);
+  const responseText = await result?.text();
+
+  if (result.status === 540 && responseText.includes("ACCESS_DENIED")) {
+    return Promise.resolve(true);
+  }
+
+  return Promise.resolve(false);
 };
 
 Then(
@@ -145,25 +149,18 @@ Then(
     const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     // wait until the Outway has had the time to update its internal services list
-    await pWaitFor.default(async () => await isUnauthorizedRequest(url), {
-      interval: 1000,
-      timeout: 1000 * 35,
-    });
+    try {
+      await pWaitFor.default(async () => await isUnauthorizedRequest(url), {
+        interval: 1000,
+        timeout: 1000 * 35,
+      });
+    } catch (e) {
+      const result = await fetch(url);
+      const responseText = await result?.text();
 
-    const httpResponse = await fetch(url);
-    assert.equal(httpResponse?.status, 540);
-
-    const responseText = await httpResponse?.text();
-    const containsRevokedText = responseText.includes(
-      "nlx-inway: permission denied"
-    );
-
-    if (!containsRevokedText) {
       throw new Error(
         `the response of the HTTP request seems not to be about not having permission: ${responseText}`
       );
     }
-
-    assert.equal(containsRevokedText, true);
   }
 );

@@ -12,9 +12,11 @@ export const isServiceKnownInServiceListOfOutway = async (
   init?: RequestInit
 ): Promise<boolean> => {
   const result = await fetch(input, init);
-  const responseText = await result.text()
-  const responseContainsInvalidService = responseText.includes('nlx-outway: invalid serialNumber/service path: valid services')
-  return Promise.resolve(!responseContainsInvalidService)
+  const responseText = await result.text();
+  const responseContainsInvalidService = responseText.includes(
+    "invalid serialNumber/service path: valid services"
+  );
+  return Promise.resolve(!responseContainsInvalidService);
 };
 
 When(
@@ -37,16 +39,23 @@ When(
     const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     // wait until the Outway has had the time to update its internal services list
-    await pWaitFor.default(async () => await isServiceKnownInServiceListOfOutway(url), {
-      interval: 1000,
-      timeout: 1000 * 35,
-    });
+    await pWaitFor.default(
+      async () => await isServiceKnownInServiceListOfOutway(url),
+      {
+        interval: 1000,
+        timeout: 1000 * 35,
+      }
+    );
 
-    const headers =  {"X-Nlx-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"}
+    const headers = {
+      "X-Nlx-Authorization":
+        "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+    };
 
     scenarioContext.organizations[orgNameConsumer].httpResponse = await fetch(
-      url,{
-        headers
+      url,
+      {
+        headers,
       }
     );
   }
@@ -76,13 +85,14 @@ When(
     const url = `${outway.selfAddress}/${orgProvider.serialNumber}/${serviceName}/get`;
 
     const validAuthorizationDetails = {
-      "X-Nlx-Authorization": "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
-    }
+      "X-Nlx-Authorization":
+        "Bearer 8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414",
+    };
 
     const headers = {
       "X-Nlx-Request-Delegator": orgDelegator.serialNumber,
       "X-Nlx-Request-Order-Reference": orderReference,
-      ...validAuthorizationDetails
+      ...validAuthorizationDetails,
     };
 
     debug(
@@ -92,8 +102,7 @@ When(
 
     // wait until the Outway has had the time to update its internal services list
     await pWaitFor.default(
-      async () =>
-        await isServiceKnownInServiceListOfOutway(url),
+      async () => await isServiceKnownInServiceListOfOutway(url),
       {
         interval: 1000,
         timeout: 1000 * 35,

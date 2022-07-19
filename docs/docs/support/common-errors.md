@@ -12,8 +12,8 @@ title: Common errors
 You can identify NLX errors by looking at the HTTP status code.
 When the status code is `540`, the error is related to NLX.
 
-If the error has occured in the Inway, the error message will be prefixed with `nlx-inway:`.
-When the error occured in the Outway,  the error message will be prefixed with `nlx-outway:`.
+If the error has occured in the Inway, the error source will be `inway:`.
+When the error occured in the Outway,  the error source will be `outway:`.
 
 This enables you to determine if the error is coming from NLX or from the service that is being provided.
 
@@ -44,13 +44,18 @@ will appear to be unhealthy.
 
 ## Common  errors
 
+ - **C1** Something went wrong between the Client and the Outway
+   Could be multiple problems, for example the requested URL is invalid.
+   Check the error message for more information
  - **O1** Outway fails to connect to an Inway.
    No direct connection is possible from the Outway to the Inway so there
    are most likely firewall issues. Check **M1** to figure out if the Inway or the
    Outway is having networking problems.
+ - **OAS1** Something went wrong between the Outway and the Authorization server
  - **A1** Inway fails to connect to a service. The organization providing
    the service has to bring the service back online or has some internal
    networking problems.
+ - **IAS1** Something went wrong between the Inway and the Authorization server
  - **M1** Directory monitoring cannot reach the inway to perform a healthcheck.
    The registered Inway service will appear as unhealthy on [https://directory.nlx.io](https://directory.nlx.io).
    An Outway will still recieve the advertised address of the Inway but

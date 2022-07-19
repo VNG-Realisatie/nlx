@@ -15,6 +15,7 @@ import (
 
 	"go.nlx.io/nlx/common/delegation"
 	"go.nlx.io/nlx/common/grpcerrors"
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/common/tls"
 	directory_api "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -66,7 +67,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 
 			requestContext.Logger.Error(msg, zap.Error(err))
 
-			outway_http.WriteError(requestContext.Response, msg)
+			outway_http.WriteError(requestContext.Response, httperrors.C1, httperrors.UnableToParseDelegationMetadata, msg)
 
 			return nil
 		}
@@ -79,7 +80,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			externalManagementClient, err := plugin.setupExternalManagementClient(requestContext.Request.Context(), delegatorSerialNumber)
 			if err != nil {
 				plugin.logger.Error("unable to setup external management client", zap.String("delegatorSerialNumber", delegatorSerialNumber), zap.Error(err))
-				outway_http.WriteError(requestContext.Response, "unable to setup the external management client")
+				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.UnableToSetupManagementClient, "unable to setup the external management client")
 
 				return nil
 			}
@@ -93,36 +94,36 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 				plugin.logger.Error("unable to request claim", zap.String("orderReference", orderReference), zap.String("serviceOrganizationSerialNumber", requestContext.Destination.OrganizationSerialNumber), zap.String("serviceName", requestContext.Destination.Service), zap.Error(err))
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND) {
-					outway_http.WriteError(requestContext.Response, "order not found")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderNotFound, "order not found")
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG) {
-					outway_http.WriteError(requestContext.Response, "order does not exist for your organization")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotExistForYourOrganization, "order does not exist for your organization")
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_REVOKED) {
-					outway_http.WriteError(requestContext.Response, "order is revoked")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderRevoked, "order is revoked")
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_EXPIRED) {
-					outway_http.WriteError(requestContext.Response, "the order has expired")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderExpired, "the order has expired")
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE) {
-					outway_http.WriteError(requestContext.Response, fmt.Sprintf("order does not contain the service '%s'", requestContext.Destination.Service))
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotContainService, fmt.Sprintf("order does not contain the service '%s'", requestContext.Destination.Service))
 
 					return nil
 				}
 
-				outway_http.WriteError(requestContext.Response, fmt.Sprintf("unable to request claim from %s", delegatorSerialNumber))
+				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.UnableToRequestClaim, fmt.Sprintf("unable to request claim from %s", delegatorSerialNumber))
 
 				return nil
 			}
@@ -131,7 +132,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			if err != nil {
 				plugin.logger.Error("unable to parse received claim", zap.String("claim", response.Claim), zap.Error(err))
 
-				outway_http.WriteError(requestContext.Response, fmt.Sprintf("received an invalid claim from %s", delegatorSerialNumber))
+				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.ReceivedInvalidClaim, fmt.Sprintf("received an invalid claim from %s", delegatorSerialNumber))
 
 				return nil
 			}

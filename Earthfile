@@ -8,6 +8,7 @@ all:
     BUILD +proto
     BUILD +mocks
     BUILD +sqlc
+    BUILD +enums
 
 proto:
     BUILD +proto-directory-api
@@ -27,6 +28,10 @@ mocks:
 sqlc:
     BUILD +sqlc-txlog-api
     BUILD +sqlc-directory-api
+
+enums:
+    BUILD +enums-httperrors
+    BUILD +enums-permissions
 
 deps:
     COPY go.mod go.sum /src/
@@ -270,3 +275,23 @@ sqlc-directory-api:
     RUN goimports -w -local "go.nlx.io" /src/
 
     SAVE ARTIFACT /src/directory-api/adapters/storage/postgres/queries/* AS LOCAL ./directory-api/adapters/storage/postgres/queries/
+
+enums-httperrors:
+    FROM +deps
+    COPY ./common/httperrors/ /src/common/httperrors/
+
+    WORKDIR /src/
+
+    RUN go generate ./...
+
+    SAVE ARTIFACT /src/common/httperrors/*_enumer.go AS LOCAL ./common/httperrors/
+
+enums-permissions:
+    FROM +deps
+    COPY ./management-api/pkg/permissions/ /src/management-api/pkg/permissions/
+
+    WORKDIR /src/
+
+    RUN go generate ./...
+
+    SAVE ARTIFACT /src/management-api/pkg/permissions/*_enumer.go AS LOCAL ./management-api/pkg/permissions/

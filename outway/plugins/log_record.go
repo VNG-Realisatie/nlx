@@ -14,6 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/common/transactionlog"
 	outway_http "go.nlx.io/nlx/outway/http"
 )
@@ -61,9 +62,9 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 			context.Logger.Error("failed to store transactionlog record", zap.Error(err))
 
 			if strings.Contains(err.Error(), "invalid data subject header") {
-				outway_http.WriteError(context.Response, "invalid data subject header")
+				outway_http.WriteError(context.Response, httperrors.C1, httperrors.InvalidDataSubjectHeader, "invalid data subject header")
 			} else {
-				outway_http.WriteError(context.Response, "server error")
+				outway_http.WriteError(context.Response, httperrors.C1, httperrors.ServerError, fmt.Sprintf("server error: %v", err))
 			}
 
 			return nil

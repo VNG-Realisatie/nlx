@@ -5,7 +5,8 @@ package plugins_test
 
 import (
 	"crypto/x509"
-	"io/ioutil"
+	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -26,8 +27,8 @@ func TestAuthenticationPlugin(t *testing.T) {
 
 	tests := map[string]struct {
 		certifcate         *x509.Certificate
-		expectedStatusCode int
-		expectedMessage    string
+		wantHTTPStatusCode int
+		wantErr            *httperrors.NLXNetworkError
 	}{
 		"invalid_certificate": {
 			certifcate: func() *x509.Certificate {
@@ -36,8 +37,13 @@ func TestAuthenticationPlugin(t *testing.T) {
 
 				return cert.Certificate()
 			}(),
-			expectedStatusCode: httperrors.StatusNLXNetworkError,
-			expectedMessage:    "nlx-inway: invalid certificate provided: missing organizations attribute in subject\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.InvalidCertificate,
+				Message:  "invalid certificate provided: missing organizations attribute in subject",
+			},
 		},
 		"invalid_certificate_without_serial_number": {
 			certifcate: func() *x509.Certificate {
@@ -46,8 +52,13 @@ func TestAuthenticationPlugin(t *testing.T) {
 
 				return cert.Certificate()
 			}(),
-			expectedStatusCode: httperrors.StatusNLXNetworkError,
-			expectedMessage:    "nlx-inway: invalid certificate provided: missing value for serial number in subject\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.InvalidCertificate,
+				Message:  "invalid certificate provided: missing or invalid value for serial number in subject",
+			},
 		},
 		"happy_flow": {
 			certifcate: func() *x509.Certificate {
@@ -56,7 +67,7 @@ func TestAuthenticationPlugin(t *testing.T) {
 
 				return cert.Certificate()
 			}(),
-			expectedStatusCode: http.StatusOK,
+			wantHTTPStatusCode: http.StatusOK,
 		},
 	}
 
@@ -72,11 +83,18 @@ func TestAuthenticationPlugin(t *testing.T) {
 			response := context.Response.(*httptest.ResponseRecorder).Result()
 			defer response.Body.Close()
 
-			contents, err := ioutil.ReadAll(response.Body)
+			contents, err := io.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			assert.Equal(t, tt.expectedMessage, string(contents))
-			assert.Equal(t, tt.expectedStatusCode, response.StatusCode)
+			assert.Equal(t, tt.wantHTTPStatusCode, response.StatusCode)
+
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			}
 		})
 	}
 }

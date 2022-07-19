@@ -4,8 +4,9 @@
 package plugins_test
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,8 +25,8 @@ func TestLoginPlugin(t *testing.T) {
 	tests := map[string]struct {
 		tranactionLogger   func(ctrl *gomock.Controller) *mock_transactionlog.MockTransactionLogger
 		headers            map[string]string
-		expectedStatusCode int
-		expectedMessage    string
+		wantHTTPStatusCode int
+		wantErr            *httperrors.NLXNetworkError
 	}{
 		"missing_log_record_id": {
 			headers: map[string]string{
@@ -36,8 +37,13 @@ func TestLoginPlugin(t *testing.T) {
 
 				return db
 			},
-			expectedStatusCode: httperrors.StatusNLXNetworkError,
-			expectedMessage:    "nlx-inway: missing logrecord id\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.MissingLogRecordID,
+				Message:  "missing logrecord id",
+			},
 		},
 		"transaction_log_db_fails": {
 			headers: map[string]string{
@@ -56,8 +62,13 @@ func TestLoginPlugin(t *testing.T) {
 				}).Return(fmt.Errorf("arbitrary error"))
 				return db
 			},
-			expectedStatusCode: httperrors.StatusNLXNetworkError,
-			expectedMessage:    "nlx-inway: server error\n",
+			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.ServerError,
+				Message:  "server error",
+			},
 		},
 		"happy_flow": {
 			headers: map[string]string{
@@ -84,7 +95,7 @@ func TestLoginPlugin(t *testing.T) {
 				}).Return(nil)
 				return db
 			},
-			expectedStatusCode: http.StatusOK,
+			wantHTTPStatusCode: http.StatusOK,
 		},
 	}
 
@@ -117,11 +128,18 @@ func TestLoginPlugin(t *testing.T) {
 			response := context.Response.(*httptest.ResponseRecorder).Result()
 			defer response.Body.Close()
 
-			contents, err := ioutil.ReadAll(response.Body)
+			contents, err := io.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			assert.Equal(t, tt.expectedMessage, string(contents))
-			assert.Equal(t, tt.expectedStatusCode, response.StatusCode)
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			}
+
+			assert.Equal(t, tt.wantHTTPStatusCode, response.StatusCode)
 		})
 	}
 }

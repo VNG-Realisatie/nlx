@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -131,7 +132,7 @@ func TestRoute_RequestCertificate(t *testing.T) {
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedStatusCode, resp.StatusCode)
 
-			responseBody, err := ioutil.ReadAll(resp.Body)
+			responseBody, err := io.ReadAll(resp.Body)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedBody, string(responseBody))
 
@@ -180,7 +181,7 @@ func TestRoute_Root(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, test.expectedStatusCode, resp.StatusCode)
 
-		responseBody, err := ioutil.ReadAll(resp.Body)
+		responseBody, err := io.ReadAll(resp.Body)
 		assert.NoError(t, err)
 		assert.Equal(t, test.expectedBody, string(responseBody))
 

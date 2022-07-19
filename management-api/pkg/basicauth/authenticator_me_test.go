@@ -6,7 +6,7 @@ package basicauth_test
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -136,7 +136,7 @@ func Test_Me(t *testing.T) {
 
 			require.Equal(t, tt.expectedStatus, resp.StatusCode)
 
-			bodyBytes, err := ioutil.ReadAll(resp.Body)
+			bodyBytes, err := io.ReadAll(resp.Body)
 			assert.NoError(t, err)
 			assert.Equal(t, tt.expectedBody, string(bodyBytes))
 		})

@@ -23,7 +23,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 		authServerEnabled            bool
 		authServerResponse           interface{}
 		authServerResponseStatusCode int
-		wantError                    string
+		wantErr                      *httperrors.NLXNetworkError
 		wantHTTPStatusCode           int
 	}{
 		"when_auth_server_returns_non_OK_status": {
@@ -48,7 +48,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			authServerEnabled:            true,
 			authServerResponseStatusCode: http.StatusUnauthorized,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-inway: error authorizing request\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.IAS1,
+				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Message:  "error authorizing request",
+			},
 		},
 		"when_auth_server_returns_invalid_response": {
 			args: &plugins.AuthRequest{
@@ -74,7 +79,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			authServerEnabled:            true,
 			authServerResponseStatusCode: http.StatusOK,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-inway: authorization server denied request.\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.IAS1,
+				Code:     httperrors.Unauthorized,
+				Message:  "authorization server denied request.",
+			},
 		},
 		"when_auth_server_fails": {
 			args: &plugins.AuthRequest{
@@ -95,7 +105,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			authServerEnabled:            true,
 			authServerResponseStatusCode: http.StatusInternalServerError,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-inway: error authorizing request\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.IAS1,
+				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Message:  "error authorizing request",
+			},
 		},
 		"when_auth_server_returns_no_access": {
 			args: &plugins.AuthRequest{
@@ -119,7 +134,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 			},
 			authServerResponseStatusCode: http.StatusOK,
 			wantHTTPStatusCode:           httperrors.StatusNLXNetworkError,
-			wantError:                    "nlx-inway: authorization server denied request.\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.IAS1,
+				Code:     httperrors.Unauthorized,
+				Message:  "authorization server denied request.",
+			},
 		},
 		"when_access_grant_not_found": {
 			args: &plugins.AuthRequest{
@@ -134,7 +154,12 @@ func TestAuthorizationPlugin(t *testing.T) {
 				},
 			},
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
-			wantError:          "nlx-inway: permission denied, organization \"00000000000000000001\" or public key fingerprint \"mock-public-key-fingerprint\" is not allowed access.\n",
+			wantErr: &httperrors.NLXNetworkError{
+				Source:   httperrors.Inway,
+				Location: httperrors.O1,
+				Code:     httperrors.AccessDenied,
+				Message:  "permission denied, organization \"00000000000000000001\" or public key fingerprint \"mock-public-key-fingerprint\" is not allowed access.",
+			},
 		},
 		"happy_flow_with_auth_server": {
 			args: &plugins.AuthRequest{
@@ -237,10 +262,15 @@ func TestAuthorizationPlugin(t *testing.T) {
 			contents, err := io.ReadAll(response.Body)
 			assert.NoError(t, err)
 
-			assert.Equal(t, tt.wantError, string(contents))
 			assert.Equal(t, tt.wantHTTPStatusCode, response.StatusCode)
 
-			if tt.wantError == "" && tt.authServerEnabled {
+			if tt.wantErr != nil {
+				gotError := &httperrors.NLXNetworkError{}
+				err := json.Unmarshal(contents, gotError)
+				assert.NoError(t, err)
+
+				assert.Equal(t, tt.wantErr, gotError)
+			} else if tt.authServerEnabled {
 				wantAuthorizationServiceRequest, err := json.Marshal(tt.args)
 				assert.NoError(t, err)
 

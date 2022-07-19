@@ -6,7 +6,7 @@ package inway
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -109,7 +109,7 @@ func TestInwayApiSpec(t *testing.T) {
 			resp, err := client.Do(req)
 			assert.Nil(t, err)
 
-			bytes, err := ioutil.ReadAll(resp.Body)
+			bytes, err := io.ReadAll(resp.Body)
 			assert.Nil(t, err)
 
 			resp.Body.Close()
