@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
-import { renderWithAllProviders } from '../../../test-utils'
+import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { ManagementApi } from '../../../api'
 import EditServicePage from './index'
@@ -52,7 +52,7 @@ describe('the EditServicePage', () => {
     })
 
     const userContext = { user: { id: '42' } }
-    renderWithAllProviders(
+    renderWithProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
@@ -80,7 +80,7 @@ describe('the EditServicePage', () => {
     })
 
     const userContext = { user: { id: '42' } }
-    renderWithAllProviders(
+    renderWithProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
@@ -111,7 +111,7 @@ describe('the EditServicePage', () => {
     await rootStore.servicesStore.fetchAll()
 
     const userContext = { user: { id: '42' } }
-    renderWithAllProviders(
+    renderWithProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <UserContext.Provider value={userContext}>
           <StoreProvider rootStore={rootStore}>
@@ -145,7 +145,7 @@ describe('the EditServicePage', () => {
       initialEntries: ['/mock-service/edit-service'],
     })
 
-    renderWithAllProviders(
+    renderWithProviders(
       <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
@@ -190,7 +190,7 @@ describe('the EditServicePage', () => {
       initialEntries: ['/mock-service/edit-service'],
     })
 
-    renderWithAllProviders(
+    renderWithProviders(
       <HistoryRouter history={history}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
@@ -225,9 +225,11 @@ describe('the EditServicePage', () => {
 
   it('submitting when the HTTP response is not ok', async () => {
     const managementApiClient = new ManagementApi()
-    managementApiClient.managementUpdateService = jest
-      .fn()
-      .mockRejectedValue(new Error('arbitrary error'))
+    managementApiClient.managementUpdateService = jest.fn().mockRejectedValue({
+      response: {
+        status: 403,
+      },
+    })
 
     managementApiClient.managementListServices = jest.fn().mockResolvedValue({
       services: [{ name: 'mock-service' }],
@@ -239,7 +241,7 @@ describe('the EditServicePage', () => {
 
     await rootStore.servicesStore.fetchAll()
 
-    renderWithAllProviders(
+    renderWithProviders(
       <MemoryRouter initialEntries={['/mock-service/edit-service']}>
         <StoreProvider rootStore={rootStore}>
           <Routes>
@@ -255,9 +257,8 @@ describe('the EditServicePage', () => {
       fireEvent.submit(editServiceForm)
     })
 
-    expect(screen.queryByRole('alert')).toBeTruthy()
     expect(screen.queryByRole('alert')).toHaveTextContent(
-      'Failed to update the service',
+      "Failed to update the serviceYou don't have the required permission.",
     )
   })
 })

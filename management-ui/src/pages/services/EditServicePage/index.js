@@ -2,9 +2,9 @@
 // Licensed under the EUPL
 //
 
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, ToasterContext } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import { useNavigate, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import serviceActions from '../ServicesPage/serviceActions'
@@ -21,7 +21,6 @@ const EditServicePage = () => {
   const [updateError, setUpdatedError] = useState(null)
   const navigate = useNavigate()
   const [service, setService] = useState(null)
-  const { showToast } = useContext(ToasterContext)
 
   useEffect(() => {
     if (serviceStore.isInitiallyFetched) {
@@ -36,25 +35,14 @@ const EditServicePage = () => {
 
       navigate(`/services/${service.name}?lastAction=${serviceActions.EDITED}`)
     } catch (err) {
-      let message = ''
+      let message = err.message
 
-      if (err.response) {
-        const res = await err.response.json()
-        message = res.message
-
-        if (err.response.status === 403) {
-          message = t(`You don't have the required permission.`)
-        } else {
-          window.scrollTo(0, 0)
-          setUpdatedError(message)
-        }
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
       }
 
-      showToast({
-        title: t('Failed to update the service'),
-        body: message,
-        variant: 'error',
-      })
+      setUpdatedError(message)
+      window.scrollTo(0, 0)
     }
   }
 
