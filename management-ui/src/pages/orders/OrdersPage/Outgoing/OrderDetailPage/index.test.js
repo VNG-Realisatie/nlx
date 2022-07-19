@@ -52,10 +52,21 @@ test('display order details', async () => {
         },
       ],
     })
+
+  managementApiClient.managementRevokeOutgoingOrder = jest
+    .fn()
+    .mockRejectedValueOnce({
+      response: {
+        status: 403,
+      },
+    })
+    .mockResolvedValue()
+
   const rootStore = new RootStore({
     managementApiClient,
     directoryApiClient,
   })
+
   const orderStore = rootStore.orderStore
 
   await orderStore.fetchOutgoing()
@@ -80,18 +91,27 @@ test('display order details', async () => {
   const orderModel = orderStore.outgoingOrders[0]
   jest.spyOn(orderModel, 'revoke')
 
-  const revokeButton = await screen.findByText(/Revoke/)
+  let revokeButton = await screen.findByText(/Revoke/)
   fireEvent.click(revokeButton)
 
-  const confirmModal = screen.getByRole('dialog')
-  const okButton = within(confirmModal).getByText(/Revoke/)
-
-  managementApiClient.managementRevokeOutgoingOrder = jest
-    .fn()
-    .mockResolvedValue()
+  let confirmModal = screen.getByRole('dialog')
+  let okButton = within(confirmModal).getByText(/Revoke/)
 
   fireEvent.click(okButton)
   await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(1))
+
+  expect(screen.queryByRole('alert').textContent).toBe(
+    "Failed to revoke the orderYou don't have the required permission.",
+  )
+
+  revokeButton = await screen.findByText(/Revoke/)
+  fireEvent.click(revokeButton)
+
+  confirmModal = screen.getByRole('dialog')
+  okButton = within(confirmModal).getByText(/Revoke/)
+
+  fireEvent.click(okButton)
+  await waitFor(() => expect(orderModel.revoke).toHaveBeenCalledTimes(2))
 
   expect(screen.getByText(/Order is revoked/)).toBeInTheDocument()
   expect(screen.getByText(/Revoked on date/)).toBeInTheDocument()
