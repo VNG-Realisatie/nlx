@@ -29,12 +29,15 @@ const ServiceDetailPage = () => {
       await serviceStore.removeService(service.name)
       navigate(`../${name}?lastAction=${serviceActions.REMOVED}`)
     } catch (err) {
+      let message = err.message
+
+      if (err.response && err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       showToast({
         title: t('Failed to remove the service'),
-        body:
-          err.response.status === 403
-            ? t(`You don't have the required permission.`)
-            : err.message,
+        body: message,
         variant: 'error',
       })
     }

@@ -102,7 +102,14 @@ test('removing the service', async () => {
     .fn()
     .mockResolvedValue({ accessGrants: [] })
 
-  managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
+  managementApiClient.managementDeleteService = jest
+    .fn()
+    .mockRejectedValueOnce({
+      response: {
+        status: 403,
+      },
+    })
+    .mockResolvedValue()
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -123,11 +130,18 @@ test('removing the service', async () => {
     </HistoryRouter>,
   )
 
-  const removeButton = await screen.findByText('Remove service')
-  fireEvent.click(removeButton)
+  fireEvent.click(await screen.findByText('Remove service'))
 
   expect(rootStore.servicesStore.removeService).toHaveBeenCalledTimes(1)
-  await act(async () => {})
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    "Failed to remove the serviceYou don't have the required permission.",
+  )
+
+  await act(async () => {
+    fireEvent.click(await screen.findByText('Remove service'))
+  })
+
+  expect(rootStore.servicesStore.removeService).toHaveBeenCalledTimes(2)
   expect(history.location.pathname).toEqual('/my-service')
   expect(history.location.search).toEqual('?lastAction=removed')
 })
