@@ -71,12 +71,16 @@ const OrdersPage = () => {
       await orderStore.updateIncoming()
     } catch (err) {
       setRefreshLoading(false)
+
+      let message = err.message
+
+      if (err.response.status === 403) {
+        message = t(`You don't have the required permission.`)
+      }
+
       showToast({
         title: t('Failed to update the order overview'),
-        body:
-          err.response && err.response.status === 403
-            ? t(`You don't have the required permission.`)
-            : err.message,
+        body: message,
         variant: 'error',
       })
 
