@@ -124,9 +124,9 @@ test('remove an Inway', async () => {
 
   fireEvent.click(okButton)
 
-  expect(
-    await screen.findByText('Failed to remove the inway'),
-  ).toBeInTheDocument()
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    "Failed to remove the inwayYou don't have the required permission.",
+  )
 
   await waitFor(() =>
     expect(rootStore.inwayStore.removeInway).toHaveBeenCalledWith('my-inway'),
