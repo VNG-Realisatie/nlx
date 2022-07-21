@@ -21,9 +21,15 @@ The process of connecting to the NLX production environment consists of the foll
 
 A private key and certificate signing request for the (pre-)production environment can be generated with the following command:
 
+Replace `<fqdn-of-your-inway>` with the Fully Qualified Domain Name (FQDN) of your Inway.
+E.g. `inway.my-organization.nl` or `nlx.my-organization.nl`
+
 ```bash
-openssl req -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
+openssl req  -addext "subjectAltName = DNS:<fqdn-of-your-inway>" -utf8 -nodes -sha256 -newkey rsa:4096 -keyout org.key -out org.csr
 ```
+
+> OpenSSL >= v1.1.1 is required, since we need support for the `-addext` flag
+
 
 Answer the questions accordingly:
 
@@ -32,8 +38,8 @@ Answer the questions accordingly:
 - **Locality Name**, enter the name of the city, e.g. `Utrecht`
 - **Organization Name**, enter your organization name (please use a URL-friendly value with a maximum length of 100 characters)
 - **Organization Unit Name**, enter the name of your organization unit name (optional)
-- **Common name**, for an inway this should correspond to the Fully Qualified Domain Name (FQDN) of your inway, e.g. `inway.my-organization.nl` or `nlx.my-organization.nl`. For an outway this FQDN does not have to be resolvable. It is possible to use the inway certificate for the outway and NLX Management.
-- **Email Address**, enter your e-mail address (optional)
+- **Common name**, FQDN of your Inway or Outway. For an Outway this FQDN does not have to be resolvable. It is possible to use the Inway certificate for the Outway and NLX Management.
+- **Email Address**, enter your email address (optional)
 - **A challenge password**, omit this value
 
 The command outputs two files: *org.key*, the private key and *org.csr*, the certificate signing request.
