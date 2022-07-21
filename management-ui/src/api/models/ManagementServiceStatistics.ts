@@ -33,6 +33,15 @@ export interface ManagementServiceStatistics {
     incomingAccessRequestCount?: number;
 }
 
+/**
+ * Check if a given object implements the ManagementServiceStatistics interface.
+ */
+export function instanceOfManagementServiceStatistics(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementServiceStatisticsFromJSON(json: any): ManagementServiceStatistics {
     return ManagementServiceStatisticsFromJSONTyped(json, false);
 }

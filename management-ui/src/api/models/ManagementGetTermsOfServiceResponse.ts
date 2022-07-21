@@ -33,6 +33,15 @@ export interface ManagementGetTermsOfServiceResponse {
     url?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementGetTermsOfServiceResponse interface.
+ */
+export function instanceOfManagementGetTermsOfServiceResponse(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementGetTermsOfServiceResponseFromJSON(json: any): ManagementGetTermsOfServiceResponse {
     return ManagementGetTermsOfServiceResponseFromJSONTyped(json, false);
 }

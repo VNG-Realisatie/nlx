@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementOrganization } from './ManagementOrganization';
 import {
-    ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
@@ -50,6 +50,15 @@ export interface ManagementAuditLogRecordMetadata {
      * @memberof ManagementAuditLogRecordMetadata
      */
     inwayName?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementAuditLogRecordMetadata interface.
+ */
+export function instanceOfManagementAuditLogRecordMetadata(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementAuditLogRecordMetadataFromJSON(json: any): ManagementAuditLogRecordMetadata {

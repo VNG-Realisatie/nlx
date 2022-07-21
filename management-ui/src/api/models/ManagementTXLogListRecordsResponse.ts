@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementTXLogRecord } from './ManagementTXLogRecord';
 import {
-    ManagementTXLogRecord,
     ManagementTXLogRecordFromJSON,
     ManagementTXLogRecordFromJSONTyped,
     ManagementTXLogRecordToJSON,
@@ -32,6 +32,15 @@ export interface ManagementTXLogListRecordsResponse {
      * @memberof ManagementTXLogListRecordsResponse
      */
     records?: Array<ManagementTXLogRecord>;
+}
+
+/**
+ * Check if a given object implements the ManagementTXLogListRecordsResponse interface.
+ */
+export function instanceOfManagementTXLogListRecordsResponse(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementTXLogListRecordsResponseFromJSON(json: any): ManagementTXLogListRecordsResponse {

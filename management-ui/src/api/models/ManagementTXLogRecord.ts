@@ -13,26 +13,26 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementTXLogDirection } from './ManagementTXLogDirection';
 import {
-    ManagementTXLogDirection,
     ManagementTXLogDirectionFromJSON,
     ManagementTXLogDirectionFromJSONTyped,
     ManagementTXLogDirectionToJSON,
 } from './ManagementTXLogDirection';
+import type { ManagementTXLogOrder } from './ManagementTXLogOrder';
 import {
-    ManagementTXLogOrder,
     ManagementTXLogOrderFromJSON,
     ManagementTXLogOrderFromJSONTyped,
     ManagementTXLogOrderToJSON,
 } from './ManagementTXLogOrder';
+import type { ManagementTXLogOrganization } from './ManagementTXLogOrganization';
 import {
-    ManagementTXLogOrganization,
     ManagementTXLogOrganizationFromJSON,
     ManagementTXLogOrganizationFromJSONTyped,
     ManagementTXLogOrganizationToJSON,
 } from './ManagementTXLogOrganization';
+import type { ManagementTXLogService } from './ManagementTXLogService';
 import {
-    ManagementTXLogService,
     ManagementTXLogServiceFromJSON,
     ManagementTXLogServiceFromJSONTyped,
     ManagementTXLogServiceToJSON,
@@ -92,6 +92,15 @@ export interface ManagementTXLogRecord {
      * @memberof ManagementTXLogRecord
      */
     createdAt?: Date;
+}
+
+/**
+ * Check if a given object implements the ManagementTXLogRecord interface.
+ */
+export function instanceOfManagementTXLogRecord(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementTXLogRecordFromJSON(json: any): ManagementTXLogRecord {

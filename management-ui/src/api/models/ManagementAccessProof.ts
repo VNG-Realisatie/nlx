@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementOrganization } from './ManagementOrganization';
 import {
-    ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
@@ -68,6 +68,15 @@ export interface ManagementAccessProof {
      * @memberof ManagementAccessProof
      */
     publicKeyFingerprint?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementAccessProof interface.
+ */
+export function instanceOfManagementAccessProof(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementAccessProofFromJSON(json: any): ManagementAccessProof {

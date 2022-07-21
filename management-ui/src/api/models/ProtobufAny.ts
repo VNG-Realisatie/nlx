@@ -28,6 +28,15 @@ export interface ProtobufAny {
     type?: string;
 }
 
+/**
+ * Check if a given object implements the ProtobufAny interface.
+ */
+export function instanceOfProtobufAny(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ProtobufAnyFromJSON(json: any): ProtobufAny {
     return ProtobufAnyFromJSONTyped(json, false);
 }

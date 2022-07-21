@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementOrganization } from './ManagementOrganization';
 import {
-    ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
@@ -44,6 +44,15 @@ export interface ManagementListServicesResponseServiceAuthorizationSettingsAutho
      * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
     publicKeyPEM?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementListServicesResponseServiceAuthorizationSettingsAuthorization interface.
+ */
+export function instanceOfManagementListServicesResponseServiceAuthorizationSettingsAuthorization(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSON(json: any): ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {

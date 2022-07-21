@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ProtobufAny } from './ProtobufAny';
 import {
-    ProtobufAny,
     ProtobufAnyFromJSON,
     ProtobufAnyFromJSONTyped,
     ProtobufAnyToJSON,
@@ -44,6 +44,15 @@ export interface RpcStatus {
      * @memberof RpcStatus
      */
     details?: Array<ProtobufAny>;
+}
+
+/**
+ * Check if a given object implements the RpcStatus interface.
+ */
+export function instanceOfRpcStatus(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function RpcStatusFromJSON(json: any): RpcStatus {

@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementErrorCode } from './ManagementErrorCode';
 import {
-    ManagementErrorCode,
     ManagementErrorCodeFromJSON,
     ManagementErrorCodeFromJSONTyped,
     ManagementErrorCodeToJSON,
@@ -44,6 +44,15 @@ export interface ManagementErrorDetails {
      * @memberof ManagementErrorDetails
      */
     stackTrace?: Array<string>;
+}
+
+/**
+ * Check if a given object implements the ManagementErrorDetails interface.
+ */
+export function instanceOfManagementErrorDetails(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementErrorDetailsFromJSON(json: any): ManagementErrorDetails {

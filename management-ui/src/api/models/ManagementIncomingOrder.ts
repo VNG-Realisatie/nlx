@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementOrderService } from './ManagementOrderService';
 import {
-    ManagementOrderService,
     ManagementOrderServiceFromJSON,
     ManagementOrderServiceFromJSONTyped,
     ManagementOrderServiceToJSON,
 } from './ManagementOrderService';
+import type { ManagementOrganization } from './ManagementOrganization';
 import {
-    ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
@@ -74,6 +74,15 @@ export interface ManagementIncomingOrder {
      * @memberof ManagementIncomingOrder
      */
     revokedAt?: Date;
+}
+
+/**
+ * Check if a given object implements the ManagementIncomingOrder interface.
+ */
+export function instanceOfManagementIncomingOrder(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementIncomingOrderFromJSON(json: any): ManagementIncomingOrder {

@@ -39,6 +39,15 @@ export interface ManagementCreateAccessRequestRequest {
     publicKeyPEM?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementCreateAccessRequestRequest interface.
+ */
+export function instanceOfManagementCreateAccessRequestRequest(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementCreateAccessRequestRequestFromJSON(json: any): ManagementCreateAccessRequestRequest {
     return ManagementCreateAccessRequestRequestFromJSONTyped(json, false);
 }

@@ -33,6 +33,15 @@ export interface ManagementOrganization {
     name?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementOrganization interface.
+ */
+export function instanceOfManagementOrganization(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementOrganizationFromJSON(json: any): ManagementOrganization {
     return ManagementOrganizationFromJSONTyped(json, false);
 }
