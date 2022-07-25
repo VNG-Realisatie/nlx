@@ -89,11 +89,6 @@ Push production outway:
   variables:
     IMAGE: outway
 
-Push production txlog-db:
-  extends: .push-production-base
-  variables:
-    IMAGE: txlog-db
-
 Push production txlog-api:
   extends: .push-production-base
   variables:

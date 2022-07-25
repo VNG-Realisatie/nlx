@@ -137,13 +137,6 @@ Build review outway:
     CONTEXT: .
     DOCKERFILE: outway/Dockerfile
 
-Build review txlog-db:
-  extends: .build-review-base
-  variables:
-    IMAGE: txlog-db
-    CONTEXT: .
-    DOCKERFILE: txlog-db/Dockerfile
-
 Build review txlog-api:
   extends: .build-review-base
   variables:

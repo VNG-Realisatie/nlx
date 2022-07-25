@@ -146,13 +146,6 @@ Build production outway:
     CONTEXT: .
     DOCKERFILE: outway/Dockerfile
 
-Build production txlog-db:
-  extends: .build-production-base
-  variables:
-    IMAGE: txlog-db
-    CONTEXT: .
-    DOCKERFILE: txlog-db/Dockerfile
-
 Build production txlog-api:
   extends: .build-production-base
   variables:

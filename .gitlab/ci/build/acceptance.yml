@@ -141,13 +141,6 @@ Build acceptance outway:
     CONTEXT: .
     DOCKERFILE: outway/Dockerfile
 
-Build acceptance txlog-db:
-  extends: .build-acceptance-base
-  variables:
-    IMAGE: txlog-db
-    CONTEXT: .
-    DOCKERFILE: txlog-db/Dockerfile
-
 Build acceptance txlog-api:
   extends: .build-acceptance-base
   variables:
