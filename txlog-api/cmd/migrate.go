@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -27,6 +28,7 @@ func init() {
 	}
 
 	migrateCommand.AddCommand(migrateUpCommand)
+	migrateCommand.AddCommand(migrateStatusCommand)
 }
 
 var migrateCommand = &cobra.Command{
@@ -45,5 +47,18 @@ var migrateUpCommand = &cobra.Command{
 		}
 
 		os.Exit(0)
+	},
+}
+
+var migrateStatusCommand = &cobra.Command{
+	Use:   "status",
+	Short: "Show migration status",
+	Run: func(cmd *cobra.Command, args []string) {
+		version, dirty, err := pgadapter.PostgresMigrationStatus(migrateOpts.PostgresDSN)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("dirty=%v version=%d\n", dirty, version)
 	},
 }
