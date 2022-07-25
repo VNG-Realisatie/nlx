@@ -23,7 +23,7 @@ ARG GIT_COMMIT_HASH=undefined
 
 RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
-        -o dist/bin/nlx-txlog-api ./cmd/txlog-api
+        -o dist/bin/nlx-txlog-api ./
 
 FROM alpine:3.16.1
 COPY --from=build /go/src/go.nlx.io/nlx/txlog-api/dist/bin/nlx-txlog-api /usr/local/bin/nlx-txlog-api
@@ -32,4 +32,4 @@ COPY --from=build /go/src/go.nlx.io/nlx/txlog-api/dist/bin/nlx-txlog-api /usr/lo
 RUN adduser -D -u 1001 appuser
 USER appuser
 
-CMD ["/usr/local/bin/nlx-txlog-api"]
+CMD ["/usr/local/bin/nlx-txlog-api", "serve"]
