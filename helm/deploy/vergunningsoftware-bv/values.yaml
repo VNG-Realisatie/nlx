@@ -217,11 +217,6 @@ postgresql:
   storageSize: 8Gi
 
 transactionLog:
-  image:
-    registry: docker.io
-    repository: nlxio/txlog-db
-    tag: ""
-    pullPolicy: IfNotPresent
   hostname: vergunningsoftware-bv-postgresql
   databaseName: vergunningsoftware-bv-transaction-log
   existingSecret:

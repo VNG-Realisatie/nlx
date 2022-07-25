@@ -12,8 +12,7 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Only add code that we use for building directory
-COPY txlog-api     /go/src/go.nlx.io/nlx/txlog-api
-COPY txlog-db     /go/src/go.nlx.io/nlx/txlog-db
+COPY txlog-api          /go/src/go.nlx.io/nlx/txlog-api
 COPY common             /go/src/go.nlx.io/nlx/common
 
 WORKDIR /go/src/go.nlx.io/nlx/txlog-api

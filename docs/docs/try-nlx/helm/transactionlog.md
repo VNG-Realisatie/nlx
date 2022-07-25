@@ -26,24 +26,6 @@ Run the following command to install a certificate for the transaction-log API o
 kubectl -n nlx apply -f txlog-api-internal-tls.yaml
 ```
 
-## Setup the database
-
-The transaction logs are stored in a Postgres database. We will use the [Postgres instance](./postgresql.md) we created earlier. Open the `txlog-api-job-migrations.yaml` file in an editor, replace the value `<postgres_password>` with the Postgres password you saved earlier and save the file.
-
-The following command will start a job in Kubernetes to create the database `nlx_transaction_log` and the required database schema:
-```
-kubectl -n nlx apply -f txlog-api-job-migrations.yaml
-```
-
-Check with `kubectl -n nlx get jobs` if the job has succeeded.
-
-A similar line should now be displayed:
-
-```
-NAME                COMPLETIONS   DURATION   AGE
-transaction-log     1/1           3s         30m
-```
-
 ## Install the Transaction Log API
 
 The transaction logs can be viewed in NLX Management. NLX Management communicates with the Transaction Log API to retrieve the logs from the database. Now let's install the Transaction Log API on the Kubernetes cluster.

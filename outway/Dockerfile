@@ -13,8 +13,7 @@ RUN go mod download
 
 # Only add code that we use for building outway
 COPY outway                                     /go/src/go.nlx.io/nlx/outway
-COPY directory-api/api     /go/src/go.nlx.io/nlx/directory-api/api
-COPY txlog-db/dbversion                         /go/src/go.nlx.io/nlx/txlog-db/dbversion
+COPY directory-api/api                          /go/src/go.nlx.io/nlx/directory-api/api
 COPY common                                     /go/src/go.nlx.io/nlx/common
 COPY management-api                             /go/src/go.nlx.io/nlx/management-api
 

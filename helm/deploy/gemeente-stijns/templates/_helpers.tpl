@@ -85,17 +85,6 @@ Return the name of the nlx-management-api image
 {{- end -}}
 
 {{/*
-Return the image name for transaction log database job
-*/}}
-{{- define "gemeente-stijns.transactionLog.image" -}}
-{{- $registryName := default .Values.transactionLog.image.registry .Values.global.imageRegistry -}}
-{{- $repositoryName := .Values.transactionLog.image.repository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.transactionLog.image.tag .Values.global.imageTag) -}}
-
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
-
-{{/*
 Return the secret name of the transaction log database
 */}}
 {{- define "gemeente-stijns.transactionLog.secret" -}}

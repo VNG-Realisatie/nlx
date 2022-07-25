@@ -29,7 +29,6 @@ container_scanning:
       management-ui
       nlxctl
       outway
-      txlog-db
       txlog-api
       apps-overview
     REPORTS_DIRECTORY: /reports
