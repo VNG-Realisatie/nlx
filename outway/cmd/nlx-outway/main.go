@@ -18,7 +18,6 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"go.nlx.io/nlx/common/cmd"
-	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/process"
@@ -28,7 +27,6 @@ import (
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/outway"
-	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
 var options struct {
@@ -236,7 +234,7 @@ func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.T
 		return transactionlog.NewDiscardTransactionLogger(), nil
 	}
 
-	logDB, err := setupDatabase(logger)
+	logDB, err := setupDatabase()
 	if err != nil {
 		logger.Fatal("failed to setup database", zap.Error(err))
 	}
@@ -251,7 +249,7 @@ func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.T
 	return postgresTxLogger, logDB
 }
 
-func setupDatabase(logger *zap.Logger) (*sqlx.DB, error) {
+func setupDatabase() (*sqlx.DB, error) {
 	var logDB *sqlx.DB
 
 	logDB, err := sqlx.Open("postgres", options.PostgresDSN)
@@ -269,8 +267,6 @@ func setupDatabase(logger *zap.Logger) (*sqlx.DB, error) {
 	logDB.SetMaxOpenConns(maxOpenConns)
 	logDB.SetMaxIdleConns(maxIdleConns)
 	logDB.MapperFunc(xstrings.ToSnakeCase)
-
-	common_db.WaitForLatestDBVersion(logger, logDB.DB, dbversion.LatestTxlogDBVersion)
 
 	return logDB, nil
 }

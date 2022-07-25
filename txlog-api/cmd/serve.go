@@ -12,14 +12,12 @@ import (
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/common/cmd"
-	common_db "go.nlx.io/nlx/common/db"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
 	"go.nlx.io/nlx/txlog-api/pkg/api"
-	"go.nlx.io/nlx/txlog-db/dbversion"
 )
 
 var serveOpts struct {
@@ -71,8 +69,6 @@ var serveCommand = &cobra.Command{
 		if err != nil {
 			logger.Fatal("can not create db connection:", zap.Error(err))
 		}
-
-		common_db.WaitForLatestDBVersion(logger, db.DB, dbversion.LatestTxlogDBVersion)
 
 		storage, err := pgadapter.New(logger, db)
 		if err != nil {
