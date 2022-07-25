@@ -13,8 +13,8 @@ import (
 	"go.nlx.io/nlx/txlog-api/cmd"
 )
 
-func setupCmdFlagForEnvironment(key, value string, cmd *cobra.Command) {
-	flag := cmd.Flags().Lookup(key)
+func setupCmdFlagForEnvironment(key, value string, command *cobra.Command) {
+	flag := command.Flags().Lookup(key)
 
 	if flag != nil {
 		if err := flag.Value.Set(value); err != nil {
@@ -27,7 +27,7 @@ func setupCmdFlagForEnvironment(key, value string, cmd *cobra.Command) {
 		}
 	}
 
-	for _, subCmd := range cmd.Commands() {
+	for _, subCmd := range command.Commands() {
 		setupCmdFlagForEnvironment(key, value, subCmd)
 	}
 }
@@ -38,7 +38,8 @@ func setupCmdFlagForEnvironment(key, value string, cmd *cobra.Command) {
 func setupFlagsForEnvironment(rootCmd *cobra.Command) {
 	// pass environment variables to the arguments
 	for _, keyval := range os.Environ() {
-		components := strings.SplitN(keyval, "=", 2)
+		const numberOfSubstringsToReturn = 2
+		components := strings.SplitN(keyval, "=", numberOfSubstringsToReturn)
 
 		//nolint:gomnd // key value pair has to have two components
 		if len(components) != 2 {

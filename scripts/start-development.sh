@@ -18,10 +18,10 @@ do
     sleep 1;
 done;
 
-# Migrate databases
-docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations" --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable up
-docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations" --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable up
-docker run --rm -v "$(pwd)/txlog-db/migrations:/migrations" --network host migrate/migrate -path=/migrations/ -database postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_c?sslmode=disable up
+# Migrate txlog databases
+go run ./txlog-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_a?sslmode=disable"
+go run ./txlog-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_b?sslmode=disable"
+go run ./txlog-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_txlog_c?sslmode=disable"
 
 # Migrate directory database
 go run ./directory-api migrate up --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx?sslmode=disable"

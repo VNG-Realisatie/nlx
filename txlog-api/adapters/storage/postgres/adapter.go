@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 	"go.uber.org/zap"
@@ -72,7 +73,7 @@ func (r *PostgreSQLRepository) Shutdown() error {
 }
 
 func PostgreSQLPerformMigrations(dsn string) error {
-	migrator, err := migrate.New("file://../../../../txlog-db/migrations", dsn)
+	migrator, err := migrate.New("file://./txlog-db/migrations", dsn)
 	if err != nil {
 		return fmt.Errorf("setup migrator: %v", err)
 	}
