@@ -246,7 +246,6 @@ transactionLog:
     name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
     usernameKey: username
     passwordKey: password
-  resetDatabase: false
 
 nlxctl:
   image:

@@ -91,6 +91,41 @@ spec:
               readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      initContainers:
+        - name: migrations
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ template "nlx-txlog-api.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - '/usr/local/bin/nlx-txlog-api'
+            - migrate
+            - up
+          env:
+            - name: POSTGRES_HOST
+              value: {{ required "PostgreSQL hostname is required" .Values.txlogdb.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ required "PostgreSQL port is required" .Values.txlogdb.port | quote }}
+            - name: POSTGRES_DATABASE
+              value: {{ required "PostgreSQL database name is required" .Values.txlogdb.database }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-txlog-api.txlogdb.secret" . }}
+                  key: {{ .Values.txlogdb.existingSecret.usernameKey }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "nlx-txlog-api.txlogdb.secret" . }}
+                  key: {{ .Values.txlogdb.existingSecret.passwordKey }}
+            - name: PGSSLMODE
+              value: {{ .Values.txlogdb.sslMode }}
+            - name: PGCONNECT_TIMEOUT
+              value: {{ .Values.txlogdb.connectTimeout | quote }}
+            - name: POSTGRES_DSN
+              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: certificate
           secret:

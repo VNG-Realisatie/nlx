@@ -228,7 +228,6 @@ transactionLog:
     name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
     usernameKey: username
     passwordKey: password
-  resetDatabase: false
 
 managementAPI:
   address: vergunningsoftware-bv-nlx-management-api:443
