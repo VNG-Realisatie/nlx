@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementServiceStatistics } from './ManagementServiceStatistics';
 import {
+    ManagementServiceStatistics,
     ManagementServiceStatisticsFromJSON,
     ManagementServiceStatisticsFromJSONTyped,
     ManagementServiceStatisticsToJSON,
@@ -32,15 +32,6 @@ export interface ManagementGetStatisticsOfServicesResponse {
      * @memberof ManagementGetStatisticsOfServicesResponse
      */
     services?: Array<ManagementServiceStatistics>;
-}
-
-/**
- * Check if a given object implements the ManagementGetStatisticsOfServicesResponse interface.
- */
-export function instanceOfManagementGetStatisticsOfServicesResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementGetStatisticsOfServicesResponseFromJSON(json: any): ManagementGetStatisticsOfServicesResponse {

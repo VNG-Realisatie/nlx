@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementAccessGrant } from './ManagementAccessGrant';
 import {
+    ManagementAccessGrant,
     ManagementAccessGrantFromJSON,
     ManagementAccessGrantFromJSONTyped,
     ManagementAccessGrantToJSON,
@@ -32,15 +32,6 @@ export interface ManagementListAccessGrantsForServiceResponse {
      * @memberof ManagementListAccessGrantsForServiceResponse
      */
     accessGrants?: Array<ManagementAccessGrant>;
-}
-
-/**
- * Check if a given object implements the ManagementListAccessGrantsForServiceResponse interface.
- */
-export function instanceOfManagementListAccessGrantsForServiceResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementListAccessGrantsForServiceResponseFromJSON(json: any): ManagementListAccessGrantsForServiceResponse {

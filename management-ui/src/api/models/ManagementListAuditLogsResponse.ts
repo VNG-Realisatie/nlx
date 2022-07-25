@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementAuditLogRecord } from './ManagementAuditLogRecord';
 import {
+    ManagementAuditLogRecord,
     ManagementAuditLogRecordFromJSON,
     ManagementAuditLogRecordFromJSONTyped,
     ManagementAuditLogRecordToJSON,
@@ -32,15 +32,6 @@ export interface ManagementListAuditLogsResponse {
      * @memberof ManagementListAuditLogsResponse
      */
     auditLogs?: Array<ManagementAuditLogRecord>;
-}
-
-/**
- * Check if a given object implements the ManagementListAuditLogsResponse interface.
- */
-export function instanceOfManagementListAuditLogsResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementListAuditLogsResponseFromJSON(json: any): ManagementListAuditLogsResponse {

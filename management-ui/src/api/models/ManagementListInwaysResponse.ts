@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementInway } from './ManagementInway';
 import {
+    ManagementInway,
     ManagementInwayFromJSON,
     ManagementInwayFromJSONTyped,
     ManagementInwayToJSON,
@@ -32,15 +32,6 @@ export interface ManagementListInwaysResponse {
      * @memberof ManagementListInwaysResponse
      */
     inways?: Array<ManagementInway>;
-}
-
-/**
- * Check if a given object implements the ManagementListInwaysResponse interface.
- */
-export function instanceOfManagementListInwaysResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementListInwaysResponseFromJSON(json: any): ManagementListInwaysResponse {

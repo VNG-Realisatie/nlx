@@ -45,15 +45,6 @@ export interface ManagementRegisterOutwayRequest {
     selfAddressAPI?: string;
 }
 
-/**
- * Check if a given object implements the ManagementRegisterOutwayRequest interface.
- */
-export function instanceOfManagementRegisterOutwayRequest(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function ManagementRegisterOutwayRequestFromJSON(json: any): ManagementRegisterOutwayRequest {
     return ManagementRegisterOutwayRequestFromJSONTyped(json, false);
 }

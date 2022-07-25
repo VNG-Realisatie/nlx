@@ -14,22 +14,20 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  ManagementDirectoryListServicesResponse,
-  ManagementDirectoryService,
-  ManagementGetTermsOfServiceResponse,
-  ManagementOutgoingAccessRequest,
-  RpcStatus,
-} from '../models';
 import {
+    ManagementDirectoryListServicesResponse,
     ManagementDirectoryListServicesResponseFromJSON,
     ManagementDirectoryListServicesResponseToJSON,
+    ManagementDirectoryService,
     ManagementDirectoryServiceFromJSON,
     ManagementDirectoryServiceToJSON,
+    ManagementGetTermsOfServiceResponse,
     ManagementGetTermsOfServiceResponseFromJSON,
     ManagementGetTermsOfServiceResponseToJSON,
+    ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestToJSON,
+    RpcStatus,
     RpcStatusFromJSON,
     RpcStatusToJSON,
 } from '../models';
@@ -51,7 +49,7 @@ export class DirectoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async directoryGetOrganizationServiceRaw(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementDirectoryService>> {
+    async directoryGetOrganizationServiceRaw(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementDirectoryService>> {
         if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
             throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling directoryGetOrganizationService.');
         }
@@ -76,14 +74,14 @@ export class DirectoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async directoryGetOrganizationService(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementDirectoryService> {
+    async directoryGetOrganizationService(requestParameters: DirectoryGetOrganizationServiceRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementDirectoryService> {
         const response = await this.directoryGetOrganizationServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async directoryGetTermsOfServiceRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetTermsOfServiceResponse>> {
+    async directoryGetTermsOfServiceRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementGetTermsOfServiceResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -100,14 +98,14 @@ export class DirectoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async directoryGetTermsOfService(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetTermsOfServiceResponse> {
+    async directoryGetTermsOfService(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementGetTermsOfServiceResponse> {
         const response = await this.directoryGetTermsOfServiceRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async directoryListServicesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementDirectoryListServicesResponse>> {
+    async directoryListServicesRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementDirectoryListServicesResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -124,14 +122,14 @@ export class DirectoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async directoryListServices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementDirectoryListServicesResponse> {
+    async directoryListServices(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementDirectoryListServicesResponse> {
         const response = await this.directoryListServicesRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async directoryRequestAccessToServiceRaw(requestParameters: DirectoryRequestAccessToServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
+    async directoryRequestAccessToServiceRaw(requestParameters: DirectoryRequestAccessToServiceRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
         if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
             throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling directoryRequestAccessToService.');
         }
@@ -156,7 +154,7 @@ export class DirectoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async directoryRequestAccessToService(requestParameters: DirectoryRequestAccessToServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementOutgoingAccessRequest> {
+    async directoryRequestAccessToService(requestParameters: DirectoryRequestAccessToServiceRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementOutgoingAccessRequest> {
         const response = await this.directoryRequestAccessToServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }

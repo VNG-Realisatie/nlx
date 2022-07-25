@@ -13,20 +13,20 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { DirectoryServiceAccessState } from './DirectoryServiceAccessState';
 import {
+    DirectoryServiceAccessState,
     DirectoryServiceAccessStateFromJSON,
     DirectoryServiceAccessStateFromJSONTyped,
     DirectoryServiceAccessStateToJSON,
 } from './DirectoryServiceAccessState';
-import type { DirectoryServiceState } from './DirectoryServiceState';
 import {
+    DirectoryServiceState,
     DirectoryServiceStateFromJSON,
     DirectoryServiceStateFromJSONTyped,
     DirectoryServiceStateToJSON,
 } from './DirectoryServiceState';
-import type { ManagementOrganization } from './ManagementOrganization';
 import {
+    ManagementOrganization,
     ManagementOrganizationFromJSON,
     ManagementOrganizationFromJSONTyped,
     ManagementOrganizationToJSON,
@@ -98,15 +98,6 @@ export interface ManagementDirectoryService {
      * @memberof ManagementDirectoryService
      */
     accessStates?: Array<DirectoryServiceAccessState>;
-}
-
-/**
- * Check if a given object implements the ManagementDirectoryService interface.
- */
-export function instanceOfManagementDirectoryService(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementDirectoryServiceFromJSON(json: any): ManagementDirectoryService {

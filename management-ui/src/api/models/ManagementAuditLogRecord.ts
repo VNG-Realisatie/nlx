@@ -13,20 +13,20 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { AuditLogRecordActionType } from './AuditLogRecordActionType';
 import {
+    AuditLogRecordActionType,
     AuditLogRecordActionTypeFromJSON,
     AuditLogRecordActionTypeFromJSONTyped,
     AuditLogRecordActionTypeToJSON,
 } from './AuditLogRecordActionType';
-import type { ManagementAuditLogRecordMetadata } from './ManagementAuditLogRecordMetadata';
 import {
+    ManagementAuditLogRecordMetadata,
     ManagementAuditLogRecordMetadataFromJSON,
     ManagementAuditLogRecordMetadataFromJSONTyped,
     ManagementAuditLogRecordMetadataToJSON,
 } from './ManagementAuditLogRecordMetadata';
-import type { ManagementAuditLogRecordService } from './ManagementAuditLogRecordService';
 import {
+    ManagementAuditLogRecordService,
     ManagementAuditLogRecordServiceFromJSON,
     ManagementAuditLogRecordServiceFromJSONTyped,
     ManagementAuditLogRecordServiceToJSON,
@@ -92,15 +92,6 @@ export interface ManagementAuditLogRecord {
      * @memberof ManagementAuditLogRecord
      */
     data?: ManagementAuditLogRecordMetadata;
-}
-
-/**
- * Check if a given object implements the ManagementAuditLogRecord interface.
- */
-export function instanceOfManagementAuditLogRecord(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementAuditLogRecordFromJSON(json: any): ManagementAuditLogRecord {

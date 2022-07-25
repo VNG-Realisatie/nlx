@@ -33,15 +33,6 @@ export interface ManagementSettings {
     organizationEmailAddress?: string;
 }
 
-/**
- * Check if a given object implements the ManagementSettings interface.
- */
-export function instanceOfManagementSettings(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function ManagementSettingsFromJSON(json: any): ManagementSettings {
     return ManagementSettingsFromJSONTyped(json, false);
 }

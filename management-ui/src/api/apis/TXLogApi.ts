@@ -14,13 +14,11 @@
 
 
 import * as runtime from '../runtime';
-import type {
-  ManagementTXLogListRecordsResponse,
-  RpcStatus,
-} from '../models';
 import {
+    ManagementTXLogListRecordsResponse,
     ManagementTXLogListRecordsResponseFromJSON,
     ManagementTXLogListRecordsResponseToJSON,
+    RpcStatus,
     RpcStatusFromJSON,
     RpcStatusToJSON,
 } from '../models';
@@ -32,7 +30,7 @@ export class TXLogApi extends runtime.BaseAPI {
 
     /**
      */
-    async tXLogListRecordsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
+    async tXLogListRecordsRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -49,7 +47,7 @@ export class TXLogApi extends runtime.BaseAPI {
 
     /**
      */
-    async tXLogListRecords(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementTXLogListRecordsResponse> {
+    async tXLogListRecords(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementTXLogListRecordsResponse> {
         const response = await this.tXLogListRecordsRaw(initOverrides);
         return await response.value();
     }

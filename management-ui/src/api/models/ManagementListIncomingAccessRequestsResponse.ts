@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementIncomingAccessRequest } from './ManagementIncomingAccessRequest';
 import {
+    ManagementIncomingAccessRequest,
     ManagementIncomingAccessRequestFromJSON,
     ManagementIncomingAccessRequestFromJSONTyped,
     ManagementIncomingAccessRequestToJSON,
@@ -32,15 +32,6 @@ export interface ManagementListIncomingAccessRequestsResponse {
      * @memberof ManagementListIncomingAccessRequestsResponse
      */
     accessRequests?: Array<ManagementIncomingAccessRequest>;
-}
-
-/**
- * Check if a given object implements the ManagementListIncomingAccessRequestsResponse interface.
- */
-export function instanceOfManagementListIncomingAccessRequestsResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementListIncomingAccessRequestsResponseFromJSON(json: any): ManagementListIncomingAccessRequestsResponse {

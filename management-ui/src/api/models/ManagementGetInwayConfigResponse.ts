@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementGetInwayConfigResponseService } from './ManagementGetInwayConfigResponseService';
 import {
+    ManagementGetInwayConfigResponseService,
     ManagementGetInwayConfigResponseServiceFromJSON,
     ManagementGetInwayConfigResponseServiceFromJSONTyped,
     ManagementGetInwayConfigResponseServiceToJSON,
@@ -38,15 +38,6 @@ export interface ManagementGetInwayConfigResponse {
      * @memberof ManagementGetInwayConfigResponse
      */
     isOrganizationInway?: boolean;
-}
-
-/**
- * Check if a given object implements the ManagementGetInwayConfigResponse interface.
- */
-export function instanceOfManagementGetInwayConfigResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementGetInwayConfigResponseFromJSON(json: any): ManagementGetInwayConfigResponse {

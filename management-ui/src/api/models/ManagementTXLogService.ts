@@ -27,15 +27,6 @@ export interface ManagementTXLogService {
     name?: string;
 }
 
-/**
- * Check if a given object implements the ManagementTXLogService interface.
- */
-export function instanceOfManagementTXLogService(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function ManagementTXLogServiceFromJSON(json: any): ManagementTXLogService {
     return ManagementTXLogServiceFromJSONTyped(json, false);
 }

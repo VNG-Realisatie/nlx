@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementOutway } from './ManagementOutway';
 import {
+    ManagementOutway,
     ManagementOutwayFromJSON,
     ManagementOutwayFromJSONTyped,
     ManagementOutwayToJSON,
@@ -32,15 +32,6 @@ export interface ManagementListOutwaysResponse {
      * @memberof ManagementListOutwaysResponse
      */
     outways?: Array<ManagementOutway>;
-}
-
-/**
- * Check if a given object implements the ManagementListOutwaysResponse interface.
- */
-export function instanceOfManagementListOutwaysResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementListOutwaysResponseFromJSON(json: any): ManagementListOutwaysResponse {

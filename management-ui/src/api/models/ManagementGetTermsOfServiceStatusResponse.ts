@@ -27,15 +27,6 @@ export interface ManagementGetTermsOfServiceStatusResponse {
     accepted?: boolean;
 }
 
-/**
- * Check if a given object implements the ManagementGetTermsOfServiceStatusResponse interface.
- */
-export function instanceOfManagementGetTermsOfServiceStatusResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
-}
-
 export function ManagementGetTermsOfServiceStatusResponseFromJSON(json: any): ManagementGetTermsOfServiceStatusResponse {
     return ManagementGetTermsOfServiceStatusResponseFromJSONTyped(json, false);
 }

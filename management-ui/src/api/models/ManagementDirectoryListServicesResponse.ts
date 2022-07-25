@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementDirectoryService } from './ManagementDirectoryService';
 import {
+    ManagementDirectoryService,
     ManagementDirectoryServiceFromJSON,
     ManagementDirectoryServiceFromJSONTyped,
     ManagementDirectoryServiceToJSON,
@@ -32,15 +32,6 @@ export interface ManagementDirectoryListServicesResponse {
      * @memberof ManagementDirectoryListServicesResponse
      */
     services?: Array<ManagementDirectoryService>;
-}
-
-/**
- * Check if a given object implements the ManagementDirectoryListServicesResponse interface.
- */
-export function instanceOfManagementDirectoryListServicesResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
 }
 
 export function ManagementDirectoryListServicesResponseFromJSON(json: any): ManagementDirectoryListServicesResponse {
