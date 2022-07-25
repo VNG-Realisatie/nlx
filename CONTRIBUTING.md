@@ -59,7 +59,7 @@ The available scopes are:
 - inway
 - management
 - outway
-- txlog-db
+- txlog
 
 ### 2.3. Merge Request
 
