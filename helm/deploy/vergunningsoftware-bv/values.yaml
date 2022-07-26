@@ -218,7 +218,10 @@ postgresql:
 
 transactionLog:
   hostname: vergunningsoftware-bv-postgresql
-  databaseName: vergunningsoftware-bv-transaction-log
+  databaseName: "vergunningsoftware-bv-transaction-log"
+  port: 5432
+  sslMode: require
+  connectTimeout: 10
   existingSecret:
     name: postgres.vergunningsoftware-bv-postgresql.credentials.postgresql.acid.zalan.do
     usernameKey: username

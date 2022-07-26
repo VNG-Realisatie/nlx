@@ -236,7 +236,10 @@ postgresql:
 
 transactionLog:
   hostname: gemeente-stijns-postgresql
-  databaseName: gemeente-stijns-transaction-log
+  databaseName: "gemeente-stijns-transaction-log"
+  port: 5432
+  sslMode: require
+  connectTimeout: 10
   existingSecret:
     name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
     usernameKey: username
@@ -264,6 +267,7 @@ managementAPI:
     tag: ""
     pullPolicy: IfNotPresent
   postgresql:
+    database: "nlx_management"
     hostname: gemeente-stijns-postgresql
     port: 5432
     sslMode: require

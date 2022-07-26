@@ -89,8 +89,11 @@ postgresql:
   storageSize: 8Gi
 
 transactionLog:
-  hostname: rvrd-postgresql
-  databaseName: rvrd-transaction-log
+  hostname: "rvrd-postgresql"
+  databaseName: "rvrd-transaction-log"
+  port: 5432
+  sslMode: require
+  connectTimeout: 10
   existingSecret:
     name: postgres.rvrd-postgresql.credentials.postgresql.acid.zalan.do
     usernameKey: username

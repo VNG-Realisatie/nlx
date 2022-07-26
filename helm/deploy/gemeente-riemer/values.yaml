@@ -218,7 +218,10 @@ postgresql:
 
 transactionLog:
   hostname: gemeente-riemer-postgresql
-  databaseName: gemeente-riemer-transaction-log
+  databaseName: "gemeente-riemer-transaction-log"
+  port: 5432
+  sslMode: require
+  connectTimeout: 10
   existingSecret:
     name: postgres.gemeente-riemer-postgresql.credentials.postgresql.acid.zalan.do
     usernameKey: username
@@ -246,6 +249,7 @@ managementAPI:
     tag: ""
     pullPolicy: IfNotPresent
   postgresql:
+    database: "nlx_management"
     hostname: gemeente-riemer-postgresql
     port: 5432
     sslMode: require
