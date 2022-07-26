@@ -960,6 +960,42 @@
         "x-codegen-request-body-name" : "body"
       }
     },
+    "/api/v1/outways/{name}" : {
+      "delete" : {
+        "operationId" : "Management_DeleteOutway",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
     "/api/v1/services" : {
       "get" : {
         "operationId" : "Management_ListServices",

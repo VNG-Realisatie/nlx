@@ -74,5 +74,6 @@ type Logger interface {
 	ServiceDelete(ctx context.Context, userName, userAgent, serviceName string) error
 	OrganizationSettingsUpdate(ctx context.Context, userName, userAgent string) error
 	InwayDelete(ctx context.Context, userName, userAgent, inwayName string) error
+	OutwayDelete(ctx context.Context, userName, userAgent, outwayName string) error
 	AcceptTermsOfService(ctx context.Context, userName, userAgent string) error
 }

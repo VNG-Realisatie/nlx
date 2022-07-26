@@ -1,6 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
 import { ManagementApi } from '../api'
 import OutwayModel from './models/OutwayModel'
 import OutwayStore from './OutwayStore'
@@ -137,4 +138,48 @@ test('get outways by public key fingerprint', async () => {
   expect(
     store.getByPublicKeyFingerprint('public-key-fingerprint-a')[0].name,
   ).toEqual('my-outway-1')
+})
+
+test('removing an outway', async () => {
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementListOutways = jest
+    .fn()
+    .mockResolvedValueOnce({
+      outways: [
+        { name: 'Outway A' },
+        { name: 'Outway B' },
+        { name: 'Outway C' },
+      ],
+    })
+    .mockResolvedValue({
+      outways: [{ name: 'Outway A' }, { name: 'Outway C' }],
+    })
+
+  managementApiClient.managementDeleteOutway = jest.fn().mockResolvedValue({})
+
+  const outwayStore = new OutwayStore({
+    rootStore: {},
+    managementApiClient,
+  })
+
+  await outwayStore.fetchAll()
+  jest.spyOn(outwayStore, 'fetchAll')
+
+  expect(outwayStore.getByName('Outway A')).toBeDefined()
+  expect(outwayStore.getByName('Outway B')).toBeDefined()
+  expect(outwayStore.getByName('Outway C')).toBeDefined()
+
+  await outwayStore.removeOutway('Outway B')
+
+  expect(managementApiClient.managementDeleteOutway).toHaveBeenCalledWith({
+    name: 'Outway B',
+  })
+
+  expect(outwayStore.fetchAll).toHaveBeenCalledTimes(1)
+  expect(outwayStore.getByName('Outway A')).toBeDefined()
+  expect(outwayStore.getByName('Outway B')).toBeUndefined()
+  expect(outwayStore.getByName('Outway C')).toBeDefined()
 })

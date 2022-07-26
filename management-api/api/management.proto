@@ -60,6 +60,9 @@ service Management {
   rpc ListOutways(ListOutwaysRequest) returns (ListOutwaysResponse){
     option (google.api.http) = {get :"/api/v1/outways"};
   }
+  rpc DeleteOutway (DeleteOutwayRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/outways/{name}" response_body: '*'};
+  }
   rpc ListIncomingAccessRequests (ListIncomingAccessRequestsRequest) returns (ListIncomingAccessRequestsResponse) {
     option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
   }
@@ -239,6 +242,10 @@ message ListOutwaysRequest {}
 
 message ListOutwaysResponse {
   repeated Outway outways = 1;
+}
+
+message DeleteOutwayRequest {
+  string name = 1;
 }
 
 message GetStatisticsOfServicesRequest {}

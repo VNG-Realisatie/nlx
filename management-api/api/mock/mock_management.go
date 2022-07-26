@@ -158,6 +158,26 @@ func (mr *MockManagementClientMockRecorder) DeleteInway(ctx, in interface{}, opt
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockManagementClient)(nil).DeleteInway), varargs...)
 }
 
+// DeleteOutway mocks base method.
+func (m *MockManagementClient) DeleteOutway(ctx context.Context, in *api.DeleteOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteOutway", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteOutway indicates an expected call of DeleteOutway.
+func (mr *MockManagementClientMockRecorder) DeleteOutway(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOutway", reflect.TypeOf((*MockManagementClient)(nil).DeleteOutway), varargs...)
+}
+
 // DeleteService mocks base method.
 func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
@@ -849,6 +869,21 @@ func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.Delet
 func (mr *MockManagementServerMockRecorder) DeleteInway(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockManagementServer)(nil).DeleteInway), arg0, arg1)
+}
+
+// DeleteOutway mocks base method.
+func (m *MockManagementServer) DeleteOutway(arg0 context.Context, arg1 *api.DeleteOutwayRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteOutway", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteOutway indicates an expected call of DeleteOutway.
+func (mr *MockManagementServerMockRecorder) DeleteOutway(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOutway", reflect.TypeOf((*MockManagementServer)(nil).DeleteOutway), arg0, arg1)
 }
 
 // DeleteService mocks base method.

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, string } from 'prop-types'
+import { shape, string, func } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Collapsible } from '@commonground/design-system'
@@ -13,15 +13,31 @@ import {
 } from '../../../../components/DetailView'
 import { IconCertificate } from '../../../../icons'
 import {
+  StyledActionsBar,
+  StyledRemoveButton,
+} from '../../../services/ServiceDetailPage/ServiceDetailView/index.styles'
+import { useConfirmationModal } from '../../../../components/ConfirmationModal'
+import {
   SubHeader,
   StyledIconOutway,
   StyledSpecList,
   StyledCode,
 } from './index.styles'
 
-const OutwayDetails = ({ outway }) => {
+const OutwayDetails = ({ outway, removeHandler }) => {
   const { t } = useTranslation()
   const { ipAddress, publicKeyPEM, version } = outway
+
+  const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
+    okText: t('Remove'),
+    children: <p>{t('Do you want to remove the outway?')}</p>,
+  })
+
+  const handleRemove = async () => {
+    if (await confirmRemove()) {
+      removeHandler()
+    }
+  }
 
   return (
     <>
@@ -29,6 +45,10 @@ const OutwayDetails = ({ outway }) => {
         <StyledIconOutway inline />
         outway
       </SubHeader>
+
+      <StyledActionsBar>
+        <StyledRemoveButton title={t('Remove outway')} onClick={handleRemove} />
+      </StyledActionsBar>
 
       <StyledSpecList data-testid="outway-specs" alignValuesRight>
         <StyledSpecList.Item title={t('IP-address')} value={ipAddress} />
@@ -54,6 +74,8 @@ const OutwayDetails = ({ outway }) => {
           </StyledCollapsibleBody>
         </Collapsible>
       </SectionGroup>
+
+      <ConfirmRemoveModal />
     </>
   )
 }
@@ -64,6 +86,7 @@ OutwayDetails.propTypes = {
     ipAddress: string,
     publicKeyPEM: string,
   }),
+  removeHandler: func,
 }
 
 OutwayDetails.defaultProps = {}

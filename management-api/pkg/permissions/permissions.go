@@ -5,8 +5,6 @@ package permissions
 
 type Permission int
 
-//go:generate go run github.com/dmarkham/enumer -type=Permission -linecomment
-
 // The comments after the enum determines the string representation of the enum value
 const (
 	ApproveIncomingAccessRequest Permission = iota + 1 // permissions.incoming_access_request.approve
@@ -29,6 +27,7 @@ const (
 	ReadIncomingOrders                                 // permissions.incoming_orders.read
 	SynchronizeIncomingOrders                          // permissions.incoming_orders.synchronize
 	ReadOutways                                        // permissions.outways.read
+	DeleteOutway                                       // permissions.outway.delete
 	CreateService                                      // permissions.service.create
 	ReadService                                        // permissions.service.read
 	UpdateService                                      // permissions.service.update

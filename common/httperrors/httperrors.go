@@ -41,8 +41,6 @@ func WriteError(w http.ResponseWriter, source Source, location Location, code Co
 	_, _ = w.Write(networkErr)
 }
 
-//go:generate go run github.com/dmarkham/enumer -type=Code -linecomment -json
-
 // Error codes
 // The comment after the error code is the string representation of the error code
 const (
@@ -132,8 +130,6 @@ const (
 	InvalidDataSubjectHeader // INVALID_DATA_SUBJECT_HEADER
 )
 
-//go:generate go run github.com/dmarkham/enumer -type=Source -linecomment -json
-
 // Source
 // The comment after the error code is the string representation of the error code
 const (
@@ -143,8 +139,6 @@ const (
 	// The error originated from the Outway
 	Outway // outway
 )
-
-//go:generate go run github.com/dmarkham/enumer -type=Location -json
 
 // Location
 // Check https://docs.nlx.io/support/common-errors for a graphical overview

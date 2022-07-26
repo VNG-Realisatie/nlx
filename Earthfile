@@ -282,16 +282,19 @@ enums-httperrors:
 
     WORKDIR /src/
 
-    RUN go generate ./...
+    RUN enumer -type=Code -linecomment -json ./common/httperrors
+    RUN enumer -type=Source -linecomment -json ./common/httperrors
+    RUN enumer -type=Location -linecomment -json ./common/httperrors
 
     SAVE ARTIFACT /src/common/httperrors/*_enumer.go AS LOCAL ./common/httperrors/
 
 enums-permissions:
     FROM +deps
+
     COPY ./management-api/pkg/permissions/ /src/management-api/pkg/permissions/
 
     WORKDIR /src/
 
-    RUN go generate ./...
+    RUN enumer -type=Permission -linecomment ./management-api/pkg/permissions
 
     SAVE ARTIFACT /src/management-api/pkg/permissions/*_enumer.go AS LOCAL ./management-api/pkg/permissions/

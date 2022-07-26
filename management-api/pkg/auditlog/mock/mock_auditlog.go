@@ -233,6 +233,20 @@ func (mr *MockLoggerMockRecorder) OutgoingAccessRequestCreate(ctx, userName, use
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutgoingAccessRequestCreate", reflect.TypeOf((*MockLogger)(nil).OutgoingAccessRequestCreate), ctx, userName, userAgent, organizationSerialNumber, service)
 }
 
+// OutwayDelete mocks base method.
+func (m *MockLogger) OutwayDelete(ctx context.Context, userName, userAgent, outwayName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OutwayDelete", ctx, userName, userAgent, outwayName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// OutwayDelete indicates an expected call of OutwayDelete.
+func (mr *MockLoggerMockRecorder) OutwayDelete(ctx, userName, userAgent, outwayName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutwayDelete", reflect.TypeOf((*MockLogger)(nil).OutwayDelete), ctx, userName, userAgent, outwayName)
+}
+
 // ServiceCreate mocks base method.
 func (m *MockLogger) ServiceCreate(ctx context.Context, userName, userAgent, serviceName string) error {
 	m.ctrl.T.Helper()

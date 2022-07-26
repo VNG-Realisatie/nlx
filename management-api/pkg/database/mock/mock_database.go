@@ -214,6 +214,20 @@ func (mr *MockConfigDatabaseMockRecorder) DeleteOutgoingAccessRequests(ctx, orga
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteOutgoingAccessRequests), ctx, organizationSerialNumber, serviceName)
 }
 
+// DeleteOutway mocks base method.
+func (m *MockConfigDatabase) DeleteOutway(ctx context.Context, name string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteOutway", ctx, name)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteOutway indicates an expected call of DeleteOutway.
+func (mr *MockConfigDatabaseMockRecorder) DeleteOutway(ctx, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOutway", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteOutway), ctx, name)
+}
+
 // DeleteService mocks base method.
 func (m *MockConfigDatabase) DeleteService(ctx context.Context, serviceName, organizationSerialNumber string) error {
 	m.ctrl.T.Helper()

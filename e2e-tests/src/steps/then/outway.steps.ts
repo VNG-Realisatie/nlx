@@ -164,3 +164,26 @@ Then(
     }
   }
 );
+
+Then(
+  "the outway {string} of {string} is removed",
+  async function (this: CustomWorld, outwayName: string, orgName: string) {
+    const org = getOrgByName(orgName);
+
+    try {
+      const res = await org.apiClients.management?.managementListOutways();
+
+      res?.outways?.forEach((o) => {
+        if (o.name == outwayName) {
+          throw new Error(
+            "this code should not be triggered, since we expect the outway to be removed"
+          );
+        }
+      });
+    } catch (error: any) {
+      throw new Error(
+        `unexpected status code '${error.response.status}' while getting outways: ${error}`
+      );
+    }
+  }
+);

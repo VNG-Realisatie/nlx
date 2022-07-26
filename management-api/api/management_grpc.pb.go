@@ -41,6 +41,7 @@ type ManagementClient interface {
 	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error)
+	DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -216,6 +217,15 @@ func (c *managementClient) RegisterOutway(ctx context.Context, in *RegisterOutwa
 func (c *managementClient) ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error) {
 	out := new(ListOutwaysResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutways", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementClient) DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteOutway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -405,6 +415,7 @@ type ManagementServer interface {
 	DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error)
 	RegisterOutway(context.Context, *RegisterOutwayRequest) (*emptypb.Empty, error)
 	ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error)
+	DeleteOutway(context.Context, *DeleteOutwayRequest) (*emptypb.Empty, error)
 	ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error)
 	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error)
@@ -480,6 +491,9 @@ func (UnimplementedManagementServer) RegisterOutway(context.Context, *RegisterOu
 }
 func (UnimplementedManagementServer) ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutways not implemented")
+}
+func (UnimplementedManagementServer) DeleteOutway(context.Context, *DeleteOutwayRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOutway not implemented")
 }
 func (UnimplementedManagementServer) ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequests not implemented")
@@ -850,6 +864,24 @@ func _Management_ListOutways_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ManagementServer).ListOutways(ctx, req.(*ListOutwaysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Management_DeleteOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOutwayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServer).DeleteOutway(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.Management/DeleteOutway",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServer).DeleteOutway(ctx, req.(*DeleteOutwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1252,6 +1284,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListOutways",
 			Handler:    _Management_ListOutways_Handler,
+		},
+		{
+			MethodName: "DeleteOutway",
+			Handler:    _Management_DeleteOutway_Handler,
 		},
 		{
 			MethodName: "ListIncomingAccessRequests",

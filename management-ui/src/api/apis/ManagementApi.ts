@@ -125,6 +125,10 @@ export interface ManagementDeleteInwayRequest {
     name: string;
 }
 
+export interface ManagementDeleteOutwayRequest {
+    name: string;
+}
+
 export interface ManagementDeleteServiceRequest {
     name: string;
 }
@@ -368,6 +372,34 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementDeleteInway(requestParameters: ManagementDeleteInwayRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
         const response = await this.managementDeleteInwayRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementDeleteOutwayRaw(requestParameters: ManagementDeleteOutwayRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.name === null || requestParameters.name === undefined) {
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementDeleteOutway.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/outways/{name}`.replace(`{${"name"}}`, encodeURIComponent(String(requestParameters.name))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementDeleteOutway(requestParameters: ManagementDeleteOutwayRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
+        const response = await this.managementDeleteOutwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

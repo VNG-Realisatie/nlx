@@ -84,3 +84,10 @@ func (db *PostgresConfigDatabase) GetOutwaysByPublicKeyFingerprint(ctx context.C
 
 	return outways, nil
 }
+
+func (db *PostgresConfigDatabase) DeleteOutway(ctx context.Context, name string) error {
+	return db.DB.
+		WithContext(ctx).
+		Where(&Outway{Name: name}).
+		Delete(&Outway{}).Error
+}

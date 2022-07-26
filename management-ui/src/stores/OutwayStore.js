@@ -77,6 +77,14 @@ class OutwayStore {
     )
   }
 
+  removeOutway = flow(function* removeOutway(name) {
+    yield this._managementApiClient.managementDeleteOutway({
+      name,
+    })
+
+    yield this.fetchAll()
+  }).bind(this)
+
   _updateFromServer(outwayData) {
     const cachedOutway = this.getByName(outwayData.name)
 

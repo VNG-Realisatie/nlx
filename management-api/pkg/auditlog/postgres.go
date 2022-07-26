@@ -20,9 +20,10 @@ type PostgresLogger struct {
 }
 
 type recordMetadata struct {
-	Delegatee *string `json:"delegatee,omitempty"`
-	Reference *string `json:"reference,omitempty"`
-	InwayName *string `json:"inwayName,omitempty"`
+	Delegatee  *string `json:"delegatee,omitempty"`
+	Reference  *string `json:"reference,omitempty"`
+	InwayName  *string `json:"inwayName,omitempty"`
+	OutwayName *string `json:"outwayName,omitempty"`
 }
 
 func NewPostgresLogger(configDatabase database.ConfigDatabase, logger *zap.Logger) Logger {
@@ -373,6 +374,31 @@ func (a *PostgresLogger) InwayDelete(ctx context.Context, userName, userAgent, i
 		UserAgent:  userAgent,
 		UserName:   userName,
 		ActionType: database.InwayDelete,
+		Data: sql.NullString{
+			Valid:  true,
+			String: string(data),
+		},
+	}
+
+	_, err = a.database.CreateAuditLogRecord(ctx, record)
+
+	return err
+}
+
+func (a *PostgresLogger) OutwayDelete(ctx context.Context, userName, userAgent, outwayName string) error {
+	metaData := &recordMetadata{
+		OutwayName: &outwayName,
+	}
+
+	data, err := json.Marshal(metaData)
+	if err != nil {
+		return err
+	}
+
+	record := &database.AuditLog{
+		UserAgent:  userAgent,
+		UserName:   userName,
+		ActionType: database.OutwayDelete,
 		Data: sql.NullString{
 			Valid:  true,
 			String: string(data),

@@ -503,6 +503,7 @@ func testCreateAdminUserContext() context.Context {
 			permissions.ReadIncomingOrders:           true,
 			permissions.SynchronizeIncomingOrders:    true,
 			permissions.ReadOutways:                  true,
+			permissions.DeleteOutway:                 true,
 			permissions.CreateService:                true,
 			permissions.ReadService:                  true,
 			permissions.UpdateService:                true,

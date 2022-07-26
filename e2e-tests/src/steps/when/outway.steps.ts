@@ -5,6 +5,7 @@ import { getOutwayByName } from "../../utils/outway";
 import { When } from "@cucumber/cucumber";
 import fetch from "cross-fetch";
 import pWaitFor from "p-wait-for";
+import { By } from "selenium-webdriver";
 const debug = logger("e2e-tests:outway");
 
 export const isServiceKnownInServiceListOfOutway = async (
@@ -115,5 +116,32 @@ When(
         headers,
       }
     );
+  }
+);
+
+When(
+  "{string} removes the outway {string}",
+  async function (this: CustomWorld, orgName: string, outwayName: string) {
+    const { driver } = this;
+
+    const org = getOrgByName(orgName);
+
+    await driver.get(
+      `${org.management.url}/inways-and-outways/outways/${outwayName}`
+    );
+
+    await driver
+      .findElement(By.xpath("//button[@title='Outway verwijderen']"))
+      .click();
+
+    await driver
+      .findElement(
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Verwijderen']"
+        )
+      )
+      .click();
+
+    await driver.findElement(By.xpath("//p[text()='De outway is verwijderd']"));
   }
 );
