@@ -12,6 +12,7 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
