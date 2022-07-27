@@ -22,25 +22,22 @@ spec:
           command: ["/bin/sh"]
           args:
             - "-exc"
-            - |
-              psql --echo-errors "${POSTGRES_DSN}" <<EOF
-                SELECT 'CREATE DATABASE parkeerrechten' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'parkeerrechten')\gexec
-              EOF
+            - psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'parkeerrechten'" | grep -q 1 || psql -U postgres -c "CREATE DATABASE \"parkeerrechten\""
           env:
-            - name: POSTGRES_HOST
+            - name: PGHOST
               value: {{ required "PostgreSQL hostname is required" .Values.managementAPI.postgresql.hostname }}
-            - name: POSTGRES_USER
+            - name: PGPORT
+              value: {{ required "PostgreSQL port number is required" .Values.managementAPI.postgresql.port | quote }}
+            - name: PGUSER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.managementAPI.postgresql.existingSecret.name }}
                   key: {{ .Values.managementAPI.postgresql.existingSecret.usernameKey }}
-            - name: POSTGRES_PASSWORD
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.managementAPI.postgresql.existingSecret.name }}
                   key: {{ .Values.managementAPI.postgresql.existingSecret.passwordKey }}
             - name: PGCONNECT_TIMEOUT
               value: {{ .Values.managementAPI.postgresql.connectTimeout | quote }}
-            - name: POSTGRES_DSN
-              value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/postgres'
 {{- end }}

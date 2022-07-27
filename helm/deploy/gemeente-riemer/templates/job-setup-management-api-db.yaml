@@ -13,11 +13,6 @@ spec:
     metadata:
       labels:
         {{- include "gemeente-riemer.selectorLabels" . | nindent 8 }}
-spec:
-  template:
-    metadata:
-      labels:
-        {{- include "gemeente-riemer.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: OnFailure
       containers:
