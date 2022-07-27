@@ -3,7 +3,7 @@
     - source ./.gitlab/ci/functions.sh
 
 .node-base:
-  image: node:18.6.0-alpine
+  image: node:18.7.0-alpine
   variables:
     NPM_CACHE_DIR: ${CI_PROJECT_DIR}/.npm-cache
   cache:
