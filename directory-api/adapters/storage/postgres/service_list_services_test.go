@@ -55,14 +55,14 @@ func TestListServices(t *testing.T) {
 						Monthly: 2,
 						Request: 3,
 					},
-					Inways: []*domain.NewServiceInwayArgs{
+					Availabilities: []*domain.NewServiceAvailability{
 						{
-							Address: "fixture-inway-address-one.com:443",
-							State:   domain.InwayDOWN,
+							InwayAddress: "fixture-inway-address-one.com:443",
+							State:        domain.InwayDOWN,
 						},
 						{
-							Address: "fixture-inway-address-two.com:443",
-							State:   domain.InwayDOWN,
+							InwayAddress: "fixture-inway-address-two.com:443",
+							State:        domain.InwayDOWN,
 						},
 					},
 				},

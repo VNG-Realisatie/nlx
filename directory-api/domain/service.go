@@ -43,7 +43,7 @@ type Service struct {
 	publicSupportContact string
 	techSupportContact   string
 	costs                *ServiceCosts
-	inways               []*ServiceInway
+	availabilities       []*ServiceAvailability
 }
 
 type NewServiceArgs struct {
@@ -55,7 +55,7 @@ type NewServiceArgs struct {
 	PublicSupportContact string
 	TechSupportContact   string
 	Costs                *NewServiceCostsArgs
-	Inways               []*NewServiceInwayArgs
+	Availabilities       []*NewServiceAvailability
 }
 
 type SpecificationType string
@@ -79,22 +79,21 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 		return nil, err
 	}
 
-	inways := make([]*ServiceInway, len(args.Inways))
+	inways := make([]*ServiceAvailability, len(args.Availabilities))
 
-	for i, inway := range args.Inways {
+	for i, inway := range args.Availabilities {
 		err := validation.ValidateStruct(
 			inway,
-			validation.Field(&inway.Address, validation.Required),
-			validation.Field(&inway.State, validation.Required),
+			validation.Field(&inway.InwayAddress, validation.Required),
 		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		inways[i] = &ServiceInway{
-			address: inway.Address,
-			state:   inway.State,
+		inways[i] = &ServiceAvailability{
+			inwayAddress: inway.InwayAddress,
+			state:        inway.State,
 		}
 	}
 
@@ -110,8 +109,8 @@ func NewService(args *NewServiceArgs) (*Service, error) {
 			monthly: args.Costs.Monthly,
 			request: args.Costs.Request,
 		},
-		inways:   inways,
-		internal: args.Internal,
+		availabilities: inways,
+		internal:       args.Internal,
 	}, nil
 }
 
@@ -155,20 +154,20 @@ func (i *Service) Internal() bool {
 	return i.internal
 }
 
-func (i *Service) Inways() []*ServiceInway {
-	return i.inways
+func (i *Service) Availabilities() []*ServiceAvailability {
+	return i.availabilities
 }
 
-type ServiceInway struct {
-	address string
-	state   ServiceInwayState
+type ServiceAvailability struct {
+	inwayAddress string
+	state        ServiceInwayState
 }
 
-func (s *ServiceInway) Address() string {
-	return s.address
+func (s *ServiceAvailability) InwayAddress() string {
+	return s.inwayAddress
 }
 
-func (s *ServiceInway) State() ServiceInwayState {
+func (s *ServiceAvailability) State() ServiceInwayState {
 	return s.state
 }
 
@@ -179,7 +178,7 @@ const (
 	InwayUP   ServiceInwayState = "UP"
 )
 
-type NewServiceInwayArgs struct {
-	Address string
-	State   ServiceInwayState
+type NewServiceAvailability struct {
+	InwayAddress string
+	State        ServiceInwayState
 }

@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/directory-api/domain"
@@ -33,6 +34,21 @@ func convertServiceRowToModel(row *queries.GetServiceRow) (*domain.Service, erro
 		return nil, fmt.Errorf("invalid organization model in database: %v", err)
 	}
 
+	inways := make([]*domain.NewServiceAvailability, len(row.InwayAddresses))
+
+	for j, inwayAddress := range row.InwayAddresses {
+		inwayArgs := &domain.NewServiceAvailability{
+			InwayAddress: inwayAddress,
+			State:        domain.InwayDOWN,
+		}
+
+		if row.HealthyStatuses[j] {
+			inwayArgs.State = domain.InwayUP
+		}
+
+		inways[j] = inwayArgs
+	}
+
 	model, err := domain.NewService(
 		&domain.NewServiceArgs{
 			Name:                 row.Name,
@@ -47,6 +63,7 @@ func convertServiceRowToModel(row *queries.GetServiceRow) (*domain.Service, erro
 				Monthly: uint(row.MonthlyCosts),
 				Request: uint(row.RequestCosts),
 			},
+			Availabilities: inways,
 		},
 	)
 	if err != nil {
@@ -59,25 +76,42 @@ func convertServiceRowToModel(row *queries.GetServiceRow) (*domain.Service, erro
 }
 
 func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
-	id, err := r.queries.RegisterService(context.Background(), &queries.RegisterServiceParams{
-		OrganizationSerialNumber: model.Organization().SerialNumber(),
-		Name:                     model.Name(),
-		Internal:                 model.Internal(),
-		DocumentationUrl:         model.DocumentationURL(),
-		ApiSpecificationType:     string(model.APISpecificationType()),
-		PublicSupportContact:     model.PublicSupportContact(),
-		TechSupportContact:       model.TechSupportContact(),
-		RequestCosts:             int32(model.Costs().Request()),
-		MonthlyCosts:             int32(model.Costs().Monthly()),
-		OneTimeCosts:             int32(model.Costs().OneTime()),
-	})
+	tx, err := r.db.Begin()
 	if err != nil {
-		return err
+		return nil
 	}
 
-	model.SetID(uint(id))
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			r.logger.Error("cannot rollback database transaction for register service", zap.Error(err))
+		}
+	}()
 
-	return err
+	queriesWithTx := r.queries.WithTx(tx)
+
+	for _, availability := range model.Availabilities() {
+		id, err := queriesWithTx.RegisterService(context.Background(), &queries.RegisterServiceParams{
+			OrganizationSerialNumber: model.Organization().SerialNumber(),
+			Name:                     model.Name(),
+			Internal:                 model.Internal(),
+			DocumentationUrl:         model.DocumentationURL(),
+			ApiSpecificationType:     string(model.APISpecificationType()),
+			PublicSupportContact:     model.PublicSupportContact(),
+			TechSupportContact:       model.TechSupportContact(),
+			RequestCosts:             int32(model.Costs().Request()),
+			MonthlyCosts:             int32(model.Costs().Monthly()),
+			OneTimeCosts:             int32(model.Costs().OneTime()),
+			InwayAddress:             availability.InwayAddress(),
+		})
+		if err != nil {
+			return err
+		}
+
+		model.SetID(uint(id))
+	}
+
+	return tx.Commit()
 }
 
 func (r *PostgreSQLRepository) ListServices(ctx context.Context, organizationSerialNumber string) ([]*domain.Service, error) {
@@ -98,12 +132,12 @@ func convertServiceRowsToModel(rows []*queries.SelectServicesRow) ([]*domain.Ser
 			return nil, err
 		}
 
-		inways := make([]*domain.NewServiceInwayArgs, len(row.InwayAddresses))
+		inways := make([]*domain.NewServiceAvailability, len(row.InwayAddresses))
 
 		for j, inwayAddress := range row.InwayAddresses {
-			inwayArgs := &domain.NewServiceInwayArgs{
-				Address: inwayAddress,
-				State:   domain.InwayDOWN,
+			inwayArgs := &domain.NewServiceAvailability{
+				InwayAddress: inwayAddress,
+				State:        domain.InwayDOWN,
 			}
 
 			if row.HealthyStatuses[j] {
@@ -126,7 +160,7 @@ func convertServiceRowsToModel(rows []*queries.SelectServicesRow) ([]*domain.Ser
 				Monthly: uint(row.MonthlyCosts),
 				Request: uint(row.RequestCosts),
 			},
-			Inways: inways,
+			Availabilities: inways,
 		})
 		if err != nil {
 			return nil, err

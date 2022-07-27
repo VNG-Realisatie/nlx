@@ -20,7 +20,7 @@ type Repository interface {
 	RegisterInway(*domain.Inway) error
 	GetInway(name, organizationSerialNumber string) (*domain.Inway, error)
 
-	RegisterService(*domain.Service) error
+	RegisterService(service *domain.Service) error
 	GetService(id uint) (*domain.Service, error)
 
 	SetOrganizationInway(ctx context.Context, organizationSerialNumber, inwayAddress string) error

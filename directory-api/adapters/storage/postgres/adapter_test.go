@@ -190,6 +190,10 @@ func loadFixtures(repo storage.Repository) error {
 				Monthly: 2,
 				Request: 3,
 			},
+			Availabilities: []*domain.NewServiceAvailability{
+				{InwayAddress: "fixture-inway-address-one.com:443"},
+				{InwayAddress: "fixture-inway-address-two.com:443"},
+			},
 		},
 	}
 

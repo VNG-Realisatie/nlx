@@ -228,17 +228,17 @@ func (mr *MockRepositoryMockRecorder) RegisterOutway(arg0 interface{}) *gomock.C
 }
 
 // RegisterService mocks base method.
-func (m *MockRepository) RegisterService(arg0 *domain.Service) error {
+func (m *MockRepository) RegisterService(service *domain.Service) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegisterService", arg0)
+	ret := m.ctrl.Call(m, "RegisterService", service)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RegisterService indicates an expected call of RegisterService.
-func (mr *MockRepositoryMockRecorder) RegisterService(arg0 interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) RegisterService(service interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterService", reflect.TypeOf((*MockRepository)(nil).RegisterService), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterService", reflect.TypeOf((*MockRepository)(nil).RegisterService), service)
 }
 
 // SetOrganizationEmailAddress mocks base method.

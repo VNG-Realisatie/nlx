@@ -58,12 +58,12 @@ func convertFromDatabaseService(models []*domain.Service) *directoryapi.ListServ
 			},
 		}
 
-		serviceInways := model.Inways()
+		serviceInways := model.Availabilities()
 
 		service.Inways = make([]*directoryapi.Inway, len(serviceInways))
 		for i, inway := range serviceInways {
 			service.Inways[i] = &directoryapi.Inway{
-				Address: inway.Address(),
+				Address: inway.InwayAddress(),
 				State:   directoryapi.Inway_State(directoryapi.Inway_State_value[string(inway.State())]),
 			}
 		}

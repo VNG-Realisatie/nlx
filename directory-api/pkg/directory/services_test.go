@@ -55,10 +55,10 @@ func TestListServices(t *testing.T) {
 						Monthly: 2,
 						Request: 3,
 					},
-					Inways: []*domain.NewServiceInwayArgs{
+					Availabilities: []*domain.NewServiceAvailability{
 						{
-							Address: "inway-address-a",
-							State:   domain.InwayUP,
+							InwayAddress: "inway-address-a",
+							State:        domain.InwayUP,
 						},
 					},
 				})
@@ -76,14 +76,14 @@ func TestListServices(t *testing.T) {
 						Monthly: 2,
 						Request: 3,
 					},
-					Inways: []*domain.NewServiceInwayArgs{
+					Availabilities: []*domain.NewServiceAvailability{
 						{
-							Address: "inway-address-b",
-							State:   domain.InwayDOWN,
+							InwayAddress: "inway-address-b",
+							State:        domain.InwayDOWN,
 						},
 						{
-							Address: "inway-address-c",
-							State:   domain.InwayUP,
+							InwayAddress: "inway-address-c",
+							State:        domain.InwayUP,
 						},
 					},
 				})

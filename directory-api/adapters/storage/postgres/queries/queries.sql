@@ -30,12 +30,19 @@ select
     organizations.name as organization_name,
     one_time_costs,
     monthly_costs,
-    request_costs
+    request_costs,
+    array_remove(array_agg(i.address), NULL)::text[] as inway_addresses,
+    array_remove(array_agg(a.healthy), NULL)::bool[] as healthy_statuses
 from directory.services
-         join directory.organizations
+         inner join directory.availabilities a on a.service_id = services.id
+         inner join directory.inways i on i.id = a.inway_id
+         inner join directory.organizations
               on services.organization_id = organizations.id
 where
-        services.id = $1;
+        services.id = $1
+group by
+    services.id,
+    organizations.id;
 
 -- name: SelectInwayByAddress :one
 select
@@ -231,6 +238,8 @@ with organization as (
             organization
         where
             organization_id = organization.id
+            and
+            inways.address = sqlc.arg(inway_address)::text
     ),
     service as (
         insert into

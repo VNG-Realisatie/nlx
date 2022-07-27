@@ -154,6 +154,11 @@ func (h *DirectoryService) registerService(organizationInformation *tls.Organiza
 				Monthly: uint(service.MonthlyCosts),
 				Request: uint(service.RequestCosts),
 			},
+			Availabilities: []*domain.NewServiceAvailability{
+				{
+					InwayAddress: inwayAddress,
+				},
+			},
 		},
 	)
 	if err != nil {
