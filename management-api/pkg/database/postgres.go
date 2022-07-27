@@ -4,6 +4,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"sync"
@@ -13,6 +14,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/management-api/migrations"
 )
 
@@ -24,16 +26,45 @@ var registerDriverOnce sync.Once
 
 type PostgresConfigDatabase struct {
 	*gorm.DB
+	queries *queries.Queries
 }
 
 func New(connectionString string) (ConfigDatabase, error) {
-	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	gormDB, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := gormDB.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	querier, err := queries.Prepare(context.Background(), db)
 	if err != nil {
 		return nil, err
 	}
 
 	return &PostgresConfigDatabase{
-		DB: db,
+		DB:      gormDB,
+		queries: querier,
+	}, nil
+}
+
+func NewWithGorm(gormDB *gorm.DB) (ConfigDatabase, error) {
+	db, err := gormDB.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	querier, err := queries.Prepare(context.Background(), db)
+	if err != nil {
+		return nil, err
+	}
+
+	return &PostgresConfigDatabase{
+		DB:      gormDB,
+		queries: querier,
 	}, nil
 }
 

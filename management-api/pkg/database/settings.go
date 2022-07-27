@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
@@ -30,30 +31,19 @@ func (s *dbSettings) TableName() string {
 }
 
 func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*domain.Settings, error) {
-	organizationSettings := &dbSettings{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Inway").
-		First(organizationSettings).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	settings, err := db.queries.GetSettings(ctx)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
 			return domain.NewSettings("", "")
 		}
 
 		return nil, err
 	}
 
-	inwayName := ""
-	if organizationSettings.Inway != nil {
-		inwayName = organizationSettings.Inway.Name
-	}
-
-	settings, err := domain.NewSettings(inwayName, organizationSettings.OrganizationEmailAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	return settings, nil
+	return domain.NewSettings(
+		settings.Name.String,
+		settings.OrganizationEmailAddress.String,
+	)
 }
 
 func (db *PostgresConfigDatabase) UpdateSettings(ctx context.Context, settings *domain.Settings) error {

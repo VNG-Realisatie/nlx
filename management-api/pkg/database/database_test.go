@@ -87,9 +87,8 @@ func newPostgresConfigDatabase(t *testing.T, id string, loadFixtures bool) (data
 	db, err := gormDB.DB()
 	require.NoError(t, err)
 
-	return &database.PostgresConfigDatabase{
-		DB: gormDB,
-	}, db.Close
+	configDb, err := database.NewWithGorm(gormDB)
+	return configDb, db.Close
 }
 
 func newConfigDatabase(t *testing.T, id string, loadFixtures bool) (database.ConfigDatabase, func() error) {

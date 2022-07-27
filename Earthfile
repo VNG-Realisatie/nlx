@@ -28,6 +28,7 @@ mocks:
 sqlc:
     BUILD +sqlc-txlog-api
     BUILD +sqlc-directory-api
+    BUILD +sqlc-management-api
 
 enums:
     BUILD +enums-httperrors
@@ -275,6 +276,19 @@ sqlc-directory-api:
     RUN goimports -w -local "go.nlx.io" /src/
 
     SAVE ARTIFACT /src/directory-api/adapters/storage/postgres/queries/* AS LOCAL ./directory-api/adapters/storage/postgres/queries/
+
+sqlc-management-api:
+    FROM +deps
+    COPY ./management-api/adapters/storage/postgres/queries /src/management-api/adapters/storage/postgres/queries
+    COPY ./management-api/migrations /src/management-api/migrations
+
+    WORKDIR /src/management-api/adapters/storage/postgres/queries
+
+    RUN /usr/bin/sqlc generate
+
+    RUN goimports -w -local "go.nlx.io" /src/
+
+    SAVE ARTIFACT /src/management-api/adapters/storage/postgres/queries/* AS LOCAL ./management-api/adapters/storage/postgres/queries/
 
 enums-httperrors:
     FROM +deps
