@@ -71,7 +71,3 @@ func TestUpdateSettings(t *testing.T) {
 		})
 	}
 }
-
-func newUint(x uint) *uint {
-	return &x
-}
