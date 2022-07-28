@@ -9,7 +9,7 @@ require (
 	github.com/coreos/go-oidc/v3 v3.2.0
 	github.com/fgrosse/zaptest v1.1.0
 	github.com/go-chi/chi/v5 v5.0.7
-	github.com/go-chi/render v1.0.1
+	github.com/go-chi/render v1.0.2
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-testfixtures/testfixtures/v3 v3.8.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
@@ -49,6 +49,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.7.0 // indirect
+	github.com/ajg/form v1.5.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/benbjohnson/clock v1.1.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
