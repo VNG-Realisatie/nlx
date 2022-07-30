@@ -62,7 +62,7 @@
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
     "react-select-event": "5.5.0",
-    "react-transition-group": "4.4.2",
+    "react-transition-group": "4.4.4",
     "styled-components": "5.3.5",
     "yup": "0.32.11"
   }
