@@ -24,6 +24,15 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
+	if q.countInwaysByNameStmt, err = db.PrepareContext(ctx, countInwaysByName); err != nil {
+		return nil, fmt.Errorf("error preparing query CountInwaysByName: %w", err)
+	}
+	if q.createSettingsStmt, err = db.PrepareContext(ctx, createSettings); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateSettings: %w", err)
+	}
+	if q.deleteSettingsStmt, err = db.PrepareContext(ctx, deleteSettings); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteSettings: %w", err)
+	}
 	if q.getSettingsStmt, err = db.PrepareContext(ctx, getSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query GetSettings: %w", err)
 	}
@@ -32,6 +41,21 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 
 func (q *Queries) Close() error {
 	var err error
+	if q.countInwaysByNameStmt != nil {
+		if cerr := q.countInwaysByNameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing countInwaysByNameStmt: %w", cerr)
+		}
+	}
+	if q.createSettingsStmt != nil {
+		if cerr := q.createSettingsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createSettingsStmt: %w", cerr)
+		}
+	}
+	if q.deleteSettingsStmt != nil {
+		if cerr := q.deleteSettingsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteSettingsStmt: %w", cerr)
+		}
+	}
 	if q.getSettingsStmt != nil {
 		if cerr := q.getSettingsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getSettingsStmt: %w", cerr)
@@ -74,15 +98,21 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db              DBTX
-	tx              *sql.Tx
-	getSettingsStmt *sql.Stmt
+	db                    DBTX
+	tx                    *sql.Tx
+	countInwaysByNameStmt *sql.Stmt
+	createSettingsStmt    *sql.Stmt
+	deleteSettingsStmt    *sql.Stmt
+	getSettingsStmt       *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:              tx,
-		tx:              tx,
-		getSettingsStmt: q.getSettingsStmt,
+		db:                    tx,
+		tx:                    tx,
+		countInwaysByNameStmt: q.countInwaysByNameStmt,
+		createSettingsStmt:    q.createSettingsStmt,
+		deleteSettingsStmt:    q.deleteSettingsStmt,
+		getSettingsStmt:       q.getSettingsStmt,
 	}
 }

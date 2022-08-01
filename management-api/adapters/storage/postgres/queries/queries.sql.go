@@ -10,6 +10,57 @@ import (
 	"database/sql"
 )
 
+const countInwaysByName = `-- name: CountInwaysByName :one
+select
+    count(*)
+from
+    nlx_management.inways
+where inways.name = $1::text
+`
+
+func (q *Queries) CountInwaysByName(ctx context.Context, inwayName string) (int64, error) {
+	row := q.queryRow(ctx, q.countInwaysByNameStmt, countInwaysByName, inwayName)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const createSettings = `-- name: CreateSettings :exec
+insert into
+    nlx_management.settings
+        (organization_email_address, inway_id)
+    VALUES (
+               $1::text,
+            (
+                select
+                    id
+                from
+                    nlx_management.inways
+                where
+                        inways.name = $2::text
+            )
+    )
+`
+
+type CreateSettingsParams struct {
+	OrganizationEmailAddress string
+	InwayName                string
+}
+
+func (q *Queries) CreateSettings(ctx context.Context, arg *CreateSettingsParams) error {
+	_, err := q.exec(ctx, q.createSettingsStmt, createSettings, arg.OrganizationEmailAddress, arg.InwayName)
+	return err
+}
+
+const deleteSettings = `-- name: DeleteSettings :exec
+delete from nlx_management.settings
+`
+
+func (q *Queries) DeleteSettings(ctx context.Context) error {
+	_, err := q.exec(ctx, q.deleteSettingsStmt, deleteSettings)
+	return err
+}
+
 const getSettings = `-- name: GetSettings :one
 select
     settings.organization_email_address,

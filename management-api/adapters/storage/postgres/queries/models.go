@@ -173,8 +173,6 @@ type NlxManagementService struct {
 type NlxManagementSetting struct {
 	ID                       int32
 	InwayID                  sql.NullInt32
-	CreatedAt                time.Time
-	UpdatedAt                time.Time
 	OrganizationEmailAddress sql.NullString
 }
 

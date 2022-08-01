@@ -7,11 +7,12 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
+	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/management-api/domain"
 )
 
@@ -47,38 +48,43 @@ func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*domain.Sett
 }
 
 func (db *PostgresConfigDatabase) UpdateSettings(ctx context.Context, settings *domain.Settings) error {
-	var inwayID *uint
-
-	var inway = &Inway{}
-
 	if settings.OrganizationInwayName() != "" {
-		if err := db.DB.
-			WithContext(ctx).
-			First(inway, &Inway{Name: settings.OrganizationInwayName()}).Error; err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return ErrInwayNotFound
-			}
-
+		amount, err := db.queries.CountInwaysByName(ctx, settings.OrganizationInwayName())
+		if err != nil {
 			return err
 		}
 
-		inwayID = &inway.ID
+		if amount < 1 {
+			return ErrInwayNotFound
+		}
 	}
 
-	settingsInDB := &dbSettings{
-		InwayID:                  inwayID,
-		Inway:                    inway,
+	tx, err := db.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin db transaction: %e", err)
+	}
+
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			db.Logger.Error(ctx, "failed to rollback db transaction while updating settings", zap.Error(err))
+		}
+	}()
+
+	queriesWithTx := db.queries.WithTx(tx)
+
+	err = queriesWithTx.DeleteSettings(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to delete settings: %e", err)
+	}
+
+	err = queriesWithTx.CreateSettings(ctx, &queries.CreateSettingsParams{
 		OrganizationEmailAddress: settings.OrganizationEmailAddress(),
+		InwayName:                settings.OrganizationInwayName(),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create settings: %e", err)
 	}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Where("id IS NOT NULL").
-		Assign(map[string]interface{}{"inway_id": inwayID, "organization_email_address": settings.OrganizationEmailAddress()}).
-		FirstOrCreate(settingsInDB).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return tx.Commit()
 }

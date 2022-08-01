@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"sync"
@@ -26,6 +27,7 @@ var registerDriverOnce sync.Once
 
 type PostgresConfigDatabase struct {
 	*gorm.DB
+	db      *sql.DB
 	queries *queries.Queries
 }
 
@@ -47,6 +49,7 @@ func New(connectionString string) (ConfigDatabase, error) {
 
 	return &PostgresConfigDatabase{
 		DB:      gormDB,
+		db:      db,
 		queries: querier,
 	}, nil
 }
@@ -64,6 +67,7 @@ func NewWithGorm(gormDB *gorm.DB) (ConfigDatabase, error) {
 
 	return &PostgresConfigDatabase{
 		DB:      gormDB,
+		db:      db,
 		queries: querier,
 	}, nil
 }
