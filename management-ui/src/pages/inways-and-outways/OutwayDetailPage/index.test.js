@@ -10,12 +10,6 @@ import { ManagementApi } from '../../../api'
 import { RootStore, StoreProvider } from '../../../stores'
 import OutwayDetailPage from './index'
 
-/* eslint-disable react/prop-types */
-jest.mock('./OutwayDetailPageView', () => ({ outway }) => (
-  <div data-testid="outway-details">{outway.name}</div>
-))
-/* eslint-enable react/prop-types */
-
 test('display outway details', async () => {
   const managementApiClient = new ManagementApi()
 
@@ -23,26 +17,28 @@ test('display outway details', async () => {
     outways: [
       {
         name: 'my-outway',
+        ipAddress: '127.0.0.1',
+        publicKeyPem: 'publicKeyPem',
       },
     ],
   })
 
-  const rootStore = new RootStore({ managementApiClient })
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
   await rootStore.outwayStore.fetchAll()
 
   renderWithAllProviders(
-    <MemoryRouter initialEntries={['/my-outway']}>
-      <StoreProvider rootStore={rootStore}>
+    <StoreProvider rootStore={rootStore}>
+      <MemoryRouter initialEntries={['/my-outway']}>
         <Routes>
           <Route path=":name" element={<OutwayDetailPage />} />
         </Routes>
-      </StoreProvider>
-    </MemoryRouter>,
+      </MemoryRouter>
+    </StoreProvider>,
   )
 
-  expect(await screen.findByTestId('outway-details')).toHaveTextContent(
-    'my-outway',
-  )
+  expect(await screen.findByTestId('outway-specs')).toBeInTheDocument()
 })
 
 test('display a non-existing outway', async () => {
@@ -50,13 +46,13 @@ test('display a non-existing outway', async () => {
   const rootStore = new RootStore({ managementApiClient })
 
   renderWithAllProviders(
-    <MemoryRouter initialEntries={['/my-outway']}>
-      <StoreProvider rootStore={rootStore}>
+    <StoreProvider rootStore={rootStore}>
+      <MemoryRouter initialEntries={['/my-outway']}>
         <Routes>
           <Route path=":name" element={<OutwayDetailPage />} />
         </Routes>
-      </StoreProvider>
-    </MemoryRouter>,
+      </MemoryRouter>
+    </StoreProvider>,
   )
 
   const message = await screen.findByTestId('error-message')
@@ -76,6 +72,8 @@ test('remove an Outway', async () => {
     outways: [
       {
         name: 'my-outway',
+        ipAddress: '127.0.0.1',
+        publicKeyPem: 'publicKeyPem',
       },
     ],
   })
