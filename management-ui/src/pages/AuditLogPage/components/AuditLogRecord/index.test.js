@@ -22,6 +22,7 @@ import AuditLogModel, {
   ACTION_ORDER_OUTGOING_REVOKE,
   ACTION_INWAY_DELETE,
   ACTION_ACCEPT_TERMS_OF_SERVICE,
+  ACTION_OUTWAY_DELETE,
 } from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
@@ -233,7 +234,7 @@ test.concurrent.each([
       },
     }),
     'cog.svg',
-    'John Doe has removed the inway my-inway',
+    'John Doe has removed the Inway my-inway',
   ],
   [
     createModel({
@@ -241,6 +242,16 @@ test.concurrent.each([
     }),
     'cog.svg',
     'John Doe has accepted the Terms of Service',
+  ],
+  [
+    createModel({
+      action: ACTION_OUTWAY_DELETE,
+      data: {
+        outwayName: 'my-outway',
+      },
+    }),
+    'cog.svg',
+    'John Doe has removed the Outway my-outway',
   ],
   [
     createModel({ action: 'unknown action' }),

@@ -23,6 +23,7 @@ import AuditLogModel, {
   ACTION_SERVICE_UPDATE,
   ACTION_INWAY_DELETE,
   ACTION_ACCEPT_TERMS_OF_SERVICE,
+  ACTION_OUTWAY_DELETE,
 } from '../../../../stores/models/AuditLogModel'
 import iconForActionType from './icon-for-action-type'
 import {
@@ -91,6 +92,8 @@ const AuditLogRecord = ({ model, ...props }) => {
   const dataReference = model.data.reference
 
   const dataInwayName = model.data.inwayName
+
+  const dataOutwayName = model.data.outwayName
 
   const organizationName = organization.name
 
@@ -175,8 +178,13 @@ const AuditLogRecord = ({ model, ...props }) => {
         </Trans>
       ) : action === ACTION_INWAY_DELETE ? (
         <Trans values={{ user, dataInwayName }}>
-          <strong>{{ user }}</strong> has removed the inway{' '}
+          <strong>{{ user }}</strong> has removed the Inway{' '}
           <strong>{{ dataInwayName }}</strong>
+        </Trans>
+      ) : action === ACTION_OUTWAY_DELETE ? (
+        <Trans values={{ user, dataOutwayName }}>
+          <strong>{{ user }}</strong> has removed the Outway{' '}
+          <strong>{{ dataOutwayName }}</strong>
         </Trans>
       ) : action === ACTION_ORDER_OUTGOING_UPDATE ? (
         <Trans values={{ user, servicesList, dataDelegatee, action }}>

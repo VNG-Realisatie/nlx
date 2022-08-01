@@ -50,6 +50,12 @@ export interface ManagementAuditLogRecordMetadata {
      * @memberof ManagementAuditLogRecordMetadata
      */
     inwayName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecordMetadata
+     */
+    outwayName?: string;
 }
 
 export function ManagementAuditLogRecordMetadataFromJSON(json: any): ManagementAuditLogRecordMetadata {
@@ -66,6 +72,7 @@ export function ManagementAuditLogRecordMetadataFromJSONTyped(json: any, ignoreD
         'delegator': !exists(json, 'delegator') ? undefined : ManagementOrganizationFromJSON(json['delegator']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'inwayName': !exists(json, 'inwayName') ? undefined : json['inwayName'],
+        'outwayName': !exists(json, 'outwayName') ? undefined : json['outwayName'],
     };
 }
 
@@ -82,6 +89,7 @@ export function ManagementAuditLogRecordMetadataToJSON(value?: ManagementAuditLo
         'delegator': ManagementOrganizationToJSON(value.delegator),
         'reference': value.reference,
         'inwayName': value.inwayName,
+        'outwayName': value.outwayName,
     };
 }
 

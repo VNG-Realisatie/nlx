@@ -23,6 +23,7 @@ export const ACTION_INSIGHT_CONFIGURATION_UPDATE =
 export const ACTION_ORDER_CREATE = 'orderCreate'
 export const ACTION_ORDER_OUTGOING_REVOKE = 'orderOutgoingRevoke'
 export const ACTION_INWAY_DELETE = 'inwayDelete'
+export const ACTION_OUTWAY_DELETE = 'outwayDelete'
 export const ACTION_ORDER_OUTGOING_UPDATE = 'orderOutgoingUpdate'
 export const ACTION_ACCEPT_TERMS_OF_SERVICE = 'acceptTermsOfService'
 
@@ -50,6 +51,7 @@ class AuditLogModel {
     delegatee: null,
     reference: '',
     inwayName: '',
+    outwayName: '',
   }
 
   constructor({ auditLogData }) {
@@ -95,7 +97,7 @@ class AuditLogModel {
     }
 
     if (auditLogData.data) {
-      const { delegatee, reference, inwayName } = auditLogData.data
+      const { delegatee, reference, inwayName, outwayName } = auditLogData.data
 
       if (delegatee) {
         this.data.delegatee = new Organization(
@@ -106,6 +108,7 @@ class AuditLogModel {
 
       this.data.reference = reference
       this.data.inwayName = inwayName
+      this.data.outwayName = outwayName
     }
   }
 }

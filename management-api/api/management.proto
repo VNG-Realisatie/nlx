@@ -549,6 +549,7 @@ message AuditLogRecord {
     inwayDelete = 16;
     orderOutgoingUpdate = 17;
     acceptTermsOfService = 18;
+    outwayDelete = 19;
   }
 
   message Service {
@@ -572,6 +573,7 @@ message AuditLogRecordMetadata {
   Organization delegator = 2;
   string reference = 3;
   string inwayName = 4;
+  string outwayName = 5;
 }
 
 message ListAuditLogsResponse {

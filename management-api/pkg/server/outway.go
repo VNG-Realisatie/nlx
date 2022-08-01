@@ -126,7 +126,7 @@ func (s *ManagementService) DeleteOutway(ctx context.Context, req *api.DeleteOut
 
 	err = s.configDatabase.DeleteOutway(ctx, req.Name)
 	if err != nil {
-		logger.Error("error deleting outway in DB", zap.Error(err))
+		logger.Error("unable to delete the outway from the database", zap.Error(err))
 		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")
 	}
 

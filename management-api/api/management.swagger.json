@@ -1384,7 +1384,7 @@
     "schemas" : {
       "AuditLogRecordActionType" : {
         "default" : "loginSuccess",
-        "enum" : [ "loginSuccess", "loginFail", "logout", "incomingAccessRequestAccept", "incomingAccessRequestReject", "accessGrantRevoke", "outgoingAccessRequestCreate", "outgoingAccessRequestFail", "serviceCreate", "serviceUpdate", "serviceDelete", "organizationSettingsUpdate", "orderCreate", "orderOutgoingRevoke", "orderIncomingRevoke", "inwayDelete", "orderOutgoingUpdate", "acceptTermsOfService" ],
+        "enum" : [ "loginSuccess", "loginFail", "logout", "incomingAccessRequestAccept", "incomingAccessRequestReject", "accessGrantRevoke", "outgoingAccessRequestCreate", "outgoingAccessRequestFail", "serviceCreate", "serviceUpdate", "serviceDelete", "organizationSettingsUpdate", "orderCreate", "orderOutgoingRevoke", "orderIncomingRevoke", "inwayDelete", "orderOutgoingUpdate", "acceptTermsOfService", "outwayDelete" ],
         "type" : "string"
       },
       "DirectoryServiceAccessState" : {
@@ -1517,6 +1517,9 @@
             "type" : "string"
           },
           "inwayName" : {
+            "type" : "string"
+          },
+          "outwayName" : {
             "type" : "string"
           }
         },

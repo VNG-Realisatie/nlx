@@ -35,7 +35,8 @@ export const AuditLogRecordActionType = {
     ORDER_INCOMING_REVOKE: 'orderIncomingRevoke',
     INWAY_DELETE: 'inwayDelete',
     ORDER_OUTGOING_UPDATE: 'orderOutgoingUpdate',
-    ACCEPT_TERMS_OF_SERVICE: 'acceptTermsOfService'
+    ACCEPT_TERMS_OF_SERVICE: 'acceptTermsOfService',
+    OUTWAY_DELETE: 'outwayDelete'
 } as const;
 export type AuditLogRecordActionType = typeof AuditLogRecordActionType[keyof typeof AuditLogRecordActionType];
 

@@ -19,10 +19,11 @@ type Record struct {
 }
 
 type RecordData struct {
-	Delegator *string
-	Delegatee *string
-	Reference *string
-	InwayName *string
+	Delegator  *string
+	Delegatee  *string
+	Reference  *string
+	InwayName  *string
+	OutwayName *string
 }
 
 type RecordServiceOrganization struct {
@@ -54,6 +55,7 @@ const (
 	OrganizationSettingsUpdate  ActionType = "organization_settings_update"
 	InwayDelete                 ActionType = "inway_delete"
 	AcceptTermsOfService        ActionType = "accept_terms_of_service"
+	OutwayDelete                ActionType = "outway_delete"
 )
 
 type Logger interface {

@@ -64,9 +64,10 @@ func convertAuditLogRecordsFromDatabase(records []*database.AuditLog) ([]*Record
 			}
 
 			convertedRecord.Data = &RecordData{
-				Delegatee: data.Delegatee,
-				Reference: data.Reference,
-				InwayName: data.InwayName,
+				Delegatee:  data.Delegatee,
+				Reference:  data.Reference,
+				InwayName:  data.InwayName,
+				OutwayName: data.OutwayName,
 			}
 		}
 

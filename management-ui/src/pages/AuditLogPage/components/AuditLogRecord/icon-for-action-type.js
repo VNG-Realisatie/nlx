@@ -20,6 +20,7 @@ import {
   ACTION_SERVICE_DELETE,
   ACTION_SERVICE_UPDATE,
   ACTION_INWAY_DELETE,
+  ACTION_OUTWAY_DELETE,
   ACTION_ACCEPT_TERMS_OF_SERVICE,
 } from '../../../../stores/models/AuditLogModel'
 import {
@@ -64,6 +65,7 @@ const iconForActionType = (actionType) => {
     case ACTION_ORDER_OUTGOING_UPDATE:
     case ACTION_ORDER_CREATE:
     case ACTION_INWAY_DELETE:
+    case ACTION_OUTWAY_DELETE:
     case ACTION_ACCEPT_TERMS_OF_SERVICE:
       return IconSettings
 
