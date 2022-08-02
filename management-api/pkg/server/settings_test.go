@@ -33,16 +33,16 @@ import (
 
 func TestManagementService_GetSettings(t *testing.T) {
 	tests := map[string]struct {
-		setup            func(context.Context, serviceMocks)
-		ctx              context.Context
-		expectedResponse *api.Settings
-		expectedError    error
+		setup   func(context.Context, serviceMocks)
+		ctx     context.Context
+		want    *api.Settings
+		wantErr error
 	}{
 		"missing_required_permission": {
-			setup:            func(ctx context.Context, mocks serviceMocks) {},
-			ctx:              testCreateUserWithoutPermissionsContext(),
-			expectedResponse: nil,
-			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.read\" to execute this request").Err(),
+			setup:   func(ctx context.Context, mocks serviceMocks) {},
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			want:    nil,
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.read\" to execute this request").Err(),
 		},
 		"when_the_database_call_fails": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
@@ -52,9 +52,9 @@ func TestManagementService_GetSettings(t *testing.T) {
 					Return(nil, errors.New("arbitrary error"))
 
 			},
-			ctx:              testCreateAdminUserContext(),
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "database error"),
+			ctx:     testCreateAdminUserContext(),
+			want:    nil,
+			wantErr: status.Error(codes.Internal, "database error"),
 		},
 		"happy flow": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
@@ -67,11 +67,11 @@ func TestManagementService_GetSettings(t *testing.T) {
 					Return(settings, nil)
 			},
 			ctx: testCreateAdminUserContext(),
-			expectedResponse: &api.Settings{
+			want: &api.Settings{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedError: nil,
+			wantErr: nil,
 		},
 	}
 
@@ -84,8 +84,8 @@ func TestManagementService_GetSettings(t *testing.T) {
 
 			got, err := service.GetSettings(tt.ctx, &emptypb.Empty{})
 
-			assert.Equal(t, tt.expectedResponse, got)
-			assert.Equal(t, tt.expectedError, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
