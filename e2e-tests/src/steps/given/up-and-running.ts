@@ -7,6 +7,7 @@ import {
   setDefaultInwayAsOrganizationInway,
 } from "../../utils/inway";
 import { Given } from "@cucumber/cucumber";
+import {hasOutwayRunning} from "../../utils/outway";
 
 Given(
   "{string} is up and running",
@@ -19,6 +20,12 @@ Given(
     if (org.defaultInway.name !== "") {
       await hasDefaultInwayRunning(this, orgName);
       await setDefaultInwayAsOrganizationInway(this, orgName);
+    }
+
+    if (org.outways !== null){
+      for (const outwayName in org.outways){
+        await hasOutwayRunning(this, orgName, outwayName)
+      }
     }
   }
 );

@@ -1,15 +1,25 @@
 import { getOrgByName, Outway, Outways } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
 import { strict as assert } from "assert";
+import pWaitFor from "p-wait-for";
 
 export const hasOutwayRunning = async (
   world: CustomWorld,
   orgName: string,
   outwayName: string
 ) => {
-  const outways = await getOutways(orgName);
 
-  assert.equal(!!outways[outwayName], true);
+  await pWaitFor.default(
+    async () => {
+    const outways = await getOutways(orgName);
+    return !!outways[outwayName];
+  },
+    {
+      interval: 200,
+      timeout: 1000 * 11,
+    }
+  );
+
 };
 
 export const getOutways = async (orgName: string): Promise<Outways> => {
