@@ -33,38 +33,38 @@ import (
 
 func TestManagementService_GetSettings(t *testing.T) {
 	tests := map[string]struct {
-		db               func(ctrl *gomock.Controller) database.ConfigDatabase
+		setup            func(context.Context, serviceMocks)
 		ctx              context.Context
 		expectedResponse *api.Settings
 		expectedError    error
 	}{
 		"missing_required_permission": {
-			ctx: testCreateUserWithoutPermissionsContext(),
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				return mock_database.NewMockConfigDatabase(ctrl)
-			},
+			setup:            func(ctx context.Context, mocks serviceMocks) {},
+			ctx:              testCreateUserWithoutPermissionsContext(),
 			expectedResponse: nil,
 			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.read\" to execute this request").Err(),
 		},
 		"when_the_database_call_fails": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-				db.EXPECT().GetSettings(gomock.Any()).Return(nil, errors.New("arbitrary error"))
+			setup: func(ctx context.Context, mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetSettings(gomock.Any()).
+					Return(nil, errors.New("arbitrary error"))
 
-				return db
 			},
 			ctx:              testCreateAdminUserContext(),
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		"happy flow": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				settings, err := domain.NewSettings("inway-name", "mock@email.com")
 				require.NoError(t, err)
-				db.EXPECT().GetSettings(gomock.Any()).Return(settings, nil)
 
-				return db
+				mocks.db.
+					EXPECT().
+					GetSettings(gomock.Any()).
+					Return(settings, nil)
 			},
 			ctx: testCreateAdminUserContext(),
 			expectedResponse: &api.Settings{
@@ -79,14 +79,10 @@ func TestManagementService_GetSettings(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
+			service, _, mocks := newService(t)
+			tt.setup(tt.ctx, mocks)
 
-			l := zap.NewNop()
-			d := mock_directory.NewMockClient(ctrl)
-
-			h := server.NewManagementService(l, d, nil, nil, nil, tt.db(ctrl), nil, mock_auditlog.NewMockLogger(ctrl), management.NewClient, outway.NewClient)
-			got, err := h.GetSettings(tt.ctx, &emptypb.Empty{})
+			got, err := service.GetSettings(tt.ctx, &emptypb.Empty{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
