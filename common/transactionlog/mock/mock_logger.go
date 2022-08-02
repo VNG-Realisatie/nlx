@@ -48,3 +48,17 @@ func (mr *MockTransactionLoggerMockRecorder) AddRecord(rec interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddRecord", reflect.TypeOf((*MockTransactionLogger)(nil).AddRecord), rec)
 }
+
+// Close mocks base method.
+func (m *MockTransactionLogger) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close.
+func (mr *MockTransactionLoggerMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockTransactionLogger)(nil).Close))
+}

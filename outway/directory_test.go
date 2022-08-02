@@ -91,7 +91,7 @@ func TestRegisterToDirectory(t *testing.T) {
 				DirectoryClient:   tc.directoryClient(ctx, ctrl),
 			}
 
-			ow, err := NewOutway(args)
+			ow, err := New(args)
 			assert.Nil(t, err)
 
 			err = ow.registerToDirectory(ctx)

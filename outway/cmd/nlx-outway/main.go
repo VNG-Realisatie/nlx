@@ -53,31 +53,41 @@ var options struct {
 	cmd.TLSOptions
 }
 
-// nolint:funlen,gocyclo // this is the main function
 func main() {
 	parseOptions()
 
 	p := process.NewProcess()
 
 	// Setup new zap logger
-	config := options.LogOptions.ZapConfig()
-	logger, err := config.Build()
-
+	logger, err := options.LogOptions.ZapConfig().Build()
 	if err != nil {
 		log.Fatalf("failed to create new zap logger: %v", err)
 	}
 
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
-	txlogger, logDB := setupTransactionLogger(logger, options.DisableLogdb)
+
+	txLogger, err := setupTransactionLogger(logger, options.DisableLogdb)
+	if err != nil {
+		logger.Fatal("unable to setup the transaction logger")
+	}
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgCertFile))
 	}
 
+	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
+		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
+	}
+
 	orgCert, err := common_tls.NewBundleFromFiles(options.OrgCertFile, options.OrgKeyFile, options.NLXRootCert)
 	if err != nil {
-		logger.Fatal("loading TLS files", zap.Error(err))
+		logger.Fatal("unable to load organization certificate and key", zap.Error(err))
+	}
+
+	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+	if err != nil {
+		logger.Fatal("unable to load internal PKI certificate and key", zap.Error(err))
 	}
 
 	var serverCertificate *tls.Certificate
@@ -88,7 +98,6 @@ func main() {
 		}
 
 		cert, certErr := tls.LoadX509KeyPair(options.ServerCertFile, options.ServerKeyFile)
-
 		if certErr != nil {
 			logger.Fatal("failed to load server certificate", zap.Error(err))
 		}
@@ -96,106 +105,76 @@ func main() {
 		serverCertificate = &cert
 	}
 
-	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.KeyFile); errValidate != nil {
-		logger.Warn("invalid internal PKI key permissions", zap.Error(errValidate), zap.String("file-path", options.KeyFile))
-	}
-
-	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
+	managementAPIConn, err := grpc.DialContext(context.TODO(), options.ManagementAPIAddress, grpc.WithTransportCredentials(credentials.NewTLS(cert.TLSConfig())))
 	if err != nil {
-		logger.Fatal("loading TLS files", zap.Error(err))
-	}
-
-	publicKeyPEM, err := orgCert.PublicKeyPEM()
-	if err != nil {
-		logger.Fatal("unable to get public key pem from certificate TLS files", zap.Error(err))
-	}
-
-	creds := credentials.NewTLS(cert.TLSConfig())
-
-	conn, err := grpc.DialContext(context.TODO(), options.ManagementAPIAddress, grpc.WithTransportCredentials(creds))
-	if err != nil {
-		logger.Fatal("failed to connect to Management API", zap.Error(err))
-	}
-
-	client := api.NewManagementClient(conn)
-
-	_, err = client.RegisterOutway(context.TODO(), &api.RegisterOutwayRequest{
-		Name:           options.Name,
-		PublicKeyPEM:   publicKeyPEM,
-		SelfAddressAPI: options.AddressAPI,
-		Version:        version.BuildVersion,
-	})
-	if err != nil {
-		logger.Fatal("failed to register outway in Management API", zap.Error(err))
-	}
-
-	directoryDialCredentials := credentials.NewTLS(orgCert.TLSConfig())
-	directoryDialOptions := []grpc.DialOption{
-		grpc.WithTransportCredentials(directoryDialCredentials),
+		logger.Fatal("failed to connection to the management api", zap.Error(err))
 	}
 
 	directoryConnCtx, directoryConnCtxCancel := context.WithTimeout(nlxversion.NewGRPCContext(context.Background(), "outway"), 1*time.Minute)
-	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryAddress, directoryDialOptions...)
-
 	defer directoryConnCtxCancel()
 
+	directoryConn, err := grpc.DialContext(directoryConnCtx, options.DirectoryAddress,
+		grpc.WithTransportCredentials(credentials.NewTLS(orgCert.TLSConfig())),
+	)
 	if err != nil {
-		logger.Fatal("failed to setup connection to directory registration api", zap.Error(err))
+		logger.Fatal("failed to setup connection to the directory api", zap.Error(err))
 	}
 
-	directoryClient := directoryapi.NewDirectoryClient(directoryConn)
-
-	ow, err := outway.NewOutway(&outway.NewOutwayArgs{
-		Name:              options.Name,
-		AddressAPI:        options.AddressAPI,
-		Ctx:               context.Background(),
-		Logger:            logger,
-		Txlogger:          txlogger,
-		ManagementClient:  client,
-		MonitoringAddress: options.MonitoringAddress,
-		OrgCert:           orgCert,
-		InternalCert:      cert,
-		DirectoryClient:   directoryClient,
-		AuthServiceURL:    options.AuthorizationServiceAddress,
-		AuthCAPath:        options.AuthorizationCA,
-		UseAsHTTPProxy:    options.UseAsHTTPProxy,
+	ow, err := outway.New(&outway.NewOutwayArgs{
+		Name:                options.Name,
+		AddressAPI:          options.AddressAPI,
+		Ctx:                 context.Background(),
+		Logger:              logger,
+		Txlogger:            txLogger,
+		ManagementAPIClient: api.NewManagementClient(managementAPIConn),
+		MonitoringAddress:   options.MonitoringAddress,
+		OrgCert:             orgCert,
+		InternalCert:        cert,
+		DirectoryClient:     directoryapi.NewDirectoryClient(directoryConn),
+		AuthServiceURL:      options.AuthorizationServiceAddress,
+		AuthCAPath:          options.AuthorizationCA,
+		UseAsHTTPProxy:      options.UseAsHTTPProxy,
 	})
-
 	if err != nil {
-		logger.Fatal("failed to start outway", zap.Error(err))
+		logger.Fatal("failed to initialize the outway", zap.Error(err))
 	}
 
+	ctxAnnouncementsCancel, cancelAnnouncements := context.WithCancel(context.Background())
 	go func() {
-		err = ow.Run()
+		err = ow.Run(ctxAnnouncementsCancel)
 		if err != nil {
 			logger.Fatal("error running outway", zap.Error(err))
 		}
 
 		err = ow.RunServer(options.ListenAddress, options.ListenAddressAPI, serverCertificate)
 		if err != nil {
-			logger.Fatal("error running outway", zap.Error(err))
+			logger.Fatal("error running outway server", zap.Error(err))
 		}
 	}()
 
 	p.Wait()
 
 	logger.Info("starting graceful shutdown")
+	cancelAnnouncements()
 
 	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
 	ow.Shutdown(gracefulCtx)
 
-	err = conn.Close()
+	err = managementAPIConn.Close()
 	if err != nil {
-		logger.Error("could not close grpc connection", zap.Error(err))
+		logger.Error("could not close management API grpc connection", zap.Error(err))
 	}
 
-	if logDB != nil {
-		err := logDB.Close()
-		if err != nil {
-			logger.Error("could not close log db", zap.Error(err))
-		}
+	err = directoryConn.Close()
+	if err != nil {
+		logger.Error("could not close directory API grpc connection", zap.Error(err))
+	}
+
+	err = txLogger.Close()
+	if err != nil {
+		logger.Error("could not close log db", zap.Error(err))
 	}
 }
 
@@ -229,25 +208,22 @@ func parseOptions() {
 	}
 }
 
-func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.TransactionLogger, *sqlx.DB) {
+func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.TransactionLogger, error) {
 	if disabled {
-		logger.Info("logging to transaction-log disabled")
 		return transactionlog.NewDiscardTransactionLogger(), nil
 	}
 
 	logDB, err := setupDatabase()
 	if err != nil {
-		logger.Fatal("failed to setup database", zap.Error(err))
+		return nil, err
 	}
 
 	postgresTxLogger, err := transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionOut)
 	if err != nil {
-		logger.Fatal("failed to setup transactionlog", zap.Error(err))
+		return nil, err
 	}
 
-	logger.Info("transaction logger created")
-
-	return postgresTxLogger, logDB
+	return postgresTxLogger, nil
 }
 
 func setupDatabase() (*sqlx.DB, error) {

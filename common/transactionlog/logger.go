@@ -16,6 +16,7 @@ import (
 // TransactionLogger abstracts the writing of transactionlogs.
 type TransactionLogger interface {
 	AddRecord(rec *Record) error
+	Close() error
 }
 
 // DiscardTransactionLogger discards records it gets
@@ -28,6 +29,11 @@ func NewDiscardTransactionLogger() TransactionLogger {
 
 // AddRecord implements TransactionLogger.AddRecord and discards any given record.
 func (txl *DiscardTransactionLogger) AddRecord(rec *Record) error {
+	return nil
+}
+
+// Close implements TransactionLogger.Close.
+func (txl *DiscardTransactionLogger) Close() error {
 	return nil
 }
 
@@ -149,4 +155,9 @@ func (txl *PostgresTransactionLogger) AddRecord(rec *Record) error {
 	}
 
 	return nil
+}
+
+// Close closes the database connection. Returns an error when failed.
+func (txl *PostgresTransactionLogger) Close() error {
+	return txl.logdb.Close()
 }

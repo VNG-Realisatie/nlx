@@ -26,6 +26,7 @@ import (
 	"go.nlx.io/nlx/common/httperrors"
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/transactionlog"
+	mock_transactionlog "go.nlx.io/nlx/common/transactionlog/mock"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	mock "go.nlx.io/nlx/outway/mock"
 	"go.nlx.io/nlx/outway/plugins"
@@ -342,13 +343,6 @@ func TestHandleConnectMethodException(t *testing.T) {
 	}, gotError)
 }
 
-type failingTransactionLogger struct {
-}
-
-func (f *failingTransactionLogger) AddRecord(record *transactionlog.Record) error {
-	return errors.New("cannot add transaction record")
-}
-
 func TestHandleOnNLXExceptions(t *testing.T) {
 	outway := createMockOutway()
 
@@ -361,14 +355,17 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 
 	tests := map[string]struct {
 		authEnabled        bool
-		txLogger           transactionlog.TransactionLogger
+		txLogger           func(ctrl *gomock.Controller) transactionlog.TransactionLogger
 		dataSubjectHeader  string
 		wantHTTPStatusCode int
 		wantErr            *httperrors.NLXNetworkError
 	}{
-		"with failing auth settings": {
-			authEnabled:        true,
-			txLogger:           &transactionlog.DiscardTransactionLogger{},
+		"with_failing_auth_settings": {
+			authEnabled: true,
+			txLogger: func(ctrl *gomock.Controller) transactionlog.TransactionLogger {
+				txLogger := mock_transactionlog.NewMockTransactionLogger(ctrl)
+				return txLogger
+			},
 			dataSubjectHeader:  "",
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
 			wantErr: &httperrors.NLXNetworkError{
@@ -378,9 +375,14 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 				Message:  "error authorizing request",
 			},
 		},
-		"with failing transactionlogger": {
-			authEnabled:        false,
-			txLogger:           &failingTransactionLogger{},
+		"with_failing_transactionlogger": {
+			authEnabled: false,
+			txLogger: func(ctrl *gomock.Controller) transactionlog.TransactionLogger {
+				txLogger := mock_transactionlog.NewMockTransactionLogger(ctrl)
+				txLogger.EXPECT().AddRecord(gomock.Any()).Return(fmt.Errorf("cannot add transaction record"))
+
+				return txLogger
+			},
 			dataSubjectHeader:  "",
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
 			wantErr: &httperrors.NLXNetworkError{
@@ -390,9 +392,12 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 				Message:  "server error: unable to add record to database: cannot add transaction record",
 			},
 		},
-		"with invalid datasubject header": {
-			authEnabled:        false,
-			txLogger:           &transactionlog.DiscardTransactionLogger{},
+		"with_invalid_datasubject header": {
+			authEnabled: false,
+			txLogger: func(ctrl *gomock.Controller) transactionlog.TransactionLogger {
+				txLogger := mock_transactionlog.NewMockTransactionLogger(ctrl)
+				return txLogger
+			},
 			dataSubjectHeader:  "invalid",
 			wantHTTPStatusCode: httperrors.StatusNLXNetworkError,
 			wantErr: &httperrors.NLXNetworkError{
@@ -410,8 +415,13 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			recorder := httptest.NewRecorder()
 
+			tCtrl := gomock.NewController(t)
+			defer tCtrl.Finish()
+
+			outway.txlogger = tt.txLogger(tCtrl)
+
 			outway.plugins = []plugins.Plugin{
-				plugins.NewLogRecordPlugin("00000000000000000001", tt.txLogger),
+				plugins.NewLogRecordPlugin("00000000000000000001", outway.txlogger),
 				plugins.NewStripHeadersPlugin("00000000000000000001"),
 			}
 
@@ -424,8 +434,6 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 					}),
 				}, outway.plugins...)
 			}
-
-			outway.txlogger = tt.txLogger
 
 			req := httptest.NewRequest("GET", "http://mockservice.00000000000000000001.services.nlx.local", nil)
 			req.Header.Add("X-NLX-Request-Data-Subject", tt.dataSubjectHeader)

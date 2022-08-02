@@ -58,6 +58,7 @@ type Outway struct {
 	logger              *zap.Logger
 	txlogger            transactionlog.TransactionLogger
 	directoryClient     directoryapi.DirectoryClient
+	managementAPIClient managementapi.ManagementClient
 	httpServer          *http.Server
 	grpcServer          *grpc.Server
 	monitorService      *monitoring.Service
@@ -70,19 +71,19 @@ type Outway struct {
 }
 
 type NewOutwayArgs struct {
-	Name              string
-	AddressAPI        string
-	Ctx               context.Context
-	Logger            *zap.Logger
-	Txlogger          transactionlog.TransactionLogger
-	ManagementClient  managementapi.ManagementClient
-	MonitoringAddress string
-	OrgCert           *common_tls.CertificateBundle
-	InternalCert      *common_tls.CertificateBundle
-	DirectoryClient   directoryapi.DirectoryClient
-	AuthServiceURL    string
-	AuthCAPath        string
-	UseAsHTTPProxy    bool
+	Name                string
+	AddressAPI          string
+	Ctx                 context.Context
+	Logger              *zap.Logger
+	Txlogger            transactionlog.TransactionLogger
+	ManagementAPIClient managementapi.ManagementClient
+	MonitoringAddress   string
+	OrgCert             *common_tls.CertificateBundle
+	InternalCert        *common_tls.CertificateBundle
+	DirectoryClient     directoryapi.DirectoryClient
+	AuthServiceURL      string
+	AuthCAPath          string
+	UseAsHTTPProxy      bool
 }
 
 func (o *Outway) configureAuthorizationPlugin(authCAPath, authServiceURL string) (*plugins.AuthorizationPlugin, error) {
@@ -133,7 +134,7 @@ func (o *Outway) startDirectoryInspector() error {
 	return nil
 }
 
-func NewOutway(args *NewOutwayArgs) (*Outway, error) {
+func New(args *NewOutwayArgs) (*Outway, error) {
 	cert := args.OrgCert.Certificate()
 
 	if len(cert.Subject.Organization) != 1 {
@@ -149,9 +150,10 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 	organizationSerialNumber := cert.Subject.SerialNumber
 
 	o := &Outway{
-		ctx:        args.Ctx,
-		addressAPI: args.AddressAPI,
-		wg:         &sync.WaitGroup{},
+		ctx:                 args.Ctx,
+		addressAPI:          args.AddressAPI,
+		wg:                  &sync.WaitGroup{},
+		managementAPIClient: args.ManagementAPIClient,
 		logger: args.Logger.With(
 			zap.String("outway-organization-name", organizationName),
 			zap.String("outway-organization-serialnumber", organizationSerialNumber)),
@@ -227,8 +229,9 @@ func NewOutway(args *NewOutwayArgs) (*Outway, error) {
 	return o, nil
 }
 
-func (o *Outway) Run() error {
-	go o.announceToDirectory(context.Background())
+func (o *Outway) Run(ctx context.Context) error {
+	go o.announceToDirectory(ctx)
+	go o.announceToManagementAPI(ctx)
 
 	err := o.startDirectoryInspector()
 	if err != nil {

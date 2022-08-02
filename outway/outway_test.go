@@ -143,7 +143,7 @@ func TestNewOutwayExeception(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			outway, err := NewOutway(tt.args)
+			outway, err := New(tt.args)
 			if tt.wantError != nil {
 				assert.Equal(t, tt.wantError.Error(), err.Error())
 			} else {
