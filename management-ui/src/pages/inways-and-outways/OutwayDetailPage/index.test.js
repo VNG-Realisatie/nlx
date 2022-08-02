@@ -105,7 +105,7 @@ test('remove an Outway', async () => {
     </StoreProvider>,
   )
 
-  fireEvent.click(screen.getByTitle('Remove outway'))
+  fireEvent.click(screen.getByTitle('Remove Outway'))
 
   let confirmModal = screen.getByRole('dialog')
   let okButton = within(confirmModal).getByText('Remove')
@@ -122,7 +122,7 @@ test('remove an Outway', async () => {
     ),
   )
 
-  fireEvent.click(screen.getByTitle('Remove outway'))
+  fireEvent.click(screen.getByTitle('Remove Outway'))
 
   confirmModal = screen.getByRole('dialog')
   okButton = within(confirmModal).getByText('Remove')

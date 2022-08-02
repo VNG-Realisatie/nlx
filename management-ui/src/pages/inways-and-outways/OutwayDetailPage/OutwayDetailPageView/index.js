@@ -30,7 +30,7 @@ const OutwayDetails = ({ outway, removeHandler }) => {
 
   const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
     okText: t('Remove'),
-    children: <p>{t('Do you want to remove the outway?')}</p>,
+    children: <p>{t('Are you sure you want to remove the Outway?')}</p>,
   })
 
   const handleRemove = async () => {
@@ -47,7 +47,7 @@ const OutwayDetails = ({ outway, removeHandler }) => {
       </SubHeader>
 
       <StyledActionsBar>
-        <StyledRemoveButton title={t('Remove outway')} onClick={handleRemove} />
+        <StyledRemoveButton title={t('Remove Outway')} onClick={handleRemove} />
       </StyledActionsBar>
 
       <StyledSpecList data-testid="outway-specs" alignValuesRight>

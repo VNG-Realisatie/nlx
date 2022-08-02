@@ -28,7 +28,13 @@ const InwayDetailPageView = ({ inway, removeHandler }) => {
 
   const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
     okText: t('Remove'),
-    children: <p>{t('Do you want to remove the inway?')}</p>,
+    children: (
+      <p>
+        {t(
+          'Are you sure you want to remove the Inway? If this Inway is used to access services, deleting the Inway might cause these services to be unavailable on the NLX network.',
+        )}
+      </p>
+    ),
   })
 
   const handleRemove = async () => {
@@ -45,7 +51,7 @@ const InwayDetailPageView = ({ inway, removeHandler }) => {
       </SubHeader>
 
       <StyledActionsBar>
-        <StyledRemoveButton title={t('Remove inway')} onClick={handleRemove} />
+        <StyledRemoveButton title={t('Remove Inway')} onClick={handleRemove} />
       </StyledActionsBar>
 
       <StyledSpecList data-testid="inway-specs" alignValuesRight>

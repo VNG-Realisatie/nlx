@@ -117,7 +117,7 @@ test('remove an Inway', async () => {
     </StoreProvider>,
   )
 
-  fireEvent.click(screen.getByTitle('Remove inway'))
+  fireEvent.click(screen.getByTitle('Remove Inway'))
 
   let confirmModal = screen.getByRole('dialog')
   let okButton = within(confirmModal).getByText('Remove')
@@ -132,7 +132,7 @@ test('remove an Inway', async () => {
     expect(rootStore.inwayStore.removeInway).toHaveBeenCalledWith('my-inway'),
   )
 
-  fireEvent.click(screen.getByTitle('Remove inway'))
+  fireEvent.click(screen.getByTitle('Remove Inway'))
 
   confirmModal = screen.getByRole('dialog')
   okButton = within(confirmModal).getByText('Remove')
