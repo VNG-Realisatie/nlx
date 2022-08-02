@@ -48,8 +48,6 @@ Reset acc applications:
 
         stop_section deploy_${CHART}
       done
-  dependencies:
-    - Deploy acceptance
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
