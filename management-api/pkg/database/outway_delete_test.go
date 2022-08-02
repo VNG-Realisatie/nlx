@@ -55,14 +55,4 @@ func TestDeleteOutway(t *testing.T) {
 func assertOutwayDeleted(t *testing.T, repo database.ConfigDatabase, outwayName string) {
 	_, err := repo.GetOutway(context.Background(), outwayName)
 	require.Equal(t, database.ErrNotFound, err)
-
-	outways, err := repo.ListOutways(context.Background())
-	require.NoError(t, err)
-
-	for _, o := range outways {
-		if o.Name == outwayName {
-			t.Errorf("outway %q is not deleted", outwayName)
-		}
-	}
-
 }
