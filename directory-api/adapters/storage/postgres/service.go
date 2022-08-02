@@ -84,6 +84,9 @@ func (r *PostgreSQLRepository) RegisterService(model *domain.Service) error {
 	defer func() {
 		err = tx.Rollback()
 		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
 			r.logger.Error("cannot rollback database transaction for register service", zap.Error(err))
 		}
 	}()
