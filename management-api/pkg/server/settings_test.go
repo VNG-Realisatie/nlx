@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -20,15 +19,7 @@ import (
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/domain"
-	"go.nlx.io/nlx/management-api/pkg/auditlog"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
-	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	"go.nlx.io/nlx/management-api/pkg/directory"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
 func TestManagementService_GetSettings(t *testing.T) {
@@ -93,25 +84,15 @@ func TestManagementService_GetSettings(t *testing.T) {
 //nolint:funlen // alot of scenario's to test
 func TestManagementService_UpdateSettings(t *testing.T) {
 	tests := map[string]struct {
-		db               func(ctrl *gomock.Controller) database.ConfigDatabase
-		directoryClient  func(ctrl *gomock.Controller) directory.Client
-		auditLog         func(ctrl *gomock.Controller) auditlog.Logger
-		req              *api.UpdateSettingsRequest
+		setup            func(context.Context, serviceMocks)
 		ctx              context.Context
+		req              *api.UpdateSettingsRequest
 		expectedResponse *emptypb.Empty
 		expectedError    error
 	}{
 		"missing_required_permission": {
-			ctx: testCreateUserWithoutPermissionsContext(),
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				return mock_database.NewMockConfigDatabase(ctrl)
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				return mock_directory.NewMockClient(ctrl)
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				return mock_auditlog.NewMockLogger(ctrl)
-			},
+			ctx:   testCreateUserWithoutPermissionsContext(),
+			setup: func(context.Context, serviceMocks) {},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -120,18 +101,13 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.update\" to execute this request").Err(),
 		},
 		"when_writing_audit_log_fails": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				return mock_database.NewMockConfigDatabase(ctrl)
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				return mock_directory.NewMockClient(ctrl)
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl").Return(fmt.Errorf("arbitrary error"))
-				return auditLogger
-			},
 			ctx: testCreateAdminUserContext(),
+			setup: func(ctx context.Context, mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					OrganizationSettingsUpdate(ctx, "admin@example.com", "nlxctl").
+					Return(fmt.Errorf("arbitrary error"))
+			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -140,62 +116,59 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.Error(codes.Internal, "could not create audit log"),
 		},
 		"when_update_settings_database_call_fails": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
+			ctx: testCreateAdminUserContext(),
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				settings, err := domain.NewSettings("inway-name", "mock@email.com")
 				require.NoError(t, err)
 
-				db.EXPECT().UpdateSettings(
-					gomock.Any(), settings,
-				).Return(errors.New("arbitrary error"))
+				mocks.db.
+					EXPECT().
+					UpdateSettings(ctx, settings).
+					Return(errors.New("arbitrary error"))
 
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
-					EmailAddress: "mock@email.com",
-				}).Return(&emptypb.Empty{}, nil)
-				return directoryClient
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
-				return auditLogger
+				mocks.dc.
+					EXPECT().
+					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
+						EmailAddress: "mock@email.com",
+					}).
+					Return(&emptypb.Empty{}, nil)
+
+				mocks.al.
+					EXPECT().
+					OrganizationSettingsUpdate(ctx, "admin@example.com", "nlxctl").
+					Return(nil)
+
 			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			ctx:              testCreateAdminUserContext(),
 			expectedResponse: nil,
 			expectedError:    status.Error(codes.Internal, "database error"),
 		},
 		"inway_does_not_exist": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-
+			ctx: testCreateAdminUserContext(),
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				settings, err := domain.NewSettings("inway-name", "mock@email.com")
 				require.NoError(t, err)
 
-				db.EXPECT().UpdateSettings(gomock.Any(), settings).Return(database.ErrInwayNotFound)
+				mocks.db.
+					EXPECT().
+					UpdateSettings(ctx, settings).
+					Return(database.ErrInwayNotFound)
 
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
-					EmailAddress: "mock@email.com",
-				}).Return(&emptypb.Empty{}, nil)
+				mocks.dc.
+					EXPECT().
+					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
+						EmailAddress: "mock@email.com",
+					}).
+					Return(&emptypb.Empty{}, nil)
 
-				return directoryClient
+				mocks.al.
+					EXPECT().
+					OrganizationSettingsUpdate(ctx, "admin@example.com", "nlxctl").
+					Return(nil)
 			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
-				return auditLogger
-			},
-			ctx: testCreateAdminUserContext(),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -204,24 +177,20 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.Error(codes.InvalidArgument, "inway not found"),
 		},
 		"call_to_directory_fails": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
-					EmailAddress: "mock@email.com",
-				}).Return(nil, fmt.Errorf("arbitrary error"))
-
-				return directoryClient
-			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
-				return auditLogger
-			},
 			ctx: testCreateAdminUserContext(),
+			setup: func(ctx context.Context, mocks serviceMocks) {
+				mocks.dc.
+					EXPECT().
+					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
+						EmailAddress: "mock@email.com",
+					}).
+					Return(nil, fmt.Errorf("arbitrary error"))
+
+				mocks.al.
+					EXPECT().
+					OrganizationSettingsUpdate(ctx, "admin@example.com", "nlxctl").
+					Return(nil)
+			},
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -230,30 +199,27 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 			expectedError:    status.Error(codes.Internal, "nlx directory unreachable"),
 		},
 		"happy_flow": {
-			db: func(ctrl *gomock.Controller) database.ConfigDatabase {
-				db := mock_database.NewMockConfigDatabase(ctrl)
-
+			ctx: testCreateAdminUserContext(),
+			setup: func(ctx context.Context, mocks serviceMocks) {
 				settings, err := domain.NewSettings("inway-name", "mock@email.com")
 				require.NoError(t, err)
 
-				db.EXPECT().UpdateSettings(gomock.Any(), settings).Return(nil)
+				mocks.db.
+					EXPECT().
+					UpdateSettings(ctx, settings).
+					Return(nil)
 
-				return db
-			},
-			directoryClient: func(ctrl *gomock.Controller) directory.Client {
-				directoryClient := mock_directory.NewMockClient(ctrl)
-				directoryClient.EXPECT().SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
-					EmailAddress: "mock@email.com",
-				}).Return(&emptypb.Empty{}, nil)
+				mocks.dc.
+					EXPECT().
+					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
+						EmailAddress: "mock@email.com",
+					}).
+					Return(&emptypb.Empty{}, nil)
 
-				return directoryClient
+				mocks.al.
+					EXPECT().
+					OrganizationSettingsUpdate(ctx, "admin@example.com", "nlxctl")
 			},
-			auditLog: func(ctrl *gomock.Controller) auditlog.Logger {
-				auditLogger := mock_auditlog.NewMockLogger(ctrl)
-				auditLogger.EXPECT().OrganizationSettingsUpdate(gomock.Any(), "admin@example.com", "nlxctl")
-				return auditLogger
-			},
-			ctx: testCreateAdminUserContext(),
 			req: &api.UpdateSettingsRequest{
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
@@ -267,13 +233,10 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
+			service, _, mocks := newService(t)
+			tt.setup(tt.ctx, mocks)
 
-			l := zap.NewNop()
-
-			h := server.NewManagementService(l, tt.directoryClient(ctrl), nil, nil, nil, tt.db(ctrl), nil, tt.auditLog(ctrl), management.NewClient, outway.NewClient)
-			got, err := h.UpdateSettings(tt.ctx, tt.req)
+			got, err := service.UpdateSettings(tt.ctx, tt.req)
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
