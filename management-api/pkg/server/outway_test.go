@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/jackc/pgtype"
 	"github.com/stretchr/testify/assert"
@@ -21,13 +20,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api"
-	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
 	"go.nlx.io/nlx/management-api/pkg/database"
-	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
-	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
-	"go.nlx.io/nlx/management-api/pkg/management"
-	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/server"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
 
@@ -148,30 +141,15 @@ func TestRegisterOutway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			logger := zaptest.Logger(t)
-
-			mockCtrl := gomock.NewController(t)
-			defer mockCtrl.Finish()
+			service, _, mocks := newService(t)
 
 			ctx := peer.NewContext(context.Background(), tt.args.peer)
-			mockDatabase := mock_database.NewMockConfigDatabase(mockCtrl)
 
 			if tt.wantErr == nil {
-				mockDatabase.EXPECT().RegisterOutway(ctx, tt.args.database)
+				mocks.db.
+					EXPECT().
+					RegisterOutway(ctx, tt.args.database)
 			}
-
-			service := server.NewManagementService(
-				logger,
-				mock_directory.NewMockClient(mockCtrl),
-				nil,
-				nil,
-				nil,
-				mockDatabase,
-				nil,
-				mock_auditlog.NewMockLogger(mockCtrl),
-				management.NewClient,
-				outway.NewClient,
-			)
 
 			_, err := service.RegisterOutway(ctx, tt.args.request)
 			assert.Equal(t, tt.wantErr, err)
