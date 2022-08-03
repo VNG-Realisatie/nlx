@@ -81,14 +81,13 @@ func TestManagementService_GetSettings(t *testing.T) {
 	}
 }
 
-//nolint:funlen // alot of scenario's to test
 func TestManagementService_UpdateSettings(t *testing.T) {
 	tests := map[string]struct {
-		setup            func(context.Context, serviceMocks)
-		ctx              context.Context
-		req              *api.UpdateSettingsRequest
-		expectedResponse *emptypb.Empty
-		expectedError    error
+		setup   func(context.Context, serviceMocks)
+		ctx     context.Context
+		req     *api.UpdateSettingsRequest
+		want    *emptypb.Empty
+		wantErr error
 	}{
 		"missing_required_permission": {
 			ctx:   testCreateUserWithoutPermissionsContext(),
@@ -97,8 +96,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: nil,
-			expectedError:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.update\" to execute this request").Err(),
+			want:    nil,
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.organization_settings.update\" to execute this request").Err(),
 		},
 		"when_writing_audit_log_fails": {
 			ctx: testCreateAdminUserContext(),
@@ -112,8 +111,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "could not create audit log"),
+			want:    nil,
+			wantErr: status.Error(codes.Internal, "could not create audit log"),
 		},
 		"when_update_settings_database_call_fails": {
 			ctx: testCreateAdminUserContext(),
@@ -143,8 +142,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "database error"),
+			want:    nil,
+			wantErr: status.Error(codes.Internal, "database error"),
 		},
 		"inway_does_not_exist": {
 			ctx: testCreateAdminUserContext(),
@@ -173,8 +172,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.InvalidArgument, "inway not found"),
+			want:    nil,
+			wantErr: status.Error(codes.InvalidArgument, "inway not found"),
 		},
 		"call_to_directory_fails": {
 			ctx: testCreateAdminUserContext(),
@@ -195,8 +194,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: nil,
-			expectedError:    status.Error(codes.Internal, "nlx directory unreachable"),
+			want:    nil,
+			wantErr: status.Error(codes.Internal, "nlx directory unreachable"),
 		},
 		"happy_flow": {
 			ctx: testCreateAdminUserContext(),
@@ -224,8 +223,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			expectedResponse: &emptypb.Empty{},
-			expectedError:    nil,
+			want:    &emptypb.Empty{},
+			wantErr: nil,
 		},
 	}
 
@@ -238,8 +237,8 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 
 			got, err := service.UpdateSettings(tt.ctx, tt.req)
 
-			assert.Equal(t, tt.expectedResponse, got)
-			assert.Equal(t, tt.expectedError, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.wantErr, err)
 		})
 	}
 }
