@@ -1,3 +1,34 @@
+# [0.136.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.135.1...v0.136.0) (2022-08-03)
+
+
+### Bug Fixes
+
+* **directory:** ensure a service is registered for the correct Inway ([f97b578](https://gitlab.com/commonground/nlx/nlx/commit/f97b578ac40c66814d3312014d9c5ca6c8c62436)), closes [nlx#1584](https://gitlab.com/nlx/issues/1584)
+* **directory:** ignore transaction done error when registering a service ([4f43626](https://gitlab.com/commonground/nlx/nlx/commit/4f436268a6b4c20828a75d65ba420839ce33a52e)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **inway,outway:** import Postgres driver ([4550323](https://gitlab.com/commonground/nlx/nlx/commit/4550323d9ca1dc57ad431057673156667c332fc2)), closes [nlx#1579](https://gitlab.com/nlx/issues/1579)
+
+
+### Features
+
+* **inway:** log error when offered service cannot be reached ([c07cbdf](https://gitlab.com/commonground/nlx/nlx/commit/c07cbdf04fa44b3ae54dad2639fc4eccc9736f96)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **management:** add auditlog record for deleting an Outway ([b63b012](https://gitlab.com/commonground/nlx/nlx/commit/b63b0127c6eb165407b4611d96f79927f4cae2cb)), closes [nlx#1581](https://gitlab.com/nlx/issues/1581)
+* **management:** add remove outway feature ([5478565](https://gitlab.com/commonground/nlx/nlx/commit/547856599bdd3fd68ee8c1ae46dc8f1ca329a838)), closes [nlx#1581](https://gitlab.com/nlx/issues/1581)
+* **management:** show error when user has no permission in management UI ([a18271e](https://gitlab.com/commonground/nlx/nlx/commit/a18271ecedaf12b0c7ebecffee71f7052dea7b22)), closes [nlx#1547](https://gitlab.com/nlx/issues/1547)
+* **management:** show feedback if accepting the ToS fails ([e8c2f2f](https://gitlab.com/commonground/nlx/nlx/commit/e8c2f2f336ecf4cc5773e60f3caf1f98d8847cd7)), closes [nlx#1547](https://gitlab.com/nlx/issues/1547)
+* **management:** show feedback if adding an Inway fails ([2dcb0c4](https://gitlab.com/commonground/nlx/nlx/commit/2dcb0c4c7a0196f45e1d7ecfd002ec562e04ef09)), closes [nlx#1547](https://gitlab.com/nlx/issues/1547)
+* **management:** show feedback if removing an Inway fails ([63a5d0e](https://gitlab.com/commonground/nlx/nlx/commit/63a5d0e43da1c60285380cbdc1d3299d46bf26f4)), closes [nlx#1547](https://gitlab.com/nlx/issues/1547)
+* **management:** show feedback if updating the settings fails ([1841efd](https://gitlab.com/commonground/nlx/nlx/commit/1841efdf184b12afe819a696f21f87460c5e6867)), closes [nlx#1547](https://gitlab.com/nlx/issues/1547)
+* **outway:** keep announcing to the management api after startup ([4b8f483](https://gitlab.com/commonground/nlx/nlx/commit/4b8f4837d4f44550df6802f5cff3248f7551ed56)), closes [nlx#1581](https://gitlab.com/nlx/issues/1581)
+* return structured errors in json format when calling outway ([e99ad57](https://gitlab.com/commonground/nlx/nlx/commit/e99ad57baff48052f9ebf70e26f88d5fbe41a949)), closes [nlx#1557](https://gitlab.com/nlx/issues/1557)
+* **txlog:** enable 'migrate status' command for the txlog-api + copy migrations from txlog-db ([2de8538](https://gitlab.com/commonground/nlx/nlx/commit/2de8538ea4733f0afd5f085c04c6b42713dd936a)), closes [nlx#1579](https://gitlab.com/nlx/issues/1579)
+* **txlog:** enable 'migrate up' command for the txlog-api ([914797f](https://gitlab.com/commonground/nlx/nlx/commit/914797f33c07500c5facf214b29c36cd05751d59)), closes [nlx#1579](https://gitlab.com/nlx/issues/1579)
+* **txlog:** introduce initContainer for txlog-api migrations + remove job-transaction-log.yaml ([d510ffb](https://gitlab.com/commonground/nlx/nlx/commit/d510ffbd062baee1c4297d7379121f4786ae97da)), closes [nlx#1579](https://gitlab.com/nlx/issues/1579)
+
+
+### Reverts
+
+* **ca-cfssl-unsafe:** use go 1.18.5 instead of go 1.19.0 ([25711a3](https://gitlab.com/commonground/nlx/nlx/commit/25711a32e05e58bc2ff74effe882eaa4ed86ab97)), closes [nlx#1581](https://gitlab.com/nlx/issues/1581)
+
 ## [0.135.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.135.0...v0.135.1) (2022-07-19)
 
 # [0.135.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.134.1...v0.135.0) (2022-07-18)
