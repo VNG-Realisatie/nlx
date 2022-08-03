@@ -20,7 +20,6 @@
     ]
   },
   "commitBody": "Issue: nlx#1171",
-  "ignoreDeps": [],
   "packageRules": [
     {
       "groupName": "used for E2E-tests. more recent versions only support ESM which causes issues while importing into TypeScript",
@@ -43,6 +42,12 @@
       "groupName": "React v18 - these dependencies support v18 but break support for v17",
       "packageNames": ["@testing-library/react"],
       "enabled": false
+    },
+    {
+      "groupName": "ca-cfssl-unsafe. Upgrading to go 1.19 breaks this component",
+      "paths": ["ca-cfssl-unsafe/**"],
+      "matchPackageNames": ["golang"],
+      "allowedVersions": "<=1.18"
     }
   ]
 }
