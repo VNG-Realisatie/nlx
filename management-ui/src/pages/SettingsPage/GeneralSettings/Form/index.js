@@ -35,7 +35,7 @@ const Form = ({ initialValues, onSubmitHandler, ...props }) => {
   const [ConfirmationModal, confirmModal] = useConfirmationModal({
     okText: t('Save'),
     children: t(
-      'By removing the organization inway it is no longer possible to process or receive access requests',
+      'By removing the organization Inway it is no longer possible to process or receive access requests',
     ),
   })
 
