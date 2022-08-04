@@ -34,7 +34,7 @@
     "@commonground/design-system": "21.1.10",
     "@fontsource/source-sans-pro": "4.5.10",
     "@openapitools/openapi-generator-cli": "2.5.1",
-    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.4",
     "@testing-library/user-event": "14.4.1",
     "@types/react-router-dom": "5.3.3",
