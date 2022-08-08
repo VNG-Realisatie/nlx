@@ -6,7 +6,7 @@ metadata:
     {{- include "directory.labels" . | nindent 4 }}
 spec:
   teamId: {{ include "directory.fullname" . }}
-  numberOfInstances: 1
+  numberOfInstances: {{ .Values.postgresql.numberOfInstances }}
   users:
     admin:
       - superuser

@@ -15,6 +15,7 @@ enableDemoRedirect: false
 postgresql:
   version: "11"
   storageSize: 8Gi
+  numberOfInstances: 1
 
 ################
 ## Sub-charts ##

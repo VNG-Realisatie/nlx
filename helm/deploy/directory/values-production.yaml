@@ -3,6 +3,8 @@
 ################
 enableDemoRedirect: true
 
+postgresql:
+  numberOfInstances: 2
 
 ################
 ## Sub-charts ##
