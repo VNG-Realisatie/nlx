@@ -37,3 +37,23 @@ dependencies:
     alias: nlx-outway-2
     repository: "file://../../charts/nlx-outway"
     version: ">=0"
+  - name: nlx-inway
+    alias: nlx-inway
+    repository: "file://../../charts/nlx-inway"
+    version: ">=0"
+  - name: nlx-management
+    alias: nlx-management
+    repository: "file://../../charts/nlx-management"
+    version: ">=0"
+  - name: nlx-txlog-api
+    alias: nlx-txlog-api
+    repository: "file://../../charts/nlx-txlog-api"
+    version: ">=0"
+  - name: video-player-ui
+    alias: video-player-ui
+    repository: "file://../../charts/video-player-ui"
+    version: ">=0"
+  - name: websockets-chat-ui
+    alias: websockets-chat-ui
+    repository: "file://../../charts/websockets-chat-ui"
+    version: ">=0"
