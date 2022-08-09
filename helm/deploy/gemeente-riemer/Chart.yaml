@@ -16,4 +16,21 @@ dependencies:
     repository: https://charts.commonground.nl
     version: 0.1.0
     condition: manage-citizens-ui.enabled
-
+  - name: nlx-inway
+    repository: "file://../../charts/nlx-inway"
+    version: ">=0"
+  - name: nlx-management
+    repository: "file://../../charts/nlx-management"
+    version: ">=0"
+  - name: nlx-outway
+    repository: "file://../../charts/nlx-outway"
+    version: ">=0"
+  - name: nlx-txlog-api
+    repository: "file://../../charts/nlx-txlog-api"
+    version: ">=0"
+  - name: video-player-ui
+    repository: "file://../../charts/video-player-ui"
+    version: ">=0"
+  - name: websockets-chat-ui
+    repository: "file://../../charts/websockets-chat-ui"
+    version: ">=0"
