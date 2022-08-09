@@ -5,7 +5,6 @@ exports.config = {
 
   capabilities: [
     {
-      os: "Windows",
       browserName: "chrome",
     },
   ],
