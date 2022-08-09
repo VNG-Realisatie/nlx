@@ -1,0 +1,6 @@
+dependencies:
+- name: nlx-directory
+  repository: file://../../charts/nlx-directory
+  version: 0.136.0
+digest: sha256:e4b6dc8128aa93812762d20504dd738777068e6db8906a4995fc424c3f9d0fe6
+generated: "2022-08-09T10:51:11.678835+02:00"

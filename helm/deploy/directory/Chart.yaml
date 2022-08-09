@@ -4,3 +4,8 @@ description: A meta chart for NLX directory
 type: application
 version: 0.136.0
 appVersion: 0.136.0
+
+dependencies:
+  - name: nlx-directory
+    repository: "file://../../charts/nlx-directory"
+    version: ">=0"
