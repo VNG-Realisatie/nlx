@@ -12,3 +12,12 @@ dependencies:
   - name: basisregister-fictieve-kentekens
     version: 0.1.0
     repository: https://charts.commonground.nl
+  - name: nlx-inway
+    repository: "file://../../charts/nlx-inway"
+    version: ">=0"
+  - name: nlx-management
+    repository: "file://../../charts/nlx-management"
+    version: ">=0"
+  - name: nlx-txlog-api
+    repository: "file://../../charts/nlx-txlog-api"
+    version: ">=0"

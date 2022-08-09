@@ -5,5 +5,14 @@ dependencies:
 - name: basisregister-fictieve-kentekens
   repository: https://charts.commonground.nl
   version: 0.1.0
-digest: sha256:967b4db21fa76d2f4da82305a2907ed50dd006e07ea8b8ba639c70565906cc50
-generated: "2022-06-27T13:31:28.600506+02:00"
+- name: nlx-inway
+  repository: file://../../charts/nlx-inway
+  version: 0.136.0
+- name: nlx-management
+  repository: file://../../charts/nlx-management
+  version: 0.136.0
+- name: nlx-txlog-api
+  repository: file://../../charts/nlx-txlog-api
+  version: 0.136.0
+digest: sha256:603c1529ed0868174a2d29ff96a3367e0f3cd7bb82b9d3132b5275e64268d6e0
+generated: "2022-08-09T10:55:24.889957+02:00"
