@@ -10,3 +10,12 @@ dependencies:
     version: 0.2.0
     repository: https://charts.commonground.nl
     condition: parkeerrechten-admin.enabled
+  - name: nlx-management
+    repository: "file://../../charts/nlx-management"
+    version: ">=0"
+  - name: nlx-outway
+    repository: "file://../../charts/nlx-outway"
+    version: ">=0"
+  - name: nlx-txlog-api
+    repository: "file://../../charts/nlx-txlog-api"
+    version: ">=0"

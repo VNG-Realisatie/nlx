@@ -2,5 +2,14 @@ dependencies:
 - name: parkeerrechten-admin
   repository: https://charts.commonground.nl
   version: 0.2.0
-digest: sha256:f3dbf3404601426fff93106f2e604ad5b496aacb6cf57c57d48ba2d40d8c324e
-generated: "2022-06-28T09:31:52.417037+02:00"
+- name: nlx-management
+  repository: file://../../charts/nlx-management
+  version: 0.136.0
+- name: nlx-outway
+  repository: file://../../charts/nlx-outway
+  version: 0.136.0
+- name: nlx-txlog-api
+  repository: file://../../charts/nlx-txlog-api
+  version: 0.136.0
+digest: sha256:ff0b0f6f1f8f387fa7439a639164b552e6de29f68e627114352eef502e22b65c
+generated: "2022-08-09T10:58:42.167144+02:00"
