@@ -7,26 +7,12 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"time"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/management-api/domain"
 )
 
-type dbSettings struct {
-	ID                       uint
-	InwayID                  *uint
-	OrganizationEmailAddress string
-	Inway                    *Inway `gorm:"foreignkey:InwayID;references:ID"`
-	CreatedAt                time.Time
-	UpdatedAt                time.Time
-}
-
 var ErrInwayNotFound = errors.New("inway not found")
-
-func (s *dbSettings) TableName() string {
-	return "nlx_management.settings"
-}
 
 func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*domain.Settings, error) {
 	settings, err := db.queries.GetSettings(ctx)

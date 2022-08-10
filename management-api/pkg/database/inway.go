@@ -10,6 +10,8 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 type Inway struct {
@@ -67,12 +69,10 @@ func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) 
 	}
 
 	if settings != nil && settings.OrganizationInwayName() != "" && settings.OrganizationInwayName() == name {
-		err = tx.
-			WithContext(ctx).
-			Omit(clause.Associations).
-			Model(&dbSettings{}).
-			Where("inway_id = ?", inway.ID).
-			Update("inway_id", nil).Error
+		err = db.queries.UpdateSettings(ctx, &queries.UpdateSettingsParams{
+			OrganizationEmailAddress: settings.OrganizationEmailAddress(),
+			InwayName:                "",
+		})
 		if err != nil {
 			return err
 		}
