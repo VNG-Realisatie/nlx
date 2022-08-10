@@ -19,7 +19,6 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
-// GetSettings returns the settings for the organization
 func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (*api.Settings, error) {
 	err := s.authorize(ctx, permissions.ReadOrganizationSettings)
 	if err != nil {
@@ -46,7 +45,6 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (
 	return result, nil
 }
 
-// UpdateSettings updates the settings for the organization
 func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
 	err := s.authorize(ctx, permissions.UpdateOrganizationSettings)
 	if err != nil {

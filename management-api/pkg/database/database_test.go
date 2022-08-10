@@ -19,9 +19,8 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"go.nlx.io/nlx/testing/testingutils"
-
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/testing/testingutils"
 )
 
 var setupOnce sync.Once
