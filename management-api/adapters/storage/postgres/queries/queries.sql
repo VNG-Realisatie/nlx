@@ -18,22 +18,17 @@ from
     nlx_management.inways
 where inways.name = sqlc.arg(inway_name)::text;
 
--- name: DeleteSettings :exec
-delete from nlx_management.settings;
-
--- name: CreateSettings :exec
-insert into
+-- name: UpdateSettings :exec
+update
     nlx_management.settings
-        (organization_email_address, inway_id)
-    VALUES (
-               sqlc.arg(organization_email_address)::text,
-            (
-                select
-                    id
-                from
-                    nlx_management.inways
-                where
-                        inways.name = sqlc.arg(inway_name)::text
-            )
-    )
+set
+        organization_email_address = sqlc.arg(organization_email_address)::text,
+        inway_id = (
+            select
+                id
+            from
+                nlx_management.inways
+            where
+                    inways.name = sqlc.arg(inway_name)::text
+        )
 ;

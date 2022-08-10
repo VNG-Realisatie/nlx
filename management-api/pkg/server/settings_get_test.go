@@ -38,7 +38,6 @@ func TestManagementService_GetSettings(t *testing.T) {
 					EXPECT().
 					GetSettings(gomock.Any()).
 					Return(nil, errors.New("arbitrary error"))
-
 			},
 			ctx:     testCreateAdminUserContext(),
 			want:    nil,

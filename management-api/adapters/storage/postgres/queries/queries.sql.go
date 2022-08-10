@@ -25,42 +25,6 @@ func (q *Queries) CountInwaysByName(ctx context.Context, inwayName string) (int6
 	return count, err
 }
 
-const createSettings = `-- name: CreateSettings :exec
-insert into
-    nlx_management.settings
-        (organization_email_address, inway_id)
-    VALUES (
-               $1::text,
-            (
-                select
-                    id
-                from
-                    nlx_management.inways
-                where
-                        inways.name = $2::text
-            )
-    )
-`
-
-type CreateSettingsParams struct {
-	OrganizationEmailAddress string
-	InwayName                string
-}
-
-func (q *Queries) CreateSettings(ctx context.Context, arg *CreateSettingsParams) error {
-	_, err := q.exec(ctx, q.createSettingsStmt, createSettings, arg.OrganizationEmailAddress, arg.InwayName)
-	return err
-}
-
-const deleteSettings = `-- name: DeleteSettings :exec
-delete from nlx_management.settings
-`
-
-func (q *Queries) DeleteSettings(ctx context.Context) error {
-	_, err := q.exec(ctx, q.deleteSettingsStmt, deleteSettings)
-	return err
-}
-
 const getSettings = `-- name: GetSettings :one
 select
     settings.organization_email_address,
@@ -85,4 +49,29 @@ func (q *Queries) GetSettings(ctx context.Context) (*GetSettingsRow, error) {
 	var i GetSettingsRow
 	err := row.Scan(&i.OrganizationEmailAddress, &i.Name)
 	return &i, err
+}
+
+const updateSettings = `-- name: UpdateSettings :exec
+update
+    nlx_management.settings
+set
+        organization_email_address = $1::text,
+        inway_id = (
+            select
+                id
+            from
+                nlx_management.inways
+            where
+                    inways.name = $2::text
+        )
+`
+
+type UpdateSettingsParams struct {
+	OrganizationEmailAddress string
+	InwayName                string
+}
+
+func (q *Queries) UpdateSettings(ctx context.Context, arg *UpdateSettingsParams) error {
+	_, err := q.exec(ctx, q.updateSettingsStmt, updateSettings, arg.OrganizationEmailAddress, arg.InwayName)
+	return err
 }

@@ -7,10 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
-
-	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/management-api/domain"
@@ -59,32 +56,8 @@ func (db *PostgresConfigDatabase) UpdateSettings(ctx context.Context, settings *
 		}
 	}
 
-	tx, err := db.db.BeginTx(ctx, nil)
-	if err != nil {
-		return fmt.Errorf("failed to begin db transaction: %e", err)
-	}
-
-	defer func() {
-		err = tx.Rollback()
-		if err != nil {
-			db.Logger.Error(ctx, "failed to rollback db transaction while updating settings", zap.Error(err))
-		}
-	}()
-
-	queriesWithTx := db.queries.WithTx(tx)
-
-	err = queriesWithTx.DeleteSettings(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to delete settings: %e", err)
-	}
-
-	err = queriesWithTx.CreateSettings(ctx, &queries.CreateSettingsParams{
+	return db.queries.UpdateSettings(ctx, &queries.UpdateSettingsParams{
 		OrganizationEmailAddress: settings.OrganizationEmailAddress(),
 		InwayName:                settings.OrganizationInwayName(),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create settings: %e", err)
-	}
-
-	return tx.Commit()
 }
