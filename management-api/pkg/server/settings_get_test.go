@@ -17,6 +17,7 @@ import (
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/domain"
+	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
 func TestManagementService_GetSettings(t *testing.T) {
@@ -42,6 +43,20 @@ func TestManagementService_GetSettings(t *testing.T) {
 			ctx:     testCreateAdminUserContext(),
 			want:    nil,
 			wantErr: status.Error(codes.Internal, "database error"),
+		},
+		"when_there_is_no_settings_row_present": {
+			setup: func(ctx context.Context, mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					GetSettings(gomock.Any()).
+					Return(nil, database.ErrNotFound)
+			},
+			ctx: testCreateAdminUserContext(),
+			want: &api.Settings{
+				OrganizationInway:        "",
+				OrganizationEmailAddress: "",
+			},
+			wantErr: nil,
 		},
 		"happy_flow": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
