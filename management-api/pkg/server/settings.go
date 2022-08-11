@@ -31,7 +31,8 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (
 	if err != nil {
 		if errIsNotFound(err) {
 			return &api.Settings{
-				OrganizationInway: "",
+				OrganizationInway:        "",
+				OrganizationEmailAddress: "",
 			}, nil
 		}
 
