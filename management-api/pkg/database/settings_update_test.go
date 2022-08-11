@@ -47,6 +47,16 @@ func TestUpdateSettings(t *testing.T) {
 			},
 			expectedErr: nil,
 		},
+		"happy_flow_unsetting_organization_inway": {
+			loadFixtures: true,
+			settings: func() *domain.Settings {
+				settings, err := domain.NewSettings("", "mock@email.com")
+				require.NoError(t, err)
+
+				return settings
+			},
+			expectedErr: nil,
+		},
 	}
 
 	for name, tt := range tests {
