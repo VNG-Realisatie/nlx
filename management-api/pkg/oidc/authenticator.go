@@ -150,6 +150,8 @@ func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 	session, err := a.store.Get(r, cookieName)
 	if err != nil {
+		a.logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
+
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
 		return
 	}
@@ -158,6 +160,8 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		_, err := a.oidcVerifier.Verify(r.Context(), bearerToken)
 		if err == nil {
+			a.logger.Error("cannot verify token", zap.Error(err))
+
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
 		}
@@ -168,6 +172,8 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 
 		err := session.Save(r, w)
 		if err != nil {
+			a.logger.Error("unable to save session", zap.Error(err))
+
 			http.Error(w, "unable to save session", http.StatusInternalServerError)
 			return
 		}
@@ -179,6 +185,8 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 	session, err := a.store.Get(r, cookieName)
 	if err != nil {
+		a.logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
+
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
 		return
 	}
@@ -191,6 +199,8 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 
 	idToken, err := a.oidcVerifier.Verify(r.Context(), bearerToken)
 	if err != nil {
+		a.logger.Error("cannot verify token", zap.Error(err))
+
 		http.Error(w, "unauthorized request, invalid token", http.StatusUnauthorized)
 		return
 	}
@@ -199,6 +209,8 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 	claims := &Claims{}
 
 	if err = idToken.Claims(claims); err != nil {
+		a.logger.Error("unable to parse id token claims", zap.Error(err))
+
 		http.Error(w, "unauthorized request, could not parse token", http.StatusUnauthorized)
 		return
 	}
