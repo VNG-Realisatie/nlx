@@ -43,7 +43,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 			want:    nil,
 			wantErr: status.Error(codes.Internal, "database error"),
 		},
-		"happy flow": {
+		"happy_flow": {
 			setup: func(ctx context.Context, mocks serviceMocks) {
 				settings, err := domain.NewSettings("inway-name", "mock@email.com")
 				require.NoError(t, err)
