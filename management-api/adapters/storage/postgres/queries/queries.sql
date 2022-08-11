@@ -11,12 +11,13 @@ order by
     settings.id
 limit 1;
 
--- name: CountInwaysByName :one
+-- name: DoesInwayExistByName :one
 select
-    count(*)
+        count(*)>0 as inway_exits
 from
     nlx_management.inways
-where inways.name = sqlc.arg(inway_name)::text;
+where
+    inways.name = sqlc.arg(inway_name)::text;
 
 -- name: UpdateSettings :exec
 update

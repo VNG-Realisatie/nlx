@@ -24,8 +24,8 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
-	if q.countInwaysByNameStmt, err = db.PrepareContext(ctx, countInwaysByName); err != nil {
-		return nil, fmt.Errorf("error preparing query CountInwaysByName: %w", err)
+	if q.doesInwayExistByNameStmt, err = db.PrepareContext(ctx, doesInwayExistByName); err != nil {
+		return nil, fmt.Errorf("error preparing query DoesInwayExistByName: %w", err)
 	}
 	if q.getSettingsStmt, err = db.PrepareContext(ctx, getSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query GetSettings: %w", err)
@@ -38,9 +38,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 
 func (q *Queries) Close() error {
 	var err error
-	if q.countInwaysByNameStmt != nil {
-		if cerr := q.countInwaysByNameStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing countInwaysByNameStmt: %w", cerr)
+	if q.doesInwayExistByNameStmt != nil {
+		if cerr := q.doesInwayExistByNameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing doesInwayExistByNameStmt: %w", cerr)
 		}
 	}
 	if q.getSettingsStmt != nil {
@@ -90,19 +90,19 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                    DBTX
-	tx                    *sql.Tx
-	countInwaysByNameStmt *sql.Stmt
-	getSettingsStmt       *sql.Stmt
-	updateSettingsStmt    *sql.Stmt
+	db                       DBTX
+	tx                       *sql.Tx
+	doesInwayExistByNameStmt *sql.Stmt
+	getSettingsStmt          *sql.Stmt
+	updateSettingsStmt       *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                    tx,
-		tx:                    tx,
-		countInwaysByNameStmt: q.countInwaysByNameStmt,
-		getSettingsStmt:       q.getSettingsStmt,
-		updateSettingsStmt:    q.updateSettingsStmt,
+		db:                       tx,
+		tx:                       tx,
+		doesInwayExistByNameStmt: q.doesInwayExistByNameStmt,
+		getSettingsStmt:          q.getSettingsStmt,
+		updateSettingsStmt:       q.updateSettingsStmt,
 	}
 }

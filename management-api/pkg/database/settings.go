@@ -32,12 +32,12 @@ func (db *PostgresConfigDatabase) GetSettings(ctx context.Context) (*domain.Sett
 
 func (db *PostgresConfigDatabase) UpdateSettings(ctx context.Context, settings *domain.Settings) error {
 	if settings.OrganizationInwayName() != "" {
-		amount, err := db.queries.CountInwaysByName(ctx, settings.OrganizationInwayName())
+		inwayExists, err := db.queries.DoesInwayExistByName(ctx, settings.OrganizationInwayName())
 		if err != nil {
 			return err
 		}
 
-		if amount < 1 {
+		if !inwayExists {
 			return ErrInwayNotFound
 		}
 	}

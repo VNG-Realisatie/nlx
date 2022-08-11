@@ -10,19 +10,23 @@ import (
 	"database/sql"
 )
 
-const countInwaysByName = `-- name: CountInwaysByName :one
+const doesInwayExistByName = `-- name: DoesInwayExistByName :one
 select
-    count(*)
+    case
+        when count(*) > 0
+            then true
+        else false
+        end amount
 from
     nlx_management.inways
 where inways.name = $1::text
 `
 
-func (q *Queries) CountInwaysByName(ctx context.Context, inwayName string) (int64, error) {
-	row := q.queryRow(ctx, q.countInwaysByNameStmt, countInwaysByName, inwayName)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
+func (q *Queries) DoesInwayExistByName(ctx context.Context, inwayName string) (bool, error) {
+	row := q.queryRow(ctx, q.doesInwayExistByNameStmt, doesInwayExistByName, inwayName)
+	var amount bool
+	err := row.Scan(&amount)
+	return amount, err
 }
 
 const getSettings = `-- name: GetSettings :one
