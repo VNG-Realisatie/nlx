@@ -8,25 +8,48 @@ package queries
 import (
 	"context"
 	"database/sql"
+	"time"
 )
+
+const createAccessGrant = `-- name: CreateAccessGrant :one
+insert into
+    nlx_management.access_grants
+    (
+        access_request_incoming_id,
+        created_at
+    ) values (
+          $1,
+          $2
+    )
+returning id
+`
+
+type CreateAccessGrantParams struct {
+	AccessRequestIncomingID int32
+	CreatedAt               time.Time
+}
+
+func (q *Queries) CreateAccessGrant(ctx context.Context, arg *CreateAccessGrantParams) (int32, error) {
+	row := q.queryRow(ctx, q.createAccessGrantStmt, createAccessGrant, arg.AccessRequestIncomingID, arg.CreatedAt)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
 
 const doesInwayExistByName = `-- name: DoesInwayExistByName :one
 select
-    case
-        when count(*) > 0
-            then true
-        else false
-        end amount
+        count(*)>0 as inway_exits
 from
     nlx_management.inways
-where inways.name = $1::text
+where
+    inways.name = $1::text
 `
 
 func (q *Queries) DoesInwayExistByName(ctx context.Context, inwayName string) (bool, error) {
 	row := q.queryRow(ctx, q.doesInwayExistByNameStmt, doesInwayExistByName, inwayName)
-	var amount bool
-	err := row.Scan(&amount)
-	return amount, err
+	var inway_exits bool
+	err := row.Scan(&inway_exits)
+	return inway_exits, err
 }
 
 const getSettings = `-- name: GetSettings :one

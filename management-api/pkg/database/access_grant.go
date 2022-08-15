@@ -11,6 +11,8 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 var ErrAccessGrantAlreadyRevoked = errors.New("accessGrant is already revoked")
@@ -28,18 +30,22 @@ func (a *AccessGrant) TableName() string {
 }
 
 func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
-	accessGrant := &AccessGrant{
+	result := &AccessGrant{
 		IncomingAccessRequestID: accessRequest.ID,
+		CreatedAt:               time.Now(),
 	}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Create(accessGrant).Error; err != nil {
+	id, err := db.queries.CreateAccessGrant(ctx, &queries.CreateAccessGrantParams{
+		AccessRequestIncomingID: int32(result.IncomingAccessRequestID),
+		CreatedAt:               result.CreatedAt,
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return accessGrant, nil
+	result.ID = uint(id)
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (*AccessGrant, error) {

@@ -33,3 +33,16 @@ set
                     inways.name = sqlc.arg(inway_name)::text
         )
 ;
+
+-- name: CreateAccessGrant :one
+insert into
+    nlx_management.access_grants
+(
+    access_request_incoming_id,
+    created_at
+) values (
+      $1,
+      $2
+)
+returning id
+;
