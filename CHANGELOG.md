@@ -1,3 +1,10 @@
+# [0.137.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.136.0...v0.137.0) (2022-08-15)
+
+
+### Features
+
+* **management:** log errors of the authenticator ([20082e7](https://gitlab.com/commonground/nlx/nlx/commit/20082e7121883d4b4df04422147a3239a2241468)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 # [0.136.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.135.1...v0.136.0) (2022-08-03)
 
 
