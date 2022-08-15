@@ -4,12 +4,12 @@ dependencies:
   version: 0.2.0
 - name: nlx-management
   repository: file://../../charts/nlx-management
-  version: 0.136.0
+  version: 0.137.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.136.0
+  version: 0.137.0
 - name: nlx-txlog-api
   repository: file://../../charts/nlx-txlog-api
-  version: 0.136.0
-digest: sha256:ff0b0f6f1f8f387fa7439a639164b552e6de29f68e627114352eef502e22b65c
-generated: "2022-08-09T10:58:42.167144+02:00"
+  version: 0.137.0
+digest: sha256:312d754b4c3e969c1fe363bf63260273b5fd6974b7aa50cd9ef1f8331d3f1083
+generated: "2022-08-15T10:28:36.500527+02:00"
