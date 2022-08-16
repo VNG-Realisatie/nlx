@@ -14,13 +14,13 @@ import (
 const createAccessGrant = `-- name: CreateAccessGrant :one
 insert into
     nlx_management.access_grants
-    (
-        access_request_incoming_id,
-        created_at
-    ) values (
-          $1,
-          $2
-    )
+(
+    access_request_incoming_id,
+    created_at
+) values (
+      $1,
+      $2
+)
 returning id
 `
 
@@ -50,6 +50,109 @@ func (q *Queries) DoesInwayExistByName(ctx context.Context, inwayName string) (b
 	var inway_exits bool
 	err := row.Scan(&inway_exits)
 	return inway_exits, err
+}
+
+const getAccessGrant = `-- name: GetAccessGrant :one
+select
+    access_grants.id,
+    access_grants.created_at,
+    access_grants.revoked_at,
+    access_request_incoming_id,
+    access_requests_incoming.id as ari_id,
+    access_requests_incoming.service_id as ari_service_id,
+    access_requests_incoming.organization_name as ari_organization_name,
+    access_requests_incoming.organization_serial_number as ari_organization_serial_number,
+    access_requests_incoming.state as ari_state,
+    access_requests_incoming.created_at as ari_created_at,
+    access_requests_incoming.updated_at as ari_updated_at,
+    access_requests_incoming.public_key_fingerprint as ari_public_key_fingerprint,
+    access_requests_incoming.public_key_pem as ari_public_key_pem,
+    services.id as s_id,
+    services.name as s_name,
+    services.endpoint_url as s_endpoint_url,
+    services.documentation_url as s_documentation_url,
+    services.api_specification_url as s_api_specification_url,
+    services.internal as s_internal,
+    services.tech_support_contact as s_tech_support_contact,
+    services.public_support_contact as s_public_support_contact,
+    services.one_time_costs as s_one_time_costs,
+    services.monthly_costs as s_monthly_costs,
+    services.request_costs as s_request_costs,
+    services.created_at as s_created_at,
+    services.updated_at as s_updated_at
+from
+    nlx_management.access_grants
+        left join nlx_management.access_requests_incoming on (
+            access_grants.access_request_incoming_id = access_requests_incoming.id
+        )
+        left join nlx_management.services on (
+            access_requests_incoming.service_id = services.id
+        )
+where
+        access_grants.id = $1
+`
+
+type GetAccessGrantRow struct {
+	ID                          int32
+	CreatedAt                   time.Time
+	RevokedAt                   sql.NullTime
+	AccessRequestIncomingID     int32
+	AriID                       sql.NullInt32
+	AriServiceID                sql.NullInt32
+	AriOrganizationName         sql.NullString
+	AriOrganizationSerialNumber sql.NullString
+	AriState                    sql.NullString
+	AriCreatedAt                sql.NullTime
+	AriUpdatedAt                sql.NullTime
+	AriPublicKeyFingerprint     sql.NullString
+	AriPublicKeyPem             sql.NullString
+	SID                         sql.NullInt32
+	SName                       sql.NullString
+	SEndpointUrl                sql.NullString
+	SDocumentationUrl           sql.NullString
+	SApiSpecificationUrl        sql.NullString
+	SInternal                   sql.NullBool
+	STechSupportContact         sql.NullString
+	SPublicSupportContact       sql.NullString
+	SOneTimeCosts               sql.NullInt32
+	SMonthlyCosts               sql.NullInt32
+	SRequestCosts               sql.NullInt32
+	SCreatedAt                  sql.NullTime
+	SUpdatedAt                  sql.NullTime
+}
+
+func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrantRow, error) {
+	row := q.queryRow(ctx, q.getAccessGrantStmt, getAccessGrant, id)
+	var i GetAccessGrantRow
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.RevokedAt,
+		&i.AccessRequestIncomingID,
+		&i.AriID,
+		&i.AriServiceID,
+		&i.AriOrganizationName,
+		&i.AriOrganizationSerialNumber,
+		&i.AriState,
+		&i.AriCreatedAt,
+		&i.AriUpdatedAt,
+		&i.AriPublicKeyFingerprint,
+		&i.AriPublicKeyPem,
+		&i.SID,
+		&i.SName,
+		&i.SEndpointUrl,
+		&i.SDocumentationUrl,
+		&i.SApiSpecificationUrl,
+		&i.SInternal,
+		&i.STechSupportContact,
+		&i.SPublicSupportContact,
+		&i.SOneTimeCosts,
+		&i.SMonthlyCosts,
+		&i.SRequestCosts,
+		&i.SCreatedAt,
+		&i.SUpdatedAt,
+	)
+	return &i, err
 }
 
 const getSettings = `-- name: GetSettings :one

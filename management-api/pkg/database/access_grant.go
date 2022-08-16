@@ -49,21 +49,62 @@ func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessR
 }
 
 func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (*AccessGrant, error) {
-	accessGrant := &AccessGrant{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("IncomingAccessRequest").
-		Preload("IncomingAccessRequest.Service").
-		First(accessGrant, id).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	accessGrant, err := db.queries.GetAccessGrant(ctx, int32(id))
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return accessGrant, nil
+	var serviceID uint
+
+	if accessGrant.AriServiceID.Valid {
+		serviceID = uint(accessGrant.AriServiceID.Int32)
+	}
+
+	service := &Service{
+		ID:                     serviceID,
+		Name:                   accessGrant.SName.String,
+		EndpointURL:            accessGrant.SEndpointUrl.String,
+		DocumentationURL:       accessGrant.SDocumentationUrl.String,
+		APISpecificationURL:    accessGrant.SApiSpecificationUrl.String,
+		Internal:               accessGrant.SInternal.Bool,
+		TechSupportContact:     accessGrant.STechSupportContact.String,
+		PublicSupportContact:   accessGrant.SPublicSupportContact.String,
+		Inways:                 nil,
+		IncomingAccessRequests: nil,
+		OneTimeCosts:           int(accessGrant.SOneTimeCosts.Int32),
+		MonthlyCosts:           int(accessGrant.SMonthlyCosts.Int32),
+		RequestCosts:           int(accessGrant.SRequestCosts.Int32),
+		CreatedAt:              accessGrant.SCreatedAt.Time,
+		UpdatedAt:              accessGrant.SUpdatedAt.Time,
+	}
+
+	result := &AccessGrant{
+		ID:                      uint(accessGrant.ID),
+		IncomingAccessRequestID: uint(accessGrant.AccessRequestIncomingID),
+		IncomingAccessRequest: &IncomingAccessRequest{
+			ID:        uint(accessGrant.AccessRequestIncomingID),
+			ServiceID: serviceID,
+			Organization: IncomingAccessRequestOrganization{
+				Name:         accessGrant.AriOrganizationName.String,
+				SerialNumber: accessGrant.AriOrganizationSerialNumber.String,
+			},
+			State:                IncomingAccessRequestState(accessGrant.AriState.String),
+			AccessGrants:         nil,
+			PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint.String,
+			PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+			Service:              service,
+			CreatedAt:            accessGrant.AriCreatedAt.Time,
+			UpdatedAt:            accessGrant.AriUpdatedAt.Time,
+		},
+		CreatedAt: accessGrant.CreatedAt,
+		RevokedAt: accessGrant.RevokedAt,
+	}
+
+	return result, nil
 }
 
 //nolint:dupl // looks the same as RevokeAccessProof but is different. RevokeAccessGrant is for access grants RevokeAccessProof is for access proofs.
