@@ -1,3 +1,5 @@
+## [0.137.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.137.1...v0.137.2) (2022-08-16)
+
 ## [0.137.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.137.0...v0.137.1) (2022-08-16)
 
 # [0.137.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.136.0...v0.137.0) (2022-08-15)
