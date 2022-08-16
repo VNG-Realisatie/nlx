@@ -32,9 +32,7 @@
       "message": "release: ${nextRelease.version}\n\n${nextRelease.notes}",
       "assets": [
         "technical-docs/nlx-helm-installation-guide/*.{yml,yaml}",
-        "helm/{charts,deploy}/*/Chart.yaml",
-        "helm/deploy/gemeente-stijns/Chart.lock",
-        "helm/deploy/vergunningsoftware-bv/Chart.lock",
+        "helm/{charts,deploy}/*/Chart.{yaml,lock}",
         "CHANGELOG.md"
       ]
     }]
