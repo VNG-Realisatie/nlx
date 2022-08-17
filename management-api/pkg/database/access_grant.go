@@ -225,22 +225,64 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 }
 
 func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*AccessGrant, error) {
-	accessGrant := &AccessGrant{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("IncomingAccessRequest").
-		Preload("IncomingAccessRequest.Service").
-		Joins("JOIN nlx_management.access_requests_incoming r ON r.id = access_grants.access_request_incoming_id AND r.organization_serial_number = ? AND r.public_key_fingerprint = ?", organizationSerialNumber, publicKeyFingerprint).
-		Joins("JOIN nlx_management.services s ON s.id = r.service_id AND s.name = ?", serviceName).
-		Order("created_at DESC").
-		First(accessGrant).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	accessGrant, err := db.queries.GetLatestAccessGrantForService(ctx, &queries.GetLatestAccessGrantForServiceParams{
+		ServiceName:              serviceName,
+		OrganizationSerialNumber: organizationSerialNumber,
+		PublicKeyFingerprint:     publicKeyFingerprint,
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return accessGrant, nil
+	var serviceID uint
+
+	if accessGrant.AriServiceID > 0 {
+		serviceID = uint(accessGrant.AriServiceID)
+	}
+
+	service := &Service{
+		ID:                     serviceID,
+		Name:                   accessGrant.SName,
+		EndpointURL:            accessGrant.SEndpointUrl,
+		DocumentationURL:       accessGrant.SDocumentationUrl,
+		APISpecificationURL:    accessGrant.SApiSpecificationUrl,
+		Internal:               accessGrant.SInternal,
+		TechSupportContact:     accessGrant.STechSupportContact,
+		PublicSupportContact:   accessGrant.SPublicSupportContact,
+		Inways:                 nil,
+		IncomingAccessRequests: nil,
+		OneTimeCosts:           int(accessGrant.SOneTimeCosts),
+		MonthlyCosts:           int(accessGrant.SMonthlyCosts),
+		RequestCosts:           int(accessGrant.SRequestCosts),
+		CreatedAt:              accessGrant.SCreatedAt,
+		UpdatedAt:              accessGrant.SUpdatedAt,
+	}
+
+	result := &AccessGrant{
+		ID:                      uint(accessGrant.ID),
+		IncomingAccessRequestID: uint(accessGrant.AccessRequestIncomingID),
+		IncomingAccessRequest: &IncomingAccessRequest{
+			ID:        uint(accessGrant.AccessRequestIncomingID),
+			ServiceID: serviceID,
+			Organization: IncomingAccessRequestOrganization{
+				Name:         accessGrant.AriOrganizationName,
+				SerialNumber: accessGrant.AriOrganizationSerialNumber,
+			},
+			State:                IncomingAccessRequestState(accessGrant.AriState),
+			AccessGrants:         nil,
+			PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint,
+			PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+			Service:              service,
+			CreatedAt:            accessGrant.AriCreatedAt,
+			UpdatedAt:            accessGrant.AriUpdatedAt,
+		},
+		CreatedAt: accessGrant.CreatedAt,
+		RevokedAt: accessGrant.RevokedAt,
+	}
+
+	return result, nil
 }

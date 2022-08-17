@@ -155,6 +155,119 @@ func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrant
 	return &i, err
 }
 
+const getLatestAccessGrantForService = `-- name: GetLatestAccessGrantForService :one
+select
+    access_grants.id,
+    access_grants.created_at,
+    access_grants.revoked_at,
+    access_grants.access_request_incoming_id,
+    access_requests_incoming.id as ari_id,
+    access_requests_incoming.service_id as ari_service_id,
+    access_requests_incoming.organization_name as ari_organization_name,
+    access_requests_incoming.organization_serial_number as ari_organization_serial_number,
+    access_requests_incoming.state as ari_state,
+    access_requests_incoming.created_at as ari_created_at,
+    access_requests_incoming.updated_at as ari_updated_at,
+    access_requests_incoming.public_key_fingerprint as ari_public_key_fingerprint,
+    access_requests_incoming.public_key_pem as ari_public_key_pem,
+    services.id as s_id,
+    services.name as s_name,
+    services.endpoint_url as s_endpoint_url,
+    services.documentation_url as s_documentation_url,
+    services.api_specification_url as s_api_specification_url,
+    services.internal as s_internal,
+    services.tech_support_contact as s_tech_support_contact,
+    services.public_support_contact as s_public_support_contact,
+    services.one_time_costs as s_one_time_costs,
+    services.monthly_costs as s_monthly_costs,
+    services.request_costs as s_request_costs,
+    services.created_at as s_created_at,
+    services.updated_at as s_updated_at
+from
+    nlx_management.access_grants
+        left join nlx_management.access_requests_incoming on (
+            access_requests_incoming.id = access_grants.access_request_incoming_id and
+            access_requests_incoming.organization_serial_number = $1 and
+            access_requests_incoming.public_key_fingerprint = $2
+        )
+        join nlx_management.services on (
+            services.id = access_requests_incoming.service_id and
+            services.name = $3::text
+        )
+order by
+    access_grants.created_at desc
+limit 1
+`
+
+type GetLatestAccessGrantForServiceParams struct {
+	OrganizationSerialNumber string
+	PublicKeyFingerprint     string
+	ServiceName              string
+}
+
+type GetLatestAccessGrantForServiceRow struct {
+	ID                          int32
+	CreatedAt                   time.Time
+	RevokedAt                   sql.NullTime
+	AccessRequestIncomingID     int32
+	AriID                       int32
+	AriServiceID                int32
+	AriOrganizationName         string
+	AriOrganizationSerialNumber string
+	AriState                    string
+	AriCreatedAt                time.Time
+	AriUpdatedAt                time.Time
+	AriPublicKeyFingerprint     string
+	AriPublicKeyPem             sql.NullString
+	SID                         int32
+	SName                       string
+	SEndpointUrl                string
+	SDocumentationUrl           string
+	SApiSpecificationUrl        string
+	SInternal                   bool
+	STechSupportContact         string
+	SPublicSupportContact       string
+	SOneTimeCosts               int32
+	SMonthlyCosts               int32
+	SRequestCosts               int32
+	SCreatedAt                  time.Time
+	SUpdatedAt                  time.Time
+}
+
+func (q *Queries) GetLatestAccessGrantForService(ctx context.Context, arg *GetLatestAccessGrantForServiceParams) (*GetLatestAccessGrantForServiceRow, error) {
+	row := q.queryRow(ctx, q.getLatestAccessGrantForServiceStmt, getLatestAccessGrantForService, arg.OrganizationSerialNumber, arg.PublicKeyFingerprint, arg.ServiceName)
+	var i GetLatestAccessGrantForServiceRow
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.RevokedAt,
+		&i.AccessRequestIncomingID,
+		&i.AriID,
+		&i.AriServiceID,
+		&i.AriOrganizationName,
+		&i.AriOrganizationSerialNumber,
+		&i.AriState,
+		&i.AriCreatedAt,
+		&i.AriUpdatedAt,
+		&i.AriPublicKeyFingerprint,
+		&i.AriPublicKeyPem,
+		&i.SID,
+		&i.SName,
+		&i.SEndpointUrl,
+		&i.SDocumentationUrl,
+		&i.SApiSpecificationUrl,
+		&i.SInternal,
+		&i.STechSupportContact,
+		&i.SPublicSupportContact,
+		&i.SOneTimeCosts,
+		&i.SMonthlyCosts,
+		&i.SRequestCosts,
+		&i.SCreatedAt,
+		&i.SUpdatedAt,
+	)
+	return &i, err
+}
+
 const getSettings = `-- name: GetSettings :one
 select
     settings.organization_email_address,
@@ -186,7 +299,7 @@ select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
-    access_request_incoming_id,
+    access_grants.access_request_incoming_id,
     access_requests_incoming.id as ari_id,
     access_requests_incoming.service_id as ari_service_id,
     access_requests_incoming.organization_name as ari_organization_name,
