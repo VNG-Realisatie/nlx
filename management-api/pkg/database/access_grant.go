@@ -107,7 +107,6 @@ func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (
 	return result, nil
 }
 
-//nolint:dupl // looks the same as RevokeAccessProof but is different. RevokeAccessGrant is for access grants RevokeAccessProof is for access proofs.
 func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessGrantID uint, revokedAt time.Time) (*AccessGrant, error) {
 	accessGrant := &AccessGrant{}
 
