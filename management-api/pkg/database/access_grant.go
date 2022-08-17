@@ -160,19 +160,68 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 }
 
 func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error) {
-	accessGrants := []*AccessGrant{}
+	result := []*AccessGrant{}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("IncomingAccessRequest").
-		Preload("IncomingAccessRequest.Service").
-		Joins("JOIN nlx_management.access_requests_incoming r ON r.id = access_grants.access_request_incoming_id").
-		Joins("JOIN nlx_management.services s ON s.id = r.service_id AND s.name = ?", serviceName).
-		Find(&accessGrants).Error; err != nil {
+	accessGrants, err := db.queries.ListAccessGrantsForService(ctx, serviceName)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return result, nil
+		}
+
 		return nil, err
 	}
 
-	return accessGrants, nil
+	for _, accessGrant := range accessGrants {
+		var serviceID uint
+
+		if accessGrant.AriServiceID > 0 {
+			serviceID = uint(accessGrant.AriServiceID)
+		}
+
+		service := &Service{
+			ID:                     serviceID,
+			Name:                   accessGrant.SName,
+			EndpointURL:            accessGrant.SEndpointUrl,
+			DocumentationURL:       accessGrant.SDocumentationUrl,
+			APISpecificationURL:    accessGrant.SApiSpecificationUrl,
+			Internal:               accessGrant.SInternal,
+			TechSupportContact:     accessGrant.STechSupportContact,
+			PublicSupportContact:   accessGrant.SPublicSupportContact,
+			Inways:                 nil,
+			IncomingAccessRequests: nil,
+			OneTimeCosts:           int(accessGrant.SOneTimeCosts),
+			MonthlyCosts:           int(accessGrant.SMonthlyCosts),
+			RequestCosts:           int(accessGrant.SRequestCosts),
+			CreatedAt:              accessGrant.SCreatedAt,
+			UpdatedAt:              accessGrant.SUpdatedAt,
+		}
+
+		newModel := &AccessGrant{
+			ID:                      uint(accessGrant.ID),
+			IncomingAccessRequestID: uint(accessGrant.AccessRequestIncomingID),
+			IncomingAccessRequest: &IncomingAccessRequest{
+				ID:        uint(accessGrant.AccessRequestIncomingID),
+				ServiceID: serviceID,
+				Organization: IncomingAccessRequestOrganization{
+					Name:         accessGrant.AriOrganizationName,
+					SerialNumber: accessGrant.AriOrganizationSerialNumber,
+				},
+				State:                IncomingAccessRequestState(accessGrant.AriState),
+				AccessGrants:         nil,
+				PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint,
+				PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+				Service:              service,
+				CreatedAt:            accessGrant.AriCreatedAt,
+				UpdatedAt:            accessGrant.AriUpdatedAt,
+			},
+			CreatedAt: accessGrant.CreatedAt,
+			RevokedAt: accessGrant.RevokedAt,
+		}
+
+		result = append(result, newModel)
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*AccessGrant, error) {

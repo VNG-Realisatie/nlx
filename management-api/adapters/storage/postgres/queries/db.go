@@ -36,6 +36,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getSettingsStmt, err = db.PrepareContext(ctx, getSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query GetSettings: %w", err)
 	}
+	if q.listAccessGrantsForServiceStmt, err = db.PrepareContext(ctx, listAccessGrantsForService); err != nil {
+		return nil, fmt.Errorf("error preparing query ListAccessGrantsForService: %w", err)
+	}
 	if q.updateSettingsStmt, err = db.PrepareContext(ctx, updateSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateSettings: %w", err)
 	}
@@ -62,6 +65,11 @@ func (q *Queries) Close() error {
 	if q.getSettingsStmt != nil {
 		if cerr := q.getSettingsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getSettingsStmt: %w", cerr)
+		}
+	}
+	if q.listAccessGrantsForServiceStmt != nil {
+		if cerr := q.listAccessGrantsForServiceStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listAccessGrantsForServiceStmt: %w", cerr)
 		}
 	}
 	if q.updateSettingsStmt != nil {
@@ -106,23 +114,25 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                       DBTX
-	tx                       *sql.Tx
-	createAccessGrantStmt    *sql.Stmt
-	doesInwayExistByNameStmt *sql.Stmt
-	getAccessGrantStmt       *sql.Stmt
-	getSettingsStmt          *sql.Stmt
-	updateSettingsStmt       *sql.Stmt
+	db                             DBTX
+	tx                             *sql.Tx
+	createAccessGrantStmt          *sql.Stmt
+	doesInwayExistByNameStmt       *sql.Stmt
+	getAccessGrantStmt             *sql.Stmt
+	getSettingsStmt                *sql.Stmt
+	listAccessGrantsForServiceStmt *sql.Stmt
+	updateSettingsStmt             *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                       tx,
-		tx:                       tx,
-		createAccessGrantStmt:    q.createAccessGrantStmt,
-		doesInwayExistByNameStmt: q.doesInwayExistByNameStmt,
-		getAccessGrantStmt:       q.getAccessGrantStmt,
-		getSettingsStmt:          q.getSettingsStmt,
-		updateSettingsStmt:       q.updateSettingsStmt,
+		db:                             tx,
+		tx:                             tx,
+		createAccessGrantStmt:          q.createAccessGrantStmt,
+		doesInwayExistByNameStmt:       q.doesInwayExistByNameStmt,
+		getAccessGrantStmt:             q.getAccessGrantStmt,
+		getSettingsStmt:                q.getSettingsStmt,
+		listAccessGrantsForServiceStmt: q.listAccessGrantsForServiceStmt,
+		updateSettingsStmt:             q.updateSettingsStmt,
 	}
 }
