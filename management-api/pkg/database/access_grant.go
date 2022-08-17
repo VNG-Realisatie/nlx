@@ -23,10 +23,6 @@ type AccessGrant struct {
 	RevokedAt               sql.NullTime
 }
 
-func (a *AccessGrant) TableName() string {
-	return "nlx_management.access_grants"
-}
-
 func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
 	result := &AccessGrant{
 		IncomingAccessRequestID: accessRequest.ID,
