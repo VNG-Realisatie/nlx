@@ -17,7 +17,7 @@ var ErrAccessGrantAlreadyRevoked = errors.New("accessGrant is already revoked")
 
 type AccessGrant struct {
 	ID                      uint
-	IncomingAccessRequestID uint `gorm:"column:access_request_incoming_id;"`
+	IncomingAccessRequestID uint
 	IncomingAccessRequest   *IncomingAccessRequest
 	CreatedAt               time.Time
 	RevokedAt               sql.NullTime
