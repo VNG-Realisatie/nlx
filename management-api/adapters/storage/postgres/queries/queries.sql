@@ -169,3 +169,22 @@ order by
     access_grants.created_at desc
 limit 1
 ;
+
+-- name: RevokeAccessGrant :exec
+update
+    nlx_management.access_grants
+set
+    revoked_at = $2
+where
+    access_grants.id = $1
+;
+
+-- name: RevokeIncomingAccessRequest :exec
+update
+    nlx_management.access_requests_incoming
+set
+    state = $2,
+    updated_at = $3
+where
+    id = $1
+;

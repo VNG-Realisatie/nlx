@@ -412,6 +412,46 @@ func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) (
 	return items, nil
 }
 
+const revokeAccessGrant = `-- name: RevokeAccessGrant :exec
+update
+    nlx_management.access_grants
+set
+    revoked_at = $2
+where
+    access_grants.id = $1
+`
+
+type RevokeAccessGrantParams struct {
+	ID        int32
+	RevokedAt sql.NullTime
+}
+
+func (q *Queries) RevokeAccessGrant(ctx context.Context, arg *RevokeAccessGrantParams) error {
+	_, err := q.exec(ctx, q.revokeAccessGrantStmt, revokeAccessGrant, arg.ID, arg.RevokedAt)
+	return err
+}
+
+const revokeIncomingAccessRequest = `-- name: RevokeIncomingAccessRequest :exec
+update
+    nlx_management.access_requests_incoming
+set
+    state = $2,
+    updated_at = $3
+where
+    id = $1
+`
+
+type RevokeIncomingAccessRequestParams struct {
+	ID        int32
+	State     string
+	UpdatedAt time.Time
+}
+
+func (q *Queries) RevokeIncomingAccessRequest(ctx context.Context, arg *RevokeIncomingAccessRequestParams) error {
+	_, err := q.exec(ctx, q.revokeIncomingAccessRequestStmt, revokeIncomingAccessRequest, arg.ID, arg.State, arg.UpdatedAt)
+	return err
+}
+
 const updateSettings = `-- name: UpdateSettings :exec
 update
     nlx_management.settings

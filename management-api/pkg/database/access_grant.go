@@ -7,10 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
-
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
@@ -48,6 +46,7 @@ func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessR
 	return result, nil
 }
 
+//nolint:dupl // looks the same as other methods but we want to keep these separate to avoid abstracting too soon
 func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (*AccessGrant, error) {
 	accessGrant, err := db.queries.GetAccessGrant(ctx, int32(id))
 	if err != nil {
@@ -107,15 +106,29 @@ func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (
 	return result, nil
 }
 
+//nolint:dupl // looks the same as other methods but we want to keep these separate to avoid abstracting too soon
 func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessGrantID uint, revokedAt time.Time) (*AccessGrant, error) {
-	accessGrant := &AccessGrant{}
+	tx, err := db.db.Begin()
+	if err != nil {
+		return nil, err
+	}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("IncomingAccessRequest").
-		Preload("IncomingAccessRequest.Service").
-		First(accessGrant, accessGrantID).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
+
+			fmt.Printf("cannot rollback database transaction for revoke access grant: %e", err)
+		}
+	}()
+
+	qtx := db.queries.WithTx(tx)
+
+	accessGrant, err := qtx.GetAccessGrant(ctx, int32(accessGrantID))
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
@@ -126,36 +139,87 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 		return nil, ErrAccessGrantAlreadyRevoked
 	}
 
-	accessGrant.RevokedAt = sql.NullTime{
-		Time:  revokedAt,
-		Valid: true,
-	}
-
-	if err := db.DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.
-			WithContext(ctx).
-			Omit(clause.Associations).
-			Select("revoked_at").
-			Save(accessGrant).Error; err != nil {
-			return err
-		}
-
-		accessGrant.IncomingAccessRequest.State = IncomingAccessRequestRevoked
-
-		if err := tx.
-			WithContext(ctx).
-			Omit(clause.Associations).
-			Select("state", "updated_at").
-			Save(accessGrant.IncomingAccessRequest).Error; err != nil {
-			return err
-		}
-
-		return nil
-	}); err != nil {
+	err = db.queries.RevokeAccessGrant(ctx, &queries.RevokeAccessGrantParams{
+		ID: int32(accessGrantID),
+		RevokedAt: sql.NullTime{
+			Time:  revokedAt,
+			Valid: true,
+		},
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return accessGrant, nil
+	err = qtx.RevokeIncomingAccessRequest(ctx, &queries.RevokeIncomingAccessRequestParams{
+		ID:        accessGrant.AccessRequestIncomingID,
+		State:     string(IncomingAccessRequestRevoked),
+		UpdatedAt: revokedAt,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	accessGrant, err = qtx.GetAccessGrant(ctx, int32(accessGrantID))
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	var serviceID uint
+
+	if accessGrant.AriServiceID.Valid {
+		serviceID = uint(accessGrant.AriServiceID.Int32)
+	}
+
+	service := &Service{
+		ID:                     serviceID,
+		Name:                   accessGrant.SName.String,
+		EndpointURL:            accessGrant.SEndpointUrl.String,
+		DocumentationURL:       accessGrant.SDocumentationUrl.String,
+		APISpecificationURL:    accessGrant.SApiSpecificationUrl.String,
+		Internal:               accessGrant.SInternal.Bool,
+		TechSupportContact:     accessGrant.STechSupportContact.String,
+		PublicSupportContact:   accessGrant.SPublicSupportContact.String,
+		Inways:                 nil,
+		IncomingAccessRequests: nil,
+		OneTimeCosts:           int(accessGrant.SOneTimeCosts.Int32),
+		MonthlyCosts:           int(accessGrant.SMonthlyCosts.Int32),
+		RequestCosts:           int(accessGrant.SRequestCosts.Int32),
+		CreatedAt:              accessGrant.SCreatedAt.Time,
+		UpdatedAt:              accessGrant.SUpdatedAt.Time,
+	}
+
+	result := &AccessGrant{
+		ID:                      uint(accessGrant.ID),
+		IncomingAccessRequestID: uint(accessGrant.AccessRequestIncomingID),
+		IncomingAccessRequest: &IncomingAccessRequest{
+			ID:        uint(accessGrant.AccessRequestIncomingID),
+			ServiceID: serviceID,
+			Organization: IncomingAccessRequestOrganization{
+				Name:         accessGrant.AriOrganizationName.String,
+				SerialNumber: accessGrant.AriOrganizationSerialNumber.String,
+			},
+			State:                IncomingAccessRequestState(accessGrant.AriState.String),
+			AccessGrants:         nil,
+			PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint.String,
+			PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+			Service:              service,
+			CreatedAt:            accessGrant.AriCreatedAt.Time,
+			UpdatedAt:            accessGrant.AriUpdatedAt.Time,
+		},
+		CreatedAt: accessGrant.CreatedAt,
+		RevokedAt: accessGrant.RevokedAt,
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error) {
