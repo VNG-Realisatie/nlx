@@ -36,6 +36,37 @@
         "tags": [
           "TXLog"
         ]
+      },
+      "post": {
+        "operationId": "TXLog_CreateRecord",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/txlogCreateRecordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TXLog"
+        ]
       }
     }
   },
@@ -50,7 +81,7 @@
           "$ref": "#/definitions/RecordOrganization"
         },
         "direction": {
-          "$ref": "#/definitions/RecordDirection"
+          "$ref": "#/definitions/ListRecordsResponseRecordDirection"
         },
         "service": {
           "$ref": "#/definitions/RecordService"
@@ -70,7 +101,7 @@
         }
       }
     },
-    "RecordDirection": {
+    "ListRecordsResponseRecordDirection": {
       "type": "string",
       "enum": [
         "IN",
@@ -131,6 +162,49 @@
           }
         }
       }
+    },
+    "txlogCreateRecordRequest": {
+      "type": "object",
+      "properties": {
+        "sourceOrganization": {
+          "type": "string"
+        },
+        "destOrganization": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "logrecordID": {
+          "type": "string"
+        },
+        "delegator": {
+          "type": "string"
+        },
+        "orderReference": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        },
+        "direction": {
+          "$ref": "#/definitions/txlogCreateRecordRequestDirection"
+        },
+        "dataSubjects": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "txlogCreateRecordRequestDirection": {
+      "type": "string",
+      "enum": [
+        "IN",
+        "OUT"
+      ],
+      "default": "IN"
     },
     "txlogListRecordsResponse": {
       "type": "object",

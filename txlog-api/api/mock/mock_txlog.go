@@ -38,6 +38,26 @@ func (m *MockTXLogClient) EXPECT() *MockTXLogClientMockRecorder {
 	return m.recorder
 }
 
+// CreateRecord mocks base method.
+func (m *MockTXLogClient) CreateRecord(ctx context.Context, in *api.CreateRecordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateRecord", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateRecord indicates an expected call of CreateRecord.
+func (mr *MockTXLogClientMockRecorder) CreateRecord(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockTXLogClient)(nil).CreateRecord), varargs...)
+}
+
 // ListRecords mocks base method.
 func (m *MockTXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()
@@ -79,6 +99,21 @@ func NewMockTXLogServer(ctrl *gomock.Controller) *MockTXLogServer {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTXLogServer) EXPECT() *MockTXLogServerMockRecorder {
 	return m.recorder
+}
+
+// CreateRecord mocks base method.
+func (m *MockTXLogServer) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRecord", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateRecord indicates an expected call of CreateRecord.
+func (mr *MockTXLogServerMockRecorder) CreateRecord(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockTXLogServer)(nil).CreateRecord), arg0, arg1)
 }
 
 // ListRecords mocks base method.

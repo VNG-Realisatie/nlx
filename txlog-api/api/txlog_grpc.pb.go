@@ -25,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TXLogClient interface {
 	ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListRecordsResponse, error)
+	CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type tXLogClient struct {
@@ -44,11 +45,21 @@ func (c *tXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts .
 	return out, nil
 }
 
+func (c *tXLogClient) CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/nlx.txlog.TXLog/CreateRecord", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TXLogServer is the server API for TXLog service.
 // All implementations must embed UnimplementedTXLogServer
 // for forward compatibility
 type TXLogServer interface {
 	ListRecords(context.Context, *emptypb.Empty) (*ListRecordsResponse, error)
+	CreateRecord(context.Context, *CreateRecordRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTXLogServer()
 }
 
@@ -58,6 +69,9 @@ type UnimplementedTXLogServer struct {
 
 func (UnimplementedTXLogServer) ListRecords(context.Context, *emptypb.Empty) (*ListRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRecords not implemented")
+}
+func (UnimplementedTXLogServer) CreateRecord(context.Context, *CreateRecordRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateRecord not implemented")
 }
 func (UnimplementedTXLogServer) mustEmbedUnimplementedTXLogServer() {}
 
@@ -90,6 +104,24 @@ func _TXLog_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TXLog_CreateRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TXLogServer).CreateRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.txlog.TXLog/CreateRecord",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TXLogServer).CreateRecord(ctx, req.(*CreateRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TXLog_ServiceDesc is the grpc.ServiceDesc for TXLog service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +132,10 @@ var TXLog_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRecords",
 			Handler:    _TXLog_ListRecords_Handler,
+		},
+		{
+			MethodName: "CreateRecord",
+			Handler:    _TXLog_CreateRecord_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -12,24 +12,44 @@ import (
 	"github.com/tabbed/pqtype"
 )
 
-const createRecord = `-- name: CreateRecord :exec
+const createDataSubject = `-- name: CreateDataSubject :exec
+INSERT INTO transactionlog.datasubjects (
+    record_id,
+    key,
+    value
+)
+VALUES ($1, $2, $3)
+`
+
+type CreateDataSubjectParams struct {
+	RecordID int64
+	Key      string
+	Value    string
+}
+
+func (q *Queries) CreateDataSubject(ctx context.Context, arg *CreateDataSubjectParams) error {
+	_, err := q.exec(ctx, q.createDataSubjectStmt, createDataSubject, arg.RecordID, arg.Key, arg.Value)
+	return err
+}
+
+const createRecord = `-- name: CreateRecord :one
 INSERT INTO transactionlog.records (
     direction,
-    created,
     src_organization,
     dest_organization,
     service_name,
     logrecord_id,
     data,
     delegator,
-    order_reference
-) 
+    order_reference,
+    created
+)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+returning id
 `
 
 type CreateRecordParams struct {
 	Direction        TransactionlogDirection
-	Created          time.Time
 	SrcOrganization  string
 	DestOrganization string
 	ServiceName      string
@@ -37,12 +57,12 @@ type CreateRecordParams struct {
 	Data             pqtype.NullRawMessage
 	Delegator        string
 	OrderReference   string
+	Created          time.Time
 }
 
-func (q *Queries) CreateRecord(ctx context.Context, arg *CreateRecordParams) error {
-	_, err := q.exec(ctx, q.createRecordStmt, createRecord,
+func (q *Queries) CreateRecord(ctx context.Context, arg *CreateRecordParams) (int64, error) {
+	row := q.queryRow(ctx, q.createRecordStmt, createRecord,
 		arg.Direction,
-		arg.Created,
 		arg.SrcOrganization,
 		arg.DestOrganization,
 		arg.ServiceName,
@@ -50,8 +70,11 @@ func (q *Queries) CreateRecord(ctx context.Context, arg *CreateRecordParams) err
 		arg.Data,
 		arg.Delegator,
 		arg.OrderReference,
+		arg.Created,
 	)
-	return err
+	var id int64
+	err := row.Scan(&id)
+	return id, err
 }
 
 const listRecords = `-- name: ListRecords :many

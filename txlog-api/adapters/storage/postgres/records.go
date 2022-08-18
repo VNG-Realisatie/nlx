@@ -2,7 +2,10 @@ package pgadapter
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
+	"errors"
+	"fmt"
 
 	"github.com/tabbed/pqtype"
 
@@ -11,7 +14,25 @@ import (
 )
 
 func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.Record) error {
-	err := r.queries.CreateRecord(ctx, &queries.CreateRecordParams{
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
+
+			fmt.Printf("cannot rollback database transaction for create record: %e", err)
+		}
+	}()
+
+	qtx := r.queries.WithTx(tx)
+
+	recordID, err := qtx.CreateRecord(ctx, &queries.CreateRecordParams{
 		Direction:        queries.TransactionlogDirection(record.Direction()),
 		SrcOrganization:  record.Source().SerialNumber(),
 		DestOrganization: record.Destination().SerialNumber(),
@@ -25,6 +46,22 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 		},
 		LogrecordID: record.TransactionID(),
 	})
+	if err != nil {
+		return err
+	}
+
+	for key, value := range record.DataSubjects() {
+		err = qtx.CreateDataSubject(ctx, &queries.CreateDataSubjectParams{
+			RecordID: recordID,
+			Key:      key,
+			Value:    value,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	err = tx.Commit()
 	if err != nil {
 		return err
 	}

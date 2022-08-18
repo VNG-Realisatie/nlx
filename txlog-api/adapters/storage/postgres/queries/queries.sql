@@ -13,16 +13,25 @@ FROM transactionlog.records
 ORDER BY created DESC
 LIMIT $1;
 
--- name: CreateRecord :exec
+-- name: CreateRecord :one
 INSERT INTO transactionlog.records (
     direction,
-    created,
     src_organization,
     dest_organization,
     service_name,
     logrecord_id,
     data,
     delegator,
-    order_reference
-) 
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+    order_reference,
+    created
+)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+returning id;
+
+-- name: CreateDataSubject :exec
+INSERT INTO transactionlog.datasubjects (
+    record_id,
+    key,
+    value
+)
+VALUES ($1, $2, $3);

@@ -12,6 +12,10 @@ service TXLog {
   rpc ListRecords (google.protobuf.Empty) returns (ListRecordsResponse) {
     option (google.api.http) = {get: "/api/v1/records"};
   }
+
+  rpc CreateRecord (CreateRecordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/api/v1/records" body: '*'};
+  }
 }
 
 message ListRecordsResponse {
@@ -48,4 +52,21 @@ message ListRecordsResponse {
   }
 
   repeated Record records = 1;
+}
+
+message CreateRecordRequest {
+    enum Direction {
+        IN = 0;
+        OUT = 1;
+    }
+
+    string sourceOrganization = 1;
+    string destOrganization = 2;
+    string serviceName = 3;
+    string logrecordID = 4;
+    string delegator = 5;
+    string orderReference = 6;
+    string data = 7;
+    Direction direction = 8;
+    map<string, string> dataSubjects = 9;
 }

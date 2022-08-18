@@ -19,6 +19,7 @@ type Record struct {
 	data          json.RawMessage
 	transactionID string
 	createdAt     time.Time
+	dataSubjects  map[string]string
 }
 
 type OrderDirection string
@@ -39,6 +40,7 @@ type NewRecordArgs struct {
 	Data          json.RawMessage
 	TransactionID string
 	CreatedAt     time.Time
+	DataSubjects  map[string]string
 }
 
 func NewRecord(args *NewRecordArgs) (*Record, error) {
@@ -64,6 +66,7 @@ func NewRecord(args *NewRecordArgs) (*Record, error) {
 		data:          args.Data,
 		transactionID: args.TransactionID,
 		createdAt:     args.CreatedAt,
+		dataSubjects:  args.DataSubjects,
 	}, nil
 }
 
@@ -97,4 +100,8 @@ func (r *Record) TransactionID() string {
 
 func (r *Record) CreatedAt() time.Time {
 	return r.createdAt
+}
+
+func (r *Record) DataSubjects() map[string]string {
+	return r.dataSubjects
 }

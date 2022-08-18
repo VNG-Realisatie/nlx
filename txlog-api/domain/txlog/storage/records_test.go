@@ -35,6 +35,7 @@ func TestCreateRecord(t *testing.T) {
 				Data:          []byte(`{"test": "value"}`),
 				TransactionID: "abcde",
 				CreatedAt:     time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+				DataSubjects:  map[string]string{"foo": "bar"},
 			},
 			wantErr: nil,
 		},

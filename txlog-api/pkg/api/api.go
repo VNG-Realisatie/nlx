@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"time"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -37,7 +38,14 @@ type API struct {
 	storage    storage.Repository
 }
 
+type clock struct{}
+
+func (c *clock) Now() time.Time {
+	return time.Now()
+}
+
 // NewAPI creates and prepares a new API
+//
 //nolint:gocyclo // parameter validation
 func NewAPI(logger *zap.Logger, cert *common_tls.CertificateBundle, s storage.Repository) (*API, error) {
 	if logger == nil {
@@ -55,6 +63,7 @@ func NewAPI(logger *zap.Logger, cert *common_tls.CertificateBundle, s storage.Re
 	txlogService := server.NewTXLogService(
 		logger,
 		s,
+		&clock{},
 	)
 
 	grpcServer := newGRPCServer(logger, cert)

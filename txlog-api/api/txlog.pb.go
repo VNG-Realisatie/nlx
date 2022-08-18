@@ -70,6 +70,52 @@ func (ListRecordsResponse_Record_Direction) EnumDescriptor() ([]byte, []int) {
 	return file_txlog_proto_rawDescGZIP(), []int{0, 0, 0}
 }
 
+type CreateRecordRequest_Direction int32
+
+const (
+	CreateRecordRequest_IN  CreateRecordRequest_Direction = 0
+	CreateRecordRequest_OUT CreateRecordRequest_Direction = 1
+)
+
+// Enum value maps for CreateRecordRequest_Direction.
+var (
+	CreateRecordRequest_Direction_name = map[int32]string{
+		0: "IN",
+		1: "OUT",
+	}
+	CreateRecordRequest_Direction_value = map[string]int32{
+		"IN":  0,
+		"OUT": 1,
+	}
+)
+
+func (x CreateRecordRequest_Direction) Enum() *CreateRecordRequest_Direction {
+	p := new(CreateRecordRequest_Direction)
+	*p = x
+	return p
+}
+
+func (x CreateRecordRequest_Direction) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (CreateRecordRequest_Direction) Descriptor() protoreflect.EnumDescriptor {
+	return file_txlog_proto_enumTypes[1].Descriptor()
+}
+
+func (CreateRecordRequest_Direction) Type() protoreflect.EnumType {
+	return &file_txlog_proto_enumTypes[1]
+}
+
+func (x CreateRecordRequest_Direction) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use CreateRecordRequest_Direction.Descriptor instead.
+func (CreateRecordRequest_Direction) EnumDescriptor() ([]byte, []int) {
+	return file_txlog_proto_rawDescGZIP(), []int{1, 0}
+}
+
 type ListRecordsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -117,6 +163,117 @@ func (x *ListRecordsResponse) GetRecords() []*ListRecordsResponse_Record {
 	return nil
 }
 
+type CreateRecordRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SourceOrganization string                        `protobuf:"bytes,1,opt,name=sourceOrganization,proto3" json:"sourceOrganization,omitempty"`
+	DestOrganization   string                        `protobuf:"bytes,2,opt,name=destOrganization,proto3" json:"destOrganization,omitempty"`
+	ServiceName        string                        `protobuf:"bytes,3,opt,name=serviceName,proto3" json:"serviceName,omitempty"`
+	LogrecordID        string                        `protobuf:"bytes,4,opt,name=logrecordID,proto3" json:"logrecordID,omitempty"`
+	Delegator          string                        `protobuf:"bytes,5,opt,name=delegator,proto3" json:"delegator,omitempty"`
+	OrderReference     string                        `protobuf:"bytes,6,opt,name=orderReference,proto3" json:"orderReference,omitempty"`
+	Data               string                        `protobuf:"bytes,7,opt,name=data,proto3" json:"data,omitempty"`
+	Direction          CreateRecordRequest_Direction `protobuf:"varint,8,opt,name=direction,proto3,enum=nlx.txlog.CreateRecordRequest_Direction" json:"direction,omitempty"`
+	DataSubjects       map[string]string             `protobuf:"bytes,9,rep,name=dataSubjects,proto3" json:"dataSubjects,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *CreateRecordRequest) Reset() {
+	*x = CreateRecordRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_txlog_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateRecordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateRecordRequest) ProtoMessage() {}
+
+func (x *CreateRecordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_txlog_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateRecordRequest.ProtoReflect.Descriptor instead.
+func (*CreateRecordRequest) Descriptor() ([]byte, []int) {
+	return file_txlog_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateRecordRequest) GetSourceOrganization() string {
+	if x != nil {
+		return x.SourceOrganization
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetDestOrganization() string {
+	if x != nil {
+		return x.DestOrganization
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetServiceName() string {
+	if x != nil {
+		return x.ServiceName
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetLogrecordID() string {
+	if x != nil {
+		return x.LogrecordID
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetDelegator() string {
+	if x != nil {
+		return x.Delegator
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetOrderReference() string {
+	if x != nil {
+		return x.OrderReference
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetData() string {
+	if x != nil {
+		return x.Data
+	}
+	return ""
+}
+
+func (x *CreateRecordRequest) GetDirection() CreateRecordRequest_Direction {
+	if x != nil {
+		return x.Direction
+	}
+	return CreateRecordRequest_IN
+}
+
+func (x *CreateRecordRequest) GetDataSubjects() map[string]string {
+	if x != nil {
+		return x.DataSubjects
+	}
+	return nil
+}
+
 type ListRecordsResponse_Record struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -135,7 +292,7 @@ type ListRecordsResponse_Record struct {
 func (x *ListRecordsResponse_Record) Reset() {
 	*x = ListRecordsResponse_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_txlog_proto_msgTypes[1]
+		mi := &file_txlog_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -148,7 +305,7 @@ func (x *ListRecordsResponse_Record) String() string {
 func (*ListRecordsResponse_Record) ProtoMessage() {}
 
 func (x *ListRecordsResponse_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_txlog_proto_msgTypes[1]
+	mi := &file_txlog_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -231,7 +388,7 @@ type ListRecordsResponse_Record_Organization struct {
 func (x *ListRecordsResponse_Record_Organization) Reset() {
 	*x = ListRecordsResponse_Record_Organization{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_txlog_proto_msgTypes[2]
+		mi := &file_txlog_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -244,7 +401,7 @@ func (x *ListRecordsResponse_Record_Organization) String() string {
 func (*ListRecordsResponse_Record_Organization) ProtoMessage() {}
 
 func (x *ListRecordsResponse_Record_Organization) ProtoReflect() protoreflect.Message {
-	mi := &file_txlog_proto_msgTypes[2]
+	mi := &file_txlog_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -278,7 +435,7 @@ type ListRecordsResponse_Record_Service struct {
 func (x *ListRecordsResponse_Record_Service) Reset() {
 	*x = ListRecordsResponse_Record_Service{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_txlog_proto_msgTypes[3]
+		mi := &file_txlog_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -291,7 +448,7 @@ func (x *ListRecordsResponse_Record_Service) String() string {
 func (*ListRecordsResponse_Record_Service) ProtoMessage() {}
 
 func (x *ListRecordsResponse_Record_Service) ProtoReflect() protoreflect.Message {
-	mi := &file_txlog_proto_msgTypes[3]
+	mi := &file_txlog_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -326,7 +483,7 @@ type ListRecordsResponse_Record_Order struct {
 func (x *ListRecordsResponse_Record_Order) Reset() {
 	*x = ListRecordsResponse_Record_Order{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_txlog_proto_msgTypes[4]
+		mi := &file_txlog_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -339,7 +496,7 @@ func (x *ListRecordsResponse_Record_Order) String() string {
 func (*ListRecordsResponse_Record_Order) ProtoMessage() {}
 
 func (x *ListRecordsResponse_Record_Order) ProtoReflect() protoreflect.Message {
-	mi := &file_txlog_proto_msgTypes[4]
+	mi := &file_txlog_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -427,16 +584,56 @@ var file_txlog_proto_rawDesc = []byte{
 	0x74, 0x6f, 0x72, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65,
 	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x72, 0x65, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63,
 	0x65, 0x22, 0x1c, 0x0a, 0x09, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x06,
-	0x0a, 0x02, 0x49, 0x4e, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x55, 0x54, 0x10, 0x01, 0x32,
-	0x67, 0x0a, 0x05, 0x54, 0x58, 0x4c, 0x6f, 0x67, 0x12, 0x5e, 0x0a, 0x0b, 0x4c, 0x69, 0x73, 0x74,
+	0x0a, 0x02, 0x49, 0x4e, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x55, 0x54, 0x10, 0x01, 0x22,
+	0x8c, 0x04, 0x0a, 0x13, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2e, 0x0a, 0x12, 0x73, 0x6f, 0x75, 0x72, 0x63,
+	0x65, 0x4f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x12, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x4f, 0x72, 0x67, 0x61, 0x6e,
+	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2a, 0x0a, 0x10, 0x64, 0x65, 0x73, 0x74, 0x4f,
+	0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x10, 0x64, 0x65, 0x73, 0x74, 0x4f, 0x72, 0x67, 0x61, 0x6e, 0x69, 0x7a, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x12, 0x20, 0x0a, 0x0b, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4e, 0x61,
+	0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x6c, 0x6f, 0x67, 0x72, 0x65, 0x63, 0x6f,
+	0x72, 0x64, 0x49, 0x44, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x6c, 0x6f, 0x67, 0x72,
+	0x65, 0x63, 0x6f, 0x72, 0x64, 0x49, 0x44, 0x12, 0x1c, 0x0a, 0x09, 0x64, 0x65, 0x6c, 0x65, 0x67,
+	0x61, 0x74, 0x6f, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x64, 0x65, 0x6c, 0x65,
+	0x67, 0x61, 0x74, 0x6f, 0x72, 0x12, 0x26, 0x0a, 0x0e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65,
+	0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x6f,
+	0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x66, 0x65, 0x72, 0x65, 0x6e, 0x63, 0x65, 0x12, 0x12, 0x0a,
+	0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x64, 0x61, 0x74,
+	0x61, 0x12, 0x46, 0x0a, 0x09, 0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x08,
+	0x20, 0x01, 0x28, 0x0e, 0x32, 0x28, 0x2e, 0x6e, 0x6c, 0x78, 0x2e, 0x74, 0x78, 0x6c, 0x6f, 0x67,
+	0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x2e, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x09,
+	0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x54, 0x0a, 0x0c, 0x64, 0x61, 0x74,
+	0x61, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x30, 0x2e, 0x6e, 0x6c, 0x78, 0x2e, 0x74, 0x78, 0x6c, 0x6f, 0x67, 0x2e, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e,
+	0x44, 0x61, 0x74, 0x61, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72,
+	0x79, 0x52, 0x0c, 0x64, 0x61, 0x74, 0x61, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x1a,
+	0x3f, 0x0a, 0x11, 0x44, 0x61, 0x74, 0x61, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01,
+	0x22, 0x1c, 0x0a, 0x09, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x06, 0x0a,
+	0x02, 0x49, 0x4e, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x55, 0x54, 0x10, 0x01, 0x32, 0xcb,
+	0x01, 0x0a, 0x05, 0x54, 0x58, 0x4c, 0x6f, 0x67, 0x12, 0x5e, 0x0a, 0x0b, 0x4c, 0x69, 0x73, 0x74,
 	0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a,
 	0x1e, 0x2e, 0x6e, 0x6c, 0x78, 0x2e, 0x74, 0x78, 0x6c, 0x6f, 0x67, 0x2e, 0x4c, 0x69, 0x73, 0x74,
 	0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
 	0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x12, 0x0f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31,
-	0x2f, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x42, 0x1d, 0x5a, 0x1b, 0x67, 0x6f, 0x2e, 0x6e,
-	0x6c, 0x78, 0x2e, 0x69, 0x6f, 0x2f, 0x6e, 0x6c, 0x78, 0x2f, 0x74, 0x78, 0x6c, 0x6f, 0x67, 0x2d,
-	0x61, 0x70, 0x69, 0x2f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x2f, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x12, 0x62, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x1e, 0x2e, 0x6e, 0x6c, 0x78, 0x2e, 0x74,
+	0x78, 0x6c, 0x6f, 0x67, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
+	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x22, 0x1a, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x14, 0x22, 0x0f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76,
+	0x31, 0x2f, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x3a, 0x01, 0x2a, 0x42, 0x1d, 0x5a, 0x1b,
+	0x67, 0x6f, 0x2e, 0x6e, 0x6c, 0x78, 0x2e, 0x69, 0x6f, 0x2f, 0x6e, 0x6c, 0x78, 0x2f, 0x74, 0x78,
+	0x6c, 0x6f, 0x67, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -451,33 +648,40 @@ func file_txlog_proto_rawDescGZIP() []byte {
 	return file_txlog_proto_rawDescData
 }
 
-var file_txlog_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_txlog_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_txlog_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_txlog_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_txlog_proto_goTypes = []interface{}{
 	(ListRecordsResponse_Record_Direction)(0),       // 0: nlx.txlog.ListRecordsResponse.Record.Direction
-	(*ListRecordsResponse)(nil),                     // 1: nlx.txlog.ListRecordsResponse
-	(*ListRecordsResponse_Record)(nil),              // 2: nlx.txlog.ListRecordsResponse.Record
-	(*ListRecordsResponse_Record_Organization)(nil), // 3: nlx.txlog.ListRecordsResponse.Record.Organization
-	(*ListRecordsResponse_Record_Service)(nil),      // 4: nlx.txlog.ListRecordsResponse.Record.Service
-	(*ListRecordsResponse_Record_Order)(nil),        // 5: nlx.txlog.ListRecordsResponse.Record.Order
-	(*timestamppb.Timestamp)(nil),                   // 6: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                           // 7: google.protobuf.Empty
+	(CreateRecordRequest_Direction)(0),              // 1: nlx.txlog.CreateRecordRequest.Direction
+	(*ListRecordsResponse)(nil),                     // 2: nlx.txlog.ListRecordsResponse
+	(*CreateRecordRequest)(nil),                     // 3: nlx.txlog.CreateRecordRequest
+	(*ListRecordsResponse_Record)(nil),              // 4: nlx.txlog.ListRecordsResponse.Record
+	(*ListRecordsResponse_Record_Organization)(nil), // 5: nlx.txlog.ListRecordsResponse.Record.Organization
+	(*ListRecordsResponse_Record_Service)(nil),      // 6: nlx.txlog.ListRecordsResponse.Record.Service
+	(*ListRecordsResponse_Record_Order)(nil),        // 7: nlx.txlog.ListRecordsResponse.Record.Order
+	nil,                                             // 8: nlx.txlog.CreateRecordRequest.DataSubjectsEntry
+	(*timestamppb.Timestamp)(nil),                   // 9: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                           // 10: google.protobuf.Empty
 }
 var file_txlog_proto_depIdxs = []int32{
-	2, // 0: nlx.txlog.ListRecordsResponse.records:type_name -> nlx.txlog.ListRecordsResponse.Record
-	3, // 1: nlx.txlog.ListRecordsResponse.Record.source:type_name -> nlx.txlog.ListRecordsResponse.Record.Organization
-	3, // 2: nlx.txlog.ListRecordsResponse.Record.destination:type_name -> nlx.txlog.ListRecordsResponse.Record.Organization
-	0, // 3: nlx.txlog.ListRecordsResponse.Record.direction:type_name -> nlx.txlog.ListRecordsResponse.Record.Direction
-	4, // 4: nlx.txlog.ListRecordsResponse.Record.service:type_name -> nlx.txlog.ListRecordsResponse.Record.Service
-	5, // 5: nlx.txlog.ListRecordsResponse.Record.order:type_name -> nlx.txlog.ListRecordsResponse.Record.Order
-	6, // 6: nlx.txlog.ListRecordsResponse.Record.createdAt:type_name -> google.protobuf.Timestamp
-	7, // 7: nlx.txlog.TXLog.ListRecords:input_type -> google.protobuf.Empty
-	1, // 8: nlx.txlog.TXLog.ListRecords:output_type -> nlx.txlog.ListRecordsResponse
-	8, // [8:9] is the sub-list for method output_type
-	7, // [7:8] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	4,  // 0: nlx.txlog.ListRecordsResponse.records:type_name -> nlx.txlog.ListRecordsResponse.Record
+	1,  // 1: nlx.txlog.CreateRecordRequest.direction:type_name -> nlx.txlog.CreateRecordRequest.Direction
+	8,  // 2: nlx.txlog.CreateRecordRequest.dataSubjects:type_name -> nlx.txlog.CreateRecordRequest.DataSubjectsEntry
+	5,  // 3: nlx.txlog.ListRecordsResponse.Record.source:type_name -> nlx.txlog.ListRecordsResponse.Record.Organization
+	5,  // 4: nlx.txlog.ListRecordsResponse.Record.destination:type_name -> nlx.txlog.ListRecordsResponse.Record.Organization
+	0,  // 5: nlx.txlog.ListRecordsResponse.Record.direction:type_name -> nlx.txlog.ListRecordsResponse.Record.Direction
+	6,  // 6: nlx.txlog.ListRecordsResponse.Record.service:type_name -> nlx.txlog.ListRecordsResponse.Record.Service
+	7,  // 7: nlx.txlog.ListRecordsResponse.Record.order:type_name -> nlx.txlog.ListRecordsResponse.Record.Order
+	9,  // 8: nlx.txlog.ListRecordsResponse.Record.createdAt:type_name -> google.protobuf.Timestamp
+	10, // 9: nlx.txlog.TXLog.ListRecords:input_type -> google.protobuf.Empty
+	3,  // 10: nlx.txlog.TXLog.CreateRecord:input_type -> nlx.txlog.CreateRecordRequest
+	2,  // 11: nlx.txlog.TXLog.ListRecords:output_type -> nlx.txlog.ListRecordsResponse
+	10, // 12: nlx.txlog.TXLog.CreateRecord:output_type -> google.protobuf.Empty
+	11, // [11:13] is the sub-list for method output_type
+	9,  // [9:11] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_txlog_proto_init() }
@@ -499,7 +703,7 @@ func file_txlog_proto_init() {
 			}
 		}
 		file_txlog_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRecordsResponse_Record); i {
+			switch v := v.(*CreateRecordRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -511,7 +715,7 @@ func file_txlog_proto_init() {
 			}
 		}
 		file_txlog_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRecordsResponse_Record_Organization); i {
+			switch v := v.(*ListRecordsResponse_Record); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -523,7 +727,7 @@ func file_txlog_proto_init() {
 			}
 		}
 		file_txlog_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRecordsResponse_Record_Service); i {
+			switch v := v.(*ListRecordsResponse_Record_Organization); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -535,6 +739,18 @@ func file_txlog_proto_init() {
 			}
 		}
 		file_txlog_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListRecordsResponse_Record_Service); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_txlog_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListRecordsResponse_Record_Order); i {
 			case 0:
 				return &v.state
@@ -552,8 +768,8 @@ func file_txlog_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_txlog_proto_rawDesc,
-			NumEnums:      1,
-			NumMessages:   5,
+			NumEnums:      2,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

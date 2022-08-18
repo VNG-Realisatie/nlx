@@ -4,6 +4,8 @@
 package server
 
 import (
+	"time"
+
 	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/txlog-api/api"
@@ -15,11 +17,17 @@ type TXLogService struct {
 
 	logger  *zap.Logger
 	storage storage.Repository
+	clock   Clock
 }
 
-func NewTXLogService(logger *zap.Logger, s storage.Repository) *TXLogService {
+type Clock interface {
+	Now() time.Time
+}
+
+func NewTXLogService(logger *zap.Logger, s storage.Repository, clock Clock) *TXLogService {
 	return &TXLogService{
 		logger:  logger,
 		storage: s,
+		clock:   clock,
 	}
 }
