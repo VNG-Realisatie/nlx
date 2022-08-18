@@ -125,19 +125,19 @@ func TestTXLogListRecords(t *testing.T) {
 					EXPECT().
 					ListRecords(ctx, &emptypb.Empty{}).
 					Return(&txlogapi.ListRecordsResponse{
-						Records: []*txlogapi.Record{
+						Records: []*txlogapi.ListRecordsResponse_Record{
 							{
-								Source: &txlogapi.Organization{
+								Source: &txlogapi.ListRecordsResponse_Record_Organization{
 									SerialNumber: "00000000000000000001",
 								},
-								Destination: &txlogapi.Organization{
+								Destination: &txlogapi.ListRecordsResponse_Record_Organization{
 									SerialNumber: "00000000000000000002",
 								},
-								Direction: txlogapi.Direction_IN,
-								Service: &txlogapi.Service{
+								Direction: txlogapi.ListRecordsResponse_Record_IN,
+								Service: &txlogapi.ListRecordsResponse_Record_Service{
 									Name: "test-service",
 								},
-								Order: &txlogapi.Order{
+								Order: &txlogapi.ListRecordsResponse_Record_Order{
 									Delegator: "00000000000000000003",
 									Reference: "test-reference",
 								},

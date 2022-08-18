@@ -30,7 +30,7 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 	}
 
 	response := &api.ListRecordsResponse{}
-	response.Records = make([]*api.Record, len(records))
+	response.Records = make([]*api.ListRecordsResponse_Record, len(records))
 
 	for i, r := range records {
 		response.Records[i] = convertFromDatabaseRecord(r)
@@ -39,19 +39,19 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 	return response, nil
 }
 
-func convertFromDatabaseRecord(m *domain.Record) *api.Record {
-	record := &api.Record{
-		Source: &api.Organization{
+func convertFromDatabaseRecord(m *domain.Record) *api.ListRecordsResponse_Record {
+	record := &api.ListRecordsResponse_Record{
+		Source: &api.ListRecordsResponse_Record_Organization{
 			SerialNumber: m.Source().SerialNumber(),
 		},
-		Destination: &api.Organization{
+		Destination: &api.ListRecordsResponse_Record_Organization{
 			SerialNumber: m.Destination().SerialNumber(),
 		},
-		Direction: api.Direction(api.Direction_value[strings.ToUpper(string(m.Direction()))]),
-		Service: &api.Service{
+		Direction: api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[strings.ToUpper(string(m.Direction()))]),
+		Service: &api.ListRecordsResponse_Record_Service{
 			Name: m.Service().Name(),
 		},
-		Order: &api.Order{
+		Order: &api.ListRecordsResponse_Record_Order{
 			Delegator: m.Order().Delegator(),
 			Reference: m.Order().Reference(),
 		},

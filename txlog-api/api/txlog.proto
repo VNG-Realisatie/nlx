@@ -14,38 +14,38 @@ service TXLog {
   }
 }
 
-enum Direction {
-  IN = 0;
-  OUT = 1;
-}
-
-message Organization {
-  string serialNumber = 1;
-}
-
-message Service {
-  string name = 1;
-}
-
-message Order {
-  string delegator = 1;
-  string reference = 2;
-}
-
-message Record {
-  Organization source = 1;
-  Organization destination = 2;
-  
-  Direction direction = 3;
-  Service service = 4;
-  string data = 5;
-  Order order = 6;
-
-  string TransactionID = 7;
-  
-  google.protobuf.Timestamp createdAt = 9;
-}
-
 message ListRecordsResponse {
+  message Record {
+    enum Direction {
+      IN = 0;
+      OUT = 1;
+    }
+
+    message Organization {
+      string serialNumber = 1;
+    }
+
+    message Service {
+       string name = 1;
+    }
+
+    message Order {
+      string delegator = 1;
+      string reference = 2;
+    }
+
+    Organization source = 1;
+    Organization destination = 2;
+
+    Direction direction = 3;
+    Service service = 4;
+    string data = 5;
+    Order order = 6;
+
+    string TransactionID = 7;
+
+    google.protobuf.Timestamp createdAt = 9;
+  }
+
   repeated Record records = 1;
 }

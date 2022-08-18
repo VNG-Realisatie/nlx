@@ -40,6 +40,71 @@
     }
   },
   "definitions": {
+    "ListRecordsResponseRecord": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/RecordOrganization"
+        },
+        "destination": {
+          "$ref": "#/definitions/RecordOrganization"
+        },
+        "direction": {
+          "$ref": "#/definitions/RecordDirection"
+        },
+        "service": {
+          "$ref": "#/definitions/RecordService"
+        },
+        "data": {
+          "type": "string"
+        },
+        "order": {
+          "$ref": "#/definitions/RecordOrder"
+        },
+        "TransactionID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "RecordDirection": {
+      "type": "string",
+      "enum": [
+        "IN",
+        "OUT"
+      ],
+      "default": "IN"
+    },
+    "RecordOrder": {
+      "type": "object",
+      "properties": {
+        "delegator": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        }
+      }
+    },
+    "RecordOrganization": {
+      "type": "object",
+      "properties": {
+        "serialNumber": {
+          "type": "string"
+        }
+      }
+    },
+    "RecordService": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -67,79 +132,14 @@
         }
       }
     },
-    "txlogDirection": {
-      "type": "string",
-      "enum": [
-        "IN",
-        "OUT"
-      ],
-      "default": "IN"
-    },
     "txlogListRecordsResponse": {
       "type": "object",
       "properties": {
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/txlogRecord"
+            "$ref": "#/definitions/ListRecordsResponseRecord"
           }
-        }
-      }
-    },
-    "txlogOrder": {
-      "type": "object",
-      "properties": {
-        "delegator": {
-          "type": "string"
-        },
-        "reference": {
-          "type": "string"
-        }
-      }
-    },
-    "txlogOrganization": {
-      "type": "object",
-      "properties": {
-        "serialNumber": {
-          "type": "string"
-        }
-      }
-    },
-    "txlogRecord": {
-      "type": "object",
-      "properties": {
-        "source": {
-          "$ref": "#/definitions/txlogOrganization"
-        },
-        "destination": {
-          "$ref": "#/definitions/txlogOrganization"
-        },
-        "direction": {
-          "$ref": "#/definitions/txlogDirection"
-        },
-        "service": {
-          "$ref": "#/definitions/txlogService"
-        },
-        "data": {
-          "type": "string"
-        },
-        "order": {
-          "$ref": "#/definitions/txlogOrder"
-        },
-        "TransactionID": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "txlogService": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
         }
       }
     }

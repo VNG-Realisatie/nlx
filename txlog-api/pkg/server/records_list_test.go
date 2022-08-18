@@ -54,19 +54,19 @@ func TestListRecords(t *testing.T) {
 					Return(models, nil)
 			},
 			want: &api.ListRecordsResponse{
-				Records: []*api.Record{
+				Records: []*api.ListRecordsResponse_Record{
 					{
-						Source: &api.Organization{
+						Source: &api.ListRecordsResponse_Record_Organization{
 							SerialNumber: "0001",
 						},
-						Destination: &api.Organization{
+						Destination: &api.ListRecordsResponse_Record_Organization{
 							SerialNumber: "0002",
 						},
-						Direction: api.Direction_IN,
-						Service: &api.Service{
+						Direction: api.ListRecordsResponse_Record_IN,
+						Service: &api.ListRecordsResponse_Record_Service{
 							Name: "test-service",
 						},
-						Order: &api.Order{
+						Order: &api.ListRecordsResponse_Record_Order{
 							Delegator: "0003",
 							Reference: "test-reference",
 						},
