@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-//nolint funlen: these are tests
+// nolint funlen: these are tests
 package scheduler_test
 
 import (
@@ -148,7 +148,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					CreateAccessProof(gomock.Any(), accessRequest).
+					CreateAccessProof(gomock.Any(), accessRequest.ID).
 					Return(nil, errors.New("arbitrary error"))
 
 				mocks.management.
@@ -283,14 +283,7 @@ func getApprovedAccessRequests() map[string]testCase {
 
 				mocks.db.
 					EXPECT().
-					CreateAccessProof(gomock.Any(), &database.OutgoingAccessRequest{
-						ID: 1,
-						Organization: database.Organization{
-							SerialNumber: "00000000000000000002",
-						},
-						ServiceName: "service",
-						State:       database.OutgoingAccessRequestApproved,
-					}).
+					CreateAccessProof(gomock.Any(), uint(1)).
 					Return(nil, nil)
 
 				mocks.db.

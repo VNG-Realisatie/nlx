@@ -70,18 +70,18 @@ func (mr *MockConfigDatabaseMockRecorder) CreateAccessGrant(ctx, accessRequest i
 }
 
 // CreateAccessProof mocks base method.
-func (m *MockConfigDatabase) CreateAccessProof(ctx context.Context, accessRequest *database.OutgoingAccessRequest) (*database.AccessProof, error) {
+func (m *MockConfigDatabase) CreateAccessProof(ctx context.Context, accessRequestOutgoingID uint) (*database.AccessProof, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccessProof", ctx, accessRequest)
+	ret := m.ctrl.Call(m, "CreateAccessProof", ctx, accessRequestOutgoingID)
 	ret0, _ := ret[0].(*database.AccessProof)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateAccessProof indicates an expected call of CreateAccessProof.
-func (mr *MockConfigDatabaseMockRecorder) CreateAccessProof(ctx, accessRequest interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) CreateAccessProof(ctx, accessRequestOutgoingID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessProof", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessProof), ctx, accessRequest)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessProof", reflect.TypeOf((*MockConfigDatabase)(nil).CreateAccessProof), ctx, accessRequestOutgoingID)
 }
 
 // CreateAuditLogRecord mocks base method.

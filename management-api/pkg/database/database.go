@@ -60,7 +60,7 @@ type ConfigDatabase interface {
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
 	GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*AccessGrant, error)
 
-	CreateAccessProof(ctx context.Context, accessRequest *OutgoingAccessRequest) (*AccessProof, error)
+	CreateAccessProof(ctx context.Context, accessRequestOutgoingID uint) (*AccessProof, error)
 	RevokeAccessProof(ctx context.Context, id uint, revokedAt time.Time) (*AccessProof, error)
 	GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error)
 	GetAccessProofs(ctx context.Context, accessProofIDs []uint64) ([]*AccessProof, error)

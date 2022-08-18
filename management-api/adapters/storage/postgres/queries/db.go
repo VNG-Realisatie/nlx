@@ -27,6 +27,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createAccessGrantStmt, err = db.PrepareContext(ctx, createAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateAccessGrant: %w", err)
 	}
+	if q.createAccessProofStmt, err = db.PrepareContext(ctx, createAccessProof); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateAccessProof: %w", err)
+	}
 	if q.doesInwayExistByNameStmt, err = db.PrepareContext(ctx, doesInwayExistByName); err != nil {
 		return nil, fmt.Errorf("error preparing query DoesInwayExistByName: %w", err)
 	}
@@ -59,6 +62,11 @@ func (q *Queries) Close() error {
 	if q.createAccessGrantStmt != nil {
 		if cerr := q.createAccessGrantStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createAccessGrantStmt: %w", cerr)
+		}
+	}
+	if q.createAccessProofStmt != nil {
+		if cerr := q.createAccessProofStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createAccessProofStmt: %w", cerr)
 		}
 	}
 	if q.doesInwayExistByNameStmt != nil {
@@ -141,6 +149,7 @@ type Queries struct {
 	db                                 DBTX
 	tx                                 *sql.Tx
 	createAccessGrantStmt              *sql.Stmt
+	createAccessProofStmt              *sql.Stmt
 	doesInwayExistByNameStmt           *sql.Stmt
 	getAccessGrantStmt                 *sql.Stmt
 	getLatestAccessGrantForServiceStmt *sql.Stmt
@@ -156,6 +165,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		db:                                 tx,
 		tx:                                 tx,
 		createAccessGrantStmt:              q.createAccessGrantStmt,
+		createAccessProofStmt:              q.createAccessProofStmt,
 		doesInwayExistByNameStmt:           q.doesInwayExistByNameStmt,
 		getAccessGrantStmt:                 q.getAccessGrantStmt,
 		getLatestAccessGrantForServiceStmt: q.getLatestAccessGrantForServiceStmt,

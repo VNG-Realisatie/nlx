@@ -7,7 +7,6 @@ package database_test
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -22,13 +21,8 @@ func TestCreateAccessProof(t *testing.T) {
 
 	setup(t)
 
-	fixtureTime := getFixtureTime(t)
-
-	fixtureCertBundle, err := newFixtureCertificateBundle()
-	require.NoError(t, err)
-
 	type args struct {
-		accessRequest *database.OutgoingAccessRequest
+		accessRequestOutgoingID uint
 	}
 
 	tests := map[string]struct {
@@ -40,37 +34,11 @@ func TestCreateAccessProof(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			args: args{
-				accessRequest: &database.OutgoingAccessRequest{
-					ID: 1,
-					Organization: database.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "fixture-organization-name",
-					},
-					ServiceName:          "fixture-service-name",
-					ReferenceID:          1,
-					State:                database.OutgoingAccessRequestCreated,
-					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
-					CreatedAt:            fixtureTime,
-					UpdatedAt:            fixtureTime,
-				},
+				accessRequestOutgoingID: 1,
 			},
 			want: &database.AccessProof{
 				ID:                      fixturesStartID,
 				AccessRequestOutgoingID: 1,
-				OutgoingAccessRequest: &database.OutgoingAccessRequest{
-					ID: 1,
-					Organization: database.Organization{
-						SerialNumber: "00000000000000000001",
-						Name:         "fixture-organization-name",
-					},
-					ServiceName:          "fixture-service-name",
-					ReferenceID:          1,
-					State:                database.OutgoingAccessRequestCreated,
-					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
-					CreatedAt:            fixtureTime,
-					UpdatedAt:            fixtureTime,
-				},
-				RevokedAt: sql.NullTime{},
 			},
 			wantErr: nil,
 		},
@@ -85,15 +53,15 @@ func TestCreateAccessProof(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.CreateAccessProof(context.Background(), tt.args.accessRequest)
+			got, err := configDb.CreateAccessProof(context.Background(), tt.args.accessRequestOutgoingID)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
+				// NOTE: we're testing individual properties, since we don't have control over the CreatedAt timestamp
+				require.False(t, got.CreatedAt.IsZero())
+
 				require.Equal(t, tt.want.ID, got.ID)
 				require.Equal(t, tt.want.AccessRequestOutgoingID, got.AccessRequestOutgoingID)
-				require.EqualValues(t, tt.want.OutgoingAccessRequest, got.OutgoingAccessRequest)
-				require.False(t, got.CreatedAt.IsZero())
-				require.Equal(t, tt.want.RevokedAt, got.RevokedAt)
 			}
 		})
 	}

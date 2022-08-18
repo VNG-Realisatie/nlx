@@ -36,6 +36,31 @@ func (q *Queries) CreateAccessGrant(ctx context.Context, arg *CreateAccessGrantP
 	return id, err
 }
 
+const createAccessProof = `-- name: CreateAccessProof :one
+insert into
+    nlx_management.access_proofs
+(
+    access_request_outgoing_id,
+    created_at
+) values (
+             $1,
+             $2
+         )
+returning id
+`
+
+type CreateAccessProofParams struct {
+	AccessRequestOutgoingID int32
+	CreatedAt               time.Time
+}
+
+func (q *Queries) CreateAccessProof(ctx context.Context, arg *CreateAccessProofParams) (int32, error) {
+	row := q.queryRow(ctx, q.createAccessProofStmt, createAccessProof, arg.AccessRequestOutgoingID, arg.CreatedAt)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
 const doesInwayExistByName = `-- name: DoesInwayExistByName :one
 select
         count(*)>0 as inway_exits

@@ -188,3 +188,16 @@ set
 where
     id = $1
 ;
+
+-- name: CreateAccessProof :one
+insert into
+    nlx_management.access_proofs
+(
+    access_request_outgoing_id,
+    created_at
+) values (
+             $1,
+             $2
+         )
+returning id
+;

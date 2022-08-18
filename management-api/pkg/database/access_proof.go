@@ -11,6 +11,8 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 type AccessProof struct {
@@ -25,21 +27,23 @@ func (AccessProof) TableName() string {
 	return "nlx_management.access_proofs"
 }
 
-func (db *PostgresConfigDatabase) CreateAccessProof(ctx context.Context, accessRequest *OutgoingAccessRequest) (*AccessProof, error) {
-	accessProof := &AccessProof{
-		AccessRequestOutgoingID: accessRequest.ID,
-		OutgoingAccessRequest:   accessRequest,
+func (db *PostgresConfigDatabase) CreateAccessProof(ctx context.Context, accessRequestOutgoingID uint) (*AccessProof, error) {
+	result := &AccessProof{
+		AccessRequestOutgoingID: accessRequestOutgoingID,
+		CreatedAt:               time.Now(),
 	}
 
-	result := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Create(accessProof)
-	if result.Error != nil {
-		return nil, result.Error
+	id, err := db.queries.CreateAccessProof(ctx, &queries.CreateAccessProofParams{
+		AccessRequestOutgoingID: int32(result.AccessRequestOutgoingID),
+		CreatedAt:               result.CreatedAt,
+	})
+	if err != nil {
+		return nil, err
 	}
 
-	return accessProof, nil
+	result.ID = uint(id)
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error) {

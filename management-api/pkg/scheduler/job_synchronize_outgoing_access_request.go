@@ -191,7 +191,7 @@ func (job *SynchronizeOutgoingAccessRequestJob) syncAccessProof(ctx context.Cont
 	switch err {
 	case nil:
 	case database.ErrNotFound:
-		_, err = job.configDatabase.CreateAccessProof(ctx, outgoingAccessRequest)
+		_, err = job.configDatabase.CreateAccessProof(ctx, outgoingAccessRequest.ID)
 
 		return err
 	default:
