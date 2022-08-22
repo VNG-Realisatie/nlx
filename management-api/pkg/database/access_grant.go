@@ -215,14 +215,14 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 }
 
 func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error) {
-	result := []*AccessGrant{}
-
 	accessGrants, err := db.queries.ListAccessGrantsForService(ctx, serviceName)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, accessGrant := range accessGrants {
+	result := make([]*AccessGrant, len(accessGrants))
+
+	for i, accessGrant := range accessGrants {
 		serviceID := uint(accessGrant.AccessRequestIncomingServiceID)
 
 		service := &Service{
@@ -265,7 +265,7 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 			RevokedAt: accessGrant.RevokedAt,
 		}
 
-		result = append(result, newModel)
+		result[i] = newModel
 	}
 
 	return result, nil
