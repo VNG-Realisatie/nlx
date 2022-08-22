@@ -9,15 +9,15 @@ import (
 )
 
 type Claims struct {
-	Subject   string `json:"sub"`
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	Picture   string `json:"picture"`
-	Issuer    string `json:"iss"`
-	Audience  string `json:"aud"`
-	ExpiresAt int64  `json:"exp,omitempty"`
-	IssuedAt  int64  `json:"iat,omitempty"`
-	NotBefore int64  `json:"nbf,omitempty"`
+	Subject   string   `json:"sub"`
+	Name      string   `json:"name"`
+	Email     string   `json:"email"`
+	Picture   string   `json:"picture"`
+	Issuer    string   `json:"iss"`
+	Audience  audience `json:"aud"`
+	ExpiresAt int64    `json:"exp,omitempty"`
+	IssuedAt  int64    `json:"iat,omitempty"`
+	NotBefore int64    `json:"nbf,omitempty"`
 }
 
 func (claims *Claims) Verify() error {
