@@ -219,10 +219,6 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 
 	accessGrants, err := db.queries.ListAccessGrantsForService(ctx, serviceName)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return result, nil
-		}
-
 		return nil, err
 	}
 
