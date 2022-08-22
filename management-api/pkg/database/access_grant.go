@@ -223,11 +223,7 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 	}
 
 	for _, accessGrant := range accessGrants {
-		var serviceID uint
-
-		if accessGrant.AccessRequestIncomingServiceID > 0 {
-			serviceID = uint(accessGrant.AccessRequestIncomingServiceID)
-		}
+		serviceID := uint(accessGrant.AccessRequestIncomingServiceID)
 
 		service := &Service{
 			ID:                     serviceID,
