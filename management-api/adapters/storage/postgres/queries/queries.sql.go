@@ -450,7 +450,7 @@ func (q *Queries) RevokeAccessGrant(ctx context.Context, arg *RevokeAccessGrantP
 	return err
 }
 
-const revokeIncomingAccessRequest = `-- name: RevokeIncomingAccessRequest :exec
+const updateIncomingAccessRequest = `-- name: UpdateIncomingAccessRequest :exec
 update
     nlx_management.access_requests_incoming
 set
@@ -460,14 +460,14 @@ where
     id = $1
 `
 
-type RevokeIncomingAccessRequestParams struct {
+type UpdateIncomingAccessRequestParams struct {
 	ID        int32
 	State     string
 	UpdatedAt time.Time
 }
 
-func (q *Queries) RevokeIncomingAccessRequest(ctx context.Context, arg *RevokeIncomingAccessRequestParams) error {
-	_, err := q.exec(ctx, q.revokeIncomingAccessRequestStmt, revokeIncomingAccessRequest, arg.ID, arg.State, arg.UpdatedAt)
+func (q *Queries) UpdateIncomingAccessRequest(ctx context.Context, arg *UpdateIncomingAccessRequestParams) error {
+	_, err := q.exec(ctx, q.updateIncomingAccessRequestStmt, updateIncomingAccessRequest, arg.ID, arg.State, arg.UpdatedAt)
 	return err
 }
 

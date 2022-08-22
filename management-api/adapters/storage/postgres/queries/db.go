@@ -48,8 +48,8 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.revokeAccessGrantStmt, err = db.PrepareContext(ctx, revokeAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query RevokeAccessGrant: %w", err)
 	}
-	if q.revokeIncomingAccessRequestStmt, err = db.PrepareContext(ctx, revokeIncomingAccessRequest); err != nil {
-		return nil, fmt.Errorf("error preparing query RevokeIncomingAccessRequest: %w", err)
+	if q.updateIncomingAccessRequestStmt, err = db.PrepareContext(ctx, updateIncomingAccessRequest); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateIncomingAccessRequest: %w", err)
 	}
 	if q.updateSettingsStmt, err = db.PrepareContext(ctx, updateSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateSettings: %w", err)
@@ -99,9 +99,9 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing revokeAccessGrantStmt: %w", cerr)
 		}
 	}
-	if q.revokeIncomingAccessRequestStmt != nil {
-		if cerr := q.revokeIncomingAccessRequestStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing revokeIncomingAccessRequestStmt: %w", cerr)
+	if q.updateIncomingAccessRequestStmt != nil {
+		if cerr := q.updateIncomingAccessRequestStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateIncomingAccessRequestStmt: %w", cerr)
 		}
 	}
 	if q.updateSettingsStmt != nil {
@@ -156,7 +156,7 @@ type Queries struct {
 	getSettingsStmt                    *sql.Stmt
 	listAccessGrantsForServiceStmt     *sql.Stmt
 	revokeAccessGrantStmt              *sql.Stmt
-	revokeIncomingAccessRequestStmt    *sql.Stmt
+	updateIncomingAccessRequestStmt    *sql.Stmt
 	updateSettingsStmt                 *sql.Stmt
 }
 
@@ -172,7 +172,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getSettingsStmt:                    q.getSettingsStmt,
 		listAccessGrantsForServiceStmt:     q.listAccessGrantsForServiceStmt,
 		revokeAccessGrantStmt:              q.revokeAccessGrantStmt,
-		revokeIncomingAccessRequestStmt:    q.revokeIncomingAccessRequestStmt,
+		updateIncomingAccessRequestStmt:    q.updateIncomingAccessRequestStmt,
 		updateSettingsStmt:                 q.updateSettingsStmt,
 	}
 }

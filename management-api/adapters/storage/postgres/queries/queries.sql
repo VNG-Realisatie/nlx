@@ -177,7 +177,7 @@ where
     access_grants.id = $1
 ;
 
--- name: RevokeIncomingAccessRequest :exec
+-- name: UpdateIncomingAccessRequest :exec
 update
     nlx_management.access_requests_incoming
 set

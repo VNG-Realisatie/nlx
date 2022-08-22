@@ -146,7 +146,7 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 		return nil, err
 	}
 
-	err = qtx.RevokeIncomingAccessRequest(ctx, &queries.RevokeIncomingAccessRequestParams{
+	err = qtx.UpdateIncomingAccessRequest(ctx, &queries.UpdateIncomingAccessRequestParams{
 		ID:        accessGrant.AccessRequestIncomingID,
 		State:     string(IncomingAccessRequestRevoked),
 		UpdatedAt: revokedAt,
