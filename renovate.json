@@ -44,12 +44,6 @@
       "enabled": false
     },
     {
-      "groupName": "ca-cfssl-unsafe. Upgrading to go 1.19 breaks this component",
-      "paths": ["ca-cfssl-unsafe/**"],
-      "matchPackageNames": ["golang"],
-      "allowedVersions": "<=1.18"
-    },
-    {
       "groupName": "E2E tests - BROWSERSTACK_IDLE_TIMEOUT. Issue #1596",
       "paths": [".gitlab/ci/e2e/nlx_management_selenium.yml"],
       "matchPackageNames": ["node"],

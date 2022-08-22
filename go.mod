@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/DATA-DOG/go-txdb v0.1.5
 	github.com/blang/semver/v4 v4.0.0
-	github.com/cloudflare/cfssl v1.6.1
+	github.com/cloudflare/cfssl v1.6.2-0.20220819173405-7614d6cad35d
 	github.com/coreos/go-oidc/v3 v3.2.0
 	github.com/fgrosse/zaptest v1.1.0
 	github.com/go-chi/chi/v5 v5.0.7
