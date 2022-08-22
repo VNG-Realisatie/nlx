@@ -164,11 +164,7 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 		return nil, err
 	}
 
-	var serviceID uint
-
-	if accessGrant.AccessRequestIncomingServiceID.Valid {
-		serviceID = uint(accessGrant.AccessRequestIncomingServiceID.Int32)
-	}
+	serviceID := uint(accessGrant.AccessRequestIncomingServiceID.Int32)
 
 	service := &Service{
 		ID:                     serviceID,
