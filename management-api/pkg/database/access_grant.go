@@ -55,26 +55,26 @@ func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (
 
 	var serviceID uint
 
-	if accessGrant.AriServiceID.Valid {
-		serviceID = uint(accessGrant.AriServiceID.Int32)
+	if accessGrant.AccessRequestIncomingServiceID.Valid {
+		serviceID = uint(accessGrant.AccessRequestIncomingServiceID.Int32)
 	}
 
 	service := &Service{
 		ID:                     serviceID,
-		Name:                   accessGrant.SName.String,
-		EndpointURL:            accessGrant.SEndpointUrl.String,
-		DocumentationURL:       accessGrant.SDocumentationUrl.String,
-		APISpecificationURL:    accessGrant.SApiSpecificationUrl.String,
-		Internal:               accessGrant.SInternal.Bool,
-		TechSupportContact:     accessGrant.STechSupportContact.String,
-		PublicSupportContact:   accessGrant.SPublicSupportContact.String,
+		Name:                   accessGrant.ServiceName.String,
+		EndpointURL:            accessGrant.ServiceEndpointUrl.String,
+		DocumentationURL:       accessGrant.ServiceDocumentationUrl.String,
+		APISpecificationURL:    accessGrant.ServiceApiSpecificationUrl.String,
+		Internal:               accessGrant.ServiceInternal.Bool,
+		TechSupportContact:     accessGrant.ServiceTechSupportContact.String,
+		PublicSupportContact:   accessGrant.ServicePublicSupportContact.String,
 		Inways:                 nil,
 		IncomingAccessRequests: nil,
-		OneTimeCosts:           int(accessGrant.SOneTimeCosts.Int32),
-		MonthlyCosts:           int(accessGrant.SMonthlyCosts.Int32),
-		RequestCosts:           int(accessGrant.SRequestCosts.Int32),
-		CreatedAt:              accessGrant.SCreatedAt.Time,
-		UpdatedAt:              accessGrant.SUpdatedAt.Time,
+		OneTimeCosts:           int(accessGrant.ServiceOneTimeCosts.Int32),
+		MonthlyCosts:           int(accessGrant.ServiceMonthlyCosts.Int32),
+		RequestCosts:           int(accessGrant.ServiceRequestCosts.Int32),
+		CreatedAt:              accessGrant.ServiceCreatedAt.Time,
+		UpdatedAt:              accessGrant.ServiceUpdatedAt.Time,
 	}
 
 	result := &AccessGrant{
@@ -84,16 +84,16 @@ func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (
 			ID:        uint(accessGrant.AccessRequestIncomingID),
 			ServiceID: serviceID,
 			Organization: IncomingAccessRequestOrganization{
-				Name:         accessGrant.AriOrganizationName.String,
-				SerialNumber: accessGrant.AriOrganizationSerialNumber.String,
+				Name:         accessGrant.AccessRequestIncomingOrganizationName.String,
+				SerialNumber: accessGrant.AccessRequestIncomingOrganizationSerialNumber.String,
 			},
-			State:                IncomingAccessRequestState(accessGrant.AriState.String),
+			State:                IncomingAccessRequestState(accessGrant.AccessRequestIncomingState.String),
 			AccessGrants:         nil,
-			PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint.String,
-			PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+			PublicKeyFingerprint: accessGrant.AccessRequestIncomingPublicKeyFingerprint.String,
+			PublicKeyPEM:         accessGrant.AccessRequestIncomingPublicKeyPem.String,
 			Service:              service,
-			CreatedAt:            accessGrant.AriCreatedAt.Time,
-			UpdatedAt:            accessGrant.AriUpdatedAt.Time,
+			CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt.Time,
+			UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt.Time,
 		},
 		CreatedAt: accessGrant.CreatedAt,
 		RevokedAt: accessGrant.RevokedAt,
@@ -166,26 +166,26 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 
 	var serviceID uint
 
-	if accessGrant.AriServiceID.Valid {
-		serviceID = uint(accessGrant.AriServiceID.Int32)
+	if accessGrant.AccessRequestIncomingServiceID.Valid {
+		serviceID = uint(accessGrant.AccessRequestIncomingServiceID.Int32)
 	}
 
 	service := &Service{
 		ID:                     serviceID,
-		Name:                   accessGrant.SName.String,
-		EndpointURL:            accessGrant.SEndpointUrl.String,
-		DocumentationURL:       accessGrant.SDocumentationUrl.String,
-		APISpecificationURL:    accessGrant.SApiSpecificationUrl.String,
-		Internal:               accessGrant.SInternal.Bool,
-		TechSupportContact:     accessGrant.STechSupportContact.String,
-		PublicSupportContact:   accessGrant.SPublicSupportContact.String,
+		Name:                   accessGrant.ServiceName.String,
+		EndpointURL:            accessGrant.ServiceEndpointUrl.String,
+		DocumentationURL:       accessGrant.ServiceDocumentationUrl.String,
+		APISpecificationURL:    accessGrant.ServiceApiSpecificationUrl.String,
+		Internal:               accessGrant.ServiceInternal.Bool,
+		TechSupportContact:     accessGrant.ServiceTechSupportContact.String,
+		PublicSupportContact:   accessGrant.ServicePublicSupportContact.String,
 		Inways:                 nil,
 		IncomingAccessRequests: nil,
-		OneTimeCosts:           int(accessGrant.SOneTimeCosts.Int32),
-		MonthlyCosts:           int(accessGrant.SMonthlyCosts.Int32),
-		RequestCosts:           int(accessGrant.SRequestCosts.Int32),
-		CreatedAt:              accessGrant.SCreatedAt.Time,
-		UpdatedAt:              accessGrant.SUpdatedAt.Time,
+		OneTimeCosts:           int(accessGrant.ServiceOneTimeCosts.Int32),
+		MonthlyCosts:           int(accessGrant.ServiceMonthlyCosts.Int32),
+		RequestCosts:           int(accessGrant.ServiceRequestCosts.Int32),
+		CreatedAt:              accessGrant.ServiceCreatedAt.Time,
+		UpdatedAt:              accessGrant.ServiceUpdatedAt.Time,
 	}
 
 	result := &AccessGrant{
@@ -195,16 +195,16 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 			ID:        uint(accessGrant.AccessRequestIncomingID),
 			ServiceID: serviceID,
 			Organization: IncomingAccessRequestOrganization{
-				Name:         accessGrant.AriOrganizationName.String,
-				SerialNumber: accessGrant.AriOrganizationSerialNumber.String,
+				Name:         accessGrant.AccessRequestIncomingOrganizationName.String,
+				SerialNumber: accessGrant.AccessRequestIncomingOrganizationSerialNumber.String,
 			},
-			State:                IncomingAccessRequestState(accessGrant.AriState.String),
+			State:                IncomingAccessRequestState(accessGrant.AccessRequestIncomingState.String),
 			AccessGrants:         nil,
-			PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint.String,
-			PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+			PublicKeyFingerprint: accessGrant.AccessRequestIncomingPublicKeyFingerprint.String,
+			PublicKeyPEM:         accessGrant.AccessRequestIncomingPublicKeyPem.String,
 			Service:              service,
-			CreatedAt:            accessGrant.AriCreatedAt.Time,
-			UpdatedAt:            accessGrant.AriUpdatedAt.Time,
+			CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt.Time,
+			UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt.Time,
 		},
 		CreatedAt: accessGrant.CreatedAt,
 		RevokedAt: accessGrant.RevokedAt,
@@ -233,26 +233,26 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 	for _, accessGrant := range accessGrants {
 		var serviceID uint
 
-		if accessGrant.AriServiceID > 0 {
-			serviceID = uint(accessGrant.AriServiceID)
+		if accessGrant.AccessRequestIncomingServiceID > 0 {
+			serviceID = uint(accessGrant.AccessRequestIncomingServiceID)
 		}
 
 		service := &Service{
 			ID:                     serviceID,
-			Name:                   accessGrant.SName,
-			EndpointURL:            accessGrant.SEndpointUrl,
-			DocumentationURL:       accessGrant.SDocumentationUrl,
-			APISpecificationURL:    accessGrant.SApiSpecificationUrl,
-			Internal:               accessGrant.SInternal,
-			TechSupportContact:     accessGrant.STechSupportContact,
-			PublicSupportContact:   accessGrant.SPublicSupportContact,
+			Name:                   accessGrant.ServiceName,
+			EndpointURL:            accessGrant.ServiceEndpointUrl,
+			DocumentationURL:       accessGrant.ServiceDocumentationUrl,
+			APISpecificationURL:    accessGrant.ServiceApiSpecificationUrl,
+			Internal:               accessGrant.ServiceInternal,
+			TechSupportContact:     accessGrant.ServiceTechSupportContact,
+			PublicSupportContact:   accessGrant.ServicePublicSupportContact,
 			Inways:                 nil,
 			IncomingAccessRequests: nil,
-			OneTimeCosts:           int(accessGrant.SOneTimeCosts),
-			MonthlyCosts:           int(accessGrant.SMonthlyCosts),
-			RequestCosts:           int(accessGrant.SRequestCosts),
-			CreatedAt:              accessGrant.SCreatedAt,
-			UpdatedAt:              accessGrant.SUpdatedAt,
+			OneTimeCosts:           int(accessGrant.ServiceOneTimeCosts),
+			MonthlyCosts:           int(accessGrant.ServiceMonthlyCosts),
+			RequestCosts:           int(accessGrant.ServiceRequestCosts),
+			CreatedAt:              accessGrant.ServiceCreatedAt,
+			UpdatedAt:              accessGrant.ServiceUpdatedAt,
 		}
 
 		newModel := &AccessGrant{
@@ -262,16 +262,16 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 				ID:        uint(accessGrant.AccessRequestIncomingID),
 				ServiceID: serviceID,
 				Organization: IncomingAccessRequestOrganization{
-					Name:         accessGrant.AriOrganizationName,
-					SerialNumber: accessGrant.AriOrganizationSerialNumber,
+					Name:         accessGrant.AccessRequestIncomingOrganizationName,
+					SerialNumber: accessGrant.AccessRequestIncomingOrganizationSerialNumber,
 				},
-				State:                IncomingAccessRequestState(accessGrant.AriState),
+				State:                IncomingAccessRequestState(accessGrant.AccessRequestIncomingState),
 				AccessGrants:         nil,
-				PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint,
-				PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+				PublicKeyFingerprint: accessGrant.AccessRequestIncomingPublicKeyFingerprint,
+				PublicKeyPEM:         accessGrant.AccessRequestIncomingPublicKeyPem.String,
 				Service:              service,
-				CreatedAt:            accessGrant.AriCreatedAt,
-				UpdatedAt:            accessGrant.AriUpdatedAt,
+				CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt,
+				UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt,
 			},
 			CreatedAt: accessGrant.CreatedAt,
 			RevokedAt: accessGrant.RevokedAt,
@@ -299,26 +299,26 @@ func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Con
 
 	var serviceID uint
 
-	if accessGrant.AriServiceID > 0 {
-		serviceID = uint(accessGrant.AriServiceID)
+	if accessGrant.AccessRequestIncomingServiceID > 0 {
+		serviceID = uint(accessGrant.AccessRequestIncomingServiceID)
 	}
 
 	service := &Service{
 		ID:                     serviceID,
-		Name:                   accessGrant.SName,
-		EndpointURL:            accessGrant.SEndpointUrl,
-		DocumentationURL:       accessGrant.SDocumentationUrl,
-		APISpecificationURL:    accessGrant.SApiSpecificationUrl,
-		Internal:               accessGrant.SInternal,
-		TechSupportContact:     accessGrant.STechSupportContact,
-		PublicSupportContact:   accessGrant.SPublicSupportContact,
+		Name:                   accessGrant.ServiceName,
+		EndpointURL:            accessGrant.ServiceEndpointUrl,
+		DocumentationURL:       accessGrant.ServiceDocumentationUrl,
+		APISpecificationURL:    accessGrant.ServiceApiSpecificationUrl,
+		Internal:               accessGrant.ServiceInternal,
+		TechSupportContact:     accessGrant.ServiceTechSupportContact,
+		PublicSupportContact:   accessGrant.ServicePublicSupportContact,
 		Inways:                 nil,
 		IncomingAccessRequests: nil,
-		OneTimeCosts:           int(accessGrant.SOneTimeCosts),
-		MonthlyCosts:           int(accessGrant.SMonthlyCosts),
-		RequestCosts:           int(accessGrant.SRequestCosts),
-		CreatedAt:              accessGrant.SCreatedAt,
-		UpdatedAt:              accessGrant.SUpdatedAt,
+		OneTimeCosts:           int(accessGrant.ServiceOneTimeCosts),
+		MonthlyCosts:           int(accessGrant.ServiceMonthlyCosts),
+		RequestCosts:           int(accessGrant.ServiceRequestCosts),
+		CreatedAt:              accessGrant.ServiceCreatedAt,
+		UpdatedAt:              accessGrant.ServiceUpdatedAt,
 	}
 
 	result := &AccessGrant{
@@ -328,16 +328,16 @@ func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Con
 			ID:        uint(accessGrant.AccessRequestIncomingID),
 			ServiceID: serviceID,
 			Organization: IncomingAccessRequestOrganization{
-				Name:         accessGrant.AriOrganizationName,
-				SerialNumber: accessGrant.AriOrganizationSerialNumber,
+				Name:         accessGrant.AccessRequestIncomingOrganizationName,
+				SerialNumber: accessGrant.AccessRequestIncomingOrganizationSerialNumber,
 			},
-			State:                IncomingAccessRequestState(accessGrant.AriState),
+			State:                IncomingAccessRequestState(accessGrant.AccessRequestIncomingState),
 			AccessGrants:         nil,
-			PublicKeyFingerprint: accessGrant.AriPublicKeyFingerprint,
-			PublicKeyPEM:         accessGrant.AriPublicKeyPem.String,
+			PublicKeyFingerprint: accessGrant.AccessRequestIncomingPublicKeyFingerprint,
+			PublicKeyPEM:         accessGrant.AccessRequestIncomingPublicKeyPem.String,
 			Service:              service,
-			CreatedAt:            accessGrant.AriCreatedAt,
-			UpdatedAt:            accessGrant.AriUpdatedAt,
+			CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt,
+			UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt,
 		},
 		CreatedAt: accessGrant.CreatedAt,
 		RevokedAt: accessGrant.RevokedAt,

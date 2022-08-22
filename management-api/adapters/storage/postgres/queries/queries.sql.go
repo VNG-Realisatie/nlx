@@ -83,28 +83,28 @@ select
     access_grants.created_at,
     access_grants.revoked_at,
     access_request_incoming_id,
-    access_requests_incoming.id as ari_id,
-    access_requests_incoming.service_id as ari_service_id,
-    access_requests_incoming.organization_name as ari_organization_name,
-    access_requests_incoming.organization_serial_number as ari_organization_serial_number,
-    access_requests_incoming.state as ari_state,
-    access_requests_incoming.created_at as ari_created_at,
-    access_requests_incoming.updated_at as ari_updated_at,
-    access_requests_incoming.public_key_fingerprint as ari_public_key_fingerprint,
-    access_requests_incoming.public_key_pem as ari_public_key_pem,
-    services.id as s_id,
-    services.name as s_name,
-    services.endpoint_url as s_endpoint_url,
-    services.documentation_url as s_documentation_url,
-    services.api_specification_url as s_api_specification_url,
-    services.internal as s_internal,
-    services.tech_support_contact as s_tech_support_contact,
-    services.public_support_contact as s_public_support_contact,
-    services.one_time_costs as s_one_time_costs,
-    services.monthly_costs as s_monthly_costs,
-    services.request_costs as s_request_costs,
-    services.created_at as s_created_at,
-    services.updated_at as s_updated_at
+    access_requests_incoming.id as access_request_incoming_id,
+    access_requests_incoming.service_id as access_request_incoming_service_id,
+    access_requests_incoming.organization_name as access_request_incoming_organization_name,
+    access_requests_incoming.organization_serial_number as access_request_incoming_organization_serial_number,
+    access_requests_incoming.state as access_request_incoming_state,
+    access_requests_incoming.created_at as access_request_incoming_created_at,
+    access_requests_incoming.updated_at as access_request_incoming_updated_at,
+    access_requests_incoming.public_key_fingerprint as access_request_incoming_public_key_fingerprint,
+    access_requests_incoming.public_key_pem as access_request_incoming_public_key_pem,
+    services.id as service_id,
+    services.name as service_name,
+    services.endpoint_url as service_endpoint_url,
+    services.documentation_url as service_documentation_url,
+    services.api_specification_url as service_api_specification_url,
+    services.internal as service_internal,
+    services.tech_support_contact as service_tech_support_contact,
+    services.public_support_contact as service_public_support_contact,
+    services.one_time_costs as service_one_time_costs,
+    services.monthly_costs as service_monthly_costs,
+    services.request_costs as service_request_costs,
+    services.created_at as service_created_at,
+    services.updated_at as service_updated_at
 from
     nlx_management.access_grants
         left join nlx_management.access_requests_incoming on (
@@ -118,32 +118,32 @@ where
 `
 
 type GetAccessGrantRow struct {
-	ID                          int32
-	CreatedAt                   time.Time
-	RevokedAt                   sql.NullTime
-	AccessRequestIncomingID     int32
-	AriID                       sql.NullInt32
-	AriServiceID                sql.NullInt32
-	AriOrganizationName         sql.NullString
-	AriOrganizationSerialNumber sql.NullString
-	AriState                    sql.NullString
-	AriCreatedAt                sql.NullTime
-	AriUpdatedAt                sql.NullTime
-	AriPublicKeyFingerprint     sql.NullString
-	AriPublicKeyPem             sql.NullString
-	SID                         sql.NullInt32
-	SName                       sql.NullString
-	SEndpointUrl                sql.NullString
-	SDocumentationUrl           sql.NullString
-	SApiSpecificationUrl        sql.NullString
-	SInternal                   sql.NullBool
-	STechSupportContact         sql.NullString
-	SPublicSupportContact       sql.NullString
-	SOneTimeCosts               sql.NullInt32
-	SMonthlyCosts               sql.NullInt32
-	SRequestCosts               sql.NullInt32
-	SCreatedAt                  sql.NullTime
-	SUpdatedAt                  sql.NullTime
+	ID                                            int32
+	CreatedAt                                     time.Time
+	RevokedAt                                     sql.NullTime
+	AccessRequestIncomingID                       int32
+	AccessRequestIncomingID_2                     sql.NullInt32
+	AccessRequestIncomingServiceID                sql.NullInt32
+	AccessRequestIncomingOrganizationName         sql.NullString
+	AccessRequestIncomingOrganizationSerialNumber sql.NullString
+	AccessRequestIncomingState                    sql.NullString
+	AccessRequestIncomingCreatedAt                sql.NullTime
+	AccessRequestIncomingUpdatedAt                sql.NullTime
+	AccessRequestIncomingPublicKeyFingerprint     sql.NullString
+	AccessRequestIncomingPublicKeyPem             sql.NullString
+	ServiceID                                     sql.NullInt32
+	ServiceName                                   sql.NullString
+	ServiceEndpointUrl                            sql.NullString
+	ServiceDocumentationUrl                       sql.NullString
+	ServiceApiSpecificationUrl                    sql.NullString
+	ServiceInternal                               sql.NullBool
+	ServiceTechSupportContact                     sql.NullString
+	ServicePublicSupportContact                   sql.NullString
+	ServiceOneTimeCosts                           sql.NullInt32
+	ServiceMonthlyCosts                           sql.NullInt32
+	ServiceRequestCosts                           sql.NullInt32
+	ServiceCreatedAt                              sql.NullTime
+	ServiceUpdatedAt                              sql.NullTime
 }
 
 func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrantRow, error) {
@@ -154,28 +154,28 @@ func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrant
 		&i.CreatedAt,
 		&i.RevokedAt,
 		&i.AccessRequestIncomingID,
-		&i.AriID,
-		&i.AriServiceID,
-		&i.AriOrganizationName,
-		&i.AriOrganizationSerialNumber,
-		&i.AriState,
-		&i.AriCreatedAt,
-		&i.AriUpdatedAt,
-		&i.AriPublicKeyFingerprint,
-		&i.AriPublicKeyPem,
-		&i.SID,
-		&i.SName,
-		&i.SEndpointUrl,
-		&i.SDocumentationUrl,
-		&i.SApiSpecificationUrl,
-		&i.SInternal,
-		&i.STechSupportContact,
-		&i.SPublicSupportContact,
-		&i.SOneTimeCosts,
-		&i.SMonthlyCosts,
-		&i.SRequestCosts,
-		&i.SCreatedAt,
-		&i.SUpdatedAt,
+		&i.AccessRequestIncomingID_2,
+		&i.AccessRequestIncomingServiceID,
+		&i.AccessRequestIncomingOrganizationName,
+		&i.AccessRequestIncomingOrganizationSerialNumber,
+		&i.AccessRequestIncomingState,
+		&i.AccessRequestIncomingCreatedAt,
+		&i.AccessRequestIncomingUpdatedAt,
+		&i.AccessRequestIncomingPublicKeyFingerprint,
+		&i.AccessRequestIncomingPublicKeyPem,
+		&i.ServiceID,
+		&i.ServiceName,
+		&i.ServiceEndpointUrl,
+		&i.ServiceDocumentationUrl,
+		&i.ServiceApiSpecificationUrl,
+		&i.ServiceInternal,
+		&i.ServiceTechSupportContact,
+		&i.ServicePublicSupportContact,
+		&i.ServiceOneTimeCosts,
+		&i.ServiceMonthlyCosts,
+		&i.ServiceRequestCosts,
+		&i.ServiceCreatedAt,
+		&i.ServiceUpdatedAt,
 	)
 	return &i, err
 }
@@ -185,29 +185,28 @@ select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
-    access_grants.access_request_incoming_id,
-    access_requests_incoming.id as ari_id,
-    access_requests_incoming.service_id as ari_service_id,
-    access_requests_incoming.organization_name as ari_organization_name,
-    access_requests_incoming.organization_serial_number as ari_organization_serial_number,
-    access_requests_incoming.state as ari_state,
-    access_requests_incoming.created_at as ari_created_at,
-    access_requests_incoming.updated_at as ari_updated_at,
-    access_requests_incoming.public_key_fingerprint as ari_public_key_fingerprint,
-    access_requests_incoming.public_key_pem as ari_public_key_pem,
-    services.id as s_id,
-    services.name as s_name,
-    services.endpoint_url as s_endpoint_url,
-    services.documentation_url as s_documentation_url,
-    services.api_specification_url as s_api_specification_url,
-    services.internal as s_internal,
-    services.tech_support_contact as s_tech_support_contact,
-    services.public_support_contact as s_public_support_contact,
-    services.one_time_costs as s_one_time_costs,
-    services.monthly_costs as s_monthly_costs,
-    services.request_costs as s_request_costs,
-    services.created_at as s_created_at,
-    services.updated_at as s_updated_at
+    access_requests_incoming.id as access_request_incoming_id,
+    access_requests_incoming.service_id as access_request_incoming_service_id,
+    access_requests_incoming.organization_name as access_request_incoming_organization_name,
+    access_requests_incoming.organization_serial_number as access_request_incoming_organization_serial_number,
+    access_requests_incoming.state as access_request_incoming_state,
+    access_requests_incoming.created_at as access_request_incoming_created_at,
+    access_requests_incoming.updated_at as access_request_incoming_updated_at,
+    access_requests_incoming.public_key_fingerprint as access_request_incoming_public_key_fingerprint,
+    access_requests_incoming.public_key_pem as access_request_incoming_public_key_pem,
+    services.id as service_id,
+    services.name as service_name,
+    services.endpoint_url as service_endpoint_url,
+    services.documentation_url as service_documentation_url,
+    services.api_specification_url as service_api_specification_url,
+    services.internal as service_internal,
+    services.tech_support_contact as service_tech_support_contact,
+    services.public_support_contact as service_public_support_contact,
+    services.one_time_costs as service_one_time_costs,
+    services.monthly_costs as service_monthly_costs,
+    services.request_costs as service_request_costs,
+    services.created_at as service_created_at,
+    services.updated_at as service_updated_at
 from
     nlx_management.access_grants
         left join nlx_management.access_requests_incoming on (
@@ -231,32 +230,31 @@ type GetLatestAccessGrantForServiceParams struct {
 }
 
 type GetLatestAccessGrantForServiceRow struct {
-	ID                          int32
-	CreatedAt                   time.Time
-	RevokedAt                   sql.NullTime
-	AccessRequestIncomingID     int32
-	AriID                       int32
-	AriServiceID                int32
-	AriOrganizationName         string
-	AriOrganizationSerialNumber string
-	AriState                    string
-	AriCreatedAt                time.Time
-	AriUpdatedAt                time.Time
-	AriPublicKeyFingerprint     string
-	AriPublicKeyPem             sql.NullString
-	SID                         int32
-	SName                       string
-	SEndpointUrl                string
-	SDocumentationUrl           string
-	SApiSpecificationUrl        string
-	SInternal                   bool
-	STechSupportContact         string
-	SPublicSupportContact       string
-	SOneTimeCosts               int32
-	SMonthlyCosts               int32
-	SRequestCosts               int32
-	SCreatedAt                  time.Time
-	SUpdatedAt                  time.Time
+	ID                                            int32
+	CreatedAt                                     time.Time
+	RevokedAt                                     sql.NullTime
+	AccessRequestIncomingID                       int32
+	AccessRequestIncomingServiceID                int32
+	AccessRequestIncomingOrganizationName         string
+	AccessRequestIncomingOrganizationSerialNumber string
+	AccessRequestIncomingState                    string
+	AccessRequestIncomingCreatedAt                time.Time
+	AccessRequestIncomingUpdatedAt                time.Time
+	AccessRequestIncomingPublicKeyFingerprint     string
+	AccessRequestIncomingPublicKeyPem             sql.NullString
+	ServiceID                                     int32
+	ServiceName                                   string
+	ServiceEndpointUrl                            string
+	ServiceDocumentationUrl                       string
+	ServiceApiSpecificationUrl                    string
+	ServiceInternal                               bool
+	ServiceTechSupportContact                     string
+	ServicePublicSupportContact                   string
+	ServiceOneTimeCosts                           int32
+	ServiceMonthlyCosts                           int32
+	ServiceRequestCosts                           int32
+	ServiceCreatedAt                              time.Time
+	ServiceUpdatedAt                              time.Time
 }
 
 func (q *Queries) GetLatestAccessGrantForService(ctx context.Context, arg *GetLatestAccessGrantForServiceParams) (*GetLatestAccessGrantForServiceRow, error) {
@@ -267,28 +265,27 @@ func (q *Queries) GetLatestAccessGrantForService(ctx context.Context, arg *GetLa
 		&i.CreatedAt,
 		&i.RevokedAt,
 		&i.AccessRequestIncomingID,
-		&i.AriID,
-		&i.AriServiceID,
-		&i.AriOrganizationName,
-		&i.AriOrganizationSerialNumber,
-		&i.AriState,
-		&i.AriCreatedAt,
-		&i.AriUpdatedAt,
-		&i.AriPublicKeyFingerprint,
-		&i.AriPublicKeyPem,
-		&i.SID,
-		&i.SName,
-		&i.SEndpointUrl,
-		&i.SDocumentationUrl,
-		&i.SApiSpecificationUrl,
-		&i.SInternal,
-		&i.STechSupportContact,
-		&i.SPublicSupportContact,
-		&i.SOneTimeCosts,
-		&i.SMonthlyCosts,
-		&i.SRequestCosts,
-		&i.SCreatedAt,
-		&i.SUpdatedAt,
+		&i.AccessRequestIncomingServiceID,
+		&i.AccessRequestIncomingOrganizationName,
+		&i.AccessRequestIncomingOrganizationSerialNumber,
+		&i.AccessRequestIncomingState,
+		&i.AccessRequestIncomingCreatedAt,
+		&i.AccessRequestIncomingUpdatedAt,
+		&i.AccessRequestIncomingPublicKeyFingerprint,
+		&i.AccessRequestIncomingPublicKeyPem,
+		&i.ServiceID,
+		&i.ServiceName,
+		&i.ServiceEndpointUrl,
+		&i.ServiceDocumentationUrl,
+		&i.ServiceApiSpecificationUrl,
+		&i.ServiceInternal,
+		&i.ServiceTechSupportContact,
+		&i.ServicePublicSupportContact,
+		&i.ServiceOneTimeCosts,
+		&i.ServiceMonthlyCosts,
+		&i.ServiceRequestCosts,
+		&i.ServiceCreatedAt,
+		&i.ServiceUpdatedAt,
 	)
 	return &i, err
 }
@@ -325,28 +322,27 @@ select
     access_grants.created_at,
     access_grants.revoked_at,
     access_grants.access_request_incoming_id,
-    access_requests_incoming.id as ari_id,
-    access_requests_incoming.service_id as ari_service_id,
-    access_requests_incoming.organization_name as ari_organization_name,
-    access_requests_incoming.organization_serial_number as ari_organization_serial_number,
-    access_requests_incoming.state as ari_state,
-    access_requests_incoming.created_at as ari_created_at,
-    access_requests_incoming.updated_at as ari_updated_at,
-    access_requests_incoming.public_key_fingerprint as ari_public_key_fingerprint,
-    access_requests_incoming.public_key_pem as ari_public_key_pem,
-    services.id as s_id,
-    services.name as s_name,
-    services.endpoint_url as s_endpoint_url,
-    services.documentation_url as s_documentation_url,
-    services.api_specification_url as s_api_specification_url,
-    services.internal as s_internal,
-    services.tech_support_contact as s_tech_support_contact,
-    services.public_support_contact as s_public_support_contact,
-    services.one_time_costs as s_one_time_costs,
-    services.monthly_costs as s_monthly_costs,
-    services.request_costs as s_request_costs,
-    services.created_at as s_created_at,
-    services.updated_at as s_updated_at
+    access_requests_incoming.service_id as access_request_incoming_service_id,
+    access_requests_incoming.organization_name as access_request_incoming_organization_name,
+    access_requests_incoming.organization_serial_number as access_request_incoming_organization_serial_number,
+    access_requests_incoming.state as access_request_incoming_state,
+    access_requests_incoming.created_at as access_request_incoming_created_at,
+    access_requests_incoming.updated_at as access_request_incoming_updated_at,
+    access_requests_incoming.public_key_fingerprint as access_request_incoming_public_key_fingerprint,
+    access_requests_incoming.public_key_pem as access_request_incoming_public_key_pem,
+    services.id as service_id,
+    services.name as service_name,
+    services.endpoint_url as service_endpoint_url,
+    services.documentation_url as service_documentation_url,
+    services.api_specification_url as service_api_specification_url,
+    services.internal as service_internal,
+    services.tech_support_contact as service_tech_support_contact,
+    services.public_support_contact as service_public_support_contact,
+    services.one_time_costs as service_one_time_costs,
+    services.monthly_costs as service_monthly_costs,
+    services.request_costs as service_request_costs,
+    services.created_at as service_created_at,
+    services.updated_at as service_updated_at
 from
     nlx_management.access_grants
         left join nlx_management.access_requests_incoming on (
@@ -359,32 +355,31 @@ from
 `
 
 type ListAccessGrantsForServiceRow struct {
-	ID                          int32
-	CreatedAt                   time.Time
-	RevokedAt                   sql.NullTime
-	AccessRequestIncomingID     int32
-	AriID                       int32
-	AriServiceID                int32
-	AriOrganizationName         string
-	AriOrganizationSerialNumber string
-	AriState                    string
-	AriCreatedAt                time.Time
-	AriUpdatedAt                time.Time
-	AriPublicKeyFingerprint     string
-	AriPublicKeyPem             sql.NullString
-	SID                         int32
-	SName                       string
-	SEndpointUrl                string
-	SDocumentationUrl           string
-	SApiSpecificationUrl        string
-	SInternal                   bool
-	STechSupportContact         string
-	SPublicSupportContact       string
-	SOneTimeCosts               int32
-	SMonthlyCosts               int32
-	SRequestCosts               int32
-	SCreatedAt                  time.Time
-	SUpdatedAt                  time.Time
+	ID                                            int32
+	CreatedAt                                     time.Time
+	RevokedAt                                     sql.NullTime
+	AccessRequestIncomingID                       int32
+	AccessRequestIncomingServiceID                int32
+	AccessRequestIncomingOrganizationName         string
+	AccessRequestIncomingOrganizationSerialNumber string
+	AccessRequestIncomingState                    string
+	AccessRequestIncomingCreatedAt                time.Time
+	AccessRequestIncomingUpdatedAt                time.Time
+	AccessRequestIncomingPublicKeyFingerprint     string
+	AccessRequestIncomingPublicKeyPem             sql.NullString
+	ServiceID                                     int32
+	ServiceName                                   string
+	ServiceEndpointUrl                            string
+	ServiceDocumentationUrl                       string
+	ServiceApiSpecificationUrl                    string
+	ServiceInternal                               bool
+	ServiceTechSupportContact                     string
+	ServicePublicSupportContact                   string
+	ServiceOneTimeCosts                           int32
+	ServiceMonthlyCosts                           int32
+	ServiceRequestCosts                           int32
+	ServiceCreatedAt                              time.Time
+	ServiceUpdatedAt                              time.Time
 }
 
 func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) ([]*ListAccessGrantsForServiceRow, error) {
@@ -401,28 +396,27 @@ func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) (
 			&i.CreatedAt,
 			&i.RevokedAt,
 			&i.AccessRequestIncomingID,
-			&i.AriID,
-			&i.AriServiceID,
-			&i.AriOrganizationName,
-			&i.AriOrganizationSerialNumber,
-			&i.AriState,
-			&i.AriCreatedAt,
-			&i.AriUpdatedAt,
-			&i.AriPublicKeyFingerprint,
-			&i.AriPublicKeyPem,
-			&i.SID,
-			&i.SName,
-			&i.SEndpointUrl,
-			&i.SDocumentationUrl,
-			&i.SApiSpecificationUrl,
-			&i.SInternal,
-			&i.STechSupportContact,
-			&i.SPublicSupportContact,
-			&i.SOneTimeCosts,
-			&i.SMonthlyCosts,
-			&i.SRequestCosts,
-			&i.SCreatedAt,
-			&i.SUpdatedAt,
+			&i.AccessRequestIncomingServiceID,
+			&i.AccessRequestIncomingOrganizationName,
+			&i.AccessRequestIncomingOrganizationSerialNumber,
+			&i.AccessRequestIncomingState,
+			&i.AccessRequestIncomingCreatedAt,
+			&i.AccessRequestIncomingUpdatedAt,
+			&i.AccessRequestIncomingPublicKeyFingerprint,
+			&i.AccessRequestIncomingPublicKeyPem,
+			&i.ServiceID,
+			&i.ServiceName,
+			&i.ServiceEndpointUrl,
+			&i.ServiceDocumentationUrl,
+			&i.ServiceApiSpecificationUrl,
+			&i.ServiceInternal,
+			&i.ServiceTechSupportContact,
+			&i.ServicePublicSupportContact,
+			&i.ServiceOneTimeCosts,
+			&i.ServiceMonthlyCosts,
+			&i.ServiceRequestCosts,
+			&i.ServiceCreatedAt,
+			&i.ServiceUpdatedAt,
 		); err != nil {
 			return nil, err
 		}
