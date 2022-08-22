@@ -77,10 +77,10 @@ select
     services.updated_at as service_updated_at
 from
     nlx_management.access_grants
-        left join nlx_management.access_requests_incoming on (
+        join nlx_management.access_requests_incoming on (
             access_grants.access_request_incoming_id = access_requests_incoming.id
         )
-        left join nlx_management.services on (
+        join nlx_management.services on (
             access_requests_incoming.service_id = services.id
         )
 where
@@ -116,7 +116,7 @@ select
     services.updated_at as service_updated_at
 from
     nlx_management.access_grants
-        left join nlx_management.access_requests_incoming on (
+        join nlx_management.access_requests_incoming on (
             access_grants.access_request_incoming_id = access_requests_incoming.id
         )
         join nlx_management.services on (
@@ -154,7 +154,7 @@ select
     services.updated_at as service_updated_at
 from
     nlx_management.access_grants
-        left join nlx_management.access_requests_incoming on (
+        join nlx_management.access_requests_incoming on (
             access_requests_incoming.id = access_grants.access_request_incoming_id and
             access_requests_incoming.organization_serial_number = $1 and
             access_requests_incoming.public_key_fingerprint = $2

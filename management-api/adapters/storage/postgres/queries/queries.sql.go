@@ -107,10 +107,10 @@ select
     services.updated_at as service_updated_at
 from
     nlx_management.access_grants
-        left join nlx_management.access_requests_incoming on (
+        join nlx_management.access_requests_incoming on (
             access_grants.access_request_incoming_id = access_requests_incoming.id
         )
-        left join nlx_management.services on (
+        join nlx_management.services on (
             access_requests_incoming.service_id = services.id
         )
 where
@@ -122,28 +122,28 @@ type GetAccessGrantRow struct {
 	CreatedAt                                     time.Time
 	RevokedAt                                     sql.NullTime
 	AccessRequestIncomingID                       int32
-	AccessRequestIncomingID_2                     sql.NullInt32
-	AccessRequestIncomingServiceID                sql.NullInt32
-	AccessRequestIncomingOrganizationName         sql.NullString
-	AccessRequestIncomingOrganizationSerialNumber sql.NullString
-	AccessRequestIncomingState                    sql.NullString
-	AccessRequestIncomingCreatedAt                sql.NullTime
-	AccessRequestIncomingUpdatedAt                sql.NullTime
-	AccessRequestIncomingPublicKeyFingerprint     sql.NullString
+	AccessRequestIncomingID_2                     int32
+	AccessRequestIncomingServiceID                int32
+	AccessRequestIncomingOrganizationName         string
+	AccessRequestIncomingOrganizationSerialNumber string
+	AccessRequestIncomingState                    string
+	AccessRequestIncomingCreatedAt                time.Time
+	AccessRequestIncomingUpdatedAt                time.Time
+	AccessRequestIncomingPublicKeyFingerprint     string
 	AccessRequestIncomingPublicKeyPem             sql.NullString
-	ServiceID                                     sql.NullInt32
-	ServiceName                                   sql.NullString
-	ServiceEndpointUrl                            sql.NullString
-	ServiceDocumentationUrl                       sql.NullString
-	ServiceApiSpecificationUrl                    sql.NullString
-	ServiceInternal                               sql.NullBool
-	ServiceTechSupportContact                     sql.NullString
-	ServicePublicSupportContact                   sql.NullString
-	ServiceOneTimeCosts                           sql.NullInt32
-	ServiceMonthlyCosts                           sql.NullInt32
-	ServiceRequestCosts                           sql.NullInt32
-	ServiceCreatedAt                              sql.NullTime
-	ServiceUpdatedAt                              sql.NullTime
+	ServiceID                                     int32
+	ServiceName                                   string
+	ServiceEndpointUrl                            string
+	ServiceDocumentationUrl                       string
+	ServiceApiSpecificationUrl                    string
+	ServiceInternal                               bool
+	ServiceTechSupportContact                     string
+	ServicePublicSupportContact                   string
+	ServiceOneTimeCosts                           int32
+	ServiceMonthlyCosts                           int32
+	ServiceRequestCosts                           int32
+	ServiceCreatedAt                              time.Time
+	ServiceUpdatedAt                              time.Time
 }
 
 func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrantRow, error) {
@@ -209,7 +209,7 @@ select
     services.updated_at as service_updated_at
 from
     nlx_management.access_grants
-        left join nlx_management.access_requests_incoming on (
+        join nlx_management.access_requests_incoming on (
             access_requests_incoming.id = access_grants.access_request_incoming_id and
             access_requests_incoming.organization_serial_number = $1 and
             access_requests_incoming.public_key_fingerprint = $2
@@ -345,7 +345,7 @@ select
     services.updated_at as service_updated_at
 from
     nlx_management.access_grants
-        left join nlx_management.access_requests_incoming on (
+        join nlx_management.access_requests_incoming on (
             access_grants.access_request_incoming_id = access_requests_incoming.id
         )
         join nlx_management.services on (
