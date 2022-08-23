@@ -9,7 +9,7 @@ variables:
 
 Go tests (unit & integration):
   stage: Tests
-  image: golang:1.18.2
+  image: golang:1.19.0
   variables:
     POSTGRES_DSN: "postgres://postgres@postgres:5432/nlx?sslmode=disable"
   before_script:
