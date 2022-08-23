@@ -67,7 +67,7 @@ func NewServer(
 	server := &Server{}
 	logger := args.Logger
 	// setup zap connection for global grpc logging
-	grpc_zap.ReplaceGrpcLogger(logger)
+	grpc_zap.ReplaceGrpcLoggerV2(logger)
 
 	recoveryOptions := []grpc_recovery.Option{
 		grpc_recovery.WithRecoveryHandler(func(p interface{}) error {
