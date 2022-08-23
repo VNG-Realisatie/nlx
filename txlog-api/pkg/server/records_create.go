@@ -42,14 +42,14 @@ func (s *TXLogService) CreateRecord(ctx context.Context, req *api.CreateRecordRe
 
 	var order *domain.Order
 
-	if len(req.Delegator) > 0 && len(req.OrderReference) > 0 {
+	if len(req.Delegator) > 0 || len(req.OrderReference) > 0 {
 		newOrder, orderErr := domain.NewOrder(&domain.NewOrderArgs{
 			Delegator: req.Delegator,
 			Reference: req.OrderReference,
 		})
 		if orderErr != nil {
 			s.logger.Error("failed to create order model", zap.Error(err))
-			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("order: %s", err))
+			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("order: %s", orderErr))
 		}
 
 		order = newOrder

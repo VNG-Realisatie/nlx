@@ -81,32 +81,16 @@ func TestCreateRecord(t *testing.T) {
 			want:    nil,
 			wantErr: status.Error(codes.InvalidArgument, "service: cannot be blank"),
 		},
-		"without_order": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
-				model, err := domain.NewRecord(&domain.NewRecordArgs{
-					Source:        createNewOrganization(t, "00000000000000000001"),
-					Destination:   createNewOrganization(t, "00000000000000000002"),
-					Direction:     domain.IN,
-					Service:       createNewService(t, "test-service"),
-					TransactionID: "42",
-					Data:          []byte(`{"request-path":"/get"}`),
-					CreatedAt:     fixedTestClockTime,
-					DataSubjects:  map[string]string{"foo": "bar"},
-				})
-				require.NoError(t, err)
-
-				mocks.
-					EXPECT().
-					CreateRecord(ctx, model).
-					Return(nil)
-			},
+		"incomplete_order_missing_reference": {
+			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
-				ServiceName:        "test-service",
 				LogrecordID:        "42",
 				Data:               `{"request-path":"/get"}`,
+				Delegator:          "00000000000000000003",
+				ServiceName:        "test-service",
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
 						Key:   "foo",
@@ -114,8 +98,8 @@ func TestCreateRecord(t *testing.T) {
 					},
 				},
 			},
-			want:    &emptypb.Empty{},
-			wantErr: nil,
+			want:    nil,
+			wantErr: status.Error(codes.InvalidArgument, "order: Reference: cannot be blank."),
 		},
 		"db_call_fails": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
@@ -155,6 +139,42 @@ func TestCreateRecord(t *testing.T) {
 			},
 			want:    nil,
 			wantErr: status.Error(codes.Internal, "storage error"),
+		},
+		"happy_flow_without_order": {
+			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
+				model, err := domain.NewRecord(&domain.NewRecordArgs{
+					Source:        createNewOrganization(t, "00000000000000000001"),
+					Destination:   createNewOrganization(t, "00000000000000000002"),
+					Direction:     domain.IN,
+					Service:       createNewService(t, "test-service"),
+					TransactionID: "42",
+					Data:          []byte(`{"request-path":"/get"}`),
+					CreatedAt:     fixedTestClockTime,
+					DataSubjects:  map[string]string{"foo": "bar"},
+				})
+				require.NoError(t, err)
+
+				mocks.
+					EXPECT().
+					CreateRecord(ctx, model).
+					Return(nil)
+			},
+			req: &api.CreateRecordRequest{
+				SourceOrganization: "00000000000000000001",
+				DestOrganization:   "00000000000000000002",
+				Direction:          api.CreateRecordRequest_IN,
+				ServiceName:        "test-service",
+				LogrecordID:        "42",
+				Data:               `{"request-path":"/get"}`,
+				DataSubjects: []*api.CreateRecordRequest_DataSubject{
+					{
+						Key:   "foo",
+						Value: "bar",
+					},
+				},
+			},
+			want:    &emptypb.Empty{},
+			wantErr: nil,
 		},
 		"happy_flow": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
