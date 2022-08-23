@@ -62,7 +62,7 @@ Go linter:
 
 Go go.mod tidy test:
   stage: Tests
-  image: golang:1.18.2
+  image: golang:1.19.0
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
