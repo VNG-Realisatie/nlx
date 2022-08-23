@@ -60,6 +60,11 @@ message CreateRecordRequest {
         OUT = 1;
     }
 
+    message DataSubject {
+        string key = 1;
+        string value = 2;
+    }
+
     string sourceOrganization = 1;
     string destOrganization = 2;
     string serviceName = 3;
@@ -68,5 +73,5 @@ message CreateRecordRequest {
     string orderReference = 6;
     string data = 7;
     Direction direction = 8;
-    map<string, string> dataSubjects = 9;
+    repeated DataSubject dataSubjects = 9;
 }

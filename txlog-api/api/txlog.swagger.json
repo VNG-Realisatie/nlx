@@ -71,6 +71,17 @@
     }
   },
   "definitions": {
+    "CreateRecordRequestDataSubject": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
     "ListRecordsResponseRecord": {
       "type": "object",
       "properties": {
@@ -191,9 +202,9 @@
           "$ref": "#/definitions/txlogCreateRecordRequestDirection"
         },
         "dataSubjects": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CreateRecordRequestDataSubject"
           }
         }
       }
