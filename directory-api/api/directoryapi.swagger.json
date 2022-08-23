@@ -170,6 +170,28 @@
         ]
       }
     },
+    "/api/directory/version": {
+      "get": {
+        "operationId": "Directory_GetVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/directoryapiGetVersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Directory"
+        ]
+      }
+    },
     "/api/stats": {
       "get": {
         "operationId": "Directory_ListInOutwayStatistics",
@@ -356,6 +378,14 @@
           "type": "boolean"
         },
         "url": {
+          "type": "string"
+        }
+      }
+    },
+    "directoryapiGetVersionResponse": {
+      "type": "object",
+      "properties": {
+        "version": {
           "type": "string"
         }
       }

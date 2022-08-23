@@ -153,7 +153,7 @@ func TestListServices(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: time.Now(),
 			})
 

@@ -118,6 +118,26 @@ func (mr *MockDirectoryClientMockRecorder) GetTermsOfService(ctx, in interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfService", reflect.TypeOf((*MockDirectoryClient)(nil).GetTermsOfService), varargs...)
 }
 
+// GetVersion mocks base method.
+func (m *MockDirectoryClient) GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.GetVersionResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetVersion", varargs...)
+	ret0, _ := ret[0].(*directoryapi.GetVersionResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetVersion indicates an expected call of GetVersion.
+func (mr *MockDirectoryClientMockRecorder) GetVersion(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVersion", reflect.TypeOf((*MockDirectoryClient)(nil).GetVersion), varargs...)
+}
+
 // ListInOutwayStatistics mocks base method.
 func (m *MockDirectoryClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
 	m.ctrl.T.Helper()
@@ -339,6 +359,21 @@ func (m *MockDirectoryServer) GetTermsOfService(arg0 context.Context, arg1 *empt
 func (mr *MockDirectoryServerMockRecorder) GetTermsOfService(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTermsOfService", reflect.TypeOf((*MockDirectoryServer)(nil).GetTermsOfService), arg0, arg1)
+}
+
+// GetVersion mocks base method.
+func (m *MockDirectoryServer) GetVersion(arg0 context.Context, arg1 *emptypb.Empty) (*directoryapi.GetVersionResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetVersion", arg0, arg1)
+	ret0, _ := ret[0].(*directoryapi.GetVersionResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetVersion indicates an expected call of GetVersion.
+func (mr *MockDirectoryServerMockRecorder) GetVersion(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVersion", reflect.TypeOf((*MockDirectoryServer)(nil).GetVersion), arg0, arg1)
 }
 
 // ListInOutwayStatistics mocks base method.

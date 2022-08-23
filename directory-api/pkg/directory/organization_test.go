@@ -65,7 +65,7 @@ func TestClearOrganizationInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: time.Now(),
 			})
 
@@ -135,7 +135,7 @@ func TestSetOrganizationEmailAddress(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: time.Now(),
 			})
 
@@ -197,7 +197,7 @@ func TestListOrganizations(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: time.Now(),
 			})
 
@@ -255,7 +255,7 @@ func TestGetOrganizationManagementAPIProxyAddress(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: time.Now(),
 			})
 
@@ -315,7 +315,7 @@ func TestGetOrganizationInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: time.Now(),
 			})
 

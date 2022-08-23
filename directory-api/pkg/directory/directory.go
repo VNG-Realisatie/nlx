@@ -34,6 +34,7 @@ type DirectoryService struct {
 	termsOfServiceURL                     string
 	getOrganizationInformationFromRequest OrganizationInformationExtractor
 	clock                                 Clock
+	version                               string
 }
 
 type NewDirectoryArgs struct {
@@ -43,9 +44,15 @@ type NewDirectoryArgs struct {
 	HTTPClient                            *http.Client
 	GetOrganizationInformationFromRequest OrganizationInformationExtractor
 	Clock                                 Clock
+	Version                               string
 }
 
 func New(args *NewDirectoryArgs) *DirectoryService {
+	version := args.Version
+	if args.Version == "" {
+		version = "unknown"
+	}
+
 	s := &DirectoryService{
 		logger:                                args.Logger,
 		repository:                            args.Repository,
@@ -53,6 +60,7 @@ func New(args *NewDirectoryArgs) *DirectoryService {
 		termsOfServiceURL:                     args.TermsOfServiceURL,
 		getOrganizationInformationFromRequest: args.GetOrganizationInformationFromRequest,
 		clock:                                 args.Clock,
+		version:                               version,
 	}
 
 	return s

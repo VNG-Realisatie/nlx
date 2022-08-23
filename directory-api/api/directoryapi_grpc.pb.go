@@ -35,6 +35,7 @@ type DirectoryClient interface {
 	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error)
 	ListParticipants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListParticipantsResponse, error)
 	GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
+	GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetVersionResponse, error)
 }
 
 type directoryClient struct {
@@ -144,6 +145,15 @@ func (c *directoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Emp
 	return out, nil
 }
 
+func (c *directoryClient) GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetVersionResponse, error) {
+	out := new(GetVersionResponse)
+	err := c.cc.Invoke(ctx, "/directoryapi.Directory/GetVersion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DirectoryServer is the server API for Directory service.
 // All implementations must embed UnimplementedDirectoryServer
 // for forward compatibility
@@ -159,6 +169,7 @@ type DirectoryServer interface {
 	RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error)
 	ListParticipants(context.Context, *emptypb.Empty) (*ListParticipantsResponse, error)
 	GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error)
+	GetVersion(context.Context, *emptypb.Empty) (*GetVersionResponse, error)
 	mustEmbedUnimplementedDirectoryServer()
 }
 
@@ -198,6 +209,9 @@ func (UnimplementedDirectoryServer) ListParticipants(context.Context, *emptypb.E
 }
 func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfService not implemented")
+}
+func (UnimplementedDirectoryServer) GetVersion(context.Context, *emptypb.Empty) (*GetVersionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVersion not implemented")
 }
 func (UnimplementedDirectoryServer) mustEmbedUnimplementedDirectoryServer() {}
 
@@ -410,6 +424,24 @@ func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Directory_GetVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DirectoryServer).GetVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/directoryapi.Directory/GetVersion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DirectoryServer).GetVersion(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Directory_ServiceDesc is the grpc.ServiceDesc for Directory service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -460,6 +492,10 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTermsOfService",
 			Handler:    _Directory_GetTermsOfService_Handler,
+		},
+		{
+			MethodName: "GetVersion",
+			Handler:    _Directory_GetVersion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

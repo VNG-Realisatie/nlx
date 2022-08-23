@@ -98,6 +98,7 @@ var serveCommand = &cobra.Command{
 			Clock:                                 &clock{},
 			HTTPClient:                            httpClient,
 			GetOrganizationInformationFromRequest: common_tls.GetOrganizationInfoFromRequest,
+			Version:                               version.BuildVersion,
 		})
 
 		httpServer := http.NewServer(db, certificate, logger)

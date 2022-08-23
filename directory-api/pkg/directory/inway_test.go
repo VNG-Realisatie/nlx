@@ -449,7 +449,7 @@ func TestRegisterInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newService(t, "", &testClock{
+			service, mocks := newService(t, testNlxVersion128, "", &testClock{
 				timeToReturn: now,
 			})
 
@@ -481,7 +481,7 @@ func testGetOrganizationInformationFromRequest(context.Context) (*tls.Organizati
 	}, nil
 }
 
-func newService(t *testing.T, termsOfServiceURL string, clock directory.Clock) (*directory.DirectoryService, serviceMocks) {
+func newService(t *testing.T, version, termsOfServiceURL string, clock directory.Clock) (*directory.DirectoryService, serviceMocks) {
 	ctrl := gomock.NewController(t)
 
 	t.Cleanup(func() {
@@ -499,6 +499,7 @@ func newService(t *testing.T, termsOfServiceURL string, clock directory.Clock) (
 		Repository:                            mocks.repository,
 		HTTPClient:                            nil,
 		Clock:                                 clock,
+		Version:                               version,
 		GetOrganizationInformationFromRequest: testGetOrganizationInformationFromRequest,
 	})
 

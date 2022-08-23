@@ -44,6 +44,10 @@ service Directory {
 	rpc GetTermsOfService (google.protobuf.Empty) returns (GetTermsOfServiceResponse) {
 		option (google.api.http).get = "/api/directory/terms-of-service";
 	};
+
+    rpc GetVersion (google.protobuf.Empty) returns (GetVersionResponse) {
+        option (google.api.http).get = "/api/directory/version";
+    };
 }
 
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
@@ -205,4 +209,8 @@ message SetOrganizationContactDetailsRequest {
 message GetTermsOfServiceResponse {
 	bool enabled = 1;
 	string url = 2;
+}
+
+message GetVersionResponse {
+    string version = 1;
 }

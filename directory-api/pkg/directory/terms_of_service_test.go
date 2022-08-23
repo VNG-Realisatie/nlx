@@ -32,7 +32,7 @@ func TestGetTermsOfService(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _ := newService(t, tt.termsOfServiceURL, &testClock{
+			service, _ := newService(t, testNlxVersion128, tt.termsOfServiceURL, &testClock{
 				timeToReturn: time.Now(),
 			})
 
