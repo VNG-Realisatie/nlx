@@ -1,3 +1,15 @@
+# [0.138.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.137.3...v0.138.0) (2022-08-23)
+
+
+### Bug Fixes
+
+* **management:** enable parsing audience as array in oidc access-token ([3a57a51](https://gitlab.com/commonground/nlx/nlx/commit/3a57a51e87154105d73df4d79964f7141474d412)), closes [nlx#1595](https://gitlab.com/nlx/issues/1595)
+
+
+### Features
+
+* **txlog:** add index to created column of records table ([7eec5c2](https://gitlab.com/commonground/nlx/nlx/commit/7eec5c2ab778b230f46f4509f580c8b9dda5a21d)), closes [nlx#785](https://gitlab.com/nlx/issues/785)
+
 ## [0.137.3](https://gitlab.com/commonground/nlx/nlx/compare/v0.137.2...v0.137.3) (2022-08-16)
 
 ## [0.137.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.137.1...v0.137.2) (2022-08-16)

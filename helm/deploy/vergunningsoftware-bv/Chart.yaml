@@ -2,8 +2,8 @@ apiVersion: v2
 name: vergunningsoftware-bv
 description: Metachart for the demo organization Vergunningsoftware BV
 type: application
-version: 0.137.3
-appVersion: 0.137.3
+version: 0.138.0
+appVersion: 0.138.0
 
 dependencies:
   - name: parkeerrechten-admin
