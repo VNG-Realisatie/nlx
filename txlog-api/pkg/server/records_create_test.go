@@ -7,7 +7,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -40,7 +39,7 @@ func TestCreateRecord(t *testing.T) {
 
 				mocks.
 					EXPECT().
-					CreateRecord(ctx, gomock.Eq(model)).
+					CreateRecord(ctx, model).
 					Return(nil)
 			},
 			want:    &emptypb.Empty{},
