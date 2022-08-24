@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/txlog-api/domain"
 )
@@ -21,94 +20,170 @@ func Test_NewRecord(t *testing.T) {
 		args        *domain.NewRecordArgs
 		expectedErr string
 	}{
-		"when_no_source": {
+		"empty_source_organization": {
 			args: &domain.NewRecordArgs{
-				Source:        nil,
-				Destination:   createNewOrganization(t, "0002"),
-				Direction:     domain.IN,
-				Service:       createNewService(t, "test-service-2"),
-				Order:         createNewOrder(t, "0003", "test-reference"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "abcde",
-				CreatedAt:     now,
+				SourceOrganization:      "",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
 			},
-			expectedErr: "Source: cannot be blank.",
+			expectedErr: "SourceOrganization: cannot be blank.",
 		},
-		"when_no_dest": {
+		"invalid_source_organization": {
 			args: &domain.NewRecordArgs{
-				Source:        createNewOrganization(t, "0001"),
-				Destination:   nil,
-				Direction:     domain.IN,
-				Service:       createNewService(t, "test-service"),
-				Order:         createNewOrder(t, "0003", "test-reference"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "abcde",
-				CreatedAt:     now,
+				SourceOrganization:      "000000000000000000001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
 			},
-			expectedErr: "Destination: cannot be blank.",
+			expectedErr: "SourceOrganization: too long, max 20 bytes.",
 		},
-		"when_no_direction": {
+		"empty_destination_organization": {
 			args: &domain.NewRecordArgs{
-				Source:        createNewOrganization(t, "0001"),
-				Destination:   createNewOrganization(t, "0002"),
-				Direction:     "",
-				Service:       createNewService(t, "test-service"),
-				Order:         createNewOrder(t, "0003", "test-reference"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "abcde",
-				CreatedAt:     now,
+				SourceOrganization:      "0001",
+				DestinationOrganization: "",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
+			},
+			expectedErr: "DestinationOrganization: cannot be blank.",
+		},
+		"invalid_destination": {
+			args: &domain.NewRecordArgs{
+				SourceOrganization:      "0001",
+				DestinationOrganization: "000000000000000000002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
+			},
+			expectedErr: "DestinationOrganization: too long, max 20 bytes.",
+		},
+		"empty_direction": {
+			args: &domain.NewRecordArgs{
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               "",
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
 			},
 			expectedErr: "Direction: cannot be blank.",
 		},
-		"when_no_service": {
+		"empty_service_name": {
 			args: &domain.NewRecordArgs{
-				Source:        createNewOrganization(t, "0001"),
-				Destination:   createNewOrganization(t, "0002"),
-				Direction:     domain.IN,
-				Service:       nil,
-				Order:         createNewOrder(t, "0003", "test-reference"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "abcde",
-				CreatedAt:     now,
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
 			},
-			expectedErr: "Service: cannot be blank.",
+			expectedErr: "ServiceName: cannot be blank.",
 		},
-		"when_no_transaction_id": {
+		"empty_transaction_id": {
 			args: &domain.NewRecordArgs{
-				Source:        createNewOrganization(t, "0001"),
-				Destination:   createNewOrganization(t, "0002"),
-				Direction:     domain.IN,
-				Service:       createNewService(t, "test-service"),
-				Order:         createNewOrder(t, "0003", "test-reference"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "",
-				CreatedAt:     now,
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "",
+				CreatedAt:               now,
 			},
 			expectedErr: "TransactionID: cannot be blank.",
 		},
-		"when_no_created_at": {
+		"empty_created_at": {
 			args: &domain.NewRecordArgs{
-				Source:        createNewOrganization(t, "0001"),
-				Destination:   createNewOrganization(t, "0002"),
-				Direction:     domain.IN,
-				Service:       createNewService(t, "test-service"),
-				Order:         createNewOrder(t, "0003", "test-reference"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "abcde",
-				CreatedAt:     time.Time{},
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
 			},
 			expectedErr: "CreatedAt: cannot be blank.",
 		},
+		"order_reference_without_delegator": {
+			args: &domain.NewRecordArgs{
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
+			},
+			expectedErr: "empty delegator, both the delegator and order reference should be provided",
+		},
+		"delegator_without_order_reference": {
+			args: &domain.NewRecordArgs{
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "",
+				Delegator:               "0003",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
+			},
+			expectedErr: "empty order reference, both the delegator and order reference should be provided",
+		},
+		"invalid_delegator": {
+			args: &domain.NewRecordArgs{
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "000000000000000000001",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
+			},
+			expectedErr: "Delegator: too long, max 20 bytes.",
+		},
 		"happy_flow": {
 			args: &domain.NewRecordArgs{
-				Source:        createNewOrganization(t, "0001"),
-				Destination:   createNewOrganization(t, "0002"),
-				Direction:     domain.IN,
-				Service:       createNewService(t, "test-service"),
-				Order:         createNewOrder(t, "0004", "test-reference-2"),
-				Data:          []byte(`{"test": "value"}`),
-				TransactionID: "abcde",
-				CreatedAt:     now,
+				SourceOrganization:      "0001",
+				DestinationOrganization: "0002",
+				Direction:               domain.IN,
+				ServiceName:             "test-service-2",
+				OrderReference:          "test-reference",
+				Delegator:               "0004",
+				Data:                    []byte(`{"test": "value"}`),
+				TransactionID:           "abcde",
+				CreatedAt:               now,
 			},
 			expectedErr: "",
 		},
@@ -127,39 +202,15 @@ func Test_NewRecord(t *testing.T) {
 				assert.NotNil(t, result)
 				assert.Nil(t, err)
 
-				assert.Equal(t, tt.args.Source.SerialNumber(), result.Source().SerialNumber())
-				assert.Equal(t, tt.args.Destination.SerialNumber(), result.Destination().SerialNumber())
+				assert.Equal(t, tt.args.SourceOrganization, result.SourceOrganization())
+				assert.Equal(t, tt.args.DestinationOrganization, result.DestinationOrganization())
 				assert.Equal(t, tt.args.Direction, result.Direction())
-				assert.Equal(t, tt.args.Service.Name(), result.Service().Name())
-				assert.Equal(t, tt.args.Order.Delegator(), result.Order().Delegator())
+				assert.Equal(t, tt.args.ServiceName, result.ServiceName())
+				assert.Equal(t, tt.args.Delegator, result.Delegator())
 				assert.Equal(t, tt.args.Data, result.Data())
 				assert.Equal(t, tt.args.TransactionID, result.TransactionID())
 				assert.Equal(t, tt.args.CreatedAt, result.CreatedAt())
 			}
 		})
 	}
-}
-
-func createNewOrganization(t *testing.T, serialNumber string) *domain.Organization {
-	m, err := domain.NewOrganization(serialNumber)
-	require.NoError(t, err)
-
-	return m
-}
-
-func createNewService(t *testing.T, name string) *domain.Service {
-	m, err := domain.NewService(name)
-	require.NoError(t, err)
-
-	return m
-}
-
-func createNewOrder(t *testing.T, delegator, reference string) *domain.Order {
-	m, err := domain.NewOrder(&domain.NewOrderArgs{
-		Delegator: delegator,
-		Reference: reference,
-	})
-	require.NoError(t, err)
-
-	return m
 }

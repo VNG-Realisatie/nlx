@@ -30,14 +30,15 @@ func TestListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
 				args := []*domain.NewRecordArgs{
 					{
-						Source:        createNewOrganization(t, "0001"),
-						Destination:   createNewOrganization(t, "0002"),
-						Direction:     domain.IN,
-						Service:       createNewService(t, "test-service"),
-						Order:         createNewOrder(t, "0003", "test-reference"),
-						Data:          []byte(`{"test": "data"}`),
-						CreatedAt:     now,
-						TransactionID: "abcde",
+						SourceOrganization:      "0001",
+						DestinationOrganization: "0002",
+						Direction:               domain.IN,
+						ServiceName:             "test-service",
+						Delegator:               "0003",
+						OrderReference:          "test-reference",
+						Data:                    []byte(`{"test": "data"}`),
+						CreatedAt:               now,
+						TransactionID:           "abcde",
 					},
 				}
 

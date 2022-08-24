@@ -42,18 +42,18 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 func convertFromDatabaseRecord(m *domain.Record) *api.ListRecordsResponse_Record {
 	record := &api.ListRecordsResponse_Record{
 		Source: &api.ListRecordsResponse_Record_Organization{
-			SerialNumber: m.Source().SerialNumber(),
+			SerialNumber: m.SourceOrganization(),
 		},
 		Destination: &api.ListRecordsResponse_Record_Organization{
-			SerialNumber: m.Destination().SerialNumber(),
+			SerialNumber: m.DestinationOrganization(),
 		},
 		Direction: api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[strings.ToUpper(string(m.Direction()))]),
 		Service: &api.ListRecordsResponse_Record_Service{
-			Name: m.Service().Name(),
+			Name: m.ServiceName(),
 		},
 		Order: &api.ListRecordsResponse_Record_Order{
-			Delegator: m.Order().Delegator(),
-			Reference: m.Order().Reference(),
+			Delegator: m.Delegator(),
+			Reference: m.OrderReference(),
 		},
 		Data:          string(m.Data()),
 		TransactionID: m.TransactionID(),

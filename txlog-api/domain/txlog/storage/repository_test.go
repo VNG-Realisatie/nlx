@@ -21,24 +21,25 @@ import (
 func new(t *testing.T, enableFixtures bool) (storage.Repository, func() error) {
 	repo, close := pgadapter_test_setup.New(t)
 	if enableFixtures {
-		err := loadFixtures(t, repo)
+		err := loadFixtures(repo)
 		require.NoError(t, err)
 	}
 
 	return repo, close
 }
 
-func loadFixtures(t *testing.T, repo storage.Repository) error {
+func loadFixtures(repo storage.Repository) error {
 	newRecordsArgs := []*domain.NewRecordArgs{
 		{
-			Source:        createNewOrganization(t, "0001"),
-			Destination:   createNewOrganization(t, "0002"),
-			Direction:     domain.IN,
-			Service:       createNewService(t, "test-service"),
-			Order:         createNewOrder(t, "0003", "test-reference"),
-			Data:          []byte(`{"test": "data"}`),
-			CreatedAt:     time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
-			TransactionID: "abcde",
+			SourceOrganization:      "0001",
+			DestinationOrganization: "0002",
+			Direction:               domain.IN,
+			ServiceName:             "test-service",
+			OrderReference:          "test-reference",
+			Delegator:               "0003",
+			Data:                    []byte(`{"test": "data"}`),
+			CreatedAt:               time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+			TransactionID:           "abcde",
 		},
 	}
 
@@ -72,28 +73,4 @@ func assertRecordInRepository(t *testing.T, repo storage.Repository, r *domain.R
 	}
 
 	require.Equal(t, true, found)
-}
-
-func createNewOrganization(t *testing.T, serialNumber string) *domain.Organization {
-	m, err := domain.NewOrganization(serialNumber)
-	require.NoError(t, err)
-
-	return m
-}
-
-func createNewService(t *testing.T, name string) *domain.Service {
-	m, err := domain.NewService(name)
-	require.NoError(t, err)
-
-	return m
-}
-
-func createNewOrder(t *testing.T, delegator, reference string) *domain.Order {
-	m, err := domain.NewOrder(&domain.NewOrderArgs{
-		Delegator: delegator,
-		Reference: reference,
-	})
-	require.NoError(t, err)
-
-	return m
 }

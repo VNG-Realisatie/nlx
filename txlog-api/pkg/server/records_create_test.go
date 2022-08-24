@@ -43,12 +43,13 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "source organization: error validating organization serial number: cannot be empty"),
+			wantErr: status.Error(codes.InvalidArgument, "invalid record: SourceOrganization: cannot be blank."),
 		},
 		"without_destination_org": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
+				DestOrganization:   "",
 				Direction:          api.CreateRecordRequest_IN,
 				ServiceName:        "test-service",
 				LogrecordID:        "42",
@@ -61,7 +62,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "destination organization: error validating organization serial number: cannot be empty"),
+			wantErr: status.Error(codes.InvalidArgument, "invalid record: DestinationOrganization: cannot be blank."),
 		},
 		"without_service": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
@@ -79,7 +80,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "service: cannot be blank"),
+			wantErr: status.Error(codes.InvalidArgument, "invalid record: ServiceName: cannot be blank."),
 		},
 		"incomplete_order_missing_reference": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
@@ -99,20 +100,41 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "order: Reference: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid record: empty order reference, both the delegator and order reference should be provided"),
+		},
+		"incomplete_order_missing_delegator": {
+			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
+			req: &api.CreateRecordRequest{
+				SourceOrganization: "00000000000000000001",
+				DestOrganization:   "00000000000000000002",
+				Direction:          api.CreateRecordRequest_IN,
+				LogrecordID:        "42",
+				Data:               `{"request-path":"/get"}`,
+				OrderReference:     "test-reference",
+				ServiceName:        "test-service",
+				DataSubjects: []*api.CreateRecordRequest_DataSubject{
+					{
+						Key:   "foo",
+						Value: "bar",
+					},
+				},
+			},
+			want:    nil,
+			wantErr: status.Error(codes.InvalidArgument, "invalid record: empty delegator, both the delegator and order reference should be provided"),
 		},
 		"db_call_fails": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
 				model, err := domain.NewRecord(&domain.NewRecordArgs{
-					Source:        createNewOrganization(t, "00000000000000000001"),
-					Destination:   createNewOrganization(t, "00000000000000000002"),
-					Direction:     domain.IN,
-					Service:       createNewService(t, "test-service"),
-					TransactionID: "42",
-					Order:         createNewOrder(t, "00000000000000000003", "test-reference"),
-					Data:          []byte(`{"request-path":"/get"}`),
-					CreatedAt:     fixedTestClockTime,
-					DataSubjects:  map[string]string{"foo": "bar"},
+					SourceOrganization:      "00000000000000000001",
+					DestinationOrganization: "00000000000000000002",
+					Direction:               domain.IN,
+					ServiceName:             "test-service",
+					TransactionID:           "42",
+					OrderReference:          "test-reference",
+					Delegator:               "00000000000000000003",
+					Data:                    []byte(`{"request-path":"/get"}`),
+					CreatedAt:               fixedTestClockTime,
+					DataSubjects:            map[string]string{"foo": "bar"},
 				})
 				require.NoError(t, err)
 
@@ -143,14 +165,14 @@ func TestCreateRecord(t *testing.T) {
 		"happy_flow_without_order": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
 				model, err := domain.NewRecord(&domain.NewRecordArgs{
-					Source:        createNewOrganization(t, "00000000000000000001"),
-					Destination:   createNewOrganization(t, "00000000000000000002"),
-					Direction:     domain.IN,
-					Service:       createNewService(t, "test-service"),
-					TransactionID: "42",
-					Data:          []byte(`{"request-path":"/get"}`),
-					CreatedAt:     fixedTestClockTime,
-					DataSubjects:  map[string]string{"foo": "bar"},
+					SourceOrganization:      "00000000000000000001",
+					DestinationOrganization: "00000000000000000002",
+					Direction:               domain.IN,
+					ServiceName:             "test-service",
+					TransactionID:           "42",
+					Data:                    []byte(`{"request-path":"/get"}`),
+					CreatedAt:               fixedTestClockTime,
+					DataSubjects:            map[string]string{"foo": "bar"},
 				})
 				require.NoError(t, err)
 
@@ -179,15 +201,16 @@ func TestCreateRecord(t *testing.T) {
 		"happy_flow": {
 			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
 				model, err := domain.NewRecord(&domain.NewRecordArgs{
-					Source:        createNewOrganization(t, "00000000000000000001"),
-					Destination:   createNewOrganization(t, "00000000000000000002"),
-					Direction:     domain.IN,
-					Service:       createNewService(t, "test-service"),
-					TransactionID: "42",
-					Order:         createNewOrder(t, "00000000000000000003", "test-reference"),
-					Data:          []byte(`{"request-path":"/get"}`),
-					CreatedAt:     fixedTestClockTime,
-					DataSubjects:  map[string]string{"foo": "bar"},
+					SourceOrganization:      "00000000000000000001",
+					DestinationOrganization: "00000000000000000002",
+					Direction:               domain.IN,
+					ServiceName:             "test-service",
+					TransactionID:           "42",
+					Delegator:               "00000000000000000003",
+					OrderReference:          "test-reference",
+					Data:                    []byte(`{"request-path":"/get"}`),
+					CreatedAt:               fixedTestClockTime,
+					DataSubjects:            map[string]string{"foo": "bar"},
 				})
 				require.NoError(t, err)
 

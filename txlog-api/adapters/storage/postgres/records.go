@@ -26,7 +26,7 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 				return
 			}
 
-			fmt.Printf("cannot rollback database transaction for create record: %e", err)
+			fmt.Printf("cannot rollback database transaction while creating record: %e", err)
 		}
 	}()
 
@@ -34,20 +34,17 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 
 	dbRecord := &queries.CreateRecordParams{
 		Direction:        queries.TransactionlogDirection(record.Direction()),
-		SrcOrganization:  record.Source().SerialNumber(),
-		DestOrganization: record.Destination().SerialNumber(),
-		ServiceName:      record.Service().Name(),
+		SrcOrganization:  record.SourceOrganization(),
+		DestOrganization: record.DestinationOrganization(),
+		ServiceName:      record.ServiceName(),
 		Created:          record.CreatedAt(),
 		Data: pqtype.NullRawMessage{
 			Valid:      true,
 			RawMessage: record.Data(),
 		},
-		LogrecordID: record.TransactionID(),
-	}
-
-	if record.Order() != nil {
-		dbRecord.Delegator = record.Order().Delegator()
-		dbRecord.OrderReference = record.Order().Reference()
+		LogrecordID:    record.TransactionID(),
+		Delegator:      record.Delegator(),
+		OrderReference: record.OrderReference(),
 	}
 
 	recordID, err := qtx.CreateRecord(ctx, dbRecord)
@@ -83,43 +80,21 @@ func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit int32) ([]
 	records := make([]*domain.Record, len(dbRecords))
 
 	for i, r := range dbRecords {
-		src, err := domain.NewOrganization(r.SrcOrganization)
-		if err != nil {
-			return nil, err
-		}
-
-		dest, err := domain.NewOrganization(r.DestOrganization)
-		if err != nil {
-			return nil, err
-		}
-
-		service, err := domain.NewService(r.ServiceName)
-		if err != nil {
-			return nil, err
-		}
-
-		order, err := domain.NewOrder(&domain.NewOrderArgs{
-			Delegator: r.Delegator,
-			Reference: r.OrderReference,
-		})
-		if err != nil {
-			return nil, err
-		}
-
 		var data json.RawMessage
 		if r.Data.Valid {
 			data = r.Data.RawMessage
 		}
 
 		records[i], err = domain.NewRecord(&domain.NewRecordArgs{
-			Source:        src,
-			Destination:   dest,
-			Direction:     domain.OrderDirection(r.Direction),
-			Service:       service,
-			Order:         order,
-			Data:          data,
-			TransactionID: r.LogrecordID,
-			CreatedAt:     r.Created,
+			SourceOrganization:      r.SrcOrganization,
+			DestinationOrganization: r.DestOrganization,
+			Direction:               domain.OrderDirection(r.Direction),
+			ServiceName:             r.ServiceName,
+			OrderReference:          r.OrderReference,
+			Delegator:               r.Delegator,
+			Data:                    data,
+			TransactionID:           r.LogrecordID,
+			CreatedAt:               r.Created,
 		})
 		if err != nil {
 			return nil, err
