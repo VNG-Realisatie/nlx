@@ -32,20 +32,25 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 
 	qtx := r.queries.WithTx(tx)
 
-	recordID, err := qtx.CreateRecord(ctx, &queries.CreateRecordParams{
+	dbRecord := &queries.CreateRecordParams{
 		Direction:        queries.TransactionlogDirection(record.Direction()),
 		SrcOrganization:  record.Source().SerialNumber(),
 		DestOrganization: record.Destination().SerialNumber(),
 		ServiceName:      record.Service().Name(),
 		Created:          record.CreatedAt(),
-		Delegator:        record.Order().Delegator(),
-		OrderReference:   record.Order().Reference(),
 		Data: pqtype.NullRawMessage{
 			Valid:      true,
 			RawMessage: record.Data(),
 		},
 		LogrecordID: record.TransactionID(),
-	})
+	}
+
+	if record.Order() != nil {
+		dbRecord.Delegator = record.Order().Delegator()
+		dbRecord.OrderReference = record.Order().Reference()
+	}
+
+	recordID, err := qtx.CreateRecord(ctx, dbRecord)
 	if err != nil {
 		return err
 	}

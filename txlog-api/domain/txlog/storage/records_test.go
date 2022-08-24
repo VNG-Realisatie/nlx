@@ -24,6 +24,20 @@ func TestCreateRecord(t *testing.T) {
 		args         *domain.NewRecordArgs
 		wantErr      error
 	}{
+		"happy_flow_without_order": {
+			loadFixtures: false,
+			args: &domain.NewRecordArgs{
+				Source:        createNewOrganization(t, "0001"),
+				Destination:   createNewOrganization(t, "0002"),
+				Direction:     domain.IN,
+				Service:       createNewService(t, "test-service"),
+				Data:          []byte(`{"test": "value"}`),
+				TransactionID: "abcde",
+				CreatedAt:     time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
+				DataSubjects:  map[string]string{"foo": "bar"},
+			},
+			wantErr: nil,
+		},
 		"happy_flow": {
 			loadFixtures: false,
 			args: &domain.NewRecordArgs{
