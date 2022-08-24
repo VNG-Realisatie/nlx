@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"log"
 	"time"
 
@@ -43,6 +44,7 @@ var options struct {
 	ManagementAPIAddress        string `long:"management-api-address" env:"MANAGEMENT_API_ADDRESS" description:"The address of the NLX Management API" required:"true"`
 	DisableLogdb                bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN                 string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	TxLogAPIAddress             string `long:"tx-log-api-address" env:"TX_LOG_API_ADDRESS" description:"The address of the transaction log API" required:"false"`
 	AuthorizationServiceAddress string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the inway"`
 	AuthorizationCA             string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certificate"`
 	ServerCertFile              string `long:"tls-server-cert" env:"TLS_SERVER_CERT" description:"Path to a cert .pem, used for the HTTPS server" required:"false"`
@@ -67,11 +69,6 @@ func main() {
 	logger.Info("version info", zap.String("version", version.BuildVersion), zap.String("source-hash", version.BuildSourceHash))
 	logger = logger.With(zap.String("version", version.BuildVersion))
 
-	txLogger, err := setupTransactionLogger(logger, options.DisableLogdb)
-	if err != nil {
-		logger.Fatal("unable to setup the transaction logger")
-	}
-
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgCertFile))
 	}
@@ -88,6 +85,16 @@ func main() {
 	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
 	if err != nil {
 		logger.Fatal("unable to load internal PKI certificate and key", zap.Error(err))
+	}
+
+	var txLogger transactionlog.TransactionLogger
+	if options.DisableLogdb {
+		txLogger = transactionlog.NewDiscardTransactionLogger()
+	} else {
+		txLogger, err = setupTransactionLogger(logger, options.PostgresDSN, options.TxLogAPIAddress, cert)
+		if err != nil {
+			logger.Fatal("unable to setup the transaction logger")
+		}
 	}
 
 	var serverCertificate *tls.Certificate
@@ -208,22 +215,30 @@ func parseOptions() {
 	}
 }
 
-func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.TransactionLogger, error) {
-	if disabled {
-		return transactionlog.NewDiscardTransactionLogger(), nil
+func setupTransactionLogger(logger *zap.Logger, postgresDSN, txLogAPIAddress string, certificateBundle *common_tls.CertificateBundle) (transactionlog.TransactionLogger, error) {
+	if postgresDSN != "" && txLogAPIAddress != "" {
+		return nil, fmt.Errorf("cannot configure both postgresDSN and txlogAPIAddress")
 	}
 
-	logDB, err := setupDatabase()
-	if err != nil {
-		return nil, err
+	if postgresDSN != "" {
+		logDB, err := setupDatabase()
+		if err != nil {
+			return nil, err
+		}
+
+		return transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionOut)
 	}
 
-	postgresTxLogger, err := transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionOut)
-	if err != nil {
-		return nil, err
+	if txLogAPIAddress != "" {
+		return transactionlog.NewAPITransactionLogger(&transactionlog.NewAPITransactionLoggerArgs{
+			Logger:       logger,
+			Direction:    transactionlog.DirectionOut,
+			APIAddress:   txLogAPIAddress,
+			InternalCert: certificateBundle,
+		})
 	}
 
-	return postgresTxLogger, nil
+	return transactionlog.NewDiscardTransactionLogger(), nil
 }
 
 func setupDatabase() (*sqlx.DB, error) {

@@ -33,6 +33,7 @@ config:
 
 transactionLog:
   enabled: true
+  apiAddress: ""
   hostname: ""
   database: ""
   port: 5432

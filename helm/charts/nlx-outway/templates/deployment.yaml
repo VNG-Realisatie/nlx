@@ -113,6 +113,10 @@ spec:
             - name: TLS_ORG_KEY
               value: /certificate-organization/tls.key
           {{- if .Values.transactionLog.enabled }}
+            {{- if .Values.transactionLog.apiAddress}}
+            - name: TX_LOG_API_ADDRESS
+              value: {{ .Values.transactionLog.apiAddress }}
+            {{- else }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -135,6 +139,7 @@ spec:
               value: {{ .Values.transactionLog.connectTimeout | quote }}
             - name: POSTGRES_DSN
               value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
+            {{- end }}
           {{- else }}
             - name: DISABLE_LOGDB
               value: "1"
