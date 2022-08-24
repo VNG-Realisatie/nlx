@@ -17,6 +17,7 @@ COPY directory-monitor/health                       /go/src/go.nlx.io/nlx/direct
 COPY directory-api/api                              /go/src/go.nlx.io/nlx/directory-api/api
 COPY management-api                                 /go/src/go.nlx.io/nlx/management-api
 COPY common                                         /go/src/go.nlx.io/nlx/common
+COPY txlog-api                                      /go/src/go.nlx.io/nlx/txlog-api
 
 WORKDIR /go/src/go.nlx.io/nlx/inway
 
