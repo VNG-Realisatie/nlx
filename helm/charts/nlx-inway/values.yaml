@@ -38,6 +38,7 @@ config:
 
 transactionLog:
   enabled: true
+  apiAddress: ""
   hostname: ""
   port: 5432
   database: ""

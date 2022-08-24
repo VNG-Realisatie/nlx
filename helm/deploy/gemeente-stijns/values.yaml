@@ -347,12 +347,7 @@ nlx-inway:
     managementAPI:
       address: gemeente-stijns-nlx-management-api:443
   transactionLog:
-    hostname: gemeente-stijns-postgresql
-    database: "gemeente-stijns-transaction-log"
-    existingSecret:
-      name: postgres.gemeente-stijns-postgresql.credentials.postgresql.acid.zalan.do
-      usernameKey: username
-      passwordKey: password
+    apiAddress: gemeente-stijns-nlx-txlog-api:8443
   tls:
     organization:
       existingSecret: gemeente-stijns-organization-tls

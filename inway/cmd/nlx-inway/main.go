@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -42,6 +43,7 @@ var options struct {
 	DirectoryAddress                string `long:"directory-address" env:"DIRECTORY_ADDRESS" description:"Address for the directory where this inway can register it's services"`
 	DisableLogdb                    bool   `long:"disable-logdb" env:"DISABLE_LOGDB" description:"Disable logdb connections"`
 	PostgresDSN                     string `long:"postgres-dsn" env:"POSTGRES_DSN" description:"DSN for the postgres driver. See https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters."`
+	TxLogAPIAddress                 string `long:"tx-log-api-address" env:"TX_LOG_API_ADDRESS" description:"The address of the transaction log API" required:"false"`
 	Name                            string `long:"name" env:"INWAY_NAME" description:"Name of the inway. Every inway should have a unique name within the organization." required:"true"`
 	AuthorizationServiceAddress     string `long:"authorization-service-address" env:"AUTHORIZATION_SERVICE_ADDRESS" description:"Address of the authorization service. If set calls will go through the authorization service before being send to the service"`
 	AuthorizationCA                 string `long:"authorization-root-ca" env:"AUTHORIZATION_ROOT_CA" description:"absolute path to root CA used to verify auth service certificate"`
@@ -57,7 +59,6 @@ func main() {
 	p := process.NewProcess()
 
 	logger := setupLogger()
-	txlogger, logDB := setupTransactionLogger(logger, options.DisableLogdb)
 
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(options.OrgKeyFile); errValidate != nil {
 		logger.Warn("invalid organization key permissions", zap.Error(errValidate), zap.String("file-path", options.OrgKeyFile))
@@ -75,6 +76,16 @@ func main() {
 	cert, err := common_tls.NewBundleFromFiles(options.CertFile, options.KeyFile, options.RootCertFile)
 	if err != nil {
 		logger.Fatal("loading TLS files", zap.Error(err))
+	}
+
+	var txLogger transactionlog.TransactionLogger
+	if options.DisableLogdb {
+		txLogger = transactionlog.NewDiscardTransactionLogger()
+	} else {
+		txLogger, err = setupTransactionLogger(logger, options.PostgresDSN, options.TxLogAPIAddress, cert)
+		if err != nil {
+			logger.Fatal("unable to setup the transaction logger")
+		}
 	}
 
 	creds := credentials.NewTLS(cert.TLSConfig())
@@ -116,7 +127,7 @@ func main() {
 	params := &inway.Params{
 		Context:                         context.Background(),
 		Logger:                          logger,
-		Txlogger:                        txlogger,
+		Txlogger:                        txLogger,
 		ManagementClient:                api.NewManagementClient(conn),
 		ManagementProxy:                 managementProxy,
 		Name:                            options.Name,
@@ -144,10 +155,10 @@ func main() {
 
 	p.Wait()
 
-	shutdown(logger, iw, logDB)
+	shutdown(logger, iw, txLogger)
 }
 
-func shutdown(logger *zap.Logger, iw *inway.Inway, logDB *sqlx.DB) {
+func shutdown(logger *zap.Logger, iw *inway.Inway, transactionLogger transactionlog.TransactionLogger) {
 	logger.Info("starting graceful shutdown")
 
 	gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -158,33 +169,36 @@ func shutdown(logger *zap.Logger, iw *inway.Inway, logDB *sqlx.DB) {
 		logger.Error("failed to shutdown", zap.Error(err))
 	}
 
-	if logDB != nil {
-		err = logDB.Close()
-		if err != nil {
-			logger.Error("failed to close logDB", zap.Error(err))
-		}
+	err = transactionLogger.Close()
+	if err != nil {
+		logger.Error("failed to close transactionLogger", zap.Error(err))
 	}
 }
 
-func setupTransactionLogger(logger *zap.Logger, disabled bool) (transactionlog.TransactionLogger, *sqlx.DB) {
-	if disabled {
-		logger.Info("logging to transaction-log disabled")
-		return transactionlog.NewDiscardTransactionLogger(), nil
+func setupTransactionLogger(logger *zap.Logger, postgresDSN, txLogAPIAddress string, certificateBundle *common_tls.CertificateBundle) (transactionlog.TransactionLogger, error) {
+	if postgresDSN != "" && txLogAPIAddress != "" {
+		return nil, fmt.Errorf("cannot configure both postgresDSN and txlogAPIAddress")
 	}
 
-	logDB, err := setupDatabase()
-	if err != nil {
-		logger.Fatal("failed to setup database", zap.Error(err))
+	if postgresDSN != "" {
+		logDB, err := setupDatabase()
+		if err != nil {
+			return nil, err
+		}
+
+		return transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionOut)
 	}
 
-	postgresTxLogger, err := transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
-	if err != nil {
-		logger.Fatal("failed to setup transactionlog", zap.Error(err))
+	if txLogAPIAddress != "" {
+		return transactionlog.NewAPITransactionLogger(&transactionlog.NewAPITransactionLoggerArgs{
+			Logger:       logger,
+			Direction:    transactionlog.DirectionIn,
+			APIAddress:   txLogAPIAddress,
+			InternalCert: certificateBundle,
+		})
 	}
 
-	logger.Info("transaction logger created")
-
-	return postgresTxLogger, logDB
+	return transactionlog.NewDiscardTransactionLogger(), nil
 }
 
 func setupLogger() *zap.Logger {
