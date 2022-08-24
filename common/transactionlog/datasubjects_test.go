@@ -8,7 +8,7 @@ import (
 )
 
 func TestParseDataSubjectHeaderHappy(t *testing.T) {
-	headerString := "key1=value1 ,key2= value2 , key3 =value3,key4=value4"
+	headerString := "key1=value1 ,key2= value2 , key3 =value3,key4=value4,k=value5"
 	keyValuesPairs, err := ParseDataSubjectHeader(headerString)
 	if err != nil {
 		t.Errorf("failed to parse header %s", err)
@@ -19,6 +19,7 @@ func TestParseDataSubjectHeaderHappy(t *testing.T) {
 	expectedResult["key2"] = "value2"
 	expectedResult["key3"] = "value3"
 	expectedResult["key4"] = "value4"
+	expectedResult["k"] = "value5"
 
 	valuesChecked := make(map[string]string)
 	for key, value := range keyValuesPairs {
@@ -38,8 +39,8 @@ func TestParseDataSubjectHeaderHappy(t *testing.T) {
 		valuesChecked[key] = value
 	}
 
-	if len(valuesChecked) != 4 {
-		t.Errorf("excepted to find 4 key value pairs but found %d", len(valuesChecked))
+	if len(valuesChecked) != 5 {
+		t.Errorf("excepted to find 5 key value pairs but found %d", len(valuesChecked))
 	}
 }
 

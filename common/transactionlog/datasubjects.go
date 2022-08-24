@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var regExpKey = regexp.MustCompile("^[a-z0-9]{4,100}$")
+var regExpKey = regexp.MustCompile("^[a-z0-9]{1,100}$")
 var regExpValue = regexp.MustCompile("^[a-zA-Z0-9.-]{1,100}$")
 
 // ParseDataSubjectHeader parses a data subject header value and returns a key/value map, or an error.
