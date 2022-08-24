@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
+	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -112,6 +113,16 @@ func (a *API) Shutdown(ctx context.Context) error {
 
 		return nil
 	})
+
+	err := a.directoryClient.Close()
+	if err != nil {
+		a.logger.Error("cannot close directory client", zap.Error(err))
+	}
+
+	err = a.txlogClient.Close()
+	if err != nil {
+		a.logger.Error("cannot close txlog client", zap.Error(err))
+	}
 
 	return g.Wait()
 }

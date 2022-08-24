@@ -19,16 +19,18 @@ import (
 const component = "nlx-management"
 
 var (
-	userAgent   = component + "/" + version.BuildVersion
-	dialTimeout = 10 * time.Second
+	userAgent = component + "/" + version.BuildVersion
 )
 
 type Client interface {
 	outwayapi.OutwayClient
+	Close() error
 }
 
 type client struct {
 	outwayapi.OutwayClient
+	conn   *grpc.ClientConn
+	cancel context.CancelFunc
 }
 
 func NewClient(ctx context.Context, outwayAddress string, cert *common_tls.CertificateBundle) (Client, error) {
@@ -36,25 +38,30 @@ func NewClient(ctx context.Context, outwayAddress string, cert *common_tls.Certi
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(dialCredentials),
 		grpc.WithUserAgent(userAgent),
-		grpc.WithUnaryInterceptor(timeoutUnaryInterceptor),
 	}
 
-	ctx = nlxversion.NewGRPCContext(ctx, component)
+	var grpcTimeout = 10 * time.Second
 
-	outwayConn, err := grpc.DialContext(ctx, outwayAddress, dialOptions...)
+	timeoutCtx, cancel := context.WithTimeout(ctx, grpcTimeout)
+
+	grpcCtx := nlxversion.NewGRPCContext(timeoutCtx, component)
+
+	outwayConn, err := grpc.DialContext(grpcCtx, outwayAddress, dialOptions...)
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
 	c := &client{
-		outwayapi.NewOutwayClient(outwayConn),
+		OutwayClient: outwayapi.NewOutwayClient(outwayConn),
+		conn:         outwayConn,
+		cancel:       cancel,
 	}
 
 	return c, nil
 }
 
-func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	ctx, _ = context.WithTimeout(ctx, dialTimeout) // nolint:govet // cancel function is used by the invoker
-
-	return invoker(ctx, method, req, reply, cc, opts...)
+func (c *client) Close() error {
+	c.cancel()
+	return c.conn.Close()
 }

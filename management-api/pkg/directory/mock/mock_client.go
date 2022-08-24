@@ -58,6 +58,20 @@ func (mr *MockClientMockRecorder) ClearOrganizationInway(arg0, arg1 interface{},
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearOrganizationInway", reflect.TypeOf((*MockClient)(nil).ClearOrganizationInway), varargs...)
 }
 
+// Close mocks base method.
+func (m *MockClient) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close.
+func (mr *MockClientMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockClient)(nil).Close))
+}
+
 // GetOrganizationInway mocks base method.
 func (m *MockClient) GetOrganizationInway(arg0 context.Context, arg1 *directoryapi.GetOrganizationInwayRequest, arg2 ...grpc.CallOption) (*directoryapi.GetOrganizationInwayResponse, error) {
 	m.ctrl.T.Helper()

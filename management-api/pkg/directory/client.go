@@ -19,18 +19,20 @@ import (
 const component = "nlx-management"
 
 var (
-	userAgent   = component + "/" + version.BuildVersion
-	dialTimeout = 10 * time.Second
+	userAgent = component + "/" + version.BuildVersion
 )
 
 type Client interface {
 	directoryapi.DirectoryClient
 
 	GetOrganizationInwayProxyAddress(ctx context.Context, organizationSerialNumber string) (string, error)
+	Close() error
 }
 
 type client struct {
 	directoryapi.DirectoryClient
+	conn   *grpc.ClientConn
+	cancel context.CancelFunc
 }
 
 func NewClient(ctx context.Context, directoryAddress string, cert *common_tls.CertificateBundle) (Client, error) {
@@ -38,18 +40,24 @@ func NewClient(ctx context.Context, directoryAddress string, cert *common_tls.Ce
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(dialCredentials),
 		grpc.WithUserAgent(userAgent),
-		grpc.WithUnaryInterceptor(timeoutUnaryInterceptor),
 	}
 
-	ctx = nlxversion.NewGRPCContext(ctx, component)
+	var grpcTimeout = 5 * time.Second
 
-	directoryConn, err := grpc.DialContext(ctx, directoryAddress, dialOptions...)
+	timeoutCtx, cancel := context.WithTimeout(ctx, grpcTimeout)
+
+	grpcCtx := nlxversion.NewGRPCContext(timeoutCtx, component)
+
+	directoryConn, err := grpc.DialContext(grpcCtx, directoryAddress, dialOptions...)
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
 	c := &client{
-		directoryapi.NewDirectoryClient(directoryConn),
+		DirectoryClient: directoryapi.NewDirectoryClient(directoryConn),
+		cancel:          cancel,
+		conn:            directoryConn,
 	}
 
 	return c, nil
@@ -66,8 +74,8 @@ func (c *client) GetOrganizationInwayProxyAddress(ctx context.Context, organizat
 	return response.Address, nil
 }
 
-func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	ctx, _ = context.WithTimeout(ctx, dialTimeout) // nolint:govet // cancel function is used by the invoker
+func (c *client) Close() error {
+	c.cancel()
 
-	return invoker(ctx, method, req, reply, cc, opts...)
+	return c.conn.Close()
 }

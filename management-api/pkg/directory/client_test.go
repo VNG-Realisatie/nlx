@@ -60,7 +60,7 @@ func TestGetOrganizationInwayProxyAddress(t *testing.T) {
 
 			directoryClient := tt.directoryClient(ctrl)
 			client := &client{
-				directoryClient,
+				DirectoryClient: directoryClient,
 			}
 
 			got, err := client.GetOrganizationInwayProxyAddress(context.Background(), organizationSerialNumber)

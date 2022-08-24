@@ -32,7 +32,8 @@ type Client interface {
 type client struct {
 	external.AccessRequestServiceClient
 	external.DelegationServiceClient
-	conn *grpc.ClientConn
+	conn   *grpc.ClientConn
+	cancel context.CancelFunc
 }
 
 func NewClient(ctx context.Context, inwayAddress string, cert *common_tls.CertificateBundle) (Client, error) {
@@ -40,18 +41,23 @@ func NewClient(ctx context.Context, inwayAddress string, cert *common_tls.Certif
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(dialCredentials),
 		grpc.WithUserAgent(userAgent),
-		grpc.WithUnaryInterceptor(timeoutUnaryInterceptor),
 	}
 
-	ctx = nlxversion.NewGRPCContext(ctx, component)
+	var grpcTimeout = 5 * time.Second
 
-	conn, err := grpc.DialContext(ctx, inwayAddress, dialOptions...)
+	timeoutCtx, cancel := context.WithTimeout(ctx, grpcTimeout)
+
+	grpcCtx := nlxversion.NewGRPCContext(timeoutCtx, component)
+
+	conn, err := grpc.DialContext(grpcCtx, inwayAddress, dialOptions...)
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
 	c := client{
 		conn:                       conn,
+		cancel:                     cancel,
 		AccessRequestServiceClient: external.NewAccessRequestServiceClient(conn),
 		DelegationServiceClient:    external.NewDelegationServiceClient(conn),
 	}
@@ -60,11 +66,6 @@ func NewClient(ctx context.Context, inwayAddress string, cert *common_tls.Certif
 }
 
 func (client *client) Close() error {
+	client.cancel()
 	return client.conn.Close()
-}
-
-func timeoutUnaryInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	ctx, _ = context.WithTimeout(ctx, dialTimeout) // nolint:govet // cancel function is used by the invoker
-
-	return invoker(ctx, method, req, reply, cc, opts...)
 }

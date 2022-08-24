@@ -23,13 +23,14 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/outway"
 	"go.nlx.io/nlx/management-api/pkg/server"
+	"go.nlx.io/nlx/management-api/pkg/txlog"
 	mock_txlog "go.nlx.io/nlx/management-api/pkg/txlog/mock"
 	txlogapi "go.nlx.io/nlx/txlog-api/api"
 )
 
 func TestIsTXLogEnabled(t *testing.T) {
 	tests := map[string]struct {
-		client  txlogapi.TXLogClient
+		client  txlog.Client
 		enabled bool
 	}{
 		"returns_false_when_txlog_client_is_nil": {
