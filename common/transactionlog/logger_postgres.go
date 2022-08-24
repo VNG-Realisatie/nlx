@@ -13,7 +13,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// PostgresTransactionLogger helps inway and outway to write transaction logs to a data store.
 type PostgresTransactionLogger struct {
 	zapLogger                *zap.Logger
 	logdb                    *sqlx.DB
@@ -22,7 +21,6 @@ type PostgresTransactionLogger struct {
 	direction                Direction
 }
 
-// NewPostgresTransactionLogger prepares a new TransactionLogger.
 func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, direction Direction) (TransactionLogger, error) {
 	txl := &PostgresTransactionLogger{
 		logdb: logdb,
@@ -83,7 +81,6 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 	return txl, nil
 }
 
-// AddRecord inserts a record into the datastore. Returns an error when failed.
 func (txl *PostgresTransactionLogger) AddRecord(rec *Record) error {
 	dataJSON, err := json.Marshal(rec.Data)
 	if err != nil {
@@ -139,7 +136,6 @@ func (txl *PostgresTransactionLogger) AddRecord(rec *Record) error {
 	return nil
 }
 
-// Close closes the database connection. Returns an error when failed.
 func (txl *PostgresTransactionLogger) Close() error {
 	return txl.logdb.Close()
 }
