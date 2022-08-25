@@ -44,7 +44,7 @@ type TransactionlogRecord struct {
 	SrcOrganization  string
 	DestOrganization string
 	ServiceName      string
-	LogrecordID      string
+	TransactionID    string
 	Data             pqtype.NullRawMessage
 	Delegator        string
 	OrderReference   string

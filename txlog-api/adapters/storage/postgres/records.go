@@ -44,7 +44,7 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, model *record.R
 			Valid:      true,
 			RawMessage: model.Data(),
 		},
-		LogrecordID:    model.TransactionID(),
+		TransactionID:  model.TransactionID(),
 		Delegator:      model.Delegator(),
 		OrderReference: model.OrderReference(),
 	}
@@ -95,7 +95,7 @@ func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit uint) ([]*
 			OrderReference:          r.OrderReference,
 			Delegator:               r.Delegator,
 			Data:                    data,
-			TransactionID:           r.LogrecordID,
+			TransactionID:           r.TransactionID,
 			CreatedAt:               r.Created,
 		})
 		if err != nil {

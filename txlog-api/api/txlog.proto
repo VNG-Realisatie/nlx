@@ -68,7 +68,7 @@ message CreateRecordRequest {
     string sourceOrganization = 1;
     string destOrganization = 2;
     string serviceName = 3;
-    string logrecordID = 4;
+    string transactionID = 4;
     string delegator = 5;
     string orderReference = 6;
     string data = 7;

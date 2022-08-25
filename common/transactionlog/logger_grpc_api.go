@@ -97,7 +97,7 @@ func (txl *APITransactionLogger) AddRecord(rec *Record) error {
 		SourceOrganization: rec.SrcOrganization,
 		DestOrganization:   rec.DestOrganization,
 		ServiceName:        rec.ServiceName,
-		LogrecordID:        rec.LogrecordID,
+		TransactionID:      rec.TransactionID,
 		Delegator:          rec.Delegator,
 		OrderReference:     rec.OrderReference,
 		Data:               string(dataJSON),

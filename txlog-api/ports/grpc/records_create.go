@@ -36,7 +36,7 @@ func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest)
 		OrderReference:          req.OrderReference,
 		Delegator:               req.Delegator,
 		Data:                    json.RawMessage(req.Data),
-		TransactionID:           req.LogrecordID,
+		TransactionID:           req.TransactionID,
 		DataSubjects:            dataSubjects,
 	})
 	if err != nil {

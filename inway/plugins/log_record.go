@@ -86,7 +86,7 @@ func (plugin *LogRecordPlugin) createLogRecord(context *Context, logRecordID str
 		SrcOrganization:  organizationSerialNumber,
 		DestOrganization: context.Destination.Organization,
 		ServiceName:      context.Destination.Service.Name,
-		LogrecordID:      logRecordID,
+		TransactionID:    logRecordID,
 		Data:             recordData,
 	}
 

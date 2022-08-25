@@ -133,7 +133,7 @@ func (plugin *LogRecordPlugin) createLogRecord(context *Context) (*LogRecordID, 
 		SrcOrganization:  plugin.organizationSerialNumber,
 		DestOrganization: context.Destination.OrganizationSerialNumber,
 		ServiceName:      context.Destination.Service,
-		LogrecordID:      logRecordID.String(),
+		TransactionID:    logRecordID.String(),
 		Data:             recordData,
 		DataSubjects:     dataSubjects,
 	}

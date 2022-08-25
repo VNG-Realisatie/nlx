@@ -8,7 +8,7 @@ type Record struct {
 	SrcOrganization  string                 `json:"source_organization"`
 	DestOrganization string                 `json:"destination_organization"`
 	ServiceName      string                 `json:"service_name"`
-	LogrecordID      string                 `json:"logrecord-id"`
+	TransactionID    string                 `json:"transaction_id"`
 	Data             map[string]interface{} `json:"data"`
 	Delegator        string                 `json:"delegator"`
 	DataSubjects     map[string]string      `json:"data_subjects"`

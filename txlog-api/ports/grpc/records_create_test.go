@@ -33,7 +33,7 @@ func TestCreateRecord(t *testing.T) {
 				DestOrganization: "00000000000000000002",
 				Direction:        api.CreateRecordRequest_IN,
 				ServiceName:      "test-service",
-				LogrecordID:      "42",
+				TransactionID:    "42",
 				Data:             `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -52,7 +52,7 @@ func TestCreateRecord(t *testing.T) {
 				DestOrganization:   "",
 				Direction:          api.CreateRecordRequest_IN,
 				ServiceName:        "test-service",
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Data:               `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -70,7 +70,7 @@ func TestCreateRecord(t *testing.T) {
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Data:               `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -88,7 +88,7 @@ func TestCreateRecord(t *testing.T) {
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Data:               `{"request-path":"/get"}`,
 				Delegator:          "00000000000000000003",
 				ServiceName:        "test-service",
@@ -108,7 +108,7 @@ func TestCreateRecord(t *testing.T) {
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Data:               `{"request-path":"/get"}`,
 				OrderReference:     "test-reference",
 				ServiceName:        "test-service",
@@ -148,7 +148,7 @@ func TestCreateRecord(t *testing.T) {
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
 				ServiceName:        "test-service",
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Delegator:          "00000000000000000003",
 				OrderReference:     "test-reference",
 				Data:               `{"request-path":"/get"}`,
@@ -186,7 +186,7 @@ func TestCreateRecord(t *testing.T) {
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
 				ServiceName:        "test-service",
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Data:               `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -224,7 +224,7 @@ func TestCreateRecord(t *testing.T) {
 				DestOrganization:   "00000000000000000002",
 				Direction:          api.CreateRecordRequest_IN,
 				ServiceName:        "test-service",
-				LogrecordID:        "42",
+				TransactionID:      "42",
 				Delegator:          "00000000000000000003",
 				OrderReference:     "test-reference",
 				Data:               `{"request-path":"/get"}`,

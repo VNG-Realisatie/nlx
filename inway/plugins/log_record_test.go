@@ -52,7 +52,7 @@ func TestLoginPlugin(t *testing.T) {
 			tranactionLogger: func(ctrl *gomock.Controller) *mock_transactionlog.MockTransactionLogger {
 				db := mock_transactionlog.NewMockTransactionLogger(ctrl)
 				db.EXPECT().AddRecord(&transactionlog.Record{
-					LogrecordID:      "mock-log-record-id",
+					TransactionID:    "mock-log-record-id",
 					SrcOrganization:  "99999999999999999999",
 					DestOrganization: "11111111111111111111",
 					ServiceName:      "mock-service",
@@ -81,7 +81,7 @@ func TestLoginPlugin(t *testing.T) {
 			tranactionLogger: func(ctrl *gomock.Controller) *mock_transactionlog.MockTransactionLogger {
 				db := mock_transactionlog.NewMockTransactionLogger(ctrl)
 				db.EXPECT().AddRecord(&transactionlog.Record{
-					LogrecordID:      "mock-log-record-id",
+					TransactionID:    "mock-log-record-id",
 					SrcOrganization:  "99999999999999999999",
 					DestOrganization: "11111111111111111111",
 					ServiceName:      "mock-service",

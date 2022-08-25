@@ -58,7 +58,7 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 			src_organization,
 			dest_organization,
 			service_name,
-			logrecord_id,
+			transaction_id,
 			delegator,
 			order_reference,
 			data
@@ -67,7 +67,7 @@ func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, directi
 			:src_organization,
 			:dest_organization,
 			:service_name,
-			:logrecord_id,
+			:transaction_id,
 			:delegator,
 			:order_reference,
 			:data_json

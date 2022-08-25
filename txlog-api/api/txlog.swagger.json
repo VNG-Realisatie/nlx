@@ -186,7 +186,7 @@
         "serviceName": {
           "type": "string"
         },
-        "logrecordID": {
+        "transactionID": {
           "type": "string"
         },
         "delegator": {

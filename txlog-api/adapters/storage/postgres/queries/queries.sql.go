@@ -38,7 +38,7 @@ INSERT INTO transactionlog.records (
     src_organization,
     dest_organization,
     service_name,
-    logrecord_id,
+    transaction_id,
     data,
     delegator,
     order_reference,
@@ -53,7 +53,7 @@ type CreateRecordParams struct {
 	SrcOrganization  string
 	DestOrganization string
 	ServiceName      string
-	LogrecordID      string
+	TransactionID    string
 	Data             pqtype.NullRawMessage
 	Delegator        string
 	OrderReference   string
@@ -66,7 +66,7 @@ func (q *Queries) CreateRecord(ctx context.Context, arg *CreateRecordParams) (in
 		arg.SrcOrganization,
 		arg.DestOrganization,
 		arg.ServiceName,
-		arg.LogrecordID,
+		arg.TransactionID,
 		arg.Data,
 		arg.Delegator,
 		arg.OrderReference,
@@ -84,7 +84,7 @@ SELECT id,
     src_organization,
     dest_organization,
     service_name,
-    logrecord_id,
+    transaction_id,
     data,
     delegator,
     order_reference
@@ -109,7 +109,7 @@ func (q *Queries) ListRecords(ctx context.Context, limit int32) ([]*Transactionl
 			&i.SrcOrganization,
 			&i.DestOrganization,
 			&i.ServiceName,
-			&i.LogrecordID,
+			&i.TransactionID,
 			&i.Data,
 			&i.Delegator,
 			&i.OrderReference,
