@@ -14,8 +14,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/txlog-api/migrations"
 )
@@ -25,16 +23,11 @@ const driverName = "embed"
 var registerDriverOnce sync.Once
 
 type PostgreSQLRepository struct {
-	logger  *zap.Logger
 	db      *sqlx.DB
 	queries *queries.Queries
 }
 
-func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
-	if logger == nil {
-		panic("missing logger")
-	}
-
+func New(db *sqlx.DB) (*PostgreSQLRepository, error) {
 	if db == nil {
 		panic("missing db")
 	}
@@ -45,7 +38,6 @@ func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	}
 
 	return &PostgreSQLRepository{
-		logger:  logger.Named("postgres repository"),
 		db:      db,
 		queries: querier,
 	}, nil

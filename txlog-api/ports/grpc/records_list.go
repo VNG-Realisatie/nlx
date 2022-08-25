@@ -7,7 +7,6 @@ import (
 	"context"
 	"strings"
 
-	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -24,7 +23,7 @@ func (s *Server) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.ListRe
 
 	records, err := s.app.Queries.ListRecords.Handle(ctx, maxAmountOfRecords)
 	if err != nil {
-		s.logger.Error("error getting record list from storage", zap.Error(err))
+		s.logger.Error("error getting record list from storage", err)
 		return nil, status.Error(codes.Internal, "storage error")
 	}
 

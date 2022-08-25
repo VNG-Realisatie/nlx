@@ -3,18 +3,17 @@ package service
 import (
 	"context"
 
-	"go.uber.org/zap"
-
 	"go.nlx.io/nlx/txlog-api/app"
 	"go.nlx.io/nlx/txlog-api/app/command"
 	"go.nlx.io/nlx/txlog-api/app/query"
 	"go.nlx.io/nlx/txlog-api/domain/record"
+	"go.nlx.io/nlx/txlog-api/ports/logger"
 )
 
 type NewApplicationArgs struct {
 	Context    context.Context
 	Clock      command.Clock
-	Logger     *zap.Logger
+	Logger     logger.Logger
 	Repository record.Repository
 }
 

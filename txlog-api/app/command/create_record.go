@@ -10,10 +10,9 @@ import (
 	"fmt"
 	"time"
 
-	"go.uber.org/zap"
-
 	app_errors "go.nlx.io/nlx/txlog-api/app/errors"
 	"go.nlx.io/nlx/txlog-api/domain/record"
+	"go.nlx.io/nlx/txlog-api/ports/logger"
 )
 
 type Clock interface {
@@ -21,12 +20,12 @@ type Clock interface {
 }
 
 type CreateRecordHandler struct {
-	repository record.Repository
 	clock      Clock
-	logger     *zap.Logger
+	repository record.Repository
+	logger     logger.Logger
 }
 
-func NewCreateRecordHandler(repository record.Repository, clock Clock, logger *zap.Logger) (*CreateRecordHandler, error) {
+func NewCreateRecordHandler(repository record.Repository, clock Clock, lgr logger.Logger) (*CreateRecordHandler, error) {
 	if repository == nil {
 		return nil, errors.New("repository is required")
 	}
@@ -35,14 +34,14 @@ func NewCreateRecordHandler(repository record.Repository, clock Clock, logger *z
 		return nil, errors.New("repository is required")
 	}
 
-	if logger == nil {
+	if lgr == nil {
 		return nil, errors.New("logger is required")
 	}
 
 	return &CreateRecordHandler{
 		repository: repository,
 		clock:      clock,
-		logger:     logger,
+		logger:     lgr,
 	}, nil
 }
 
@@ -83,7 +82,7 @@ func (h *CreateRecordHandler) Handle(ctx context.Context, args *NewRecordArgs) e
 
 	err = h.repository.CreateRecord(ctx, model)
 	if err != nil {
-		h.logger.Error("create record", zap.Error(err))
+		h.logger.Error("create record", err)
 		return err
 	}
 

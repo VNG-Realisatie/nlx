@@ -15,7 +15,6 @@ import (
 	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/testing/testingutils"
 	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
@@ -56,7 +55,7 @@ func New(t *testing.T) (*pgadapter.PostgreSQLRepository, func() error) {
 
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	repo, err := pgadapter.New(zap.NewNop(), db)
+	repo, err := pgadapter.New(db)
 	require.NoError(t, err)
 
 	return repo, db.Close
