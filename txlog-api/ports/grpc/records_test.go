@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	common_testing "go.nlx.io/nlx/testing/testingutils"
-	mock_txlog "go.nlx.io/nlx/txlog-api/domain/txlog/storage/mock"
+	txlog_mock "go.nlx.io/nlx/txlog-api/domain/record/mock"
 	"go.nlx.io/nlx/txlog-api/ports/grpc"
 	"go.nlx.io/nlx/txlog-api/service"
 )
@@ -30,7 +30,7 @@ func (c *testClock) Now() time.Time {
 	return c.timeToReturn
 }
 
-func newStorageRepository(t *testing.T) (s *grpc.Server, m *mock_txlog.MockRepository) {
+func newStorageRepository(t *testing.T) (s *grpc.Server, m *txlog_mock.MockRepository) {
 	logger := zaptest.Logger(t)
 
 	ctrl := gomock.NewController(t)
@@ -39,7 +39,7 @@ func newStorageRepository(t *testing.T) (s *grpc.Server, m *mock_txlog.MockRepos
 		ctrl.Finish()
 	})
 
-	m = mock_txlog.NewMockRepository(ctrl)
+	m = txlog_mock.NewMockRepository(ctrl)
 
 	clock := &testClock{
 		timeToReturn: fixedTestClockTime,

@@ -14,25 +14,25 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/txlog-api/api"
-	"go.nlx.io/nlx/txlog-api/domain"
-	mock_txlog "go.nlx.io/nlx/txlog-api/domain/txlog/storage/mock"
+	"go.nlx.io/nlx/txlog-api/domain/record"
+	txlog_mock "go.nlx.io/nlx/txlog-api/domain/record/mock"
 )
 
 func TestListRecords(t *testing.T) {
 	now := time.Now()
 
 	tests := map[string]struct {
-		setup   func(context.Context, *mock_txlog.MockRepository)
+		setup   func(context.Context, *txlog_mock.MockRepository)
 		want    *api.ListRecordsResponse
 		wantErr error
 	}{
 		"happy_flow": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
-				args := []*domain.NewRecordArgs{
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
+				args := []*record.NewRecordArgs{
 					{
 						SourceOrganization:      "0001",
 						DestinationOrganization: "0002",
-						Direction:               domain.IN,
+						Direction:               record.IN,
 						ServiceName:             "test-service",
 						Delegator:               "0003",
 						OrderReference:          "test-reference",
@@ -42,10 +42,10 @@ func TestListRecords(t *testing.T) {
 					},
 				}
 
-				models := make([]*domain.Record, len(args))
+				models := make([]*record.Record, len(args))
 				for i, arg := range args {
 					var err error
-					models[i], err = domain.NewRecord(arg)
+					models[i], err = record.NewRecord(arg)
 					require.NoError(t, err)
 				}
 

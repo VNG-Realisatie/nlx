@@ -1,20 +1,22 @@
+// Copyright © VNG Realisatie 2022
+// Licensed under the EUPL
+
 package command
 
 import (
 	"context"
 
-	"go.nlx.io/nlx/txlog-api/domain"
-	"go.nlx.io/nlx/txlog-api/domain/txlog/storage"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 type CreateRecordHandler struct {
-	repository storage.Repository
+	repository record.Repository
 }
 
-func NewCreateRecordHandler(repository storage.Repository) *CreateRecordHandler {
+func NewCreateRecordHandler(repository record.Repository) *CreateRecordHandler {
 	return &CreateRecordHandler{repository: repository}
 }
 
-func (h *CreateRecordHandler) Handle(ctx context.Context, record *domain.Record) error {
-	return h.repository.CreateRecord(ctx, record)
+func (h *CreateRecordHandler) Handle(ctx context.Context, model *record.Record) error {
+	return h.repository.CreateRecord(ctx, model)
 }

@@ -8,13 +8,13 @@ import (
 	"go.nlx.io/nlx/txlog-api/app"
 	"go.nlx.io/nlx/txlog-api/app/command"
 	"go.nlx.io/nlx/txlog-api/app/query"
-	"go.nlx.io/nlx/txlog-api/domain/txlog/storage"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 type NewApplicationArgs struct {
 	Context    context.Context
 	Logger     *zap.Logger
-	Repository storage.Repository
+	Repository record.Repository
 }
 
 func NewApplication(args *NewApplicationArgs) (*app.Application, error) {

@@ -244,12 +244,12 @@ mocks-txlog-api:
     WORKDIR /src/txlog-api
 
     RUN mockgen -source api/txlog_grpc.pb.go -package=mock -destination /dist/api/mock/mock_txlog.go
-    RUN mockgen -source domain/txlog/storage/repository.go -package=txlog_mock -destination /dist/domain/txlog/storage/mock/repository.go
+    RUN mockgen -source domain/record/repository.go -package=txlog_mock -destination /dist/domain/record/mock/repository.go
 
     RUN goimports -w -local "go.nlx.io" /dist/
 
     SAVE ARTIFACT /dist/api/mock/mock_txlog.go AS LOCAL ./txlog-api/api/mock/mock_txlog.go
-    SAVE ARTIFACT /dist/domain/txlog/storage/mock/repository.go AS LOCAL ./txlog-api/domain/txlog/storage/mock/repository.go
+    SAVE ARTIFACT /dist/domain/record/mock/repository.go AS LOCAL ./txlog-api/domain/record/mock/repository.go
 
 sqlc-txlog-api:
     FROM +deps

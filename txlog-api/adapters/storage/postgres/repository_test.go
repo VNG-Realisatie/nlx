@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package storage_test
+package pgadapter_test
 
 import (
 	"context"
@@ -14,11 +14,10 @@ import (
 	"github.com/stretchr/testify/require"
 
 	pgadapter_test_setup "go.nlx.io/nlx/txlog-api/adapters/storage/postgres/test_setup"
-	"go.nlx.io/nlx/txlog-api/domain"
-	"go.nlx.io/nlx/txlog-api/domain/txlog/storage"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
-func new(t *testing.T, enableFixtures bool) (storage.Repository, func() error) {
+func new(t *testing.T, enableFixtures bool) (record.Repository, func() error) {
 	repo, close := pgadapter_test_setup.New(t)
 	if enableFixtures {
 		err := loadFixtures(repo)
@@ -28,12 +27,12 @@ func new(t *testing.T, enableFixtures bool) (storage.Repository, func() error) {
 	return repo, close
 }
 
-func loadFixtures(repo storage.Repository) error {
-	newRecordsArgs := []*domain.NewRecordArgs{
+func loadFixtures(repo record.Repository) error {
+	newRecordsArgs := []*record.NewRecordArgs{
 		{
 			SourceOrganization:      "0001",
 			DestinationOrganization: "0002",
-			Direction:               domain.IN,
+			Direction:               record.IN,
 			ServiceName:             "test-service",
 			OrderReference:          "test-reference",
 			Delegator:               "0003",
@@ -44,7 +43,7 @@ func loadFixtures(repo storage.Repository) error {
 	}
 
 	for _, args := range newRecordsArgs {
-		record, err := domain.NewRecord(args)
+		record, err := record.NewRecord(args)
 		if err != nil {
 			return err
 		}
@@ -58,7 +57,7 @@ func loadFixtures(repo storage.Repository) error {
 	return nil
 }
 
-func assertRecordInRepository(t *testing.T, repo storage.Repository, r *domain.Record) {
+func assertRecordInRepository(t *testing.T, repo record.Repository, r *record.Record) {
 	require.NotNil(t, r)
 
 	records, err := repo.ListRecords(context.Background(), 100)

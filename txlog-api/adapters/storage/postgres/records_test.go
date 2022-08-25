@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package storage_test
+package pgadapter_test
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go.nlx.io/nlx/txlog-api/domain"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 func TestCreateRecord(t *testing.T) {
@@ -21,15 +21,15 @@ func TestCreateRecord(t *testing.T) {
 
 	tests := map[string]struct {
 		loadFixtures bool
-		args         *domain.NewRecordArgs
+		args         *record.NewRecordArgs
 		wantErr      error
 	}{
 		"happy_flow_without_order": {
 			loadFixtures: false,
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service",
 				Data:                    []byte(`{"test": "value"}`),
 				TransactionID:           "abcde",
@@ -40,10 +40,10 @@ func TestCreateRecord(t *testing.T) {
 		},
 		"happy_flow": {
 			loadFixtures: false,
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service",
 				OrderReference:          "test-reference",
 				Delegator:               "0003",
@@ -65,7 +65,7 @@ func TestCreateRecord(t *testing.T) {
 			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
-			model, err := domain.NewRecord(tt.args)
+			model, err := record.NewRecord(tt.args)
 			require.NoError(t, err)
 
 			err = repo.CreateRecord(context.Background(), model)
@@ -83,16 +83,16 @@ func TestListRecords(t *testing.T) {
 
 	tests := map[string]struct {
 		loadFixtures bool
-		want         []*domain.NewRecordArgs
+		want         []*record.NewRecordArgs
 		wantErr      error
 	}{
 		"happy_flow": {
 			loadFixtures: true,
-			want: []*domain.NewRecordArgs{
+			want: []*record.NewRecordArgs{
 				{
 					SourceOrganization:      "0001",
 					DestinationOrganization: "0002",
-					Direction:               domain.IN,
+					Direction:               record.IN,
 					ServiceName:             "test-service",
 					OrderReference:          "test-reference",
 					Delegator:               "0003",
@@ -114,11 +114,11 @@ func TestListRecords(t *testing.T) {
 			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
-			want := make([]*domain.Record, len(tt.want))
+			want := make([]*record.Record, len(tt.want))
 
 			for i, s := range tt.want {
 				var err error
-				want[i], err = domain.NewRecord(s)
+				want[i], err = record.NewRecord(s)
 				require.NoError(t, err)
 			}
 

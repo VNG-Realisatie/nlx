@@ -15,20 +15,20 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/txlog-api/api"
-	"go.nlx.io/nlx/txlog-api/domain"
-	mock_txlog "go.nlx.io/nlx/txlog-api/domain/txlog/storage/mock"
+	"go.nlx.io/nlx/txlog-api/domain/record"
+	txlog_mock "go.nlx.io/nlx/txlog-api/domain/record/mock"
 )
 
 //nolint:funlen // this is a test
 func TestCreateRecord(t *testing.T) {
 	tests := map[string]struct {
-		setup   func(context.Context, *mock_txlog.MockRepository)
+		setup   func(context.Context, *txlog_mock.MockRepository)
 		req     *api.CreateRecordRequest
 		want    *emptypb.Empty
 		wantErr error
 	}{
 		"without_source_org": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				DestOrganization: "00000000000000000002",
 				Direction:        api.CreateRecordRequest_IN,
@@ -46,7 +46,7 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid record: SourceOrganization: cannot be blank."),
 		},
 		"without_destination_org": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "",
@@ -65,7 +65,7 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid record: DestinationOrganization: cannot be blank."),
 		},
 		"without_service": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
@@ -83,7 +83,7 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid record: ServiceName: cannot be blank."),
 		},
 		"incomplete_order_missing_reference": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
@@ -103,7 +103,7 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid record: empty order reference, both the delegator and order reference should be provided"),
 		},
 		"incomplete_order_missing_delegator": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {},
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
@@ -123,11 +123,11 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: status.Error(codes.InvalidArgument, "invalid record: empty delegator, both the delegator and order reference should be provided"),
 		},
 		"db_call_fails": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
-				model, err := domain.NewRecord(&domain.NewRecordArgs{
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
+				model, err := record.NewRecord(&record.NewRecordArgs{
 					SourceOrganization:      "00000000000000000001",
 					DestinationOrganization: "00000000000000000002",
-					Direction:               domain.IN,
+					Direction:               record.IN,
 					ServiceName:             "test-service",
 					TransactionID:           "42",
 					OrderReference:          "test-reference",
@@ -163,11 +163,11 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: status.Error(codes.Internal, "storage error"),
 		},
 		"happy_flow_without_order": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
-				model, err := domain.NewRecord(&domain.NewRecordArgs{
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
+				model, err := record.NewRecord(&record.NewRecordArgs{
 					SourceOrganization:      "00000000000000000001",
 					DestinationOrganization: "00000000000000000002",
-					Direction:               domain.IN,
+					Direction:               record.IN,
 					ServiceName:             "test-service",
 					TransactionID:           "42",
 					Data:                    []byte(`{"request-path":"/get"}`),
@@ -199,11 +199,11 @@ func TestCreateRecord(t *testing.T) {
 			wantErr: nil,
 		},
 		"happy_flow": {
-			setup: func(ctx context.Context, mocks *mock_txlog.MockRepository) {
-				model, err := domain.NewRecord(&domain.NewRecordArgs{
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
+				model, err := record.NewRecord(&record.NewRecordArgs{
 					SourceOrganization:      "00000000000000000001",
 					DestinationOrganization: "00000000000000000002",
-					Direction:               domain.IN,
+					Direction:               record.IN,
 					ServiceName:             "test-service",
 					TransactionID:           "42",
 					Delegator:               "00000000000000000003",

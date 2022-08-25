@@ -14,16 +14,16 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/txlog-api/api"
-	"go.nlx.io/nlx/txlog-api/domain"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateRecord")
 
-	direction := domain.OUT
+	direction := record.OUT
 
 	if req.Direction == api.CreateRecordRequest_IN {
-		direction = domain.IN
+		direction = record.IN
 	}
 
 	dataSubjects := map[string]string{}
@@ -32,7 +32,7 @@ func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest)
 		dataSubjects[dataSubject.Key] = dataSubject.Value
 	}
 
-	record, err := domain.NewRecord(&domain.NewRecordArgs{
+	model, err := record.NewRecord(&record.NewRecordArgs{
 		SourceOrganization:      req.SourceOrganization,
 		DestinationOrganization: req.DestOrganization,
 		Direction:               direction,
@@ -48,7 +48,7 @@ func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest)
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid record: %s", err))
 	}
 
-	err = s.app.Commands.CreateRecord.Handle(ctx, record)
+	err = s.app.Commands.CreateRecord.Handle(ctx, model)
 	if err != nil {
 		s.logger.Error("failed to create record model", zap.Error(err))
 		return nil, status.Error(codes.Internal, "storage error")

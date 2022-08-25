@@ -1,22 +1,24 @@
+// Copyright © VNG Realisatie 2022
+// Licensed under the EUPL
+
 package query
 
 import (
 	"context"
 
-	"go.nlx.io/nlx/txlog-api/domain"
-	"go.nlx.io/nlx/txlog-api/domain/txlog/storage"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 type ListRecordsHandler struct {
-	recordsRepository storage.Repository
+	recordsRepository record.Repository
 }
 
-func NewListRecordsHandler(repository storage.Repository) *ListRecordsHandler {
+func NewListRecordsHandler(repository record.Repository) *ListRecordsHandler {
 	return &ListRecordsHandler{
 		recordsRepository: repository,
 	}
 }
 
-func (l *ListRecordsHandler) Handle(ctx context.Context, limit uint) ([]*domain.Record, error) {
+func (l *ListRecordsHandler) Handle(ctx context.Context, limit uint) ([]*record.Record, error) {
 	return l.recordsRepository.ListRecords(ctx, limit)
 }

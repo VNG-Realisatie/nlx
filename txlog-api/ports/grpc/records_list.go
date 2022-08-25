@@ -14,7 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/txlog-api/api"
-	"go.nlx.io/nlx/txlog-api/domain"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 const maxAmountOfRecords = 100
@@ -33,12 +33,12 @@ func (s *Server) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.ListRe
 	return response, nil
 }
 
-func dataModelToResponse(records []*domain.Record) *api.ListRecordsResponse {
+func dataModelToResponse(records []*record.Record) *api.ListRecordsResponse {
 	response := &api.ListRecordsResponse{}
 	response.Records = make([]*api.ListRecordsResponse_Record, len(records))
 
 	for i, r := range records {
-		record := &api.ListRecordsResponse_Record{
+		recordResponse := &api.ListRecordsResponse_Record{
 			Source: &api.ListRecordsResponse_Record_Organization{
 				SerialNumber: r.SourceOrganization(),
 			},
@@ -57,7 +57,7 @@ func dataModelToResponse(records []*domain.Record) *api.ListRecordsResponse {
 			TransactionID: r.TransactionID(),
 			CreatedAt:     timestamppb.New(r.CreatedAt()),
 		}
-		response.Records[i] = record
+		response.Records[i] = recordResponse
 	}
 
 	return response

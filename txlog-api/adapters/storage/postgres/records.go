@@ -1,3 +1,6 @@
+// Copyright © VNG Realisatie 2022
+// Licensed under the EUPL
+
 package pgadapter
 
 import (
@@ -10,10 +13,10 @@ import (
 	"github.com/tabbed/pqtype"
 
 	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
-	"go.nlx.io/nlx/txlog-api/domain"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
-func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.Record) error {
+func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, model *record.Record) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return err
@@ -33,18 +36,18 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 	qtx := r.queries.WithTx(tx)
 
 	dbRecord := &queries.CreateRecordParams{
-		Direction:        queries.TransactionlogDirection(record.Direction()),
-		SrcOrganization:  record.SourceOrganization(),
-		DestOrganization: record.DestinationOrganization(),
-		ServiceName:      record.ServiceName(),
-		Created:          record.CreatedAt(),
+		Direction:        queries.TransactionlogDirection(model.Direction()),
+		SrcOrganization:  model.SourceOrganization(),
+		DestOrganization: model.DestinationOrganization(),
+		ServiceName:      model.ServiceName(),
+		Created:          model.CreatedAt(),
 		Data: pqtype.NullRawMessage{
 			Valid:      true,
-			RawMessage: record.Data(),
+			RawMessage: model.Data(),
 		},
-		LogrecordID:    record.TransactionID(),
-		Delegator:      record.Delegator(),
-		OrderReference: record.OrderReference(),
+		LogrecordID:    model.TransactionID(),
+		Delegator:      model.Delegator(),
+		OrderReference: model.OrderReference(),
 	}
 
 	recordID, err := qtx.CreateRecord(ctx, dbRecord)
@@ -52,7 +55,7 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 		return err
 	}
 
-	for key, value := range record.DataSubjects() {
+	for key, value := range model.DataSubjects() {
 		err = qtx.CreateDataSubject(ctx, &queries.CreateDataSubjectParams{
 			RecordID: recordID,
 			Key:      key,
@@ -71,13 +74,13 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 	return nil
 }
 
-func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit uint) ([]*domain.Record, error) {
+func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit uint) ([]*record.Record, error) {
 	dbRecords, err := r.queries.ListRecords(ctx, int32(limit))
 	if err != nil {
 		return nil, err
 	}
 
-	records := make([]*domain.Record, len(dbRecords))
+	records := make([]*record.Record, len(dbRecords))
 
 	for i, r := range dbRecords {
 		var data json.RawMessage
@@ -85,10 +88,10 @@ func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit uint) ([]*
 			data = r.Data.RawMessage
 		}
 
-		records[i], err = domain.NewRecord(&domain.NewRecordArgs{
+		records[i], err = record.NewRecord(&record.NewRecordArgs{
 			SourceOrganization:      r.SrcOrganization,
 			DestinationOrganization: r.DestOrganization,
-			Direction:               domain.OrderDirection(r.Direction),
+			Direction:               record.OrderDirection(r.Direction),
 			ServiceName:             r.ServiceName,
 			OrderReference:          r.OrderReference,
 			Delegator:               r.Delegator,

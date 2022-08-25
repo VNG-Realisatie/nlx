@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package domain_test
+package record_test
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.nlx.io/nlx/txlog-api/domain"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 //nolint:funlen // this is a test
@@ -17,14 +17,14 @@ func Test_NewRecord(t *testing.T) {
 	now := time.Now()
 
 	tests := map[string]struct {
-		args        *domain.NewRecordArgs
+		args        *record.NewRecordArgs
 		expectedErr string
 	}{
 		"empty_source_organization": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -35,10 +35,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "SourceOrganization: cannot be blank.",
 		},
 		"invalid_source_organization": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "000000000000000000001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -49,10 +49,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "SourceOrganization: too long, max 20 bytes.",
 		},
 		"empty_destination_organization": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -63,10 +63,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "DestinationOrganization: cannot be blank.",
 		},
 		"invalid_destination": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "000000000000000000002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -77,7 +77,7 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "DestinationOrganization: too long, max 20 bytes.",
 		},
 		"empty_direction": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
 				Direction:               "",
@@ -91,10 +91,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "Direction: cannot be blank.",
 		},
 		"empty_service_name": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -105,10 +105,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "ServiceName: cannot be blank.",
 		},
 		"empty_transaction_id": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -119,10 +119,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "TransactionID: cannot be blank.",
 		},
 		"empty_created_at": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -132,10 +132,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "CreatedAt: cannot be blank.",
 		},
 		"order_reference_without_delegator": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "",
@@ -146,10 +146,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "empty delegator, both the delegator and order reference should be provided",
 		},
 		"delegator_without_order_reference": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "",
 				Delegator:               "0003",
@@ -160,10 +160,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "empty order reference, both the delegator and order reference should be provided",
 		},
 		"invalid_delegator": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "000000000000000000001",
@@ -174,10 +174,10 @@ func Test_NewRecord(t *testing.T) {
 			expectedErr: "Delegator: too long, max 20 bytes.",
 		},
 		"happy_flow": {
-			args: &domain.NewRecordArgs{
+			args: &record.NewRecordArgs{
 				SourceOrganization:      "0001",
 				DestinationOrganization: "0002",
-				Direction:               domain.IN,
+				Direction:               record.IN,
 				ServiceName:             "test-service-2",
 				OrderReference:          "test-reference",
 				Delegator:               "0004",
@@ -193,7 +193,7 @@ func Test_NewRecord(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			result, err := domain.NewRecord(tt.args)
+			result, err := record.NewRecord(tt.args)
 
 			if tt.expectedErr != "" {
 				assert.Nil(t, result)
