@@ -1,4 +1,4 @@
-FROM node:18.7.0-alpine AS build
+FROM node:18.8.0-alpine AS build
 
 ENV CI=true
 
