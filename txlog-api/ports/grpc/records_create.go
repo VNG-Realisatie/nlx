@@ -1,7 +1,6 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 
-//nolint:dupl // service and inway structs look the same
 package grpc
 
 import (
@@ -18,7 +17,6 @@ import (
 	"go.nlx.io/nlx/txlog-api/domain"
 )
 
-//nolint:gocyclo // complexity will be reduced once we simplify the domain
 func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateRecord")
 
