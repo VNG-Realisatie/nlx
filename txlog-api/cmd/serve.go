@@ -88,12 +88,13 @@ var serveCommand = &cobra.Command{
 			Context:    ctx,
 			Logger:     logger,
 			Repository: storage,
+			Clock:      &clock{},
 		})
 		if err != nil {
 			logger.Fatal("could not create application", zap.Error(err))
 		}
 
-		grpcServer := ports_grpc.New(logger, &clock{}, app, certificate)
+		grpcServer := ports_grpc.New(logger, app, certificate)
 
 		go func() {
 			err = grpcServer.ListenAndServe(serveOpts.ListenAddress, serveOpts.ListenAddressPlain)

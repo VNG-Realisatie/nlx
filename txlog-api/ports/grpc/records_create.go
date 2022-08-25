@@ -6,24 +6,20 @@ package grpc
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
-	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/txlog-api/api"
-	"go.nlx.io/nlx/txlog-api/domain/record"
+	"go.nlx.io/nlx/txlog-api/app/command"
 )
 
 func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateRecord")
 
-	direction := record.OUT
+	direction := "out"
 
 	if req.Direction == api.CreateRecordRequest_IN {
-		direction = record.IN
+		direction = "in"
 	}
 
 	dataSubjects := map[string]string{}
@@ -32,7 +28,7 @@ func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest)
 		dataSubjects[dataSubject.Key] = dataSubject.Value
 	}
 
-	model, err := record.NewRecord(&record.NewRecordArgs{
+	err := s.app.Commands.CreateRecord.Handle(ctx, &command.NewRecordArgs{
 		SourceOrganization:      req.SourceOrganization,
 		DestinationOrganization: req.DestOrganization,
 		Direction:               direction,
@@ -41,17 +37,10 @@ func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest)
 		Delegator:               req.Delegator,
 		Data:                    json.RawMessage(req.Data),
 		TransactionID:           req.LogrecordID,
-		CreatedAt:               s.clock.Now(),
 		DataSubjects:            dataSubjects,
 	})
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid record: %s", err))
-	}
-
-	err = s.app.Commands.CreateRecord.Handle(ctx, model)
-	if err != nil {
-		s.logger.Error("failed to create record model", zap.Error(err))
-		return nil, status.Error(codes.Internal, "storage error")
+		return nil, ResponseFromError(err)
 	}
 
 	return &emptypb.Empty{}, nil

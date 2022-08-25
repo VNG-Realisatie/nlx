@@ -21,7 +21,6 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, model *record.R
 	if err != nil {
 		return err
 	}
-
 	defer func() {
 		err = tx.Rollback()
 		if err != nil {

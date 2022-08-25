@@ -43,7 +43,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid record: SourceOrganization: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: SourceOrganization: cannot be blank."),
 		},
 		"without_destination_org": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
@@ -62,7 +62,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid record: DestinationOrganization: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: DestinationOrganization: cannot be blank."),
 		},
 		"without_service": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
@@ -80,7 +80,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid record: ServiceName: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: ServiceName: cannot be blank."),
 		},
 		"incomplete_order_missing_reference": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
@@ -100,7 +100,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid record: empty order reference, both the delegator and order reference should be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: empty order reference, both the delegator and order reference should be provided"),
 		},
 		"incomplete_order_missing_delegator": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
@@ -120,7 +120,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid record: empty delegator, both the delegator and order reference should be provided"),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: empty delegator, both the delegator and order reference should be provided"),
 		},
 		"db_call_fails": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
@@ -160,7 +160,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.Internal, "storage error"),
+			wantErr: status.Error(codes.Internal, "internal"),
 		},
 		"happy_flow_without_order": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {

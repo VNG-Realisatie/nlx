@@ -36,7 +36,6 @@ type Server struct {
 	api.UnimplementedTXLogServer
 	app        *app.Application
 	logger     *zap.Logger
-	clock      Clock
 	mux        *runtime.ServeMux
 	service    *grpc.Server
 	cert       *common_tls.CertificateBundle
@@ -45,11 +44,7 @@ type Server struct {
 
 var readHeaderTimeout = 5 * time.Second
 
-type Clock interface {
-	Now() time.Time
-}
-
-func New(logger *zap.Logger, clock Clock, a *app.Application, cert *common_tls.CertificateBundle) *Server {
+func New(logger *zap.Logger, a *app.Application, cert *common_tls.CertificateBundle) *Server {
 	grpcServer := newGRPCServer(logger, cert)
 
 	mux := runtime.NewServeMux(
@@ -69,7 +64,6 @@ func New(logger *zap.Logger, clock Clock, a *app.Application, cert *common_tls.C
 
 	server := &Server{
 		logger:  logger,
-		clock:   clock,
 		app:     a,
 		mux:     mux,
 		service: grpcServer,

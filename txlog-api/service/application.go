@@ -13,17 +13,23 @@ import (
 
 type NewApplicationArgs struct {
 	Context    context.Context
+	Clock      command.Clock
 	Logger     *zap.Logger
 	Repository record.Repository
 }
 
 func NewApplication(args *NewApplicationArgs) (*app.Application, error) {
+	createRecordHandler, err := command.NewCreateRecordHandler(args.Repository, args.Clock, args.Logger)
+	if err != nil {
+		return nil, err
+	}
+
 	application := &app.Application{
 		Queries: app.Queries{
 			ListRecords: query.NewListRecordsHandler(args.Repository),
 		},
 		Commands: app.Commands{
-			CreateRecord: command.NewCreateRecordHandler(args.Repository),
+			CreateRecord: createRecordHandler,
 		},
 	}
 

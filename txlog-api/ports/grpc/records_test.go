@@ -47,6 +47,7 @@ func newStorageRepository(t *testing.T) (s *grpc.Server, m *txlog_mock.MockRepos
 
 	app, err := service.NewApplication(&service.NewApplicationArgs{
 		Context:    context.Background(),
+		Clock:      clock,
 		Logger:     logger,
 		Repository: m,
 	})
@@ -57,7 +58,7 @@ func newStorageRepository(t *testing.T) (s *grpc.Server, m *txlog_mock.MockRepos
 	internalCert, err := common_testing.GetCertificateBundle(pkiDir, common_testing.NLXTestInternal)
 	require.NoError(t, err)
 
-	s = grpc.New(logger, clock, app, internalCert)
+	s = grpc.New(logger, app, internalCert)
 
-	return
+	return s, m
 }
