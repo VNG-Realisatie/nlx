@@ -17,7 +17,8 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
-	"go.nlx.io/nlx/txlog-api/pkg/api"
+	ports_grpc "go.nlx.io/nlx/txlog-api/ports/grpc"
+	"go.nlx.io/nlx/txlog-api/service"
 )
 
 var serveOpts struct {
@@ -27,6 +28,12 @@ var serveOpts struct {
 
 	logoptions.LogOptions
 	cmd.TLSOptions
+}
+
+type clock struct{}
+
+func (c *clock) Now() time.Time {
+	return time.Now()
 }
 
 //nolint:gochecknoinits,funlen,gocyclo // this is the recommended way to use cobra, also a lot of flags..
@@ -75,13 +82,21 @@ var serveCommand = &cobra.Command{
 			logger.Fatal("failed to setup postgresql txlog database:", zap.Error(err))
 		}
 
-		server, err := api.NewAPI(logger, certificate, storage)
+		ctx := context.Background()
+
+		app, err := service.NewApplication(&service.NewApplicationArgs{
+			Context:    ctx,
+			Logger:     logger,
+			Repository: storage,
+		})
 		if err != nil {
-			logger.Fatal("could not start server", zap.Error(err))
+			logger.Fatal("could not create application", zap.Error(err))
 		}
 
+		grpcServer := ports_grpc.New(logger, &clock{}, app, certificate)
+
 		go func() {
-			err = server.ListenAndServe(serveOpts.ListenAddress, serveOpts.ListenAddressPlain)
+			err = grpcServer.ListenAndServe(serveOpts.ListenAddress, serveOpts.ListenAddressPlain)
 			if err != nil {
 				logger.Fatal("could not listen and serve", zap.Error(err))
 			}
@@ -94,7 +109,7 @@ var serveCommand = &cobra.Command{
 		gracefulCtx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		defer cancel()
 
-		err = server.Shutdown(gracefulCtx)
+		err = grpcServer.Shutdown(gracefulCtx)
 		if err != nil {
 			logger.Error("could not shutdown server", zap.Error(err))
 		}

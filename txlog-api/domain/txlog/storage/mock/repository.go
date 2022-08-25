@@ -37,21 +37,21 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // CreateRecord mocks base method.
-func (m *MockRepository) CreateRecord(ctx context.Context, record *domain.Record) error {
+func (m *MockRepository) CreateRecord(arg0 context.Context, arg1 *domain.Record) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateRecord", ctx, record)
+	ret := m.ctrl.Call(m, "CreateRecord", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateRecord indicates an expected call of CreateRecord.
-func (mr *MockRepositoryMockRecorder) CreateRecord(ctx, record interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) CreateRecord(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockRepository)(nil).CreateRecord), ctx, record)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockRepository)(nil).CreateRecord), arg0, arg1)
 }
 
 // ListRecords mocks base method.
-func (m *MockRepository) ListRecords(ctx context.Context, limit int32) ([]*domain.Record, error) {
+func (m *MockRepository) ListRecords(ctx context.Context, limit uint) ([]*domain.Record, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRecords", ctx, limit)
 	ret0, _ := ret[0].([]*domain.Record)

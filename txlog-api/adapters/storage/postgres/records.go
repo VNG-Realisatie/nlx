@@ -71,8 +71,8 @@ func (r *PostgreSQLRepository) CreateRecord(ctx context.Context, record *domain.
 	return nil
 }
 
-func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit int32) ([]*domain.Record, error) {
-	dbRecords, err := r.queries.ListRecords(ctx, limit)
+func (r *PostgreSQLRepository) ListRecords(ctx context.Context, limit uint) ([]*domain.Record, error) {
+	dbRecords, err := r.queries.ListRecords(ctx, int32(limit))
 	if err != nil {
 		return nil, err
 	}

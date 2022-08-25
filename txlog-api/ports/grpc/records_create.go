@@ -2,12 +2,13 @@
 // Licensed under the EUPL
 
 //nolint:dupl // service and inway structs look the same
-package server
+package grpc
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,7 +19,7 @@ import (
 )
 
 //nolint:gocyclo // complexity will be reduced once we simplify the domain
-func (s *TXLogService) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*emptypb.Empty, error) {
+func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*emptypb.Empty, error) {
 	s.logger.Info("rpc request CreateRecord")
 
 	direction := domain.OUT
@@ -49,7 +50,7 @@ func (s *TXLogService) CreateRecord(ctx context.Context, req *api.CreateRecordRe
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid record: %s", err))
 	}
 
-	err = s.storage.CreateRecord(ctx, record)
+	err = s.app.Commands.CreateRecord.Handle(ctx, record)
 	if err != nil {
 		s.logger.Error("failed to create record model", zap.Error(err))
 		return nil, status.Error(codes.Internal, "storage error")

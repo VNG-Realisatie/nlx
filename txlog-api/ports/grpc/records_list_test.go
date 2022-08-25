@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 
-package server_test
+package grpc_test
 
 import (
 	"context"
@@ -51,7 +51,7 @@ func TestListRecords(t *testing.T) {
 
 				mocks.
 					EXPECT().
-					ListRecords(ctx, int32(100)).
+					ListRecords(ctx, uint(100)).
 					Return(models, nil)
 			},
 			want: &api.ListRecordsResponse{

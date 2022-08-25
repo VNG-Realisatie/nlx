@@ -11,7 +11,7 @@ import (
 
 type Repository interface {
 	CreateRecord(context.Context, *domain.Record) error
-	ListRecords(ctx context.Context, limit int32) ([]*domain.Record, error)
+	ListRecords(ctx context.Context, limit uint) ([]*domain.Record, error)
 
 	Shutdown() error
 }
