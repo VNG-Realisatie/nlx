@@ -17,7 +17,7 @@ import (
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
 	zaplogger "go.nlx.io/nlx/txlog-api/adapters/logger/zap"
-	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
+	postgresadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
 	ports_grpc "go.nlx.io/nlx/txlog-api/ports/grpc"
 	"go.nlx.io/nlx/txlog-api/service"
 )
@@ -71,12 +71,12 @@ var serveCommand = &cobra.Command{
 			logger.Fatal("loading TLS files", err)
 		}
 
-		db, err := pgadapter.NewConnection(serveOpts.PostgresDSN)
+		db, err := postgresadapter.NewConnection(serveOpts.PostgresDSN)
 		if err != nil {
 			logger.Fatal("can not create db connection:", err)
 		}
 
-		storage, err := pgadapter.New(db)
+		storage, err := postgresadapter.New(db)
 		if err != nil {
 			logger.Fatal("failed to setup postgresql txlog database", err)
 		}
