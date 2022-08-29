@@ -32,7 +32,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "SourceOrganization: cannot be blank.",
+			expectedErr: "SourceOrganization: cannot be blank",
 		},
 		"invalid_source_organization": {
 			args: &record.NewRecordArgs{
@@ -46,7 +46,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "SourceOrganization: too long, max 20 bytes.",
+			expectedErr: "SourceOrganization: too long, max 20 bytes",
 		},
 		"empty_destination_organization": {
 			args: &record.NewRecordArgs{
@@ -60,7 +60,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "DestinationOrganization: cannot be blank.",
+			expectedErr: "DestinationOrganization: cannot be blank",
 		},
 		"invalid_destination": {
 			args: &record.NewRecordArgs{
@@ -74,7 +74,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "DestinationOrganization: too long, max 20 bytes.",
+			expectedErr: "DestinationOrganization: too long, max 20 bytes",
 		},
 		"empty_direction": {
 			args: &record.NewRecordArgs{
@@ -88,7 +88,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "Direction: cannot be blank.",
+			expectedErr: "Direction: cannot be blank",
 		},
 		"empty_service_name": {
 			args: &record.NewRecordArgs{
@@ -102,7 +102,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "ServiceName: cannot be blank.",
+			expectedErr: "ServiceName: cannot be blank",
 		},
 		"empty_transaction_id": {
 			args: &record.NewRecordArgs{
@@ -116,7 +116,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "",
 				CreatedAt:               now,
 			},
-			expectedErr: "TransactionID: cannot be blank.",
+			expectedErr: "TransactionID: cannot be blank",
 		},
 		"empty_created_at": {
 			args: &record.NewRecordArgs{
@@ -129,7 +129,7 @@ func Test_NewRecord(t *testing.T) {
 				Data:                    []byte(`{"test": "value"}`),
 				TransactionID:           "abcde",
 			},
-			expectedErr: "CreatedAt: cannot be blank.",
+			expectedErr: "CreatedAt: cannot be blank",
 		},
 		"order_reference_without_delegator": {
 			args: &record.NewRecordArgs{
@@ -171,7 +171,7 @@ func Test_NewRecord(t *testing.T) {
 				TransactionID:           "abcde",
 				CreatedAt:               now,
 			},
-			expectedErr: "Delegator: too long, max 20 bytes.",
+			expectedErr: "Delegator: too long, max 20 bytes",
 		},
 		"happy_flow": {
 			args: &record.NewRecordArgs{

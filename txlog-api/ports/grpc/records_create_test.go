@@ -43,7 +43,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid input: SourceOrganization: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: SourceOrganization: cannot be blank"),
 		},
 		"without_destination_org": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
@@ -62,7 +62,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid input: DestinationOrganization: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: DestinationOrganization: cannot be blank"),
 		},
 		"without_service": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
@@ -80,7 +80,7 @@ func TestCreateRecord(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: status.Error(codes.InvalidArgument, "invalid input: ServiceName: cannot be blank."),
+			wantErr: status.Error(codes.InvalidArgument, "invalid input: ServiceName: cannot be blank"),
 		},
 		"incomplete_order_missing_reference": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},

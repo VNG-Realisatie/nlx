@@ -8,8 +8,6 @@ import (
 	"errors"
 	"time"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
-
 	"go.nlx.io/nlx/common/tls"
 )
 
@@ -33,8 +31,6 @@ const (
 	OUT OrderDirection = "out"
 )
 
-var orderDirections = []interface{}{IN, OUT}
-
 type NewRecordArgs struct {
 	SourceOrganization      string
 	DestinationOrganization string
@@ -57,18 +53,49 @@ func NewRecord(args *NewRecordArgs) (*Record, error) {
 		return nil, errors.New("empty order reference, both the delegator and order reference should be provided")
 	}
 
-	err := validation.ValidateStruct(
-		args,
-		validation.Field(&args.SourceOrganization, validation.Required, validation.By(validateSerialNumber)),
-		validation.Field(&args.DestinationOrganization, validation.Required, validation.By(validateSerialNumber)),
-		validation.Field(&args.Delegator, validation.When(args.Delegator != "", validation.By(validateSerialNumber))),
-		validation.Field(&args.Direction, validation.Required, validation.In(orderDirections...)),
-		validation.Field(&args.ServiceName, validation.Required),
-		validation.Field(&args.TransactionID, validation.Required),
-		validation.Field(&args.CreatedAt, validation.Required),
-	)
-	if err != nil {
-		return nil, err
+	if args.SourceOrganization == "" {
+		return nil, errors.New("SourceOrganization: cannot be blank")
+	}
+
+	sourceErr := tls.ValidateSerialNumber(args.SourceOrganization)
+	if sourceErr != nil {
+		return nil, errors.New("SourceOrganization: " + sourceErr.Error())
+	}
+
+	if args.DestinationOrganization == "" {
+		return nil, errors.New("DestinationOrganization: cannot be blank")
+	}
+
+	destErr := tls.ValidateSerialNumber(args.DestinationOrganization)
+	if destErr != nil {
+		return nil, errors.New("DestinationOrganization: " + destErr.Error())
+	}
+
+	if args.Delegator != "" {
+		delegatorErr := tls.ValidateSerialNumber(args.Delegator)
+		if delegatorErr != nil {
+			return nil, errors.New("Delegator: " + delegatorErr.Error())
+		}
+	}
+
+	if args.Direction == "" {
+		return nil, errors.New("Direction: cannot be blank")
+	}
+
+	if args.Direction != IN && args.Direction != OUT {
+		return nil, errors.New("Direction: must be IN or OUT")
+	}
+
+	if args.ServiceName == "" {
+		return nil, errors.New("ServiceName: cannot be blank")
+	}
+
+	if args.TransactionID == "" {
+		return nil, errors.New("TransactionID: cannot be blank")
+	}
+
+	if args.CreatedAt.IsZero() {
+		return nil, errors.New("CreatedAt: cannot be blank")
 	}
 
 	return &Record{
@@ -83,11 +110,6 @@ func NewRecord(args *NewRecordArgs) (*Record, error) {
 		createdAt:               args.CreatedAt,
 		dataSubjects:            args.DataSubjects,
 	}, nil
-}
-
-func validateSerialNumber(value interface{}) error {
-	s, _ := value.(string)
-	return tls.ValidateSerialNumber(s)
 }
 
 func (r *Record) SourceOrganization() string {
