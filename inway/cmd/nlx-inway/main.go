@@ -84,7 +84,7 @@ func main() {
 	} else {
 		txLogger, err = setupTransactionLogger(logger, options.PostgresDSN, options.TxLogAPIAddress, cert)
 		if err != nil {
-			logger.Fatal("unable to setup the transaction logger")
+			logger.Fatal("unable to setup the transaction logger", zap.Error(err))
 		}
 	}
 
