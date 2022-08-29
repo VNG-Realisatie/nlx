@@ -5,11 +5,14 @@ package grpc_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -26,10 +29,20 @@ func TestListRecords(t *testing.T) {
 		want    *api.ListRecordsResponse
 		wantErr error
 	}{
+		"database_error": {
+			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
+				mocks.
+					EXPECT().
+					ListRecords(ctx, gomock.Any()).
+					Return(nil, errors.New("arbitrary error"))
+			},
+			want:    nil,
+			wantErr: status.Error(codes.Internal, "storage error"),
+		},
 		"happy_flow": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {
-				args := []*record.NewRecordArgs{
-					{
+				records := []*record.Record{
+					mustNewRecord(t, &record.NewRecordArgs{
 						SourceOrganization:      "0001",
 						DestinationOrganization: "0002",
 						Direction:               record.IN,
@@ -39,20 +52,13 @@ func TestListRecords(t *testing.T) {
 						Data:                    []byte(`{"test": "data"}`),
 						CreatedAt:               now,
 						TransactionID:           "abcde",
-					},
-				}
-
-				models := make([]*record.Record, len(args))
-				for i, arg := range args {
-					var err error
-					models[i], err = record.NewRecord(arg)
-					require.NoError(t, err)
+					}),
 				}
 
 				mocks.
 					EXPECT().
 					ListRecords(ctx, uint(100)).
-					Return(models, nil)
+					Return(records, nil)
 			},
 			want: &api.ListRecordsResponse{
 				Records: []*api.ListRecordsResponse_Record{
@@ -85,7 +91,7 @@ func TestListRecords(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newStorageRepository(t)
+			service, mocks := newService(t)
 			tt.setup(context.Background(), mocks)
 
 			got, err := service.ListRecords(context.Background(), &emptypb.Empty{})
@@ -95,4 +101,11 @@ func TestListRecords(t *testing.T) {
 			assert.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func mustNewRecord(t *testing.T, args *record.NewRecordArgs) *record.Record {
+	result, err := record.NewRecord(args)
+	assert.NoError(t, err)
+
+	return result
 }

@@ -30,7 +30,7 @@ func (c *testClock) Now() time.Time {
 	return c.timeToReturn
 }
 
-func newStorageRepository(t *testing.T) (s *grpc.Server, m *txlog_mock.MockRepository) {
+func newService(t *testing.T) (s *grpc.Server, m *txlog_mock.MockRepository) {
 	logger := discard_logger.New()
 
 	ctrl := gomock.NewController(t)

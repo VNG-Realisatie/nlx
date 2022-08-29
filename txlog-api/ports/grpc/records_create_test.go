@@ -244,7 +244,7 @@ func TestCreateRecord(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, mocks := newStorageRepository(t)
+			service, mocks := newService(t)
 			tt.setup(context.Background(), mocks)
 
 			got, err := service.CreateRecord(context.Background(), tt.req)
