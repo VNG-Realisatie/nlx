@@ -52,15 +52,20 @@ The command outputs two files: *org.key*, the private key and *org.csr*, the cer
 
 To request a *Staat der Nederlanden Private Root CA - G1* certificate, contact one of the Trusted Service Providers (TSPs):
 
-- [QuoVadis](https://www.quovadisglobal.nl/DigitaleCertificaten/PKIOverheidCertificaten.aspx)
-- [Digidentity](https://sslstore.digidentity.eu/)
-- [KPN](https://certificaat.kpn.com/pkioverheidcertificaten/servercertificaten/private-servercertificaat/)
+- [QuoVadis](https://www.quovadisglobal.com/nl/pki-platform/)
+- [Digidentity](https://www.digidentity.eu/nl/SBR-Certificates/)
+- [KPN](https://certificaat.kpn.com/aanvragen/servercertificaten/private/)
 
 Follow the approval process and submit the certificate signing request *org.csr*. When you retrieved the certificate, name the files accordingly:
 
 - *root.crt*, the certificate of the [Staat der Nederlanden Private Root CA - G1](/certs/PKIoverheid-PrivateRootCA-G1.crt)
 - *org.crt*, the certificate you retrieved from the TSP, including the intermediate CA certificates
 - *org.key*, the private key you generated with the OpenSSL command
+
+## Using the certificate
+
+When connecting to the NLX network using your PKIoverheid certificate, it is required to offer the entire certificate chain, without the complete chain you will be unable to connect to the NLX network.
+You can offer the entire chain by concatenating the certificates into a single file starting with the end-user certificate and followed by the intermediate CA certificates.
 
 ## Environments
 
