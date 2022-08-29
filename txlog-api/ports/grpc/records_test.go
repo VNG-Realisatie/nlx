@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	common_testing "go.nlx.io/nlx/testing/testingutils"
-	"go.nlx.io/nlx/txlog-api/adapters/logger/discard"
+	discard_logger "go.nlx.io/nlx/txlog-api/adapters/logger/discard"
 	txlog_mock "go.nlx.io/nlx/txlog-api/domain/record/mock"
 	"go.nlx.io/nlx/txlog-api/ports/grpc"
 	"go.nlx.io/nlx/txlog-api/service"
@@ -31,7 +31,7 @@ func (c *testClock) Now() time.Time {
 }
 
 func newStorageRepository(t *testing.T) (s *grpc.Server, m *txlog_mock.MockRepository) {
-	logger := discard.New()
+	logger := discard_logger.New()
 
 	ctrl := gomock.NewController(t)
 

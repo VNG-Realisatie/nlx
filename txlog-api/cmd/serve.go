@@ -10,12 +10,13 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+
 	"go.nlx.io/nlx/common/cmd"
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
-	zap_logger "go.nlx.io/nlx/txlog-api/adapters/logger/zap"
+	zaplogger "go.nlx.io/nlx/txlog-api/adapters/logger/zap"
 	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
 	ports_grpc "go.nlx.io/nlx/txlog-api/ports/grpc"
 	"go.nlx.io/nlx/txlog-api/service"
@@ -54,7 +55,7 @@ var serveCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		p := process.NewProcess()
 
-		logger, err := zap_logger.New(serveOpts.LogOptions.LogLevel, serveOpts.LogOptions.LogType)
+		logger, err := zaplogger.New(serveOpts.LogOptions.LogLevel, serveOpts.LogOptions.LogType)
 		if err != nil {
 			log.Fatalf("failed to create logger: %v", err)
 		}
