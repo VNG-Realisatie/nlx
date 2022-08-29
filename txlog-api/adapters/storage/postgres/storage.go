@@ -15,9 +15,9 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 
+	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/migrations"
 	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/txlog-api/domain/record"
-	"go.nlx.io/nlx/txlog-api/migrations"
 )
 
 const driverName = "embed"
