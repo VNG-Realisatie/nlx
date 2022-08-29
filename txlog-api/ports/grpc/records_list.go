@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/txlog-api/api"
-	"go.nlx.io/nlx/txlog-api/domain/record"
+	"go.nlx.io/nlx/txlog-api/app/query"
 )
 
 const maxAmountOfRecords = 100
@@ -32,29 +32,29 @@ func (s *Server) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.ListRe
 	return response, nil
 }
 
-func dataModelToResponse(records []*record.Record) *api.ListRecordsResponse {
+func dataModelToResponse(records []*query.Record) *api.ListRecordsResponse {
 	response := &api.ListRecordsResponse{}
 	response.Records = make([]*api.ListRecordsResponse_Record, len(records))
 
 	for i, r := range records {
 		recordResponse := &api.ListRecordsResponse_Record{
 			Source: &api.ListRecordsResponse_Record_Organization{
-				SerialNumber: r.SourceOrganization(),
+				SerialNumber: r.SourceOrganization,
 			},
 			Destination: &api.ListRecordsResponse_Record_Organization{
-				SerialNumber: r.DestinationOrganization(),
+				SerialNumber: r.DestinationOrganization,
 			},
-			Direction: api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[strings.ToUpper(string(r.Direction()))]),
+			Direction: api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[strings.ToUpper(r.Direction)]),
 			Service: &api.ListRecordsResponse_Record_Service{
-				Name: r.ServiceName(),
+				Name: r.ServiceName,
 			},
 			Order: &api.ListRecordsResponse_Record_Order{
-				Delegator: r.Delegator(),
-				Reference: r.OrderReference(),
+				Delegator: r.Delegator,
+				Reference: r.OrderReference,
 			},
-			Data:          string(r.Data()),
-			TransactionID: r.TransactionID(),
-			CreatedAt:     timestamppb.New(r.CreatedAt()),
+			Data:          string(r.Data),
+			TransactionID: r.TransactionID,
+			CreatedAt:     timestamppb.New(r.CreatedAt),
 		}
 		response.Records[i] = recordResponse
 	}

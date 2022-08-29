@@ -19,6 +19,27 @@ func NewListRecordsHandler(repository record.Repository) *ListRecordsHandler {
 	}
 }
 
-func (l *ListRecordsHandler) Handle(ctx context.Context, limit uint) ([]*record.Record, error) {
-	return l.recordsRepository.ListRecords(ctx, limit)
+func (l *ListRecordsHandler) Handle(ctx context.Context, limit uint) ([]*Record, error) {
+	records, err := l.recordsRepository.ListRecords(ctx, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]*Record, len(records))
+
+	for i, model := range records {
+		result[i] = &Record{
+			SourceOrganization:      model.SourceOrganization(),
+			DestinationOrganization: model.DestinationOrganization(),
+			Direction:               string(model.Direction()),
+			ServiceName:             model.ServiceName(),
+			OrderReference:          model.OrderReference(),
+			Delegator:               model.Delegator(),
+			Data:                    model.Data(),
+			TransactionID:           model.TransactionID(),
+			CreatedAt:               model.CreatedAt(),
+		}
+	}
+
+	return result, nil
 }
