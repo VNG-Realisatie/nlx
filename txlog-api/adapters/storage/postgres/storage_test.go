@@ -7,7 +7,6 @@ package postgresadapter_test
 
 import (
 	"context"
-	"github.com/huandu/xstrings"
 	"os"
 	"sync"
 	"testing"
@@ -15,6 +14,7 @@ import (
 
 	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 
@@ -42,8 +42,7 @@ func new(t *testing.T, enableFixtures bool) (record.Repository, func() error) {
 	require.NoError(t, err)
 
 	if enableFixtures {
-		err := loadFixtures(repo)
-		require.NoError(t, err)
+		loadFixtures(t, repo)
 	}
 
 	return repo, db.Close
@@ -52,15 +51,11 @@ func new(t *testing.T, enableFixtures bool) (record.Repository, func() error) {
 func setupDatabase(t *testing.T) {
 	dsnBase := os.Getenv("POSTGRES_DSN")
 	dsn, err := testingutils.CreateTestDatabase(dsnBase, dbName)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", dbName)
 	err = postgresadapter.PerformMigrations(dsnForMigrations)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	txdb.Register(dbDriver, "postgres", dsn)
 
@@ -69,7 +64,7 @@ func setupDatabase(t *testing.T) {
 
 }
 
-func loadFixtures(repo record.Repository) error {
+func loadFixtures(t *testing.T, repo record.Repository) error {
 	newRecordsArgs := []*record.NewRecordArgs{
 		{
 			SourceOrganization:      "0001",
@@ -86,14 +81,10 @@ func loadFixtures(repo record.Repository) error {
 
 	for _, args := range newRecordsArgs {
 		recordModel, err := record.NewRecord(args)
-		if err != nil {
-			return err
-		}
+		require.NoError(t, err)
 
 		err = repo.CreateRecord(context.Background(), recordModel)
-		if err != nil {
-			return err
-		}
+		require.NoError(t, err)
 	}
 
 	return nil
