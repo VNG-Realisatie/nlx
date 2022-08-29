@@ -71,7 +71,7 @@ var serveCommand = &cobra.Command{
 			logger.Fatal("loading TLS files", err)
 		}
 
-		db, err := pgadapter.NewPostgreSQLConnection(serveOpts.PostgresDSN)
+		db, err := pgadapter.NewConnection(serveOpts.PostgresDSN)
 		if err != nil {
 			logger.Fatal("can not create db connection:", err)
 		}

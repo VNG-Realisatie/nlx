@@ -45,7 +45,7 @@ func New(db *sqlx.DB) (record.Repository, error) {
 	}, nil
 }
 
-func NewPostgreSQLConnection(dsn string) (*sqlx.DB, error) {
+func NewConnection(dsn string) (*sqlx.DB, error) {
 	db, err := sqlx.Open("postgres", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("could not open connection to postgres: %s", err)
@@ -79,7 +79,7 @@ func setupMigrator(dsn string) (*migrate.Migrate, error) {
 	return migrate.New(fmt.Sprintf("%s://", driverName), dsn)
 }
 
-func PostgreSQLPerformMigrations(dsn string) error {
+func PerformMigrations(dsn string) error {
 	migrator, err := setupMigrator(dsn)
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func PostgreSQLPerformMigrations(dsn string) error {
 	return nil
 }
 
-func PostgresMigrationStatus(dsn string) (version uint, dirty bool, err error) {
+func MigrationStatus(dsn string) (version uint, dirty bool, err error) {
 	migrator, err := setupMigrator(dsn)
 	if err != nil {
 		return 0, false, err

@@ -131,3 +131,20 @@ func TestListRecords(t *testing.T) {
 		})
 	}
 }
+
+func assertRecordInRepository(t *testing.T, repo record.Repository, r *record.Record) {
+	require.NotNil(t, r)
+
+	records, err := repo.ListRecords(context.Background(), 100)
+	require.NoError(t, err)
+
+	var found bool
+	for _, recordModel := range records {
+		if recordModel.TransactionID() == r.TransactionID() {
+			found = true
+			break
+		}
+	}
+
+	require.Equal(t, true, found)
+}

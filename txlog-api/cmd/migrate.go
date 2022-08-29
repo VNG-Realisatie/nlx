@@ -12,7 +12,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 
-	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
+	postgresadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
 )
 
 var migrateOpts struct {
@@ -41,7 +41,7 @@ var migrateUpCommand = &cobra.Command{
 	Use:   "up",
 	Short: "Up the migrations",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := pgadapter.PostgreSQLPerformMigrations(migrateOpts.PostgresDSN)
+		err := postgresadapter.PerformMigrations(migrateOpts.PostgresDSN)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -54,7 +54,7 @@ var migrateStatusCommand = &cobra.Command{
 	Use:   "status",
 	Short: "Show migration status",
 	Run: func(cmd *cobra.Command, args []string) {
-		version, dirty, err := pgadapter.PostgresMigrationStatus(migrateOpts.PostgresDSN)
+		version, dirty, err := postgresadapter.MigrationStatus(migrateOpts.PostgresDSN)
 		if err != nil {
 			log.Fatal(err)
 		}
