@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package pgadapter_test
+package postgresadapter_test
 
 import (
 	"context"
@@ -13,12 +13,11 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/stretchr/testify/require"
 
-	pgadapter_test_setup "go.nlx.io/nlx/txlog-api/adapters/storage/postgres/test_setup"
 	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 func new(t *testing.T, enableFixtures bool) (record.Repository, func() error) {
-	repo, close := pgadapter_test_setup.New(t)
+	repo, close := NewTestRepository(t)
 	if enableFixtures {
 		err := loadFixtures(repo)
 		require.NoError(t, err)

@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package pgadapter_test_setup
+package postgresadapter_test
 
 import (
 	"os"
@@ -17,7 +17,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.nlx.io/nlx/testing/testingutils"
-	pgadapter "go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
+	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
 const dbName = "test_txlog"
@@ -33,7 +34,7 @@ func setupDatabase(t *testing.T) {
 	}
 
 	dsnForMigrations := testingutils.AddQueryParamToAddress(dsn, "x-migrations-table", dbName)
-	err = pgadapter.PostgreSQLPerformMigrations(dsnForMigrations)
+	err = postgresadapter.PostgreSQLPerformMigrations(dsnForMigrations)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -45,7 +46,7 @@ func setupDatabase(t *testing.T) {
 
 }
 
-func New(t *testing.T) (*pgadapter.PostgreSQLRepository, func() error) {
+func NewTestRepository(t *testing.T) (record.Repository, func() error) {
 	setupOnce.Do(func() {
 		setupDatabase(t)
 	})
@@ -55,7 +56,7 @@ func New(t *testing.T) (*pgadapter.PostgreSQLRepository, func() error) {
 
 	db.MapperFunc(xstrings.ToSnakeCase)
 
-	repo, err := pgadapter.New(db)
+	repo, err := postgresadapter.New(db)
 	require.NoError(t, err)
 
 	return repo, db.Close

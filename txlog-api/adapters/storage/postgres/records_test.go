@@ -3,7 +3,7 @@
 
 //go:build integration
 
-package pgadapter_test
+package postgresadapter_test
 
 import (
 	"context"

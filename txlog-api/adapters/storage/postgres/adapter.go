@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-package pgadapter
+package postgresadapter
 
 import (
 	"context"
@@ -14,7 +14,9 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
+
 	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres/queries"
+	"go.nlx.io/nlx/txlog-api/domain/record"
 	"go.nlx.io/nlx/txlog-api/migrations"
 )
 
@@ -27,7 +29,7 @@ type PostgreSQLRepository struct {
 	queries *queries.Queries
 }
 
-func New(db *sqlx.DB) (*PostgreSQLRepository, error) {
+func New(db *sqlx.DB) (record.Repository, error) {
 	if db == nil {
 		panic("missing db")
 	}
