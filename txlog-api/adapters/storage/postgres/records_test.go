@@ -62,8 +62,8 @@ func TestCreateRecord(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			repo, close := new(t, tt.loadFixtures)
-			defer close()
+			repo, closeDb := new(t, tt.loadFixtures)
+			defer closeDb()
 
 			model, err := record.NewRecord(tt.args)
 			require.NoError(t, err)
@@ -83,13 +83,13 @@ func TestListRecords(t *testing.T) {
 
 	tests := map[string]struct {
 		loadFixtures bool
-		want         []*record.NewRecordArgs
+		want         []*record.Record
 		wantErr      error
 	}{
 		"happy_flow": {
 			loadFixtures: true,
-			want: []*record.NewRecordArgs{
-				{
+			want: []*record.Record{
+				mustNewRecord(t, &record.NewRecordArgs{
 					SourceOrganization:      "0001",
 					DestinationOrganization: "0002",
 					Direction:               record.IN,
@@ -99,7 +99,7 @@ func TestListRecords(t *testing.T) {
 					Data:                    []byte(`{"test": "data"}`),
 					TransactionID:           "abcde",
 					CreatedAt:               time.Date(2021, 1, 2, 1, 2, 3, 0, time.UTC),
-				},
+				}),
 			},
 			wantErr: nil,
 		},
@@ -114,19 +114,11 @@ func TestListRecords(t *testing.T) {
 			repo, close := new(t, tt.loadFixtures)
 			defer close()
 
-			want := make([]*record.Record, len(tt.want))
-
-			for i, s := range tt.want {
-				var err error
-				want[i], err = record.NewRecord(s)
-				require.NoError(t, err)
-			}
-
 			got, err := repo.ListRecords(context.Background(), 100)
 			require.Equal(t, tt.wantErr, err)
 
 			if tt.wantErr == nil {
-				assert.EqualValues(t, want, got)
+				assert.EqualValues(t, tt.want, got)
 			}
 		})
 	}
@@ -147,4 +139,11 @@ func assertRecordInRepository(t *testing.T, repo record.Repository, r *record.Re
 	}
 
 	require.Equal(t, true, found)
+}
+
+func mustNewRecord(t *testing.T, args *record.NewRecordArgs) *record.Record {
+	result, err := record.NewRecord(args)
+	assert.NoError(t, err)
+
+	return result
 }
