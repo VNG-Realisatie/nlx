@@ -102,12 +102,13 @@ TLS certificate of your organization (used to communicate on the NLX Network).
 
 TLS certificates used by NLX components for internal communication.
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `tls.internal.rootCertificatePEM` | The root certificate of your internal PKI | `""` | yes (if global value is not set) |
-| `tls.internal.certificatePEM` | The certificate signed by your internal PKI | `""` | yes |
-| `tls.internal.keyPEM` | The private key of `tls.internal.certificatePEM` | `""` | yes |
-| `tls.internal.existingSecret` | Use existing secret with your NLX keypair (`tls.internal.certificatePEM` and `tls.internal.keyPEM` will be ignored and picked up from this secret) | `""` | no |
+| Parameter                         | Description                                                                                                                                                                             | Default | Required (yes/no) |
+|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------- | -------- |
+| `tls.internal.rootCertificatePEM` | The root certificate of your internal PKI                                                                                                                                               | `""` | yes (if global value is not set) |
+| `tls.internal.certificatePEM`     | The certificate signed by your internal PKI                                                                                                                                             | `""` | yes |
+| `tls.internal.keyPEM`             | The private key of `tls.internal.certificatePEM`                                                                                                                                        | `""` | yes |
+| `tls.internal.existingSecret`     | Use existing secret with your NLX keypair (`tls.internal.certificatePEM` and `tls.internal.keyPEM` will be ignored and picked up from this secret)                                      | `""` | no |
+| `tls.serviceCA.certificatePEM`    | If a service offered by this Inway uses certificates signed by your own CA you can use this values to mount the CA certificate on the Inway so the Inway is able to validate the TLS connection. | `""` | no |
 
 ### Transaction Log parameters
 

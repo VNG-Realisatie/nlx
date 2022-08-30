@@ -267,6 +267,15 @@
             "certificatePEM",
             "keyPEM"
           ]
+        },
+        "serviceCA": {
+          "type": "object",
+          "properties": {
+            "certificatePEM": {
+              "type": "string",
+              "description": "If a service offered by this Inway uses certificates signed by your own CA you can use this values to mount the CA certificate on the Inway so the Inway is able to validate the TLS connection."
+            }
+          }
         }
       }
     },

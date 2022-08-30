@@ -142,6 +142,11 @@ spec:
               mountPath: /certificate
             - name: config
               mountPath: /config
+          {{- if .Values.tls.serviceCA.certificatePEM }}
+            - name: serviceCA
+              mountPath: /etc/ssl/certs/service-ca-cert.pem
+              subPath: service-ca-cert.pem
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -156,6 +161,11 @@ spec:
         - name: config
           configMap:
             name: {{ template "nlx-inway.fullname" . }}
+    {{- if .Values.tls.serviceCA.certificatePEM }}
+        - name: serviceCA
+          configMap:
+            name: {{ include "nlx-inway.fullname" . }}-service-ca-certificate
+    {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
