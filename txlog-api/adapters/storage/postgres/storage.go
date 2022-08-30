@@ -20,7 +20,7 @@ import (
 	"go.nlx.io/nlx/txlog-api/domain/record"
 )
 
-const driverName = "embed"
+const migratorDriverName = "embed"
 
 var registerDriverOnce sync.Once
 
@@ -73,10 +73,10 @@ func (r *PostgreSQLRepository) Shutdown() error {
 
 func setupMigrator(dsn string) (*migrate.Migrate, error) {
 	registerDriverOnce.Do(func() {
-		migrations.RegisterDriver(driverName)
+		migrations.RegisterDriver(migratorDriverName)
 	})
 
-	return migrate.New(fmt.Sprintf("%s://", driverName), dsn)
+	return migrate.New(fmt.Sprintf("%s://", migratorDriverName), dsn)
 }
 
 func PerformMigrations(dsn string) error {
