@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/user"
 	"strings"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -30,10 +30,12 @@ func init() {
 }
 
 func initConfig() {
-	home, err := homedir.Dir()
+	usr, err := user.Current()
 	if err != nil {
 		log.Panic(err)
 	}
+
+	home := usr.HomeDir
 
 	viper.SetEnvPrefix("nlx")
 	viper.AutomaticEnv()
