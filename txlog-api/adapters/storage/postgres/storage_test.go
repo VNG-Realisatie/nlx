@@ -14,10 +14,10 @@ import (
 
 	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/require"
 
+	"go.nlx.io/nlx/common/strings"
 	"go.nlx.io/nlx/testing/testingutils"
 	"go.nlx.io/nlx/txlog-api/adapters/storage/postgres"
 	"go.nlx.io/nlx/txlog-api/domain/record"
@@ -36,7 +36,7 @@ func new(t *testing.T, enableFixtures bool) (record.Repository, func() error) {
 	db, err := sqlx.Open(dbDriver, t.Name())
 	require.NoError(t, err)
 
-	db.MapperFunc(xstrings.ToSnakeCase)
+	db.MapperFunc(strings.ToSnakeCase)
 
 	repo, err := postgresadapter.New(db)
 	require.NoError(t, err)

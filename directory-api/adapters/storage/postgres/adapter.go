@@ -12,11 +12,11 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres" // postgres driver
-	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/strings"
 	"go.nlx.io/nlx/directory-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/directory-api/migrations"
 )
@@ -31,7 +31,7 @@ type PostgreSQLRepository struct {
 	queries *queries.Queries
 }
 
-//nolint gocyclo: all checks in this function are necessary
+// nolint gocyclo: all checks in this function are necessary
 func New(logger *zap.Logger, db *sqlx.DB) (*PostgreSQLRepository, error) {
 	if logger == nil {
 		return nil, errors.New("no logger provided")
@@ -66,7 +66,7 @@ func NewPostgreSQLConnection(dsn string) (*sqlx.DB, error) {
 
 	db.SetConnMaxLifetime(FiveMinutes)
 	db.SetMaxIdleConns(MaxIdleConnections)
-	db.MapperFunc(xstrings.ToSnakeCase)
+	db.MapperFunc(strings.ToSnakeCase)
 
 	return db, nil
 }

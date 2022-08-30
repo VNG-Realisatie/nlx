@@ -14,12 +14,12 @@ import (
 
 	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/huandu/xstrings"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
+	"go.nlx.io/nlx/common/strings"
 	pgadapter "go.nlx.io/nlx/directory-api/adapters/storage/postgres"
 	"go.nlx.io/nlx/directory-api/domain"
 	"go.nlx.io/nlx/directory-api/domain/directory/storage"
@@ -59,7 +59,7 @@ func New(t *testing.T) (*pgadapter.PostgreSQLRepository, func() error) {
 	db, err := sqlx.Open(dbDriver, t.Name())
 	require.NoError(t, err)
 
-	db.MapperFunc(xstrings.ToSnakeCase)
+	db.MapperFunc(strings.ToSnakeCase)
 
 	repo, err := pgadapter.New(zap.NewNop(), db)
 	require.NoError(t, err)

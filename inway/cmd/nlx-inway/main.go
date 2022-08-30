@@ -9,7 +9,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/huandu/xstrings"
 	"github.com/jessevdk/go-flags"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -22,6 +21,7 @@ import (
 	"go.nlx.io/nlx/common/logoptions"
 	"go.nlx.io/nlx/common/nlxversion"
 	"go.nlx.io/nlx/common/process"
+	"go.nlx.io/nlx/common/strings"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/common/version"
@@ -234,7 +234,7 @@ func setupDatabase() (*sqlx.DB, error) {
 	logDB.SetConnMaxLifetime(connMaxLifetime)
 	logDB.SetMaxOpenConns(maxOpenConns)
 	logDB.SetMaxIdleConns(maxIdleConns)
-	logDB.MapperFunc(xstrings.ToSnakeCase)
+	logDB.MapperFunc(strings.ToSnakeCase)
 
 	return logDB, nil
 }
