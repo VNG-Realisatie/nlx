@@ -6,8 +6,8 @@ package server_test
 import (
 	"testing"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
+	"go.uber.org/zap/zaptest"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
@@ -18,7 +18,7 @@ import (
 )
 
 func newDirectoryService(t *testing.T) (*server.DirectoryService, directoryServiceMocks) {
-	logger := zaptest.Logger(t)
+	logger := zaptest.NewLogger(t)
 
 	ctrl := gomock.NewController(t)
 

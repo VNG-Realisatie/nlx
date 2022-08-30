@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap/zaptest"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -203,7 +203,7 @@ type txlogServiceMocks struct {
 }
 
 func newTXLogService(t *testing.T) (s *server.TXLogService, mocks *txlogServiceMocks) {
-	logger := zaptest.Logger(t)
+	logger := zaptest.NewLogger(t)
 
 	ctrl := gomock.NewController(t)
 

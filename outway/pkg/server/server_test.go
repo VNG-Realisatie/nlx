@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap/zaptest"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/outway/pkg/server"
@@ -30,7 +30,7 @@ func newService(t *testing.T, mockSigner server.SignFunction) *server.OutwayServ
 		ctrl.Finish()
 	})
 
-	logger := zaptest.Logger(t)
+	logger := zaptest.NewLogger(t)
 
 	bundle, err := newCertificateBundle()
 	assert.NoError(t, err)

@@ -12,12 +12,12 @@ import (
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/fgrosse/zaptest"
 	"github.com/go-chi/chi/v5"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/sessions"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap/zaptest"
 	"golang.org/x/oauth2"
 
 	mock_auditlog "go.nlx.io/nlx/management-api/pkg/auditlog/mock"
@@ -90,7 +90,7 @@ func TestOnlyAuthenticated(t *testing.T) {
 			mockStore := mock_oidc.NewMockStore(ctrl)
 
 			authenticator := Authenticator{
-				logger:       zaptest.Logger(t),
+				logger:       zaptest.NewLogger(t),
 				oauth2Config: mockOAuth2Config,
 				store:        mockStore,
 			}
@@ -136,7 +136,7 @@ func TestAuthenticateEndpoint(t *testing.T) {
 	session.Values[tokenName] = testToken
 
 	authenticator := Authenticator{
-		logger:       zaptest.Logger(t),
+		logger:       zaptest.NewLogger(t),
 		oauth2Config: mockOAuth2Config,
 		store:        mockStore,
 		db:           mockDB,
@@ -181,7 +181,7 @@ func TestMeEndpoint(t *testing.T) {
 	mockStore := mock_oidc.NewMockStore(ctrl)
 
 	authenticator := Authenticator{
-		logger:       zaptest.Logger(t),
+		logger:       zaptest.NewLogger(t),
 		oauth2Config: mockOAuth2Config,
 		store:        mockStore,
 	}
@@ -211,7 +211,7 @@ func TestCallbackEndpoint(t *testing.T) {
 	auditLogger.EXPECT().LoginFail(gomock.Any(), "Go-http-client/1.1")
 
 	authenticator := Authenticator{
-		logger:       zaptest.Logger(t),
+		logger:       zaptest.NewLogger(t),
 		oauth2Config: mockOAuth2Config,
 		auditLogger:  auditLogger,
 		store:        mockStore,
@@ -255,7 +255,7 @@ func TestLogoutEndpoint(t *testing.T) {
 	}, nil)
 
 	authenticator := Authenticator{
-		logger:       zaptest.Logger(t),
+		logger:       zaptest.NewLogger(t),
 		oauth2Config: mockOAuth2Config,
 		auditLogger:  auditLogger,
 		store:        mockStore,

@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fgrosse/zaptest"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap/zaptest"
 	"google.golang.org/grpc/metadata"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -120,7 +120,7 @@ func newServiceWithoutTXLog(t *testing.T) (*server.ManagementService, *common_tl
 }
 
 func newServer(t *testing.T, mocks serviceMocks) (*server.ManagementService, *common_tls.CertificateBundle) {
-	logger := zaptest.Logger(t)
+	logger := zaptest.NewLogger(t)
 
 	orgCert, err := newCertificateBundle()
 	assert.NoError(t, err)
