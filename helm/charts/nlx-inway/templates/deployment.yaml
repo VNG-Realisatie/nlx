@@ -143,7 +143,7 @@ spec:
             - name: config
               mountPath: /config
           {{- if .Values.tls.serviceCA.certificatePEM }}
-            - name: serviceCA
+            - name: service-ca
               mountPath: /etc/ssl/certs/service-ca-cert.pem
               subPath: service-ca-cert.pem
           {{- end }}
@@ -162,7 +162,7 @@ spec:
           configMap:
             name: {{ template "nlx-inway.fullname" . }}
     {{- if .Values.tls.serviceCA.certificatePEM }}
-        - name: serviceCA
+        - name: service-ca
           configMap:
             name: {{ include "nlx-inway.fullname" . }}-service-ca-certificate
     {{- end }}
