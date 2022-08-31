@@ -31,14 +31,15 @@ func (i *Inway) TableName() string {
 }
 
 func (db *PostgresConfigDatabase) RegisterInway(ctx context.Context, inway *Inway) error {
-	return db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "name"}},
-			DoUpdates: clause.AssignmentColumns([]string{"version"}),
-		}).
-		Create(inway).Error
+	return db.queries.UpsertInway(ctx, &queries.UpsertInwayParams{
+		Name:        inway.Name,
+		SelfAddress: inway.SelfAddress,
+		Version:     inway.Version,
+		Hostname:    inway.Hostname,
+		IpAddress:   inway.IPAddress,
+		CreatedAt:   inway.CreatedAt,
+		UpdatedAt:   inway.UpdatedAt,
+	})
 }
 
 func (db *PostgresConfigDatabase) UpdateInway(ctx context.Context, inway *Inway) error {

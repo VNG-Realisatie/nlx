@@ -199,3 +199,18 @@ insert into
          )
 returning id
 ;
+
+-- name: UpsertInway :exec
+insert into nlx_management.inways
+    (name, self_address, version, hostname, ip_address, created_at, updated_at)
+values
+    ($1, $2, $3, $4, $5, $6, $7)
+    on conflict
+on constraint inways_name_key
+    do update
+           set
+                self_address    = excluded.self_address,
+                version         = excluded.version,
+                hostname        = excluded.hostname,
+                ip_address      = excluded.ip_address,
+                updated_at      = excluded.updated_at;

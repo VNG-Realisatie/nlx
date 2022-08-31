@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -30,6 +31,14 @@ import (
 	mock_txlogdb "go.nlx.io/nlx/management-api/pkg/txlogdb/mock"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
+
+var fixtureTime = time.Date(2022, 1, 1, 0, 0, 0, 0, time.UTC)
+
+type testClock struct{}
+
+func (tc *testClock) Now() time.Time {
+	return fixtureTime
+}
 
 func newCertificateBundle() (*common_tls.CertificateBundle, error) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
@@ -136,19 +145,21 @@ func newServer(t *testing.T, mocks serviceMocks) (*server.ManagementService, *co
 	}
 
 	return server.NewManagementService(
-		logger,
-		mocks.dc,
-		mocks.tx,
-		orgCert,
-		internalCert,
-		mocks.db,
-		txLog,
-		mocks.al,
-		func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
-			return mocks.mc, nil
-		},
-		func(context.Context, string, *common_tls.CertificateBundle) (outway.Client, error) {
-			return mocks.oc, nil
-		},
-	), orgCert
+		&server.NewManagementServiceArgs{
+			Logger:          logger,
+			DirectoryClient: mocks.dc,
+			TxlogClient:     mocks.tx,
+			OrgCert:         orgCert,
+			InternalCert:    internalCert,
+			ConfigDatabase:  mocks.db,
+			TxlogDatabase:   txLog,
+			AuditLogger:     mocks.al,
+			CreateManagementClientFunc: func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
+				return mocks.mc, nil
+			},
+			CreateOutwayClientFunc: func(context.Context, string, *common_tls.CertificateBundle) (outway.Client, error) {
+				return mocks.oc, nil
+			},
+			Clock: &testClock{},
+		}), orgCert
 }

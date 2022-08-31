@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
@@ -24,6 +25,10 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
+type Clock interface {
+	Now() time.Time
+}
+
 type ManagementService struct {
 	api.UnimplementedDirectoryServer
 	api.UnimplementedManagementServer
@@ -39,22 +44,38 @@ type ManagementService struct {
 	configDatabase             database.ConfigDatabase
 	txlogDatabase              txlogdb.TxlogDatabase
 	auditLogger                auditlog.Logger
+	clock                      Clock
 	createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
 	createOutwayClientFunc     func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)
 }
 
-func NewManagementService(logger *zap.Logger, directoryClient directory.Client, txlogClient txlog.Client, orgCert, internalCert *tls.CertificateBundle, configDatabase database.ConfigDatabase, txlogDatabase txlogdb.TxlogDatabase, auditLogger auditlog.Logger, createManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error), createOutwayClientFunc func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)) *ManagementService {
+type NewManagementServiceArgs struct {
+	Logger                     *zap.Logger
+	DirectoryClient            directory.Client
+	TxlogClient                txlog.Client
+	OrgCert                    *tls.CertificateBundle
+	InternalCert               *tls.CertificateBundle
+	ConfigDatabase             database.ConfigDatabase
+	TxlogDatabase              txlogdb.TxlogDatabase
+	AuditLogger                auditlog.Logger
+	CreateManagementClientFunc func(context.Context, string, *tls.CertificateBundle) (management.Client, error)
+	CreateOutwayClientFunc     func(context.Context, string, *tls.CertificateBundle) (outway.Client, error)
+	Clock                      Clock
+}
+
+func NewManagementService(args *NewManagementServiceArgs) *ManagementService {
 	return &ManagementService{
-		logger:                     logger,
-		orgCert:                    orgCert,
-		internalCert:               internalCert,
-		directoryClient:            directoryClient,
-		txlogClient:                txlogClient,
-		configDatabase:             configDatabase,
-		txlogDatabase:              txlogDatabase,
-		auditLogger:                auditLogger,
-		createManagementClientFunc: createManagementClientFunc,
-		createOutwayClientFunc:     createOutwayClientFunc,
+		logger:                     args.Logger,
+		orgCert:                    args.OrgCert,
+		internalCert:               args.InternalCert,
+		directoryClient:            args.DirectoryClient,
+		txlogClient:                args.TxlogClient,
+		configDatabase:             args.ConfigDatabase,
+		txlogDatabase:              args.TxlogDatabase,
+		auditLogger:                args.AuditLogger,
+		createManagementClientFunc: args.CreateManagementClientFunc,
+		createOutwayClientFunc:     args.CreateOutwayClientFunc,
+		clock:                      args.Clock,
 	}
 }
 

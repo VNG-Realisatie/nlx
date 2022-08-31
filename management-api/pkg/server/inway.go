@@ -51,6 +51,8 @@ func (s *ManagementService) RegisterInway(ctx context.Context, inway *api.Inway)
 		Hostname:    inway.Hostname,
 		SelfAddress: inway.SelfAddress,
 		IPAddress:   inway.IpAddress,
+		CreatedAt:   s.clock.Now(),
+		UpdatedAt:   s.clock.Now(),
 	}
 
 	if err := s.configDatabase.RegisterInway(ctx, model); err != nil {

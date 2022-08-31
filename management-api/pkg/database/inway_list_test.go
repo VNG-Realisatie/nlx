@@ -104,6 +104,17 @@ func TestListInways(t *testing.T) {
 					CreatedAt:   fixtureTime,
 					UpdatedAt:   fixtureTime,
 				},
+				{
+					ID:          3,
+					Name:        "fixture-inway-3",
+					Version:     "unknown",
+					Hostname:    "fixture-server-3",
+					IPAddress:   "127.0.0.1",
+					SelfAddress: "fixture-3.local:443",
+					Services:    []*database.Service{},
+					CreatedAt:   fixtureTime,
+					UpdatedAt:   fixtureTime,
+				},
 			},
 		},
 	}

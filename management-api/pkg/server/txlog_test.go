@@ -49,17 +49,19 @@ func TestIsTXLogEnabled(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			service := server.NewManagementService(
-				nil,
-				nil,
-				tt.client,
-				nil,
-				nil,
-				nil,
-				nil,
-				nil,
-				management.NewClient,
-				outway.NewClient,
-			)
+				&server.NewManagementServiceArgs{
+					Logger:                     nil,
+					DirectoryClient:            nil,
+					TxlogClient:                tt.client,
+					OrgCert:                    nil,
+					InternalCert:               nil,
+					ConfigDatabase:             nil,
+					TxlogDatabase:              nil,
+					AuditLogger:                nil,
+					CreateManagementClientFunc: management.NewClient,
+					CreateOutwayClientFunc:     outway.NewClient,
+					Clock:                      nil,
+				})
 
 			response, err := service.IsTXLogEnabled(context.Background(), nil)
 			assert.NoError(t, err)

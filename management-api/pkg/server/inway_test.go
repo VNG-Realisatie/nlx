@@ -23,6 +23,7 @@ import (
 )
 
 func TestRegisterInway(t *testing.T) {
+
 	tests := map[string]struct {
 		peer       *peer.Peer
 		setupMocks func(mocks serviceMocks)
@@ -38,7 +39,7 @@ func TestRegisterInway(t *testing.T) {
 		"register_inway_database_call_fails": {
 			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
 			setupMocks: func(mocks serviceMocks) {
-				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"}).Return(fmt.Errorf("arbitrary error"))
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime}).Return(fmt.Errorf("arbitrary error"))
 			},
 			request: &api.Inway{Name: "inway42.basic"},
 			wantErr: status.Error(codes.Internal, "database error"),
@@ -46,7 +47,7 @@ func TestRegisterInway(t *testing.T) {
 		"happy_flow_address_from_peer": {
 			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
 			setupMocks: func(mocks serviceMocks) {
-				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"})
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime})
 			},
 			request: &api.Inway{Name: "inway42.basic"},
 			want: &api.Inway{
@@ -57,7 +58,7 @@ func TestRegisterInway(t *testing.T) {
 		"happy_flow_ipv6_address_from_peer": {
 			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv6loopback}},
 			setupMocks: func(mocks serviceMocks) {
-				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "::1"})
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "::1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime})
 			},
 			request: &api.Inway{Name: "inway42.basic"},
 			want: &api.Inway{
@@ -68,7 +69,7 @@ func TestRegisterInway(t *testing.T) {
 		"happy_flow_ip_address_from_request_ignored": {
 			peer: &peer.Peer{Addr: &net.TCPAddr{IP: net.IPv4(127, 1, 1, 1)}},
 			setupMocks: func(mocks serviceMocks) {
-				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1"})
+				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime})
 			},
 			request: &api.Inway{Name: "inway42.basic", IpAddress: "127.2.2.2"},
 			want: &api.Inway{

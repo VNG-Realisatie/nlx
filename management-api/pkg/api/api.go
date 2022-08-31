@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -66,6 +67,12 @@ type NewAPIArgs struct {
 	AuditLogger      auditlog.Logger
 }
 
+type clock struct{}
+
+func (c *clock) Now() time.Time {
+	return time.Now()
+}
+
 type Authenticator interface {
 	MountRoutes(router chi.Router)
 	OnlyAuthenticated(h http.Handler) http.Handler
@@ -105,17 +112,19 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 	}
 
 	managementService := server.NewManagementService(
-		args.Logger,
-		directoryClient,
-		txlogClient,
-		args.OrgCert,
-		args.InternalCert,
-		args.DB,
-		args.TXlogDB,
-		args.AuditLogger,
-		management.NewClient,
-		outway.NewClient,
-	)
+		&server.NewManagementServiceArgs{
+			Logger:                     args.Logger,
+			DirectoryClient:            directoryClient,
+			TxlogClient:                txlogClient,
+			OrgCert:                    args.OrgCert,
+			InternalCert:               args.InternalCert,
+			ConfigDatabase:             args.DB,
+			TxlogDatabase:              args.TXlogDB,
+			AuditLogger:                args.AuditLogger,
+			CreateManagementClientFunc: management.NewClient,
+			CreateOutwayClientFunc:     outway.NewClient,
+			Clock:                      &clock{},
+		})
 
 	grpcServer := newGRPCServer(args.Logger, args.InternalCert, args.DB, args.Authenticator)
 
