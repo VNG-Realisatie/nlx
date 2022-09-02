@@ -7,7 +7,7 @@ appVersion: 0.138.0
 
 dependencies:
   - name: dex
-    version: 0.9.0
+    version: 0.10.0
     repository: https://charts.dexidp.io
   - name: parkeerrechten-api
     repository: https://charts.commonground.nl
