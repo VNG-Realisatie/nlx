@@ -10,14 +10,17 @@ The central NLX components (directory) are located at the following IP addresses
 ### Demo
 
 - directory-api (`20.86.243.85:443`)
+- directory-monitor (`20.86.242.212:443`)
 
 ### Pre-production
 
 - directory-api (`20.86.244.123:443`)
+- directory-monitor (`20.86.242.212:443`)
 
 ### Production
 
 - directory-api (`20.76.229.234:443`)
+- directory-monitor (`20.86.242.212:443`)
 
 ## Your NLX components
 
