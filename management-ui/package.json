@@ -33,7 +33,7 @@
   "devDependencies": {
     "@commonground/design-system": "21.1.13",
     "@fontsource/source-sans-pro": "4.5.11",
-    "@openapitools/openapi-generator-cli": "2.5.1",
+    "@openapitools/openapi-generator-cli": "2.5.2",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.4",
     "@testing-library/user-event": "14.4.3",
