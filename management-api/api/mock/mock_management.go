@@ -78,26 +78,6 @@ func (mr *MockManagementClientMockRecorder) ApproveIncomingAccessRequest(ctx, in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApproveIncomingAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).ApproveIncomingAccessRequest), varargs...)
 }
 
-// CreateAccessRequest mocks base method.
-func (m *MockManagementClient) CreateAccessRequest(ctx context.Context, in *api.CreateAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{ctx, in}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "CreateAccessRequest", varargs...)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateAccessRequest indicates an expected call of CreateAccessRequest.
-func (mr *MockManagementClientMockRecorder) CreateAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).CreateAccessRequest), varargs...)
-}
-
 // CreateOutgoingOrder mocks base method.
 func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	m.ctrl.T.Helper()
@@ -639,14 +619,14 @@ func (mr *MockManagementClientMockRecorder) RevokeOutgoingOrder(ctx, in interfac
 }
 
 // SendAccessRequest mocks base method.
-func (m *MockManagementClient) SendAccessRequest(ctx context.Context, in *api.SendAccessRequestRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
+func (m *MockManagementClient) SendAccessRequest(ctx context.Context, in *api.SendAccessRequestRequest, opts ...grpc.CallOption) (*api.SendAccessRequestResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "SendAccessRequest", varargs...)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret0, _ := ret[0].(*api.SendAccessRequestResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -809,21 +789,6 @@ func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context
 func (mr *MockManagementServerMockRecorder) ApproveIncomingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApproveIncomingAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).ApproveIncomingAccessRequest), arg0, arg1)
-}
-
-// CreateAccessRequest mocks base method.
-func (m *MockManagementServer) CreateAccessRequest(arg0 context.Context, arg1 *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateAccessRequest indicates an expected call of CreateAccessRequest.
-func (mr *MockManagementServerMockRecorder) CreateAccessRequest(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).CreateAccessRequest), arg0, arg1)
 }
 
 // CreateOutgoingOrder mocks base method.
@@ -1232,10 +1197,10 @@ func (mr *MockManagementServerMockRecorder) RevokeOutgoingOrder(arg0, arg1 inter
 }
 
 // SendAccessRequest mocks base method.
-func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
+func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api.SendAccessRequestRequest) (*api.SendAccessRequestResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SendAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret0, _ := ret[0].(*api.SendAccessRequestResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

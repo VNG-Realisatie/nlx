@@ -295,6 +295,7 @@
   "Transaction logs of your inway and outways": "De laatste 100 transactie logs van jouw inways en outways",
   "txlog_configure": "Om de transactie logs te kunnen inzien moet de transactie log api geconfigureerd zijn.",
   "Type": "Type",
+  "Unable to reach the organization.": "Kan de organisatie niet bereiken.",
   "Unknown": "Onbekend",
   "Up": "Beschikbaar",
   "Update order": "Order bijwerken",

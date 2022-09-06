@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 //
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { arrayOf, func, instanceOf, string } from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react'
@@ -24,6 +24,7 @@ const Row = ({
 }) => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
+  const [isLoading, setIsLoading] = useState(false)
   const [RequestConfirmationModal, confirmRequest] = useConfirmationModal({
     title: t('Request access'),
     okText: t('Send'),
@@ -41,12 +42,16 @@ const Row = ({
 
     if (await confirmRequest()) {
       try {
+        setIsLoading(true)
         await service.requestAccess(publicKeyPEM)
       } catch (err) {
-        const message =
-          err.response && err.response.status === 403
-            ? t(`You don't have the required permission.`)
-            : err.message
+        let message = err.message
+
+        if (err.response && err.response.status === 403) {
+          message = t(`You don't have the required permission.`)
+        } else if (err.response && err.response.status === 409) {
+          message = t(`Unable to reach the organization.`)
+        }
 
         showToast({
           title: t('Failed to request access'),
@@ -54,6 +59,8 @@ const Row = ({
           variant: 'error',
         })
       }
+
+      setIsLoading(false)
     }
 
     onHideConfirmRequestAccessModalHandler()
@@ -76,6 +83,7 @@ const Row = ({
         </Outways>
 
         <AccessState
+          isLoading={isLoading}
           accessRequest={accessRequest}
           accessProof={accessProof}
           onRequestAccess={onRequestAccess}

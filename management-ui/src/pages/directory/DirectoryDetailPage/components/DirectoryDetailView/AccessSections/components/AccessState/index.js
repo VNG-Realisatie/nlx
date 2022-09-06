@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { func, instanceOf } from 'prop-types'
+import { bool, func, instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { Spinner, Button, Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
@@ -27,6 +27,7 @@ import {
 } from './index.styles'
 
 const AccessState = ({
+  isLoading,
   accessRequest,
   accessProof,
   onRequestAccess,
@@ -34,10 +35,14 @@ const AccessState = ({
 }) => {
   const { t } = useTranslation()
 
-  const displayState = getDirectoryServiceAccessUIState(
+  let displayState = getDirectoryServiceAccessUIState(
     accessRequest,
     accessProof,
   )
+
+  if (isLoading) {
+    displayState = SHOW_REQUEST_CREATED
+  }
 
   const onRequestAccessButtonClick = (event) => {
     event.stopPropagation()
@@ -157,6 +162,7 @@ const AccessState = ({
 }
 
 AccessState.propTypes = {
+  isLoading: bool,
   accessRequest: instanceOf(OutgoingAccessRequestModel),
   accessProof: instanceOf(AccessProofModel),
   onRequestAccess: func,

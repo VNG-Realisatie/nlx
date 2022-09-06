@@ -88,45 +88,6 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests" : {
-      "post" : {
-        "operationId" : "Management_CreateAccessRequest",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/managementCreateAccessRequestRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
-                }
-              }
-            },
-            "description" : "A successful response."
-          },
-          "default" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/rpcStatus"
-                }
-              }
-            },
-            "description" : "An unexpected error response."
-          }
-        },
-        "tags" : [ "Management" ],
-        "x-codegen-request-body-name" : "body"
-      }
-    },
     "/api/v1/access-requests/incoming/services/{serviceName}" : {
       "get" : {
         "operationId" : "Management_ListIncomingAccessRequests",
@@ -251,15 +212,27 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests/outgoing/{accessRequestID}/send" : {
+    "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}" : {
       "post" : {
         "operationId" : "Management_SendAccessRequest",
         "parameters" : [ {
           "in" : "path",
-          "name" : "accessRequestID",
+          "name" : "organizationSerialNumber",
           "required" : true,
           "schema" : {
-            "format" : "uint64",
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "publicKeyPEM",
+          "schema" : {
             "type" : "string"
           }
         } ],
@@ -268,7 +241,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+                  "$ref" : "#/components/schemas/managementSendAccessRequestResponse"
                 }
               }
             },
@@ -1536,20 +1509,6 @@
         },
         "type" : "object"
       },
-      "managementCreateAccessRequestRequest" : {
-        "properties" : {
-          "organizationSerialNumber" : {
-            "type" : "string"
-          },
-          "serviceName" : {
-            "type" : "string"
-          },
-          "publicKeyPEM" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
       "managementCreateOutgoingOrderRequest" : {
         "properties" : {
           "reference" : {
@@ -2311,6 +2270,14 @@
           },
           "selfAddressAPI" : {
             "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementSendAccessRequestResponse" : {
+        "properties" : {
+          "outgoingAccessRequest" : {
+            "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
           }
         },
         "type" : "object"

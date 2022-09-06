@@ -45,19 +45,6 @@ test('should properly construct object', () => {
   expect(accessRequest.errorDetails.cause).toEqual('the cause of an error')
 })
 
-test('calling retry should pass instance to store', () => {
-  const storeRetryMock = jest.fn()
-
-  const accessRequest = new OutgoingAccessRequestModel({
-    accessRequestData,
-    outgoingAccessRequestStore: { retry: storeRetryMock },
-  })
-
-  accessRequest.retry()
-
-  expect(storeRetryMock).toHaveBeenCalledWith(accessRequest)
-})
-
 test('organization name is empty', () => {
   const model = new OutgoingAccessRequestModel({
     outgoingAccessRequestStore: {},

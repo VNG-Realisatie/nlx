@@ -40,6 +40,7 @@ export class RootStore {
     this.directoryServicesStore = new DirectoryServicesStore({
       rootStore: this,
       directoryApiClient,
+      managementApiClient,
     })
     this.outgoingAccessRequestStore = new OutgoingAccessRequestStore({
       rootStore: this,

@@ -31,7 +31,12 @@ func newDirectoryService(t *testing.T) (*server.DirectoryService, directoryServi
 		db: mock_database.NewMockConfigDatabase(ctrl),
 	}
 
-	s := server.NewDirectoryService(logger, &environment.Environment{}, mocks.d, mocks.db)
+	s := server.NewDirectoryService(
+		logger,
+		&environment.Environment{},
+		mocks.d,
+		mocks.db,
+	)
 
 	return s, mocks
 }

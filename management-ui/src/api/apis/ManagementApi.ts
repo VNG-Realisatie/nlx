@@ -18,9 +18,6 @@ import {
     ManagementAccessGrant,
     ManagementAccessGrantFromJSON,
     ManagementAccessGrantToJSON,
-    ManagementCreateAccessRequestRequest,
-    ManagementCreateAccessRequestRequestFromJSON,
-    ManagementCreateAccessRequestRequestToJSON,
     ManagementCreateOutgoingOrderRequest,
     ManagementCreateOutgoingOrderRequestFromJSON,
     ManagementCreateOutgoingOrderRequestToJSON,
@@ -75,12 +72,12 @@ import {
     ManagementListServicesResponse,
     ManagementListServicesResponseFromJSON,
     ManagementListServicesResponseToJSON,
-    ManagementOutgoingAccessRequest,
-    ManagementOutgoingAccessRequestFromJSON,
-    ManagementOutgoingAccessRequestToJSON,
     ManagementRegisterOutwayRequest,
     ManagementRegisterOutwayRequestFromJSON,
     ManagementRegisterOutwayRequestToJSON,
+    ManagementSendAccessRequestResponse,
+    ManagementSendAccessRequestResponseFromJSON,
+    ManagementSendAccessRequestResponseToJSON,
     ManagementSettings,
     ManagementSettingsFromJSON,
     ManagementSettingsToJSON,
@@ -107,10 +104,6 @@ import {
 export interface ManagementApproveIncomingAccessRequestRequest {
     serviceName: string;
     accessRequestID: string;
-}
-
-export interface ManagementCreateAccessRequestOperationRequest {
-    body: ManagementCreateAccessRequestRequest;
 }
 
 export interface ManagementCreateOutgoingOrderOperationRequest {
@@ -172,7 +165,9 @@ export interface ManagementRevokeOutgoingOrderRequest {
 }
 
 export interface ManagementSendAccessRequestRequest {
-    accessRequestID: string;
+    organizationSerialNumber: string;
+    serviceName: string;
+    publicKeyPEM?: string;
 }
 
 export interface ManagementUpdateInwayRequest {
@@ -251,37 +246,6 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementApproveIncomingAccessRequest(requestParameters: ManagementApproveIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
         const response = await this.managementApproveIncomingAccessRequestRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async managementCreateAccessRequestRaw(requestParameters: ManagementCreateAccessRequestOperationRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
-        if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateAccessRequest.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/v1/access-requests`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ManagementCreateAccessRequestRequestToJSON(requestParameters.body),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementOutgoingAccessRequestFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async managementCreateAccessRequest(requestParameters: ManagementCreateAccessRequestOperationRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementOutgoingAccessRequest> {
-        const response = await this.managementCreateAccessRequestRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -987,28 +951,36 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementSendAccessRequestRaw(requestParameters: ManagementSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementOutgoingAccessRequest>> {
-        if (requestParameters.accessRequestID === null || requestParameters.accessRequestID === undefined) {
-            throw new runtime.RequiredError('accessRequestID','Required parameter requestParameters.accessRequestID was null or undefined when calling managementSendAccessRequest.');
+    async managementSendAccessRequestRaw(requestParameters: ManagementSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementSendAccessRequestResponse>> {
+        if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementSendAccessRequest.');
+        }
+
+        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementSendAccessRequest.');
         }
 
         const queryParameters: any = {};
 
+        if (requestParameters.publicKeyPEM !== undefined) {
+            queryParameters['publicKeyPEM'] = requestParameters.publicKeyPEM;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/outgoing/{accessRequestID}/send`.replace(`{${"accessRequestID"}}`, encodeURIComponent(String(requestParameters.accessRequestID))),
+            path: `/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementOutgoingAccessRequestFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementSendAccessRequestResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementSendAccessRequest(requestParameters: ManagementSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementOutgoingAccessRequest> {
+    async managementSendAccessRequest(requestParameters: ManagementSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementSendAccessRequestResponse> {
         const response = await this.managementSendAccessRequestRaw(requestParameters, initOverrides);
         return await response.value();
     }

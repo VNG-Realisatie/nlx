@@ -9,7 +9,6 @@ import (
 	"encoding/pem"
 	"errors"
 	"strings"
-	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -186,83 +185,6 @@ func (s *ManagementService) getIncomingAccessRequest(ctx context.Context, access
 	}
 
 	return accessRequest, nil
-}
-
-func (s *ManagementService) CreateAccessRequest(ctx context.Context, req *api.CreateAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
-	err := s.authorize(ctx, permissions.CreateOutgoingAccessRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	userInfo, err := retrieveUserFromContext(ctx)
-	if err != nil {
-		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
-		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
-	}
-
-	err = s.auditLogger.OutgoingAccessRequestCreate(ctx, userInfo.Email, userInfo.UserAgent, req.OrganizationSerialNumber, req.ServiceName)
-	if err != nil {
-		return nil, status.Error(codes.Internal, "could not create audit log")
-	}
-
-	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPEM))
-	if err != nil {
-		s.logger.Error("invalid public key format", zap.Error(err))
-		return nil, status.Error(codes.Internal, "invalid public key format")
-	}
-
-	ar := &database.OutgoingAccessRequest{
-		Organization: database.Organization{
-			SerialNumber: req.OrganizationSerialNumber,
-		},
-		ServiceName:          req.ServiceName,
-		PublicKeyPEM:         req.PublicKeyPEM,
-		PublicKeyFingerprint: fingerprint,
-		State:                database.OutgoingAccessRequestCreated,
-	}
-
-	request, err := s.configDatabase.CreateOutgoingAccessRequest(ctx, ar)
-	if err != nil {
-		if errors.Is(err, database.ErrActiveAccessRequest) {
-			return nil, status.Errorf(codes.AlreadyExists, "there is already an active access request")
-		}
-
-		return nil, err
-	}
-
-	return convertOutgoingAccessRequest(request), nil
-}
-
-func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.SendAccessRequestRequest) (*api.OutgoingAccessRequest, error) {
-	err := s.authorize(ctx, permissions.UpdateOutgoingAccessRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	accessRequest, err := s.configDatabase.GetOutgoingAccessRequest(ctx, uint(req.AccessRequestID))
-	if err != nil {
-		if errIsNotFound(err) {
-			return nil, status.Error(codes.NotFound, "access request not found")
-		}
-
-		s.logger.Error("fetching access request", zap.Uint("id", uint(req.AccessRequestID)), zap.Error(err))
-
-		return nil, status.Error(codes.Internal, "database error")
-	}
-
-	if !accessRequest.IsSendable() {
-		return nil, status.Error(codes.AlreadyExists, "access request is not in a sendable state")
-	}
-
-	err = s.configDatabase.UpdateOutgoingAccessRequestState(ctx, accessRequest.ID, database.OutgoingAccessRequestCreated, 0, nil, time.Now())
-	if err != nil {
-		s.logger.Error("access request cannot be updated", zap.Uint("id", accessRequest.ID), zap.Error(err))
-		return nil, status.Error(codes.Internal, "database error")
-	}
-
-	accessRequest.State = database.OutgoingAccessRequestCreated
-
-	return convertOutgoingAccessRequest(accessRequest), nil
 }
 
 func (s *ManagementService) parseProxyMetadata(ctx context.Context) (*proxyMetadata, error) {

@@ -23,7 +23,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-//nolint dupl: this is a test
+// nolint dupl: this is a test
 func TestListDirectoryServices(t *testing.T) {
 	logger := zap.NewNop()
 	env := &environment.Environment{}
@@ -106,7 +106,12 @@ func TestListDirectoryServices(t *testing.T) {
 			CreatedAt: time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC),
 		}, nil)
 
-	directoryService := server.NewDirectoryService(logger, env, client, db)
+	directoryService := server.NewDirectoryService(
+		logger,
+		env,
+		client,
+		db,
+	)
 	response, err := directoryService.ListServices(ctx, &emptypb.Empty{})
 	assert.NoError(t, err)
 

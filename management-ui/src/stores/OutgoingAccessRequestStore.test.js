@@ -16,36 +16,36 @@ test('initializing the store', () => {
   expect(outgoingAccessRequestStore.outgoingAccessRequests.size).toEqual(0)
 })
 
-test('creating an outgoing access request', async () => {
+test('sending an outgoing access request', async () => {
   const managementApiClient = new ManagementApi()
 
-  managementApiClient.managementCreateAccessRequest = jest
+  managementApiClient.managementSendAccessRequest = jest
     .fn()
     .mockResolvedValue({
-      id: '42',
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'organization-name',
+      outgoingAccessRequest: {
+        id: '42',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'organization-name',
+        },
+        serviceName: 'service-name',
+        state: ACCESS_REQUEST_STATES.RECEIVED,
+        createdAt: '2020-10-07T13:01:11.288349Z',
+        updatedAt: null,
       },
-      serviceName: 'service-name',
-      state: ACCESS_REQUEST_STATES.CREATED,
-      createdAt: '2020-10-07T13:01:11.288349Z',
-      updatedAt: null,
     })
 
   const outgoingAccessRequestStore = new OutgoingAccessRequestStore({
     managementApiClient,
   })
 
-  const outgoingAccessRequest = await outgoingAccessRequestStore.create(
+  const outgoingAccessRequest = await outgoingAccessRequestStore.send(
     '00000000000000000001',
     'service-name',
     'public-key-pem',
   )
 
-  expect(
-    managementApiClient.managementCreateAccessRequest,
-  ).toHaveBeenCalledWith({
+  expect(managementApiClient.managementSendAccessRequest).toHaveBeenCalledWith({
     body: {
       organizationSerialNumber: '00000000000000000001',
       serviceName: 'service-name',
@@ -60,7 +60,7 @@ test('creating an outgoing access request', async () => {
   )
   expect(outgoingAccessRequest.organization.name).toEqual('organization-name')
   expect(outgoingAccessRequest.serviceName).toEqual('service-name')
-  expect(outgoingAccessRequest.state).toEqual(ACCESS_REQUEST_STATES.CREATED)
+  expect(outgoingAccessRequest.state).toEqual(ACCESS_REQUEST_STATES.RECEIVED)
   expect(outgoingAccessRequest.createdAt).toEqual(
     new Date('2020-10-07T13:01:11.288349Z'),
   )

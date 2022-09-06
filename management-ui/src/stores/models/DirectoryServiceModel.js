@@ -127,21 +127,6 @@ class DirectoryServiceModel {
     yield this.fetch()
   }).bind(this)
 
-  retryRequestAccess = flow(function* retryRequestAccess(publicKeyFingerprint) {
-    const accessStateForFingerprint =
-      this._accessStates.get(publicKeyFingerprint)
-
-    if (
-      !accessStateForFingerprint ||
-      !accessStateForFingerprint.accessRequest
-    ) {
-      return false
-    }
-
-    yield accessStateForFingerprint.accessRequest.retry()
-    yield this.fetch()
-  }).bind(this)
-
   _accessStateHasAccess(accessState) {
     const { accessRequest, accessProof } = accessState
     return !!(

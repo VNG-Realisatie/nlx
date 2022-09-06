@@ -201,29 +201,15 @@ export const getAccessToService = async (
 
   // request access to new service
   const createAccessRequestResponse =
-    await serviceConsumer.apiClients.management?.managementCreateAccessRequest({
-      body: {
-        organizationSerialNumber: serviceProvider.serialNumber,
-        serviceName: uniqueServiceName,
-        publicKeyPEM: outway.publicKeyPEM,
-      },
+    await serviceConsumer.apiClients.management?.managementSendAccessRequest({
+      organizationSerialNumber: serviceProvider.serialNumber,
+      serviceName: uniqueServiceName,
+      publicKeyPEM: outway.publicKeyPEM,
     });
 
-  assert.equal(createAccessRequestResponse?.serviceName, uniqueServiceName);
-
-  // wait until the other organization has received our access request
-  await pWaitFor.default(
-    async () =>
-      await isIncomingAccessRequestPresent(
-        uniqueServiceName,
-        serviceConsumer,
-        serviceProvider,
-        outway.publicKeyFingerprint || ""
-      ),
-    {
-      interval: 200,
-      timeout: 1000 * 30,
-    }
+  assert.equal(
+    createAccessRequestResponse?.outgoingAccessRequest?.serviceName,
+    uniqueServiceName
   );
 
   const incomingAccessRequest = await getIncomingAccessRequest(

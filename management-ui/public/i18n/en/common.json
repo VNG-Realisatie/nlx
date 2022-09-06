@@ -297,6 +297,7 @@
   "Transaction logs of your inway and outways": "The latest 100 transaction logs of your inways and outways",
   "txlog_configure": "To view transaction logs you need to configure the transaction log api.",
   "Type": "Type",
+  "Unable to reach the organization.": "Unable to reach the organization.",
   "Unknown": "Unknown",
   "Up": "Up",
   "Update order": "Update order",

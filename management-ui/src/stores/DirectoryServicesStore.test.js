@@ -175,11 +175,13 @@ test('requesting access to a service in the directory', async () => {
 
   const managementApiClient = new ManagementApi()
 
+  managementApiClient.managementSendAccessRequest = jest
+    .fn()
+    .mockResolvedValue()
+
   const rootStore = new RootStore({
     managementApiClient,
   })
-
-  jest.spyOn(rootStore.outgoingAccessRequestStore, 'create').mockResolvedValue()
 
   const directoryService = new DirectoryServiceModel({
     serviceData: {
@@ -197,11 +199,11 @@ test('requesting access to a service in the directory', async () => {
     'public-key-pem',
   )
 
-  expect(rootStore.outgoingAccessRequestStore.create).toHaveBeenCalledWith(
-    '00000000000000000001',
-    'service',
-    'public-key-pem',
-  )
+  expect(managementApiClient.managementSendAccessRequest).toHaveBeenCalledWith({
+    organizationSerialNumber: '00000000000000000001',
+    serviceName: 'service',
+    publicKeyPEM: 'public-key-pem',
+  })
 })
 
 test('retrieving all services with access', async () => {

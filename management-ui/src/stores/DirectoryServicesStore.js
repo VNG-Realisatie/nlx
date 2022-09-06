@@ -12,11 +12,12 @@ class DirectoryServicesStore {
   // This is internal state to prevent concurrent fetchAll calls being in flight.
   isFetching = false
 
-  constructor({ rootStore, directoryApiClient }) {
+  constructor({ rootStore, directoryApiClient, managementApiClient }) {
     makeAutoObservable(this)
 
     this._rootStore = rootStore
     this._directoryApiClient = directoryApiClient
+    this._managementApiClient = managementApiClient
   }
 
   fetch = flow(function* fetch(organizationSerialNumber, serviceName) {
@@ -80,11 +81,11 @@ class DirectoryServicesStore {
   }
 
   async requestAccess(organizationSerialNumber, serviceName, publicKeyPEM) {
-    return this._rootStore.outgoingAccessRequestStore.create(
-      organizationSerialNumber,
-      serviceName,
-      publicKeyPEM,
-    )
+    return this._managementApiClient.managementSendAccessRequest({
+      organizationSerialNumber: organizationSerialNumber,
+      serviceName: serviceName,
+      publicKeyPEM: publicKeyPEM,
+    })
   }
 
   _updateFromServer(serviceData) {

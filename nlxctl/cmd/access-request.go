@@ -98,7 +98,7 @@ var createAccessRequestCommand = &cobra.Command{
 	Use:   "create",
 	Short: "Request access to another service",
 	Run: func(cmd *cobra.Command, args []string) {
-		accessRequest, err := getManagementClient().CreateAccessRequest(newRequestContext(), &api.CreateAccessRequestRequest{
+		accessRequest, err := getManagementClient().SendAccessRequest(newRequestContext(), &api.SendAccessRequestRequest{
 			OrganizationSerialNumber: accessRequestOptions.organizationSerialNumber,
 			ServiceName:              accessRequestOptions.serviceName,
 		})
@@ -107,12 +107,12 @@ var createAccessRequestCommand = &cobra.Command{
 		}
 
 		printAccessRequest(accessRequestDetails{
-			ID:                       accessRequest.Id,
-			State:                    accessRequest.State,
-			OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
-			ServiceName:              accessRequest.ServiceName,
-			CreatedAt:                accessRequest.CreatedAt,
-			UpdatedAt:                accessRequest.UpdatedAt,
+			ID:                       accessRequest.OutgoingAccessRequest.Id,
+			State:                    accessRequest.OutgoingAccessRequest.State,
+			OrganizationSerialNumber: accessRequest.OutgoingAccessRequest.Organization.SerialNumber,
+			ServiceName:              accessRequest.OutgoingAccessRequest.ServiceName,
+			CreatedAt:                accessRequest.OutgoingAccessRequest.CreatedAt,
+			UpdatedAt:                accessRequest.OutgoingAccessRequest.UpdatedAt,
 		})
 	},
 }

@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 export const ACCESS_REQUEST_STATES = {
   CREATED: 'CREATED',
@@ -37,7 +37,7 @@ class OutgoingAccessRequestModel {
 
   update = (accessRequestData) => {
     if (!accessRequestData) {
-      throw Error('Data required to update outgoingAccessRequest')
+      throw Error('Data required to update OutgoingAccessRequest')
     }
 
     if (accessRequestData.id) {
@@ -76,10 +76,6 @@ class OutgoingAccessRequestModel {
       this.errorDetails.cause = accessRequestData.errorDetails.cause
     }
   }
-
-  retry = flow(function* retry() {
-    yield this.outgoingAccessRequestStore.retry(this)
-  }).bind(this)
 }
 
 export default OutgoingAccessRequestModel

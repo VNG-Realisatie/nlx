@@ -72,11 +72,8 @@ service Management {
   rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject" response_body: '*'};
   }
-  rpc CreateAccessRequest (CreateAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/access-requests" body: "*" response_body: '*'};
-  }
-  rpc SendAccessRequest (SendAccessRequestRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{accessRequestID}/send" response_body: '*'};
+  rpc SendAccessRequest (SendAccessRequestRequest) returns (SendAccessRequestResponse) {
+    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}"};
   }
   rpc GetSettings (google.protobuf.Empty) returns (Settings) {
     option (google.api.http) = {get: "/api/v1/settings"};
@@ -411,14 +408,14 @@ message RejectIncomingAccessRequestRequest {
   uint64 accessRequestID = 2;
 }
 
-message CreateAccessRequestRequest {
-  string organizationSerialNumber = 1;
-  string serviceName = 2;
-  string publicKeyPEM = 3;
+message SendAccessRequestRequest {
+    string organizationSerialNumber = 1;
+    string serviceName = 2;
+    string publicKeyPEM = 3;
 }
 
-message SendAccessRequestRequest {
-  uint64 accessRequestID = 1;
+message SendAccessRequestResponse {
+    OutgoingAccessRequest outgoingAccessRequest = 1;
 }
 
 message ListAccessGrantsForServiceRequest {
