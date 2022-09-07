@@ -86,34 +86,34 @@ func handleJWTValidationError(context *Context, claims *delegation.JWTClaims, er
 	validationError, ok := err.(*jwt.ValidationError)
 	if !ok {
 		context.Logger.Error("casting error to jwt validation error failed", zap.Error(err))
-		inway_http.WriteError(context.Response, httperrors.O1, httperrors.UnableToVerifyClaim, "unable to verify claim")
+		inway_http.WriteError(context.Response, httperrors.O1, httperrors.UnableToVerifyClaim())
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationIsNotDelegatee) {
 		context.Logger.Info("requesting organization public key is not the public key found in order", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		inway_http.WriteError(context.Response, httperrors.O1, httperrors.RequestingOrganizationIsNotDelegatee, "no access. organization serialnumber does not match the delegatee organization serialnumber of the order")
+		inway_http.WriteError(context.Response, httperrors.O1, httperrors.RequestingOrganizationIsNotDelegatee("no access. organization serialnumber does not match the delegatee organization serialnumber of the order"))
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrRequestingOrganizationPublicKeyNotFoundInOrder) {
 		context.Logger.Info("requesting organization is not the delegatee", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		inway_http.WriteError(context.Response, httperrors.O1, httperrors.RequestingOrganizationIsNotDelegatee, "no access. public key of the connection does not match the delegatee public key of the order")
+		inway_http.WriteError(context.Response, httperrors.O1, httperrors.RequestingOrganizationIsNotDelegatee("no access. public key of the connection does not match the delegatee public key of the order"))
 
 		return
 	}
 
 	if errors.Is(validationError.Inner, ErrDelegatorDoesNotHaveAccess) {
 		context.Logger.Info("delegator does not have access to service", zap.String("delegator", claims.Issuer), zap.String("serviceName", context.Destination.Service.Name))
-		inway_http.WriteError(context.Response, httperrors.O1, httperrors.DelegatorDoesNotHaveAccessToService, "no access. delegator does not have access to the service for the public key in the claim")
+		inway_http.WriteError(context.Response, httperrors.O1, httperrors.DelegatorDoesNotHaveAccessToService())
 
 		return
 	}
 
 	context.Logger.Error("failed to parse jwt", zap.Error(err))
-	inway_http.WriteError(context.Response, httperrors.O1, httperrors.UnableToVerifyClaim, "unable to verify claim")
+	inway_http.WriteError(context.Response, httperrors.O1, httperrors.UnableToVerifyClaim())
 }
 
 func parsePublicKeyFromPEM(publicKeyPEM string) (crypto.PublicKey, error) {

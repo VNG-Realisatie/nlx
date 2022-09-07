@@ -49,7 +49,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.UnableToParseDelegationMetadata,
+				Code:     httperrors.UnableToParseDelegationMetadataErr,
 				Message:  "failed to parse delegation metadata",
 			},
 			setHeaders: func(r *http.Request) {
@@ -62,7 +62,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.UnableToParseDelegationMetadata,
+				Code:     httperrors.UnableToParseDelegationMetadataErr,
 				Message:  "failed to parse delegation metadata",
 			},
 			setHeaders: func(r *http.Request) {
@@ -75,7 +75,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.UnableToSetupManagementClient,
+				Code:     httperrors.UnableToSetupManagementClientErr,
 				Message:  "unable to setup the external management client",
 			},
 			setHeaders: func(r *http.Request) {
@@ -97,7 +97,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.UnableToSetupManagementClient,
+				Code:     httperrors.UnableToSetupManagementClientErr,
 				Message:  "unable to setup the external management client",
 			},
 			setHeaders: func(r *http.Request) {
@@ -114,7 +114,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.UnableToRequestClaim,
+				Code:     httperrors.UnableToRequestClaimErr,
 				Message:  "unable to request claim from 00000000000000000001",
 			},
 			setHeaders: func(r *http.Request) {
@@ -144,7 +144,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.ReceivedInvalidClaim,
+				Code:     httperrors.ReceivedInvalidClaimErr,
 				Message:  "received an invalid claim from 00000000000000000001",
 			},
 			setHeaders: func(r *http.Request) {
@@ -177,7 +177,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.OrderNotFound,
+				Code:     httperrors.OrderNotFoundErr,
 				Message:  "order not found",
 			},
 			setHeaders: func(r *http.Request) {
@@ -205,7 +205,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.OrderDoesNotExistForYourOrganization,
+				Code:     httperrors.OrderDoesNotExistForYourOrganizationErr,
 				Message:  "order does not exist for your organization",
 			},
 			setHeaders: func(r *http.Request) {
@@ -233,7 +233,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.OrderExpired,
+				Code:     httperrors.OrderExpiredErr,
 				Message:  "the order has expired",
 			},
 			setHeaders: func(r *http.Request) {
@@ -261,7 +261,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.OrderDoesNotContainService,
+				Code:     httperrors.OrderDoesNotContainServiceErr,
 				Message:  "order does not contain the service 'service-name'",
 			},
 			setHeaders: func(r *http.Request) {
@@ -289,7 +289,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.OrderRevoked,
+				Code:     httperrors.OrderRevokedErr,
 				Message:  "order is revoked",
 			},
 			setHeaders: func(r *http.Request) {

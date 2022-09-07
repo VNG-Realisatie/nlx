@@ -63,11 +63,9 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 
 		delegatorSerialNumber, orderReference, err := parseRequestMetadata(requestContext.Request)
 		if err != nil {
-			msg := "failed to parse delegation metadata"
+			requestContext.Logger.Error("failed to parse delegation metadata", zap.Error(err))
 
-			requestContext.Logger.Error(msg, zap.Error(err))
-
-			outway_http.WriteError(requestContext.Response, httperrors.C1, httperrors.UnableToParseDelegationMetadata, msg)
+			outway_http.WriteError(requestContext.Response, httperrors.C1, httperrors.UnableToParseDelegationMetadata())
 
 			return nil
 		}
@@ -80,7 +78,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			externalManagementClient, err := plugin.setupExternalManagementClient(requestContext.Request.Context(), delegatorSerialNumber)
 			if err != nil {
 				plugin.logger.Error("unable to setup external management client", zap.String("delegatorSerialNumber", delegatorSerialNumber), zap.Error(err))
-				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.UnableToSetupManagementClient, "unable to setup the external management client")
+				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.UnableToSetupManagementClient())
 
 				return nil
 			}
@@ -94,36 +92,36 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 				plugin.logger.Error("unable to request claim", zap.String("orderReference", orderReference), zap.String("serviceOrganizationSerialNumber", requestContext.Destination.OrganizationSerialNumber), zap.String("serviceName", requestContext.Destination.Service), zap.Error(err))
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND) {
-					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderNotFound, "order not found")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderNotFound())
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG) {
-					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotExistForYourOrganization, "order does not exist for your organization")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotExistForYourOrganization())
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_REVOKED) {
-					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderRevoked, "order is revoked")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderRevoked())
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_EXPIRED) {
-					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderExpired, "the order has expired")
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderExpired())
 
 					return nil
 				}
 
 				if grpcerrors.Equal(err, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE) {
-					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotContainService, fmt.Sprintf("order does not contain the service '%s'", requestContext.Destination.Service))
+					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotContainService(requestContext.Destination.Service))
 
 					return nil
 				}
 
-				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.UnableToRequestClaim, fmt.Sprintf("unable to request claim from %s", delegatorSerialNumber))
+				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.UnableToRequestClaim(delegatorSerialNumber))
 
 				return nil
 			}
@@ -132,7 +130,7 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			if err != nil {
 				plugin.logger.Error("unable to parse received claim", zap.String("claim", response.Claim), zap.Error(err))
 
-				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.ReceivedInvalidClaim, fmt.Sprintf("received an invalid claim from %s", delegatorSerialNumber))
+				outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.ReceivedInvalidClaim(delegatorSerialNumber))
 
 				return nil
 			}

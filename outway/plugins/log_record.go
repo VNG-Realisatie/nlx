@@ -62,9 +62,9 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 			context.Logger.Error("failed to store transactionlog record", zap.Error(err))
 
 			if strings.Contains(err.Error(), "invalid data subject header") {
-				outway_http.WriteError(context.Response, httperrors.C1, httperrors.InvalidDataSubjectHeader, "invalid data subject header")
+				outway_http.WriteError(context.Response, httperrors.C1, httperrors.InvalidDataSubjectHeader())
 			} else {
-				outway_http.WriteError(context.Response, httperrors.C1, httperrors.ServerError, fmt.Sprintf("server error: %v", err))
+				outway_http.WriteError(context.Response, httperrors.C1, httperrors.ServerError(err))
 			}
 
 			return nil

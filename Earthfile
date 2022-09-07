@@ -31,7 +31,6 @@ sqlc:
     BUILD +sqlc-management-api
 
 enums:
-    BUILD +enums-httperrors
     BUILD +enums-permissions
 
 deps:
@@ -289,18 +288,6 @@ sqlc-management-api:
     RUN goimports -w -local "go.nlx.io" /src/
 
     SAVE ARTIFACT /src/management-api/adapters/storage/postgres/queries/* AS LOCAL ./management-api/adapters/storage/postgres/queries/
-
-enums-httperrors:
-    FROM +deps
-    COPY ./common/httperrors/ /src/common/httperrors/
-
-    WORKDIR /src/
-
-    RUN enumer -type=Code -linecomment -json ./common/httperrors
-    RUN enumer -type=Source -linecomment -json ./common/httperrors
-    RUN enumer -type=Location -linecomment -json ./common/httperrors
-
-    SAVE ARTIFACT /src/common/httperrors/*_enumer.go AS LOCAL ./common/httperrors/
 
 enums-permissions:
     FROM +deps

@@ -51,7 +51,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.IAS1,
-				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Code:     httperrors.ErrorWhileAuthorizingRequestErr,
 				Message:  "error authorizing request",
 			},
 		},
@@ -82,8 +82,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.IAS1,
-				Code:     httperrors.Unauthorized,
-				Message:  "authorization server denied request.",
+				Code:     httperrors.UnauthorizedErr,
+				Message:  "authorization server denied request",
 			},
 		},
 		"when_auth_server_fails": {
@@ -108,7 +108,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.IAS1,
-				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Code:     httperrors.ErrorWhileAuthorizingRequestErr,
 				Message:  "error authorizing request",
 			},
 		},
@@ -137,8 +137,8 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.IAS1,
-				Code:     httperrors.Unauthorized,
-				Message:  "authorization server denied request.",
+				Code:     httperrors.UnauthorizedErr,
+				Message:  "authorization server denied request",
 			},
 		},
 		"when_access_grant_not_found": {
@@ -157,7 +157,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.AccessDenied,
+				Code:     httperrors.AccessDeniedErr,
 				Message:  "permission denied, organization \"00000000000000000001\" or public key fingerprint \"mock-public-key-fingerprint\" is not allowed access.",
 			},
 		},

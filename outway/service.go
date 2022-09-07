@@ -135,9 +135,8 @@ func (s *RoundRobinLoadBalancedHTTPService) GetProxies() []*httputil.ReverseProx
 // log the error and return some helpful text.
 // set 503 Status Service Temporarily Unavailable response.
 func (s *RoundRobinLoadBalancedHTTPService) LogServiceErrors(w http.ResponseWriter, r *http.Request, e error) {
-	msg := fmt.Sprintf("failed request to '%s', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/", r.URL.String())
-	s.logger.Error(msg, zap.Error(e))
-	outway_http.WriteError(w, httperrors.O1, httperrors.ServiceUnreachable, msg)
+	s.logger.Error(fmt.Sprintf("failed request to '%s', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/", r.URL.String()), zap.Error(e))
+	outway_http.WriteError(w, httperrors.O1, httperrors.ServiceUnreachable(r.URL.String()))
 }
 
 // GetInwayAddresses returns the possible inwayaddresses of the httpservice

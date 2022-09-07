@@ -147,7 +147,7 @@ func (o *Outway) handleHTTPRequest(logger *zap.Logger, w http.ResponseWriter, r 
 	destination, err := parseURLPath(r.URL.Path)
 	if err != nil {
 		if isNLXUrl(r.URL) {
-			outway_http.WriteError(w, httperrors.C1, httperrors.ProxyModeDisabled, fmt.Sprintf("please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: %s", r.URL.String()))
+			outway_http.WriteError(w, httperrors.C1, httperrors.ProxyModeDisabled(r.URL.String()))
 			return
 		}
 
@@ -165,7 +165,7 @@ func (o *Outway) handleHTTPRequest(logger *zap.Logger, w http.ResponseWriter, r 
 func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodConnect {
 		logger.Error("CONNECT method not supported")
-		outway_http.WriteError(w, httperrors.C1, httperrors.UnsupportedMethod, "CONNECT method is not supported")
+		outway_http.WriteError(w, httperrors.C1, httperrors.UnsupportedMethod())
 
 		return
 	}
@@ -178,7 +178,7 @@ func (o *Outway) handleHTTPRequestAsProxy(logger *zap.Logger, w http.ResponseWri
 	destination, err := parseLocalNLXURL(r.URL)
 	if err != nil {
 		logger.Error("error parsing desination", zap.Error(err))
-		outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL, "no valid url expecting: service.serialNumber.service.nlx.local/apipath")
+		outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL("no valid url expecting: service.serialNumber.service.nlx.local/apipath"))
 
 		return
 	}

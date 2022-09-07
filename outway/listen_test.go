@@ -163,7 +163,7 @@ func TestOutwayListen(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.InvalidURL,
+				Code:     httperrors.InvalidURLErr,
 				Message:  "invalid /serialNumber/service/ url: valid organization serial numbers : [00000000000000000001]",
 			},
 		},
@@ -173,7 +173,7 @@ func TestOutwayListen(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.InvalidURL,
+				Code:     httperrors.InvalidURLErr,
 				Message:  "invalid serialNumber/service path: valid services : [mockservice0, mockservice1, mockservice10, mockservice2, mockservice3, mockservice4, mockservice5, mockservice6, mockservice7, mockservice8, mockservice9, mockservicefail]",
 			},
 		},
@@ -250,7 +250,7 @@ func TestOutwayAsProxy(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.InvalidURL,
+				Code:     httperrors.InvalidURLErr,
 				Message:  "no valid url expecting: service.serialNumber.service.nlx.local/apipath",
 			},
 			dataSubjectHeader: "",
@@ -268,7 +268,7 @@ func TestOutwayAsProxy(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.ProxyModeDisabled,
+				Code:     httperrors.ProxyModeDisabledErr,
 				Message:  "please enable proxy mode by setting the 'use-as-http-proxy' flag to resolve: http://mockservice.00000000000000000001.services.nlx.local/",
 			},
 			dataSubjectHeader: "",
@@ -338,7 +338,7 @@ func TestHandleConnectMethodException(t *testing.T) {
 	assert.Equal(t, &httperrors.NLXNetworkError{
 		Source:   httperrors.Outway,
 		Location: httperrors.C1,
-		Code:     httperrors.UnsupportedMethod,
+		Code:     httperrors.UnsupportedMethodErr,
 		Message:  "CONNECT method is not supported",
 	}, gotError)
 }
@@ -371,7 +371,7 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.OAS1,
-				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Code:     httperrors.ErrorWhileAuthorizingRequestErr,
 				Message:  "error authorizing request",
 			},
 		},
@@ -388,7 +388,7 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.ServerError,
+				Code:     httperrors.ServerErrorErr,
 				Message:  "server error: unable to add record to database: cannot add transaction record",
 			},
 		},
@@ -403,7 +403,7 @@ func TestHandleOnNLXExceptions(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.C1,
-				Code:     httperrors.InvalidDataSubjectHeader,
+				Code:     httperrors.InvalidDataSubjectHeaderErr,
 				Message:  "invalid data subject header",
 			},
 		},
@@ -518,8 +518,8 @@ func TestFailingTransport(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.O1,
-				Code:     httperrors.ServiceUnreachable,
-				Message:  "failed request to 'https://inway.00000000000000000001/mockservice/', try again later and check your firewall, check O1 and M1 at https://docs.nlx.io/support/common-errors/",
+				Code:     httperrors.ServiceUnreachableErr,
+				Message:  "failed API request to https://inway.00000000000000000001/mockservice/ try again later. service api down/unreachable. check error at https://docs.nlx.io/support/common-errors/",
 			},
 		},
 	}

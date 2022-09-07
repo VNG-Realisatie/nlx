@@ -73,7 +73,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.UnableToVerifyClaim,
+				Code:     httperrors.UnableToVerifyClaimErr,
 				Message:  "unable to verify claim",
 			},
 			wantDelegationSuccess: false,
@@ -91,7 +91,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.RequestingOrganizationIsNotDelegatee,
+				Code:     httperrors.RequestingOrganizationIsNotDelegateeErr,
 				Message:  "no access. organization serialnumber does not match the delegatee organization serialnumber of the order",
 			},
 			wantDelegationSuccess: false,
@@ -128,7 +128,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.RequestingOrganizationIsNotDelegatee,
+				Code:     httperrors.RequestingOrganizationIsNotDelegateeErr,
 				Message:  "no access. public key of the connection does not match the delegatee public key of the order",
 			},
 			wantDelegationSuccess: false,
@@ -147,7 +147,7 @@ func TestDelegationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.DelegatorDoesNotHaveAccessToService,
+				Code:     httperrors.DelegatorDoesNotHaveAccessToServiceErr,
 				Message:  "no access. delegator does not have access to the service for the public key in the claim",
 			},
 			wantDelegationSuccess: false,

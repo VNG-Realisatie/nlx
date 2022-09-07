@@ -33,7 +33,7 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 		if logRecordID == "" {
 			context.Logger.Warn("Received request with missing logrecord id", zap.String("organization_serial_number", context.AuthInfo.OrganizationSerialNumber))
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.MissingLogRecordID, "missing logrecord id")
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.MissingLogRecordID())
 
 			return nil
 		}
@@ -42,7 +42,7 @@ func (plugin *LogRecordPlugin) Serve(next ServeFunc) ServeFunc {
 		if err != nil {
 			context.Logger.Error("failed to store transactionlog record", zap.Error(err))
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.ServerError, "server error")
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.ServerError(nil))
 
 			return nil
 		}

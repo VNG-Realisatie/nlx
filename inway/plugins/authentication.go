@@ -30,7 +30,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 		if len(peerCertificates) == 0 {
 			logger.Warn("received request does not contain certificates")
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.MissingPeerCertificate, "invalid connection: missing peer certificates")
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.MissingPeerCertificate())
 
 			return nil
 		}
@@ -42,7 +42,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing organizations attribute in subject"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate(msg))
 
 			return nil
 		}
@@ -53,7 +53,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing value for organization in subject"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate(msg))
 
 			return nil
 		}
@@ -65,7 +65,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing or invalid value for serial number in subject"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate(msg))
 
 			return nil
 		}
@@ -74,7 +74,7 @@ func (d *AuthenticationPlugin) Serve(next ServeFunc) ServeFunc {
 			msg := "invalid certificate provided: missing value for issuer organization in issuer"
 			logger.Warn(msg)
 
-			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate, msg)
+			inway_http.WriteError(context.Response, httperrors.O1, httperrors.InvalidCertificate(msg))
 
 			return nil
 		}

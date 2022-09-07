@@ -62,7 +62,7 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 		if authErr != nil {
 			context.Logger.Error("error authorizing request", zap.Error(authErr))
 
-			outway_http.WriteError(context.Response, httperrors.OAS1, httperrors.ErrorWhileAuthorizingRequest, "error authorizing request")
+			outway_http.WriteError(context.Response, httperrors.OAS1, httperrors.ErrorWhileAuthorizingRequest())
 
 			return nil
 		}
@@ -73,7 +73,7 @@ func (plugin *AuthorizationPlugin) Serve(next ServeFunc) ServeFunc {
 		)
 
 		if !authResponse.Result {
-			outway_http.WriteError(context.Response, httperrors.OAS1, httperrors.Unauthorized, "authorization server denied request")
+			outway_http.WriteError(context.Response, httperrors.OAS1, httperrors.Unauthorized())
 
 			return nil
 		}

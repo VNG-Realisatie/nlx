@@ -67,7 +67,7 @@ func (o *Outway) helpUserOrg(w http.ResponseWriter, serialNumber string) {
 	}
 
 	msg := createList(suggestion)
-	outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL, fmt.Sprintf("invalid /serialNumber/service/ url: valid organization serial numbers : [%s]", msg))
+	outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL(fmt.Sprintf("invalid /serialNumber/service/ url: valid organization serial numbers : [%s]", msg)))
 }
 
 func (o *Outway) helpUserService(
@@ -110,7 +110,7 @@ func (o *Outway) helpUserService(
 		msg = createList(services)
 	}
 
-	outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL, fmt.Sprintf("invalid serialNumber/service path: valid services : [%s]", msg))
+	outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL(fmt.Sprintf("invalid serialNumber/service path: valid services : [%s]", msg)))
 }
 
 func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *plugins.Destination, urlPath string) {
@@ -143,7 +143,7 @@ func (o *Outway) helpUser(w http.ResponseWriter, msg string, dest *plugins.Desti
 	}
 
 	if urlPath == "" {
-		outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL, fmt.Sprintf("missing urlpath for service %s", msg))
+		outway_http.WriteError(w, httperrors.C1, httperrors.InvalidURL(fmt.Sprintf("missing urlpath for service %s", msg)))
 		return
 	}
 }

@@ -41,7 +41,7 @@ func TestLoginPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.MissingLogRecordID,
+				Code:     httperrors.MissingLogRecordIDErr,
 				Message:  "missing logrecord id",
 			},
 		},
@@ -66,7 +66,7 @@ func TestLoginPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.ServerError,
+				Code:     httperrors.ServerErrorErr,
 				Message:  "server error",
 			},
 		},

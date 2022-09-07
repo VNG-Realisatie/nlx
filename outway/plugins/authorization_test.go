@@ -40,7 +40,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.OAS1,
-				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Code:     httperrors.ErrorWhileAuthorizingRequestErr,
 				Message:  "error authorizing request",
 			},
 		},
@@ -62,7 +62,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.OAS1,
-				Code:     httperrors.Unauthorized,
+				Code:     httperrors.UnauthorizedErr,
 				Message:  "authorization server denied request",
 			},
 		},
@@ -79,7 +79,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.OAS1,
-				Code:     httperrors.ErrorWhileAuthorizingRequest,
+				Code:     httperrors.ErrorWhileAuthorizingRequestErr,
 				Message:  "error authorizing request",
 			},
 		},
@@ -99,7 +99,7 @@ func TestAuthorizationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Outway,
 				Location: httperrors.OAS1,
-				Code:     httperrors.Unauthorized,
+				Code:     httperrors.UnauthorizedErr,
 				Message:  "authorization server denied request",
 			},
 		},

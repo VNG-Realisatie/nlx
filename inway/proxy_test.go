@@ -32,7 +32,7 @@ func TestInwayProxy(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.EmptyPath,
+				Code:     httperrors.EmptyPathErr,
 				Message:  "path cannot be empty, must at least contain the service name.",
 			},
 		},
@@ -42,7 +42,7 @@ func TestInwayProxy(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.ServiceDoesNotExist,
+				Code:     httperrors.ServiceDoesNotExistErr,
 				Message:  "no endpoint for service 'non-existing-service'",
 			},
 		},
@@ -141,7 +141,7 @@ func TestInwayProxyEndpointNotReachable(t *testing.T) {
 	assert.Equal(t, &httperrors.NLXNetworkError{
 		Source:   httperrors.Inway,
 		Location: httperrors.A1,
-		Code:     httperrors.ServiceUnreachable,
-		Message:  "failed internal API request to http://non-existing-url try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/",
+		Code:     httperrors.ServiceUnreachableErr,
+		Message:  "failed API request to http://non-existing-url try again later. service api down/unreachable. check error at https://docs.nlx.io/support/common-errors/",
 	}, gotError)
 }

@@ -25,7 +25,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path == "" {
 		logger.Warn("received request with invalid path")
-		inway_http.WriteError(w, httperrors.O1, httperrors.EmptyPath, "path cannot be empty, must at least contain the service name.")
+		inway_http.WriteError(w, httperrors.O1, httperrors.EmptyPath())
 
 		return
 	}
@@ -48,7 +48,7 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 
 	if !exists {
 		logger.Warn("received request for service with no known endpoint")
-		inway_http.WriteError(w, httperrors.O1, httperrors.ServiceDoesNotExist, fmt.Sprintf("no endpoint for service '%s'", serviceName))
+		inway_http.WriteError(w, httperrors.O1, httperrors.ServiceDoesNotExist(serviceName))
 
 		return
 	}
@@ -106,13 +106,12 @@ func (i *Inway) handleProxyRequest(w http.ResponseWriter, r *http.Request) {
 	if err := chain(context); err != nil {
 		logger.Error("error executing plugin chain", zap.Error(err))
 
-		inway_http.WriteError(w, httperrors.O1, httperrors.ErrorExecutingPluginChain, "error executing plugin chain")
+		inway_http.WriteError(w, httperrors.O1, httperrors.ErrorExecutingPluginChain())
 	}
 }
 
 func (i *Inway) LogAPIErrors(w http.ResponseWriter, r *http.Request, err error) {
-	msg := fmt.Sprintf("failed internal API request to %s try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/", r.URL.String())
-	i.logger.Error(msg, zap.Error(err))
+	i.logger.Error(fmt.Sprintf("failed internal API request to %s try again later. service api down/unreachable. check A1 error at https://docs.nlx.io/support/common-errors/", r.URL.String()), zap.Error(err))
 
-	inway_http.WriteError(w, httperrors.A1, httperrors.ServiceUnreachable, msg)
+	inway_http.WriteError(w, httperrors.A1, httperrors.ServiceUnreachable(r.URL.String()))
 }

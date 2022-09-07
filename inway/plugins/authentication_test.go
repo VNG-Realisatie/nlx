@@ -41,7 +41,7 @@ func TestAuthenticationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.InvalidCertificate,
+				Code:     httperrors.InvalidCertificateErr,
 				Message:  "invalid certificate provided: missing organizations attribute in subject",
 			},
 		},
@@ -56,7 +56,7 @@ func TestAuthenticationPlugin(t *testing.T) {
 			wantErr: &httperrors.NLXNetworkError{
 				Source:   httperrors.Inway,
 				Location: httperrors.O1,
-				Code:     httperrors.InvalidCertificate,
+				Code:     httperrors.InvalidCertificateErr,
 				Message:  "invalid certificate provided: missing or invalid value for serial number in subject",
 			},
 		},
