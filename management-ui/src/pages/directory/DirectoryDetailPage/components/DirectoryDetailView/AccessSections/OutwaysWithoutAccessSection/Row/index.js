@@ -49,8 +49,6 @@ const Row = ({
 
         if (err.response && err.response.status === 403) {
           message = t(`You don't have the required permission.`)
-        } else if (err.response && err.response.status === 409) {
-          message = t(`Unable to reach the organization.`)
         }
 
         showToast({
@@ -67,7 +65,7 @@ const Row = ({
   }
 
   const onRetryRequestAccess = () => {
-    service.retryRequestAccess(publicKeyFingerprint)
+    return onRequestAccess()
   }
 
   const { accessRequest, accessProof } =

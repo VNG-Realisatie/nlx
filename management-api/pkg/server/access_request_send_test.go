@@ -69,14 +69,72 @@ func Test_SendAccessRequest(t *testing.T) {
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("", errors.New("arbitrary error"))
+
+				mocks.db.
+					EXPECT().
+					CreateOutgoingAccessRequest(gomock.Any(), &database.OutgoingAccessRequest{
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "",
+						},
+						ReferenceID:          0,
+						ServiceName:          "my-service",
+						PublicKeyPEM:         testPublicKeyPEM,
+						PublicKeyFingerprint: testPublicKeyFingerprint,
+						State:                database.OutgoingAccessRequestFailed,
+						ErrorCause:           "The organization is not available.",
+					}).
+					Return(&database.OutgoingAccessRequest{
+						ID: 42,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "my-organization",
+						},
+						ServiceName:          "my-service",
+						State:                database.OutgoingAccessRequestFailed,
+						CreatedAt:            now,
+						UpdatedAt:            now,
+						ErrorCause:           "The organization is not available.",
+						PublicKeyPEM:         testPublicKeyPEM,
+						PublicKeyFingerprint: testPublicKeyFingerprint,
+					}, nil)
+
+				mocks.al.
+					EXPECT().
+					OutgoingAccessRequestCreate(
+						gomock.Any(),
+						"admin@example.com",
+						"nlxctl",
+						"00000000000000000001",
+						"my-service",
+					).
+					Return(nil)
 			},
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
 				PublicKeyPEM:             testPublicKeyPEM,
 			},
-			want:    nil,
-			wantErr: status.New(codes.Internal, "internal").Err(),
+			want: &api.SendAccessRequestResponse{
+				OutgoingAccessRequest: &api.OutgoingAccessRequest{
+					Id: 42,
+					Organization: &api.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "my-organization",
+					},
+					ServiceName:          "my-service",
+					State:                api.AccessRequestState_FAILED,
+					CreatedAt:            timestamppb.New(now),
+					UpdatedAt:            timestamppb.New(now),
+					PublicKeyFingerprint: testPublicKeyFingerprint,
+					ErrorDetails: &api.ErrorDetails{
+						Code:       api.ErrorCode_INTERNAL,
+						Cause:      "The organization is not available.",
+						StackTrace: nil,
+					},
+				},
+			},
+			wantErr: nil,
 		},
 		"failed_to_request_access": {
 			ctx: testCreateAdminUserContext(),
@@ -92,14 +150,72 @@ func Test_SendAccessRequest(t *testing.T) {
 						ServiceName:  "my-service",
 						PublicKeyPem: testPublicKeyPEM,
 					}).Return(nil, errors.New("arbitrary"))
+
+				mocks.db.
+					EXPECT().
+					CreateOutgoingAccessRequest(gomock.Any(), &database.OutgoingAccessRequest{
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "",
+						},
+						ReferenceID:          0,
+						ServiceName:          "my-service",
+						PublicKeyPEM:         testPublicKeyPEM,
+						PublicKeyFingerprint: testPublicKeyFingerprint,
+						State:                database.OutgoingAccessRequestFailed,
+						ErrorCause:           "The organization is not available.",
+					}).
+					Return(&database.OutgoingAccessRequest{
+						ID: 42,
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "my-organization",
+						},
+						ServiceName:          "my-service",
+						State:                database.OutgoingAccessRequestFailed,
+						CreatedAt:            now,
+						UpdatedAt:            now,
+						ErrorCause:           "The organization is not available.",
+						PublicKeyPEM:         testPublicKeyPEM,
+						PublicKeyFingerprint: testPublicKeyFingerprint,
+					}, nil)
+
+				mocks.al.
+					EXPECT().
+					OutgoingAccessRequestCreate(
+						gomock.Any(),
+						"admin@example.com",
+						"nlxctl",
+						"00000000000000000001",
+						"my-service",
+					).
+					Return(nil)
 			},
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
 				PublicKeyPEM:             testPublicKeyPEM,
 			},
-			want:    nil,
-			wantErr: status.New(codes.Aborted, "failed to request access, please retry").Err(),
+			want: &api.SendAccessRequestResponse{
+				OutgoingAccessRequest: &api.OutgoingAccessRequest{
+					Id: 42,
+					Organization: &api.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "my-organization",
+					},
+					ServiceName:          "my-service",
+					State:                api.AccessRequestState_FAILED,
+					CreatedAt:            timestamppb.New(now),
+					UpdatedAt:            timestamppb.New(now),
+					PublicKeyFingerprint: testPublicKeyFingerprint,
+					ErrorDetails: &api.ErrorDetails{
+						Code:       api.ErrorCode_INTERNAL,
+						Cause:      "The organization is not available.",
+						StackTrace: nil,
+					},
+				},
+			},
+			wantErr: nil,
 		},
 		"outgoing_access_request_already_present": {
 			ctx: testCreateAdminUserContext(),
@@ -137,7 +253,7 @@ func Test_SendAccessRequest(t *testing.T) {
 				PublicKeyPEM:             testPublicKeyPEM,
 			},
 			want:    nil,
-			wantErr: status.New(codes.AlreadyExists, "there is already an active access request").Err(),
+			wantErr: status.New(codes.Internal, "internal").Err(),
 		},
 		"failed_to_create_outgoing_access_request": {
 			ctx: testCreateAdminUserContext(),

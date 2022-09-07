@@ -80,7 +80,7 @@ const AccessState = ({
                   </Alert.ActionButton>,
                 ]}
               >
-                {accessRequest.errorDetails.cause}
+                {t(accessRequest.errorDetails.cause)}
               </StyledAlert>
             )}
           </Switch.Case>
