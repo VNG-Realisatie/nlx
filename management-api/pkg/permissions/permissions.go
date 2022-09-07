@@ -10,7 +10,6 @@ const (
 	ApproveIncomingAccessRequest Permission = iota + 1 // permissions.incoming_access_request.approve
 	RejectIncomingAccessRequest                        // permissions.incoming_access_request.reject
 	ReadIncomingAccessRequests                         // permissions.incoming_access_requests.read
-	CreateOutgoingAccessRequest                        // permissions.outgoing_access_request.create
 	UpdateOutgoingAccessRequest                        // permissions.outgoing_access_request.update
 	SendOutgoingAccessRequest                          // permissions.outgoing_access_request.send
 	ReadAccessGrants                                   // permissions.access_grants.read
