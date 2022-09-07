@@ -24,7 +24,6 @@ const lockTimeOut = 5 * time.Minute
 type OutgoingAccessRequestState string
 
 const (
-	OutgoingAccessRequestCreated  OutgoingAccessRequestState = "created"
 	OutgoingAccessRequestReceived OutgoingAccessRequestState = "received"
 	OutgoingAccessRequestApproved OutgoingAccessRequestState = "approved"
 	OutgoingAccessRequestRejected OutgoingAccessRequestState = "rejected"
@@ -59,8 +58,7 @@ func (*OutgoingAccessRequest) TableName() string {
 }
 
 func (request *OutgoingAccessRequest) IsSendable() bool {
-	return request.State == OutgoingAccessRequestCreated ||
-		request.State == OutgoingAccessRequestFailed
+	return request.State == OutgoingAccessRequestFailed
 }
 
 func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error) {
@@ -94,7 +92,6 @@ func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Contex
 			accessRequest.ServiceName,
 			accessRequest.PublicKeyFingerprint,
 			[]string{
-				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestReceived),
 			},
 		).
@@ -243,7 +240,6 @@ func (db *PostgresConfigDatabase) TakePendingOutgoingAccessRequests(ctx context.
 					updated_at ASC
 				)`,
 			[]string{
-				string(OutgoingAccessRequestCreated),
 				string(OutgoingAccessRequestApproved),
 				string(OutgoingAccessRequestReceived),
 			},

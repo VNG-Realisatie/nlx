@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"time"
 
-	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -64,8 +63,6 @@ func (job *SynchronizeOutgoingAccessRequestJob) Synchronize(ctx context.Context,
 	synchronizeAt = time.Now().Add(synchronizationIntervalAccessRequests)
 
 	switch request.State {
-	case database.OutgoingAccessRequestCreated:
-		newState, referenceID, err = job.sendAccessRequest(ctx, request)
 
 	case database.OutgoingAccessRequestReceived:
 		newState, err = job.getAccessRequestState(ctx, request)
@@ -118,39 +115,6 @@ func (job *SynchronizeOutgoingAccessRequestJob) Synchronize(ctx context.Context,
 		errorDetails,
 		synchronizeAt,
 	)
-}
-
-func (job *SynchronizeOutgoingAccessRequestJob) sendAccessRequest(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, uint, error) {
-	client, err := job.getOrganizationManagementClient(ctx, request.Organization.SerialNumber)
-	if err != nil {
-		return database.OutgoingAccessRequestFailed, 0, err
-	}
-
-	defer client.Close()
-
-	outways, err := job.configDatabase.GetOutwaysByPublicKeyFingerprint(ctx, request.PublicKeyFingerprint)
-	if err != nil {
-		if err == database.ErrNotFound {
-			return database.OutgoingAccessRequestFailed, 0, fmt.Errorf("no outway using the publickey fingerprint '%s'", request.PublicKeyFingerprint)
-		}
-
-		return database.OutgoingAccessRequestFailed, 0, fmt.Errorf("failed to retrieve outways: %v", err)
-	}
-
-	response, err := client.RequestAccess(ctx, &external.RequestAccessRequest{
-		ServiceName:  request.ServiceName,
-		PublicKeyPem: outways[0].PublicKeyPEM,
-	}, grpc_retry.WithMax(maxRetries))
-	if err != nil {
-		return database.OutgoingAccessRequestFailed, 0, err
-	}
-
-	accessRequestState, err := convertAccessRequestState(response.AccessRequestState)
-	if err != nil {
-		return database.OutgoingAccessRequestFailed, 0, err
-	}
-
-	return accessRequestState, uint(response.ReferenceId), nil
 }
 
 func (job *SynchronizeOutgoingAccessRequestJob) getAccessRequestState(ctx context.Context, request *database.OutgoingAccessRequest) (database.OutgoingAccessRequestState, error) {
@@ -291,8 +255,6 @@ func (job *SynchronizeOutgoingAccessRequestJob) getOrganizationManagementClient(
 
 func convertAccessRequestState(state api.AccessRequestState) (database.OutgoingAccessRequestState, error) {
 	switch state {
-	case api.AccessRequestState_CREATED:
-		return database.OutgoingAccessRequestCreated, nil
 	case api.AccessRequestState_APPROVED:
 		return database.OutgoingAccessRequestApproved, nil
 	case api.AccessRequestState_REJECTED:

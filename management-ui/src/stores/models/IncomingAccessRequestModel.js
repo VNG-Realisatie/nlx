@@ -4,7 +4,6 @@
 import { makeAutoObservable, flow } from 'mobx'
 
 export const STATES = {
-  CREATED: 'CREATED',
   FAILED: 'FAILED',
   RECEIVED: 'RECEIVED',
   CANCELLED: 'CANCELLED',

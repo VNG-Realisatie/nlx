@@ -77,7 +77,7 @@ test('updating from server', async () => {
   let outgoingAccessRequestModel =
     await outgoingAccessRequestStore.updateFromServer({
       id: '42',
-      state: ACCESS_REQUEST_STATES.CREATED,
+      state: ACCESS_REQUEST_STATES.RECEIVED,
     })
 
   // new model should be created
@@ -87,13 +87,13 @@ test('updating from server', async () => {
   outgoingAccessRequestModel =
     await outgoingAccessRequestStore.updateFromServer({
       id: '42',
-      state: ACCESS_REQUEST_STATES.RECEIVED,
+      state: ACCESS_REQUEST_STATES.APPROVED,
     })
 
   // existing model should be updated
   expect(outgoingAccessRequestStore.outgoingAccessRequests.size).toEqual(1)
   expect(outgoingAccessRequestModel).toBeInstanceOf(OutgoingAccessRequestModel)
   expect(outgoingAccessRequestModel.state).toEqual(
-    ACCESS_REQUEST_STATES.RECEIVED,
+    ACCESS_REQUEST_STATES.APPROVED,
   )
 })

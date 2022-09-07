@@ -4,7 +4,6 @@
 import { makeAutoObservable } from 'mobx'
 
 export const ACCESS_REQUEST_STATES = {
-  CREATED: 'CREATED',
   FAILED: 'FAILED',
   RECEIVED: 'RECEIVED',
   REJECTED: 'REJECTED',

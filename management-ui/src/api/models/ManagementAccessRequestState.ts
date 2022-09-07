@@ -20,7 +20,6 @@
 export const ManagementAccessRequestState = {
     UNSPECIFIED: 'UNSPECIFIED',
     FAILED: 'FAILED',
-    CREATED: 'CREATED',
     RECEIVED: 'RECEIVED',
     APPROVED: 'APPROVED',
     REJECTED: 'REJECTED',

@@ -58,21 +58,6 @@ test('Request access failed', () => {
   expect(retryRequestAccessSpy).toHaveBeenCalled()
 })
 
-test('Request access created', () => {
-  const accessRequest = new OutgoingAccessRequestModel({
-    accessRequestData: {
-      state: ACCESS_REQUEST_STATES.CREATED,
-    },
-    outgoingAccessRequestStore: null,
-  })
-
-  renderWithProviders(
-    <AccessState accessRequest={accessRequest} accessProof={null} />,
-  )
-
-  expect(screen.getByText('Sending request…')).toBeInTheDocument()
-})
-
 test('Request access received', () => {
   const accessRequest = new OutgoingAccessRequestModel({
     accessRequestData: {

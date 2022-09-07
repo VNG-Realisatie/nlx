@@ -59,7 +59,7 @@ func TestGetOrganizationService(t *testing.T) {
 						Organization: database.Organization{
 							SerialNumber: "00000000000000000001",
 						},
-						State:     database.OutgoingAccessRequestCreated,
+						State:     database.OutgoingAccessRequestReceived,
 						CreatedAt: time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 						UpdatedAt: time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 					}}, nil)
@@ -76,7 +76,7 @@ func TestGetOrganizationService(t *testing.T) {
 							Organization: database.Organization{
 								SerialNumber: "00000000000000000001",
 							},
-							State:     database.OutgoingAccessRequestCreated,
+							State:     database.OutgoingAccessRequestReceived,
 							CreatedAt: time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 							UpdatedAt: time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC),
 						},
@@ -113,7 +113,7 @@ func TestGetOrganizationService(t *testing.T) {
 							},
 							ServiceName:          "test-service",
 							PublicKeyFingerprint: "public-key-fingerprint",
-							State:                api.AccessRequestState_CREATED,
+							State:                api.AccessRequestState_RECEIVED,
 							CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 							UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						},

@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-//nolint funlen: these are tests
+// nolint funlen: these are tests
 package scheduler_test
 
 import (
@@ -32,7 +32,6 @@ func TestSynchronizeOutgoingAccessRequest(t *testing.T) {
 	pollInterval := 1500 * time.Millisecond
 
 	testGroups := []map[string]testCase{
-		getCreatedAccessRequests(),
 		getReceivedAccessRequests(),
 		getApprovedAccessRequests(),
 	}

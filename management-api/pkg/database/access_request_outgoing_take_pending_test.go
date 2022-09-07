@@ -32,7 +32,7 @@ func TestTakePendingOutgoingAccessRequest(t *testing.T) {
 		"happy_flow": {
 			loadFixtures: true,
 			wantErr:      nil,
-			wantIDs:      []uint64{1, 2, 3, 5, 6},
+			wantIDs:      []uint64{1, 2, 3, 6},
 		},
 	}
 

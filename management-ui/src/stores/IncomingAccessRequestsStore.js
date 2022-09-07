@@ -95,7 +95,7 @@ class IncomingAccessRequestsStore {
 
     // we are only interested in access request which are not 'resolved'
     latestAccessRequests = latestAccessRequests.filter(
-      (ar) => ar.state === STATES.CREATED || ar.state === STATES.RECEIVED,
+      (ar) => ar.state === STATES.RECEIVED,
     )
 
     if (latestAccessRequests.length !== service.incomingAccessRequests.length) {

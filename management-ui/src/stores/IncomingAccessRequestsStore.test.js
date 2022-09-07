@@ -143,14 +143,14 @@ test('fetching for a service should update existing in-memory models instead of 
           id: 'ar-1',
           serviceName: 'service-a',
           organizationName: 'organization-a',
-          state: STATES.CREATED,
+          state: STATES.RECEIVED,
           publicKeyFingerprint: 'public-key-fingerprint',
         },
         {
           id: 'ar-2',
           serviceName: 'service-a',
           organizationName: 'organization-b',
-          state: STATES.CREATED,
+          state: STATES.RECEIVED,
           publicKeyFingerprint: 'public-key-fingerprint-2',
         },
       ],
@@ -161,14 +161,14 @@ test('fetching for a service should update existing in-memory models instead of 
           id: 'ar-1',
           serviceName: 'service-a',
           organizationName: 'organization-a',
-          state: STATES.CREATED,
+          state: STATES.RECEIVED,
           publicKeyFingerprint: 'public-key-fingerprint',
         },
         {
           id: 'ar-2',
           serviceName: 'service-a',
           organizationName: 'organization-b',
-          state: STATES.CREATED,
+          state: STATES.RECEIVED,
           publicKeyFingerprint: 'public-key-fingerprint-2',
         },
       ],
@@ -197,7 +197,7 @@ describe('have the access requests been changed for a service', () => {
     id: 'ar-1',
     serviceName: 'service-a',
     organizationName: 'organization-a',
-    state: STATES.CREATED,
+    state: STATES.RECEIVED,
     publicKeyFingerprint: 'public-key-fingerprint',
   }
 
@@ -205,7 +205,7 @@ describe('have the access requests been changed for a service', () => {
     id: 'ar-2',
     serviceName: 'service-a',
     organizationName: 'organization-a',
-    state: STATES.CREATED,
+    state: STATES.RECEIVED,
     publicKeyFingerprint: 'public-key-fingerprint-2',
   }
 
