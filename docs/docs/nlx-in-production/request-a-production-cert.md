@@ -75,4 +75,4 @@ Inways and outways use the `DIRECTORY_ADDRESS` setting to connect to the directo
 - directory-api.preprod.nlx.io
 
 **Production**
-- directory-api.nlx.io
+- directory-api.prod.nlx.io
