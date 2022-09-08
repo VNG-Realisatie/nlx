@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 //
-import React from 'react'
+import React, { useState } from 'react'
 import { instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { SectionGroup } from '../../../../../components/DetailView'
@@ -16,7 +16,19 @@ import {
 } from './AccessSections'
 
 const DirectoryDetailView = ({ service }) => {
-  const [pauseFetchPolling, continueFetchPolling] = usePolling(service.fetch)
+  const [isLoading, setIsLoading] = useState(false)
+  const [pauseFetchPolling, continueFetchPolling] = usePolling(async () => {
+    if (isLoading) {
+      return
+    }
+
+    setIsLoading(true)
+
+    await service.syncOutgoingAccessRequests()
+    await service.fetch()
+
+    setIsLoading(false)
+  })
 
   const onShowConfirmRequestAccessModalHandler = () => {
     pauseFetchPolling()

@@ -170,6 +170,11 @@ export interface ManagementSendAccessRequestRequest {
     publicKeyPEM?: string;
 }
 
+export interface ManagementSynchronizeOutgoingAccessRequestsRequest {
+    organizationSerialNumber: string;
+    serviceName: string;
+}
+
 export interface ManagementUpdateInwayRequest {
     name: string;
     inway: ManagementInway;
@@ -1006,6 +1011,38 @@ export class ManagementApi extends runtime.BaseAPI {
      */
     async managementSynchronizeOrders(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<ManagementSynchronizeOrdersResponse> {
         const response = await this.managementSynchronizeOrdersRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementSynchronizeOutgoingAccessRequestsRaw(requestParameters: ManagementSynchronizeOutgoingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementSynchronizeOutgoingAccessRequests.');
+        }
+
+        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementSynchronizeOutgoingAccessRequests.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementSynchronizeOutgoingAccessRequests(requestParameters: ManagementSynchronizeOutgoingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
+        const response = await this.managementSynchronizeOutgoingAccessRequestsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

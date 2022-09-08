@@ -116,6 +116,10 @@ service Management {
   }
 
   rpc GetInwayConfig (GetInwayConfigRequest) returns (GetInwayConfigResponse) {}
+
+  rpc SynchronizeOutgoingAccessRequests (SynchronizeOutgoingAccessRequestsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize"};
+  }
 }
 
 message Organization {
@@ -636,6 +640,11 @@ message IncomingOrder {
 
 message ListIncomingOrdersResponse {
   repeated IncomingOrder orders = 1;
+}
+
+message SynchronizeOutgoingAccessRequestsRequest {
+    string organizationSerialNumber = 1;
+    string serviceName = 2;
 }
 
 service TXLog {

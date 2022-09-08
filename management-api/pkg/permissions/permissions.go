@@ -12,6 +12,7 @@ const (
 	ReadIncomingAccessRequests                         // permissions.incoming_access_requests.read
 	UpdateOutgoingAccessRequest                        // permissions.outgoing_access_request.update
 	SendOutgoingAccessRequest                          // permissions.outgoing_access_request.send
+	SyncOutgoingAccessRequests                         // permissions.outgoing_access_requests.sync
 	ReadAccessGrants                                   // permissions.access_grants.read
 	RevokeAccessGrant                                  // permissions.access_grant.revoke
 	ReadAuditLogs                                      // permissions.audit_logs.read

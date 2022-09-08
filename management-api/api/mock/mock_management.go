@@ -658,6 +658,26 @@ func (mr *MockManagementClientMockRecorder) SynchronizeOrders(ctx, in interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockManagementClient)(nil).SynchronizeOrders), varargs...)
 }
 
+// SynchronizeOutgoingAccessRequests mocks base method.
+func (m *MockManagementClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *api.SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SynchronizeOutgoingAccessRequests", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SynchronizeOutgoingAccessRequests indicates an expected call of SynchronizeOutgoingAccessRequests.
+func (mr *MockManagementClientMockRecorder) SynchronizeOutgoingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOutgoingAccessRequests", reflect.TypeOf((*MockManagementClient)(nil).SynchronizeOutgoingAccessRequests), varargs...)
+}
+
 // UpdateInway mocks base method.
 func (m *MockManagementClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
 	m.ctrl.T.Helper()
@@ -1224,6 +1244,21 @@ func (m *MockManagementServer) SynchronizeOrders(arg0 context.Context, arg1 *emp
 func (mr *MockManagementServerMockRecorder) SynchronizeOrders(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockManagementServer)(nil).SynchronizeOrders), arg0, arg1)
+}
+
+// SynchronizeOutgoingAccessRequests mocks base method.
+func (m *MockManagementServer) SynchronizeOutgoingAccessRequests(arg0 context.Context, arg1 *api.SynchronizeOutgoingAccessRequestsRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SynchronizeOutgoingAccessRequests", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SynchronizeOutgoingAccessRequests indicates an expected call of SynchronizeOutgoingAccessRequests.
+func (mr *MockManagementServerMockRecorder) SynchronizeOutgoingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOutgoingAccessRequests", reflect.TypeOf((*MockManagementServer)(nil).SynchronizeOutgoingAccessRequests), arg0, arg1)
 }
 
 // UpdateInway mocks base method.

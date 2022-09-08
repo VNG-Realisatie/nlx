@@ -261,6 +261,49 @@
         "tags" : [ "Management" ]
       }
     },
+    "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize" : {
+      "get" : {
+        "operationId" : "Management_SynchronizeOutgoingAccessRequests",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "organizationSerialNumber",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "serviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
     "/api/v1/audit-logs" : {
       "get" : {
         "operationId" : "Management_ListAuditLogs",

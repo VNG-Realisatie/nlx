@@ -47,6 +47,18 @@ class DirectoryServicesStore {
       }
     }
   })
+  //TODO: add tests
+  syncOutgoingAccessRequests = flow(function* fetch(
+    organizationSerialNumber,
+    serviceName,
+  ) {
+    yield this._managementApiClient.managementSynchronizeOutgoingAccessRequests(
+      {
+        organizationSerialNumber,
+        serviceName,
+      },
+    )
+  })
 
   fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {

@@ -190,6 +190,7 @@ func testCreateAdminUserContext() context.Context {
 			permissions.RejectIncomingAccessRequest:  true,
 			permissions.ReadIncomingAccessRequests:   true,
 			permissions.UpdateOutgoingAccessRequest:  true,
+			permissions.SyncOutgoingAccessRequests:   true,
 			permissions.SendOutgoingAccessRequest:    true,
 			permissions.ReadAccessGrants:             true,
 			permissions.RevokeAccessGrant:            true,
