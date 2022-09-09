@@ -1,0 +1,12 @@
+Lint newlines:
+  image: bash:5.1.16
+  stage: Tests
+  script:
+    - apk add git
+    - bash ./scripts/eol-at-eof-linter.sh
+  needs: []
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
