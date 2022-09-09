@@ -1,0 +1,12 @@
+Lint copyright notice:
+  image: golang:1.19.1-alpine
+  stage: Tests
+  script:
+    - go install github.com/google/addlicense@latest
+    - addlicense -check -ignore "**/node_modules/**" -ignore "management-ui/src/api/**/*" -ignore "directory-api/api/directoryapi.swagger.json.go" -f license-header.tmpl .
+  needs: []
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
