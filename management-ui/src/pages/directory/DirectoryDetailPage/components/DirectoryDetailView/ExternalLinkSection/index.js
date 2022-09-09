@@ -19,6 +19,7 @@ const ExternalLinkSection = ({ service }) => {
         href={documentationURL}
         target="_blank"
         role="button"
+        rel="noreferrer"
         aria-disabled={!documentationURL}
         disabled={!documentationURL}
       >
