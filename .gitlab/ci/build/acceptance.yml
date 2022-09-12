@@ -1,8 +1,8 @@
 .build-acceptance-base:
   stage: Build
-  image: docker:20.10.17-git
+  image: docker:20.10.18-git
   services:
-    - docker:20.10.17-dind
+    - docker:20.10.18-dind
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
