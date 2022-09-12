@@ -18,4 +18,3 @@ Feature: Service
             And the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" has access to "basisregister-fictieve-kentekens" of "RvRD"
         When "RvRD" revokes access of "Gemeenste Stijns" to "basisregister-fictieve-kentekens"
         Then the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" no longer has access to the service "basisregister-fictieve-kentekens" from "RvRD"
-

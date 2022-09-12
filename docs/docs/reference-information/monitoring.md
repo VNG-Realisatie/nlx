@@ -22,4 +22,3 @@ The outway is ready when the service list has been retrieved from the directory.
 ### Configuration
 
 By default the endpoints are reachable on port `8081`. If you want to change this port you can do so by setting the `monitoring-address` flag when starting the in/outway.
-

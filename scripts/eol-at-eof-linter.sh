@@ -33,6 +33,6 @@ while read -r file; do
             rc=1
         fi   
     fi
-done < <(git ls-files | grep -v -E ".*\.(jpg|png|svg|drawio|ico|woff|jpg|jpg|gitkeep)$|management-ui/src/api/.*$")
+done < <(git ls-files | grep -v -E ".*\.(jpg|png|svg|drawio|ico|woff|jpg|jpg|gitkeep)$|management-ui/src/api/.*$|management-api/api/management\.swagger\.json")
 
 exit $rc

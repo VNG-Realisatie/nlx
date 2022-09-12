@@ -56,4 +56,3 @@ The Inway configuration should look similar to the following:
       - ./pki/internal/certs/internal-cert-key.pem:/certs/internal/internal-cert.key:ro
       - ./service-ca-cert.pem:/etc/ssl/certs/service-ca-cert.pem
 ```
-

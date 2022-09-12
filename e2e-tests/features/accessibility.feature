@@ -30,4 +30,3 @@ Feature: Accessibility
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" opens the services page
         Then the page is accessible
-
