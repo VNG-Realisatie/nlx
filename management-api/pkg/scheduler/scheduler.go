@@ -64,13 +64,6 @@ func (s *scheduler) Run(ctx context.Context) {
 		wg.Done()
 	}()
 
-	wg.Add(1)
-
-	go func() {
-		s.RunSynchronizeOutgoingAccessRequest(ctx)
-		wg.Done()
-	}()
-
 	wg.Wait()
 }
 
