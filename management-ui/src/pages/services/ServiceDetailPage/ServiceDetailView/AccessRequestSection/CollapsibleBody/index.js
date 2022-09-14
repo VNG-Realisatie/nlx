@@ -58,7 +58,7 @@ const CollapsibleBody = ({
       showToast({
         title: t('Access request rejected'),
         body: t('Organization has been denied access to service', {
-          organizationName: accessRequest.organizationName,
+          organizationName: accessRequest.organization.name,
           serviceName: accessRequest.serviceName,
         }),
         variant: 'success',
