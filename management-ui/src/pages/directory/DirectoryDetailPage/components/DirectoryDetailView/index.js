@@ -1,9 +1,11 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 //
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
+import { ToasterContext } from '@commonground/design-system'
+import { useTranslation } from 'react-i18next'
 import { SectionGroup } from '../../../../../components/DetailView'
 import CostsSection from '../../../../../components/CostsSection'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
@@ -17,6 +19,8 @@ import {
 
 const DirectoryDetailView = ({ service }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const { showToast } = useContext(ToasterContext)
+  const { t } = useTranslation()
   const [pauseFetchPolling, continueFetchPolling] = usePolling(async () => {
     if (isLoading) {
       return
@@ -24,8 +28,24 @@ const DirectoryDetailView = ({ service }) => {
 
     setIsLoading(true)
 
-    await service.syncOutgoingAccessRequests()
-    await service.fetch()
+    try {
+      await service.syncOutgoingAccessRequests()
+    } catch (error) {
+      showToast({
+        title: t('Failed to synchronize access states'),
+        body: t('The organization (Inway) might be unavailable.'),
+        variant: 'error',
+      })
+    }
+
+    try {
+      await service.fetch()
+    } catch (error) {
+      showToast({
+        title: t('Failed to retrieve service details'),
+        variant: 'error',
+      })
+    }
 
     setIsLoading(false)
   })
