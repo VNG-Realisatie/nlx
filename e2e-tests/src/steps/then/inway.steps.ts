@@ -32,13 +32,20 @@ Then(
     const org = getOrgByName(orgName);
 
     try {
-      await org.apiClients.management?.managementGetInway({
+      const inway = await org.apiClients.management?.managementGetInway({
         name: org.defaultInway.name,
       });
+
       throw new Error(
-        "this code should not be triggered, since we expect the inway to be removed"
+        `this code should not be triggered, since we expect the inway to be removed: ${JSON.stringify(
+          inway
+        )}`
       );
     } catch (error: any) {
+      if (!error.response) {
+        throw error;
+      }
+
       if (error.response.status !== 404) {
         throw new Error(
           `unexpected status code '${error.response.status}' while getting a inway, expected 404: ${error}`
