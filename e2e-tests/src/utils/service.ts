@@ -229,18 +229,10 @@ export const getAccessToService = async (
     }
   );
 
-  // wait until the other organization has retrieved the approval of the access request
-  await pWaitFor.default(
-    async () =>
-      await isAccessRequestApprovedForService(
-        uniqueServiceName,
-        serviceConsumer,
-        outway.publicKeyFingerprint || ""
-      ),
-    {
-      interval: 200,
-      timeout: 1000 * 35, // TODO: we dont know how long it takes until an approval is being synced to the other organization
-    }
+  await isAccessRequestApprovedForService(
+    uniqueServiceName,
+    serviceConsumer,
+    outway.publicKeyFingerprint || ""
   );
 
   debug(
