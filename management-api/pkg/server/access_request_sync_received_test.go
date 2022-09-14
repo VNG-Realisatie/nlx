@@ -251,6 +251,99 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 			want:    nil,
 			wantErr: status.New(codes.Internal, "error occurred while syncing at least one Outgoing Access Request").Err(),
 		},
+		"state_went_from_received_to_approved": {
+			ctx: testCreateAdminUserContext(),
+			setupMocks: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListLatestOutgoingAccessRequests(
+						gomock.Any(),
+						"00000000000000000001",
+						"my-service",
+					).
+					Return([]*database.OutgoingAccessRequest{
+						{
+							ID:    42,
+							State: database.OutgoingAccessRequestReceived,
+							Organization: database.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+							ReferenceID:          1,
+						},
+					}, nil)
+
+				mocks.dc.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
+					Return("address", nil)
+
+				mocks.mc.
+					EXPECT().
+					Close().
+					Return(nil)
+
+				mocks.mc.
+					EXPECT().
+					GetAccessRequestState(gomock.Any(),
+						&external.GetAccessRequestStateRequest{
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+						}).
+					Return(&external.GetAccessRequestStateResponse{
+						State: api.AccessRequestState_APPROVED,
+					}, nil)
+
+				mocks.mc.
+					EXPECT().
+					GetAccessProof(gomock.Any(),
+						&external.GetAccessProofRequest{
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+						}).
+					Return(&api.AccessProof{
+						AccessRequestId: 1,
+						Organization: &api.Organization{
+							SerialNumber: "00000000000000000001",
+							Name:         "my-organization",
+						},
+						ServiceName: "my-service",
+						RevokedAt:   nil,
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					GetAccessProofForOutgoingAccessRequest(gomock.Any(), uint(42)).
+					Return(nil, database.ErrNotFound)
+
+				mocks.db.
+					EXPECT().
+					CreateAccessProof(gomock.Any(), uint(42)).
+					Return(nil, nil)
+
+				week := time.Hour * 24 * 7
+
+				mocks.db.
+					EXPECT().
+					UpdateOutgoingAccessRequestState(
+						gomock.Any(),
+						uint(42),
+						database.OutgoingAccessRequestApproved,
+						uint(0),
+						nil,
+						fixtureTime.Add(week),
+					).
+					Return(nil)
+			},
+			req: &api.SynchronizeOutgoingAccessRequestsRequest{
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "my-service",
+			},
+			want:    &emptypb.Empty{},
+			wantErr: nil,
+		},
 		"happy_flow": {
 			ctx: testCreateAdminUserContext(),
 			setupMocks: func(mocks serviceMocks) {

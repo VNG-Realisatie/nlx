@@ -56,21 +56,6 @@ const getDirectoryService = async (
   );
 };
 
-const isIncomingAccessRequestPresent = async (
-  uniqueServiceName: string,
-  org: Organization,
-  serviceProvider: Organization,
-  publicKeyFingerprint: string
-): Promise<boolean> => {
-  const result = await getIncomingAccessRequest(
-    uniqueServiceName,
-    org,
-    serviceProvider,
-    publicKeyFingerprint
-  );
-  return Promise.resolve(!!result);
-};
-
 const getIncomingAccessRequest = async (
   uniqueServiceName: string,
   org: Organization,
@@ -234,6 +219,13 @@ export const getAccessToService = async (
     {
       serviceName: uniqueServiceName,
       accessRequestID: incomingAccessRequest?.id as string,
+    }
+  );
+
+  await serviceConsumer.apiClients.management?.managementSynchronizeOutgoingAccessRequests(
+    {
+      organizationSerialNumber: serviceProvider.serialNumber,
+      serviceName: uniqueServiceName,
     }
   );
 

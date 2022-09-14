@@ -110,6 +110,13 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 			return fmt.Errorf("unable to convert access request state: %v", err)
 		}
 
+		if newState == database.OutgoingAccessRequestApproved {
+			err := syncAccessProof(ctx, configDatabase, client, request)
+			if err != nil {
+				return err
+			}
+		}
+
 		return configDatabase.UpdateOutgoingAccessRequestState(
 			ctx,
 			request.ID,
