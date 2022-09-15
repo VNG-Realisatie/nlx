@@ -20,7 +20,7 @@ export const isServiceKnownInServiceListOfOutway = async (
   const result = await fetch(input, init);
   const responseText = await result.text();
   const responseContainsInvalidService = responseText.includes(
-    "invalid serialNumber/service path: valid services"
+    "INVALID_URL"
   );
   return Promise.resolve(!responseContainsInvalidService);
 };
