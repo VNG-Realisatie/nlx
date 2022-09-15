@@ -235,6 +235,13 @@ export const getAccessToService = async (
     outway.publicKeyFingerprint || ""
   );
 
+  // Issue #1613: wait until the Inway has refreshed its internal list of services + access grants
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(null)
+    }, 10 * 1000)
+  })
+
   debug(
     `${serviceConsumerOrgName} has gotten access to service ${serviceName} of ${serviceProviderOrgName}`
   );
