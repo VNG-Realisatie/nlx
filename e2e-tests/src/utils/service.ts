@@ -159,6 +159,10 @@ export const createService = async (
     `successfully created service ${serviceName} for ${serviceProviderOrgName}`
   );
 
+  debug(
+    `waiting until ${serviceName} for ${serviceProviderOrgName} is present in the directory`
+  );
+
   // wait until the service has been announced to the directory
   await pWaitFor.default(
     async () =>
