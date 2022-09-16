@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 begin transaction;
 
 CREATE TABLE nlx_management.terms_of_service (

@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 
 # Make sure you have installed drawio-desktop
 # https://github.com/jgraph/drawio-desktop/releases

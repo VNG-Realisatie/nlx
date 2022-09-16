@@ -1,3 +1,6 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 Lint newlines:
   image: bash:5.1.16
   stage: Tests

@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 ALTER TABLE nlx_management.outgoing_orders ADD COLUMN revoked_at timestamp with time zone NULL DEFAULT NULL;

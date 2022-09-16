@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 ALTER TABLE nlx_management.access_requests_incoming ADD COLUMN public_key_pem VARCHAR(4096) NULL DEFAULT NULL;

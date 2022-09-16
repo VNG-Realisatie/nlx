@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 CREATE TABLE nlx_management.audit_logs(
   audit_log_id BIGSERIAL PRIMARY KEY,
   user_name VARCHAR(250),

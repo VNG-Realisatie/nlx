@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 DROP TABLE nlx_management.permissions_roles;

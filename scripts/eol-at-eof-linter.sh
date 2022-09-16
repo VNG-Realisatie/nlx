@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 
 rc=0
 

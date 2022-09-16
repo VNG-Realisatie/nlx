@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN TRANSACTION;
 
 ALTER TABLE nlx_management.audit_logs ADD COLUMN delegatee VARCHAR(250) NULL DEFAULT NULL;

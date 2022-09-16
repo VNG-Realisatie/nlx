@@ -1,3 +1,6 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 - id: 1
   inway_id: 1
   organization_email_address: fixture@example.com

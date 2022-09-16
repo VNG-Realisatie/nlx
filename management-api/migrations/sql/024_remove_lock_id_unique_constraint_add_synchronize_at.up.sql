@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 begin transaction;
 
 alter table nlx_management.access_requests_outgoing drop constraint access_requests_outgoing_lock_id_key;

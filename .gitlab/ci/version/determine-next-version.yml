@@ -1,3 +1,6 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 Determine next version:
   extends: .node-base
   stage: Version

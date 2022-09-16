@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { getOrgByName, Outway, Outways } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
 import { strict as assert } from "assert";

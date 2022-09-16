@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { getOrgByName } from "./organizations";
 import { getOutwayByName } from "./outway";
 import { CustomWorld } from "../support/custom-world";

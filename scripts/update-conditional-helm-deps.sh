@@ -1,4 +1,7 @@
 #!/bin/sh
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 
 helm repo add stable https://charts.helm.sh/stable && \
 helm repo update && \

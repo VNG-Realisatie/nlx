@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 exports.config = {
   server: "http://localhost:4444/wd/hub",
   username: "",

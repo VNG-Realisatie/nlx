@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 ALTER TABLE nlx_management.orders RENAME TO outgoing_orders;

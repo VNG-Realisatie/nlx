@@ -1,3 +1,6 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 # All of the SAST jobs will run at 4AM each day, in a scheduled pipeline.
 # To see all scheduled pipelines, see: https://gitlab.com/commonground/nlx/nlx/-/pipeline_schedules
 

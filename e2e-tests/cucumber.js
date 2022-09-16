@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 const common = `
   --require-module ts-node/register
   --require src/**/*.ts

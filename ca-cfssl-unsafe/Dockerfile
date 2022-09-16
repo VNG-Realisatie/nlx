@@ -1,3 +1,6 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 # Use go 1.x based on alpine image.
 FROM golang:1.19.1-alpine AS build-cfssl
 

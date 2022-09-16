@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 begin transaction;
 
 truncate table directory.organizations cascade;

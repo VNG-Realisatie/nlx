@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 # This will replace the service names in the generated directory api grpc code
 # So that the directory api proto is backwards compatible
 

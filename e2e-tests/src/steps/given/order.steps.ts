@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { CustomWorld } from "../../support/custom-world";
 import { setDefaultInwayAsOrganizationInway } from "../../utils/inway";
 import { createOrder, revokeOrder } from "../../utils/order";

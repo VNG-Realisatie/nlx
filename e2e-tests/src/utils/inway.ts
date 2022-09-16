@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { Organization, getOrgByName } from "./organizations";
 import { env } from "./env";
 import { ManagementInway } from "../../../management-ui/src/api/models";

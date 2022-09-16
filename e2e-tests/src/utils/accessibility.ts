@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import AxeBuilder from "@axe-core/webdriverjs";
 import webdriver from "selenium-webdriver";
 

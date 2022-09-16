@@ -1,3 +1,6 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 - incoming_order_id: 1
   service: fixture-service
   organization_serial_number: "10000000000000000001"

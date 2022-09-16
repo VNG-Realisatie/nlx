@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 ALTER TABLE directory.services ADD COLUMN one_time_costs INT NOT NULL DEFAULT 0;

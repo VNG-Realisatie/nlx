@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 INSERT INTO nlx_management.roles (code) VALUES ('readonly');

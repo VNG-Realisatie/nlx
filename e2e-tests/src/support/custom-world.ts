@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { organizations } from "../utils/organizations";
 import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
 import * as messages from "@cucumber/messages";

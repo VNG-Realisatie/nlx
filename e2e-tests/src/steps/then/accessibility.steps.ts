@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { CustomWorld } from "../../support/custom-world";
 import { checkForAccessibilityIssues } from "../../utils/accessibility";
 import { Then } from "@cucumber/cucumber";

@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 
 start_section() {
     echo -e "section_start:$(date +%s):${1}\r\e[0K${2}"

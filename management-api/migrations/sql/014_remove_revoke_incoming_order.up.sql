@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 ALTER TABLE nlx_management.audit_logs DROP CONSTRAINT audit_log_ck_action_type;

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 
 PROJECT_ID="${1}"
 VERSION="${2}"

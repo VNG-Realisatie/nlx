@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 import { DirectoryApi, ManagementApi } from "../../../management-ui/src/api";
 import { strict as assert } from "assert";
 

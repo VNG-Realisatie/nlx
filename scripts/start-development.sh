@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
 # Run this script from the root folder of the git repository with the following command: ./scripts/start-development.sh
 
 # Make sure permissions for pki files are ok

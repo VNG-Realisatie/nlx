@@ -1,3 +1,8 @@
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 const prepare = require('../../scripts/semantic-release-installation-guide-yaml').prepare
 
 prepare({

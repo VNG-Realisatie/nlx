@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/**
+ * Copyright © VNG Realisatie 2022
+ * Licensed under the EUPL
+ */
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 var os = require("os");
 var child_process = require("child_process");

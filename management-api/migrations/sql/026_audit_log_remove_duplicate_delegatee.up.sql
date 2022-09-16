@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN TRANSACTION;
 
 UPDATE nlx_management.audit_logs
