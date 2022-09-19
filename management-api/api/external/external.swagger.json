@@ -36,11 +36,11 @@
       },
       "externalRequestAccessResponse" : {
         "properties" : {
-          "referenceId" : {
+          "reference_id" : {
             "format" : "uint64",
             "type" : "string"
           },
-          "accessRequestState" : {
+          "access_request_state" : {
             "$ref" : "#/components/schemas/managementAccessRequestState"
           }
         },

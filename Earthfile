@@ -50,6 +50,7 @@ proto-directory-api:
             --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist \
             --openapiv2_out=/dist \
+            --openapiv2_opt json_names_for_fields=false \
             ./directoryapi.proto
     RUN goimports -w -local "go.nlx.io" /dist/
 
@@ -71,6 +72,7 @@ proto-management-api:
             --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist \
+            --openapiv2_opt json_names_for_fields=false \
             ./*.proto && \
         cd external && \
         protoc \
@@ -82,6 +84,7 @@ proto-management-api:
             --go-grpc_out=/dist/external --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist/external --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist/external \
+            --openapiv2_opt json_names_for_fields=false \
             ./*.proto
 
     RUN  npx @openapitools/openapi-generator-cli generate -i /dist/management.swagger.json -g openapi --additional-properties=outputFileName=management.swagger.json -o /openapi
@@ -117,6 +120,7 @@ proto-txlog-api:
             --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist \
+            --openapiv2_opt json_names_for_fields=false \
             ./txlog.proto
     RUN goimports -w -local "go.nlx.io" /dist/
 
@@ -168,6 +172,7 @@ proto-grpc-errors:
             --go-grpc_out=/dist --go-grpc_opt=paths=source_relative \
             --grpc-gateway_out=/dist --grpc-gateway_opt=paths=source_relative \
             --openapiv2_out=/dist \
+            --openapiv2_opt json_names_for_fields=false \
             ./*.proto
 
     RUN goimports -w -local "go.nlx.io" /dist/
