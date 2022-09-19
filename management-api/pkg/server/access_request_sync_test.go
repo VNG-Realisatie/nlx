@@ -18,52 +18,26 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-type syncOutgoingAccessRequestTestCases map[string]struct {
-	ctx        context.Context
-	setupMocks func(mocks serviceMocks)
-	req        *api.SynchronizeOutgoingAccessRequestsRequest
-	want       *emptypb.Empty
-	wantErr    error
-}
-
 func Test_SyncOutgoingAccessRequests(t *testing.T) {
-	testGroups := map[string]syncOutgoingAccessRequestTestCases{
-		"generic":  getGenericTestCases(),
-		"received": getReceivedTestCases(t),
-		"approved": getApprovedTestCases(t),
+	type testCase struct {
+		ctx     context.Context
+		setup   func(mocks serviceMocks)
+		req     *api.SynchronizeOutgoingAccessRequestsRequest
+		want    *emptypb.Empty
+		wantErr error
 	}
 
-	for groupName, testGroup := range testGroups {
-		testGroup := testGroup
-
-		for name, test := range testGroup {
-			test := test
-
-			t.Run(groupName+" "+name, func(t *testing.T) {
-				service, _, mocks := newService(t)
-
-				test.setupMocks(mocks)
-				got, err := service.SynchronizeOutgoingAccessRequests(test.ctx, test.req)
-
-				assert.Equal(t, test.want, got)
-				assert.Equal(t, test.wantErr, err)
-			})
-		}
-	}
-}
-
-func getGenericTestCases() syncOutgoingAccessRequestTestCases {
-	return syncOutgoingAccessRequestTestCases{
+	testCases := map[string]testCase{
 		"missing_required_permission": {
-			ctx:        testCreateUserWithoutPermissionsContext(),
-			setupMocks: func(mocks serviceMocks) {},
-			req:        &api.SynchronizeOutgoingAccessRequestsRequest{},
-			want:       nil,
-			wantErr:    status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_access_requests.sync\" to execute this request").Err(),
+			ctx:     testCreateUserWithoutPermissionsContext(),
+			setup:   func(mocks serviceMocks) {},
+			req:     &api.SynchronizeOutgoingAccessRequestsRequest{},
+			want:    nil,
+			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.outgoing_access_requests.sync\" to execute this request").Err(),
 		},
 		"db_fails_to_retrieve_latest_outgoing_access_requests": {
 			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
+			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					ListLatestOutgoingAccessRequests(
@@ -82,7 +56,7 @@ func getGenericTestCases() syncOutgoingAccessRequestTestCases {
 		},
 		"failed_to_retrieve_inway_proxy_address": {
 			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
+			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					ListLatestOutgoingAccessRequests(
@@ -108,7 +82,7 @@ func getGenericTestCases() syncOutgoingAccessRequestTestCases {
 		},
 		"happy_flow_no_outgoing_access_requests": {
 			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
+			setup: func(mocks serviceMocks) {
 				mocks.db.
 					EXPECT().
 					ListLatestOutgoingAccessRequests(
@@ -124,5 +98,19 @@ func getGenericTestCases() syncOutgoingAccessRequestTestCases {
 			want:    &emptypb.Empty{},
 			wantErr: nil,
 		},
+	}
+
+	for name, tc := range testCases {
+		tc := tc
+
+		t.Run(name, func(t *testing.T) {
+			service, _, mocks := newService(t)
+
+			tc.setup(mocks)
+			got, err := service.SynchronizeOutgoingAccessRequests(tc.ctx, tc.req)
+
+			assert.Equal(t, tc.want, got)
+			assert.Equal(t, tc.wantErr, err)
+		})
 	}
 }

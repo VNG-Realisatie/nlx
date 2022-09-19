@@ -1,9 +1,10 @@
 // Copyright © VNG Realisatie 2022
 // Licensed under the EUPL
 
-package server_test
+package syncer_test
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"testing"
@@ -11,14 +12,13 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/syncer"
 )
 
 //nolint:funlen // this is a test
@@ -30,34 +30,7 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 
 	return syncOutgoingAccessRequestTestCases{
 		"failed_to_get_access_proof": {
-			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					ListLatestOutgoingAccessRequests(
-						gomock.Any(),
-						"00000000000000000001",
-						"my-service",
-					).
-					Return([]*database.OutgoingAccessRequest{
-						{
-							ID:    42,
-							State: database.OutgoingAccessRequestApproved,
-							Organization: database.Organization{
-								SerialNumber: "00000000000000000001",
-								Name:         "my-organization",
-							},
-							ServiceName:          "my-service",
-							PublicKeyFingerprint: testPublicKeyFingerprint,
-							ReferenceID:          1,
-						},
-					}, nil)
-
-				mocks.dc.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
-					Return("address", nil)
-
+			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
 					GetAccessProof(gomock.Any(),
@@ -66,30 +39,15 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(nil, errors.New("arbitrary error"))
-
-				mocks.mc.
-					EXPECT().
-					Close().
-					Return(nil)
 			},
-			req: &api.SynchronizeOutgoingAccessRequestsRequest{
-				OrganizationSerialNumber: "00000000000000000001",
-				ServiceName:              "my-service",
-			},
-			want:    nil,
-			wantErr: status.New(codes.Internal, "error occurred while syncing at least one Outgoing Access Request").Err(),
-		},
-		"access_proof_is_linked_to_different_access_request": {
-			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					ListLatestOutgoingAccessRequests(
-						gomock.Any(),
-						"00000000000000000001",
-						"my-service",
-					).
-					Return([]*database.OutgoingAccessRequest{
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					Clock:  &testClock{},
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
 						{
 							ID:    42,
 							State: database.OutgoingAccessRequestApproved,
@@ -101,13 +59,13 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 							ReferenceID:          1,
 						},
-					}, nil)
-
-				mocks.dc.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
-					Return("address", nil)
-
+					},
+				}
+			},
+			want: errors.New("error occurred while syncing at least one Outgoing Access Request"),
+		},
+		"access_proof_is_linked_to_different_access_request": {
+			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
 					GetAccessProof(gomock.Any(),
@@ -138,30 +96,15 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						fixtureTime.Add(week),
 					).
 					Return(nil)
-
-				mocks.mc.
-					EXPECT().
-					Close().
-					Return(nil)
 			},
-			req: &api.SynchronizeOutgoingAccessRequestsRequest{
-				OrganizationSerialNumber: "00000000000000000001",
-				ServiceName:              "my-service",
-			},
-			want:    &emptypb.Empty{},
-			wantErr: nil,
-		},
-		"remote_acces_proof_is_revoked": {
-			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					ListLatestOutgoingAccessRequests(
-						gomock.Any(),
-						"00000000000000000001",
-						"my-service",
-					).
-					Return([]*database.OutgoingAccessRequest{
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					Clock:  &testClock{},
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
 						{
 							ID:    42,
 							State: database.OutgoingAccessRequestApproved,
@@ -173,13 +116,12 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 							ReferenceID:          1,
 						},
-					}, nil)
-
-				mocks.dc.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
-					Return("address", nil)
-
+					},
+				}
+			},
+		},
+		"remote_acces_proof_is_revoked": {
+			setup: func(mocks syncMocks) {
 				revokedAt := timestamppb.New(time.Now())
 
 				mocks.mc.
@@ -231,30 +173,15 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						fixtureTime.Add(week),
 					).
 					Return(nil)
-
-				mocks.mc.
-					EXPECT().
-					Close().
-					Return(nil)
 			},
-			req: &api.SynchronizeOutgoingAccessRequestsRequest{
-				OrganizationSerialNumber: "00000000000000000001",
-				ServiceName:              "my-service",
-			},
-			want:    &emptypb.Empty{},
-			wantErr: nil,
-		},
-		"happy_flow": {
-			ctx: testCreateAdminUserContext(),
-			setupMocks: func(mocks serviceMocks) {
-				mocks.db.
-					EXPECT().
-					ListLatestOutgoingAccessRequests(
-						gomock.Any(),
-						"00000000000000000001",
-						"my-service",
-					).
-					Return([]*database.OutgoingAccessRequest{
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					Clock:  &testClock{},
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
 						{
 							ID:    42,
 							State: database.OutgoingAccessRequestApproved,
@@ -266,13 +193,13 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 							ReferenceID:          1,
 						},
-					}, nil)
-
-				mocks.dc.
-					EXPECT().
-					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
-					Return("address", nil)
-
+					},
+				}
+			},
+			want: nil,
+		},
+		"happy_flow": {
+			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
 					GetAccessProof(gomock.Any(),
@@ -313,18 +240,30 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						fixtureTime.Add(week),
 					).
 					Return(nil)
-
-				mocks.mc.
-					EXPECT().
-					Close().
-					Return(nil)
 			},
-			req: &api.SynchronizeOutgoingAccessRequestsRequest{
-				OrganizationSerialNumber: "00000000000000000001",
-				ServiceName:              "my-service",
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					Clock:  &testClock{},
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
+						{
+							ID:    42,
+							State: database.OutgoingAccessRequestApproved,
+							Organization: database.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+							ReferenceID:          1,
+						},
+					},
+				}
 			},
-			want:    &emptypb.Empty{},
-			wantErr: nil,
+			want: nil,
 		},
 	}
 }
