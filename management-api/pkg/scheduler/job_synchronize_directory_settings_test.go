@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2021
 // Licensed under the EUPL
 
-//nolint funlen: these are tests
+// nolint funlen: these are tests
 package scheduler_test
 
 import (

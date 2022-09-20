@@ -28,7 +28,6 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 		a.logger,
 		a.directoryClient,
 		a.configDatabase,
-		a.orgCert,
 	)
 
 	go s.Run(ctx)
