@@ -258,3 +258,33 @@ test('retrieving all services with access', async () => {
   expect(servicesWithAccess).toHaveLength(1)
   expect(servicesWithAccess[0]).toBe(serviceWithAccess)
 })
+
+test('syncing outgoing access requests for a service', async () => {
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementSynchronizeOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({
+      foo: 'bar',
+    })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  const result =
+    await rootStore.directoryServicesStore.syncOutgoingAccessRequests(
+      '00000000000000000001',
+      'Service A',
+    )
+
+  expect(
+    managementApiClient.managementSynchronizeOutgoingAccessRequests,
+  ).toHaveBeenCalledWith({
+    organizationSerialNumber: '00000000000000000001',
+    serviceName: 'Service A',
+  })
+  expect(result).toEqual({ foo: 'bar' })
+})
