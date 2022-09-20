@@ -359,13 +359,24 @@ message GetInwayConfigResponse {
     }
 }
 
-enum AccessRequestState {
+enum AccessRequestStateDeprecated {
   UNSPECIFIED = 0;
   FAILED = 1;
+  reserved 2; // Removed deprecated option 'CREATED'
   RECEIVED = 3;
   APPROVED = 4;
   REJECTED = 5;
   REVOKED = 6;
+}
+
+enum AccessRequestState {
+  ACCESS_REQUEST_STATE_UNSPECIFIED = 0;
+  ACCESS_REQUEST_STATE_FAILED = 1;
+  reserved 2; // Removed deprecated option 'CREATED'
+  ACCESS_REQUEST_STATE_RECEIVED = 3;
+  ACCESS_REQUEST_STATE_APPROVED = 4;
+  ACCESS_REQUEST_STATE_REJECTED = 5;
+  ACCESS_REQUEST_STATE_REVOKED = 6;
 }
 
 enum ErrorCode {

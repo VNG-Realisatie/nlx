@@ -13,7 +13,7 @@ import "google/protobuf/empty.proto";
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
   rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
-  rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof);
+  rpc GetAccessProof (GetAccessProofRequest) returns (nlx.management.AccessProof);
 }
 
 service DelegationService {
@@ -32,7 +32,8 @@ message GetAccessRequestStateRequest {
 }
 
 message GetAccessRequestStateResponse {
-  nlx.management.AccessRequestState state = 1;
+  nlx.management.AccessRequestStateDeprecated state_deprecated = 1 [ deprecated = true ];
+  nlx.management.AccessRequestState state = 2;
 }
 
 message GetAccessProofRequest {
@@ -42,7 +43,8 @@ message GetAccessProofRequest {
 
 message RequestAccessResponse {
   uint64 reference_id = 1;
-  nlx.management.AccessRequestState access_request_state = 2;
+  nlx.management.AccessRequestStateDeprecated access_request_state_deprecated = 2 [ deprecated = true ];
+  nlx.management.AccessRequestState access_request_state = 3;
 }
 
 message RequestClaimRequest {

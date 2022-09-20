@@ -91,31 +91,31 @@ func (plugin *DelegationPlugin) Serve(next ServeFunc) ServeFunc {
 			if err != nil {
 				plugin.logger.Error("unable to request claim", zap.String("orderReference", orderReference), zap.String("serviceOrganizationSerialNumber", requestContext.Destination.OrganizationSerialNumber), zap.String("serviceName", requestContext.Destination.Service), zap.Error(err))
 
-				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND) {
+				if grpcerrors.Equal(err, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND) {
 					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderNotFound())
 
 					return nil
 				}
 
-				if grpcerrors.Equal(err, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG) {
+				if grpcerrors.Equal(err, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND_FOR_ORG) {
 					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotExistForYourOrganization())
 
 					return nil
 				}
 
-				if grpcerrors.Equal(err, external.ErrorReason_ORDER_REVOKED) {
+				if grpcerrors.Equal(err, external.ErrorReason_ERROR_REASON_ORDER_REVOKED) {
 					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderRevoked())
 
 					return nil
 				}
 
-				if grpcerrors.Equal(err, external.ErrorReason_ORDER_EXPIRED) {
+				if grpcerrors.Equal(err, external.ErrorReason_ERROR_REASON_ORDER_EXPIRED) {
 					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderExpired())
 
 					return nil
 				}
 
-				if grpcerrors.Equal(err, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE) {
+				if grpcerrors.Equal(err, external.ErrorReason_ERROR_REASON_ORDER_DOES_NOT_CONTAIN_SERVICE) {
 					outway_http.WriteError(requestContext.Response, httperrors.O1, httperrors.OrderDoesNotContainService(requestContext.Destination.Service))
 
 					return nil

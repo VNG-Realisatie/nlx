@@ -94,7 +94,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: grpcerrors.New(codes.PermissionDenied, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG, "order does not exist for your organization", nil),
+			wantErr: grpcerrors.New(codes.PermissionDenied, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND_FOR_ORG, "order does not exist for your organization", nil),
 		},
 		"when_public_key_is_invalid": {
 			setup: func(t *testing.T, certBundle *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -170,7 +170,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_REVOKED, "order is revoked", nil),
+			wantErr: grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_REVOKED, "order is revoked", nil),
 		},
 		"when_order_is_no_longer_valid": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -207,7 +207,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "service-name",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_EXPIRED, "order is expired", nil),
+			wantErr: grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_EXPIRED, "order is expired", nil),
 		},
 		"when_service_not_found_in_access_proofs": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {
@@ -238,7 +238,7 @@ func TestRequestClaim(t *testing.T) {
 				ServiceName:                     "non-existing-service",
 				ServiceOrganizationSerialNumber: "00000000000000000001",
 			},
-			wantErr: grpcerrors.New(codes.NotFound, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE, "service not found in order", nil),
+			wantErr: grpcerrors.New(codes.NotFound, external.ErrorReason_ERROR_REASON_ORDER_DOES_NOT_CONTAIN_SERVICE, "service not found in order", nil),
 		},
 		"when_outway_not_found": {
 			setup: func(t *testing.T, orgCerts *common_tls.CertificateBundle, mocks serviceMocks) context.Context {

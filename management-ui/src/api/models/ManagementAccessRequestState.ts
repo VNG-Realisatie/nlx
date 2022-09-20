@@ -18,12 +18,12 @@
  * @export
  */
 export const ManagementAccessRequestState = {
-    UNSPECIFIED: 'UNSPECIFIED',
-    FAILED: 'FAILED',
-    RECEIVED: 'RECEIVED',
-    APPROVED: 'APPROVED',
-    REJECTED: 'REJECTED',
-    REVOKED: 'REVOKED'
+    UNSPECIFIED: 'ACCESS_REQUEST_STATE_UNSPECIFIED',
+    FAILED: 'ACCESS_REQUEST_STATE_FAILED',
+    RECEIVED: 'ACCESS_REQUEST_STATE_RECEIVED',
+    APPROVED: 'ACCESS_REQUEST_STATE_APPROVED',
+    REJECTED: 'ACCESS_REQUEST_STATE_REJECTED',
+    REVOKED: 'ACCESS_REQUEST_STATE_REVOKED'
 } as const;
 export type ManagementAccessRequestState = typeof ManagementAccessRequestState[keyof typeof ManagementAccessRequestState];
 

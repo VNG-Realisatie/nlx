@@ -26,7 +26,7 @@ test('fetching, getting and updating from server', async () => {
           id: 'abcd',
           organizationName: 'Organization',
           serviceName: 'Service',
-          state: 'RECEIVED',
+          state: STATES.RECEIVED,
           createdAt: '2020-10-01T12:00:00Z',
           updatedAt: '2020-10-01T12:00:10Z',
           publicKeyFingerprint: 'public-key-fingerprint',
@@ -39,7 +39,7 @@ test('fetching, getting and updating from server', async () => {
           id: 'abcd',
           organizationName: 'Organization',
           serviceName: 'Service',
-          state: 'CREATED',
+          state: STATES.CREATED,
           createdAt: '2020-10-01T12:00:00Z',
           updatedAt: '2020-10-01T12:00:01Z',
           publicKeyFingerprint: 'public-key-fingerprint-2',
@@ -71,7 +71,7 @@ test('fetching, getting and updating from server', async () => {
 
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
   expect(updatedAccessRequests[0]).toBeInstanceOf(IncomingAccessRequestModel)
-  expect(updatedAccessRequests[0].state).toBe('RECEIVED')
+  expect(updatedAccessRequests[0].state).toBe(STATES.RECEIVED)
   expect(updatedAccessRequests[0].publicKeyFingerprint).toBe(
     'public-key-fingerprint',
   )

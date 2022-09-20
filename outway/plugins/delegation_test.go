@@ -196,7 +196,7 @@ func TestDelegationPlugin(t *testing.T) {
 					OrderReference:                  "test-ref-123",
 					ServiceOrganizationSerialNumber: "00000000000000000002",
 					ServiceName:                     "service-name",
-				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_NOT_FOUND, "order not found", nil))
+				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND, "order not found", nil))
 			},
 		},
 		//nolint:dupl // this is a test
@@ -224,7 +224,7 @@ func TestDelegationPlugin(t *testing.T) {
 					OrderReference:                  "test-ref-123",
 					ServiceOrganizationSerialNumber: "00000000000000000002",
 					ServiceName:                     "service-name",
-				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG, "order not found for organization", nil))
+				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND_FOR_ORG, "order not found for organization", nil))
 			},
 		},
 		//nolint:dupl // this is a test
@@ -252,7 +252,7 @@ func TestDelegationPlugin(t *testing.T) {
 					OrderReference:                  "test-ref-123",
 					ServiceOrganizationSerialNumber: "00000000000000000002",
 					ServiceName:                     "service-name",
-				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_EXPIRED, "order has expired", nil))
+				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_EXPIRED, "order has expired", nil))
 			},
 		},
 		//nolint:dupl // this is a test
@@ -280,7 +280,7 @@ func TestDelegationPlugin(t *testing.T) {
 					OrderReference:                  "test-ref-123",
 					ServiceOrganizationSerialNumber: "00000000000000000002",
 					ServiceName:                     "service-name",
-				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE, "order does not contain service", nil))
+				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_DOES_NOT_CONTAIN_SERVICE, "order does not contain service", nil))
 			},
 		},
 
@@ -308,7 +308,7 @@ func TestDelegationPlugin(t *testing.T) {
 					OrderReference:                  "test-ref-123",
 					ServiceOrganizationSerialNumber: "00000000000000000002",
 					ServiceName:                     "service-name",
-				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_REVOKED, "order is revoked", nil))
+				}).Return(nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_REVOKED, "order is revoked", nil))
 			},
 		},
 

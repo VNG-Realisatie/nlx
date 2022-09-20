@@ -113,7 +113,7 @@ func TestGetOrganizationService(t *testing.T) {
 							},
 							ServiceName:          "test-service",
 							PublicKeyFingerprint: "public-key-fingerprint",
-							State:                api.AccessRequestState_RECEIVED,
+							State:                api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 							CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 							UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						},

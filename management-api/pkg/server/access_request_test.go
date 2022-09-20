@@ -508,8 +508,9 @@ func TestExternalRequestAccess(t *testing.T) {
 				return ctx
 			},
 			want: &external.RequestAccessResponse{
-				ReferenceId:        43,
-				AccessRequestState: api.AccessRequestState_APPROVED,
+				ReferenceId:                  43,
+				AccessRequestState:           api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED,
+				AccessRequestStateDeprecated: api.AccessRequestStateDeprecated_APPROVED,
 			},
 		},
 	}
@@ -619,7 +620,8 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 				return ctx
 			},
 			want: &external.GetAccessRequestStateResponse{
-				State: api.AccessRequestState_RECEIVED,
+				State:           api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
+				StateDeprecated: api.AccessRequestStateDeprecated_RECEIVED,
 			},
 		},
 	}
@@ -742,7 +744,7 @@ func TestListIncomingAccessRequests(t *testing.T) {
 							Name:         "test-organization",
 						},
 						ServiceName:          "service-name",
-						State:                api.AccessRequestState_RECEIVED,
+						State:                api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 						CreatedAt:            timestamppb.New(currentTime),
 						UpdatedAt:            timestamppb.New(currentTime),
 						PublicKeyFingerprint: "public-key-fingerprint",

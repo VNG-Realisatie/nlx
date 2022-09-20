@@ -140,7 +140,7 @@ func TestListDirectoryServices(t *testing.T) {
 						},
 						ServiceName:          "test-service-1",
 						PublicKeyFingerprint: "public-key-fingerprint",
-						State:                api.AccessRequestState_RECEIVED,
+						State:                api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 						CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 						UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 					},

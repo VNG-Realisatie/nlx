@@ -79,13 +79,13 @@ test('get related incoming access requests', () => {
     new IncomingAccessRequestModel({
       accessRequestData: {
         id: '1',
-        state: 'REJECTED',
+        state: STATES.REJECTED,
       },
     }),
     new IncomingAccessRequestModel({
       accessRequestData: {
         id: '2',
-        state: 'RECEIVED',
+        state: STATES.RECEIVED,
       },
     }),
   ])
@@ -111,7 +111,7 @@ test('get related incoming access requests', () => {
   expect(incomingAccessRequests[0]).toEqual(
     expect.objectContaining({
       id: '2',
-      state: 'RECEIVED',
+      state: STATES.RECEIVED,
     }),
   )
 })

@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"strings"
 
 	"go.uber.org/zap"
@@ -32,26 +33,28 @@ type proxyMetadata struct {
 	PublicKeyPEM             string
 }
 
-func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
-	name := strings.ToUpper(string(state))
+const accessRequestStatePrefix = "ACCESS_REQUEST_STATE_%s"
+
+func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) int32 {
+	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
 	protoState, ok := api.AccessRequestState_value[name]
 	if ok {
-		return api.AccessRequestState(protoState)
+		return int32(api.AccessRequestState(protoState))
 	}
 
-	return api.AccessRequestState_UNSPECIFIED
+	return int32(api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED)
 }
 
-func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) api.AccessRequestState {
-	name := strings.ToUpper(string(state))
+func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
+	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
 	protoState, ok := api.AccessRequestState_value[name]
 	if ok {
 		return api.AccessRequestState(protoState)
 	}
 
-	return api.AccessRequestState_UNSPECIFIED
+	return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 }
 
 func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req *api.ListIncomingAccessRequestsRequest) (*api.ListIncomingAccessRequestsResponse, error) {
@@ -284,8 +287,9 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 
 	if isIncomingAccessRequestStillActive(existingIncomingAccessRequest) {
 		return &external.RequestAccessResponse{
-			ReferenceId:        uint64(existingIncomingAccessRequest.ID),
-			AccessRequestState: incomingAccessRequestStateToProto(existingIncomingAccessRequest.State),
+			ReferenceId:                  uint64(existingIncomingAccessRequest.ID),
+			AccessRequestStateDeprecated: api.AccessRequestStateDeprecated(incomingAccessRequestStateToProto(existingIncomingAccessRequest.State)),
+			AccessRequestState:           api.AccessRequestState(incomingAccessRequestStateToProto(existingIncomingAccessRequest.State)),
 		}, nil
 	}
 
@@ -301,8 +305,9 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	}
 
 	return &external.RequestAccessResponse{
-		ReferenceId:        uint64(createdRequest.ID),
-		AccessRequestState: incomingAccessRequestStateToProto(createdRequest.State),
+		ReferenceId:                  uint64(createdRequest.ID),
+		AccessRequestStateDeprecated: api.AccessRequestStateDeprecated(incomingAccessRequestStateToProto(createdRequest.State)),
+		AccessRequestState:           api.AccessRequestState(incomingAccessRequestStateToProto(createdRequest.State)),
 	}, nil
 }
 
@@ -330,7 +335,8 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 	}
 
 	return &external.GetAccessRequestStateResponse{
-		State: incomingAccessRequestStateToProto(request.State),
+		StateDeprecated: api.AccessRequestStateDeprecated(incomingAccessRequestStateToProto(request.State)),
+		State:           api.AccessRequestState(incomingAccessRequestStateToProto(request.State)),
 	}, nil
 }
 
@@ -347,7 +353,7 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 			SerialNumber: accessRequest.Organization.SerialNumber,
 		},
 		ServiceName:          accessRequest.Service.Name,
-		State:                incomingAccessRequestStateToProto(accessRequest.State),
+		State:                api.AccessRequestState(incomingAccessRequestStateToProto(accessRequest.State)),
 		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
 		CreatedAt:            timestamppb.New(accessRequest.CreatedAt),
 		UpdatedAt:            timestamppb.New(accessRequest.UpdatedAt),

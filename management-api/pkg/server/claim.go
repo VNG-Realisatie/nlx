@@ -39,27 +39,27 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	order, err := s.configDatabase.GetOutgoingOrderByReference(ctx, req.OrderReference)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, grpcerrors.New(codes.NotFound, external.ErrorReason_ORDER_NOT_FOUND, "order not found", nil)
+			return nil, grpcerrors.New(codes.NotFound, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND, "order not found", nil)
 		}
 
 		return nil, grpcerrors.NewInternal("failed to find order", nil)
 	}
 
 	if order.Delegatee != md.OrganizationSerialNumber {
-		return nil, grpcerrors.New(codes.PermissionDenied, external.ErrorReason_ORDER_NOT_FOUND_FOR_ORG, "order does not exist for your organization", nil)
+		return nil, grpcerrors.New(codes.PermissionDenied, external.ErrorReason_ERROR_REASON_ORDER_NOT_FOUND_FOR_ORG, "order does not exist for your organization", nil)
 	}
 
 	outgoingAccessRequest := filterOutgoingAccessRequestFromOrder(order, req.ServiceOrganizationSerialNumber, req.ServiceName)
 	if outgoingAccessRequest == nil {
-		return nil, grpcerrors.New(codes.NotFound, external.ErrorReason_ORDER_DOES_NOT_CONTAIN_SERVICE, "service not found in order", nil)
+		return nil, grpcerrors.New(codes.NotFound, external.ErrorReason_ERROR_REASON_ORDER_DOES_NOT_CONTAIN_SERVICE, "service not found in order", nil)
 	}
 
 	if order.RevokedAt.Valid {
-		return nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_REVOKED, "order is revoked", nil)
+		return nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_REVOKED, "order is revoked", nil)
 	}
 
 	if time.Now().After(order.ValidUntil) {
-		return nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ORDER_EXPIRED, "order is expired", nil)
+		return nil, grpcerrors.New(codes.Unauthenticated, external.ErrorReason_ERROR_REASON_ORDER_EXPIRED, "order is expired", nil)
 	}
 
 	expiresAt := time.Now().Add(expiresInHours * time.Hour)
