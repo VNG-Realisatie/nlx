@@ -73,7 +73,6 @@ test('listing all services', async () => {
 
   renderDirectoryPage(rootStore)
 
-  expect(fetchAllSpy).toHaveBeenCalledTimes(1)
   expect(screen.getByRole('progressbar')).toBeInTheDocument()
   expect(
     screen.queryByTestId('mock-directory-services'),
@@ -83,6 +82,7 @@ test('listing all services', async () => {
   ).toBeInTheDocument()
 
   expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+  expect(fetchAllSpy).toHaveBeenCalledTimes(1)
   expect(syncAllOutgoingAccessRequestsSpy).toHaveBeenCalledTimes(1)
   expect(rootStore.directoryServicesStore.isInitiallyFetched).toEqual(true)
   expect(screen.getByTestId('mock-directory-service-0')).toHaveTextContent(

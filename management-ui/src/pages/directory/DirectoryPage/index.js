@@ -20,11 +20,12 @@ const DirectoryPage = () => {
   const { t } = useTranslation()
   const { showToast } = useContext(ToasterContext)
   const directoryServiceStore = useDirectoryServiceStore()
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    // we fetch the services before syncing, because the sync might take a long time
     async function fetchData() {
-      await directoryServiceStore.fetchAll()
+      const env = await EnvironmentRepository.getCurrent()
+      setSubjectSerialNumber(env.organizationSerialNumber)
 
       try {
         await directoryServiceStore.syncAllOutgoingAccessRequests()
@@ -36,26 +37,15 @@ const DirectoryPage = () => {
       }
 
       await directoryServiceStore.fetchAll()
+
+      setIsLoaded(true)
     }
 
     fetchData()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    const loadEnv = async () => {
-      const env = await EnvironmentRepository.getCurrent()
-      const organizationSubjectSerialNumber = env.organizationSerialNumber
-      setSubjectSerialNumber(organizationSubjectSerialNumber)
-    }
-
-    loadEnv().catch(console.warn)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   const DirectoryCount = () => {
-    if (
-      directoryServiceStore.isInitiallyFetched &&
-      !directoryServiceStore.error
-    ) {
+    if (isLoaded && !directoryServiceStore.error) {
       return <DirectoryServiceCount services={directoryServiceStore.services} />
     }
     return null
@@ -73,7 +63,7 @@ const DirectoryPage = () => {
         }
       />
 
-      {!directoryServiceStore.isInitiallyFetched || !subjectSerialNumber ? (
+      {!isLoaded ? (
         <LoadingMessage />
       ) : directoryServiceStore.error ? (
         <Alert variant="error" data-testid="error-message">
