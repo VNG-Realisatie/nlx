@@ -120,6 +120,10 @@ service Management {
   rpc SynchronizeOutgoingAccessRequests (SynchronizeOutgoingAccessRequestsRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {get: "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize"};
   }
+
+  rpc SynchronizeAllOutgoingAccessRequests (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/synchronize"};
+  }
 }
 
 message Organization {

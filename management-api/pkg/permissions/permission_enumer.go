@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _PermissionName = "permissions.incoming_access_request.approvepermissions.incoming_access_request.rejectpermissions.incoming_access_requests.readpermissions.outgoing_access_request.updatepermissions.outgoing_access_request.sendpermissions.outgoing_access_requests.syncpermissions.access_grants.readpermissions.access_grant.revokepermissions.audit_logs.readpermissions.finance_report.readpermissions.inway.readpermissions.inway.updatepermissions.inway.deletepermissions.inways.readpermissions.outgoing_order.createpermissions.outgoing_order.updatepermissions.outgoing_order.revokepermissions.outgoing_orders.readpermissions.incoming_orders.readpermissions.incoming_orders.synchronizepermissions.outways.readpermissions.outway.deletepermissions.service.createpermissions.service.readpermissions.service.updatepermissions.service.deletepermissions.services.readpermissions.services_statistics.readpermissions.organization_settings.readpermissions.organization_settings.updatepermissions.terms_of_service.acceptpermissions.terms_of_service_status.readpermissions.transaction_logs.read"
+const _PermissionName = "permissions.incoming_access_request.approvepermissions.incoming_access_request.rejectpermissions.incoming_access_requests.readpermissions.outgoing_access_request.updatepermissions.outgoing_access_request.sendpermissions.outgoing_access_requests.syncpermissions.outgoing_access_requests.sync_allpermissions.access_grants.readpermissions.access_grant.revokepermissions.audit_logs.readpermissions.finance_report.readpermissions.inway.readpermissions.inway.updatepermissions.inway.deletepermissions.inways.readpermissions.outgoing_order.createpermissions.outgoing_order.updatepermissions.outgoing_order.revokepermissions.outgoing_orders.readpermissions.incoming_orders.readpermissions.incoming_orders.synchronizepermissions.outways.readpermissions.outway.deletepermissions.service.createpermissions.service.readpermissions.service.updatepermissions.service.deletepermissions.services.readpermissions.services_statistics.readpermissions.organization_settings.readpermissions.organization_settings.updatepermissions.terms_of_service.acceptpermissions.terms_of_service_status.readpermissions.transaction_logs.read"
 
-var _PermissionIndex = [...]uint16{0, 43, 85, 126, 168, 208, 249, 279, 310, 337, 368, 390, 414, 438, 461, 494, 527, 560, 592, 624, 663, 687, 712, 738, 762, 788, 814, 839, 875, 913, 953, 988, 1028, 1061}
+var _PermissionIndex = [...]uint16{0, 43, 85, 126, 168, 208, 249, 294, 324, 355, 382, 413, 435, 459, 483, 506, 539, 572, 605, 637, 669, 708, 732, 757, 783, 807, 833, 859, 884, 920, 958, 998, 1033, 1073, 1106}
 
-const _PermissionLowerName = "permissions.incoming_access_request.approvepermissions.incoming_access_request.rejectpermissions.incoming_access_requests.readpermissions.outgoing_access_request.updatepermissions.outgoing_access_request.sendpermissions.outgoing_access_requests.syncpermissions.access_grants.readpermissions.access_grant.revokepermissions.audit_logs.readpermissions.finance_report.readpermissions.inway.readpermissions.inway.updatepermissions.inway.deletepermissions.inways.readpermissions.outgoing_order.createpermissions.outgoing_order.updatepermissions.outgoing_order.revokepermissions.outgoing_orders.readpermissions.incoming_orders.readpermissions.incoming_orders.synchronizepermissions.outways.readpermissions.outway.deletepermissions.service.createpermissions.service.readpermissions.service.updatepermissions.service.deletepermissions.services.readpermissions.services_statistics.readpermissions.organization_settings.readpermissions.organization_settings.updatepermissions.terms_of_service.acceptpermissions.terms_of_service_status.readpermissions.transaction_logs.read"
+const _PermissionLowerName = "permissions.incoming_access_request.approvepermissions.incoming_access_request.rejectpermissions.incoming_access_requests.readpermissions.outgoing_access_request.updatepermissions.outgoing_access_request.sendpermissions.outgoing_access_requests.syncpermissions.outgoing_access_requests.sync_allpermissions.access_grants.readpermissions.access_grant.revokepermissions.audit_logs.readpermissions.finance_report.readpermissions.inway.readpermissions.inway.updatepermissions.inway.deletepermissions.inways.readpermissions.outgoing_order.createpermissions.outgoing_order.updatepermissions.outgoing_order.revokepermissions.outgoing_orders.readpermissions.incoming_orders.readpermissions.incoming_orders.synchronizepermissions.outways.readpermissions.outway.deletepermissions.service.createpermissions.service.readpermissions.service.updatepermissions.service.deletepermissions.services.readpermissions.services_statistics.readpermissions.organization_settings.readpermissions.organization_settings.updatepermissions.terms_of_service.acceptpermissions.terms_of_service_status.readpermissions.transaction_logs.read"
 
 func (i Permission) String() string {
 	i -= 1
@@ -31,36 +31,37 @@ func _PermissionNoOp() {
 	_ = x[UpdateOutgoingAccessRequest-(4)]
 	_ = x[SendOutgoingAccessRequest-(5)]
 	_ = x[SyncOutgoingAccessRequests-(6)]
-	_ = x[ReadAccessGrants-(7)]
-	_ = x[RevokeAccessGrant-(8)]
-	_ = x[ReadAuditLogs-(9)]
-	_ = x[ReadFinanceReport-(10)]
-	_ = x[ReadInway-(11)]
-	_ = x[UpdateInway-(12)]
-	_ = x[DeleteInway-(13)]
-	_ = x[ReadInways-(14)]
-	_ = x[CreateOutgoingOrder-(15)]
-	_ = x[UpdateOutgoingOrder-(16)]
-	_ = x[RevokeOutgoingOrder-(17)]
-	_ = x[ReadOutgoingOrders-(18)]
-	_ = x[ReadIncomingOrders-(19)]
-	_ = x[SynchronizeIncomingOrders-(20)]
-	_ = x[ReadOutways-(21)]
-	_ = x[DeleteOutway-(22)]
-	_ = x[CreateService-(23)]
-	_ = x[ReadService-(24)]
-	_ = x[UpdateService-(25)]
-	_ = x[DeleteService-(26)]
-	_ = x[ReadServices-(27)]
-	_ = x[ReadServicesStatistics-(28)]
-	_ = x[ReadOrganizationSettings-(29)]
-	_ = x[UpdateOrganizationSettings-(30)]
-	_ = x[AcceptTermsOfService-(31)]
-	_ = x[ReadTermsOfServiceStatus-(32)]
-	_ = x[ReadTransactionLogs-(33)]
+	_ = x[SyncAllOutgoingAccessRequests-(7)]
+	_ = x[ReadAccessGrants-(8)]
+	_ = x[RevokeAccessGrant-(9)]
+	_ = x[ReadAuditLogs-(10)]
+	_ = x[ReadFinanceReport-(11)]
+	_ = x[ReadInway-(12)]
+	_ = x[UpdateInway-(13)]
+	_ = x[DeleteInway-(14)]
+	_ = x[ReadInways-(15)]
+	_ = x[CreateOutgoingOrder-(16)]
+	_ = x[UpdateOutgoingOrder-(17)]
+	_ = x[RevokeOutgoingOrder-(18)]
+	_ = x[ReadOutgoingOrders-(19)]
+	_ = x[ReadIncomingOrders-(20)]
+	_ = x[SynchronizeIncomingOrders-(21)]
+	_ = x[ReadOutways-(22)]
+	_ = x[DeleteOutway-(23)]
+	_ = x[CreateService-(24)]
+	_ = x[ReadService-(25)]
+	_ = x[UpdateService-(26)]
+	_ = x[DeleteService-(27)]
+	_ = x[ReadServices-(28)]
+	_ = x[ReadServicesStatistics-(29)]
+	_ = x[ReadOrganizationSettings-(30)]
+	_ = x[UpdateOrganizationSettings-(31)]
+	_ = x[AcceptTermsOfService-(32)]
+	_ = x[ReadTermsOfServiceStatus-(33)]
+	_ = x[ReadTransactionLogs-(34)]
 }
 
-var _PermissionValues = []Permission{ApproveIncomingAccessRequest, RejectIncomingAccessRequest, ReadIncomingAccessRequests, UpdateOutgoingAccessRequest, SendOutgoingAccessRequest, SyncOutgoingAccessRequests, ReadAccessGrants, RevokeAccessGrant, ReadAuditLogs, ReadFinanceReport, ReadInway, UpdateInway, DeleteInway, ReadInways, CreateOutgoingOrder, UpdateOutgoingOrder, RevokeOutgoingOrder, ReadOutgoingOrders, ReadIncomingOrders, SynchronizeIncomingOrders, ReadOutways, DeleteOutway, CreateService, ReadService, UpdateService, DeleteService, ReadServices, ReadServicesStatistics, ReadOrganizationSettings, UpdateOrganizationSettings, AcceptTermsOfService, ReadTermsOfServiceStatus, ReadTransactionLogs}
+var _PermissionValues = []Permission{ApproveIncomingAccessRequest, RejectIncomingAccessRequest, ReadIncomingAccessRequests, UpdateOutgoingAccessRequest, SendOutgoingAccessRequest, SyncOutgoingAccessRequests, SyncAllOutgoingAccessRequests, ReadAccessGrants, RevokeAccessGrant, ReadAuditLogs, ReadFinanceReport, ReadInway, UpdateInway, DeleteInway, ReadInways, CreateOutgoingOrder, UpdateOutgoingOrder, RevokeOutgoingOrder, ReadOutgoingOrders, ReadIncomingOrders, SynchronizeIncomingOrders, ReadOutways, DeleteOutway, CreateService, ReadService, UpdateService, DeleteService, ReadServices, ReadServicesStatistics, ReadOrganizationSettings, UpdateOrganizationSettings, AcceptTermsOfService, ReadTermsOfServiceStatus, ReadTransactionLogs}
 
 var _PermissionNameToValueMap = map[string]Permission{
 	_PermissionName[0:43]:           ApproveIncomingAccessRequest,
@@ -75,60 +76,62 @@ var _PermissionNameToValueMap = map[string]Permission{
 	_PermissionLowerName[168:208]:   SendOutgoingAccessRequest,
 	_PermissionName[208:249]:        SyncOutgoingAccessRequests,
 	_PermissionLowerName[208:249]:   SyncOutgoingAccessRequests,
-	_PermissionName[249:279]:        ReadAccessGrants,
-	_PermissionLowerName[249:279]:   ReadAccessGrants,
-	_PermissionName[279:310]:        RevokeAccessGrant,
-	_PermissionLowerName[279:310]:   RevokeAccessGrant,
-	_PermissionName[310:337]:        ReadAuditLogs,
-	_PermissionLowerName[310:337]:   ReadAuditLogs,
-	_PermissionName[337:368]:        ReadFinanceReport,
-	_PermissionLowerName[337:368]:   ReadFinanceReport,
-	_PermissionName[368:390]:        ReadInway,
-	_PermissionLowerName[368:390]:   ReadInway,
-	_PermissionName[390:414]:        UpdateInway,
-	_PermissionLowerName[390:414]:   UpdateInway,
-	_PermissionName[414:438]:        DeleteInway,
-	_PermissionLowerName[414:438]:   DeleteInway,
-	_PermissionName[438:461]:        ReadInways,
-	_PermissionLowerName[438:461]:   ReadInways,
-	_PermissionName[461:494]:        CreateOutgoingOrder,
-	_PermissionLowerName[461:494]:   CreateOutgoingOrder,
-	_PermissionName[494:527]:        UpdateOutgoingOrder,
-	_PermissionLowerName[494:527]:   UpdateOutgoingOrder,
-	_PermissionName[527:560]:        RevokeOutgoingOrder,
-	_PermissionLowerName[527:560]:   RevokeOutgoingOrder,
-	_PermissionName[560:592]:        ReadOutgoingOrders,
-	_PermissionLowerName[560:592]:   ReadOutgoingOrders,
-	_PermissionName[592:624]:        ReadIncomingOrders,
-	_PermissionLowerName[592:624]:   ReadIncomingOrders,
-	_PermissionName[624:663]:        SynchronizeIncomingOrders,
-	_PermissionLowerName[624:663]:   SynchronizeIncomingOrders,
-	_PermissionName[663:687]:        ReadOutways,
-	_PermissionLowerName[663:687]:   ReadOutways,
-	_PermissionName[687:712]:        DeleteOutway,
-	_PermissionLowerName[687:712]:   DeleteOutway,
-	_PermissionName[712:738]:        CreateService,
-	_PermissionLowerName[712:738]:   CreateService,
-	_PermissionName[738:762]:        ReadService,
-	_PermissionLowerName[738:762]:   ReadService,
-	_PermissionName[762:788]:        UpdateService,
-	_PermissionLowerName[762:788]:   UpdateService,
-	_PermissionName[788:814]:        DeleteService,
-	_PermissionLowerName[788:814]:   DeleteService,
-	_PermissionName[814:839]:        ReadServices,
-	_PermissionLowerName[814:839]:   ReadServices,
-	_PermissionName[839:875]:        ReadServicesStatistics,
-	_PermissionLowerName[839:875]:   ReadServicesStatistics,
-	_PermissionName[875:913]:        ReadOrganizationSettings,
-	_PermissionLowerName[875:913]:   ReadOrganizationSettings,
-	_PermissionName[913:953]:        UpdateOrganizationSettings,
-	_PermissionLowerName[913:953]:   UpdateOrganizationSettings,
-	_PermissionName[953:988]:        AcceptTermsOfService,
-	_PermissionLowerName[953:988]:   AcceptTermsOfService,
-	_PermissionName[988:1028]:       ReadTermsOfServiceStatus,
-	_PermissionLowerName[988:1028]:  ReadTermsOfServiceStatus,
-	_PermissionName[1028:1061]:      ReadTransactionLogs,
-	_PermissionLowerName[1028:1061]: ReadTransactionLogs,
+	_PermissionName[249:294]:        SyncAllOutgoingAccessRequests,
+	_PermissionLowerName[249:294]:   SyncAllOutgoingAccessRequests,
+	_PermissionName[294:324]:        ReadAccessGrants,
+	_PermissionLowerName[294:324]:   ReadAccessGrants,
+	_PermissionName[324:355]:        RevokeAccessGrant,
+	_PermissionLowerName[324:355]:   RevokeAccessGrant,
+	_PermissionName[355:382]:        ReadAuditLogs,
+	_PermissionLowerName[355:382]:   ReadAuditLogs,
+	_PermissionName[382:413]:        ReadFinanceReport,
+	_PermissionLowerName[382:413]:   ReadFinanceReport,
+	_PermissionName[413:435]:        ReadInway,
+	_PermissionLowerName[413:435]:   ReadInway,
+	_PermissionName[435:459]:        UpdateInway,
+	_PermissionLowerName[435:459]:   UpdateInway,
+	_PermissionName[459:483]:        DeleteInway,
+	_PermissionLowerName[459:483]:   DeleteInway,
+	_PermissionName[483:506]:        ReadInways,
+	_PermissionLowerName[483:506]:   ReadInways,
+	_PermissionName[506:539]:        CreateOutgoingOrder,
+	_PermissionLowerName[506:539]:   CreateOutgoingOrder,
+	_PermissionName[539:572]:        UpdateOutgoingOrder,
+	_PermissionLowerName[539:572]:   UpdateOutgoingOrder,
+	_PermissionName[572:605]:        RevokeOutgoingOrder,
+	_PermissionLowerName[572:605]:   RevokeOutgoingOrder,
+	_PermissionName[605:637]:        ReadOutgoingOrders,
+	_PermissionLowerName[605:637]:   ReadOutgoingOrders,
+	_PermissionName[637:669]:        ReadIncomingOrders,
+	_PermissionLowerName[637:669]:   ReadIncomingOrders,
+	_PermissionName[669:708]:        SynchronizeIncomingOrders,
+	_PermissionLowerName[669:708]:   SynchronizeIncomingOrders,
+	_PermissionName[708:732]:        ReadOutways,
+	_PermissionLowerName[708:732]:   ReadOutways,
+	_PermissionName[732:757]:        DeleteOutway,
+	_PermissionLowerName[732:757]:   DeleteOutway,
+	_PermissionName[757:783]:        CreateService,
+	_PermissionLowerName[757:783]:   CreateService,
+	_PermissionName[783:807]:        ReadService,
+	_PermissionLowerName[783:807]:   ReadService,
+	_PermissionName[807:833]:        UpdateService,
+	_PermissionLowerName[807:833]:   UpdateService,
+	_PermissionName[833:859]:        DeleteService,
+	_PermissionLowerName[833:859]:   DeleteService,
+	_PermissionName[859:884]:        ReadServices,
+	_PermissionLowerName[859:884]:   ReadServices,
+	_PermissionName[884:920]:        ReadServicesStatistics,
+	_PermissionLowerName[884:920]:   ReadServicesStatistics,
+	_PermissionName[920:958]:        ReadOrganizationSettings,
+	_PermissionLowerName[920:958]:   ReadOrganizationSettings,
+	_PermissionName[958:998]:        UpdateOrganizationSettings,
+	_PermissionLowerName[958:998]:   UpdateOrganizationSettings,
+	_PermissionName[998:1033]:       AcceptTermsOfService,
+	_PermissionLowerName[998:1033]:  AcceptTermsOfService,
+	_PermissionName[1033:1073]:      ReadTermsOfServiceStatus,
+	_PermissionLowerName[1033:1073]: ReadTermsOfServiceStatus,
+	_PermissionName[1073:1106]:      ReadTransactionLogs,
+	_PermissionLowerName[1073:1106]: ReadTransactionLogs,
 }
 
 var _PermissionNames = []string{
@@ -138,33 +141,34 @@ var _PermissionNames = []string{
 	_PermissionName[126:168],
 	_PermissionName[168:208],
 	_PermissionName[208:249],
-	_PermissionName[249:279],
-	_PermissionName[279:310],
-	_PermissionName[310:337],
-	_PermissionName[337:368],
-	_PermissionName[368:390],
-	_PermissionName[390:414],
-	_PermissionName[414:438],
-	_PermissionName[438:461],
-	_PermissionName[461:494],
-	_PermissionName[494:527],
-	_PermissionName[527:560],
-	_PermissionName[560:592],
-	_PermissionName[592:624],
-	_PermissionName[624:663],
-	_PermissionName[663:687],
-	_PermissionName[687:712],
-	_PermissionName[712:738],
-	_PermissionName[738:762],
-	_PermissionName[762:788],
-	_PermissionName[788:814],
-	_PermissionName[814:839],
-	_PermissionName[839:875],
-	_PermissionName[875:913],
-	_PermissionName[913:953],
-	_PermissionName[953:988],
-	_PermissionName[988:1028],
-	_PermissionName[1028:1061],
+	_PermissionName[249:294],
+	_PermissionName[294:324],
+	_PermissionName[324:355],
+	_PermissionName[355:382],
+	_PermissionName[382:413],
+	_PermissionName[413:435],
+	_PermissionName[435:459],
+	_PermissionName[459:483],
+	_PermissionName[483:506],
+	_PermissionName[506:539],
+	_PermissionName[539:572],
+	_PermissionName[572:605],
+	_PermissionName[605:637],
+	_PermissionName[637:669],
+	_PermissionName[669:708],
+	_PermissionName[708:732],
+	_PermissionName[732:757],
+	_PermissionName[757:783],
+	_PermissionName[783:807],
+	_PermissionName[807:833],
+	_PermissionName[833:859],
+	_PermissionName[859:884],
+	_PermissionName[884:920],
+	_PermissionName[920:958],
+	_PermissionName[958:998],
+	_PermissionName[998:1033],
+	_PermissionName[1033:1073],
+	_PermissionName[1073:1106],
 }
 
 // PermissionString retrieves an enum value from the enum constants string name.

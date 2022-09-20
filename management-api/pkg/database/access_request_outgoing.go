@@ -80,6 +80,57 @@ func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.C
 	return *outgoingAccessRequests, nil
 }
 
+func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error) {
+	accessRequests, err := db.queries.ListAllLatestOutgoingAccessRequests(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var outgoingAccessRequests = make([]*OutgoingAccessRequest, len(accessRequests))
+
+	for i, accessRequest := range accessRequests {
+		var lockID *uuid.UUID = nil
+
+		if accessRequest.LockID.Valid {
+			lockID = &accessRequest.LockID.UUID
+		}
+
+		var pem = ""
+
+		if accessRequest.PublicKeyPem.Valid {
+			pem = accessRequest.PublicKeyPem.String
+		}
+
+		var errorCause = ""
+
+		if accessRequest.ErrorCause.Valid {
+			errorCause = accessRequest.ErrorCause.String
+		}
+
+		outgoingAccessRequests[i] = &OutgoingAccessRequest{
+			ID: uint(accessRequest.ID),
+			Organization: Organization{
+				SerialNumber: accessRequest.OrganizationSerialNumber,
+				Name:         accessRequest.OrganizationName,
+			},
+			ServiceName:          accessRequest.ServiceName,
+			ReferenceID:          uint(accessRequest.ReferenceID),
+			State:                OutgoingAccessRequestState(accessRequest.State),
+			LockID:               lockID,
+			LockExpiresAt:        accessRequest.LockExpiresAt,
+			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
+			PublicKeyPEM:         pem,
+			ErrorCode:            int(accessRequest.ErrorCode),
+			ErrorCause:           errorCause,
+			CreatedAt:            accessRequest.CreatedAt,
+			UpdatedAt:            accessRequest.UpdatedAt,
+			SynchronizeAt:        accessRequest.SynchronizeAt,
+		}
+	}
+
+	return outgoingAccessRequests, nil
+}
+
 func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
 	var count int64
 

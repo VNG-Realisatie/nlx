@@ -527,6 +527,21 @@ func (mr *MockConfigDatabaseMockRecorder) ListAccessGrantsForService(ctx, servic
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccessGrantsForService", reflect.TypeOf((*MockConfigDatabase)(nil).ListAccessGrantsForService), ctx, serviceName)
 }
 
+// ListAllLatestOutgoingAccessRequests mocks base method.
+func (m *MockConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*database.OutgoingAccessRequest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAllLatestOutgoingAccessRequests", ctx)
+	ret0, _ := ret[0].([]*database.OutgoingAccessRequest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAllLatestOutgoingAccessRequests indicates an expected call of ListAllLatestOutgoingAccessRequests.
+func (mr *MockConfigDatabaseMockRecorder) ListAllLatestOutgoingAccessRequests(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAllLatestOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).ListAllLatestOutgoingAccessRequests), ctx)
+}
+
 // ListAuditLogRecords mocks base method.
 func (m *MockConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*database.AuditLog, error) {
 	m.ctrl.T.Helper()

@@ -65,8 +65,8 @@ const createTermsOfService = `-- name: CreateTermsOfService :exec
 insert into
     nlx_management.terms_of_service
 (username, created_at)
-    values
-($1, $2)
+values
+    ($1, $2)
 `
 
 type CreateTermsOfServiceParams struct {
@@ -438,6 +438,63 @@ func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) (
 			&i.ServiceRequestCosts,
 			&i.ServiceCreatedAt,
 			&i.ServiceUpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listAllLatestOutgoingAccessRequests = `-- name: ListAllLatestOutgoingAccessRequests :many
+select
+    distinct on (
+        public_key_fingerprint,
+        service_name,
+        organization_serial_number
+    ) access_requests_outgoing.id, access_requests_outgoing.organization_name, access_requests_outgoing.service_name, access_requests_outgoing.state, access_requests_outgoing.public_key_fingerprint, access_requests_outgoing.reference_id, access_requests_outgoing.error_code, access_requests_outgoing.error_cause, access_requests_outgoing.error_stack_trace, access_requests_outgoing.lock_id, access_requests_outgoing.lock_expires_at, access_requests_outgoing.created_at, access_requests_outgoing.updated_at, access_requests_outgoing.public_key_pem, access_requests_outgoing.organization_serial_number, access_requests_outgoing.synchronize_at
+from
+    nlx_management.access_requests_outgoing
+order by
+    organization_serial_number,
+    public_key_fingerprint,
+    service_name,
+    created_at
+desc
+`
+
+func (q *Queries) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*NlxManagementAccessRequestsOutgoing, error) {
+	rows, err := q.query(ctx, q.listAllLatestOutgoingAccessRequestsStmt, listAllLatestOutgoingAccessRequests)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*NlxManagementAccessRequestsOutgoing{}
+	for rows.Next() {
+		var i NlxManagementAccessRequestsOutgoing
+		if err := rows.Scan(
+			&i.ID,
+			&i.OrganizationName,
+			&i.ServiceName,
+			&i.State,
+			&i.PublicKeyFingerprint,
+			&i.ReferenceID,
+			&i.ErrorCode,
+			&i.ErrorCause,
+			&i.ErrorStackTrace,
+			&i.LockID,
+			&i.LockExpiresAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.PublicKeyPem,
+			&i.OrganizationSerialNumber,
+			&i.SynchronizeAt,
 		); err != nil {
 			return nil, err
 		}

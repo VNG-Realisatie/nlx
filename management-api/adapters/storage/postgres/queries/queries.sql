@@ -218,6 +218,22 @@ on constraint inways_name_key
                 ip_address      = excluded.ip_address,
                 updated_at      = excluded.updated_at;
 
+-- name: ListAllLatestOutgoingAccessRequests :many
+select
+    distinct on (
+        public_key_fingerprint,
+        service_name,
+        organization_serial_number
+    ) access_requests_outgoing.*
+from
+    nlx_management.access_requests_outgoing
+order by
+    organization_serial_number,
+    public_key_fingerprint,
+    service_name,
+    created_at
+desc;
+
 -- name: ListTermsOfService :many
 select
     id, username, created_at
@@ -228,8 +244,8 @@ from
 insert into
     nlx_management.terms_of_service
 (username, created_at)
-    values
-($1, $2);
+values
+    ($1, $2);
 
 -- name: ListPermissions :many
 select code from nlx_management.permissions;

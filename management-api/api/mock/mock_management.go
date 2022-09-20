@@ -638,6 +638,26 @@ func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementClient)(nil).SendAccessRequest), varargs...)
 }
 
+// SynchronizeAllOutgoingAccessRequests mocks base method.
+func (m *MockManagementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "SynchronizeAllOutgoingAccessRequests", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SynchronizeAllOutgoingAccessRequests indicates an expected call of SynchronizeAllOutgoingAccessRequests.
+func (mr *MockManagementClientMockRecorder) SynchronizeAllOutgoingAccessRequests(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeAllOutgoingAccessRequests", reflect.TypeOf((*MockManagementClient)(nil).SynchronizeAllOutgoingAccessRequests), varargs...)
+}
+
 // SynchronizeOrders mocks base method.
 func (m *MockManagementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.SynchronizeOrdersResponse, error) {
 	m.ctrl.T.Helper()
@@ -1229,6 +1249,21 @@ func (m *MockManagementServer) SendAccessRequest(arg0 context.Context, arg1 *api
 func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAccessRequest", reflect.TypeOf((*MockManagementServer)(nil).SendAccessRequest), arg0, arg1)
+}
+
+// SynchronizeAllOutgoingAccessRequests mocks base method.
+func (m *MockManagementServer) SynchronizeAllOutgoingAccessRequests(arg0 context.Context, arg1 *emptypb.Empty) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SynchronizeAllOutgoingAccessRequests", arg0, arg1)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SynchronizeAllOutgoingAccessRequests indicates an expected call of SynchronizeAllOutgoingAccessRequests.
+func (mr *MockManagementServerMockRecorder) SynchronizeAllOutgoingAccessRequests(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeAllOutgoingAccessRequests", reflect.TypeOf((*MockManagementServer)(nil).SynchronizeAllOutgoingAccessRequests), arg0, arg1)
 }
 
 // SynchronizeOrders mocks base method.

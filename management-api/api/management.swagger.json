@@ -212,6 +212,34 @@
         "tags" : [ "Management" ]
       }
     },
+    "/api/v1/access-requests/outgoing/synchronize" : {
+      "get" : {
+        "operationId" : "Management_SynchronizeAllOutgoingAccessRequests",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "Management" ]
+      }
+    },
     "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}" : {
       "post" : {
         "operationId" : "Management_SendAccessRequest",
