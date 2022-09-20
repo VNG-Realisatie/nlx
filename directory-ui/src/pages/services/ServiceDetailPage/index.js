@@ -1,33 +1,20 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Alert, Drawer } from '@commonground/design-system'
-import getServices from '../ServicesPage/get-services'
+import { array } from 'prop-types'
 import DirectoryDetailView from './components/DirectoryDetailView'
 import DrawerHeader from './components/DrawerHeader'
 import { StyledDrawer } from './index.styles'
 
-const ServiceDetailPage = () => {
+const ServiceDetailPage = ({ services }) => {
   const navigate = useNavigate()
   const { serviceName } = useParams()
   const location = useLocation()
-  const [service, setService] = useState()
 
-  useEffect(() => {
-    const loadService = async () => {
-      const services = await getServices()
-
-      const activeService = services.find(
-        (service) => service.name === serviceName,
-      )
-
-      setService(activeService)
-    }
-    loadService()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const service = services.find((service) => service.name === serviceName)
 
   const navigateToParentUrl = () => {
     const urlParams = new URLSearchParams(location.search)
@@ -67,6 +54,14 @@ const ServiceDetailPage = () => {
       </Drawer.Content>
     </StyledDrawer>
   )
+}
+
+ServiceDetailPage.propTypes = {
+  services: array,
+}
+
+ServiceDetailPage.defaultProps = {
+  services: [],
 }
 
 export default ServiceDetailPage

@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { shape, text } from 'prop-types'
+import { shape, string } from 'prop-types'
 import { Icon } from '@commonground/design-system'
 import {
   DetailHeading,
@@ -40,7 +40,7 @@ const ContactSection = ({ service }) => {
 
 ContactSection.propTypes = {
   service: shape({
-    contactEmailAddress: text,
+    contactEmailAddress: string,
   }),
 }
 

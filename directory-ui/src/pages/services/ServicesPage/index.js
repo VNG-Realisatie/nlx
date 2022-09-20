@@ -106,7 +106,7 @@ const ServicesPage = ({ location }) => {
           <Routes>
             <Route
               path="/:organizationSerialNumber/:serviceName"
-              element={<DirectoryDetailPage />}
+              element={<DirectoryDetailPage services={services} />}
             />
           </Routes>
         </Container>

@@ -12,26 +12,17 @@ jest.mock('./components/DirectoryDetailView', () => () => (
   <div data-testid="directory-service-details" />
 ))
 
-beforeEach(() => {
-  jest.spyOn(global, 'fetch').mockResolvedValueOnce({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({
-        services: [
-          {
-            id: 'Test Organization/Test Service',
-            organization: {
-              name: 'Test Organization',
-              serialNumber: '01234567890123456789',
-            },
-            name: 'my-service',
-            apiType: 'API',
-          },
-        ],
-      }),
-  })
-})
+const services = [
+  {
+    id: 'Test Organization/my-service',
+    organization: {
+      name: 'Test Organization',
+      serialNumber: '01234567890123456789',
+    },
+    name: 'my-service',
+    apiType: 'API',
+  },
+]
 
 test('display directory service details', async () => {
   renderWithProviders(
@@ -41,7 +32,7 @@ test('display directory service details', async () => {
       <Routes>
         <Route
           path="/:organizationName/:serviceName"
-          element={<ServiceDetailPage />}
+          element={<ServiceDetailPage services={services} />}
         />
       </Routes>
     </MemoryRouter>,
@@ -49,17 +40,17 @@ test('display directory service details', async () => {
 
   expect(await screen.findByText('Test Organization')).toBeInTheDocument()
   expect(screen.getByText('my-service')).toBeInTheDocument()
-  expect(screen.getByText('state-down.svg')).toBeInTheDocument()
+  expect(screen.getByText('state-unknown.svg')).toBeInTheDocument()
   expect(screen.getByTestId('directory-service-details')).toBeInTheDocument()
 })
 
 test('service does not exist', () => {
   const { getByTestId, getByText, queryByText } = renderWithProviders(
-    <MemoryRouter initialEntries={['/organization/service']}>
+    <MemoryRouter initialEntries={['/organization/unknown-service']}>
       <Routes>
         <Route
           path="/:organizationName/:serviceName"
-          element={<ServiceDetailPage />}
+          element={<ServiceDetailPage services={services} />}
         />
       </Routes>
     </MemoryRouter>,
@@ -67,9 +58,11 @@ test('service does not exist', () => {
 
   const message = getByTestId('error-message')
   expect(message).toBeInTheDocument()
-  expect(message.textContent).toBe("Kan de service 'service' niet vinden.")
+  expect(message.textContent).toBe(
+    "Kan de service 'unknown-service' niet vinden.",
+  )
 
-  expect(getByText('service')).toBeInTheDocument()
+  expect(getByText('unknown-service')).toBeInTheDocument()
   expect(queryByText('organization')).toBeNull()
 
   const closeButton = getByTestId('close-button')
