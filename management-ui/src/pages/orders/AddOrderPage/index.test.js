@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history'
 import { configure } from 'mobx'
 import userEvent from '@testing-library/user-event'
 import selectEvent from 'react-select-event'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithAllProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
 import { DirectoryApi, ManagementApi } from '../../../api'
@@ -37,6 +37,10 @@ test('rendering the add order page', async () => {
       },
     ],
   })
+
+  managementApiClient.managementSynchronizeAllOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue()
 
   const directoryApiClient = new DirectoryApi()
 
@@ -77,7 +81,7 @@ test('rendering the add order page', async () => {
 
   const history = createMemoryHistory()
 
-  renderWithProviders(
+  renderWithAllProviders(
     <HistoryRouter history={history}>
       <UserContextProvider user={{}}>
         <StoreProvider rootStore={rootStore}>
@@ -88,6 +92,10 @@ test('rendering the add order page', async () => {
   )
 
   jest.spyOn(rootStore.orderStore, 'create')
+
+  await waitFor(() => {
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+  })
 
   await userEvent.type(
     screen.getByLabelText(/Order description/),
