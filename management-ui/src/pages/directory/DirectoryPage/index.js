@@ -40,36 +40,6 @@ const DirectoryPage = () => {
     return null
   }
 
-  const MainContent = () => {
-    if (!isInitiallyFetched || !subjectSerialNumber) {
-      return <LoadingMessage />
-    }
-
-    if (error) {
-      return (
-        <Alert variant="error" data-testid="error-message">
-          {t('Failed to load the directory')}
-        </Alert>
-      )
-    }
-    return (
-      <>
-        <DirectoryPageView
-          managementSubjectSerialNumber={subjectSerialNumber}
-          services={services}
-          selectedServiceName={name || ''}
-        />
-
-        <Routes>
-          <Route
-            path=":organizationSerialNumber/:serviceName"
-            element={<DirectoryDetailPage />}
-          />
-        </Routes>
-      </>
-    )
-  }
-
   return (
     <PageTemplate>
       <PageTemplate.Header
@@ -81,7 +51,29 @@ const DirectoryPage = () => {
           </span>
         }
       />
-      <MainContent />
+
+      {!isInitiallyFetched || !subjectSerialNumber ? (
+        <LoadingMessage />
+      ) : error ? (
+        <Alert variant="error" data-testid="error-message">
+          {t('Failed to load the directory')}
+        </Alert>
+      ) : (
+        <>
+          <DirectoryPageView
+            managementSubjectSerialNumber={subjectSerialNumber}
+            services={services}
+            selectedServiceName={name || ''}
+          />
+
+          <Routes>
+            <Route
+              path=":organizationSerialNumber/:serviceName"
+              element={<DirectoryDetailPage />}
+            />
+          </Routes>
+        </>
+      )}
     </PageTemplate>
   )
 }
