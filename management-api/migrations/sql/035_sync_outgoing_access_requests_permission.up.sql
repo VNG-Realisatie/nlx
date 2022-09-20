@@ -1,3 +1,6 @@
+-- Copyright © VNG Realisatie 2022
+-- Licensed under the EUPL
+
 BEGIN transaction;
 
 INSERT INTO nlx_management.permissions (code) VALUES ('permissions.outgoing_access_requests.sync');
