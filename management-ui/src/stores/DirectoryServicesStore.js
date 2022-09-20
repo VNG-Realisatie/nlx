@@ -60,6 +60,10 @@ class DirectoryServicesStore {
     )
   })
 
+  syncAllOutgoingAccessRequests = flow(function* fetch() {
+    return yield this._managementApiClient.managementSynchronizeAllOutgoingAccessRequests()
+  })
+
   fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {
       return

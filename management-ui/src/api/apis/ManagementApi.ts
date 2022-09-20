@@ -992,6 +992,30 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
+    async managementSynchronizeAllOutgoingAccessRequestsRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/access-requests/outgoing/synchronize`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementSynchronizeAllOutgoingAccessRequests(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
+        const response = await this.managementSynchronizeAllOutgoingAccessRequestsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async managementSynchronizeOrdersRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementSynchronizeOrdersResponse>> {
         const queryParameters: any = {};
 

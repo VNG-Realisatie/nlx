@@ -6,7 +6,7 @@ import React from 'react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import { configure } from 'mobx'
 import { screen } from '@testing-library/react'
-import { renderWithProviders } from '../../../test-utils'
+import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
 import { DirectoryApi } from '../../../api'
@@ -36,7 +36,7 @@ jest.mock('../../../domain/environment-repository', () => ({
 }))
 
 const renderDirectoryPage = (store) =>
-  renderWithProviders(
+  renderWithAllProviders(
     <StoreProvider rootStore={store}>
       <UserContextProvider user={{}}>
         <MemoryRouter>
@@ -50,6 +50,7 @@ const renderDirectoryPage = (store) =>
 
 test('listing all services', async () => {
   configure({ safeDescriptors: false })
+
   const directoryApiClient = new DirectoryApi()
 
   directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
@@ -65,6 +66,10 @@ test('listing all services', async () => {
     directoryApiClient,
   })
   const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
+  const syncAllOutgoingAccessRequestsSpy = jest.spyOn(
+    rootStore.directoryServicesStore,
+    'syncAllOutgoingAccessRequests',
+  )
 
   renderDirectoryPage(rootStore)
 
@@ -73,11 +78,12 @@ test('listing all services', async () => {
   expect(
     screen.queryByTestId('mock-directory-services'),
   ).not.toBeInTheDocument()
-
   expect(
     await screen.findByTestId('mock-directory-services'),
   ).toBeInTheDocument()
+
   expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+  expect(syncAllOutgoingAccessRequestsSpy).toHaveBeenCalledTimes(1)
   expect(rootStore.directoryServicesStore.isInitiallyFetched).toEqual(true)
   expect(screen.getByTestId('mock-directory-service-0')).toHaveTextContent(
     'Test Service',

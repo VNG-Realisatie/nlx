@@ -288,3 +288,27 @@ test('syncing outgoing access requests for a service', async () => {
   })
   expect(result).toEqual({ foo: 'bar' })
 })
+
+test('syncing all outgoing access requests', async () => {
+  configure({ safeDescriptors: false })
+
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementSynchronizeAllOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({
+      foo: 'bar',
+    })
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  const result =
+    await rootStore.directoryServicesStore.syncAllOutgoingAccessRequests()
+
+  expect(
+    managementApiClient.managementSynchronizeAllOutgoingAccessRequests,
+  ).toHaveBeenCalled()
+  expect(result).toEqual({ foo: 'bar' })
+})

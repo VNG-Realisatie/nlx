@@ -1,10 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { Route, Routes, useParams } from 'react-router-dom'
-import { Alert } from '@commonground/design-system'
+import { Alert, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import LoadingMessage from '../../../components/LoadingMessage'
 import PageTemplate from '../../../components/PageTemplate'
@@ -16,10 +16,30 @@ import DirectoryPageView from './components/DirectoryPageView'
 
 const DirectoryPage = () => {
   const [subjectSerialNumber, setSubjectSerialNumber] = useState('')
-  const { t } = useTranslation()
-  const { services, isInitiallyFetched, error, fetchAll } =
-    useDirectoryServiceStore()
   const { name } = useParams()
+  const { t } = useTranslation()
+  const { showToast } = useContext(ToasterContext)
+  const directoryServiceStore = useDirectoryServiceStore()
+
+  useEffect(() => {
+    // we fetch the services before syncing, because the sync might take a long time
+    async function fetchData() {
+      await directoryServiceStore.fetchAll()
+
+      try {
+        await directoryServiceStore.syncAllOutgoingAccessRequests()
+      } catch (error) {
+        showToast({
+          title: t('Failed to synchronize access states'),
+          variant: 'error',
+        })
+      }
+
+      await directoryServiceStore.fetchAll()
+    }
+
+    fetchData()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const loadEnv = async () => {
@@ -28,14 +48,15 @@ const DirectoryPage = () => {
       setSubjectSerialNumber(organizationSubjectSerialNumber)
     }
 
-    fetchAll()
-
     loadEnv().catch(console.warn)
-  }, [fetchAll])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const DirectoryCount = () => {
-    if (isInitiallyFetched && !error) {
-      return <DirectoryServiceCount services={services} />
+    if (
+      directoryServiceStore.isInitiallyFetched &&
+      !directoryServiceStore.error
+    ) {
+      return <DirectoryServiceCount services={directoryServiceStore.services} />
     }
     return null
   }
@@ -52,9 +73,9 @@ const DirectoryPage = () => {
         }
       />
 
-      {!isInitiallyFetched || !subjectSerialNumber ? (
+      {!directoryServiceStore.isInitiallyFetched || !subjectSerialNumber ? (
         <LoadingMessage />
-      ) : error ? (
+      ) : directoryServiceStore.error ? (
         <Alert variant="error" data-testid="error-message">
           {t('Failed to load the directory')}
         </Alert>
@@ -62,7 +83,7 @@ const DirectoryPage = () => {
         <>
           <DirectoryPageView
             managementSubjectSerialNumber={subjectSerialNumber}
-            services={services}
+            services={directoryServiceStore.services}
             selectedServiceName={name || ''}
           />
 
