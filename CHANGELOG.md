@@ -1,3 +1,31 @@
+# [0.139.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.138.0...v0.139.0) (2022-09-21)
+
+
+### Bug Fixes
+
+* add missing copyright notice headers ([19cba1e](https://gitlab.com/commonground/nlx/nlx/commit/19cba1e16f048d24f9a5046b957c37527ddbeb82)), closes [nlx#1422](https://gitlab.com/nlx/issues/1422)
+* add missing newlines ([bdc5015](https://gitlab.com/commonground/nlx/nlx/commit/bdc501539132dc2a650bfe54ec59d49efa9adb8b)), closes [nlx#1422](https://gitlab.com/nlx/issues/1422)
+* **directory:** add 'norefferer' to documentation link to resolve vulnerability ([b4e5666](https://gitlab.com/commonground/nlx/nlx/commit/b4e5666e127ecdb530b485b80b5971a2b8c6f018)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **directory:** enable clicking a service row to view the details of a service ([9941054](https://gitlab.com/commonground/nlx/nlx/commit/99410543f6848ecda59f6d7211b627eef61ab0e2)), closes [nlx#1617](https://gitlab.com/nlx/issues/1617)
+* **management:** add 'norefferer' to documentation link to resolve vulnerability ([ab1055f](https://gitlab.com/commonground/nlx/nlx/commit/ab1055f78ed875fcc23cea499467846dc66ed9cc)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **management:** correctly update Inway fields during registration ([283570c](https://gitlab.com/commonground/nlx/nlx/commit/283570ced6f11e86b13411c54c9d838f663728a7)), closes [nlx#1603](https://gitlab.com/nlx/issues/1603)
+* **txlog:** allow datasubject keys with a minimal length of 1 character ([86640e5](https://gitlab.com/commonground/nlx/nlx/commit/86640e5f02ce64f354f071a8a70091fc87e55062)), closes [nlx#866](https://gitlab.com/nlx/issues/866)
+* **txlog:** fix creating transactionlog without order ([f28bcf5](https://gitlab.com/commonground/nlx/nlx/commit/f28bcf5d8e4801dcbca955dd9fe9565e86dca37b)), closes [nlx#866](https://gitlab.com/nlx/issues/866)
+* **txlog:** remove default tag from txlog-api helm values.yaml ([910bf63](https://gitlab.com/commonground/nlx/nlx/commit/910bf63eaaf3df109d53ba713e3cef242ca0fb3e)), closes [nlx#1619](https://gitlab.com/nlx/issues/1619)
+
+
+### Features
+
+* **directory:** add version endpoint to the directory api ([0889561](https://gitlab.com/commonground/nlx/nlx/commit/0889561b511c3e5ac140f95997d348f423201605)), closes [nlx#1598](https://gitlab.com/nlx/issues/1598)
+* **docs:** add directory monitor egress ip ([d073106](https://gitlab.com/commonground/nlx/nlx/commit/d07310663e49a7a31e1eef995a4aad7801180161)), closes [nlx#1605](https://gitlab.com/nlx/issues/1605)
+* **inway,outway:** include error in output message when setting up the transaction logger fails ([18687fd](https://gitlab.com/commonground/nlx/nlx/commit/18687fd9e22d61a2f66d52c6700c9e46b34359c8)), closes [nlx#866](https://gitlab.com/nlx/issues/866)
+* **inway:** add option to helm chart to configure ca certificate ([003183f](https://gitlab.com/commonground/nlx/nlx/commit/003183fe9b49394de513af9e3bb5a4281548a52b)), closes [nlx#1601](https://gitlab.com/nlx/issues/1601)
+* **inway:** add support for grpc transactionlog api ([eaf9c91](https://gitlab.com/commonground/nlx/nlx/commit/eaf9c9170f249d1f215babc9aeff0cb8f08bcdb7)), closes [nlx#866](https://gitlab.com/nlx/issues/866)
+* **management:** keep track of errors using Outgoing Access Request when requesting access fails ([d64705b](https://gitlab.com/commonground/nlx/nlx/commit/d64705b25431be309f4f310873a0afdbf6d3bd5b)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** rework SendAccessRequest to directly communicate with the other organization ([b7c1db8](https://gitlab.com/commonground/nlx/nlx/commit/b7c1db8229a25e46b52168f5cd15fd18e5d66a8f)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **outway:** add support for grpc transactionlog api ([b245312](https://gitlab.com/commonground/nlx/nlx/commit/b245312db5e5a934704544cf2854faf673555453)), closes [nlx#866](https://gitlab.com/nlx/issues/866)
+* **txlog:** implement add record endpoint ([743d6f0](https://gitlab.com/commonground/nlx/nlx/commit/743d6f00a2f6ac84b7af03b8bc4e15150e27f3ea)), closes [nlx#866](https://gitlab.com/nlx/issues/866)
+
 # [0.138.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.137.3...v0.138.0) (2022-08-23)
 
 

@@ -11,7 +11,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: management-api-create-user
-          image: nlxio/management-api:v0.138.0
+          image: nlxio/management-api:v0.139.0
           imagePullPolicy: Always
           command: ["/bin/sh"]
           args:
