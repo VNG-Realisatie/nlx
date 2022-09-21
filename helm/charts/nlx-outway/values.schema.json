@@ -265,6 +265,10 @@
     "transactionLog": {
       "type": "object",
       "properties": {
+        "apiAddress": {
+          "type": "string",
+          "description": "The address of the Transaction Log API"
+        },
         "connectTimeout": {
           "type": "integer",
           "description": "The connection timeout for PostgreSQL"

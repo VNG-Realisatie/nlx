@@ -111,19 +111,20 @@ TLS certificates used by NLX components for internal communication.
 
 ### Transaction Log parameters
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `transactionLog.enabled` | If `true` the outway will write log records into the transaction log | `false` | no |
-| `transactionLog.connectTimeout` | The connection timeout for PostgreSQL | `10` | no |
-| `transactionLog.hostname` | PostgreSQL hostname | `""` | no |
-| `transactionLog.port` | PostgreSQL port | `5432` | yes |
-| `transactionLog.sslMode` | PostgreSQL SSL mode | `require` | yes |
-| `transactionLog.database` | PostgreSQL database  | `""` | no |
-| `transactionLog.username` | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
-| `transactionLog.password` | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret | `""` | no |
-| `transactionLog.existingSecret.name` | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret)  | `""` | no |
-| `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret | `username` | no |
-| `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret | `password` | no |
+| Parameter                                   | Description                                                                                                                                       | Default    | Required (yes/no) |
+|---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|------------| -------- |
+| `transactionLog.enabled`                    | If `true` the outway will write log records into the transaction log                                                                              | `true`     | no |
+| `transactionLog.apiAddress`                 | The address of the Transaction Log API                                                                                                            | ``         | no |
+| `transactionLog.connectTimeout`             | The connection timeout for PostgreSQL                                                                                                             | `10`       | no |
+| `transactionLog.hostname`                   | PostgreSQL hostname                                                                                                                               | `""`       | no |
+| `transactionLog.port`                       | PostgreSQL port                                                                                                                                   | `5432`     | yes |
+| `transactionLog.sslMode`                    | PostgreSQL SSL mode                                                                                                                               | `require`  | yes |
+| `transactionLog.database`                   | PostgreSQL database                                                                                                                               | `""`       | no |
+| `transactionLog.username`                   | Username of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret                                           | `""`       | no |
+| `transactionLog.password`                   | Password of the PostgreSQL user for the transaction log database. Will be stored in a kubernetes secret                                           | `""`       | no |
+| `transactionLog.existingSecret.name`        | Use existing secret for password details (`transactionLog.username` and `transactionLog.password` will be ignored and picked up from this secret) | `""`       | no |
+| `transactionLog.existingSecret.usernameKey` | Key for username value in aforementioned existingSecret                                                                                           | `username` | no |
+| `transactionLog.existingSecret.passwordKey` | Key for password value in aforementioned existingSecret                                                                                           | `password` | no |
 
 ### Exposure parameters
 
