@@ -56,6 +56,25 @@ const DirectoryPage = () => {
     fetchData()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    document.addEventListener('visibilitychange', onVisibilityChangeHandler)
+
+    return () => {
+      document.removeEventListener(
+        'visibilitychange',
+        onVisibilityChangeHandler,
+      )
+    }
+  })
+
+  const onVisibilityChangeHandler = () => {
+    if (document.hidden) {
+      pausePolling()
+    } else {
+      continuePolling()
+    }
+  }
+
   const DirectoryCount = () => {
     if (isLoaded && !directoryServiceStore.error) {
       return <DirectoryServiceCount services={directoryServiceStore.services} />
