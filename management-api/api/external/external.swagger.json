@@ -111,11 +111,11 @@
           "delegator" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "validFrom" : {
+          "valid_from" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "validUntil" : {
+          "valid_until" : {
             "format" : "date-time",
             "type" : "string"
           },
@@ -125,7 +125,7 @@
             },
             "type" : "array"
           },
-          "revokedAt" : {
+          "revoked_at" : {
             "format" : "date-time",
             "type" : "string"
           }
@@ -145,7 +145,7 @@
       },
       "managementOrganization" : {
         "properties" : {
-          "serialNumber" : {
+          "serial_number" : {
             "type" : "string"
           },
           "name" : {

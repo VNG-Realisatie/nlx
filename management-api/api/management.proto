@@ -127,7 +127,7 @@ service Management {
 }
 
 message Organization {
-  string serialNumber = 1;
+  string serial_number = 1;
   string name = 2;
 }
 
@@ -647,10 +647,10 @@ message IncomingOrder {
   string reference = 1;
   string description = 2;
   Organization delegator = 3;
-  google.protobuf.Timestamp validFrom = 4;
-  google.protobuf.Timestamp validUntil = 5;
+  google.protobuf.Timestamp valid_from = 4;
+  google.protobuf.Timestamp valid_until = 5;
   repeated OrderService services = 6;
-  google.protobuf.Timestamp revokedAt = 7;
+  google.protobuf.Timestamp revoked_at = 7;
 }
 
 message ListIncomingOrdersResponse {

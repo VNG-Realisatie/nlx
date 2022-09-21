@@ -43,7 +43,7 @@ export function ManagementOrganizationFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
-        'serialNumber': !exists(json, 'serialNumber') ? undefined : json['serialNumber'],
+        'serialNumber': !exists(json, 'serial_number') ? undefined : json['serial_number'],
         'name': !exists(json, 'name') ? undefined : json['name'],
     };
 }
@@ -57,7 +57,7 @@ export function ManagementOrganizationToJSON(value?: ManagementOrganization | nu
     }
     return {
         
-        'serialNumber': value.serialNumber,
+        'serial_number': value.serialNumber,
         'name': value.name,
     };
 }

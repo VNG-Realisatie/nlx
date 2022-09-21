@@ -89,10 +89,10 @@ export function ManagementIncomingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'delegator': !exists(json, 'delegator') ? undefined : ManagementOrganizationFromJSON(json['delegator']),
-        'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
-        'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
+        'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
+        'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementOrderServiceFromJSON)),
-        'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
+        'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
     };
 }
 
@@ -108,10 +108,10 @@ export function ManagementIncomingOrderToJSON(value?: ManagementIncomingOrder | 
         'reference': value.reference,
         'description': value.description,
         'delegator': ManagementOrganizationToJSON(value.delegator),
-        'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
-        'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
+        'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
+        'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementOrderServiceToJSON)),
-        'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
     };
 }
 
