@@ -29,9 +29,19 @@ const DirectoryPage = () => {
 
       try {
         await directoryServiceStore.syncAllOutgoingAccessRequests()
+        await directoryServiceStore.fetchAll()
       } catch (error) {
+        let message = ''
+
+        if (error.response) {
+          const text = await error.response.text()
+          const textAsJson = JSON.parse(text)
+          message = textAsJson.details[0].metadata['organizations']
+        }
+
         showToast({
-          title: t('Failed to synchronize access states'),
+          title: t('Failed to synchronize access with:'),
+          body: message,
           variant: 'error',
         })
       }

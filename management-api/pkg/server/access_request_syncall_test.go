@@ -14,7 +14,10 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
 )
 
 //nolint:funlen // this is a test
@@ -58,9 +61,25 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("", errors.New("arbitrary error"))
+
+				mocks.dc.
+					EXPECT().
+					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					Return(&directoryapi.ListOrganizationsResponse{
+						Organizations: []*directoryapi.Organization{
+							{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+						},
+					}, nil)
 			},
-			want:    nil,
-			wantErr: status.New(codes.Internal, "internal error").Err(),
+			want: nil,
+			wantErr: grpcerrors.NewInternal("unreachable organizations", &common_grpcerrors.Metadata{
+				Metadata: map[string]string{
+					"organizations": "my-organization",
+				},
+			}),
 		},
 		"happy_flow_no_outgoing_access_requests": {
 			ctx: testCreateAdminUserContext(),

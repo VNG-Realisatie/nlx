@@ -107,6 +107,7 @@
   "Failed to revoke access grant": "Failed to revoke access grant",
   "Failed to revoke the order": "Failed to revoke the order",
   "Failed to synchronize access states": "Failed to synchronize access states",
+  "Failed to synchronize access with:": "Failed to synchronize access with:",
   "Failed to update the order": "Failed to update the order",
   "Failed to update the order overview": "Failed to update the order overview",
   "Failed to update the service": "Failed to update the service",
