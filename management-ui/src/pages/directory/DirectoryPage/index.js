@@ -11,6 +11,7 @@ import PageTemplate from '../../../components/PageTemplate'
 import { useDirectoryServiceStore } from '../../../hooks/use-stores'
 import DirectoryDetailPage from '../DirectoryDetailPage'
 import EnvironmentRepository from '../../../domain/environment-repository'
+import usePolling from '../../../hooks/use-polling'
 import DirectoryServiceCount from './components/DirectoryServiceCount'
 import DirectoryPageView from './components/DirectoryPageView'
 
@@ -22,10 +23,9 @@ const DirectoryPage = () => {
   const directoryServiceStore = useDirectoryServiceStore()
   const [isLoaded, setIsLoaded] = useState(false)
 
-  useEffect(() => {
+  const [pausePolling, continuePolling] = usePolling(() => {
     async function fetchData() {
-      const env = await EnvironmentRepository.getCurrent()
-      setSubjectSerialNumber(env.organizationSerialNumber)
+      pausePolling()
 
       try {
         await directoryServiceStore.syncAllOutgoingAccessRequests()
@@ -36,7 +36,19 @@ const DirectoryPage = () => {
         })
       }
 
-      await directoryServiceStore.fetchAll()
+      continuePolling()
+    }
+
+    fetchData()
+  })
+
+  useEffect(() => {
+    async function fetchData() {
+      directoryServiceStore.fetchAll()
+      directoryServiceStore.syncAllOutgoingAccessRequests()
+
+      const env = await EnvironmentRepository.getCurrent()
+      setSubjectSerialNumber(env.organizationSerialNumber)
 
       setIsLoaded(true)
     }

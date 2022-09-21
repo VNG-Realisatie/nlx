@@ -9,7 +9,7 @@ import { screen } from '@testing-library/react'
 import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
 import { UserContextProvider } from '../../../user-context'
-import { DirectoryApi } from '../../../api'
+import { DirectoryApi, ManagementApi } from '../../../api'
 import DirectoryPage from './index'
 
 jest.mock('../../../components/PageTemplate')
@@ -62,10 +62,19 @@ test('listing all services', async () => {
     ],
   })
 
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementSynchronizeAllOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({})
+
   const rootStore = new RootStore({
     directoryApiClient,
+    managementApiClient,
   })
+
   const fetchAllSpy = jest.spyOn(rootStore.directoryServicesStore, 'fetchAll')
+
   const syncAllOutgoingAccessRequestsSpy = jest.spyOn(
     rootStore.directoryServicesStore,
     'syncAllOutgoingAccessRequests',
@@ -73,17 +82,18 @@ test('listing all services', async () => {
 
   renderDirectoryPage(rootStore)
 
+  expect(syncAllOutgoingAccessRequestsSpy).toHaveBeenCalledTimes(1)
   expect(screen.getByRole('progressbar')).toBeInTheDocument()
+
   expect(
     screen.queryByTestId('mock-directory-services'),
   ).not.toBeInTheDocument()
+  expect(fetchAllSpy).toHaveBeenCalledTimes(1)
+
   expect(
     await screen.findByTestId('mock-directory-services'),
   ).toBeInTheDocument()
-
   expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
-  expect(fetchAllSpy).toHaveBeenCalledTimes(1)
-  expect(syncAllOutgoingAccessRequestsSpy).toHaveBeenCalledTimes(1)
   expect(rootStore.directoryServicesStore.isInitiallyFetched).toEqual(true)
   expect(screen.getByTestId('mock-directory-service-0')).toHaveTextContent(
     'Test Service',
@@ -96,8 +106,15 @@ test('no services', async () => {
     services: [],
   })
 
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementSynchronizeAllOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({})
+
   const rootStore = new RootStore({
     directoryApiClient,
+    managementApiClient,
   })
 
   renderDirectoryPage(rootStore)
@@ -111,10 +128,17 @@ test('no services', async () => {
 test('failed to load services', async () => {
   global.console.error = jest.fn()
 
+  const managementApiClient = new ManagementApi()
+
+  managementApiClient.managementSynchronizeAllOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({})
+
   const rootStore = new RootStore({
     directoryRepository: {
       getAll: jest.fn().mockRejectedValue('There is an error'),
     },
+    managementApiClient,
   })
 
   renderDirectoryPage(rootStore)
