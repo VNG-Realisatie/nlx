@@ -21,16 +21,9 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/management"
 )
 
-type Clock interface {
-	Now() time.Time
-}
-
-const WEEK = time.Hour * 24 * 7
-
 type SyncArgs struct {
 	Ctx      context.Context
 	Logger   *zap.Logger
-	Clock    Clock
 	DB       database.ConfigDatabase
 	Client   management.Client
 	Requests []*database.OutgoingAccessRequest
@@ -59,7 +52,7 @@ func SyncOutgoingAccessRequests(args *SyncArgs) error {
 				zap.String("public key fingerprint", requestToSync.PublicKeyFingerprint),
 			)
 
-			err := synchronizeOutgoingAccessRequest(context.Background(), args.DB, args.Client, requestToSync, args.Clock.Now().Add(WEEK))
+			err := synchronizeOutgoingAccessRequest(context.Background(), args.DB, args.Client, requestToSync)
 			if err != nil {
 				args.Logger.Error("failed to synchronize outgoing access request", zap.Error(err))
 
@@ -77,7 +70,7 @@ func SyncOutgoingAccessRequests(args *SyncArgs) error {
 	}
 }
 
-func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase database.ConfigDatabase, client management.Client, request *database.OutgoingAccessRequest, synchronizeAt time.Time) error {
+func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase database.ConfigDatabase, client management.Client, request *database.OutgoingAccessRequest) error {
 	switch request.State {
 	case database.OutgoingAccessRequestReceived:
 		response, err := client.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
@@ -110,7 +103,6 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 			newState,
 			uint(0), // '0', because we don't want to update this value
 			nil,
-			synchronizeAt,
 		)
 
 	case database.OutgoingAccessRequestApproved:
@@ -125,7 +117,6 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 			database.OutgoingAccessRequestApproved,
 			uint(0), // '0', because we don't want to update this value
 			nil,
-			synchronizeAt,
 		)
 
 	case database.OutgoingAccessRequestFailed, database.OutgoingAccessRequestRejected:

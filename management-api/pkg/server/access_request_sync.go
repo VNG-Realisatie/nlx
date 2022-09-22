@@ -53,7 +53,6 @@ func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Contex
 	err = syncer.SyncOutgoingAccessRequests(&syncer.SyncArgs{
 		Ctx:      ctx,
 		Logger:   s.logger,
-		Clock:    s.clock,
 		DB:       s.configDatabase,
 		Client:   client,
 		Requests: outgoingAccessRequests,

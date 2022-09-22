@@ -63,7 +63,6 @@ func TestGetAccessProofs(t *testing.T) {
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
-					SynchronizeAt:        fixtureTime,
 				},
 				CreatedAt: fixtureTime,
 				RevokedAt: sql.NullTime{},
@@ -82,7 +81,6 @@ func TestGetAccessProofs(t *testing.T) {
 					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
-					SynchronizeAt:        fixtureTime,
 				},
 				CreatedAt: fixtureTime,
 				RevokedAt: sql.NullTime{

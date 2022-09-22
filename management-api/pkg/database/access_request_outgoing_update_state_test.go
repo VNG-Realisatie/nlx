@@ -7,11 +7,8 @@ package database_test
 
 import (
 	"context"
-	"database/sql"
-	"testing"
-	"time"
-
 	"github.com/lib/pq"
+	"testing"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
@@ -81,7 +78,7 @@ func TestUpdateOutgoingAccessRequestState(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			err := configDb.UpdateOutgoingAccessRequestState(context.Background(), tt.args.accessRequestID, tt.args.state, tt.args.referenceID, tt.args.schedulerErr, time.Now())
+			err := configDb.UpdateOutgoingAccessRequestState(context.Background(), tt.args.accessRequestID, tt.args.state, tt.args.referenceID, tt.args.schedulerErr)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {
@@ -98,8 +95,6 @@ func assertOutgoingAccessRequest(t *testing.T, repo database.ConfigDatabase, acc
 
 	assert.Equal(t, state, accessRequest.State)
 	assert.Equal(t, referenceID, accessRequest.ReferenceID)
-	assert.Nil(t, accessRequest.LockID)
-	assert.Equal(t, sql.NullTime{}, accessRequest.LockExpiresAt)
 
 	if schedulerErr != nil {
 		assert.Equal(t, int(schedulerErr.Code), accessRequest.ErrorCode)

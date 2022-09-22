@@ -44,7 +44,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -83,8 +82,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						RevokedAt:   nil,
 					}, nil)
 
-				week := time.Hour * 24 * 7
-
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(
@@ -93,7 +90,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						database.OutgoingAccessRequestApproved,
 						uint(0),
 						nil,
-						fixtureTime.Add(week),
 					).
 					Return(nil)
 			},
@@ -101,7 +97,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -160,8 +155,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 					).
 					Return(nil, nil)
 
-				week := time.Hour * 24 * 7
-
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(
@@ -170,7 +163,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						database.OutgoingAccessRequestApproved,
 						uint(0),
 						nil,
-						fixtureTime.Add(week),
 					).
 					Return(nil)
 			},
@@ -178,7 +170,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -227,8 +218,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 					CreateAccessProof(gomock.Any(), uint(42)).
 					Return(nil, nil)
 
-				week := time.Hour * 24 * 7
-
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(
@@ -237,7 +226,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						database.OutgoingAccessRequestApproved,
 						uint(0),
 						nil,
-						fixtureTime.Add(week),
 					).
 					Return(nil)
 			},
@@ -245,7 +233,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{

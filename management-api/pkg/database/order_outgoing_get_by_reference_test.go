@@ -86,7 +86,6 @@ func TestGetOutgoingOrderByReference(t *testing.T) {
 								ErrorStackTrace:      nil,
 								CreatedAt:            fixtureTime,
 								UpdatedAt:            fixtureTime,
-								SynchronizeAt:        fixtureTime,
 							},
 						},
 					},
@@ -112,7 +111,6 @@ func TestGetOutgoingOrderByReference(t *testing.T) {
 								ErrorStackTrace:      nil,
 								CreatedAt:            fixtureTime,
 								UpdatedAt:            fixtureTime,
-								SynchronizeAt:        fixtureTime,
 							},
 							RevokedAt: sql.NullTime{
 								Valid: true,

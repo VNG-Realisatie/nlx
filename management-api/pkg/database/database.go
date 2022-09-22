@@ -43,9 +43,8 @@ type ConfigDatabase interface {
 	ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error)
 	ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error)
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
-	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails, synchronizeAt time.Time) error
+	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error
 	DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error
-	UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) error
 
 	ListIncomingAccessRequests(ctx context.Context, serviceName string) ([]*IncomingAccessRequest, error)
 	GetLatestIncomingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*IncomingAccessRequest, error)

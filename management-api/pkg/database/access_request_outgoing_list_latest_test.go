@@ -55,9 +55,8 @@ func TestListLatestOutgoingAccessRequests(t *testing.T) {
 				State:                database.OutgoingAccessRequestApproved,
 				CreatedAt:            fixtureCustomTime,
 				UpdatedAt:            fixtureCustomTime,
-				SynchronizeAt:        fixtureCustomTime,
 				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
-			}, &database.OutgoingAccessRequest{
+			}, {
 				ID: 6,
 				Organization: database.Organization{
 					SerialNumber: "00000000000000000001",
@@ -68,7 +67,6 @@ func TestListLatestOutgoingAccessRequests(t *testing.T) {
 				State:                database.OutgoingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
-				SynchronizeAt:        fixtureTime,
 				PublicKeyFingerprint: "h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=",
 			}},
 			wantErr: nil,

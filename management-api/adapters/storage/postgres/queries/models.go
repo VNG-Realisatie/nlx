@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/tabbed/pqtype"
 )
 
@@ -48,13 +47,10 @@ type NlxManagementAccessRequestsOutgoing struct {
 	ErrorCode                int32
 	ErrorCause               sql.NullString
 	ErrorStackTrace          []byte
-	LockID                   uuid.NullUUID
-	LockExpiresAt            sql.NullTime
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 	PublicKeyPem             sql.NullString
 	OrganizationSerialNumber string
-	SynchronizeAt            time.Time
 }
 
 type NlxManagementAuditLog struct {

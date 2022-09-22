@@ -778,20 +778,6 @@ func (mr *MockConfigDatabaseMockRecorder) SynchronizeOrders(ctx, orders interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockConfigDatabase)(nil).SynchronizeOrders), ctx, orders)
 }
 
-// UnlockOutgoingAccessRequest mocks base method.
-func (m *MockConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *database.OutgoingAccessRequest) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UnlockOutgoingAccessRequest", ctx, accessRequest)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UnlockOutgoingAccessRequest indicates an expected call of UnlockOutgoingAccessRequest.
-func (mr *MockConfigDatabaseMockRecorder) UnlockOutgoingAccessRequest(ctx, accessRequest interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnlockOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).UnlockOutgoingAccessRequest), ctx, accessRequest)
-}
-
 // UpdateIncomingAccessRequestState mocks base method.
 func (m *MockConfigDatabase) UpdateIncomingAccessRequestState(ctx context.Context, id uint, state database.IncomingAccessRequestState) error {
 	m.ctrl.T.Helper()
@@ -821,17 +807,17 @@ func (mr *MockConfigDatabaseMockRecorder) UpdateInway(ctx, inway interface{}) *g
 }
 
 // UpdateOutgoingAccessRequestState mocks base method.
-func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state database.OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails, synchronizeAt time.Time) error {
+func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state database.OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, id, state, referenceID, err, synchronizeAt)
+	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, id, state, referenceID, err)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateOutgoingAccessRequestState indicates an expected call of UpdateOutgoingAccessRequestState.
-func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, id, state, referenceID, err, synchronizeAt interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, id, state, referenceID, err interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, id, state, referenceID, err, synchronizeAt)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, id, state, referenceID, err)
 }
 
 // UpdateOutgoingOrder mocks base method.

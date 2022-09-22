@@ -458,7 +458,7 @@ select
         public_key_fingerprint,
         service_name,
         organization_serial_number
-    ) access_requests_outgoing.id, access_requests_outgoing.organization_name, access_requests_outgoing.service_name, access_requests_outgoing.state, access_requests_outgoing.public_key_fingerprint, access_requests_outgoing.reference_id, access_requests_outgoing.error_code, access_requests_outgoing.error_cause, access_requests_outgoing.error_stack_trace, access_requests_outgoing.lock_id, access_requests_outgoing.lock_expires_at, access_requests_outgoing.created_at, access_requests_outgoing.updated_at, access_requests_outgoing.public_key_pem, access_requests_outgoing.organization_serial_number, access_requests_outgoing.synchronize_at
+    ) access_requests_outgoing.id, access_requests_outgoing.organization_name, access_requests_outgoing.service_name, access_requests_outgoing.state, access_requests_outgoing.public_key_fingerprint, access_requests_outgoing.reference_id, access_requests_outgoing.error_code, access_requests_outgoing.error_cause, access_requests_outgoing.error_stack_trace, access_requests_outgoing.created_at, access_requests_outgoing.updated_at, access_requests_outgoing.public_key_pem, access_requests_outgoing.organization_serial_number
 from
     nlx_management.access_requests_outgoing
 order by
@@ -488,13 +488,10 @@ func (q *Queries) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*N
 			&i.ErrorCode,
 			&i.ErrorCause,
 			&i.ErrorStackTrace,
-			&i.LockID,
-			&i.LockExpiresAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.PublicKeyPem,
 			&i.OrganizationSerialNumber,
-			&i.SynchronizeAt,
 		); err != nil {
 			return nil, err
 		}

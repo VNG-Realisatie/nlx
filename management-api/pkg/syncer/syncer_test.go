@@ -6,7 +6,6 @@ package syncer_test
 import (
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -75,12 +74,4 @@ func newCertificateBundle() (*common_tls.CertificateBundle, error) {
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
 	return common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
-}
-
-var fixtureTime = time.Date(2022, 1, 1, 0, 0, 0, 0, time.UTC)
-
-type testClock struct{}
-
-func (tc *testClock) Now() time.Time {
-	return fixtureTime
 }

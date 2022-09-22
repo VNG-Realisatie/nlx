@@ -7,7 +7,6 @@ import (
 	"context"
 	"errors"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -43,7 +42,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -82,7 +80,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -121,7 +118,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -153,8 +149,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						State: api.AccessRequestState_RECEIVED,
 					}, nil)
 
-				week := time.Hour * 24 * 7
-
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(
@@ -163,7 +157,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						database.OutgoingAccessRequestReceived,
 						uint(0),
 						nil,
-						fixtureTime.Add(week),
 					).
 					Return(errors.New("arbitrary error"))
 			},
@@ -171,7 +164,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -231,8 +223,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 					CreateAccessProof(gomock.Any(), uint(42)).
 					Return(nil, nil)
 
-				week := time.Hour * 24 * 7
-
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(
@@ -241,7 +231,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						database.OutgoingAccessRequestApproved,
 						uint(0),
 						nil,
-						fixtureTime.Add(week),
 					).
 					Return(nil)
 			},
@@ -249,7 +238,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{
@@ -282,8 +270,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						State: api.AccessRequestState_RECEIVED,
 					}, nil)
 
-				week := time.Hour * 24 * 7
-
 				mocks.db.
 					EXPECT().
 					UpdateOutgoingAccessRequestState(
@@ -292,7 +278,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						database.OutgoingAccessRequestReceived,
 						uint(0),
 						nil,
-						fixtureTime.Add(week),
 					).
 					Return(nil)
 			},
@@ -300,7 +285,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				return &syncer.SyncArgs{
 					Ctx:    context.Background(),
 					Logger: zap.NewNop(),
-					Clock:  &testClock{},
 					DB:     mocks.db,
 					Client: mocks.mc,
 					Requests: []*database.OutgoingAccessRequest{

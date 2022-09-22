@@ -82,7 +82,6 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 								ErrorStackTrace:      nil,
 								CreatedAt:            fixtureTime,
 								UpdatedAt:            fixtureTime,
-								SynchronizeAt:        fixtureTime,
 							},
 						},
 					},

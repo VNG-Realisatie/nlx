@@ -5,11 +5,9 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -18,8 +16,6 @@ import (
 )
 
 var ErrActiveAccessRequest = errors.New("there is already an active AccessRequest")
-
-const lockTimeOut = 5 * time.Minute
 
 type OutgoingAccessRequestState string
 
@@ -41,8 +37,6 @@ type OutgoingAccessRequest struct {
 	ServiceName          string
 	ReferenceID          uint
 	State                OutgoingAccessRequestState
-	LockID               *uuid.UUID
-	LockExpiresAt        sql.NullTime
 	PublicKeyFingerprint string
 	PublicKeyPEM         string
 	ErrorCode            int
@@ -50,7 +44,6 @@ type OutgoingAccessRequest struct {
 	ErrorStackTrace      pq.StringArray `gorm:"type:text[]"`
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
-	SynchronizeAt        time.Time
 }
 
 func (*OutgoingAccessRequest) TableName() string {
@@ -61,7 +54,7 @@ func (request *OutgoingAccessRequest) IsSendable() bool {
 	return request.State == OutgoingAccessRequestFailed
 }
 
-func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error) {
+func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(_ context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error) {
 	outgoingAccessRequests := &[]*OutgoingAccessRequest{}
 
 	if err := db.DB.
@@ -89,12 +82,6 @@ func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx contex
 	var outgoingAccessRequests = make([]*OutgoingAccessRequest, len(accessRequests))
 
 	for i, accessRequest := range accessRequests {
-		var lockID *uuid.UUID = nil
-
-		if accessRequest.LockID.Valid {
-			lockID = &accessRequest.LockID.UUID
-		}
-
 		var pem = ""
 
 		if accessRequest.PublicKeyPem.Valid {
@@ -116,15 +103,12 @@ func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx contex
 			ServiceName:          accessRequest.ServiceName,
 			ReferenceID:          uint(accessRequest.ReferenceID),
 			State:                OutgoingAccessRequestState(accessRequest.State),
-			LockID:               lockID,
-			LockExpiresAt:        accessRequest.LockExpiresAt,
 			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
 			PublicKeyPEM:         pem,
 			ErrorCode:            int(accessRequest.ErrorCode),
 			ErrorCause:           errorCause,
 			CreatedAt:            accessRequest.CreatedAt,
 			UpdatedAt:            accessRequest.UpdatedAt,
-			SynchronizeAt:        accessRequest.SynchronizeAt,
 		}
 	}
 
@@ -213,7 +197,7 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequestsPerCertificate(
 	return accessRequests, nil
 }
 
-func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState, referenceID uint, schedulerErr *diagnostics.ErrorDetails, synchronizeAt time.Time) error {
+func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState, referenceID uint, schedulerErr *diagnostics.ErrorDetails) error {
 	outgoingAccessRequest := &OutgoingAccessRequest{}
 
 	if err := db.DB.
@@ -231,7 +215,6 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 	}
 
 	outgoingAccessRequest.State = state
-	outgoingAccessRequest.SynchronizeAt = synchronizeAt
 
 	if schedulerErr != nil {
 		outgoingAccessRequest.ErrorCode = int(schedulerErr.Code)
@@ -253,7 +236,6 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 			"error_code",
 			"error_cause",
 			"error_stack_trace",
-			"synchronize_at",
 		).
 		Save(outgoingAccessRequest).Error
 }
@@ -264,11 +246,4 @@ func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Conte
 		Where("organization_serial_number = ? AND service_name = ?", organizationSerialNumber, serviceName).
 		Delete(&OutgoingAccessRequest{}).
 		Error
-}
-
-func (db *PostgresConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, outgoingAccessRequest *OutgoingAccessRequest) error {
-	return db.DB.
-		WithContext(ctx).
-		Model(&outgoingAccessRequest).
-		Updates(map[string]interface{}{"lock_expires_at": nil, "lock_id": nil}).Error
 }
