@@ -21,6 +21,8 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/management"
 )
 
+var ErrServiceDoesNotExist = status.Error(codes.NotFound, "service does not exist")
+
 type SyncArgs struct {
 	Ctx      context.Context
 	Logger   *zap.Logger
@@ -70,6 +72,7 @@ func SyncOutgoingAccessRequests(args *SyncArgs) error {
 	}
 }
 
+//nolint:gocyclo // unable to reduce complexity
 func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase database.ConfigDatabase, client management.Client, request *database.OutgoingAccessRequest) error {
 	switch request.State {
 	case database.OutgoingAccessRequestReceived:
@@ -78,7 +81,7 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 			PublicKeyFingerprint: request.PublicKeyFingerprint,
 		})
 		if err != nil {
-			if errors.Is(err, status.Error(codes.NotFound, "service does not exist")) {
+			if errors.Is(err, ErrServiceDoesNotExist) {
 				return configDatabase.DeleteOutgoingAccessRequests(ctx, request.Organization.SerialNumber, request.ServiceName)
 			}
 
@@ -108,7 +111,11 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 	case database.OutgoingAccessRequestApproved:
 		err := syncAccessProof(ctx, configDatabase, client, request)
 		if err != nil {
-			return err
+			if errors.Is(err, ErrServiceDoesNotExist) {
+				return configDatabase.DeleteOutgoingAccessRequests(ctx, request.Organization.SerialNumber, request.ServiceName)
+			}
+
+			return fmt.Errorf("failed to sync access proof for an approved outgoing access request: %e", err)
 		}
 
 		return configDatabase.UpdateOutgoingAccessRequestState(
@@ -154,7 +161,7 @@ func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase
 		PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
 	})
 	if err != nil {
-		return fmt.Errorf("unable to execute GetAccessProof: %v", err)
+		return err
 	}
 
 	remoteProof, err := parseAccessProof(accessProof)

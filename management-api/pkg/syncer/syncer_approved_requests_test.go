@@ -18,6 +18,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/syncer"
 )
 
@@ -62,6 +63,49 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 				}
 			},
 			want: errors.New("error occurred while syncing at least one Outgoing Access Request"),
+		},
+		"service_of_access_proof_was_removed": {
+			setup: func(mocks syncMocks) {
+				mocks.mc.
+					EXPECT().
+					GetAccessProof(gomock.Any(),
+						&external.GetAccessProofRequest{
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+						}).
+					Return(nil, server.ErrServiceDoesNotExist)
+
+				mocks.db.
+					EXPECT().
+					DeleteOutgoingAccessRequests(
+						gomock.Any(),
+						"00000000000000000001",
+						"my-service",
+					).
+					Return(nil)
+			},
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
+						{
+							ID:    42,
+							State: database.OutgoingAccessRequestApproved,
+							Organization: database.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+							ReferenceID:          1,
+						},
+					},
+				}
+			},
+			want: nil,
 		},
 		"access_proof_is_linked_to_different_access_request": {
 			setup: func(mocks syncMocks) {
