@@ -14,14 +14,16 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
+	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
+	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/syncer"
 )
 
-//nolint:funlen,gocyclo // not sure how to shorten this method
-func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	err := s.authorize(ctx, permissions.SyncOutgoingAccessRequests)
 	if err != nil {
 		return nil, err
@@ -39,75 +41,17 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 		return &emptypb.Empty{}, nil
 	}
 
-	accessRequestsByOrganization := groupAccessRequestsByOrganization(outgoingAccessRequests)
+	accessRequestsByOin := groupAccessRequestsByOin(outgoingAccessRequests)
 
-	var oinsWithErrorMutex sync.Mutex
-
-	oinsWithError := []string{}
-	waitGroup := sync.WaitGroup{}
-
-	for oin, values := range accessRequestsByOrganization {
-		accessRequests := values
-
-		waitGroup.Add(1)
-
-		go func(oin string, m *sync.Mutex) {
-			defer waitGroup.Done()
-
-			organizationInwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, oin)
-			if err != nil {
-				s.logger.Error("cannot get organization inway proxy address", zap.Error(err))
-
-				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
-				m.Unlock()
-
-				return
-			}
-
-			client, err := s.createManagementClientFunc(ctx, organizationInwayProxyAddress, s.orgCert)
-			if err != nil {
-				s.logger.Error("cannot setup management client", zap.Error(err))
-
-				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
-				m.Unlock()
-
-				return
-			}
-
-			err = syncer.SyncOutgoingAccessRequests(&syncer.SyncArgs{
-				Ctx:      ctx,
-				Logger:   s.logger,
-				DB:       s.configDatabase,
-				Client:   client,
-				Requests: accessRequests,
-			})
-			if err != nil {
-				s.logger.Error("cannot setup management client", zap.Error(err))
-
-				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
-				m.Unlock()
-
-				return
-			}
-
-			client.Close()
-
-			if err != nil {
-				s.logger.Error("failed to close client", zap.Error(err))
-
-				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
-				m.Unlock()
-
-				return
-			}
-		}(oin, &oinsWithErrorMutex)
-	}
-
-	waitGroup.Wait()
+	oinsWithError := synchronizeAccessRequests(&syncArgs{
+		ctx:                        ctx,
+		l:                          s.logger,
+		dc:                         s.directoryClient,
+		db:                         s.configDatabase,
+		orgCert:                    s.orgCert,
+		createManagementClientFunc: s.createManagementClientFunc,
+		accessRequestsByOin:        accessRequestsByOin,
+	})
 
 	if len(oinsWithError) > 0 {
 		organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
@@ -132,7 +76,7 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 	return &emptypb.Empty{}, nil
 }
 
-func groupAccessRequestsByOrganization(accessRequests []*database.OutgoingAccessRequest) map[string][]*database.OutgoingAccessRequest {
+func groupAccessRequestsByOin(accessRequests []*database.OutgoingAccessRequest) map[string][]*database.OutgoingAccessRequest {
 	result := map[string][]*database.OutgoingAccessRequest{}
 
 	for _, ar := range accessRequests {
@@ -145,4 +89,86 @@ func groupAccessRequestsByOrganization(accessRequests []*database.OutgoingAccess
 	}
 
 	return result
+}
+
+type syncArgs struct {
+	ctx                        context.Context
+	l                          *zap.Logger
+	dc                         directory.Client
+	db                         database.ConfigDatabase
+	orgCert                    *common_tls.CertificateBundle
+	createManagementClientFunc func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error)
+	accessRequestsByOin        map[string][]*database.OutgoingAccessRequest
+}
+
+func synchronizeAccessRequests(args *syncArgs) []string {
+	var oinsWithErrorMutex sync.Mutex
+
+	oinsWithError := []string{}
+	waitGroup := sync.WaitGroup{}
+
+	for oin, values := range args.accessRequestsByOin {
+		accessRequests := values
+
+		waitGroup.Add(1)
+
+		go func(oin string, m *sync.Mutex) {
+			defer waitGroup.Done()
+
+			organizationInwayProxyAddress, err := args.dc.GetOrganizationInwayProxyAddress(args.ctx, oin)
+			if err != nil {
+				args.l.Error("cannot get organization inway proxy address", zap.Error(err))
+
+				m.Lock()
+				oinsWithError = append(oinsWithError, oin)
+				m.Unlock()
+
+				return
+			}
+
+			client, err := args.createManagementClientFunc(args.ctx, organizationInwayProxyAddress, args.orgCert)
+			if err != nil {
+				args.l.Error("cannot setup management client", zap.Error(err))
+
+				m.Lock()
+				oinsWithError = append(oinsWithError, oin)
+				m.Unlock()
+
+				return
+			}
+
+			err = syncer.SyncOutgoingAccessRequests(&syncer.SyncArgs{
+				Ctx:      args.ctx,
+				Logger:   args.l,
+				DB:       args.db,
+				Client:   client,
+				Requests: accessRequests,
+			})
+			if err != nil {
+				args.l.Error("cannot setup management client", zap.Error(err))
+
+				m.Lock()
+				oinsWithError = append(oinsWithError, oin)
+				m.Unlock()
+
+				return
+			}
+
+			client.Close()
+
+			if err != nil {
+				args.l.Error("failed to close client", zap.Error(err))
+
+				m.Lock()
+				oinsWithError = append(oinsWithError, oin)
+				m.Unlock()
+
+				return
+			}
+		}(oin, &oinsWithErrorMutex)
+	}
+
+	waitGroup.Wait()
+
+	return oinsWithError
 }
