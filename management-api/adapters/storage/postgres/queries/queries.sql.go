@@ -452,6 +452,33 @@ func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) (
 	return items, nil
 }
 
+const listPermissions = `-- name: ListPermissions :many
+select code from nlx_management.permissions
+`
+
+func (q *Queries) ListPermissions(ctx context.Context) ([]string, error) {
+	rows, err := q.query(ctx, q.listPermissionsStmt, listPermissions)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []string{}
+	for rows.Next() {
+		var code string
+		if err := rows.Scan(&code); err != nil {
+			return nil, err
+		}
+		items = append(items, code)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTermsOfService = `-- name: ListTermsOfService :many
 select
     id, username, created_at

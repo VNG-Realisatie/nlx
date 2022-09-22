@@ -230,3 +230,6 @@ insert into
 (username, created_at)
     values
 ($1, $2);
+
+-- name: ListPermissions :many
+select code from nlx_management.permissions;

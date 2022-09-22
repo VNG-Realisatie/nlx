@@ -48,6 +48,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listAccessGrantsForServiceStmt, err = db.PrepareContext(ctx, listAccessGrantsForService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListAccessGrantsForService: %w", err)
 	}
+	if q.listPermissionsStmt, err = db.PrepareContext(ctx, listPermissions); err != nil {
+		return nil, fmt.Errorf("error preparing query ListPermissions: %w", err)
+	}
 	if q.listTermsOfServiceStmt, err = db.PrepareContext(ctx, listTermsOfService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListTermsOfService: %w", err)
 	}
@@ -106,6 +109,11 @@ func (q *Queries) Close() error {
 	if q.listAccessGrantsForServiceStmt != nil {
 		if cerr := q.listAccessGrantsForServiceStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listAccessGrantsForServiceStmt: %w", cerr)
+		}
+	}
+	if q.listPermissionsStmt != nil {
+		if cerr := q.listPermissionsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listPermissionsStmt: %w", cerr)
 		}
 	}
 	if q.listTermsOfServiceStmt != nil {
@@ -180,6 +188,7 @@ type Queries struct {
 	getLatestAccessGrantForServiceStmt *sql.Stmt
 	getSettingsStmt                    *sql.Stmt
 	listAccessGrantsForServiceStmt     *sql.Stmt
+	listPermissionsStmt                *sql.Stmt
 	listTermsOfServiceStmt             *sql.Stmt
 	revokeAccessGrantStmt              *sql.Stmt
 	updateIncomingAccessRequestStmt    *sql.Stmt
@@ -199,6 +208,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getLatestAccessGrantForServiceStmt: q.getLatestAccessGrantForServiceStmt,
 		getSettingsStmt:                    q.getSettingsStmt,
 		listAccessGrantsForServiceStmt:     q.listAccessGrantsForServiceStmt,
+		listPermissionsStmt:                q.listPermissionsStmt,
 		listTermsOfServiceStmt:             q.listTermsOfServiceStmt,
 		revokeAccessGrantStmt:              q.revokeAccessGrantStmt,
 		updateIncomingAccessRequestStmt:    q.updateIncomingAccessRequestStmt,

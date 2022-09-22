@@ -81,7 +81,7 @@ type ConfigDatabase interface {
 	ListIncomingOrders(ctx context.Context) ([]*domain.IncomingOrder, error)
 	SynchronizeOrders(ctx context.Context, orders []*IncomingOrder) error
 
-	ListPermissions(ctx context.Context) ([]Permission, error)
+	ListPermissions(ctx context.Context) ([]*domain.Permission, error)
 
 	GetTermsOfServiceStatus(ctx context.Context) (*domain.TermsOfServiceStatus, error)
 	AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) (alreadyAccepted bool, error error)

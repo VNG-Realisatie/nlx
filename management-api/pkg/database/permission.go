@@ -3,7 +3,11 @@
 
 package database
 
-import "context"
+import (
+	"context"
+
+	"go.nlx.io/nlx/management-api/domain"
+)
 
 type Permission struct {
 	Code string `gorm:"primaryKey"`
@@ -13,13 +17,19 @@ func (s *Permission) TableName() string {
 	return "nlx_management.permissions"
 }
 
-func (db *PostgresConfigDatabase) ListPermissions(ctx context.Context) ([]Permission, error) {
-	permissions := &[]Permission{}
-
-	res := db.DB.WithContext(ctx).Find(permissions)
-	if res.Error != nil {
-		return nil, res.Error
+func (db *PostgresConfigDatabase) ListPermissions(ctx context.Context) ([]*domain.Permission, error) {
+	permissions, err := db.queries.ListPermissions(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	return *permissions, nil
+	var result = make([]*domain.Permission, len(permissions))
+
+	for i, permission := range permissions {
+		result[i] = &domain.Permission{
+			Code: permission,
+		}
+	}
+
+	return result, nil
 }

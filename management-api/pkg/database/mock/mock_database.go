@@ -648,10 +648,10 @@ func (mr *MockConfigDatabaseMockRecorder) ListOutways(ctx interface{}) *gomock.C
 }
 
 // ListPermissions mocks base method.
-func (m *MockConfigDatabase) ListPermissions(ctx context.Context) ([]database.Permission, error) {
+func (m *MockConfigDatabase) ListPermissions(ctx context.Context) ([]*domain.Permission, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListPermissions", ctx)
-	ret0, _ := ret[0].([]database.Permission)
+	ret0, _ := ret[0].([]*domain.Permission)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
