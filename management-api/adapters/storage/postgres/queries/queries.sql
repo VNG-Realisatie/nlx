@@ -217,3 +217,16 @@ on constraint inways_name_key
                 hostname        = excluded.hostname,
                 ip_address      = excluded.ip_address,
                 updated_at      = excluded.updated_at;
+
+-- name: ListTermsOfService :many
+select
+    id, username, created_at
+from
+    nlx_management.terms_of_service;
+
+-- name: CreateTermsOfService :exec
+insert into
+    nlx_management.terms_of_service
+(username, created_at)
+    values
+($1, $2);

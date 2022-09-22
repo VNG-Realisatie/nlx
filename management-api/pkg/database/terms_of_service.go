@@ -5,73 +5,76 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
-	"gorm.io/gorm"
-
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 	"go.nlx.io/nlx/management-api/domain"
 )
 
-type TermsOfServiceStatus struct {
-	Username  string
-	CreatedAt time.Time
-}
-
 var ErrInvalidDate = errors.New("date cannot be in the future")
-
-func (i *TermsOfServiceStatus) TableName() string {
-	return "nlx_management.terms_of_service"
-}
 
 func (db *PostgresConfigDatabase) AcceptTermsOfService(ctx context.Context, username string, createdAt time.Time) (bool, error) {
 	if createdAt.After(time.Now()) {
 		return false, ErrInvalidDate
 	}
 
-	tx := db.DB.Begin()
-	defer tx.Rollback()
-
-	dbWithTx := &PostgresConfigDatabase{DB: tx}
-
-	var count int64
-	if err := dbWithTx.DB.
-		WithContext(ctx).
-		Model(&TermsOfServiceStatus{}).
-		Count(&count).Error; err != nil {
+	tx, err := db.db.Begin()
+	if err != nil {
 		return false, err
 	}
 
-	if count > 0 {
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
+
+			fmt.Printf("cannot rollback database transaction for accepting the terms of service: %e", err)
+		}
+	}()
+
+	qtx := db.queries.WithTx(tx)
+
+	termsOfService, err := qtx.ListTermsOfService(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	if len(termsOfService) > 0 {
 		return true, nil
 	}
 
-	if err := dbWithTx.DB.
-		WithContext(ctx).
-		Create(&TermsOfServiceStatus{
-			Username:  username,
-			CreatedAt: createdAt,
-		}).Error; err != nil {
+	err = qtx.CreateTermsOfService(ctx, &queries.CreateTermsOfServiceParams{
+		Username:  username,
+		CreatedAt: createdAt,
+	})
+	if err != nil {
 		return false, err
 	}
 
-	dbWithTx.DB.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return false, err
+	}
 
 	return false, nil
 }
 
 func (db *PostgresConfigDatabase) GetTermsOfServiceStatus(ctx context.Context) (*domain.TermsOfServiceStatus, error) {
-	tos := &TermsOfServiceStatus{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		First(tos).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
-		}
-
+	allTos, err := db.queries.ListTermsOfService(ctx)
+	if err != nil {
 		return nil, err
 	}
+
+	if len(allTos) == 0 {
+		return nil, ErrNotFound
+	}
+
+	tos := allTos[0]
 
 	model, err := domain.NewTermsOfServiceStatus(&domain.NewTermsOfServiceStatusArgs{
 		Username:  tos.Username,

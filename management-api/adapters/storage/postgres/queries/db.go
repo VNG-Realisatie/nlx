@@ -30,6 +30,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createAccessProofStmt, err = db.PrepareContext(ctx, createAccessProof); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateAccessProof: %w", err)
 	}
+	if q.createTermsOfServiceStmt, err = db.PrepareContext(ctx, createTermsOfService); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateTermsOfService: %w", err)
+	}
 	if q.doesInwayExistByNameStmt, err = db.PrepareContext(ctx, doesInwayExistByName); err != nil {
 		return nil, fmt.Errorf("error preparing query DoesInwayExistByName: %w", err)
 	}
@@ -44,6 +47,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.listAccessGrantsForServiceStmt, err = db.PrepareContext(ctx, listAccessGrantsForService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListAccessGrantsForService: %w", err)
+	}
+	if q.listTermsOfServiceStmt, err = db.PrepareContext(ctx, listTermsOfService); err != nil {
+		return nil, fmt.Errorf("error preparing query ListTermsOfService: %w", err)
 	}
 	if q.revokeAccessGrantStmt, err = db.PrepareContext(ctx, revokeAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query RevokeAccessGrant: %w", err)
@@ -72,6 +78,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createAccessProofStmt: %w", cerr)
 		}
 	}
+	if q.createTermsOfServiceStmt != nil {
+		if cerr := q.createTermsOfServiceStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createTermsOfServiceStmt: %w", cerr)
+		}
+	}
 	if q.doesInwayExistByNameStmt != nil {
 		if cerr := q.doesInwayExistByNameStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing doesInwayExistByNameStmt: %w", cerr)
@@ -95,6 +106,11 @@ func (q *Queries) Close() error {
 	if q.listAccessGrantsForServiceStmt != nil {
 		if cerr := q.listAccessGrantsForServiceStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listAccessGrantsForServiceStmt: %w", cerr)
+		}
+	}
+	if q.listTermsOfServiceStmt != nil {
+		if cerr := q.listTermsOfServiceStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listTermsOfServiceStmt: %w", cerr)
 		}
 	}
 	if q.revokeAccessGrantStmt != nil {
@@ -158,11 +174,13 @@ type Queries struct {
 	tx                                 *sql.Tx
 	createAccessGrantStmt              *sql.Stmt
 	createAccessProofStmt              *sql.Stmt
+	createTermsOfServiceStmt           *sql.Stmt
 	doesInwayExistByNameStmt           *sql.Stmt
 	getAccessGrantStmt                 *sql.Stmt
 	getLatestAccessGrantForServiceStmt *sql.Stmt
 	getSettingsStmt                    *sql.Stmt
 	listAccessGrantsForServiceStmt     *sql.Stmt
+	listTermsOfServiceStmt             *sql.Stmt
 	revokeAccessGrantStmt              *sql.Stmt
 	updateIncomingAccessRequestStmt    *sql.Stmt
 	updateSettingsStmt                 *sql.Stmt
@@ -175,11 +193,13 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		tx:                                 tx,
 		createAccessGrantStmt:              q.createAccessGrantStmt,
 		createAccessProofStmt:              q.createAccessProofStmt,
+		createTermsOfServiceStmt:           q.createTermsOfServiceStmt,
 		doesInwayExistByNameStmt:           q.doesInwayExistByNameStmt,
 		getAccessGrantStmt:                 q.getAccessGrantStmt,
 		getLatestAccessGrantForServiceStmt: q.getLatestAccessGrantForServiceStmt,
 		getSettingsStmt:                    q.getSettingsStmt,
 		listAccessGrantsForServiceStmt:     q.listAccessGrantsForServiceStmt,
+		listTermsOfServiceStmt:             q.listTermsOfServiceStmt,
 		revokeAccessGrantStmt:              q.revokeAccessGrantStmt,
 		updateIncomingAccessRequestStmt:    q.updateIncomingAccessRequestStmt,
 		updateSettingsStmt:                 q.updateSettingsStmt,

@@ -61,6 +61,24 @@ func (q *Queries) CreateAccessProof(ctx context.Context, arg *CreateAccessProofP
 	return id, err
 }
 
+const createTermsOfService = `-- name: CreateTermsOfService :exec
+insert into
+    nlx_management.terms_of_service
+(username, created_at)
+    values
+($1, $2)
+`
+
+type CreateTermsOfServiceParams struct {
+	Username  string
+	CreatedAt time.Time
+}
+
+func (q *Queries) CreateTermsOfService(ctx context.Context, arg *CreateTermsOfServiceParams) error {
+	_, err := q.exec(ctx, q.createTermsOfServiceStmt, createTermsOfService, arg.Username, arg.CreatedAt)
+	return err
+}
+
 const doesInwayExistByName = `-- name: DoesInwayExistByName :one
 select
         count(*)>0 as inway_exits
@@ -291,6 +309,7 @@ func (q *Queries) GetLatestAccessGrantForService(ctx context.Context, arg *GetLa
 }
 
 const getSettings = `-- name: GetSettings :one
+
 select
     settings.organization_email_address,
     inways.name
@@ -309,6 +328,8 @@ type GetSettingsRow struct {
 	Name                     sql.NullString
 }
 
+// Copyright © VNG Realisatie 2022
+// Licensed under the EUPL
 func (q *Queries) GetSettings(ctx context.Context) (*GetSettingsRow, error) {
 	row := q.queryRow(ctx, q.getSettingsStmt, getSettings)
 	var i GetSettingsRow
@@ -431,6 +452,36 @@ func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) (
 	return items, nil
 }
 
+const listTermsOfService = `-- name: ListTermsOfService :many
+select
+    id, username, created_at
+from
+    nlx_management.terms_of_service
+`
+
+func (q *Queries) ListTermsOfService(ctx context.Context) ([]*NlxManagementTermsOfService, error) {
+	rows, err := q.query(ctx, q.listTermsOfServiceStmt, listTermsOfService)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*NlxManagementTermsOfService{}
+	for rows.Next() {
+		var i NlxManagementTermsOfService
+		if err := rows.Scan(&i.ID, &i.Username, &i.CreatedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const revokeAccessGrant = `-- name: RevokeAccessGrant :exec
 update
     nlx_management.access_grants
@@ -505,7 +556,6 @@ values
 on constraint inways_name_key
     do update
            set
-                name            = excluded.name,
                 self_address    = excluded.self_address,
                 version         = excluded.version,
                 hostname        = excluded.hostname,
