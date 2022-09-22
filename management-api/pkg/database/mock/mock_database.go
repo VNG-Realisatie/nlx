@@ -778,21 +778,6 @@ func (mr *MockConfigDatabaseMockRecorder) SynchronizeOrders(ctx, orders interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockConfigDatabase)(nil).SynchronizeOrders), ctx, orders)
 }
 
-// TakePendingOutgoingAccessRequests mocks base method.
-func (m *MockConfigDatabase) TakePendingOutgoingAccessRequests(ctx context.Context) ([]*database.OutgoingAccessRequest, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TakePendingOutgoingAccessRequests", ctx)
-	ret0, _ := ret[0].([]*database.OutgoingAccessRequest)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// TakePendingOutgoingAccessRequests indicates an expected call of TakePendingOutgoingAccessRequests.
-func (mr *MockConfigDatabaseMockRecorder) TakePendingOutgoingAccessRequests(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TakePendingOutgoingAccessRequests", reflect.TypeOf((*MockConfigDatabase)(nil).TakePendingOutgoingAccessRequests), ctx)
-}
-
 // UnlockOutgoingAccessRequest mocks base method.
 func (m *MockConfigDatabase) UnlockOutgoingAccessRequest(ctx context.Context, accessRequest *database.OutgoingAccessRequest) error {
 	m.ctrl.T.Helper()
