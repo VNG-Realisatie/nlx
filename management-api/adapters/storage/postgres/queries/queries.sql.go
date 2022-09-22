@@ -458,7 +458,18 @@ select
         public_key_fingerprint,
         service_name,
         organization_serial_number
-    ) access_requests_outgoing.id, access_requests_outgoing.organization_name, access_requests_outgoing.service_name, access_requests_outgoing.state, access_requests_outgoing.public_key_fingerprint, access_requests_outgoing.reference_id, access_requests_outgoing.error_code, access_requests_outgoing.error_cause, access_requests_outgoing.error_stack_trace, access_requests_outgoing.created_at, access_requests_outgoing.updated_at, access_requests_outgoing.public_key_pem, access_requests_outgoing.organization_serial_number
+    ) access_requests_outgoing.id,
+      access_requests_outgoing.organization_name,
+      access_requests_outgoing.organization_serial_number,
+      access_requests_outgoing.service_name,
+      access_requests_outgoing.state,
+      access_requests_outgoing.reference_id,
+      access_requests_outgoing.error_code,
+      access_requests_outgoing.error_cause,
+      access_requests_outgoing.public_key_fingerprint,
+      access_requests_outgoing.public_key_pem,
+      access_requests_outgoing.created_at,
+      access_requests_outgoing.updated_at
 from
     nlx_management.access_requests_outgoing
 order by
@@ -469,29 +480,43 @@ order by
 desc
 `
 
-func (q *Queries) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*NlxManagementAccessRequestsOutgoing, error) {
+type ListAllLatestOutgoingAccessRequestsRow struct {
+	ID                       int32
+	OrganizationName         string
+	OrganizationSerialNumber string
+	ServiceName              string
+	State                    string
+	ReferenceID              int32
+	ErrorCode                int32
+	ErrorCause               sql.NullString
+	PublicKeyFingerprint     string
+	PublicKeyPem             sql.NullString
+	CreatedAt                time.Time
+	UpdatedAt                time.Time
+}
+
+func (q *Queries) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*ListAllLatestOutgoingAccessRequestsRow, error) {
 	rows, err := q.query(ctx, q.listAllLatestOutgoingAccessRequestsStmt, listAllLatestOutgoingAccessRequests)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []*NlxManagementAccessRequestsOutgoing{}
+	items := []*ListAllLatestOutgoingAccessRequestsRow{}
 	for rows.Next() {
-		var i NlxManagementAccessRequestsOutgoing
+		var i ListAllLatestOutgoingAccessRequestsRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.OrganizationName,
+			&i.OrganizationSerialNumber,
 			&i.ServiceName,
 			&i.State,
-			&i.PublicKeyFingerprint,
 			&i.ReferenceID,
 			&i.ErrorCode,
 			&i.ErrorCause,
-			&i.ErrorStackTrace,
+			&i.PublicKeyFingerprint,
+			&i.PublicKeyPem,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.PublicKeyPem,
-			&i.OrganizationSerialNumber,
 		); err != nil {
 			return nil, err
 		}
