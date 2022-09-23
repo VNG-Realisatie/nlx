@@ -1763,8 +1763,8 @@
         "type" : "object"
       },
       "managementErrorCode" : {
-        "default" : "INTERNAL",
-        "enum" : [ "INTERNAL", "NO_INWAY_SELECTED" ],
+        "default" : "ERROR_CODE_UNSPECIFIED",
+        "enum" : [ "ERROR_CODE_UNSPECIFIED", "ERROR_CODE_INTERNAL", "ERROR_CODE_NO_INWAY_SELECTED" ],
         "type" : "string"
       },
       "managementErrorDetails" : {

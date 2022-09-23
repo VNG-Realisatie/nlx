@@ -14,7 +14,8 @@ import (
 type ErrorCode int
 
 const (
-	InternalError ErrorCode = iota
+	Unspecified ErrorCode = iota
+	InternalError
 	NoInwaySelectedError
 )
 

@@ -18,8 +18,9 @@
  * @export
  */
 export const ManagementErrorCode = {
-    INTERNAL: 'INTERNAL',
-    NO_INWAY_SELECTED: 'NO_INWAY_SELECTED'
+    UNSPECIFIED: 'ERROR_CODE_UNSPECIFIED',
+    INTERNAL: 'ERROR_CODE_INTERNAL',
+    NO_INWAY_SELECTED: 'ERROR_CODE_NO_INWAY_SELECTED'
 } as const;
 export type ManagementErrorCode = typeof ManagementErrorCode[keyof typeof ManagementErrorCode];
 

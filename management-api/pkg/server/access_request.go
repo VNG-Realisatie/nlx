@@ -365,10 +365,10 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) *api.
 	var details *api.ErrorDetails
 
 	if request.ErrorCause != "" {
-		code := api.ErrorCode_INTERNAL
+		code := api.ErrorCode_ERROR_CODE_INTERNAL
 
 		if request.ErrorCode == int(diagnostics.NoInwaySelectedError) {
-			code = api.ErrorCode_NO_INWAY_SELECTED
+			code = api.ErrorCode_ERROR_CODE_NO_INWAY_SELECTED
 		}
 
 		details = &api.ErrorDetails{

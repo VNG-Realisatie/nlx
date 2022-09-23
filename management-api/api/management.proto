@@ -380,8 +380,9 @@ enum AccessRequestState {
 }
 
 enum ErrorCode {
-  INTERNAL = 0;
-  NO_INWAY_SELECTED = 1;
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_INTERNAL = 1;
+  ERROR_CODE_NO_INWAY_SELECTED = 2;
 }
 
 message ErrorDetails {

@@ -128,7 +128,7 @@ func Test_SendAccessRequest(t *testing.T) {
 					UpdatedAt:            timestamppb.New(now),
 					PublicKeyFingerprint: testPublicKeyFingerprint,
 					ErrorDetails: &api.ErrorDetails{
-						Code:       api.ErrorCode_INTERNAL,
+						Code:       api.ErrorCode_ERROR_CODE_INTERNAL,
 						Cause:      "The organization is not available.",
 						StackTrace: nil,
 					},
@@ -209,7 +209,7 @@ func Test_SendAccessRequest(t *testing.T) {
 					UpdatedAt:            timestamppb.New(now),
 					PublicKeyFingerprint: testPublicKeyFingerprint,
 					ErrorDetails: &api.ErrorDetails{
-						Code:       api.ErrorCode_INTERNAL,
+						Code:       api.ErrorCode_ERROR_CODE_INTERNAL,
 						Cause:      "The organization is not available.",
 						StackTrace: nil,
 					},
