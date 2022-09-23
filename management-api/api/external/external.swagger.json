@@ -69,22 +69,22 @@
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "serviceName" : {
+          "service_name" : {
             "type" : "string"
           },
-          "createdAt" : {
+          "created_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "revokedAt" : {
+          "revoked_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "accessRequestId" : {
+          "access_request_id" : {
             "format" : "uint64",
             "type" : "string"
           },
-          "publicKeyFingerprint" : {
+          "public_key_fingerprint" : {
             "type" : "string"
           }
         },

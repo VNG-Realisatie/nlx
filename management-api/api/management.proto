@@ -465,11 +465,11 @@ message AccessGrant {
 message AccessProof {
   uint64 id = 1;
   Organization organization = 2;
-  string serviceName = 3;
-  google.protobuf.Timestamp createdAt = 4;
-  google.protobuf.Timestamp revokedAt = 5;
-  uint64 accessRequestId = 6;
-  string publicKeyFingerprint = 7;
+  string service_name = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp revoked_at = 5;
+  uint64 access_request_id = 6;
+  string public_key_fingerprint = 7;
 }
 
 service Directory {

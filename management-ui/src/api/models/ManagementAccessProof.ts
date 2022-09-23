@@ -82,11 +82,11 @@ export function ManagementAccessProofFromJSONTyped(json: any, ignoreDiscriminato
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
-        'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
-        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
-        'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
-        'accessRequestId': !exists(json, 'accessRequestId') ? undefined : json['accessRequestId'],
-        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
+        'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
+        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
+        'accessRequestId': !exists(json, 'access_request_id') ? undefined : json['access_request_id'],
+        'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
     };
 }
 
@@ -101,11 +101,11 @@ export function ManagementAccessProofToJSON(value?: ManagementAccessProof | null
         
         'id': value.id,
         'organization': ManagementOrganizationToJSON(value.organization),
-        'serviceName': value.serviceName,
-        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
-        'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
-        'accessRequestId': value.accessRequestId,
-        'publicKeyFingerprint': value.publicKeyFingerprint,
+        'service_name': value.serviceName,
+        'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'access_request_id': value.accessRequestId,
+        'public_key_fingerprint': value.publicKeyFingerprint,
     };
 }
 
