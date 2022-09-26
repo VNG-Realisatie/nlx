@@ -6,10 +6,10 @@ package auditlog
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 
 	"go.uber.org/zap"
-	"gopkg.in/square/go-jose.v2/json"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
