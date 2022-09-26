@@ -1427,8 +1427,8 @@
   "components" : {
     "schemas" : {
       "AuditLogRecordActionType" : {
-        "default" : "loginSuccess",
-        "enum" : [ "loginSuccess", "loginFail", "logout", "incomingAccessRequestAccept", "incomingAccessRequestReject", "accessGrantRevoke", "outgoingAccessRequestCreate", "outgoingAccessRequestFail", "serviceCreate", "serviceUpdate", "serviceDelete", "organizationSettingsUpdate", "orderCreate", "orderOutgoingRevoke", "orderIncomingRevoke", "inwayDelete", "orderOutgoingUpdate", "acceptTermsOfService", "outwayDelete" ],
+        "default" : "ACTION_TYPE_UNSPECIFIED",
+        "enum" : [ "ACTION_TYPE_UNSPECIFIED", "ACTION_TYPE_LOGIN_SUCCESS", "ACTION_TYPE_LOGIN_FAIL", "ACTION_TYPE_LOGOUT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT", "ACTION_TYPE_ACCESS_GRANT_REVOKE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_FAIL", "ACTION_TYPE_SERVICE_CREATE", "ACTION_TYPE_SERVICE_UPDATE", "ACTION_TYPE_SERVICE_DELETE", "ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE", "ACTION_TYPE_ORDER_CREATE", "ACTION_TYPE_ORDER_OUTGOING_REVOKE", "ACTION_TYPE_ORDER_INCOMING_REVOKE", "ACTION_TYPE_INWAY_DELETE", "ACTION_TYPE_ORDER_OUTGOING_UPDATE", "ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE", "ACTION_TYPE_OUTWAY_DELETE" ],
         "type" : "string"
       },
       "DirectoryServiceAccessState" : {

@@ -118,7 +118,7 @@ func TestListAuditLogs(t *testing.T) {
 					{
 						Id:              1,
 						User:            "admin@example.com",
-						Action:          api.AuditLogRecord_loginSuccess,
+						Action:          api.AuditLogRecord_ACTION_TYPE_LOGIN_SUCCESS,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
 						Client:          "NLX Management",
@@ -156,7 +156,7 @@ func TestListAuditLogs(t *testing.T) {
 					{
 						Id:              1,
 						User:            "",
-						Action:          api.AuditLogRecord_loginSuccess,
+						Action:          api.AuditLogRecord_ACTION_TYPE_LOGIN_SUCCESS,
 						OperatingSystem: "Mac OS X",
 						Browser:         "",
 						Client:          "nlxctl",
@@ -205,7 +205,7 @@ func TestListAuditLogs(t *testing.T) {
 					{
 						Id:              1,
 						User:            "admin@example.com",
-						Action:          api.AuditLogRecord_orderOutgoingRevoke,
+						Action:          api.AuditLogRecord_ACTION_TYPE_ORDER_OUTGOING_REVOKE,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
 						Client:          "NLX Management",
@@ -253,7 +253,7 @@ func TestListAuditLogs(t *testing.T) {
 					{
 						Id:              1,
 						User:            "admin@example.com",
-						Action:          api.AuditLogRecord_inwayDelete,
+						Action:          api.AuditLogRecord_ACTION_TYPE_INWAY_DELETE,
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
 						Client:          "NLX Management",

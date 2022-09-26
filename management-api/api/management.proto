@@ -550,25 +550,26 @@ message UpdateSettingsRequest{
 
 message AuditLogRecord {
   enum ActionType {
-    loginSuccess = 0;
-    loginFail = 1;
-    logout = 2;
-    incomingAccessRequestAccept = 3;
-    incomingAccessRequestReject = 4;
-    accessGrantRevoke = 5;
-    outgoingAccessRequestCreate = 6;
-    outgoingAccessRequestFail = 7;
-    serviceCreate = 8;
-    serviceUpdate = 9;
-    serviceDelete = 10;
-    organizationSettingsUpdate = 11;
-    orderCreate = 13;
-    orderOutgoingRevoke = 14;
-    orderIncomingRevoke = 15;
-    inwayDelete = 16;
-    orderOutgoingUpdate = 17;
-    acceptTermsOfService = 18;
-    outwayDelete = 19;
+    ACTION_TYPE_UNSPECIFIED = 0;
+    ACTION_TYPE_LOGIN_SUCCESS = 1;
+    ACTION_TYPE_LOGIN_FAIL = 2;
+    ACTION_TYPE_LOGOUT = 3;
+    ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT = 4;
+    ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT = 5;
+    ACTION_TYPE_ACCESS_GRANT_REVOKE = 6;
+    ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE = 7;
+    ACTION_TYPE_OUTGOING_ACCESS_REQUEST_FAIL = 8;
+    ACTION_TYPE_SERVICE_CREATE = 9;
+    ACTION_TYPE_SERVICE_UPDATE = 10;
+    ACTION_TYPE_SERVICE_DELETE = 11;
+    ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE = 12;
+    ACTION_TYPE_ORDER_CREATE = 13;
+    ACTION_TYPE_ORDER_OUTGOING_REVOKE = 14;
+    ACTION_TYPE_ORDER_INCOMING_REVOKE = 15;
+    ACTION_TYPE_INWAY_DELETE = 16;
+    ACTION_TYPE_ORDER_OUTGOING_UPDATE = 17;
+    ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE = 18;
+    ACTION_TYPE_OUTWAY_DELETE = 19;
   }
 
   message Service {
