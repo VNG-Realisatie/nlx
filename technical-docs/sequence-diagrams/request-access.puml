@@ -32,14 +32,8 @@ managementAPIOrgA -> inwayOrgB: Request access
         end
         managementAPIOrgB -> inwayOrgB: Access request received
         inwayOrgB -> managementAPIOrgA: Access request received
-managementAPIOrgA -> managementDatabaseOrgA: Store outgoing access request with state 'created'
+managementAPIOrgA -> managementDatabaseOrgA: Store outgoing access request with state 'received'
 managementAPIOrgA -> managementUIOrgA: Access request send
 managementUIOrgA -> userOrgA: Show message 'access request send'
 
-userOrgB -> managementUIOrgB: Approve access request
-managementUIOrgB -> managementAPIOrgB: Approve access request
-managementAPIOrgB -> managementDatabaseOrgB: Set access request state to approved
-managementAPIOrgB -> managementDatabaseOrgB: Create access grant
-managementAPIOrgB -> managementUIOrgB: Access request approved
-managementUIOrgB -> userOrgB: Show organization A has access to service X
 @enduml

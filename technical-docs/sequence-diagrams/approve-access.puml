@@ -1,0 +1,29 @@
+@startuml
+title: Approve access request for a service
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "Organization A"
+actor "User" as userOrgA
+participant "NLX Management" as managementUIOrgA
+participant "Management API" as managementAPIOrgA
+database "Management database" as managementDatabaseOrgA
+end box
+
+box "Organization B"
+actor "User" as userOrgB
+participant "Inway" as inwayOrgB
+participant "NLX Management" as managementUIOrgB
+participant "Management API" as managementAPIOrgB
+database "Management database" as managementDatabaseOrgB
+end box
+
+userOrgB -> managementUIOrgB: Approve access request
+managementUIOrgB -> managementAPIOrgB: Approve access request
+managementAPIOrgB -> managementDatabaseOrgB: Set access request state to approved
+managementAPIOrgB -> managementDatabaseOrgB: Create access grant
+managementAPIOrgB -> managementUIOrgB: Access request approved
+managementUIOrgB -> userOrgB: Show organization A has access to service X
+@enduml

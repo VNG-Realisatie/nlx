@@ -22,53 +22,43 @@ loop for each outgoing access request
     alt state received
         managementAPIOrgA -> inwayOrgB: Get access request state
         inwayOrgB -> managementAPIOrgB: Get access request state
-        alt get access request state succeeds
-            managementAPIOrgB -> managementDatabaseOrgB: Get Service
-            managementDatabaseOrgB -> managementAPIOrgB: Return service
-            alt service exists
-                managementAPIOrgB -> managementDatabaseOrgB: Get incoming access request state (latest access request stored of the organization)
-                managementDatabaseOrgB -> managementAPIOrgB: Return incoming access request state
-                managementAPIOrgB -> inwayOrgB: Return incoming access request state
-                inwayOrgB -> managementAPIOrgA: Return incoming access request state
-                managementAPIOrgA -> managementDatabaseOrgB: Update state of the outgoing access request
-            else
-                managementDatabaseOrgB -> managementAPIOrgB: Error service no longer exists
-                managementAPIOrgB -> inwayOrgB: Error service no longer exists
-                inwayOrgB -> managementAPIOrgA: Error service no longer exists
-                managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
-            end
-        else get access request state fails
-            managementAPIOrgA -> managementAPIOrgA: Log error
+        managementAPIOrgB -> managementDatabaseOrgB: Get Service
+        managementDatabaseOrgB -> managementAPIOrgB: Return service
+        alt service exists
+            managementAPIOrgB -> managementDatabaseOrgB: Get incoming access request state (latest access request stored of the organization)
+            managementDatabaseOrgB -> managementAPIOrgB: Return incoming access request state
+            managementAPIOrgB -> inwayOrgB: Return incoming access request state
+            inwayOrgB -> managementAPIOrgA: Return incoming access request state
+            managementAPIOrgA -> managementDatabaseOrgA: Update state of the outgoing access request
+        else
+            managementDatabaseOrgB -> managementAPIOrgB: Error service no longer exists
+            managementAPIOrgB -> inwayOrgB: Error service no longer exists
+            inwayOrgB -> managementAPIOrgA: Error service no longer exists
+            managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
         end
     else state approved
         managementAPIOrgA -> inwayOrgB: Retrieve access proof
         inwayOrgB -> managementAPIOrgB: Retrieve access proof
-        alt retrieve access proof succeeds
-            managementAPIOrgB -> managementDatabaseOrgB: Get Service
-            managementDatabaseOrgB -> managementAPIOrgB: Return service
-            alt service exists
-                managementAPIOrgB -> managementDatabaseOrgB: Get latest access grant (servicename + organization serialnumber)
-                managementDatabaseOrgB -> managementAPIOrgB: Return access grant
-                managementAPIOrgB -> inwayOrgB: Return access proof
-                inwayOrgB -> managementAPIOrgA: Return access proof
-                managementAPIOrgA -> managementDatabaseOrgA: Get access proof
-                managementDatabaseOrgA -> managementAPIOrgA: Return access proof
-                alt access proof reference ID matches outgoing access request ID
-                    alt access proof does exists
-                        managementAPIOrgA -> managementDatabaseOrgA: Create access proof
-                    end
-                    alt access proof revoked
-                        managementAPIOrgA -> managementDatabaseOrgA: Revoke access proof
-                    end
+        managementAPIOrgB -> managementDatabaseOrgB: Get Service
+        managementDatabaseOrgB -> managementAPIOrgB: Return service
+        alt service exists
+            managementAPIOrgB -> managementDatabaseOrgB: Get latest access grant (servicename + organization serialnumber + Public Key Fingerprint)
+            managementDatabaseOrgB -> managementAPIOrgB: Return access grant
+            managementAPIOrgB -> inwayOrgB: Return access proof
+            inwayOrgB -> managementAPIOrgA: Return access proof
+            alt access proof reference ID matches outgoing access request ID
+                alt access proof does exists
+                    managementAPIOrgA -> managementDatabaseOrgA: Create access proof
                 end
-            else service no longer exists
-                managementDatabaseOrgB -> managementAPIOrgB: Error service no longer exists
-                managementAPIOrgB -> inwayOrgB: Error service no longer exists
-                inwayOrgB -> managementAPIOrgA: Error service no longer exists
-                managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
+                alt access proof revoked
+                    managementAPIOrgA -> managementDatabaseOrgA: Revoke access proof
+                end
             end
-        else retrieve access proof fails
-            managementAPIOrgA -> managementAPIOrgA: Log error
+        else service no longer exists
+            managementDatabaseOrgB -> managementAPIOrgB: Error service no longer exists
+            managementAPIOrgB -> inwayOrgB: Error service no longer exists
+            inwayOrgB -> managementAPIOrgA: Error service no longer exists
+            managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
         end
     end
 end

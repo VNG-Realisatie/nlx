@@ -22,23 +22,19 @@ loop for each outgoing access request
     alt state received
         managementAPIOrgA -> inwayOrgB: Get access request state
         inwayOrgB -> managementAPIOrgB: Get access request state
-        alt get access request state succeeds
-            managementAPIOrgB -> managementDatabaseOrgB: Get Service
-            managementDatabaseOrgB -> managementAPIOrgB: Return service
-            alt service exists
-                managementAPIOrgB -> managementDatabaseOrgB: Get incoming access request state (latest access request stored of the organization)
-                managementDatabaseOrgB -> managementAPIOrgB: Return incoming access request state
-                managementAPIOrgB -> inwayOrgB: Return incoming access request state
-                inwayOrgB -> managementAPIOrgA: Return incoming access request state
-                managementAPIOrgA -> managementDatabaseOrgB: Update state of the outgoing access request
-            else
-                managementDatabaseOrgB -> managementAPIOrgB: Error service no longer exists
-                managementAPIOrgB -> inwayOrgB: Error service no longer exists
-                inwayOrgB -> managementAPIOrgA: Error service no longer exists
-                managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
-            end
-        else get access request state fails
-            managementAPIOrgA -> managementAPIOrgA: Log error
+        managementAPIOrgB -> managementDatabaseOrgB: Get Service
+        managementDatabaseOrgB -> managementAPIOrgB: Return service
+        alt service exists
+            managementAPIOrgB -> managementDatabaseOrgB: Get incoming access request state (latest access request stored of the organization)
+            managementDatabaseOrgB -> managementAPIOrgB: Return incoming access request state
+            managementAPIOrgB -> inwayOrgB: Return incoming access request state
+            inwayOrgB -> managementAPIOrgA: Return incoming access request state
+            managementAPIOrgA -> managementDatabaseOrgB: Update state of the outgoing access request
+        else
+            managementDatabaseOrgB -> managementAPIOrgB: Error service no longer exists
+            managementAPIOrgB -> inwayOrgB: Error service no longer exists
+            inwayOrgB -> managementAPIOrgA: Error service no longer exists
+            managementAPIOrgA -> managementDatabaseOrgA: Delete outgoing access request for service
         end
     else state approved
         managementAPIOrgA -> inwayOrgB: Retrieve access proof
