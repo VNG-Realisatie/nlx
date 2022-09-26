@@ -510,10 +510,10 @@ message DirectoryAccessRequest {
 
 message DirectoryService {
   enum State {
-    unknown = 0;
-    up = 1;
-    down = 2;
-    degraded = 3;
+    STATE_UNSPECIFIED = 0;
+    STATE_UP = 1;
+    STATE_DOWN = 2;
+    STATE_DEGRADED = 3;
   }
 
   message AccessState {

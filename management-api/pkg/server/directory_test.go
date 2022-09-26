@@ -51,23 +51,23 @@ var directoryServiceStateTests = []struct {
 	Inways        []*directoryapi.Inway
 }{
 	{
-		api.DirectoryService_unknown,
+		api.DirectoryService_STATE_UNSPECIFIED,
 		nil,
 	},
 	{
-		api.DirectoryService_unknown,
+		api.DirectoryService_STATE_UNSPECIFIED,
 		[]*directoryapi.Inway{
 			{State: directoryapi.Inway_UNKNOWN},
 		},
 	},
 	{
-		api.DirectoryService_up,
+		api.DirectoryService_STATE_UP,
 		[]*directoryapi.Inway{
 			{State: directoryapi.Inway_UP},
 		},
 	},
 	{
-		api.DirectoryService_up,
+		api.DirectoryService_STATE_UP,
 		[]*directoryapi.Inway{
 			{State: directoryapi.Inway_UP},
 			{State: directoryapi.Inway_UP},
@@ -75,27 +75,27 @@ var directoryServiceStateTests = []struct {
 		},
 	},
 	{
-		api.DirectoryService_down,
+		api.DirectoryService_STATE_DOWN,
 		[]*directoryapi.Inway{
+			{State: directoryapi.Inway_DOWN},
+		},
+	},
+	{
+		api.DirectoryService_STATE_DOWN,
+		[]*directoryapi.Inway{
+			{State: directoryapi.Inway_DOWN},
 			{State: directoryapi.Inway_DOWN},
 		},
 	},
 	{
-		api.DirectoryService_down,
-		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_DOWN},
-			{State: directoryapi.Inway_DOWN},
-		},
-	},
-	{
-		api.DirectoryService_degraded,
+		api.DirectoryService_STATE_DEGRADED,
 		[]*directoryapi.Inway{
 			{State: directoryapi.Inway_UP},
 			{State: directoryapi.Inway_DOWN},
 		},
 	},
 	{
-		api.DirectoryService_degraded,
+		api.DirectoryService_STATE_DEGRADED,
 		[]*directoryapi.Inway{
 			{State: directoryapi.Inway_DOWN},
 			{State: directoryapi.Inway_UNKNOWN},

@@ -1443,8 +1443,8 @@
         "type" : "object"
       },
       "DirectoryServiceState" : {
-        "default" : "unknown",
-        "enum" : [ "unknown", "up", "down", "degraded" ],
+        "default" : "STATE_UNSPECIFIED",
+        "enum" : [ "STATE_UNSPECIFIED", "STATE_UP", "STATE_DOWN", "STATE_DEGRADED" ],
         "type" : "string"
       },
       "managementAccessGrant" : {

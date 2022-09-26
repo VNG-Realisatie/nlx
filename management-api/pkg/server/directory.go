@@ -31,9 +31,9 @@ type DirectoryService struct {
 }
 
 var inwayStateToDirectoryState = map[directoryapi.Inway_State]api.DirectoryService_State{
-	directoryapi.Inway_UNKNOWN: api.DirectoryService_unknown,
-	directoryapi.Inway_UP:      api.DirectoryService_up,
-	directoryapi.Inway_DOWN:    api.DirectoryService_down,
+	directoryapi.Inway_UNKNOWN: api.DirectoryService_STATE_UNSPECIFIED,
+	directoryapi.Inway_UP:      api.DirectoryService_STATE_UP,
+	directoryapi.Inway_DOWN:    api.DirectoryService_STATE_DOWN,
 }
 
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient directory.Client, configDatabase database.ConfigDatabase) *DirectoryService {
@@ -91,7 +91,7 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 }
 
 func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {
-	serviceState := api.DirectoryService_unknown
+	serviceState := api.DirectoryService_STATE_UNSPECIFIED
 
 	if len(inways) == 0 {
 		return serviceState
@@ -104,7 +104,7 @@ func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryS
 	}
 
 	if len(stateMap) > 1 {
-		return api.DirectoryService_degraded
+		return api.DirectoryService_STATE_DEGRADED
 	}
 
 	for state := range stateMap {

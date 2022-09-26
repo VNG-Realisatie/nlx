@@ -18,10 +18,10 @@
  * @export
  */
 export const DirectoryServiceState = {
-    UNKNOWN: 'unknown',
-    UP: 'up',
-    DOWN: 'down',
-    DEGRADED: 'degraded'
+    UNSPECIFIED: 'STATE_UNSPECIFIED',
+    UP: 'STATE_UP',
+    DOWN: 'STATE_DOWN',
+    DEGRADED: 'STATE_DEGRADED'
 } as const;
 export type DirectoryServiceState = typeof DirectoryServiceState[keyof typeof DirectoryServiceState];
 

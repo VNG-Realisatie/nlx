@@ -125,7 +125,7 @@ func TestListDirectoryServices(t *testing.T) {
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationURL:     "https://example.com",
 			PublicSupportContact: "test@example.com",
-			State:                api.DirectoryService_unknown,
+			State:                api.DirectoryService_STATE_UNSPECIFIED,
 			OneTimeCosts:         1,
 			MonthlyCosts:         5,
 			RequestCosts:         250,

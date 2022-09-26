@@ -7,6 +7,7 @@ import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
 import { DirectoryApi, ManagementApi } from '../../../api'
 import { RootStore, StoreProvider } from '../../../stores'
+import { SERVICE_STATE_DEGRADED } from '../../../components/StateIndicator'
 import DirectoryDetailPage from './index'
 
 jest.mock('./components/DirectoryDetailView', () => () => (
@@ -24,7 +25,7 @@ test('display directory service details', async () => {
           name: 'Test Organization',
         },
         serviceName: 'Test Service',
-        state: 'degraded',
+        state: SERVICE_STATE_DEGRADED,
         apiSpecificationType: 'API',
         latestAccessRequest: null,
       },
