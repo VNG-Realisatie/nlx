@@ -60,6 +60,7 @@ The available scopes are:
 - management
 - outway
 - txlog
+- nlxctl
 
 ### 2.3. Merge Request
 
