@@ -671,8 +671,9 @@ service TXLog {
 }
 
 enum TXLogDirection {
-  IN = 0;
-  OUT = 1;
+  TX_LOG_DIRECTION_UNSPECIFIED = 0;
+  TX_LOG_DIRECTION_IN = 1;
+  TX_LOG_DIRECTION_OUT = 2;
 }
 
 message TXLogOrganization {

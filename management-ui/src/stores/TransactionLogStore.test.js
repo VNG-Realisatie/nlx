@@ -32,7 +32,7 @@ test('fetching, getting and updating from server', async () => {
       records: [
         {
           transactionID: '2d37d10f3b6515b4075278877629d116',
-          direction: 'IN',
+          direction: 'DIRECTION_IN',
           source: {
             serialNumber: '00000000000000000001',
             name: 'Organization One',
@@ -51,7 +51,7 @@ test('fetching, getting and updating from server', async () => {
       records: [
         {
           transactionID: '2d37d10f3b6515b4075278877629d116',
-          direction: 'IN',
+          direction: 'DIRECTION_IN',
           source: {
             serialNumber: '00000000000000000001',
             name: 'Organization One',
@@ -66,7 +66,7 @@ test('fetching, getting and updating from server', async () => {
         },
         {
           transactionID: '70c5cb7ef23af6a416b2b47a377dd39f',
-          direction: 'OUT',
+          direction: 'DIRECTION_OUT',
           source: {
             serialNumber: '00000000000000000001',
             name: 'Organization One',

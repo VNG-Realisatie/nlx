@@ -3,8 +3,8 @@
 //
 import { makeAutoObservable } from 'mobx'
 
-export const DIRECTION_IN = 'IN'
-export const DIRECTION_OUT = 'OUT'
+export const DIRECTION_IN = 'DIRECTION_IN'
+export const DIRECTION_OUT = 'DIRECTION_OUT'
 
 class Organization {
   serialNumber = ''

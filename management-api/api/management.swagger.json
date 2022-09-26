@@ -2388,8 +2388,8 @@
         "type" : "object"
       },
       "managementTXLogDirection" : {
-        "default" : "IN",
-        "enum" : [ "IN", "OUT" ],
+        "default" : "TX_LOG_DIRECTION_UNSPECIFIED",
+        "enum" : [ "TX_LOG_DIRECTION_UNSPECIFIED", "TX_LOG_DIRECTION_IN", "TX_LOG_DIRECTION_OUT" ],
         "type" : "string"
       },
       "managementTXLogListRecordsResponse" : {

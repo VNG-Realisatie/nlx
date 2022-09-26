@@ -5,6 +5,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"google.golang.org/grpc/codes"
@@ -44,7 +45,7 @@ func dataModelToResponse(records []*query.Record) *api.ListRecordsResponse {
 			Destination: &api.ListRecordsResponse_Record_Organization{
 				SerialNumber: r.DestinationOrganization,
 			},
-			Direction: api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[strings.ToUpper(r.Direction)]),
+			Direction: directionToProto(r.Direction),
 			Service: &api.ListRecordsResponse_Record_Service{
 				Name: r.ServiceName,
 			},
@@ -60,4 +61,8 @@ func dataModelToResponse(records []*query.Record) *api.ListRecordsResponse {
 	}
 
 	return response
+}
+
+func directionToProto(direction string) api.ListRecordsResponse_Record_Direction {
+	return api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[fmt.Sprintf("DIRECTION_%s", strings.ToUpper(direction))])
 }

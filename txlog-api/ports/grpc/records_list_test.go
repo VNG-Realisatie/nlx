@@ -69,7 +69,7 @@ func TestListRecords(t *testing.T) {
 						Destination: &api.ListRecordsResponse_Record_Organization{
 							SerialNumber: "0002",
 						},
-						Direction: api.ListRecordsResponse_Record_IN,
+						Direction: api.ListRecordsResponse_Record_DIRECTION_IN,
 						Service: &api.ListRecordsResponse_Record_Service{
 							Name: "test-service",
 						},

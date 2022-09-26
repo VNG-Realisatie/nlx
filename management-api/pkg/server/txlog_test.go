@@ -70,6 +70,7 @@ func TestIsTXLogEnabled(t *testing.T) {
 	}
 }
 
+//nolint:funlen // this is a test
 func TestTXLogListRecords(t *testing.T) {
 	now := time.Now()
 
@@ -136,7 +137,7 @@ func TestTXLogListRecords(t *testing.T) {
 								Destination: &txlogapi.ListRecordsResponse_Record_Organization{
 									SerialNumber: "00000000000000000002",
 								},
-								Direction: txlogapi.ListRecordsResponse_Record_IN,
+								Direction: txlogapi.ListRecordsResponse_Record_DIRECTION_IN,
 								Service: &txlogapi.ListRecordsResponse_Record_Service{
 									Name: "test-service",
 								},
@@ -162,7 +163,7 @@ func TestTXLogListRecords(t *testing.T) {
 							SerialNumber: "00000000000000000002",
 							Name:         "Organization Two",
 						},
-						Direction: api.TXLogDirection_IN,
+						Direction: api.TXLogDirection_TX_LOG_DIRECTION_IN,
 						Service: &api.TXLogService{
 							Name: "test-service",
 						},

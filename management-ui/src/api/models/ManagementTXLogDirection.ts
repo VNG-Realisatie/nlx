@@ -18,8 +18,9 @@
  * @export
  */
 export const ManagementTXLogDirection = {
-    IN: 'IN',
-    OUT: 'OUT'
+    UNSPECIFIED: 'TX_LOG_DIRECTION_UNSPECIFIED',
+    IN: 'TX_LOG_DIRECTION_IN',
+    OUT: 'TX_LOG_DIRECTION_OUT'
 } as const;
 export type ManagementTXLogDirection = typeof ManagementTXLogDirection[keyof typeof ManagementTXLogDirection];
 

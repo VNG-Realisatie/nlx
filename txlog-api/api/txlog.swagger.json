@@ -115,10 +115,11 @@
     "ListRecordsResponseRecordDirection": {
       "type": "string",
       "enum": [
-        "IN",
-        "OUT"
+        "DIRECTION_UNSPECIFIED",
+        "DIRECTION_IN",
+        "DIRECTION_OUT"
       ],
-      "default": "IN"
+      "default": "DIRECTION_UNSPECIFIED"
     },
     "RecordOrder": {
       "type": "object",
