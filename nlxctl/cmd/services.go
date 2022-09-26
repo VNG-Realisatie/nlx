@@ -73,7 +73,7 @@ var listServicesCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		response, err := getManagementClient().ListServices(newRequestContext(), &api.ListServicesRequest{})
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("nlxctl list services: failed to list services from api: %v", err)
 		}
 
 		for _, service := range response.Services {
@@ -89,7 +89,7 @@ var createServiceCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, arg []string) {
 		configBytes, err := ioutil.ReadFile(serviceOptions.configPath)
 		if err != nil {
-			panic(err)
+			log.Fatalf("nlxctl create service: read config: %v", err)
 		}
 
 		serviceConfigs := splitConfigString(string(configBytes))
@@ -98,12 +98,12 @@ var createServiceCommand = &cobra.Command{
 
 			err = json.Unmarshal([]byte(configString), service)
 			if err != nil {
-				panic(err)
+				log.Fatalf("nlxctl create service: unmarshal config json: %v", err)
 			}
 
 			_, err = getManagementClient().CreateService(newRequestContext(), service)
 			if err != nil {
-				panic(err)
+				log.Fatalf("nlxctl create service: create service api: %v", err)
 			}
 
 			println(fmt.Sprintf("created service: %+v", service))
