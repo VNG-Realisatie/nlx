@@ -45,6 +45,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getSettingsStmt, err = db.PrepareContext(ctx, getSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query GetSettings: %w", err)
 	}
+	if q.getUserByEmailStmt, err = db.PrepareContext(ctx, getUserByEmail); err != nil {
+		return nil, fmt.Errorf("error preparing query GetUserByEmail: %w", err)
+	}
 	if q.listAccessGrantsForServiceStmt, err = db.PrepareContext(ctx, listAccessGrantsForService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListAccessGrantsForService: %w", err)
 	}
@@ -53,6 +56,12 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.listPermissionsStmt, err = db.PrepareContext(ctx, listPermissions); err != nil {
 		return nil, fmt.Errorf("error preparing query ListPermissions: %w", err)
+	}
+	if q.listPermissionsForRoleStmt, err = db.PrepareContext(ctx, listPermissionsForRole); err != nil {
+		return nil, fmt.Errorf("error preparing query ListPermissionsForRole: %w", err)
+	}
+	if q.listRolesForUserStmt, err = db.PrepareContext(ctx, listRolesForUser); err != nil {
+		return nil, fmt.Errorf("error preparing query ListRolesForUser: %w", err)
 	}
 	if q.listTermsOfServiceStmt, err = db.PrepareContext(ctx, listTermsOfService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListTermsOfService: %w", err)
@@ -109,6 +118,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing getSettingsStmt: %w", cerr)
 		}
 	}
+	if q.getUserByEmailStmt != nil {
+		if cerr := q.getUserByEmailStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getUserByEmailStmt: %w", cerr)
+		}
+	}
 	if q.listAccessGrantsForServiceStmt != nil {
 		if cerr := q.listAccessGrantsForServiceStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listAccessGrantsForServiceStmt: %w", cerr)
@@ -122,6 +136,16 @@ func (q *Queries) Close() error {
 	if q.listPermissionsStmt != nil {
 		if cerr := q.listPermissionsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listPermissionsStmt: %w", cerr)
+		}
+	}
+	if q.listPermissionsForRoleStmt != nil {
+		if cerr := q.listPermissionsForRoleStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listPermissionsForRoleStmt: %w", cerr)
+		}
+	}
+	if q.listRolesForUserStmt != nil {
+		if cerr := q.listRolesForUserStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listRolesForUserStmt: %w", cerr)
 		}
 	}
 	if q.listTermsOfServiceStmt != nil {
@@ -195,9 +219,12 @@ type Queries struct {
 	getAccessGrantStmt                      *sql.Stmt
 	getLatestAccessGrantForServiceStmt      *sql.Stmt
 	getSettingsStmt                         *sql.Stmt
+	getUserByEmailStmt                      *sql.Stmt
 	listAccessGrantsForServiceStmt          *sql.Stmt
 	listAllLatestOutgoingAccessRequestsStmt *sql.Stmt
 	listPermissionsStmt                     *sql.Stmt
+	listPermissionsForRoleStmt              *sql.Stmt
+	listRolesForUserStmt                    *sql.Stmt
 	listTermsOfServiceStmt                  *sql.Stmt
 	revokeAccessGrantStmt                   *sql.Stmt
 	updateIncomingAccessRequestStmt         *sql.Stmt
@@ -216,9 +243,12 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getAccessGrantStmt:                      q.getAccessGrantStmt,
 		getLatestAccessGrantForServiceStmt:      q.getLatestAccessGrantForServiceStmt,
 		getSettingsStmt:                         q.getSettingsStmt,
+		getUserByEmailStmt:                      q.getUserByEmailStmt,
 		listAccessGrantsForServiceStmt:          q.listAccessGrantsForServiceStmt,
 		listAllLatestOutgoingAccessRequestsStmt: q.listAllLatestOutgoingAccessRequestsStmt,
 		listPermissionsStmt:                     q.listPermissionsStmt,
+		listPermissionsForRoleStmt:              q.listPermissionsForRoleStmt,
+		listRolesForUserStmt:                    q.listRolesForUserStmt,
 		listTermsOfServiceStmt:                  q.listTermsOfServiceStmt,
 		revokeAccessGrantStmt:                   q.revokeAccessGrantStmt,
 		updateIncomingAccessRequestStmt:         q.updateIncomingAccessRequestStmt,

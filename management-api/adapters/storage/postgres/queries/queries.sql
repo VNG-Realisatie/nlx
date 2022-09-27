@@ -260,3 +260,24 @@ values
 
 -- name: ListPermissions :many
 select code from nlx_management.permissions;
+
+-- name: GetUserByEmail :one
+select id, email, users_roles.role_code
+from
+    nlx_management.users
+join nlx_management.users_roles on users.id = users_roles.user_id
+where email = $1
+limit 1;
+
+-- name: ListRolesForUser :many
+select
+    role_code
+from
+    nlx_management.users_roles
+where user_id = $1;
+
+-- name: ListPermissionsForRole :many
+select permission_code
+from
+    nlx_management.permissions_roles
+where role_code = $1;

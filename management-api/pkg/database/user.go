@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -59,23 +60,49 @@ func checkPasswordHash(password, hash string) bool {
 }
 
 func (db *PostgresConfigDatabase) GetUser(ctx context.Context, email string) (*User, error) {
-	user := &User{}
-
-	if err := db.
-		WithContext(ctx).
-		Where("email = ?", email).
-		Preload("Roles").
-		Preload("Roles.Permissions").
-		First(user).
-		Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	user, err := db.queries.GetUserByEmail(ctx, email)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return user, nil
+	roles, err := db.queries.ListRolesForUser(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	roleModels := make([]Role, len(roles))
+
+	for i, role := range roles {
+		permissions, err := db.queries.ListPermissionsForRole(ctx, role)
+		if err != nil {
+			return nil, err
+		}
+
+		permissionModels := make([]Permission, len(permissions))
+
+		for j, permission := range permissions {
+			permissionModels[j] = Permission{
+				Code: permission,
+			}
+		}
+
+		roleModels[i] = Role{
+			Code:        role,
+			Permissions: permissionModels,
+		}
+	}
+
+	result := &User{
+		ID:    uint(user.ID),
+		Email: user.Email,
+		Roles: roleModels,
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) VerifyUserCredentials(ctx context.Context, email, password string) (bool, error) {

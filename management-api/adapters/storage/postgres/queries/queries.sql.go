@@ -337,6 +337,28 @@ func (q *Queries) GetSettings(ctx context.Context) (*GetSettingsRow, error) {
 	return &i, err
 }
 
+const getUserByEmail = `-- name: GetUserByEmail :one
+select id, email, users_roles.role_code
+from
+    nlx_management.users
+join nlx_management.users_roles on users.id = users_roles.user_id
+where email = $1
+limit 1
+`
+
+type GetUserByEmailRow struct {
+	ID       int32
+	Email    string
+	RoleCode string
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (*GetUserByEmailRow, error) {
+	row := q.queryRow(ctx, q.getUserByEmailStmt, getUserByEmail, email)
+	var i GetUserByEmailRow
+	err := row.Scan(&i.ID, &i.Email, &i.RoleCode)
+	return &i, err
+}
+
 const listAccessGrantsForService = `-- name: ListAccessGrantsForService :many
 select
     access_grants.id,
@@ -548,6 +570,67 @@ func (q *Queries) ListPermissions(ctx context.Context) ([]string, error) {
 			return nil, err
 		}
 		items = append(items, code)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listPermissionsForRole = `-- name: ListPermissionsForRole :many
+select permission_code
+from
+    nlx_management.permissions_roles
+where role_code = $1
+`
+
+func (q *Queries) ListPermissionsForRole(ctx context.Context, roleCode string) ([]string, error) {
+	rows, err := q.query(ctx, q.listPermissionsForRoleStmt, listPermissionsForRole, roleCode)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []string{}
+	for rows.Next() {
+		var permission_code string
+		if err := rows.Scan(&permission_code); err != nil {
+			return nil, err
+		}
+		items = append(items, permission_code)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listRolesForUser = `-- name: ListRolesForUser :many
+select
+    role_code
+from
+    nlx_management.users_roles
+where user_id = $1
+`
+
+func (q *Queries) ListRolesForUser(ctx context.Context, userID int32) ([]string, error) {
+	rows, err := q.query(ctx, q.listRolesForUserStmt, listRolesForUser, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []string{}
+	for rows.Next() {
+		var role_code string
+		if err := rows.Scan(&role_code); err != nil {
+			return nil, err
+		}
+		items = append(items, role_code)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err
