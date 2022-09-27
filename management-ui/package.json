@@ -63,7 +63,7 @@
     "react-scripts": "5.0.1",
     "react-select-event": "5.5.1",
     "react-transition-group": "4.4.5",
-    "styled-components": "5.3.5",
+    "styled-components": "5.3.6",
     "yup": "0.32.11"
   }
 }
