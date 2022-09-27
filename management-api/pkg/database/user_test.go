@@ -12,7 +12,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"gorm.io/gorm"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -40,7 +39,7 @@ func TestVerifyCredentials(t *testing.T) {
 				password: "bar",
 			},
 			expected:      false,
-			expectedError: gorm.ErrRecordNotFound,
+			expectedError: database.ErrNotFound,
 		},
 		"happy_flow": {
 			loadFixtures: true,

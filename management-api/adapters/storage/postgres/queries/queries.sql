@@ -262,10 +262,10 @@ values
 select code from nlx_management.permissions;
 
 -- name: GetUserByEmail :one
-select id, email, users_roles.role_code
+select id, email, password, users_roles.role_code
 from
     nlx_management.users
-join nlx_management.users_roles on users.id = users_roles.user_id
+left join nlx_management.users_roles on users.id = users_roles.user_id
 where email = $1
 limit 1;
 

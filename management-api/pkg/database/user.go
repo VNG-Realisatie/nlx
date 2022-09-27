@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
@@ -106,23 +105,21 @@ func (db *PostgresConfigDatabase) GetUser(ctx context.Context, email string) (*U
 }
 
 func (db *PostgresConfigDatabase) VerifyUserCredentials(ctx context.Context, email, password string) (bool, error) {
-	user := &User{}
-	if err := db.
-		WithContext(ctx).
-		Where("email = ?", email).
-		Preload("Roles").
-		First(user).
-		Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, err
+	user, err := db.queries.GetUserByEmail(ctx, email)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, ErrNotFound
 		}
 
 		return false, err
 	}
 
-	match := checkPasswordHash(password, user.Password)
+	result := false
+	if user.Password.Valid {
+		result = checkPasswordHash(password, user.Password.String)
+	}
 
-	return match, nil
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) CreateUser(ctx context.Context, email, password string, roleNames []string) (*User, error) {

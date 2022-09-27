@@ -338,10 +338,10 @@ func (q *Queries) GetSettings(ctx context.Context) (*GetSettingsRow, error) {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-select id, email, users_roles.role_code
+select id, email, password, users_roles.role_code
 from
     nlx_management.users
-join nlx_management.users_roles on users.id = users_roles.user_id
+left join nlx_management.users_roles on users.id = users_roles.user_id
 where email = $1
 limit 1
 `
@@ -349,13 +349,19 @@ limit 1
 type GetUserByEmailRow struct {
 	ID       int32
 	Email    string
-	RoleCode string
+	Password sql.NullString
+	RoleCode sql.NullString
 }
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (*GetUserByEmailRow, error) {
 	row := q.queryRow(ctx, q.getUserByEmailStmt, getUserByEmail, email)
 	var i GetUserByEmailRow
-	err := row.Scan(&i.ID, &i.Email, &i.RoleCode)
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Password,
+		&i.RoleCode,
+	)
 	return &i, err
 }
 
