@@ -13,7 +13,7 @@ import (
 
 type ConfigDatabase interface {
 	GetUser(ctx context.Context, email string) (*User, error)
-	CreateUser(ctx context.Context, email, password string, roleNames []string) (*User, error)
+	CreateUser(ctx context.Context, email, password string, roleNames []string) (id uint, error error)
 	VerifyUserCredentials(ctx context.Context, email, password string) (bool, error)
 
 	ListServices(ctx context.Context) ([]*Service, error)

@@ -33,6 +33,12 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createTermsOfServiceStmt, err = db.PrepareContext(ctx, createTermsOfService); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateTermsOfService: %w", err)
 	}
+	if q.createUserStmt, err = db.PrepareContext(ctx, createUser); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateUser: %w", err)
+	}
+	if q.createUserRolesStmt, err = db.PrepareContext(ctx, createUserRoles); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateUserRoles: %w", err)
+	}
 	if q.doesInwayExistByNameStmt, err = db.PrepareContext(ctx, doesInwayExistByName); err != nil {
 		return nil, fmt.Errorf("error preparing query DoesInwayExistByName: %w", err)
 	}
@@ -96,6 +102,16 @@ func (q *Queries) Close() error {
 	if q.createTermsOfServiceStmt != nil {
 		if cerr := q.createTermsOfServiceStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createTermsOfServiceStmt: %w", cerr)
+		}
+	}
+	if q.createUserStmt != nil {
+		if cerr := q.createUserStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createUserStmt: %w", cerr)
+		}
+	}
+	if q.createUserRolesStmt != nil {
+		if cerr := q.createUserRolesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createUserRolesStmt: %w", cerr)
 		}
 	}
 	if q.doesInwayExistByNameStmt != nil {
@@ -215,6 +231,8 @@ type Queries struct {
 	createAccessGrantStmt                   *sql.Stmt
 	createAccessProofStmt                   *sql.Stmt
 	createTermsOfServiceStmt                *sql.Stmt
+	createUserStmt                          *sql.Stmt
+	createUserRolesStmt                     *sql.Stmt
 	doesInwayExistByNameStmt                *sql.Stmt
 	getAccessGrantStmt                      *sql.Stmt
 	getLatestAccessGrantForServiceStmt      *sql.Stmt
@@ -239,6 +257,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		createAccessGrantStmt:                   q.createAccessGrantStmt,
 		createAccessProofStmt:                   q.createAccessProofStmt,
 		createTermsOfServiceStmt:                q.createTermsOfServiceStmt,
+		createUserStmt:                          q.createUserStmt,
+		createUserRolesStmt:                     q.createUserRolesStmt,
 		doesInwayExistByNameStmt:                q.doesInwayExistByNameStmt,
 		getAccessGrantStmt:                      q.getAccessGrantStmt,
 		getLatestAccessGrantForServiceStmt:      q.getLatestAccessGrantForServiceStmt,

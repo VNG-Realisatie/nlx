@@ -79,6 +79,59 @@ func (q *Queries) CreateTermsOfService(ctx context.Context, arg *CreateTermsOfSe
 	return err
 }
 
+const createUser = `-- name: CreateUser :one
+insert into
+    nlx_management.users
+    (email, password, created_at, updated_at)
+values
+    ($1, $2, $3, $4)
+returning id
+`
+
+type CreateUserParams struct {
+	Email     string
+	Password  sql.NullString
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg *CreateUserParams) (int32, error) {
+	row := q.queryRow(ctx, q.createUserStmt, createUser,
+		arg.Email,
+		arg.Password,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
+const createUserRoles = `-- name: CreateUserRoles :exec
+insert into
+    nlx_management.users_roles
+(user_id, role_code, created_at, updated_at)
+values
+    ($1, $2, $3, $4)
+`
+
+type CreateUserRolesParams struct {
+	UserID    int32
+	RoleCode  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+func (q *Queries) CreateUserRoles(ctx context.Context, arg *CreateUserRolesParams) error {
+	_, err := q.exec(ctx, q.createUserRolesStmt, createUserRoles,
+		arg.UserID,
+		arg.RoleCode,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+	)
+	return err
+}
+
 const doesInwayExistByName = `-- name: DoesInwayExistByName :one
 select
         count(*)>0 as inway_exits

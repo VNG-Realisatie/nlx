@@ -53,7 +53,7 @@ var createUserCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		user, err := db.CreateUser(
+		userID, err := db.CreateUser(
 			context.Background(),
 			createUserOpts.Email,
 			createUserOpts.Password,
@@ -75,6 +75,6 @@ var createUserCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		fmt.Printf("user created with ID: %d\n", user.ID)
+		fmt.Printf("user created with ID: %d\n", userID)
 	},
 }

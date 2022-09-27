@@ -148,14 +148,17 @@ func TestCreateUser(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			actual, err := configDb.CreateUser(context.Background(), tt.args.email, tt.args.password, tt.args.roleNames)
+			_, err := configDb.CreateUser(context.Background(), tt.args.email, tt.args.password, tt.args.roleNames)
 			require.ErrorIs(t, err, tt.expectedErr)
 
 			if err == nil {
-				require.Equal(t, tt.expected.Email, actual.Email)
+				newUser, err := configDb.GetUser(context.Background(), tt.args.email)
+				require.NoError(t, err)
+
+				require.Equal(t, tt.expected.Email, newUser.Email)
 
 				for i, role := range tt.expected.Roles {
-					require.Equal(t, role.Code, actual.Roles[i].Code)
+					require.Equal(t, role.Code, newUser.Roles[i].Code)
 				}
 			}
 		})

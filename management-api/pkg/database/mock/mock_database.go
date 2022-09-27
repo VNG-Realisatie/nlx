@@ -172,10 +172,10 @@ func (mr *MockConfigDatabaseMockRecorder) CreateServiceWithInways(ctx, service, 
 }
 
 // CreateUser mocks base method.
-func (m *MockConfigDatabase) CreateUser(ctx context.Context, email, password string, roleNames []string) (*database.User, error) {
+func (m *MockConfigDatabase) CreateUser(ctx context.Context, email, password string, roleNames []string) (uint, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", ctx, email, password, roleNames)
-	ret0, _ := ret[0].(*database.User)
+	ret0, _ := ret[0].(uint)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

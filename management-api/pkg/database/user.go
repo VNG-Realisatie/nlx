@@ -8,9 +8,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
@@ -122,80 +125,77 @@ func (db *PostgresConfigDatabase) VerifyUserCredentials(ctx context.Context, ema
 	return result, nil
 }
 
-func (db *PostgresConfigDatabase) CreateUser(ctx context.Context, email, password string, roleNames []string) (*User, error) {
-	tx := db.DB.Begin()
-	defer tx.Rollback()
-
-	dbWithTx := &PostgresConfigDatabase{
-		DB: tx,
-	}
-
-	roles, err := getRoleRecords(ctx, dbWithTx, roleNames)
+// nolint:gocyclo // unable to reduce complexity
+func (db *PostgresConfigDatabase) CreateUser(ctx context.Context, email, password string, roleNames []string) (id uint, anError error) {
+	tx, err := db.db.Begin()
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	user := &User{
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
+
+			fmt.Printf("cannot rollback database transaction for creating a user: %e", err)
+		}
+	}()
+
+	qtx := db.queries.WithTx(tx)
+
+	hashedPassword, hashErr := hashPassword(password)
+	if hashErr != nil {
+		return 0, fmt.Errorf("failed to hash password: %v", hashErr)
+	}
+
+	now := time.Now()
+
+	userID, err := qtx.CreateUser(ctx, &queries.CreateUserParams{
 		Email: email,
-	}
-
-	if len(password) > 0 {
-		hashedPassword, hashErr := hashPassword(password)
-		if hashErr != nil {
-			return nil, fmt.Errorf("failed to hash password: %v", hashErr)
+		Password: sql.NullString{
+			Valid:  true,
+			String: hashedPassword,
+		},
+		CreatedAt: now,
+		UpdatedAt: now,
+	})
+	if err != nil {
+		if strings.Contains(err.Error(), "value violates unique constraint \"users_email_key\"") {
+			return 0, ErrUserAlreadyExists
 		}
 
-		user.Password = hashedPassword
+		return 0, err
 	}
 
-	var count int64
-
-	if err := dbWithTx.
-		WithContext(ctx).
-		Model(User{}).
-		Where("email = ?", email).
-		Count(&count).
-		Error; err != nil {
-		return nil, err
-	}
-
-	if count > 0 {
-		return nil, ErrUserAlreadyExists
-	}
-
-	if err := dbWithTx.
-		WithContext(ctx).
-		Create(user).
-		Error; err != nil {
-		return nil, err
-	}
-
-	err = dbWithTx.
-		WithContext(ctx).
-		Model(user).
-		Association("Roles").
-		Append(roles)
+	err = assignUserRoles(ctx, qtx, uint(userID), roleNames)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	if err := tx.Commit().Error; err != nil {
-		return nil, err
+	err = tx.Commit()
+	if err != nil {
+		return 0, err
 	}
 
-	return user, nil
+	return uint(userID), nil
 }
 
-func getRoleRecords(ctx context.Context, dbWithTx *PostgresConfigDatabase, names []string) ([]Role, error) {
-	roles := &[]Role{}
+func assignUserRoles(ctx context.Context, qtx *queries.Queries, userID uint, roleNames []string) error {
+	now := time.Now()
 
-	if err := dbWithTx.
-		WithContext(ctx).
-		Where("code in (?)", names).
-		Find(roles).
-		Error; err != nil {
-		return nil, err
+	for _, role := range roleNames {
+		err := qtx.CreateUserRoles(ctx, &queries.CreateUserRolesParams{
+			UserID:    int32(userID),
+			RoleCode:  role,
+			CreatedAt: now,
+			UpdatedAt: now,
+		})
+		if err != nil {
+			return err
+		}
 	}
 
-	return *roles, nil
+	return nil
 }

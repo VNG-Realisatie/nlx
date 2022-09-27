@@ -281,3 +281,18 @@ select permission_code
 from
     nlx_management.permissions_roles
 where role_code = $1;
+
+-- name: CreateUser :one
+insert into
+    nlx_management.users
+    (email, password, created_at, updated_at)
+values
+    ($1, $2, $3, $4)
+returning id;
+
+-- name: CreateUserRoles :exec
+insert into
+    nlx_management.users_roles
+(user_id, role_code, created_at, updated_at)
+values
+    ($1, $2, $3, $4);
