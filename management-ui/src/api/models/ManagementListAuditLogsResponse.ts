@@ -44,7 +44,7 @@ export function ManagementListAuditLogsResponseFromJSONTyped(json: any, ignoreDi
     }
     return {
         
-        'auditLogs': !exists(json, 'auditLogs') ? undefined : ((json['auditLogs'] as Array<any>).map(ManagementAuditLogRecordFromJSON)),
+        'auditLogs': !exists(json, 'audit_logs') ? undefined : ((json['audit_logs'] as Array<any>).map(ManagementAuditLogRecordFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function ManagementListAuditLogsResponseToJSON(value?: ManagementListAudi
     }
     return {
         
-        'auditLogs': value.auditLogs === undefined ? undefined : ((value.auditLogs as Array<any>).map(ManagementAuditLogRecordToJSON)),
+        'audit_logs': value.auditLogs === undefined ? undefined : ((value.auditLogs as Array<any>).map(ManagementAuditLogRecordToJSON)),
     };
 }
 

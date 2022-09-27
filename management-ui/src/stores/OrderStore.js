@@ -34,7 +34,7 @@ class OrderStore {
       body: {
         reference: formData.reference,
         description: formData.description,
-        publicKeyPEM: formData.publicKeyPEM,
+        publicKeyPem: formData.publicKeyPem,
         delegatee: formData.delegatee,
         validFrom: formData.validFrom,
         validUntil: formData.validUntil,

@@ -168,9 +168,9 @@ func servicesToPluginService(services []*api.GetInwayConfigResponse_Service) []*
 func serviceToPluginService(service *api.GetInwayConfigResponse_Service) *plugins.Service {
 	pluginService := &plugins.Service{
 		Name:                        service.Name,
-		APISpecificationDocumentURL: service.ApiSpecificationURL,
-		DocumentationURL:            service.DocumentationURL,
-		EndpointURL:                 service.EndpointURL,
+		APISpecificationDocumentURL: service.ApiSpecificationUrl,
+		DocumentationURL:            service.DocumentationUrl,
+		EndpointURL:                 service.EndpointUrl,
 		PublicSupportContact:        service.PublicSupportContact,
 		TechSupportContact:          service.TechSupportContact,
 		Internal:                    service.Internal,
@@ -183,7 +183,7 @@ func serviceToPluginService(service *api.GetInwayConfigResponse_Service) *plugin
 	for _, auth := range service.AuthorizationSettings.Authorizations {
 		pluginService.Grants = append(pluginService.Grants, &plugins.Grant{
 			OrganizationSerialNumber: auth.Organization.SerialNumber,
-			PublicKeyPEM:             auth.PublicKeyPEM,
+			PublicKeyPEM:             auth.PublicKeyPem,
 			PublicKeyFingerprint:     auth.PublicKeyHash,
 		})
 	}

@@ -22,7 +22,7 @@ class DirectoryServiceModel {
   serviceName = ''
   state = ''
   apiSpecificationType = ''
-  documentationURL = ''
+  documentationUrl = ''
   publicSupportContact = ''
   oneTimeCosts = 0
   monthlyCosts = 0
@@ -60,8 +60,8 @@ class DirectoryServiceModel {
       this.apiSpecificationType = serviceData.apiSpecificationType
     }
 
-    if (serviceData.documentationURL) {
-      this.documentationURL = serviceData.documentationURL
+    if (serviceData.documentationUrl) {
+      this.documentationUrl = serviceData.documentationUrl
     }
 
     if (serviceData.publicSupportContact) {
@@ -124,11 +124,11 @@ class DirectoryServiceModel {
     )
   }).bind(this)
 
-  requestAccess = flow(function* requestAccess(publicKeyPEM) {
+  requestAccess = flow(function* requestAccess(publicKeyPem) {
     yield this.directoryServicesStore.requestAccess(
       this.organization.serialNumber,
       this.serviceName,
-      publicKeyPEM,
+      publicKeyPem,
     )
 
     yield this.fetch()

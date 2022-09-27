@@ -43,7 +43,7 @@ export interface ManagementListServicesResponseServiceAuthorizationSettingsAutho
      * @type {string}
      * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
-    publicKeyPEM?: string;
+    publicKeyPem?: string;
 }
 
 export function ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSON(json: any): ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
@@ -57,8 +57,8 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
     return {
         
         'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
-        'publicKeyHash': !exists(json, 'publicKeyHash') ? undefined : json['publicKeyHash'],
-        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
+        'publicKeyHash': !exists(json, 'public_key_hash') ? undefined : json['public_key_hash'],
+        'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
 }
 
@@ -72,8 +72,8 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
     return {
         
         'organization': ManagementOrganizationToJSON(value.organization),
-        'publicKeyHash': value.publicKeyHash,
-        'publicKeyPEM': value.publicKeyPEM,
+        'public_key_hash': value.publicKeyHash,
+        'public_key_pem': value.publicKeyPem,
     };
 }
 

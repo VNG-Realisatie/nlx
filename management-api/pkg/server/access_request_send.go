@@ -35,7 +35,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPEM))
+	fingerprint, err := tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPem))
 	if err != nil {
 		s.logger.Error("invalid public key format", zap.Error(err))
 
@@ -55,7 +55,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		createManagementClientFunc: s.createManagementClientFunc,
 		organizationSerialNumber:   req.OrganizationSerialNumber,
 		serviceName:                req.ServiceName,
-		publicKeyPEM:               req.PublicKeyPEM,
+		publicKeyPEM:               req.PublicKeyPem,
 	})
 	if err != nil {
 		state = database.OutgoingAccessRequestFailed
@@ -73,7 +73,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		userAgent:                userAgent,
 		organizationSerialNumber: req.OrganizationSerialNumber,
 		serviceName:              req.ServiceName,
-		publicKeyPEM:             req.PublicKeyPEM,
+		publicKeyPEM:             req.PublicKeyPem,
 		publicKeyFingerprint:     fingerprint,
 		referenceID:              referenceID,
 		state:                    state,

@@ -91,7 +91,7 @@ test('creating a service', async () => {
 
   managementApiClient.managementCreateService = jest.fn().mockResolvedValue({
     name: 'New service',
-    endpointURL: 'api.io',
+    endpointUrl: 'api.io',
   })
 
   const rootStore = new RootStore({
@@ -101,7 +101,7 @@ test('creating a service', async () => {
 
   const service = await serviceStore.create({
     name: 'New service',
-    endpointURL: 'api.io',
+    endpointUrl: 'api.io',
   })
 
   expect(service).toBeInstanceOf(ServiceModel)

@@ -11,7 +11,7 @@ import OutwayDetails from './index'
 const outway = {
   name: 'name',
   ipAddress: '127.0.0.1',
-  publicKeyPEM: 'public-key-pem',
+  publicKeyPem: 'public-key-pem',
 }
 
 beforeEach(() => {

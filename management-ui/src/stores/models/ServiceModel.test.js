@@ -17,9 +17,9 @@ let serviceData
 beforeEach(() => {
   serviceData = {
     name: 'Service',
-    endpointURL: '',
-    documentationURL: '',
-    apiSpecificationURL: '',
+    endpointUrl: '',
+    documentationUrl: '',
+    apiSpecificationUrl: '',
     internal: false,
     techSupportContact: '',
     publicSupportContact: '',

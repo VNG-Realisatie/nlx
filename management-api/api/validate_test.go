@@ -23,21 +23,21 @@ func TestCreateServiceValidate(t *testing.T) {
 		"without_name_and_endpoint": {
 			service: &api.CreateServiceRequest{
 				Name:        "",
-				EndpointURL: "",
+				EndpointUrl: "",
 			},
-			err: "endpointURL: cannot be blank; name: cannot be blank.",
+			err: "endpoint_url: cannot be blank; name: cannot be blank.",
 		},
 		"using_invalid_endpoint": {
 			service: &api.CreateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "invalid-endpoint",
+				EndpointUrl: "invalid-endpoint",
 			},
-			err: "endpointURL: must be a valid URL.",
+			err: "endpoint_url: must be a valid URL.",
 		},
 		"happy_flow": {
 			service: &api.CreateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "https://my-service.test",
+				EndpointUrl: "https://my-service.test",
 			},
 			err: "",
 		},
@@ -67,21 +67,21 @@ func TestUpdateServiceValidate(t *testing.T) {
 		"without_name_and_endpoint": {
 			service: &api.UpdateServiceRequest{
 				Name:        "",
-				EndpointURL: "",
+				EndpointUrl: "",
 			},
-			err: "endpointURL: cannot be blank; name: cannot be blank.",
+			err: "endpoint_url: cannot be blank; name: cannot be blank.",
 		},
 		"using_invalid_endpoint": {
 			service: &api.UpdateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "invalid-endpoint",
+				EndpointUrl: "invalid-endpoint",
 			},
-			err: "endpointURL: must be a valid URL.",
+			err: "endpoint_url: must be a valid URL.",
 		},
 		"happy_flow": {
 			service: &api.UpdateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "https://my-service.test",
+				EndpointUrl: "https://my-service.test",
 			},
 			err: "",
 		},
@@ -152,8 +152,8 @@ func TestOutwayValidate(t *testing.T) {
 		"without_name": {
 			req: &api.RegisterOutwayRequest{
 				Name:           "",
-				SelfAddressAPI: "mock-address",
-				PublicKeyPEM:   testPublicKeyPEM,
+				SelfAddressApi: "mock-address",
+				PublicKeyPem:   testPublicKeyPEM,
 				Version:        "unknown",
 			},
 			err: "name: cannot be blank.",
@@ -161,32 +161,32 @@ func TestOutwayValidate(t *testing.T) {
 		"without_public_key_pem": {
 			req: &api.RegisterOutwayRequest{
 				Name:           "outway42.test",
-				SelfAddressAPI: "mock-address",
+				SelfAddressApi: "mock-address",
 				Version:        "unknown",
 			},
-			err: "publicKeyPEM: cannot be blank.",
+			err: "public_key_pem: cannot be blank.",
 		},
 		"without_self_address_api": {
 			req: &api.RegisterOutwayRequest{
 				Name:         "outway42.test",
 				Version:      "unknown",
-				PublicKeyPEM: testPublicKeyPEM,
+				PublicKeyPem: testPublicKeyPEM,
 			},
-			err: "selfAddressAPI: cannot be blank.",
+			err: "self_address_api: cannot be blank.",
 		},
 		"without_version": {
 			req: &api.RegisterOutwayRequest{
 				Name:           "outway42.test",
-				SelfAddressAPI: "mock-address",
-				PublicKeyPEM:   testPublicKeyPEM,
+				SelfAddressApi: "mock-address",
+				PublicKeyPem:   testPublicKeyPEM,
 			},
 			err: "version: cannot be blank.",
 		},
 		"happy_flow": {
 			req: &api.RegisterOutwayRequest{
 				Name:           "outway42.test",
-				SelfAddressAPI: "mock-address",
-				PublicKeyPEM:   testPublicKeyPEM,
+				SelfAddressApi: "mock-address",
+				PublicKeyPem:   testPublicKeyPEM,
 				Version:        "unknown",
 			},
 			err: "",

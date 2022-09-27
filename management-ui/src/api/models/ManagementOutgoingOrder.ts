@@ -95,11 +95,11 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'delegatee': !exists(json, 'delegatee') ? undefined : ManagementOrganizationFromJSON(json['delegatee']),
-        'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
-        'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
-        'accessProofs': !exists(json, 'accessProofs') ? undefined : ((json['accessProofs'] as Array<any>).map(ManagementAccessProofFromJSON)),
-        'revokedAt': !exists(json, 'revokedAt') ? undefined : (new Date(json['revokedAt'])),
-        'publicKeyPem': !exists(json, 'publicKeyPem') ? undefined : json['publicKeyPem'],
+        'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
+        'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
+        'accessProofs': !exists(json, 'access_proofs') ? undefined : ((json['access_proofs'] as Array<any>).map(ManagementAccessProofFromJSON)),
+        'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
+        'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
 }
 
@@ -115,11 +115,11 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         'reference': value.reference,
         'description': value.description,
         'delegatee': ManagementOrganizationToJSON(value.delegatee),
-        'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
-        'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'accessProofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ManagementAccessProofToJSON)),
-        'revokedAt': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
-        'publicKeyPem': value.publicKeyPem,
+        'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
+        'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
+        'access_proofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ManagementAccessProofToJSON)),
+        'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'public_key_pem': value.publicKeyPem,
     };
 }
 

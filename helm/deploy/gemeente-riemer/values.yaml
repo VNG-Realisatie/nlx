@@ -260,8 +260,8 @@ managementAPI:
       passwordKey: password
   servicePersonen:
     name: basisregister-fictieve-personen
-    endpointURL: http://gemeente-riemer-basisregister-fictieve-personen
-    apiSpecificationURL: http://gemeente-riemer-basisregister-fictieve-personen/openapi.json
+    endpointUrl: http://gemeente-riemer-basisregister-fictieve-personen
+    apiSpecificationUrl: http://gemeente-riemer-basisregister-fictieve-personen/openapi.json
     publicSupportContact: support@nlx.io
     documentationUrl: https://docs.nlx.io
     inways:

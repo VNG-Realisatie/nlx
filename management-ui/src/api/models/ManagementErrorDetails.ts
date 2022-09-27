@@ -58,7 +58,7 @@ export function ManagementErrorDetailsFromJSONTyped(json: any, ignoreDiscriminat
         
         'code': !exists(json, 'code') ? undefined : ManagementErrorCodeFromJSON(json['code']),
         'cause': !exists(json, 'cause') ? undefined : json['cause'],
-        'stackTrace': !exists(json, 'stackTrace') ? undefined : json['stackTrace'],
+        'stackTrace': !exists(json, 'stack_trace') ? undefined : json['stack_trace'],
     };
 }
 
@@ -73,7 +73,7 @@ export function ManagementErrorDetailsToJSON(value?: ManagementErrorDetails | nu
         
         'code': ManagementErrorCodeToJSON(value.code),
         'cause': value.cause,
-        'stackTrace': value.stackTrace,
+        'stack_trace': value.stackTrace,
     };
 }
 

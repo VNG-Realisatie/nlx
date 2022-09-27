@@ -101,9 +101,9 @@ class ServiceStore {
 
   create = flow(function* create({
     name,
-    endpointURL,
-    documentationURL,
-    apiSpecificationURL,
+    endpointUrl,
+    documentationUrl,
+    apiSpecificationUrl,
     internal,
     techSupportContact,
     publicSupportContact,
@@ -116,9 +116,9 @@ class ServiceStore {
       {
         body: {
           name,
-          endpointURL,
-          documentationURL,
-          apiSpecificationURL,
+          endpointUrl,
+          documentationUrl,
+          apiSpecificationUrl,
           internal,
           techSupportContact,
           publicSupportContact,
@@ -141,9 +141,9 @@ class ServiceStore {
 
   update = flow(function* update({
     name,
-    endpointURL,
-    documentationURL,
-    apiSpecificationURL,
+    endpointUrl,
+    documentationUrl,
+    apiSpecificationUrl,
     internal,
     techSupportContact,
     publicSupportContact,
@@ -167,9 +167,9 @@ class ServiceStore {
         name,
         body: {
           name,
-          endpointURL,
-          documentationURL,
-          apiSpecificationURL,
+          endpointUrl,
+          documentationUrl,
+          apiSpecificationUrl,
           internal,
           techSupportContact,
           publicSupportContact,

@@ -22,7 +22,7 @@ test('fetching all outways', async () => {
       {
         name: 'my-outway',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem',
+        publicKeyPem: 'public-key-pem',
         publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
         version: 'v0.0.42',
       },
@@ -45,7 +45,7 @@ test('fetching a single outway', async () => {
   managementApiClient.managementGetOutway = jest.fn().mockResolvedValue({
     name: 'My Outway',
     ipAddress: '127.0.0.1',
-    publicKeyPEM: 'public-key-pem',
+    publicKeyPem: 'public-key-pem',
     publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
     version: 'v0.0.42',
   })
@@ -76,21 +76,21 @@ test('retrieving the public key fingerprints', async () => {
       {
         name: 'my-outway-1',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem-a',
+        publicKeyPem: 'public-key-pem-a',
         publicKeyFingerprint: 'public-key-fingerprint-a',
         version: 'v0.0.42',
       },
       {
         name: 'my-outway-2',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem-b',
+        publicKeyPem: 'public-key-pem-b',
         publicKeyFingerprint: 'public-key-fingerprint-b',
         version: 'v0.0.42',
       },
       {
         name: 'my-outway-3',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem-c',
+        publicKeyPem: 'public-key-pem-c',
         publicKeyFingerprint: 'public-key-fingerprint-a',
         version: 'v0.0.42',
       },
@@ -116,14 +116,14 @@ test('get outways by public key fingerprint', async () => {
       {
         name: 'my-outway-1',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem',
+        publicKeyPem: 'public-key-pem',
         publicKeyFingerprint: 'public-key-fingerprint-a',
         version: 'v0.0.42',
       },
       {
         name: 'my-outway-2',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem',
+        publicKeyPem: 'public-key-pem',
         publicKeyFingerprint: 'public-key-fingerprint-b',
         version: 'v0.0.42',
       },

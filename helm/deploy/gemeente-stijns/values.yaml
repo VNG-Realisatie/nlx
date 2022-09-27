@@ -278,8 +278,8 @@ managementAPI:
       passwordKey: password
   servicePersonen:
     name: basisregister-fictieve-personen
-    endpointURL: http://gemeente-stijns-basisregister-fictieve-personen
-    apiSpecificationURL: http://gemeente-stijns-basisregister-fictieve-personen/openapi.json
+    endpointUrl: http://gemeente-stijns-basisregister-fictieve-personen
+    apiSpecificationUrl: http://gemeente-stijns-basisregister-fictieve-personen/openapi.json
     publicSupportContact: support@nlx.io
     documentationUrl: https://docs.nlx.io
     inways:

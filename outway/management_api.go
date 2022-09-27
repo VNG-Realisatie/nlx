@@ -67,9 +67,9 @@ func (o *Outway) registerToManagementAPI(ctx context.Context) error {
 
 	registerOutwayRequest := &managementapi.RegisterOutwayRequest{
 		Name:           o.name,
-		SelfAddressAPI: o.addressAPI,
+		SelfAddressApi: o.addressAPI,
 		Version:        common_version.BuildVersion,
-		PublicKeyPEM:   publicKeyCert,
+		PublicKeyPem:   publicKeyCert,
 	}
 
 	_, err = o.managementAPIClient.RegisterOutway(ctx, registerOutwayRequest)

@@ -41,12 +41,12 @@ func TestCreateService(t *testing.T) {
 			},
 			request: &api.CreateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "my-service.test",
+				EndpointUrl: "my-service.test",
 				Inways:      []string{},
 			},
 			want: &api.CreateServiceResponse{
 				Name:        "my-service",
-				EndpointURL: "my-service.test",
+				EndpointUrl: "my-service.test",
 				Inways:      []string{},
 			},
 		},

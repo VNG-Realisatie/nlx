@@ -42,9 +42,9 @@ func TestRegisterToManagementAPI(t *testing.T) {
 				managementClient := mock_management_api.NewMockManagementClient(ctrl)
 				managementClient.EXPECT().RegisterOutway(gomock.Any(), &management_api.RegisterOutwayRequest{
 					Name:           "mock-outway",
-					SelfAddressAPI: "outway.address.com",
+					SelfAddressApi: "outway.address.com",
 					Version:        "unknown",
-					PublicKeyPEM:   publicKeyPEM,
+					PublicKeyPem:   publicKeyPEM,
 				}).Return(nil, fmt.Errorf("arbitrary error"))
 
 				return managementClient
@@ -58,9 +58,9 @@ func TestRegisterToManagementAPI(t *testing.T) {
 				managementClient := mock_management_api.NewMockManagementClient(ctrl)
 				managementClient.EXPECT().RegisterOutway(gomock.Any(), &management_api.RegisterOutwayRequest{
 					Name:           "mock-outway",
-					SelfAddressAPI: "outway.address.com",
+					SelfAddressApi: "outway.address.com",
 					Version:        "unknown",
-					PublicKeyPEM:   publicKeyPEM,
+					PublicKeyPem:   publicKeyPEM,
 				}).Return(nil, nil)
 
 				return managementClient

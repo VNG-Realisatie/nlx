@@ -37,12 +37,14 @@ func TestCreateOutgoingOrder(t *testing.T) {
 	testPublicKeyPEM, err := certBundle.PublicKeyPEM()
 	require.NoError(t, err)
 
+	const invalidPEM = "invalid"
+
 	validOutgoingOrderRequest := func() api.CreateOutgoingOrderRequest {
 		return api.CreateOutgoingOrderRequest{
 			Reference:      "a-reference",
 			Description:    "a-description",
 			Delegatee:      "00000000000000000001",
-			PublicKeyPEM:   testPublicKeyPEM,
+			PublicKeyPem:   testPublicKeyPEM,
 			ValidFrom:      timestamppb.New(validFrom),
 			ValidUntil:     timestamppb.New(validUntil),
 			AccessProofIds: []uint64{1, 2, 3},
@@ -127,7 +129,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		"when_providing_an_invalid_public_key": {
 			request: func() *api.CreateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
-				request.PublicKeyPEM = "invalid"
+				request.PublicKeyPem = invalidPEM
 				return &request
 			}(),
 			ctx:     testCreateAdminUserContext(),

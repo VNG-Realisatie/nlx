@@ -127,7 +127,7 @@ test('rendering the add order page', async () => {
     description: 'my-description',
     reference: 'my-reference',
     delegatee: '01234567890123456789',
-    publicKeyPEM: 'my-public-key-pem',
+    publicKeyPem: 'my-public-key-pem',
     validFrom: new Date('2021-01-01T00:00:00.000Z'),
     validUntil: new Date('2021-01-31T00:00:00.000Z'),
     accessProofIds: ['1'],

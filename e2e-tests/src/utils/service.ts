@@ -131,7 +131,7 @@ export const createService = async (
     await serviceProvider.apiClients.management?.managementCreateService({
       body: {
         name: uniqueServiceName,
-        endpointURL: "https://postman-echo.com",
+        endpointUrl: "https://postman-echo.com",
         inways: [serviceProvider.defaultInway.name],
         internal: false,
       },
@@ -198,7 +198,7 @@ export const getAccessToService = async (
     await serviceConsumer.apiClients.management?.managementSendAccessRequest({
       organizationSerialNumber: serviceProvider.serialNumber,
       serviceName: uniqueServiceName,
-      publicKeyPEM: outway.publicKeyPEM,
+      publicKeyPem: outway.publicKeyPem,
     });
 
   assert.equal(
@@ -218,7 +218,7 @@ export const getAccessToService = async (
   await serviceProvider.apiClients.management?.managementApproveIncomingAccessRequest(
     {
       serviceName: uniqueServiceName,
-      accessRequestID: incomingAccessRequest?.id as string,
+      accessRequestId: incomingAccessRequest?.id as string,
     }
   );
 

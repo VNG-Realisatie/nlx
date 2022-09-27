@@ -33,7 +33,7 @@ const DEFAULT_INITIAL_VALUES = {
   description: '',
   reference: '',
   delegatee: '',
-  publicKeyPEM: '',
+  publicKeyPem: '',
   validFrom: '',
   validUntil: '',
   accessProofIds: [],
@@ -64,7 +64,7 @@ const OrderForm = ({
     delegatee: Yup.string()
       .max(20, t('Maximum of n characters allowed', { n: 20 }))
       .required(t('This field is required')),
-    publicKeyPEM: Yup.string().required(t('This field is required')),
+    publicKeyPem: Yup.string().required(t('This field is required')),
     validFrom: isoDateSchema(t('Invalid date')).required(
       t('This field is required'),
     ),
@@ -169,7 +169,7 @@ const OrderForm = ({
             />
           </TextInput>
 
-          <TextInput name="publicKeyPEM" size="l" type="textarea">
+          <TextInput name="publicKeyPem" size="l" type="textarea">
             <FieldLabel
               label={t('Public key PEM')}
               small={t('The public key of the delegated organization as PEM')}
@@ -213,7 +213,7 @@ OrderForm.propTypes = {
     description: string,
     reference: string,
     delegatee: string,
-    publicKeyPEM: string,
+    publicKeyPem: string,
     validFrom: instanceOf(Date),
     validUntil: instanceOf(Date),
     accessProofIds: array,

@@ -150,7 +150,7 @@ test('rendering the edit order page', async () => {
     reference: 'my-reference',
     delegatee: '00000000000000000001',
     delegateeSerialNumber: '00000000000000000001',
-    publicKeyPEM: 'my-public-key-pem',
+    publicKeyPem: 'my-public-key-pem',
     validFrom: new Date('2021-01-01T00:00:00.000Z'),
     validUntil: new Date('2021-01-31T00:00:00.000Z'),
     accessProofIds: ['1'],

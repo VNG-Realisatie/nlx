@@ -685,14 +685,14 @@ func request_Management_ListIncomingAccessRequests_0(ctx context.Context, marsha
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := client.ListIncomingAccessRequests(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -711,14 +711,14 @@ func local_request_Management_ListIncomingAccessRequests_0(ctx context.Context, 
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := server.ListIncomingAccessRequests(ctx, &protoReq)
@@ -737,24 +737,24 @@ func request_Management_ApproveIncomingAccessRequest_0(ctx context.Context, mars
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
-	val, ok = pathParams["accessRequestID"]
+	val, ok = pathParams["access_request_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessRequestID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "access_request_id")
 	}
 
-	protoReq.AccessRequestID, err = runtime.Uint64(val)
+	protoReq.AccessRequestId, err = runtime.Uint64(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessRequestID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "access_request_id", err)
 	}
 
 	msg, err := client.ApproveIncomingAccessRequest(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -773,24 +773,24 @@ func local_request_Management_ApproveIncomingAccessRequest_0(ctx context.Context
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
-	val, ok = pathParams["accessRequestID"]
+	val, ok = pathParams["access_request_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessRequestID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "access_request_id")
 	}
 
-	protoReq.AccessRequestID, err = runtime.Uint64(val)
+	protoReq.AccessRequestId, err = runtime.Uint64(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessRequestID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "access_request_id", err)
 	}
 
 	msg, err := server.ApproveIncomingAccessRequest(ctx, &protoReq)
@@ -809,24 +809,24 @@ func request_Management_RejectIncomingAccessRequest_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
-	val, ok = pathParams["accessRequestID"]
+	val, ok = pathParams["access_request_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessRequestID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "access_request_id")
 	}
 
-	protoReq.AccessRequestID, err = runtime.Uint64(val)
+	protoReq.AccessRequestId, err = runtime.Uint64(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessRequestID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "access_request_id", err)
 	}
 
 	msg, err := client.RejectIncomingAccessRequest(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -845,24 +845,24 @@ func local_request_Management_RejectIncomingAccessRequest_0(ctx context.Context,
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
-	val, ok = pathParams["accessRequestID"]
+	val, ok = pathParams["access_request_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessRequestID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "access_request_id")
 	}
 
-	protoReq.AccessRequestID, err = runtime.Uint64(val)
+	protoReq.AccessRequestId, err = runtime.Uint64(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessRequestID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "access_request_id", err)
 	}
 
 	msg, err := server.RejectIncomingAccessRequest(ctx, &protoReq)
@@ -871,7 +871,7 @@ func local_request_Management_RejectIncomingAccessRequest_0(ctx context.Context,
 }
 
 var (
-	filter_Management_SendAccessRequest_0 = &utilities.DoubleArray{Encoding: map[string]int{"organizationSerialNumber": 0, "serviceName": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_Management_SendAccessRequest_0 = &utilities.DoubleArray{Encoding: map[string]int{"organization_serial_number": 0, "service_name": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_Management_SendAccessRequest_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -885,24 +885,24 @@ func request_Management_SendAccessRequest_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -928,24 +928,24 @@ func local_request_Management_SendAccessRequest_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -1023,14 +1023,14 @@ func request_Management_ListAccessGrantsForService_0(ctx context.Context, marsha
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := client.ListAccessGrantsForService(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1049,14 +1049,14 @@ func local_request_Management_ListAccessGrantsForService_0(ctx context.Context, 
 		_   = err
 	)
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := server.ListAccessGrantsForService(ctx, &protoReq)
@@ -1075,14 +1075,14 @@ func request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["accessGrantID"]
+	val, ok = pathParams["access_grant_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessGrantID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "access_grant_id")
 	}
 
-	protoReq.AccessGrantID, err = runtime.Uint64(val)
+	protoReq.AccessGrantId, err = runtime.Uint64(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessGrantID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "access_grant_id", err)
 	}
 
 	msg, err := client.RevokeAccessGrant(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1101,14 +1101,14 @@ func local_request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["accessGrantID"]
+	val, ok = pathParams["access_grant_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "accessGrantID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "access_grant_id")
 	}
 
-	protoReq.AccessGrantID, err = runtime.Uint64(val)
+	protoReq.AccessGrantId, err = runtime.Uint64(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "accessGrantID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "access_grant_id", err)
 	}
 
 	msg, err := server.RevokeAccessGrant(ctx, &protoReq)
@@ -1357,24 +1357,24 @@ func request_Management_SynchronizeOutgoingAccessRequests_0(ctx context.Context,
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := client.SynchronizeOutgoingAccessRequests(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1393,24 +1393,24 @@ func local_request_Management_SynchronizeOutgoingAccessRequests_0(ctx context.Co
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := server.SynchronizeOutgoingAccessRequests(ctx, &protoReq)
@@ -1465,24 +1465,24 @@ func request_Directory_GetOrganizationService_0(ctx context.Context, marshaler r
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := client.GetOrganizationService(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1501,24 +1501,24 @@ func local_request_Directory_GetOrganizationService_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := server.GetOrganizationService(ctx, &protoReq)
@@ -1537,24 +1537,24 @@ func request_Directory_RequestAccessToService_0(ctx context.Context, marshaler r
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := client.RequestAccessToService(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1573,24 +1573,24 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["organizationSerialNumber"]
+	val, ok = pathParams["organization_serial_number"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organizationSerialNumber")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "organization_serial_number")
 	}
 
 	protoReq.OrganizationSerialNumber, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organizationSerialNumber", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "organization_serial_number", err)
 	}
 
-	val, ok = pathParams["serviceName"]
+	val, ok = pathParams["service_name"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serviceName")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "service_name")
 	}
 
 	protoReq.ServiceName, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serviceName", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "service_name", err)
 	}
 
 	msg, err := server.RequestAccessToService(ctx, &protoReq)
@@ -2098,7 +2098,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2123,7 +2123,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2148,7 +2148,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2173,7 +2173,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2248,7 +2248,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2273,7 +2273,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{access_grant_id}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2498,7 +2498,7 @@ func RegisterManagementHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOutgoingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOutgoingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2582,7 +2582,7 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2607,7 +2607,7 @@ func RegisterDirectoryHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3126,7 +3126,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListIncomingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3148,7 +3148,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ApproveIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3170,7 +3170,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RejectIncomingAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3192,7 +3192,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SendAccessRequest", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3258,7 +3258,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/ListAccessGrantsForService", runtime.WithHTTPPathPattern("/api/v1/access-grants/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3280,7 +3280,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{accessGrantID}/revoke"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/RevokeAccessGrant", runtime.WithHTTPPathPattern("/api/v1/access-grants/{access_grant_id}/revoke"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3478,7 +3478,7 @@ func RegisterManagementHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOutgoingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Management/SynchronizeOutgoingAccessRequests", runtime.WithHTTPPathPattern("/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3556,21 +3556,21 @@ var (
 
 	pattern_Management_DeleteOutway_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "outways", "name"}, ""))
 
-	pattern_Management_ListIncomingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "access-requests", "incoming", "services", "serviceName"}, ""))
+	pattern_Management_ListIncomingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "access-requests", "incoming", "services", "service_name"}, ""))
 
-	pattern_Management_ApproveIncomingAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "incoming", "services", "serviceName", "accessRequestID", "approve"}, ""))
+	pattern_Management_ApproveIncomingAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "incoming", "services", "service_name", "access_request_id", "approve"}, ""))
 
-	pattern_Management_RejectIncomingAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "incoming", "services", "serviceName", "accessRequestID", "reject"}, ""))
+	pattern_Management_RejectIncomingAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "incoming", "services", "service_name", "access_request_id", "reject"}, ""))
 
-	pattern_Management_SendAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "access-requests", "outgoing", "organizationSerialNumber", "services", "serviceName"}, ""))
+	pattern_Management_SendAccessRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "access-requests", "outgoing", "organization_serial_number", "services", "service_name"}, ""))
 
 	pattern_Management_GetSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "settings"}, ""))
 
 	pattern_Management_UpdateSettings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "settings"}, ""))
 
-	pattern_Management_ListAccessGrantsForService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "access-grants", "services", "serviceName"}, ""))
+	pattern_Management_ListAccessGrantsForService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "access-grants", "services", "service_name"}, ""))
 
-	pattern_Management_RevokeAccessGrant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "access-grants", "accessGrantID", "revoke"}, ""))
+	pattern_Management_RevokeAccessGrant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "access-grants", "access_grant_id", "revoke"}, ""))
 
 	pattern_Management_ListAuditLogs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "audit-logs"}, ""))
 
@@ -3588,7 +3588,7 @@ var (
 
 	pattern_Management_AcceptTermsOfService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "terms-of-service"}, ""))
 
-	pattern_Management_SynchronizeOutgoingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "outgoing", "organizationSerialNumber", "services", "serviceName", "synchronize"}, ""))
+	pattern_Management_SynchronizeOutgoingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "access-requests", "outgoing", "organization_serial_number", "services", "service_name", "synchronize"}, ""))
 
 	pattern_Management_SynchronizeAllOutgoingAccessRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "access-requests", "outgoing", "synchronize"}, ""))
 )
@@ -3733,7 +3733,7 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/GetOrganizationService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3755,7 +3755,7 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/nlx.management.Directory/RequestAccessToService", runtime.WithHTTPPathPattern("/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -3799,9 +3799,9 @@ func RegisterDirectoryHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 var (
 	pattern_Directory_ListServices_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "directory", "services"}, ""))
 
-	pattern_Directory_GetOrganizationService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "directory", "organizations", "organizationSerialNumber", "services", "serviceName"}, ""))
+	pattern_Directory_GetOrganizationService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "directory", "organizations", "organization_serial_number", "services", "service_name"}, ""))
 
-	pattern_Directory_RequestAccessToService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "directory", "organizations", "organizationSerialNumber", "services", "serviceName", "access-requests"}, ""))
+	pattern_Directory_RequestAccessToService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "directory", "organizations", "organization_serial_number", "services", "service_name", "access-requests"}, ""))
 
 	pattern_Directory_GetTermsOfService_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "directory", "terms-of-service"}, ""))
 )

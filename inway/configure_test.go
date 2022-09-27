@@ -63,9 +63,9 @@ func TestStartConfigurationPolling(t *testing.T) {
 					Services: []*api.GetInwayConfigResponse_Service{
 						{
 							Name:                 "mock-service",
-							EndpointURL:          "http://endpoint.mock",
-							DocumentationURL:     "http://docs.mock",
-							ApiSpecificationURL:  "http://api-specs.mock",
+							EndpointUrl:          "http://endpoint.mock",
+							DocumentationUrl:     "http://docs.mock",
+							ApiSpecificationUrl:  "http://api-specs.mock",
 							Internal:             false,
 							TechSupportContact:   "tech@support.mock",
 							PublicSupportContact: "public@support.mock",
@@ -77,7 +77,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 											Name:         "mock-org",
 										},
 										PublicKeyHash: "mock-public-key-hash",
-										PublicKeyPEM:  "mock-public-key-pem",
+										PublicKeyPem:  "mock-public-key-pem",
 									},
 								},
 							},

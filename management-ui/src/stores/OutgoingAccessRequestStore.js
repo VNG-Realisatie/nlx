@@ -42,14 +42,14 @@ class OutgoingAccessRequestStore {
   send = flow(function* create(
     organizationSerialNumber,
     serviceName,
-    publicKeyPEM,
+    publicKeyPem,
   ) {
     const response =
       yield this._managementApiClient.managementSendAccessRequest({
         body: {
           organizationSerialNumber,
           serviceName,
-          publicKeyPEM,
+          publicKeyPem,
         },
       })
 

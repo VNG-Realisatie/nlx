@@ -36,7 +36,7 @@ export interface ManagementUpdateOutgoingOrderRequest {
      * @type {string}
      * @memberof ManagementUpdateOutgoingOrderRequest
      */
-    publicKeyPEM?: string;
+    publicKeyPem?: string;
     /**
      * 
      * @type {string}
@@ -75,11 +75,11 @@ export function ManagementUpdateOutgoingOrderRequestFromJSONTyped(json: any, ign
         
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
+        'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
         'delegatee': !exists(json, 'delegatee') ? undefined : json['delegatee'],
-        'validFrom': !exists(json, 'validFrom') ? undefined : (new Date(json['validFrom'])),
-        'validUntil': !exists(json, 'validUntil') ? undefined : (new Date(json['validUntil'])),
-        'accessProofIds': !exists(json, 'accessProofIds') ? undefined : json['accessProofIds'],
+        'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
+        'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
+        'accessProofIds': !exists(json, 'access_proof_ids') ? undefined : json['access_proof_ids'],
     };
 }
 
@@ -94,11 +94,11 @@ export function ManagementUpdateOutgoingOrderRequestToJSON(value?: ManagementUpd
         
         'reference': value.reference,
         'description': value.description,
-        'publicKeyPEM': value.publicKeyPEM,
+        'public_key_pem': value.publicKeyPem,
         'delegatee': value.delegatee,
-        'validFrom': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
-        'validUntil': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'accessProofIds': value.accessProofIds,
+        'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
+        'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
+        'access_proof_ids': value.accessProofIds,
     };
 }
 

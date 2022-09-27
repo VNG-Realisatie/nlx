@@ -38,9 +38,9 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 
 	service := &database.Service{
 		Name:                 request.Name,
-		EndpointURL:          request.EndpointURL,
-		DocumentationURL:     request.DocumentationURL,
-		APISpecificationURL:  request.ApiSpecificationURL,
+		EndpointURL:          request.EndpointUrl,
+		DocumentationURL:     request.DocumentationUrl,
+		APISpecificationURL:  request.ApiSpecificationUrl,
 		Internal:             request.Internal,
 		TechSupportContact:   request.TechSupportContact,
 		PublicSupportContact: request.PublicSupportContact,
@@ -124,9 +124,9 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("failed to get service: %s", err))
 	}
 
-	service.EndpointURL = req.EndpointURL
-	service.DocumentationURL = req.DocumentationURL
-	service.APISpecificationURL = req.ApiSpecificationURL
+	service.EndpointURL = req.EndpointUrl
+	service.DocumentationURL = req.DocumentationUrl
+	service.APISpecificationURL = req.ApiSpecificationUrl
 	service.Internal = req.Internal
 	service.TechSupportContact = req.TechSupportContact
 	service.PublicSupportContact = req.PublicSupportContact
@@ -271,7 +271,7 @@ func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant)
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},
 		PublicKeyHash: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
-		PublicKeyPEM:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
+		PublicKeyPem:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
 	}
 }
 
@@ -284,9 +284,9 @@ func convertFromDatabaseService(model *database.Service) *api.ListServicesRespon
 
 	service := &api.ListServicesResponse_Service{
 		Name:                 model.Name,
-		EndpointURL:          model.EndpointURL,
-		DocumentationURL:     model.DocumentationURL,
-		ApiSpecificationURL:  model.APISpecificationURL,
+		EndpointUrl:          model.EndpointURL,
+		DocumentationUrl:     model.DocumentationURL,
+		ApiSpecificationUrl:  model.APISpecificationURL,
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
@@ -311,9 +311,9 @@ func convertToGetServiceResponseFromDatabaseService(model *database.Service) *ap
 
 	service := &api.GetServiceResponse{
 		Name:                 model.Name,
-		EndpointURL:          model.EndpointURL,
-		DocumentationURL:     model.DocumentationURL,
-		ApiSpecificationURL:  model.APISpecificationURL,
+		EndpointUrl:          model.EndpointURL,
+		DocumentationUrl:     model.DocumentationURL,
+		ApiSpecificationUrl:  model.APISpecificationURL,
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
@@ -329,9 +329,9 @@ func convertToGetServiceResponseFromDatabaseService(model *database.Service) *ap
 func convertToCreateServiceResponseFromCreateServiceRequest(model *api.CreateServiceRequest) *api.CreateServiceResponse {
 	service := &api.CreateServiceResponse{
 		Name:                 model.Name,
-		EndpointURL:          model.EndpointURL,
-		DocumentationURL:     model.DocumentationURL,
-		ApiSpecificationURL:  model.ApiSpecificationURL,
+		EndpointUrl:          model.EndpointUrl,
+		DocumentationUrl:     model.DocumentationUrl,
+		ApiSpecificationUrl:  model.ApiSpecificationUrl,
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,
@@ -347,9 +347,9 @@ func convertToCreateServiceResponseFromCreateServiceRequest(model *api.CreateSer
 func convertToUpdateServiceResponseFromUpdateServiceRequest(model *api.UpdateServiceRequest) *api.UpdateServiceResponse {
 	service := &api.UpdateServiceResponse{
 		Name:                 model.Name,
-		EndpointURL:          model.EndpointURL,
-		DocumentationURL:     model.DocumentationURL,
-		ApiSpecificationURL:  model.ApiSpecificationURL,
+		EndpointUrl:          model.EndpointUrl,
+		DocumentationUrl:     model.DocumentationUrl,
+		ApiSpecificationUrl:  model.ApiSpecificationUrl,
 		Internal:             model.Internal,
 		TechSupportContact:   model.TechSupportContact,
 		PublicSupportContact: model.PublicSupportContact,

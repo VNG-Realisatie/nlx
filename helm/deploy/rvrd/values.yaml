@@ -131,24 +131,24 @@ managementAPI:
     pullPolicy: IfNotPresent
   serviceKentekens:
     name: basisregister-fictieve-kentekens
-    endpointURL: http://rvrd-basisregister-fictieve-kentekens
-    apiSpecificationURL: http://rvrd-basisregister-fictieve-kentekens/openapi.json
+    endpointUrl: http://rvrd-basisregister-fictieve-kentekens
+    apiSpecificationUrl: http://rvrd-basisregister-fictieve-kentekens/openapi.json
     publicSupportContact: support@nlx.io
     documentationUrl: https://docs.nlx.io
     inways:
       - rvrd-nlx-inway
   serviceVideoStream:
     name: voorbeeld-video-stream
-    endpointURL: https://storage.googleapis.com
-    apiSpecificationURL:
+    endpointUrl: https://storage.googleapis.com
+    apiSpecificationUrl:
     publicSupportContact: support@nlx.io
     documentationUrl: https://gist.githubusercontent.com/manico/f2e6dd3371f17737331d559219b354ab/raw/6e94be4814499c428d66bac9f0c401fe2c4c35c3/videos.txt
     inways:
       - rvrd-nlx-inway
   serviceWebsockets:
     name: voorbeeld-websockets
-    endpointURL: http://rvrd-example-websockets
-    apiSpecificationURL:
+    endpointUrl: http://rvrd-example-websockets
+    apiSpecificationUrl:
     publicSupportContact: support@nlx.io
     documentationUrl: https://hub.docker.com/r/ksdn117/web-socket-test
     inways:

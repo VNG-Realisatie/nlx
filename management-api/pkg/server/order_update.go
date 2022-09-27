@@ -48,7 +48,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		ID:             orderInDB.ID,
 		Reference:      request.Reference,
 		Description:    request.Description,
-		PublicKeyPEM:   request.PublicKeyPEM,
+		PublicKeyPEM:   request.PublicKeyPem,
 		ValidFrom:      request.ValidFrom.AsTime(),
 		ValidUntil:     request.ValidUntil.AsTime(),
 		AccessProofIds: request.AccessProofIds,

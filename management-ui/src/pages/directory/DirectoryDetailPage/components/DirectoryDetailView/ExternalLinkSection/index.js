@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Section, StyledIconExternalLink } from './index.styles'
 
 const ExternalLinkSection = ({ service }) => {
-  const { documentationURL } = service
+  const { documentationUrl } = service
   const { t } = useTranslation()
 
   return (
@@ -16,15 +16,15 @@ const ExternalLinkSection = ({ service }) => {
       <Button
         variant="secondary"
         as="a"
-        href={documentationURL}
+        href={documentationUrl}
         target="_blank"
         role="button"
         rel="noreferrer"
-        aria-disabled={!documentationURL}
-        disabled={!documentationURL}
+        aria-disabled={!documentationUrl}
+        disabled={!documentationUrl}
       >
         {t('Documentation')}
-        <StyledIconExternalLink $disabled={!documentationURL} />
+        <StyledIconExternalLink $disabled={!documentationUrl} />
       </Button>
     </Section>
   )
@@ -32,7 +32,7 @@ const ExternalLinkSection = ({ service }) => {
 
 ExternalLinkSection.propTypes = {
   service: shape({
-    documentationURL: string,
+    documentationUrl: string,
     organization: shape({
       serialNumber: string,
       name: string,

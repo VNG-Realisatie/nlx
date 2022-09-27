@@ -196,7 +196,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 					}, nil)
 			},
 			req: &api.RevokeAccessGrantRequest{
-				AccessGrantID: 42,
+				AccessGrantId: 42,
 			},
 			expectedResponse: &api.AccessGrant{
 				Organization: &api.Organization{},

@@ -67,16 +67,16 @@ service Management {
     option (google.api.http) = {delete: "/api/v1/outways/{name}" response_body: '*'};
   }
   rpc ListIncomingAccessRequests (ListIncomingAccessRequestsRequest) returns (ListIncomingAccessRequestsResponse) {
-    option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{service_name}"};
   }
   rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve" response_body: '*'};
+    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve" response_body: '*'};
   }
   rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject" response_body: '*'};
+    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject" response_body: '*'};
   }
   rpc SendAccessRequest (SendAccessRequestRequest) returns (SendAccessRequestResponse) {
-    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}"};
+    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}"};
   }
   rpc GetSettings (google.protobuf.Empty) returns (Settings) {
     option (google.api.http) = {get: "/api/v1/settings"};
@@ -85,10 +85,10 @@ service Management {
     option (google.api.http) = {put: "/api/v1/settings", body: "*" response_body: '*'};
   }
   rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
-    option (google.api.http) = {get: "/api/v1/access-grants/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/access-grants/services/{service_name}"};
   }
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (AccessGrant) {
-    option (google.api.http) = {post: "/api/v1/access-grants/{accessGrantID}/revoke" response_body: '*'};
+    option (google.api.http) = {post: "/api/v1/access-grants/{access_grant_id}/revoke" response_body: '*'};
   }
   rpc ListAuditLogs (google.protobuf.Empty) returns (ListAuditLogsResponse) {
     option (google.api.http) = {get: "/api/v1/audit-logs"};
@@ -118,7 +118,7 @@ service Management {
   rpc GetInwayConfig (GetInwayConfigRequest) returns (GetInwayConfigResponse) {}
 
   rpc SynchronizeOutgoingAccessRequests (SynchronizeOutgoingAccessRequestsRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize"};
+    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize"};
   }
 
   rpc SynchronizeAllOutgoingAccessRequests (google.protobuf.Empty) returns (google.protobuf.Empty) {
@@ -149,72 +149,72 @@ message DownloadFinanceExportResponse {
 
 message GetServiceResponse {
   string name = 1;
-  string endpointURL = 2;
-  string documentationURL = 3;
-  string apiSpecificationURL = 4;
+  string endpoint_url = 2;
+  string documentation_url = 3;
+  string api_specification_url = 4;
   bool internal = 5;
-  string techSupportContact = 6;
-  string publicSupportContact = 7;
+  string tech_support_contact = 6;
+  string public_support_contact = 7;
   repeated string inways = 9;
-  int32 oneTimeCosts = 10;
-  int32 monthlyCosts = 11;
-  int32 requestCosts = 12;
+  int32 one_time_costs = 10;
+  int32 monthly_costs = 11;
+  int32 request_costs = 12;
 }
 
 message CreateServiceRequest {
   string name = 1;
-  string endpointURL = 2;
-  string documentationURL = 3;
-  string apiSpecificationURL = 4;
+  string endpoint_url = 2;
+  string documentation_url = 3;
+  string api_specification_url = 4;
   bool internal = 5;
-  string techSupportContact = 6;
-  string publicSupportContact = 7;
+  string tech_support_contact = 6;
+  string public_support_contact = 7;
   repeated string inways = 9;
-  int32 oneTimeCosts = 10;
-  int32 monthlyCosts = 11;
-  int32 requestCosts = 12;
+  int32 one_time_costs = 10;
+  int32 monthly_costs = 11;
+  int32 request_costs = 12;
 }
 
 message CreateServiceResponse {
   string name = 1;
-  string endpointURL = 2;
-  string documentationURL = 3;
-  string apiSpecificationURL = 4;
+  string endpoint_url = 2;
+  string documentation_url = 3;
+  string api_specification_url = 4;
   bool internal = 5;
-  string techSupportContact = 6;
-  string publicSupportContact = 7;
+  string tech_support_contact = 6;
+  string public_support_contact = 7;
   repeated string inways = 9;
-  int32 oneTimeCosts = 10;
-  int32 monthlyCosts = 11;
-  int32 requestCosts = 12;
+  int32 one_time_costs = 10;
+  int32 monthly_costs = 11;
+  int32 request_costs = 12;
 }
 
 message UpdateServiceRequest {
   string name = 1;
-  string endpointURL = 2;
-  string documentationURL = 3;
-  string apiSpecificationURL = 4;
+  string endpoint_url = 2;
+  string documentation_url = 3;
+  string api_specification_url = 4;
   bool internal = 5;
-  string techSupportContact = 6;
-  string publicSupportContact = 7;
+  string tech_support_contact = 6;
+  string public_support_contact = 7;
   repeated string inways = 9;
-  int32 oneTimeCosts = 10;
-  int32 monthlyCosts = 11;
-  int32 requestCosts = 12;
+  int32 one_time_costs = 10;
+  int32 monthly_costs = 11;
+  int32 request_costs = 12;
 }
 
 message UpdateServiceResponse {
   string name = 1;
-  string endpointURL = 2;
-  string documentationURL = 3;
-  string apiSpecificationURL = 4;
+  string endpoint_url = 2;
+  string documentation_url = 3;
+  string api_specification_url = 4;
   bool internal = 5;
-  string techSupportContact = 6;
-  string publicSupportContact = 7;
+  string tech_support_contact = 6;
+  string public_support_contact = 7;
   repeated string inways = 9;
-  int32 oneTimeCosts = 10;
-  int32 monthlyCosts = 11;
-  int32 requestCosts = 12;
+  int32 one_time_costs = 10;
+  int32 monthly_costs = 11;
+  int32 request_costs = 12;
 }
 
 message Inway {
@@ -225,25 +225,25 @@ message Inway {
   string name = 1;
   string version = 2;
   string hostname = 3;
-  string selfAddress = 4;
+  string self_address = 4;
   repeated Service services = 5;
-  string ipAddress = 6;
+  string ip_address = 6;
 }
 
 message Outway {
   string name = 1;
-  string ipAddress = 2;
-  string publicKeyPEM = 3;
+  string ip_address = 2;
+  string public_key_pem = 3;
   string version = 4;
-  string publicKeyFingerprint = 5;
-  string selfAddressAPI = 6;
+  string public_key_fingerprint = 5;
+  string self_address_api = 6;
 }
 
 message RegisterOutwayRequest {
   string name = 1;
-  string publicKeyPEM = 2;
+  string public_key_pem = 2;
   string version = 3;
-  string selfAddressAPI = 4;
+  string self_address_api = 4;
 }
 
 message ListOutwaysRequest {}
@@ -264,7 +264,7 @@ message GetStatisticsOfServicesResponse {
 
 message ServiceStatistics {
   string name = 1;
-  uint32 incomingAccessRequestCount = 2;
+  uint32 incoming_access_request_count = 2;
 }
 
 message ListServicesRequest {
@@ -275,24 +275,24 @@ message ListServicesResponse {
 
   message Service {
     string name = 1;
-    string endpointURL = 2;
-    string documentationURL = 3;
-    string apiSpecificationURL = 4;
+    string endpoint_url = 2;
+    string documentation_url = 3;
+    string api_specification_url = 4;
     bool internal = 5;
-    string techSupportContact = 6;
-    string publicSupportContact = 7;
-    AuthorizationSettings authorizationSettings = 8;
+    string tech_support_contact = 6;
+    string public_support_contact = 7;
+    AuthorizationSettings authorization_settings = 8;
     repeated string inways = 9;
-    uint32 incomingAccessRequestCount = 10;
-    int32 oneTimeCosts = 11;
-    int32 monthlyCosts = 12;
-    int32 requestCosts = 13;
+    uint32 incoming_access_request_count = 10;
+    int32 one_time_costs = 11;
+    int32 monthly_costs = 12;
+    int32 request_costs = 13;
 
     message AuthorizationSettings {
       message Authorization  {
         Organization organization = 1;
-        string publicKeyHash = 2;
-        string publicKeyPEM = 3;
+        string public_key_hash = 2;
+        string public_key_pem = 3;
       }
 
       string mode = 1;
@@ -333,26 +333,26 @@ message GetInwayConfigRequest {
 }
 message GetInwayConfigResponse {
     repeated Service services = 1;
-    bool isOrganizationInway = 2;
+    bool is_organization_inway = 2;
 
     message Service {
         string name = 1;
-        string endpointURL = 2;
-        string documentationURL = 3;
-        string apiSpecificationURL = 4;
+        string endpoint_url = 2;
+        string documentation_url = 3;
+        string api_specification_url = 4;
         bool internal = 5;
-        string techSupportContact = 6;
-        string publicSupportContact = 7;
-        AuthorizationSettings authorizationSettings = 8;
-        int32 oneTimeCosts = 9;
-        int32 monthlyCosts = 10;
-        int32 requestCosts = 11;
+        string tech_support_contact = 6;
+        string public_support_contact = 7;
+        AuthorizationSettings authorization_settings = 8;
+        int32 one_time_costs = 9;
+        int32 monthly_costs = 10;
+        int32 request_costs = 11;
 
         message AuthorizationSettings {
             message Authorization  {
                 Organization organization = 1;
-                string publicKeyHash = 2;
-                string publicKeyPEM = 3;
+                string public_key_hash = 2;
+                string public_key_pem = 3;
             }
             repeated Authorization authorizations = 1;
         }
@@ -388,78 +388,78 @@ enum ErrorCode {
 message ErrorDetails {
   ErrorCode code = 1;
   string cause = 2;
-  repeated string stackTrace = 3;
+  repeated string stack_trace = 3;
 }
 
 message OutgoingAccessRequest {
   uint64 id = 1;
   Organization organization = 2;
-  string serviceName = 3;
+  string service_name = 3;
   AccessRequestState state = 4;
-  google.protobuf.Timestamp createdAt = 5;
-  google.protobuf.Timestamp updatedAt = 6;
-  ErrorDetails errorDetails = 7;
-  string publicKeyFingerprint = 8;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  ErrorDetails error_details = 7;
+  string public_key_fingerprint = 8;
 }
 
 message IncomingAccessRequest {
   uint64 id = 1;
   Organization organization = 2;
-  string serviceName = 3;
+  string service_name = 3;
   AccessRequestState state = 4;
-  google.protobuf.Timestamp createdAt = 5;
-  google.protobuf.Timestamp updatedAt = 6;
-  string publicKeyFingerprint = 7;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  string public_key_fingerprint = 7;
 }
 
 message ListIncomingAccessRequestsRequest {
-  string serviceName = 1;
+  string service_name = 1;
 }
 
 message ListIncomingAccessRequestsResponse {
-  repeated IncomingAccessRequest accessRequests = 1;
+  repeated IncomingAccessRequest access_requests = 1;
 }
 
 message ApproveIncomingAccessRequestRequest {
-  string serviceName = 1;
-  uint64 accessRequestID = 2;
+  string service_name = 1;
+  uint64 access_request_id = 2;
 }
 
 message RejectIncomingAccessRequestRequest {
-  string serviceName = 1;
-  uint64 accessRequestID = 2;
+  string service_name = 1;
+  uint64 access_request_id = 2;
 }
 
 message SendAccessRequestRequest {
-    string organizationSerialNumber = 1;
-    string serviceName = 2;
-    string publicKeyPEM = 3;
+    string organization_serial_number = 1;
+    string service_name = 2;
+    string public_key_pem = 3;
 }
 
 message SendAccessRequestResponse {
-    OutgoingAccessRequest outgoingAccessRequest = 1;
+    OutgoingAccessRequest outgoing_access_request = 1;
 }
 
 message ListAccessGrantsForServiceRequest {
-  string serviceName = 1;
+  string service_name = 1;
 }
 
 message ListAccessGrantsForServiceResponse {
-  repeated AccessGrant accessGrants = 1;
+  repeated AccessGrant access_grants = 1;
 }
 
 message RevokeAccessGrantRequest {
-  uint64 accessGrantID = 1;
+  uint64 access_grant_id = 1;
 }
 
 message AccessGrant {
   uint64 id = 1;
   Organization organization = 2;
-  string serviceName = 3;
-  string publicKeyFingerprint = 4;
-  google.protobuf.Timestamp createdAt = 5;
-  google.protobuf.Timestamp revokedAt = 6;
-  uint64 accessRequestId = 7;
+  string service_name = 3;
+  string public_key_fingerprint = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp revoked_at = 6;
+  uint64 access_request_id = 7;
 }
 
 message AccessProof {
@@ -477,10 +477,10 @@ service Directory {
     option (google.api.http) = {get: "/api/v1/directory/services"};
   }
   rpc GetOrganizationService (GetOrganizationServiceRequest) returns (DirectoryService) {
-    option (google.api.http) = {get: "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}"};
+    option (google.api.http) = {get: "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}"};
   }
   rpc RequestAccessToService (RequestAccessToServiceRequest) returns (OutgoingAccessRequest) {
-    option (google.api.http) = {post: "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests"};
+    option (google.api.http) = {post: "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests"};
   }
   rpc GetTermsOfService (google.protobuf.Empty) returns (GetTermsOfServiceResponse) {
       option (google.api.http) = {get: "/api/v1/directory/terms-of-service"};
@@ -497,15 +497,15 @@ message GetTermsOfServiceResponse {
 }
 
 message GetOrganizationServiceRequest {
-  string organizationSerialNumber = 1;
-  string serviceName = 2;
+  string organization_serial_number = 1;
+  string service_name = 2;
 }
 
 message DirectoryAccessRequest {
   string id = 1;
   AccessRequestState state = 2;
-  google.protobuf.Timestamp createdAt = 3;
-  google.protobuf.Timestamp updatedAt = 4;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
 }
 
 message DirectoryService {
@@ -517,35 +517,35 @@ message DirectoryService {
   }
 
   message AccessState {
-    OutgoingAccessRequest accessRequest = 1;
-    AccessProof accessProof = 2;
+    OutgoingAccessRequest access_request = 1;
+    AccessProof access_proof = 2;
   }
 
-  string serviceName = 1;
+  string service_name = 1;
   Organization organization = 2;
-  string apiSpecificationType = 3;
-  string documentationURL = 4;
-  string publicSupportContact = 5;
+  string api_specification_type = 3;
+  string documentation_url = 4;
+  string public_support_contact = 5;
   State state = 6;
-  int32 oneTimeCosts = 7;
-  int32 monthlyCosts = 8;
-  int32 requestCosts = 9;
-  repeated AccessState accessStates = 10;
+  int32 one_time_costs = 7;
+  int32 monthly_costs = 8;
+  int32 request_costs = 9;
+  repeated AccessState access_states = 10;
 }
 
 message RequestAccessToServiceRequest {
-  string organizationSerialNumber = 1;
-  string serviceName = 2;
+  string organization_serial_number = 1;
+  string service_name = 2;
 }
 
 message Settings {
-  string organizationInway = 1;
-  string organizationEmailAddress = 2;
+  string organization_inway = 1;
+  string organization_email_address = 2;
 }
 
 message UpdateSettingsRequest{
-  string organizationInway = 1;
-  string organizationEmailAddress = 2;
+  string organization_inway = 1;
+  string organization_email_address = 2;
 }
 
 message AuditLogRecord {
@@ -579,12 +579,12 @@ message AuditLogRecord {
 
   uint64 id = 1;
   ActionType action = 2;
-  string operatingSystem = 3;
+  string operating_system = 3;
   string browser = 4;
   string client = 5;
   string user = 6;
   repeated Service services = 7;
-  google.protobuf.Timestamp createdAt = 8;
+  google.protobuf.Timestamp created_at = 8;
   AuditLogRecordMetadata data = 9;
 }
 
@@ -592,32 +592,32 @@ message AuditLogRecordMetadata {
   Organization delegatee = 1;
   Organization delegator = 2;
   string reference = 3;
-  string inwayName = 4;
-  string outwayName = 5;
+  string inway_name = 4;
+  string outway_name = 5;
 }
 
 message ListAuditLogsResponse {
-  repeated AuditLogRecord auditLogs = 1;
+  repeated AuditLogRecord audit_logs = 1;
 }
 
 message CreateOutgoingOrderRequest {
   string reference = 1;
   string description = 2;
-  string publicKeyPEM = 3;
+  string public_key_pem = 3;
   string delegatee = 4;
-  google.protobuf.Timestamp validFrom = 5;
-  google.protobuf.Timestamp validUntil = 6;
-  repeated uint64 accessProofIds = 7;
+  google.protobuf.Timestamp valid_from = 5;
+  google.protobuf.Timestamp valid_until = 6;
+  repeated uint64 access_proof_ids = 7;
 }
 
 message UpdateOutgoingOrderRequest {
     string reference = 1;
     string description = 2;
-    string publicKeyPEM = 3;
+    string public_key_pem = 3;
     string delegatee = 4;
-    google.protobuf.Timestamp validFrom = 5;
-    google.protobuf.Timestamp validUntil = 6;
-    repeated uint64 accessProofIds = 7;
+    google.protobuf.Timestamp valid_from = 5;
+    google.protobuf.Timestamp valid_until = 6;
+    repeated uint64 access_proof_ids = 7;
 }
 
 message RevokeOutgoingOrderRequest{
@@ -634,11 +634,11 @@ message OutgoingOrder {
   string reference = 1;
   string description = 2;
   Organization delegatee = 4;
-  google.protobuf.Timestamp validFrom = 5;
-  google.protobuf.Timestamp validUntil = 6;
-  repeated AccessProof accessProofs = 7;
-  google.protobuf.Timestamp revokedAt = 8;
-  string publicKeyPem = 9;
+  google.protobuf.Timestamp valid_from = 5;
+  google.protobuf.Timestamp valid_until = 6;
+  repeated AccessProof access_proofs = 7;
+  google.protobuf.Timestamp revoked_at = 8;
+  string public_key_pem = 9;
 }
 
 message ListOutgoingOrdersResponse {
@@ -660,8 +660,8 @@ message ListIncomingOrdersResponse {
 }
 
 message SynchronizeOutgoingAccessRequestsRequest {
-    string organizationSerialNumber = 1;
-    string serviceName = 2;
+    string organization_serial_number = 1;
+    string service_name = 2;
 }
 
 service TXLog {
@@ -677,7 +677,7 @@ enum TXLogDirection {
 }
 
 message TXLogOrganization {
-  string serialNumber = 1;
+  string serial_number = 1;
   string name = 2;
 }
 
@@ -699,9 +699,9 @@ message TXLogRecord {
   string data = 5;
   TXLogOrder order = 6;
 
-  string TransactionID = 7;
+  string transaction_id = 7;
 
-  google.protobuf.Timestamp createdAt = 9;
+  google.protobuf.Timestamp created_at = 9;
 }
 
 message TXLogListRecordsResponse {

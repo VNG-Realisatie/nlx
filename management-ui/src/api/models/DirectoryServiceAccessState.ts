@@ -56,8 +56,8 @@ export function DirectoryServiceAccessStateFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'accessRequest': !exists(json, 'accessRequest') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['accessRequest']),
-        'accessProof': !exists(json, 'accessProof') ? undefined : ManagementAccessProofFromJSON(json['accessProof']),
+        'accessRequest': !exists(json, 'access_request') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['access_request']),
+        'accessProof': !exists(json, 'access_proof') ? undefined : ManagementAccessProofFromJSON(json['access_proof']),
     };
 }
 
@@ -70,8 +70,8 @@ export function DirectoryServiceAccessStateToJSON(value?: DirectoryServiceAccess
     }
     return {
         
-        'accessRequest': ManagementOutgoingAccessRequestToJSON(value.accessRequest),
-        'accessProof': ManagementAccessProofToJSON(value.accessProof),
+        'access_request': ManagementOutgoingAccessRequestToJSON(value.accessRequest),
+        'access_proof': ManagementAccessProofToJSON(value.accessProof),
     };
 }
 

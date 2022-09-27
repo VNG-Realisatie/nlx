@@ -31,7 +31,7 @@ const OutwaysWithoutAccessSection = ({
       const outwaysForPublicKeyFingerprint =
         outwayStore.getByPublicKeyFingerprint(currentValue)
       previousValue[`${currentValue}`] =
-        outwaysForPublicKeyFingerprint[0].publicKeyPEM
+        outwaysForPublicKeyFingerprint[0].publicKeyPem
 
       return previousValue
     }, {})
@@ -50,7 +50,7 @@ const OutwaysWithoutAccessSection = ({
               <Row
                 key={publicKeyFingerprint}
                 publicKeyFingerprint={publicKeyFingerprint}
-                publicKeyPEM={
+                publicKeyPem={
                   publicKeyFingerprintsToPEMMap[`${publicKeyFingerprint}`]
                 }
                 service={service}

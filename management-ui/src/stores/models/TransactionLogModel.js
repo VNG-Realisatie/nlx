@@ -30,7 +30,7 @@ class Order {
 }
 
 class TransactionLogModel {
-  transactionID = null
+  transactionId = null
   direction = null
   source = null
   destination = null
@@ -50,8 +50,8 @@ class TransactionLogModel {
   }
 
   update = (transactionLog) => {
-    if (transactionLog.transactionID) {
-      this.transactionID = transactionLog.transactionID
+    if (transactionLog.transactionId) {
+      this.transactionId = transactionLog.transactionId
     }
 
     if (transactionLog.direction) {

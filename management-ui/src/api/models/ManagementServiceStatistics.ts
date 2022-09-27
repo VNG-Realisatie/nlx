@@ -44,7 +44,7 @@ export function ManagementServiceStatisticsFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'incomingAccessRequestCount': !exists(json, 'incomingAccessRequestCount') ? undefined : json['incomingAccessRequestCount'],
+        'incomingAccessRequestCount': !exists(json, 'incoming_access_request_count') ? undefined : json['incoming_access_request_count'],
     };
 }
 
@@ -58,7 +58,7 @@ export function ManagementServiceStatisticsToJSON(value?: ManagementServiceStati
     return {
         
         'name': value.name,
-        'incomingAccessRequestCount': value.incomingAccessRequestCount,
+        'incoming_access_request_count': value.incomingAccessRequestCount,
     };
 }
 

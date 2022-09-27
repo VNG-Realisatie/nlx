@@ -136,19 +136,19 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 
 func convertAccessRequestState(state api.AccessRequestState) (database.OutgoingAccessRequestState, error) {
 	switch state {
-	case api.AccessRequestState_APPROVED:
+	case api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED:
 		return database.OutgoingAccessRequestApproved, nil
-	case api.AccessRequestState_REJECTED:
+	case api.AccessRequestState_ACCESS_REQUEST_STATE_REJECTED:
 		return database.OutgoingAccessRequestRejected, nil
-	case api.AccessRequestState_RECEIVED:
+	case api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED:
 		return database.OutgoingAccessRequestReceived, nil
-	case api.AccessRequestState_FAILED:
+	case api.AccessRequestState_ACCESS_REQUEST_STATE_FAILED:
 		return database.OutgoingAccessRequestFailed, nil
 		/*
 			If the returned state is revoked the outgoing access request state needs to be set to approved because it means the access proof still needs to be synced.
 			This can happen when an access request is rejected immediately after being approved.
 		*/
-	case api.AccessRequestState_REVOKED:
+	case api.AccessRequestState_ACCESS_REQUEST_STATE_REVOKED:
 		return database.OutgoingAccessRequestApproved, nil
 	default:
 		return "", fmt.Errorf("invalid state for outgoing access request: %s", state)

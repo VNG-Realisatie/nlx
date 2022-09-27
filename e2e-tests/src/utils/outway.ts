@@ -5,26 +5,24 @@
 
 import { getOrgByName, Outway, Outways } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
-import { strict as assert } from "assert";
 import pWaitFor from "p-wait-for";
+import { strict as assert } from "assert";
 
 export const hasOutwayRunning = async (
   world: CustomWorld,
   orgName: string,
   outwayName: string
 ) => {
-
   await pWaitFor.default(
     async () => {
-    const outways = await getOutways(orgName);
-    return !!outways[outwayName];
-  },
+      const outways = await getOutways(orgName);
+      return !!outways[outwayName];
+    },
     {
       interval: 200,
       timeout: 1000 * 11,
     }
   );
-
 };
 
 export const getOutways = async (orgName: string): Promise<Outways> => {
@@ -40,7 +38,7 @@ export const getOutways = async (orgName: string): Promise<Outways> => {
     }
 
     org.outways[`${outway.name}`].name = outway.name || "";
-    org.outways[`${outway.name}`].publicKeyPEM = outway.publicKeyPEM || "";
+    org.outways[`${outway.name}`].publicKeyPem = outway.publicKeyPem || "";
     org.outways[`${outway.name}`].publicKeyFingerprint =
       outway.publicKeyFingerprint || "";
   });

@@ -26,7 +26,7 @@ import {
 
 const OutwayDetails = ({ outway, removeHandler }) => {
   const { t } = useTranslation()
-  const { ipAddress, publicKeyPEM, version } = outway
+  const { ipAddress, publicKeyPem, version } = outway
 
   const [ConfirmRemoveModal, confirmRemove] = useConfirmationModal({
     okText: t('Remove'),
@@ -70,7 +70,7 @@ const OutwayDetails = ({ outway, removeHandler }) => {
           }}
         >
           <StyledCollapsibleBody>
-            <StyledCode>{publicKeyPEM}</StyledCode>
+            <StyledCode>{publicKeyPem}</StyledCode>
           </StyledCollapsibleBody>
         </Collapsible>
       </SectionGroup>
@@ -84,7 +84,7 @@ OutwayDetails.propTypes = {
   outway: shape({
     name: string.isRequired,
     ipAddress: string,
-    publicKeyPEM: string,
+    publicKeyPem: string,
   }),
   removeHandler: func,
 }

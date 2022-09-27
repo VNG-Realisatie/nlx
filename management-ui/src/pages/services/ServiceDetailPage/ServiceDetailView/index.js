@@ -90,9 +90,9 @@ const ServiceDetailView = ({ service, removeHandler }) => {
 
 ServiceDetailView.propTypes = {
   service: shape({
-    endpointURL: string,
-    documentationURL: string,
-    apiSpecificationURL: string,
+    endpointUrl: string,
+    documentationUrl: string,
+    apiSpecificationUrl: string,
     internal: bool.isRequired,
     techSupportContact: string,
     publicSupportContact: string,

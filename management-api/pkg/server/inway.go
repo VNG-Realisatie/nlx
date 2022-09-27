@@ -267,9 +267,9 @@ func (s *ManagementService) GetInwayConfig(ctx context.Context, req *api.GetInwa
 func convertFromDatabaseServiceToInwayService(model *database.Service) *api.GetInwayConfigResponse_Service {
 	service := &api.GetInwayConfigResponse_Service{
 		Name:                  model.Name,
-		EndpointURL:           model.EndpointURL,
-		DocumentationURL:      model.DocumentationURL,
-		ApiSpecificationURL:   model.APISpecificationURL,
+		EndpointUrl:           model.EndpointURL,
+		DocumentationUrl:      model.DocumentationURL,
+		ApiSpecificationUrl:   model.APISpecificationURL,
 		Internal:              model.Internal,
 		TechSupportContact:    model.TechSupportContact,
 		PublicSupportContact:  model.PublicSupportContact,
@@ -289,7 +289,7 @@ func convertAccessGrantToInwayAuthorizationSetting(accessGrant *database.AccessG
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},
 		PublicKeyHash: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
-		PublicKeyPEM:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
+		PublicKeyPem:  accessGrant.IncomingAccessRequest.PublicKeyPEM,
 	}
 }
 

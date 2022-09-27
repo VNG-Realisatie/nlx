@@ -88,11 +88,11 @@ export function ManagementIncomingAccessRequestFromJSONTyped(json: any, ignoreDi
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
-        'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
+        'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
         'state': !exists(json, 'state') ? undefined : ManagementAccessRequestStateFromJSON(json['state']),
-        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
-        'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
-        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
+        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
+        'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
     };
 }
 
@@ -107,11 +107,11 @@ export function ManagementIncomingAccessRequestToJSON(value?: ManagementIncoming
         
         'id': value.id,
         'organization': ManagementOrganizationToJSON(value.organization),
-        'serviceName': value.serviceName,
+        'service_name': value.serviceName,
         'state': ManagementAccessRequestStateToJSON(value.state),
-        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
-        'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
-        'publicKeyFingerprint': value.publicKeyFingerprint,
+        'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'updated_at': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
+        'public_key_fingerprint': value.publicKeyFingerprint,
     };
 }
 

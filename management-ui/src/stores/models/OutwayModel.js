@@ -6,7 +6,7 @@ import { makeAutoObservable, flow } from 'mobx'
 class OutwayModel {
   _name = ''
   _ipAddress = ''
-  _publicKeyPEM = ''
+  _publicKeyPem = ''
   _publicKeyFingerprint = ''
   _version = ''
 
@@ -18,8 +18,8 @@ class OutwayModel {
     return this._ipAddress
   }
 
-  get publicKeyPEM() {
-    return this._publicKeyPEM
+  get publicKeyPem() {
+    return this._publicKeyPem
   }
 
   get publicKeyFingerprint() {
@@ -46,7 +46,7 @@ class OutwayModel {
   update = function (outway) {
     this._name = outway.name
     this._ipAddress = outway.ipAddress
-    this._publicKeyPEM = outway.publicKeyPEM
+    this._publicKeyPem = outway.publicKeyPem
     this._publicKeyFingerprint = outway.publicKeyFingerprint
     this._version = outway.version
   }

@@ -202,7 +202,7 @@ test('requesting access to a service in the directory', async () => {
   expect(managementApiClient.managementSendAccessRequest).toHaveBeenCalledWith({
     organizationSerialNumber: '00000000000000000001',
     serviceName: 'service',
-    publicKeyPEM: 'public-key-pem',
+    publicKeyPem: 'public-key-pem',
   })
 })
 

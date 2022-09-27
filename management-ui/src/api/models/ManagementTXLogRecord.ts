@@ -85,7 +85,7 @@ export interface ManagementTXLogRecord {
      * @type {string}
      * @memberof ManagementTXLogRecord
      */
-    transactionID?: string;
+    transactionId?: string;
     /**
      * 
      * @type {Date}
@@ -110,8 +110,8 @@ export function ManagementTXLogRecordFromJSONTyped(json: any, ignoreDiscriminato
         'service': !exists(json, 'service') ? undefined : ManagementTXLogServiceFromJSON(json['service']),
         'data': !exists(json, 'data') ? undefined : json['data'],
         'order': !exists(json, 'order') ? undefined : ManagementTXLogOrderFromJSON(json['order']),
-        'transactionID': !exists(json, 'TransactionID') ? undefined : json['TransactionID'],
-        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
+        'transactionId': !exists(json, 'transaction_id') ? undefined : json['transaction_id'],
+        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
     };
 }
 
@@ -130,8 +130,8 @@ export function ManagementTXLogRecordToJSON(value?: ManagementTXLogRecord | null
         'service': ManagementTXLogServiceToJSON(value.service),
         'data': value.data,
         'order': ManagementTXLogOrderToJSON(value.order),
-        'TransactionID': value.transactionID,
-        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'transaction_id': value.transactionId,
+        'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }
 

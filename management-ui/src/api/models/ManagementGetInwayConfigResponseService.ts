@@ -37,19 +37,19 @@ export interface ManagementGetInwayConfigResponseService {
      * @type {string}
      * @memberof ManagementGetInwayConfigResponseService
      */
-    endpointURL?: string;
+    endpointUrl?: string;
     /**
      * 
      * @type {string}
      * @memberof ManagementGetInwayConfigResponseService
      */
-    documentationURL?: string;
+    documentationUrl?: string;
     /**
      * 
      * @type {string}
      * @memberof ManagementGetInwayConfigResponseService
      */
-    apiSpecificationURL?: string;
+    apiSpecificationUrl?: string;
     /**
      * 
      * @type {boolean}
@@ -105,16 +105,16 @@ export function ManagementGetInwayConfigResponseServiceFromJSONTyped(json: any, 
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'endpointURL': !exists(json, 'endpointURL') ? undefined : json['endpointURL'],
-        'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
-        'apiSpecificationURL': !exists(json, 'apiSpecificationURL') ? undefined : json['apiSpecificationURL'],
+        'endpointUrl': !exists(json, 'endpoint_url') ? undefined : json['endpoint_url'],
+        'documentationUrl': !exists(json, 'documentation_url') ? undefined : json['documentation_url'],
+        'apiSpecificationUrl': !exists(json, 'api_specification_url') ? undefined : json['api_specification_url'],
         'internal': !exists(json, 'internal') ? undefined : json['internal'],
-        'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
-        'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
-        'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ManagementGetInwayConfigResponseServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
-        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
-        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
-        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
+        'techSupportContact': !exists(json, 'tech_support_contact') ? undefined : json['tech_support_contact'],
+        'publicSupportContact': !exists(json, 'public_support_contact') ? undefined : json['public_support_contact'],
+        'authorizationSettings': !exists(json, 'authorization_settings') ? undefined : ManagementGetInwayConfigResponseServiceAuthorizationSettingsFromJSON(json['authorization_settings']),
+        'oneTimeCosts': !exists(json, 'one_time_costs') ? undefined : json['one_time_costs'],
+        'monthlyCosts': !exists(json, 'monthly_costs') ? undefined : json['monthly_costs'],
+        'requestCosts': !exists(json, 'request_costs') ? undefined : json['request_costs'],
     };
 }
 
@@ -128,16 +128,16 @@ export function ManagementGetInwayConfigResponseServiceToJSON(value?: Management
     return {
         
         'name': value.name,
-        'endpointURL': value.endpointURL,
-        'documentationURL': value.documentationURL,
-        'apiSpecificationURL': value.apiSpecificationURL,
+        'endpoint_url': value.endpointUrl,
+        'documentation_url': value.documentationUrl,
+        'api_specification_url': value.apiSpecificationUrl,
         'internal': value.internal,
-        'techSupportContact': value.techSupportContact,
-        'publicSupportContact': value.publicSupportContact,
-        'authorizationSettings': ManagementGetInwayConfigResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
-        'oneTimeCosts': value.oneTimeCosts,
-        'monthlyCosts': value.monthlyCosts,
-        'requestCosts': value.requestCosts,
+        'tech_support_contact': value.techSupportContact,
+        'public_support_contact': value.publicSupportContact,
+        'authorization_settings': ManagementGetInwayConfigResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
+        'one_time_costs': value.oneTimeCosts,
+        'monthly_costs': value.monthlyCosts,
+        'request_costs': value.requestCosts,
     };
 }
 

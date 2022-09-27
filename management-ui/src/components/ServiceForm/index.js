@@ -29,9 +29,9 @@ import {
 
 const DEFAULT_INITIAL_VALUES = {
   name: '',
-  endpointURL: '',
-  documentationURL: '',
-  apiSpecificationURL: '',
+  endpointUrl: '',
+  documentationUrl: '',
+  apiSpecificationUrl: '',
   publishedInDirectory: true,
   techSupportContact: '',
   publicSupportContact: '',
@@ -76,9 +76,9 @@ const ServiceForm = ({
         t('Only alphanumeric characters, dashes and dots are allowed'),
       )
       .required(t('This field is required')),
-    endpointURL: Yup.string().required(t('Invalid endpoint URL')),
-    documentationURL: Yup.string(),
-    apiSpecificationURL: Yup.string(),
+    endpointUrl: Yup.string().required(t('Invalid endpoint URL')),
+    documentationUrl: Yup.string(),
+    apiSpecificationUrl: Yup.string(),
     publishedInDirectory: Yup.boolean(),
     techSupportContact: Yup.string(),
     publicSupportContact: Yup.string(),
@@ -132,21 +132,21 @@ const ServiceForm = ({
           <Fieldset>
             <Legend>{t('API details')}</Legend>
 
-            <TextInput name="endpointURL" data-testid="endpointURL" size="xl">
+            <TextInput name="endpointUrl" data-testid="endpointUrl" size="xl">
               {t('API endpoint URL')}
             </TextInput>
 
             <TextInput
-              name="documentationURL"
-              data-testid="documentationURL"
+              name="documentationUrl"
+              data-testid="documentationUrl"
               size="xl"
             >
               {t('API documentation URL')}
             </TextInput>
 
             <TextInput
-              name="apiSpecificationURL"
-              data-testid="apiSpecificationURL"
+              name="apiSpecificationUrl"
+              data-testid="apiSpecificationUrl"
               size="xl"
             >
               {t('API specification URL')}
@@ -281,9 +281,9 @@ ServiceForm.propTypes = {
   onSubmitHandler: func,
   initialValues: shape({
     name: string,
-    endpointURL: string,
-    documentationURL: string,
-    apiSpecificationURL: string,
+    endpointUrl: string,
+    documentationUrl: string,
+    apiSpecificationUrl: string,
     internal: bool,
     techSupportContact: string,
     publicSupportContact: string,

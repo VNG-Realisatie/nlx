@@ -18,12 +18,12 @@ test('Outways with access section', async () => {
       {
         name: 'outway-1',
         publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPEM: 'public-key-pem-1',
+        publicKeyPem: 'public-key-pem-1',
       },
       {
         name: 'outway-2',
         publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPEM: 'public-key-pem-1',
+        publicKeyPem: 'public-key-pem-1',
       },
     ],
   })

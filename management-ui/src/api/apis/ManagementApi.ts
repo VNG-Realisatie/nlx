@@ -103,7 +103,7 @@ import {
 
 export interface ManagementApproveIncomingAccessRequestRequest {
     serviceName: string;
-    accessRequestID: string;
+    accessRequestId: string;
 }
 
 export interface ManagementCreateOutgoingOrderOperationRequest {
@@ -152,11 +152,11 @@ export interface ManagementRegisterOutwayOperationRequest {
 
 export interface ManagementRejectIncomingAccessRequestRequest {
     serviceName: string;
-    accessRequestID: string;
+    accessRequestId: string;
 }
 
 export interface ManagementRevokeAccessGrantRequest {
-    accessGrantID: string;
+    accessGrantId: string;
 }
 
 export interface ManagementRevokeOutgoingOrderRequest {
@@ -167,7 +167,7 @@ export interface ManagementRevokeOutgoingOrderRequest {
 export interface ManagementSendAccessRequestRequest {
     organizationSerialNumber: string;
     serviceName: string;
-    publicKeyPEM?: string;
+    publicKeyPem?: string;
 }
 
 export interface ManagementSynchronizeOutgoingAccessRequestsRequest {
@@ -229,8 +229,8 @@ export class ManagementApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementApproveIncomingAccessRequest.');
         }
 
-        if (requestParameters.accessRequestID === null || requestParameters.accessRequestID === undefined) {
-            throw new runtime.RequiredError('accessRequestID','Required parameter requestParameters.accessRequestID was null or undefined when calling managementApproveIncomingAccessRequest.');
+        if (requestParameters.accessRequestId === null || requestParameters.accessRequestId === undefined) {
+            throw new runtime.RequiredError('accessRequestId','Required parameter requestParameters.accessRequestId was null or undefined when calling managementApproveIncomingAccessRequest.');
         }
 
         const queryParameters: any = {};
@@ -238,7 +238,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve`.replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"accessRequestID"}}`, encodeURIComponent(String(requestParameters.accessRequestID))),
+            path: `/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve`.replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"access_request_id"}}`, encodeURIComponent(String(requestParameters.accessRequestId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -612,7 +612,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-grants/services/{serviceName}`.replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/access-grants/services/{service_name}`.replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -664,7 +664,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/incoming/services/{serviceName}`.replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/access-requests/incoming/services/{service_name}`.replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -869,8 +869,8 @@ export class ManagementApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementRejectIncomingAccessRequest.');
         }
 
-        if (requestParameters.accessRequestID === null || requestParameters.accessRequestID === undefined) {
-            throw new runtime.RequiredError('accessRequestID','Required parameter requestParameters.accessRequestID was null or undefined when calling managementRejectIncomingAccessRequest.');
+        if (requestParameters.accessRequestId === null || requestParameters.accessRequestId === undefined) {
+            throw new runtime.RequiredError('accessRequestId','Required parameter requestParameters.accessRequestId was null or undefined when calling managementRejectIncomingAccessRequest.');
         }
 
         const queryParameters: any = {};
@@ -878,7 +878,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject`.replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"accessRequestID"}}`, encodeURIComponent(String(requestParameters.accessRequestID))),
+            path: `/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject`.replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))).replace(`{${"access_request_id"}}`, encodeURIComponent(String(requestParameters.accessRequestId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -897,8 +897,8 @@ export class ManagementApi extends runtime.BaseAPI {
     /**
      */
     async managementRevokeAccessGrantRaw(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<ManagementAccessGrant>> {
-        if (requestParameters.accessGrantID === null || requestParameters.accessGrantID === undefined) {
-            throw new runtime.RequiredError('accessGrantID','Required parameter requestParameters.accessGrantID was null or undefined when calling managementRevokeAccessGrant.');
+        if (requestParameters.accessGrantId === null || requestParameters.accessGrantId === undefined) {
+            throw new runtime.RequiredError('accessGrantId','Required parameter requestParameters.accessGrantId was null or undefined when calling managementRevokeAccessGrant.');
         }
 
         const queryParameters: any = {};
@@ -906,7 +906,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-grants/{accessGrantID}/revoke`.replace(`{${"accessGrantID"}}`, encodeURIComponent(String(requestParameters.accessGrantID))),
+            path: `/api/v1/access-grants/{access_grant_id}/revoke`.replace(`{${"access_grant_id"}}`, encodeURIComponent(String(requestParameters.accessGrantId))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -967,14 +967,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
-        if (requestParameters.publicKeyPEM !== undefined) {
-            queryParameters['publicKeyPEM'] = requestParameters.publicKeyPEM;
+        if (requestParameters.publicKeyPem !== undefined) {
+            queryParameters['public_key_pem'] = requestParameters.publicKeyPem;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}`.replace(`{${"organization_serial_number"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

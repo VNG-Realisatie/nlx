@@ -33,7 +33,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 	order := &database.CreateOutgoingOrder{
 		Reference:      request.Reference,
 		Description:    request.Description,
-		PublicKeyPEM:   request.PublicKeyPEM,
+		PublicKeyPEM:   request.PublicKeyPem,
 		Delegatee:      request.Delegatee,
 		ValidFrom:      request.ValidFrom.AsTime(),
 		ValidUntil:     request.ValidUntil.AsTime(),

@@ -47,7 +47,7 @@ test('the InwaysAndOutwaysPage', async () => {
       {
         name: 'Outway Name',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem',
+        publicKeyPem: 'public-key-pem',
         version: '0.0.42',
       },
     ],
@@ -90,7 +90,7 @@ test('failed to load inways', async () => {
       {
         name: 'name',
         ipAddress: '127.0.0.1',
-        publicKeyPEM: 'public-key-pem',
+        publicKeyPem: 'public-key-pem',
         version: 'version',
       },
     ],

@@ -106,12 +106,12 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'action': !exists(json, 'action') ? undefined : AuditLogRecordActionTypeFromJSON(json['action']),
-        'operatingSystem': !exists(json, 'operatingSystem') ? undefined : json['operatingSystem'],
+        'operatingSystem': !exists(json, 'operating_system') ? undefined : json['operating_system'],
         'browser': !exists(json, 'browser') ? undefined : json['browser'],
         'client': !exists(json, 'client') ? undefined : json['client'],
         'user': !exists(json, 'user') ? undefined : json['user'],
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementAuditLogRecordServiceFromJSON)),
-        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
+        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'data': !exists(json, 'data') ? undefined : ManagementAuditLogRecordMetadataFromJSON(json['data']),
     };
 }
@@ -127,12 +127,12 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         
         'id': value.id,
         'action': AuditLogRecordActionTypeToJSON(value.action),
-        'operatingSystem': value.operatingSystem,
+        'operating_system': value.operatingSystem,
         'browser': value.browser,
         'client': value.client,
         'user': value.user,
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementAuditLogRecordServiceToJSON)),
-        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'data': ManagementAuditLogRecordMetadataToJSON(value.data),
     };
 }

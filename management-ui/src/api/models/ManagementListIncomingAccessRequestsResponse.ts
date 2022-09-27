@@ -44,7 +44,7 @@ export function ManagementListIncomingAccessRequestsResponseFromJSONTyped(json: 
     }
     return {
         
-        'accessRequests': !exists(json, 'accessRequests') ? undefined : ((json['accessRequests'] as Array<any>).map(ManagementIncomingAccessRequestFromJSON)),
+        'accessRequests': !exists(json, 'access_requests') ? undefined : ((json['access_requests'] as Array<any>).map(ManagementIncomingAccessRequestFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function ManagementListIncomingAccessRequestsResponseToJSON(value?: Manag
     }
     return {
         
-        'accessRequests': value.accessRequests === undefined ? undefined : ((value.accessRequests as Array<any>).map(ManagementIncomingAccessRequestToJSON)),
+        'access_requests': value.accessRequests === undefined ? undefined : ((value.accessRequests as Array<any>).map(ManagementIncomingAccessRequestToJSON)),
     };
 }
 

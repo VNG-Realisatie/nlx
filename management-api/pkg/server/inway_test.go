@@ -530,7 +530,7 @@ func TestGetInwayConfig(t *testing.T) {
 										Name:         "org1",
 									},
 									PublicKeyHash: "abc",
-									PublicKeyPEM:  "def",
+									PublicKeyPem:  "def",
 								},
 							},
 						},
@@ -620,7 +620,7 @@ func TestGetInwayConfig(t *testing.T) {
 										Name:         "org1",
 									},
 									PublicKeyHash: "abc",
-									PublicKeyPEM:  "def",
+									PublicKeyPem:  "def",
 								},
 								{
 									Organization: &api.Organization{
@@ -628,7 +628,7 @@ func TestGetInwayConfig(t *testing.T) {
 										Name:         "org2",
 									},
 									PublicKeyHash: "uvw",
-									PublicKeyPEM:  "xyz",
+									PublicKeyPem:  "xyz",
 								},
 							},
 						},
@@ -643,7 +643,7 @@ func TestGetInwayConfig(t *testing.T) {
 										Name:         "org3",
 									},
 									PublicKeyHash: "ghi",
-									PublicKeyPEM:  "jkl",
+									PublicKeyPem:  "jkl",
 								},
 								{
 									Organization: &api.Organization{
@@ -651,7 +651,7 @@ func TestGetInwayConfig(t *testing.T) {
 										Name:         "org4",
 									},
 									PublicKeyHash: "mno",
-									PublicKeyPEM:  "pqr",
+									PublicKeyPem:  "pqr",
 								},
 							},
 						},

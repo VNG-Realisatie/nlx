@@ -56,7 +56,7 @@ When(
       .findElement(By.name("delegatee"))
       .sendKeys(delegatee.serialNumber);
     await driver
-      .findElement(By.name("publicKeyPEM"))
+      .findElement(By.name("publicKeyPem"))
       .sendKeys(randomPublicKeyPEM);
 
     const today = dayjs();

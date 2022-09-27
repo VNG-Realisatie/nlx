@@ -87,7 +87,7 @@ var approveAccessRequestCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		_, err := getManagementClient().ApproveIncomingAccessRequest(newRequestContext(), &api.ApproveIncomingAccessRequestRequest{
 			ServiceName:     accessRequestOptions.serviceName,
-			AccessRequestID: accessRequestOptions.id,
+			AccessRequestId: accessRequestOptions.id,
 		})
 		if err != nil {
 			log.Fatal(err)

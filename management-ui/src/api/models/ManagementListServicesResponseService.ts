@@ -37,19 +37,19 @@ export interface ManagementListServicesResponseService {
      * @type {string}
      * @memberof ManagementListServicesResponseService
      */
-    endpointURL?: string;
+    endpointUrl?: string;
     /**
      * 
      * @type {string}
      * @memberof ManagementListServicesResponseService
      */
-    documentationURL?: string;
+    documentationUrl?: string;
     /**
      * 
      * @type {string}
      * @memberof ManagementListServicesResponseService
      */
-    apiSpecificationURL?: string;
+    apiSpecificationUrl?: string;
     /**
      * 
      * @type {boolean}
@@ -117,18 +117,18 @@ export function ManagementListServicesResponseServiceFromJSONTyped(json: any, ig
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'endpointURL': !exists(json, 'endpointURL') ? undefined : json['endpointURL'],
-        'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
-        'apiSpecificationURL': !exists(json, 'apiSpecificationURL') ? undefined : json['apiSpecificationURL'],
+        'endpointUrl': !exists(json, 'endpoint_url') ? undefined : json['endpoint_url'],
+        'documentationUrl': !exists(json, 'documentation_url') ? undefined : json['documentation_url'],
+        'apiSpecificationUrl': !exists(json, 'api_specification_url') ? undefined : json['api_specification_url'],
         'internal': !exists(json, 'internal') ? undefined : json['internal'],
-        'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
-        'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
-        'authorizationSettings': !exists(json, 'authorizationSettings') ? undefined : ManagementListServicesResponseServiceAuthorizationSettingsFromJSON(json['authorizationSettings']),
+        'techSupportContact': !exists(json, 'tech_support_contact') ? undefined : json['tech_support_contact'],
+        'publicSupportContact': !exists(json, 'public_support_contact') ? undefined : json['public_support_contact'],
+        'authorizationSettings': !exists(json, 'authorization_settings') ? undefined : ManagementListServicesResponseServiceAuthorizationSettingsFromJSON(json['authorization_settings']),
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
-        'incomingAccessRequestCount': !exists(json, 'incomingAccessRequestCount') ? undefined : json['incomingAccessRequestCount'],
-        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
-        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
-        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
+        'incomingAccessRequestCount': !exists(json, 'incoming_access_request_count') ? undefined : json['incoming_access_request_count'],
+        'oneTimeCosts': !exists(json, 'one_time_costs') ? undefined : json['one_time_costs'],
+        'monthlyCosts': !exists(json, 'monthly_costs') ? undefined : json['monthly_costs'],
+        'requestCosts': !exists(json, 'request_costs') ? undefined : json['request_costs'],
     };
 }
 
@@ -142,18 +142,18 @@ export function ManagementListServicesResponseServiceToJSON(value?: ManagementLi
     return {
         
         'name': value.name,
-        'endpointURL': value.endpointURL,
-        'documentationURL': value.documentationURL,
-        'apiSpecificationURL': value.apiSpecificationURL,
+        'endpoint_url': value.endpointUrl,
+        'documentation_url': value.documentationUrl,
+        'api_specification_url': value.apiSpecificationUrl,
         'internal': value.internal,
-        'techSupportContact': value.techSupportContact,
-        'publicSupportContact': value.publicSupportContact,
-        'authorizationSettings': ManagementListServicesResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
+        'tech_support_contact': value.techSupportContact,
+        'public_support_contact': value.publicSupportContact,
+        'authorization_settings': ManagementListServicesResponseServiceAuthorizationSettingsToJSON(value.authorizationSettings),
         'inways': value.inways,
-        'incomingAccessRequestCount': value.incomingAccessRequestCount,
-        'oneTimeCosts': value.oneTimeCosts,
-        'monthlyCosts': value.monthlyCosts,
-        'requestCosts': value.requestCosts,
+        'incoming_access_request_count': value.incomingAccessRequestCount,
+        'one_time_costs': value.oneTimeCosts,
+        'monthly_costs': value.monthlyCosts,
+        'request_costs': value.requestCosts,
     };
 }
 

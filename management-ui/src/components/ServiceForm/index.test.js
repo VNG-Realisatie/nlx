@@ -37,9 +37,9 @@ test('with initial values', async () => {
       <ServiceForm
         initialValues={{
           name: 'my-service',
-          endpointURL: 'http://my-service.test:8000',
-          documentationURL: 'http://my-service.test:8000/docs',
-          apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
+          endpointUrl: 'http://my-service.test:8000',
+          documentationUrl: 'http://my-service.test:8000/docs',
+          apiSpecificationUrl: 'http://my-service.test:8000/openapi.json',
           internal: false,
           techSupportContact: 'tech@organization.test',
           publicSupportContact: 'public@organization.test',
@@ -99,10 +99,10 @@ test('the form values of the onSubmitHandler', async () => {
         onSubmitHandler={onSubmitHandlerSpy}
         initialValues={{
           name: '',
-          endpointURL: 'http://gemeente-stijns-parkeerrechten-api:8000',
-          documentationURL:
+          endpointUrl: 'http://gemeente-stijns-parkeerrechten-api:8000',
+          documentationUrl:
             'http://gemeente-stijns-parkeerrechten-api:8000/docs',
-          apiSpecificationURL:
+          apiSpecificationUrl:
             'http://gemeente-stijns-parkeerrechten-api:8000/openapi.json',
           internal: false,
           techSupportContact: 'tech@organization.test',
@@ -130,9 +130,9 @@ test('the form values of the onSubmitHandler', async () => {
   await waitFor(() =>
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({
       name: 'my-service',
-      endpointURL: 'http://gemeente-stijns-parkeerrechten-api:8000',
-      documentationURL: 'http://gemeente-stijns-parkeerrechten-api:8000/docs',
-      apiSpecificationURL:
+      endpointUrl: 'http://gemeente-stijns-parkeerrechten-api:8000',
+      documentationUrl: 'http://gemeente-stijns-parkeerrechten-api:8000/docs',
+      apiSpecificationUrl:
         'http://gemeente-stijns-parkeerrechten-api:8000/openapi.json',
       internal: false,
       inways: [],
@@ -149,9 +149,9 @@ test('the form values of the onSubmitHandler', async () => {
 describe('when showing inways', () => {
   const initialValues = {
     name: 'my-service',
-    endpointURL: 'http://my-service.test:8000',
-    documentationURL: 'http://my-service.test:8000/docs',
-    apiSpecificationURL: 'http://my-service.test:8000/openapi.json',
+    endpointUrl: 'http://my-service.test:8000',
+    documentationUrl: 'http://my-service.test:8000/docs',
+    apiSpecificationUrl: 'http://my-service.test:8000/openapi.json',
     internal: false,
     techSupportContact: 'tech@organization.test',
     publicSupportContact: 'public@organization.test',

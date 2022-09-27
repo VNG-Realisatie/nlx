@@ -69,7 +69,7 @@ class AccessGrantStore {
 
   revokeAccessGrant = async ({ id, serviceName }) => {
     await this._managementApiClient.managementRevokeAccessGrant({
-      accessGrantID: id,
+      accessGrantId: id,
     })
     this.fetchForService({ name: serviceName })
   }

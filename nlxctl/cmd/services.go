@@ -129,9 +129,9 @@ var updateServiceCommand = &cobra.Command{
 
 		updateServiceRequest := &api.UpdateServiceRequest{
 			Name:                 serviceOptions.name,
-			EndpointURL:          service.EndpointURL,
-			DocumentationURL:     service.DocumentationURL,
-			ApiSpecificationURL:  service.ApiSpecificationURL,
+			EndpointUrl:          service.EndpointUrl,
+			DocumentationUrl:     service.DocumentationUrl,
+			ApiSpecificationUrl:  service.ApiSpecificationUrl,
 			Internal:             service.Internal,
 			TechSupportContact:   service.TechSupportContact,
 			PublicSupportContact: service.PublicSupportContact,

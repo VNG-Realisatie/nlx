@@ -51,7 +51,7 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 	service := &api.DirectoryService{
 		ServiceName:          s.Name,
 		ApiSpecificationType: s.ApiSpecificationType,
-		DocumentationURL:     s.DocumentationUrl,
+		DocumentationUrl:     s.DocumentationUrl,
 		PublicSupportContact: s.PublicSupportContact,
 		State:                serviceState,
 	}

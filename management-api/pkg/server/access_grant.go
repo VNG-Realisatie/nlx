@@ -66,13 +66,13 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	accessGrant, err := s.configDatabase.GetAccessGrant(ctx, uint(req.AccessGrantID))
+	accessGrant, err := s.configDatabase.GetAccessGrant(ctx, uint(req.AccessGrantId))
 	if err != nil {
 		if err == database.ErrNotFound {
-			return nil, status.Error(codes.NotFound, fmt.Sprintf("access grant with id:%d does not exist", req.AccessGrantID))
+			return nil, status.Error(codes.NotFound, fmt.Sprintf("access grant with id:%d does not exist", req.AccessGrantId))
 		}
 
-		s.logger.Error("cannot get access grant from database", zap.Uint64("access grant id", req.AccessGrantID), zap.Error(err))
+		s.logger.Error("cannot get access grant from database", zap.Uint64("access grant id", req.AccessGrantId), zap.Error(err))
 
 		return nil, status.Error(codes.Internal, "internal error")
 	}
@@ -82,7 +82,7 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
-	accessGrant, err = s.configDatabase.RevokeAccessGrant(ctx, uint(req.AccessGrantID), time.Now())
+	accessGrant, err = s.configDatabase.RevokeAccessGrant(ctx, uint(req.AccessGrantId), time.Now())
 	if err != nil {
 		if errors.Is(err, database.ErrAccessGrantAlreadyRevoked) {
 			s.logger.Warn("access grant is already revoked")

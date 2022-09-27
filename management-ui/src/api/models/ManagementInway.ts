@@ -77,9 +77,9 @@ export function ManagementInwayFromJSONTyped(json: any, ignoreDiscriminator: boo
         'name': !exists(json, 'name') ? undefined : json['name'],
         'version': !exists(json, 'version') ? undefined : json['version'],
         'hostname': !exists(json, 'hostname') ? undefined : json['hostname'],
-        'selfAddress': !exists(json, 'selfAddress') ? undefined : json['selfAddress'],
+        'selfAddress': !exists(json, 'self_address') ? undefined : json['self_address'],
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementInwayServiceFromJSON)),
-        'ipAddress': !exists(json, 'ipAddress') ? undefined : json['ipAddress'],
+        'ipAddress': !exists(json, 'ip_address') ? undefined : json['ip_address'],
     };
 }
 
@@ -95,9 +95,9 @@ export function ManagementInwayToJSON(value?: ManagementInway | null): any {
         'name': value.name,
         'version': value.version,
         'hostname': value.hostname,
-        'selfAddress': value.selfAddress,
+        'self_address': value.selfAddress,
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementInwayServiceToJSON)),
-        'ipAddress': value.ipAddress,
+        'ip_address': value.ipAddress,
     };
 }
 

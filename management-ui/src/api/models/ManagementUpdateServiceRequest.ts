@@ -24,19 +24,19 @@ export interface ManagementUpdateServiceRequest {
      * @type {string}
      * @memberof ManagementUpdateServiceRequest
      */
-    endpointURL?: string;
+    endpointUrl?: string;
     /**
      * 
      * @type {string}
      * @memberof ManagementUpdateServiceRequest
      */
-    documentationURL?: string;
+    documentationUrl?: string;
     /**
      * 
      * @type {string}
      * @memberof ManagementUpdateServiceRequest
      */
-    apiSpecificationURL?: string;
+    apiSpecificationUrl?: string;
     /**
      * 
      * @type {boolean}
@@ -91,16 +91,16 @@ export function ManagementUpdateServiceRequestFromJSONTyped(json: any, ignoreDis
     }
     return {
         
-        'endpointURL': !exists(json, 'endpointURL') ? undefined : json['endpointURL'],
-        'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
-        'apiSpecificationURL': !exists(json, 'apiSpecificationURL') ? undefined : json['apiSpecificationURL'],
+        'endpointUrl': !exists(json, 'endpoint_url') ? undefined : json['endpoint_url'],
+        'documentationUrl': !exists(json, 'documentation_url') ? undefined : json['documentation_url'],
+        'apiSpecificationUrl': !exists(json, 'api_specification_url') ? undefined : json['api_specification_url'],
         'internal': !exists(json, 'internal') ? undefined : json['internal'],
-        'techSupportContact': !exists(json, 'techSupportContact') ? undefined : json['techSupportContact'],
-        'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
+        'techSupportContact': !exists(json, 'tech_support_contact') ? undefined : json['tech_support_contact'],
+        'publicSupportContact': !exists(json, 'public_support_contact') ? undefined : json['public_support_contact'],
         'inways': !exists(json, 'inways') ? undefined : json['inways'],
-        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
-        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
-        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
+        'oneTimeCosts': !exists(json, 'one_time_costs') ? undefined : json['one_time_costs'],
+        'monthlyCosts': !exists(json, 'monthly_costs') ? undefined : json['monthly_costs'],
+        'requestCosts': !exists(json, 'request_costs') ? undefined : json['request_costs'],
     };
 }
 
@@ -113,16 +113,16 @@ export function ManagementUpdateServiceRequestToJSON(value?: ManagementUpdateSer
     }
     return {
         
-        'endpointURL': value.endpointURL,
-        'documentationURL': value.documentationURL,
-        'apiSpecificationURL': value.apiSpecificationURL,
+        'endpoint_url': value.endpointUrl,
+        'documentation_url': value.documentationUrl,
+        'api_specification_url': value.apiSpecificationUrl,
         'internal': value.internal,
-        'techSupportContact': value.techSupportContact,
-        'publicSupportContact': value.publicSupportContact,
+        'tech_support_contact': value.techSupportContact,
+        'public_support_contact': value.publicSupportContact,
         'inways': value.inways,
-        'oneTimeCosts': value.oneTimeCosts,
-        'monthlyCosts': value.monthlyCosts,
-        'requestCosts': value.requestCosts,
+        'one_time_costs': value.oneTimeCosts,
+        'monthly_costs': value.monthlyCosts,
+        'request_costs': value.requestCosts,
     };
 }
 

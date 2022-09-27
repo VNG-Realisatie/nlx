@@ -39,7 +39,7 @@ interface CreatedItems {
 export interface Outway {
   name: string;
   publicKeyFingerprint: string;
-  publicKeyPEM: string;
+  publicKeyPem: string;
   selfAddress: string;
 }
 
@@ -75,7 +75,7 @@ export const organizations: Organizations = {
           process.env.E2E_GEMEENTE_STIJNS_OUTWAY_1_ADDRESS ||
           "http://127.0.0.1:7917",
         publicKeyFingerprint: "",
-        publicKeyPEM: "",
+        publicKeyPem: "",
       },
       [process.env.E2E_GEMEENTE_STIJNS_OUTWAY_2_NAME ||
       "gemeente-stijns-nlx-outway-2"]: {
@@ -84,7 +84,7 @@ export const organizations: Organizations = {
           process.env.E2E_GEMEENTE_STIJNS_OUTWAY_2_ADDRESS ||
           "http://127.0.0.1:7947",
         publicKeyFingerprint: "",
-        publicKeyPEM: "",
+        publicKeyPem: "",
       },
     },
     management: {
@@ -148,7 +148,7 @@ export const organizations: Organizations = {
           process.env.E2E_VERGUNNINGSOFTWARE_BV_OUTWAY_1_ADDRESS ||
           "http://127.0.0.1:7937",
         publicKeyFingerprint: "",
-        publicKeyPEM: "",
+        publicKeyPem: "",
       },
     },
     management: {

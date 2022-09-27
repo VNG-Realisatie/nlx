@@ -43,7 +43,7 @@ export function ManagementTXLogOrganizationFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'serialNumber': !exists(json, 'serialNumber') ? undefined : json['serialNumber'],
+        'serialNumber': !exists(json, 'serial_number') ? undefined : json['serial_number'],
         'name': !exists(json, 'name') ? undefined : json['name'],
     };
 }
@@ -57,7 +57,7 @@ export function ManagementTXLogOrganizationToJSON(value?: ManagementTXLogOrganiz
     }
     return {
         
-        'serialNumber': value.serialNumber,
+        'serial_number': value.serialNumber,
         'name': value.name,
     };
 }

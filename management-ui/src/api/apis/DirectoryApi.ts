@@ -63,7 +63,7 @@ export class DirectoryApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}`.replace(`{${"organization_serial_number"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -143,7 +143,7 @@ export class DirectoryApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests`.replace(`{${"organization_serial_number"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

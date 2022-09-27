@@ -44,7 +44,7 @@ export function ManagementListAccessGrantsForServiceResponseFromJSONTyped(json: 
     }
     return {
         
-        'accessGrants': !exists(json, 'accessGrants') ? undefined : ((json['accessGrants'] as Array<any>).map(ManagementAccessGrantFromJSON)),
+        'accessGrants': !exists(json, 'access_grants') ? undefined : ((json['access_grants'] as Array<any>).map(ManagementAccessGrantFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function ManagementListAccessGrantsForServiceResponseToJSON(value?: Manag
     }
     return {
         
-        'accessGrants': value.accessGrants === undefined ? undefined : ((value.accessGrants as Array<any>).map(ManagementAccessGrantToJSON)),
+        'access_grants': value.accessGrants === undefined ? undefined : ((value.accessGrants as Array<any>).map(ManagementAccessGrantToJSON)),
     };
 }
 

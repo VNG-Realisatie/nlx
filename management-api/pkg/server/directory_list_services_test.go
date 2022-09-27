@@ -123,7 +123,7 @@ func TestListDirectoryServices(t *testing.T) {
 				Name:         "Organization One",
 			},
 			ApiSpecificationType: "OpenAPI3",
-			DocumentationURL:     "https://example.com",
+			DocumentationUrl:     "https://example.com",
 			PublicSupportContact: "test@example.com",
 			State:                api.DirectoryService_STATE_UNSPECIFIED,
 			OneTimeCosts:         1,

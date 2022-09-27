@@ -71,8 +71,8 @@ export function ManagementAuditLogRecordMetadataFromJSONTyped(json: any, ignoreD
         'delegatee': !exists(json, 'delegatee') ? undefined : ManagementOrganizationFromJSON(json['delegatee']),
         'delegator': !exists(json, 'delegator') ? undefined : ManagementOrganizationFromJSON(json['delegator']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
-        'inwayName': !exists(json, 'inwayName') ? undefined : json['inwayName'],
-        'outwayName': !exists(json, 'outwayName') ? undefined : json['outwayName'],
+        'inwayName': !exists(json, 'inway_name') ? undefined : json['inway_name'],
+        'outwayName': !exists(json, 'outway_name') ? undefined : json['outway_name'],
     };
 }
 
@@ -88,8 +88,8 @@ export function ManagementAuditLogRecordMetadataToJSON(value?: ManagementAuditLo
         'delegatee': ManagementOrganizationToJSON(value.delegatee),
         'delegator': ManagementOrganizationToJSON(value.delegator),
         'reference': value.reference,
-        'inwayName': value.inwayName,
-        'outwayName': value.outwayName,
+        'inway_name': value.inwayName,
+        'outway_name': value.outwayName,
     };
 }
 

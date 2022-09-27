@@ -77,7 +77,7 @@ class IncomingAccessRequestsStore {
   approveAccessRequest = async ({ serviceName, id }) => {
     await this._managementApiClient.managementApproveIncomingAccessRequest({
       serviceName,
-      accessRequestID: id,
+      accessRequestId: id,
     })
     this.fetchForService({ name: serviceName })
   }
@@ -85,7 +85,7 @@ class IncomingAccessRequestsStore {
   rejectAccessRequest = async ({ serviceName, id }) => {
     await this._managementApiClient.managementRejectIncomingAccessRequest({
       serviceName,
-      accessRequestID: id,
+      accessRequestId: id,
     })
     this.fetchForService({ name: serviceName })
   }

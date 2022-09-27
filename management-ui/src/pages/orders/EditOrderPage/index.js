@@ -107,7 +107,7 @@ const EditOrderPage = () => {
               description: order.description,
               reference: order.reference,
               delegatee: order.delegatee.serialNumber,
-              publicKeyPEM: order.publicKeyPEM,
+              publicKeyPem: order.publicKeyPem,
               validFrom: order.validFrom,
               validUntil: order.validUntil,
               accessProofIds: order.accessProofs.map((model) => model.id),

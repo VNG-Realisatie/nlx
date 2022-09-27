@@ -84,7 +84,7 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 			},
 			Order:         order,
 			Data:          r.Data,
-			TransactionID: r.TransactionID,
+			TransactionId: r.TransactionID,
 			CreatedAt:     r.CreatedAt,
 		}
 	}

@@ -81,7 +81,7 @@ test('revoking an access grant', async () => {
   })
 
   expect(managementApiClient.managementRevokeAccessGrant).toHaveBeenCalledWith({
-    accessGrantID: 's1',
+    accessGrantId: 's1',
   })
   expect(accessGrantStore.fetchForService).toHaveBeenCalledWith({
     name: 'Service',

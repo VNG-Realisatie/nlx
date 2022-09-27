@@ -96,11 +96,11 @@ class DirectoryServicesStore {
     )
   }
 
-  async requestAccess(organizationSerialNumber, serviceName, publicKeyPEM) {
+  async requestAccess(organizationSerialNumber, serviceName, publicKeyPem) {
     return this._managementApiClient.managementSendAccessRequest({
       organizationSerialNumber: organizationSerialNumber,
       serviceName: serviceName,
-      publicKeyPEM: publicKeyPEM,
+      publicKeyPem: publicKeyPem,
     })
   }
 

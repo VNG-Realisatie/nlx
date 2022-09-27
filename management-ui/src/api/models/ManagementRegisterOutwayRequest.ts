@@ -30,7 +30,7 @@ export interface ManagementRegisterOutwayRequest {
      * @type {string}
      * @memberof ManagementRegisterOutwayRequest
      */
-    publicKeyPEM?: string;
+    publicKeyPem?: string;
     /**
      * 
      * @type {string}
@@ -42,7 +42,7 @@ export interface ManagementRegisterOutwayRequest {
      * @type {string}
      * @memberof ManagementRegisterOutwayRequest
      */
-    selfAddressAPI?: string;
+    selfAddressApi?: string;
 }
 
 export function ManagementRegisterOutwayRequestFromJSON(json: any): ManagementRegisterOutwayRequest {
@@ -56,9 +56,9 @@ export function ManagementRegisterOutwayRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
+        'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
         'version': !exists(json, 'version') ? undefined : json['version'],
-        'selfAddressAPI': !exists(json, 'selfAddressAPI') ? undefined : json['selfAddressAPI'],
+        'selfAddressApi': !exists(json, 'self_address_api') ? undefined : json['self_address_api'],
     };
 }
 
@@ -72,9 +72,9 @@ export function ManagementRegisterOutwayRequestToJSON(value?: ManagementRegister
     return {
         
         'name': value.name,
-        'publicKeyPEM': value.publicKeyPEM,
+        'public_key_pem': value.publicKeyPem,
         'version': value.version,
-        'selfAddressAPI': value.selfAddressAPI,
+        'self_address_api': value.selfAddressApi,
     };
 }
 

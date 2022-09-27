@@ -19,9 +19,7 @@ export const isServiceKnownInServiceListOfOutway = async (
 ): Promise<boolean> => {
   const result = await fetch(input, init);
   const responseText = await result.text();
-  const responseContainsInvalidService = responseText.includes(
-    "INVALID_URL"
-  );
+  const responseContainsInvalidService = responseText.includes("INVALID_URL");
   return Promise.resolve(!responseContainsInvalidService);
 };
 

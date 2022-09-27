@@ -57,7 +57,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             "arbitrary-pem",
+				PublicKeyPem:             "arbitrary-pem",
 			},
 			want:    nil,
 			wantErr: status.New(codes.Internal, "invalid public key format").Err(),
@@ -113,7 +113,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             testPublicKeyPEM,
+				PublicKeyPem:             testPublicKeyPEM,
 			},
 			want: &api.SendAccessRequestResponse{
 				OutgoingAccessRequest: &api.OutgoingAccessRequest{
@@ -194,7 +194,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             testPublicKeyPEM,
+				PublicKeyPem:             testPublicKeyPEM,
 			},
 			want: &api.SendAccessRequestResponse{
 				OutgoingAccessRequest: &api.OutgoingAccessRequest{
@@ -250,7 +250,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             testPublicKeyPEM,
+				PublicKeyPem:             testPublicKeyPEM,
 			},
 			want:    nil,
 			wantErr: status.New(codes.Internal, "internal").Err(),
@@ -290,7 +290,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             testPublicKeyPEM,
+				PublicKeyPem:             testPublicKeyPEM,
 			},
 			want:    nil,
 			wantErr: status.New(codes.Internal, "internal").Err(),
@@ -341,7 +341,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             testPublicKeyPEM,
+				PublicKeyPem:             testPublicKeyPEM,
 			},
 			want:    nil,
 			wantErr: status.New(codes.Internal, "internal").Err(),
@@ -403,7 +403,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
 				ServiceName:              "my-service",
-				PublicKeyPEM:             testPublicKeyPEM,
+				PublicKeyPem:             testPublicKeyPEM,
 			},
 			want: &api.SendAccessRequestResponse{
 				OutgoingAccessRequest: &api.OutgoingAccessRequest{

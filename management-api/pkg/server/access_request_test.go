@@ -50,7 +50,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateAdminUserContext,
 			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			setup: func(mocks serviceMocks) {
 				mocks.db.EXPECT().GetIncomingAccessRequest(gomock.Any(), uint(1)).Return(nil, database.ErrNotFound)
@@ -73,7 +73,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateAdminUserContext,
 			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			err: status.Error(codes.AlreadyExists, "access request is already approved"),
 		},
@@ -87,7 +87,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateUserWithoutPermissionsContext,
 			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			err: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.incoming_access_request.approve\" to execute this request"),
 		},
@@ -112,7 +112,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateAdminUserContext,
 			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			response: nil,
 			err:      status.Error(codes.Internal, "database error"),
@@ -150,7 +150,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateAdminUserContext,
 			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			response: &emptypb.Empty{},
 			err:      nil,
@@ -260,7 +260,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			setup: func(mocks serviceMocks) {},
 			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			err: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.incoming_access_request.reject\" to execute this request"),
 		},
@@ -274,7 +274,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			},
 			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			err: status.Error(codes.NotFound, "access request not found"),
 		},
@@ -300,7 +300,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateAdminUserContext(),
 			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			err: status.Error(codes.Internal, "database error"),
 		},
@@ -326,7 +326,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 			ctx: testCreateAdminUserContext(),
 			request: &api.RejectIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
-				AccessRequestID: 1,
+				AccessRequestId: 1,
 			},
 			response: &emptypb.Empty{},
 			err:      nil,

@@ -15,12 +15,12 @@
     "name" : "TXLog"
   } ],
   "paths" : {
-    "/api/v1/access-grants/services/{serviceName}" : {
+    "/api/v1/access-grants/services/{service_name}" : {
       "get" : {
         "operationId" : "Management_ListAccessGrantsForService",
         "parameters" : [ {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -51,12 +51,12 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-grants/{accessGrantID}/revoke" : {
+    "/api/v1/access-grants/{access_grant_id}/revoke" : {
       "post" : {
         "operationId" : "Management_RevokeAccessGrant",
         "parameters" : [ {
           "in" : "path",
-          "name" : "accessGrantID",
+          "name" : "access_grant_id",
           "required" : true,
           "schema" : {
             "format" : "uint64",
@@ -88,12 +88,12 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests/incoming/services/{serviceName}" : {
+    "/api/v1/access-requests/incoming/services/{service_name}" : {
       "get" : {
         "operationId" : "Management_ListIncomingAccessRequests",
         "parameters" : [ {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -124,19 +124,19 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/approve" : {
+    "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve" : {
       "post" : {
         "operationId" : "Management_ApproveIncomingAccessRequest",
         "parameters" : [ {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "path",
-          "name" : "accessRequestID",
+          "name" : "access_request_id",
           "required" : true,
           "schema" : {
             "format" : "uint64",
@@ -168,19 +168,19 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests/incoming/services/{serviceName}/{accessRequestID}/reject" : {
+    "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject" : {
       "post" : {
         "operationId" : "Management_RejectIncomingAccessRequest",
         "parameters" : [ {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "path",
-          "name" : "accessRequestID",
+          "name" : "access_request_id",
           "required" : true,
           "schema" : {
             "format" : "uint64",
@@ -240,26 +240,26 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}" : {
+    "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}" : {
       "post" : {
         "operationId" : "Management_SendAccessRequest",
         "parameters" : [ {
           "in" : "path",
-          "name" : "organizationSerialNumber",
+          "name" : "organization_serial_number",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "query",
-          "name" : "publicKeyPEM",
+          "name" : "public_key_pem",
           "schema" : {
             "type" : "string"
           }
@@ -289,19 +289,19 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize" : {
+    "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize" : {
       "get" : {
         "operationId" : "Management_SynchronizeOutgoingAccessRequests",
         "parameters" : [ {
           "in" : "path",
-          "name" : "organizationSerialNumber",
+          "name" : "organization_serial_number",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -360,19 +360,19 @@
         "tags" : [ "Management" ]
       }
     },
-    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}" : {
+    "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}" : {
       "get" : {
         "operationId" : "Directory_GetOrganizationService",
         "parameters" : [ {
           "in" : "path",
-          "name" : "organizationSerialNumber",
+          "name" : "organization_serial_number",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -403,19 +403,19 @@
         "tags" : [ "Directory" ]
       }
     },
-    "/api/v1/directory/organizations/{organizationSerialNumber}/services/{serviceName}/access-requests" : {
+    "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests" : {
       "post" : {
         "operationId" : "Directory_RequestAccessToService",
         "parameters" : [ {
           "in" : "path",
-          "name" : "organizationSerialNumber",
+          "name" : "organization_serial_number",
           "required" : true,
           "schema" : {
             "type" : "string"
           }
         }, {
           "in" : "path",
-          "name" : "serviceName",
+          "name" : "service_name",
           "required" : true,
           "schema" : {
             "type" : "string"
@@ -1433,10 +1433,10 @@
       },
       "DirectoryServiceAccessState" : {
         "properties" : {
-          "accessRequest" : {
+          "access_request" : {
             "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
           },
-          "accessProof" : {
+          "access_proof" : {
             "$ref" : "#/components/schemas/managementAccessProof"
           }
         },
@@ -1456,21 +1456,21 @@
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "serviceName" : {
+          "service_name" : {
             "type" : "string"
           },
-          "publicKeyFingerprint" : {
+          "public_key_fingerprint" : {
             "type" : "string"
           },
-          "createdAt" : {
+          "created_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "revokedAt" : {
+          "revoked_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "accessRequestId" : {
+          "access_request_id" : {
             "format" : "uint64",
             "type" : "string"
           }
@@ -1521,7 +1521,7 @@
           "action" : {
             "$ref" : "#/components/schemas/AuditLogRecordActionType"
           },
-          "operatingSystem" : {
+          "operating_system" : {
             "type" : "string"
           },
           "browser" : {
@@ -1539,7 +1539,7 @@
             },
             "type" : "array"
           },
-          "createdAt" : {
+          "created_at" : {
             "format" : "date-time",
             "type" : "string"
           },
@@ -1560,10 +1560,10 @@
           "reference" : {
             "type" : "string"
           },
-          "inwayName" : {
+          "inway_name" : {
             "type" : "string"
           },
-          "outwayName" : {
+          "outway_name" : {
             "type" : "string"
           }
         },
@@ -1588,21 +1588,21 @@
           "description" : {
             "type" : "string"
           },
-          "publicKeyPEM" : {
+          "public_key_pem" : {
             "type" : "string"
           },
           "delegatee" : {
             "type" : "string"
           },
-          "validFrom" : {
+          "valid_from" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "validUntil" : {
+          "valid_until" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "accessProofIds" : {
+          "access_proof_ids" : {
             "items" : {
               "format" : "uint64",
               "type" : "string"
@@ -1617,22 +1617,22 @@
           "name" : {
             "type" : "string"
           },
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
           "inways" : {
@@ -1641,15 +1641,15 @@
             },
             "type" : "array"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }
@@ -1661,22 +1661,22 @@
           "name" : {
             "type" : "string"
           },
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
           "inways" : {
@@ -1685,15 +1685,15 @@
             },
             "type" : "array"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }
@@ -1713,37 +1713,37 @@
       },
       "managementDirectoryService" : {
         "properties" : {
-          "serviceName" : {
+          "service_name" : {
             "type" : "string"
           },
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "apiSpecificationType" : {
+          "api_specification_type" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
           "state" : {
             "$ref" : "#/components/schemas/DirectoryServiceState"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "accessStates" : {
+          "access_states" : {
             "items" : {
               "$ref" : "#/components/schemas/DirectoryServiceAccessState"
             },
@@ -1775,7 +1775,7 @@
           "cause" : {
             "type" : "string"
           },
-          "stackTrace" : {
+          "stack_trace" : {
             "items" : {
               "type" : "string"
             },
@@ -1792,7 +1792,7 @@
             },
             "type" : "array"
           },
-          "isOrganizationInway" : {
+          "is_organization_inway" : {
             "type" : "boolean"
           }
         },
@@ -1803,36 +1803,36 @@
           "name" : {
             "type" : "string"
           },
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
-          "authorizationSettings" : {
+          "authorization_settings" : {
             "$ref" : "#/components/schemas/managementGetInwayConfigResponseServiceAuthorizationSettings"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }
@@ -1855,10 +1855,10 @@
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "publicKeyHash" : {
+          "public_key_hash" : {
             "type" : "string"
           },
-          "publicKeyPEM" : {
+          "public_key_pem" : {
             "type" : "string"
           }
         },
@@ -1869,22 +1869,22 @@
           "name" : {
             "type" : "string"
           },
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
           "inways" : {
@@ -1893,15 +1893,15 @@
             },
             "type" : "array"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }
@@ -1947,21 +1947,21 @@
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "serviceName" : {
+          "service_name" : {
             "type" : "string"
           },
           "state" : {
             "$ref" : "#/components/schemas/managementAccessRequestState"
           },
-          "createdAt" : {
+          "created_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "updatedAt" : {
+          "updated_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "publicKeyFingerprint" : {
+          "public_key_fingerprint" : {
             "type" : "string"
           }
         },
@@ -2010,7 +2010,7 @@
           "hostname" : {
             "type" : "string"
           },
-          "selfAddress" : {
+          "self_address" : {
             "type" : "string"
           },
           "services" : {
@@ -2019,7 +2019,7 @@
             },
             "type" : "array"
           },
-          "ipAddress" : {
+          "ip_address" : {
             "type" : "string"
           }
         },
@@ -2051,7 +2051,7 @@
       },
       "managementListAccessGrantsForServiceResponse" : {
         "properties" : {
-          "accessGrants" : {
+          "access_grants" : {
             "items" : {
               "$ref" : "#/components/schemas/managementAccessGrant"
             },
@@ -2062,7 +2062,7 @@
       },
       "managementListAuditLogsResponse" : {
         "properties" : {
-          "auditLogs" : {
+          "audit_logs" : {
             "items" : {
               "$ref" : "#/components/schemas/managementAuditLogRecord"
             },
@@ -2073,7 +2073,7 @@
       },
       "managementListIncomingAccessRequestsResponse" : {
         "properties" : {
-          "accessRequests" : {
+          "access_requests" : {
             "items" : {
               "$ref" : "#/components/schemas/managementIncomingAccessRequest"
             },
@@ -2142,25 +2142,25 @@
           "name" : {
             "type" : "string"
           },
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
-          "authorizationSettings" : {
+          "authorization_settings" : {
             "$ref" : "#/components/schemas/managementListServicesResponseServiceAuthorizationSettings"
           },
           "inways" : {
@@ -2169,19 +2169,19 @@
             },
             "type" : "array"
           },
-          "incomingAccessRequestCount" : {
+          "incoming_access_request_count" : {
             "format" : "int64",
             "type" : "integer"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }
@@ -2207,10 +2207,10 @@
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "publicKeyHash" : {
+          "public_key_hash" : {
             "type" : "string"
           },
-          "publicKeyPEM" : {
+          "public_key_pem" : {
             "type" : "string"
           }
         },
@@ -2247,24 +2247,24 @@
           "organization" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "serviceName" : {
+          "service_name" : {
             "type" : "string"
           },
           "state" : {
             "$ref" : "#/components/schemas/managementAccessRequestState"
           },
-          "createdAt" : {
+          "created_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "updatedAt" : {
+          "updated_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "errorDetails" : {
+          "error_details" : {
             "$ref" : "#/components/schemas/managementErrorDetails"
           },
-          "publicKeyFingerprint" : {
+          "public_key_fingerprint" : {
             "type" : "string"
           }
         },
@@ -2281,25 +2281,25 @@
           "delegatee" : {
             "$ref" : "#/components/schemas/managementOrganization"
           },
-          "validFrom" : {
+          "valid_from" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "validUntil" : {
+          "valid_until" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "accessProofs" : {
+          "access_proofs" : {
             "items" : {
               "$ref" : "#/components/schemas/managementAccessProof"
             },
             "type" : "array"
           },
-          "revokedAt" : {
+          "revoked_at" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "publicKeyPem" : {
+          "public_key_pem" : {
             "type" : "string"
           }
         },
@@ -2310,19 +2310,19 @@
           "name" : {
             "type" : "string"
           },
-          "ipAddress" : {
+          "ip_address" : {
             "type" : "string"
           },
-          "publicKeyPEM" : {
+          "public_key_pem" : {
             "type" : "string"
           },
           "version" : {
             "type" : "string"
           },
-          "publicKeyFingerprint" : {
+          "public_key_fingerprint" : {
             "type" : "string"
           },
-          "selfAddressAPI" : {
+          "self_address_api" : {
             "type" : "string"
           }
         },
@@ -2333,13 +2333,13 @@
           "name" : {
             "type" : "string"
           },
-          "publicKeyPEM" : {
+          "public_key_pem" : {
             "type" : "string"
           },
           "version" : {
             "type" : "string"
           },
-          "selfAddressAPI" : {
+          "self_address_api" : {
             "type" : "string"
           }
         },
@@ -2347,7 +2347,7 @@
       },
       "managementSendAccessRequestResponse" : {
         "properties" : {
-          "outgoingAccessRequest" : {
+          "outgoing_access_request" : {
             "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
           }
         },
@@ -2358,7 +2358,7 @@
           "name" : {
             "type" : "string"
           },
-          "incomingAccessRequestCount" : {
+          "incoming_access_request_count" : {
             "format" : "int64",
             "type" : "integer"
           }
@@ -2367,10 +2367,10 @@
       },
       "managementSettings" : {
         "properties" : {
-          "organizationInway" : {
+          "organization_inway" : {
             "type" : "string"
           },
-          "organizationEmailAddress" : {
+          "organization_email_address" : {
             "type" : "string"
           }
         },
@@ -2416,7 +2416,7 @@
       },
       "managementTXLogOrganization" : {
         "properties" : {
-          "serialNumber" : {
+          "serial_number" : {
             "type" : "string"
           },
           "name" : {
@@ -2445,10 +2445,10 @@
           "order" : {
             "$ref" : "#/components/schemas/managementTXLogOrder"
           },
-          "TransactionID" : {
+          "transaction_id" : {
             "type" : "string"
           },
-          "createdAt" : {
+          "created_at" : {
             "format" : "date-time",
             "type" : "string"
           }
@@ -2471,21 +2471,21 @@
           "description" : {
             "type" : "string"
           },
-          "publicKeyPEM" : {
+          "public_key_pem" : {
             "type" : "string"
           },
           "delegatee" : {
             "type" : "string"
           },
-          "validFrom" : {
+          "valid_from" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "validUntil" : {
+          "valid_until" : {
             "format" : "date-time",
             "type" : "string"
           },
-          "accessProofIds" : {
+          "access_proof_ids" : {
             "items" : {
               "format" : "uint64",
               "type" : "string"
@@ -2500,22 +2500,22 @@
           "name" : {
             "type" : "string"
           },
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
           "inways" : {
@@ -2524,15 +2524,15 @@
             },
             "type" : "array"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }
@@ -2541,10 +2541,10 @@
       },
       "managementUpdateSettingsRequest" : {
         "properties" : {
-          "organizationInway" : {
+          "organization_inway" : {
             "type" : "string"
           },
-          "organizationEmailAddress" : {
+          "organization_email_address" : {
             "type" : "string"
           }
         },
@@ -2581,22 +2581,22 @@
       },
       "Management_UpdateService_request" : {
         "properties" : {
-          "endpointURL" : {
+          "endpoint_url" : {
             "type" : "string"
           },
-          "documentationURL" : {
+          "documentation_url" : {
             "type" : "string"
           },
-          "apiSpecificationURL" : {
+          "api_specification_url" : {
             "type" : "string"
           },
           "internal" : {
             "type" : "boolean"
           },
-          "techSupportContact" : {
+          "tech_support_contact" : {
             "type" : "string"
           },
-          "publicSupportContact" : {
+          "public_support_contact" : {
             "type" : "string"
           },
           "inways" : {
@@ -2605,15 +2605,15 @@
             },
             "type" : "array"
           },
-          "oneTimeCosts" : {
+          "one_time_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "monthlyCosts" : {
+          "monthly_costs" : {
             "format" : "int32",
             "type" : "integer"
           },
-          "requestCosts" : {
+          "request_costs" : {
             "format" : "int32",
             "type" : "integer"
           }

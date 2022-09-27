@@ -175,7 +175,7 @@ func TestTXLogListRecords(t *testing.T) {
 							Reference: "test-reference",
 						},
 						Data:          `{"test":"data"}`,
-						TransactionID: "abcd",
+						TransactionId: "abcd",
 						CreatedAt:     timestamppb.New(now),
 					},
 				},

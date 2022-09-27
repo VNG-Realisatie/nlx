@@ -49,7 +49,7 @@ test('sending an outgoing access request', async () => {
     body: {
       organizationSerialNumber: '00000000000000000001',
       serviceName: 'service-name',
-      publicKeyPEM: 'public-key-pem',
+      publicKeyPem: 'public-key-pem',
     },
   })
 

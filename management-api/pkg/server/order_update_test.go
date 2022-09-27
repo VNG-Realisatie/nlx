@@ -42,7 +42,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 			Reference:      "a-reference",
 			Description:    "a-description",
 			Delegatee:      "00000000000000000001",
-			PublicKeyPEM:   testPublicKeyPEM,
+			PublicKeyPem:   testPublicKeyPEM,
 			ValidFrom:      timestamppb.New(validFrom),
 			ValidUntil:     timestamppb.New(validUntil),
 			AccessProofIds: []uint64{1},
@@ -154,7 +154,7 @@ func TestUpdateOutgoingOrder(t *testing.T) {
 		"when_providing_an_invalid_public_key": {
 			request: func() *api.UpdateOutgoingOrderRequest {
 				request := validOutgoingOrderRequest()
-				request.PublicKeyPEM = "invalid"
+				request.PublicKeyPem = "invalid"
 				return &request
 			}(),
 			ctx: testCreateAdminUserContext(),

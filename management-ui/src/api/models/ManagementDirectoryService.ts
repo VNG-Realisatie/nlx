@@ -61,7 +61,7 @@ export interface ManagementDirectoryService {
      * @type {string}
      * @memberof ManagementDirectoryService
      */
-    documentationURL?: string;
+    documentationUrl?: string;
     /**
      * 
      * @type {string}
@@ -110,16 +110,16 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'serviceName': !exists(json, 'serviceName') ? undefined : json['serviceName'],
+        'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
         'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
-        'apiSpecificationType': !exists(json, 'apiSpecificationType') ? undefined : json['apiSpecificationType'],
-        'documentationURL': !exists(json, 'documentationURL') ? undefined : json['documentationURL'],
-        'publicSupportContact': !exists(json, 'publicSupportContact') ? undefined : json['publicSupportContact'],
+        'apiSpecificationType': !exists(json, 'api_specification_type') ? undefined : json['api_specification_type'],
+        'documentationUrl': !exists(json, 'documentation_url') ? undefined : json['documentation_url'],
+        'publicSupportContact': !exists(json, 'public_support_contact') ? undefined : json['public_support_contact'],
         'state': !exists(json, 'state') ? undefined : DirectoryServiceStateFromJSON(json['state']),
-        'oneTimeCosts': !exists(json, 'oneTimeCosts') ? undefined : json['oneTimeCosts'],
-        'monthlyCosts': !exists(json, 'monthlyCosts') ? undefined : json['monthlyCosts'],
-        'requestCosts': !exists(json, 'requestCosts') ? undefined : json['requestCosts'],
-        'accessStates': !exists(json, 'accessStates') ? undefined : ((json['accessStates'] as Array<any>).map(DirectoryServiceAccessStateFromJSON)),
+        'oneTimeCosts': !exists(json, 'one_time_costs') ? undefined : json['one_time_costs'],
+        'monthlyCosts': !exists(json, 'monthly_costs') ? undefined : json['monthly_costs'],
+        'requestCosts': !exists(json, 'request_costs') ? undefined : json['request_costs'],
+        'accessStates': !exists(json, 'access_states') ? undefined : ((json['access_states'] as Array<any>).map(DirectoryServiceAccessStateFromJSON)),
     };
 }
 
@@ -132,16 +132,16 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
     }
     return {
         
-        'serviceName': value.serviceName,
+        'service_name': value.serviceName,
         'organization': ManagementOrganizationToJSON(value.organization),
-        'apiSpecificationType': value.apiSpecificationType,
-        'documentationURL': value.documentationURL,
-        'publicSupportContact': value.publicSupportContact,
+        'api_specification_type': value.apiSpecificationType,
+        'documentation_url': value.documentationUrl,
+        'public_support_contact': value.publicSupportContact,
         'state': DirectoryServiceStateToJSON(value.state),
-        'oneTimeCosts': value.oneTimeCosts,
-        'monthlyCosts': value.monthlyCosts,
-        'requestCosts': value.requestCosts,
-        'accessStates': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryServiceAccessStateToJSON)),
+        'one_time_costs': value.oneTimeCosts,
+        'monthly_costs': value.monthlyCosts,
+        'request_costs': value.requestCosts,
+        'access_states': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryServiceAccessStateToJSON)),
     };
 }
 

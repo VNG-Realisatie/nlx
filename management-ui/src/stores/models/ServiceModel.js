@@ -5,9 +5,9 @@ import { makeAutoObservable, reaction } from 'mobx'
 
 class ServiceModel {
   name = ''
-  endpointURL = ''
-  documentationURL = ''
-  apiSpecificationURL = ''
+  endpointUrl = ''
+  documentationUrl = ''
+  apiSpecificationUrl = ''
   internal = false
   techSupportContact = ''
   publicSupportContact = ''
@@ -55,16 +55,16 @@ class ServiceModel {
   }
 
   update = (service) => {
-    if (service.endpointURL) {
-      this.endpointURL = service.endpointURL
+    if (service.endpointUrl) {
+      this.endpointUrl = service.endpointUrl
     }
 
-    if (service.documentationURL) {
-      this.documentationURL = service.documentationURL
+    if (service.documentationUrl) {
+      this.documentationUrl = service.documentationUrl
     }
 
-    if (service.apiSpecificationURL) {
-      this.apiSpecificationURL = service.apiSpecificationURL
+    if (service.apiSpecificationUrl) {
+      this.apiSpecificationUrl = service.apiSpecificationUrl
     }
 
     if (service.internal) {

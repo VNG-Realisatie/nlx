@@ -29,8 +29,8 @@ func (req *RegisterOutwayRequest) Validate() error {
 	return validation.ValidateStruct(
 		req,
 		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
-		validation.Field(&req.PublicKeyPEM, validation.Required),
-		validation.Field(&req.SelfAddressAPI, validation.Required),
+		validation.Field(&req.PublicKeyPem, validation.Required),
+		validation.Field(&req.SelfAddressApi, validation.Required),
 		validation.Field(&req.Version, validation.Required),
 	)
 }
@@ -40,9 +40,9 @@ func (req *CreateServiceRequest) Validate() error {
 	return validation.ValidateStruct(
 		req,
 		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
-		validation.Field(&req.EndpointURL, validation.Required, is.URL),
-		validation.Field(&req.DocumentationURL, is.URL),
-		validation.Field(&req.ApiSpecificationURL, is.URL),
+		validation.Field(&req.EndpointUrl, validation.Required, is.URL),
+		validation.Field(&req.DocumentationUrl, is.URL),
+		validation.Field(&req.ApiSpecificationUrl, is.URL),
 	)
 }
 
@@ -51,8 +51,8 @@ func (req *UpdateServiceRequest) Validate() error {
 	return validation.ValidateStruct(
 		req,
 		validation.Field(&req.Name, validation.Required, validation.Match(nameRegex)),
-		validation.Field(&req.EndpointURL, validation.Required, is.URL),
-		validation.Field(&req.DocumentationURL, is.URL),
-		validation.Field(&req.ApiSpecificationURL, is.URL),
+		validation.Field(&req.EndpointUrl, validation.Required, is.URL),
+		validation.Field(&req.DocumentationUrl, is.URL),
+		validation.Field(&req.ApiSpecificationUrl, is.URL),
 	)
 }

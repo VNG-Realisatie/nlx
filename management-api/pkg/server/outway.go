@@ -44,7 +44,7 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outway: %s", err))
 	}
 
-	fingerPrint, err := common_tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPEM))
+	fingerPrint, err := common_tls.PemPublicKeyFingerprint([]byte(req.PublicKeyPem))
 	if err != nil {
 		logger.Error("unable to generate public key fingerprint", zap.Error(err))
 		return nil, status.Error(codes.InvalidArgument, "invalid public key")
@@ -62,8 +62,8 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 			IPNet:  ipAddress,
 			Status: pgtype.Present,
 		},
-		SelfAddressAPI:       req.SelfAddressAPI,
-		PublicKeyPEM:         req.PublicKeyPEM,
+		SelfAddressAPI:       req.SelfAddressApi,
+		PublicKeyPEM:         req.PublicKeyPem,
 		PublicKeyFingerprint: fingerPrint,
 		Version:              req.Version,
 	}
@@ -145,9 +145,9 @@ func getCIDRFromTCPAddress(tcpAddress *net.TCPAddr) (*net.IPNet, error) {
 func convertFromDatabaseOutway(model *database.Outway) *api.Outway {
 	outway := &api.Outway{
 		Name:                 model.Name,
-		PublicKeyPEM:         model.PublicKeyPEM,
+		PublicKeyPem:         model.PublicKeyPEM,
 		PublicKeyFingerprint: model.PublicKeyFingerprint,
-		SelfAddressAPI:       model.SelfAddressAPI,
+		SelfAddressApi:       model.SelfAddressAPI,
 		Version:              model.Version,
 	}
 

@@ -23,7 +23,7 @@ When(
     await driver.findElement(By.linkText("Service toevoegen")).click();
     await driver.findElement(By.name("name")).sendKeys(serviceName);
     await driver
-      .findElement(By.name("endpointURL"))
+      .findElement(By.name("endpointUrl"))
       .sendKeys("http://example.com");
     await driver
       .findElement(By.xpath(`//input[@value = '${org.defaultInway.name}']`))

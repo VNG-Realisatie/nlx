@@ -8,7 +8,7 @@ import ExternalLinkSection from './index'
 
 test('render two links that open in new window', async () => {
   const service = {
-    documentationURL: 'https://link.to.somewhere', // this will remove the disabled=true from documentationButton
+    documentationUrl: 'https://link.to.somewhere', // this will remove the disabled=true from documentationButton
     organization: {
       name: 'NLX',
       serialNumber: '01234567890123456789',
@@ -28,7 +28,7 @@ test('render two links that open in new window', async () => {
 
 test('render disabled buttons', async () => {
   const service = {
-    documentationURL: '',
+    documentationUrl: '',
     organization: {
       name: 'NLX',
       serialNumber: '01234567890123456789',

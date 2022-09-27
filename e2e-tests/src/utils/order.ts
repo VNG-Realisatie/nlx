@@ -69,7 +69,7 @@ export const createOrder = async (
         reference: orderReference,
         description: "arbitrary description",
         delegatee: delegatee.serialNumber,
-        publicKeyPEM: delegateeOutway.publicKeyPEM,
+        publicKeyPem: delegateeOutway.publicKeyPem,
         validFrom: validFrom,
         validUntil: validUntil,
         accessProofIds: [`${accessStateForService?.accessProof?.id}`],

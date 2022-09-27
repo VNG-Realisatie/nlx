@@ -51,7 +51,7 @@ export function ManagementGetInwayConfigResponseFromJSONTyped(json: any, ignoreD
     return {
         
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementGetInwayConfigResponseServiceFromJSON)),
-        'isOrganizationInway': !exists(json, 'isOrganizationInway') ? undefined : json['isOrganizationInway'],
+        'isOrganizationInway': !exists(json, 'is_organization_inway') ? undefined : json['is_organization_inway'],
     };
 }
 
@@ -65,7 +65,7 @@ export function ManagementGetInwayConfigResponseToJSON(value?: ManagementGetInwa
     return {
         
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementGetInwayConfigResponseServiceToJSON)),
-        'isOrganizationInway': value.isOrganizationInway,
+        'is_organization_inway': value.isOrganizationInway,
     };
 }
 

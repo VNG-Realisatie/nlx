@@ -43,8 +43,8 @@ export function ManagementUpdateSettingsRequestFromJSONTyped(json: any, ignoreDi
     }
     return {
         
-        'organizationInway': !exists(json, 'organizationInway') ? undefined : json['organizationInway'],
-        'organizationEmailAddress': !exists(json, 'organizationEmailAddress') ? undefined : json['organizationEmailAddress'],
+        'organizationInway': !exists(json, 'organization_inway') ? undefined : json['organization_inway'],
+        'organizationEmailAddress': !exists(json, 'organization_email_address') ? undefined : json['organization_email_address'],
     };
 }
 
@@ -57,8 +57,8 @@ export function ManagementUpdateSettingsRequestToJSON(value?: ManagementUpdateSe
     }
     return {
         
-        'organizationInway': value.organizationInway,
-        'organizationEmailAddress': value.organizationEmailAddress,
+        'organization_inway': value.organizationInway,
+        'organization_email_address': value.organizationEmailAddress,
     };
 }
 

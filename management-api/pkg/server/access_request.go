@@ -98,7 +98,7 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, err
 	}
 
-	accessRequest, err := s.getIncomingAccessRequest(ctx, req.AccessRequestID)
+	accessRequest, err := s.getIncomingAccessRequest(ctx, req.AccessRequestId)
 	if err != nil {
 		return nil, err
 	}
@@ -139,12 +139,12 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, err
 	}
 
-	accessRequest, err := s.getIncomingAccessRequest(ctx, req.AccessRequestID)
+	accessRequest, err := s.getIncomingAccessRequest(ctx, req.AccessRequestId)
 	if err != nil {
 		s.logger.Error(
 			"getting incoming access request of request",
 			zap.String("serviceName", req.ServiceName),
-			zap.Uint("accessRequestID", uint(req.AccessRequestID)),
+			zap.Uint("accessRequestID", uint(req.AccessRequestId)),
 			zap.Error(err),
 		)
 

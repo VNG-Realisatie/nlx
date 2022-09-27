@@ -30,7 +30,7 @@ func TestUpdateService(t *testing.T) {
 			setup: func(t *testing.T, mocks serviceMocks) {},
 			request: &api.UpdateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "my-service.test",
+				EndpointUrl: "my-service.test",
 				Inways:      []string{},
 			},
 			wantErr: status.New(codes.PermissionDenied, "user needs the permission \"permissions.service.update\" to execute this request").Err(),
@@ -51,12 +51,12 @@ func TestUpdateService(t *testing.T) {
 			},
 			request: &api.UpdateServiceRequest{
 				Name:        "my-service",
-				EndpointURL: "my-service.test",
+				EndpointUrl: "my-service.test",
 				Inways:      []string{},
 			},
 			want: &api.UpdateServiceResponse{
 				Name:        "my-service",
-				EndpointURL: "my-service.test",
+				EndpointUrl: "my-service.test",
 				Inways:      []string{},
 			},
 		},

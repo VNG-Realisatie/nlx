@@ -36,7 +36,7 @@ export interface ManagementOutway {
      * @type {string}
      * @memberof ManagementOutway
      */
-    publicKeyPEM?: string;
+    publicKeyPem?: string;
     /**
      * 
      * @type {string}
@@ -54,7 +54,7 @@ export interface ManagementOutway {
      * @type {string}
      * @memberof ManagementOutway
      */
-    selfAddressAPI?: string;
+    selfAddressApi?: string;
 }
 
 export function ManagementOutwayFromJSON(json: any): ManagementOutway {
@@ -68,11 +68,11 @@ export function ManagementOutwayFromJSONTyped(json: any, ignoreDiscriminator: bo
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'ipAddress': !exists(json, 'ipAddress') ? undefined : json['ipAddress'],
-        'publicKeyPEM': !exists(json, 'publicKeyPEM') ? undefined : json['publicKeyPEM'],
+        'ipAddress': !exists(json, 'ip_address') ? undefined : json['ip_address'],
+        'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
         'version': !exists(json, 'version') ? undefined : json['version'],
-        'publicKeyFingerprint': !exists(json, 'publicKeyFingerprint') ? undefined : json['publicKeyFingerprint'],
-        'selfAddressAPI': !exists(json, 'selfAddressAPI') ? undefined : json['selfAddressAPI'],
+        'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
+        'selfAddressApi': !exists(json, 'self_address_api') ? undefined : json['self_address_api'],
     };
 }
 
@@ -86,11 +86,11 @@ export function ManagementOutwayToJSON(value?: ManagementOutway | null): any {
     return {
         
         'name': value.name,
-        'ipAddress': value.ipAddress,
-        'publicKeyPEM': value.publicKeyPEM,
+        'ip_address': value.ipAddress,
+        'public_key_pem': value.publicKeyPem,
         'version': value.version,
-        'publicKeyFingerprint': value.publicKeyFingerprint,
-        'selfAddressAPI': value.selfAddressAPI,
+        'public_key_fingerprint': value.publicKeyFingerprint,
+        'self_address_api': value.selfAddressApi,
     };
 }
 

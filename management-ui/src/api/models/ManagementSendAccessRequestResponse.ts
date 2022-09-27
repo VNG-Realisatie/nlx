@@ -44,7 +44,7 @@ export function ManagementSendAccessRequestResponseFromJSONTyped(json: any, igno
     }
     return {
         
-        'outgoingAccessRequest': !exists(json, 'outgoingAccessRequest') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['outgoingAccessRequest']),
+        'outgoingAccessRequest': !exists(json, 'outgoing_access_request') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['outgoing_access_request']),
     };
 }
 
@@ -57,7 +57,7 @@ export function ManagementSendAccessRequestResponseToJSON(value?: ManagementSend
     }
     return {
         
-        'outgoingAccessRequest': ManagementOutgoingAccessRequestToJSON(value.outgoingAccessRequest),
+        'outgoing_access_request': ManagementOutgoingAccessRequestToJSON(value.outgoingAccessRequest),
     };
 }
 

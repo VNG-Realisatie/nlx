@@ -146,7 +146,7 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_RECEIVED,
+						State: api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 					}, nil)
 
 				mocks.db.
@@ -193,7 +193,7 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_APPROVED,
+						State: api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED,
 					}, nil)
 
 				mocks.mc.
@@ -267,7 +267,7 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_RECEIVED,
+						State: api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 					}, nil)
 
 				mocks.db.

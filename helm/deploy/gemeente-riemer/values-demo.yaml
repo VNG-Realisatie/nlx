@@ -52,8 +52,8 @@ ca:
 managementAPI:
   serviceParkeerrechten:
     name: parkeerrechten
-    endpointURL: http://gemeente-riemer-parkeerrechten-api:8000
-    apiSpecificationURL: http://gemeente-riemer-parkeerrechten-api:8000/schema?format=openapi-json
+    endpointUrl: http://gemeente-riemer-parkeerrechten-api:8000
+    apiSpecificationUrl: http://gemeente-riemer-parkeerrechten-api:8000/schema?format=openapi-json
     publicSupportContact: support@nlx.io
     documentationUrl: https://docs.nlx.io
     inways:
