@@ -54,7 +54,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 
 	logger := s.logger.With(zap.String("handler", "update-settings"))
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -65,7 +65,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	err = s.auditLogger.OrganizationSettingsUpdate(ctx, userInfo.Email, userInfo.UserAgent)
+	err = s.auditLogger.OrganizationSettingsUpdate(ctx, userInfo.Email, userAgent)
 	if err != nil {
 		logger.Error("could not create audit log", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not create audit log")

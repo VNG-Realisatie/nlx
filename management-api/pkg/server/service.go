@@ -49,13 +49,13 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 		RequestCosts:         int(request.RequestCosts),
 	}
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceCreate(ctx, userInfo.Email, userInfo.UserAgent, request.Name)
+	err = s.auditLogger.ServiceCreate(ctx, userInfo.Email, userAgent, request.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -70,7 +70,6 @@ func (s *ManagementService) CreateService(ctx context.Context, request *api.Crea
 	return convertToCreateServiceResponseFromCreateServiceRequest(request), nil
 }
 
-// GetService returns a specific service
 func (s *ManagementService) GetService(ctx context.Context, req *api.GetServiceRequest) (*api.GetServiceResponse, error) {
 	err := s.authorize(ctx, permissions.ReadService)
 	if err != nil {
@@ -135,13 +134,13 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	service.MonthlyCosts = int(req.MonthlyCosts)
 	service.RequestCosts = int(req.RequestCosts)
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceUpdate(ctx, userInfo.Email, userInfo.UserAgent, service.Name)
+	err = s.auditLogger.ServiceUpdate(ctx, userInfo.Email, userAgent, service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -170,13 +169,13 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteService")
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.ServiceDelete(ctx, userInfo.Email, userInfo.UserAgent, req.Name)
+	err = s.auditLogger.ServiceDelete(ctx, userInfo.Email, userAgent, req.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

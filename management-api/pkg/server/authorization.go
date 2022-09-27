@@ -6,6 +6,7 @@ package server
 import (
 	"context"
 
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -14,8 +15,9 @@ import (
 )
 
 func (s *ManagementService) authorize(ctx context.Context, permission permissions.Permission) error {
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, _, err := retrieveUserFromContext(ctx)
 	if err != nil {
+		s.logger.Warn("could not retrieve user info to authorize user", zap.Error(err))
 		return status.Error(codes.Internal, "could not retrieve user info to authorize user")
 	}
 

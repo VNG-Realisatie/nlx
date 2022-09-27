@@ -106,7 +106,6 @@ func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayReque
 	return response, nil
 }
 
-// UpdateInway updates an existing inway
 func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwayRequest) (*api.Inway, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateInway")
@@ -151,12 +150,11 @@ func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwa
 	return req.Inway, nil
 }
 
-// DeleteInway deletes a specific inway
 func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwayRequest) (*emptypb.Empty, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -167,7 +165,7 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 		return nil, err
 	}
 
-	err = s.auditLogger.InwayDelete(ctx, userInfo.Email, userInfo.UserAgent, req.Name)
+	err = s.auditLogger.InwayDelete(ctx, userInfo.Email, userAgent, req.Name)
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

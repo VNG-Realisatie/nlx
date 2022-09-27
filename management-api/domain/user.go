@@ -7,10 +7,11 @@ import "go.nlx.io/nlx/management-api/pkg/permissions"
 
 type User struct {
 	Email       string
-	UserAgent   string
 	Permissions map[permissions.Permission]bool
 }
 
+type UserAgentContextKey string
 type UserContextKey string
 
+var UserAgentKey UserAgentContextKey = "userAgentKey"
 var UserKey UserContextKey = "userKey"

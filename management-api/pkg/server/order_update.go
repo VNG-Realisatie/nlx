@@ -27,7 +27,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 
 	s.logger.Info("rpc request UpdateOutgoingOrder")
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -63,7 +63,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.Internal, "could not retrieve access proofs")
 	}
 
-	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.Email, userInfo.UserAgent, orderInDB.Delegatee, orderInDB.Reference, accessProofsToAuditLogRecordServices(accessProofs))
+	err = s.auditLogger.OrderOutgoingUpdate(ctx, userInfo.Email, userAgent, orderInDB.Delegatee, orderInDB.Reference, accessProofsToAuditLogRecordServices(accessProofs))
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

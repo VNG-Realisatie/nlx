@@ -106,7 +106,7 @@ func (s *ManagementService) DeleteOutway(ctx context.Context, req *api.DeleteOut
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteOutway")
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -117,7 +117,7 @@ func (s *ManagementService) DeleteOutway(ctx context.Context, req *api.DeleteOut
 		return nil, err
 	}
 
-	err = s.auditLogger.OutwayDelete(ctx, userInfo.Email, userInfo.UserAgent, req.Name)
+	err = s.auditLogger.OutwayDelete(ctx, userInfo.Email, userAgent, req.Name)
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

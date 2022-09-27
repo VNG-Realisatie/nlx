@@ -54,7 +54,7 @@ func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb
 	logger := s.logger
 	logger.Info("rpc request AcceptTermsOfService")
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -70,7 +70,7 @@ func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb
 		return &emptypb.Empty{}, nil
 	}
 
-	err = s.auditLogger.AcceptTermsOfService(ctx, userInfo.Email, userInfo.UserAgent)
+	err = s.auditLogger.AcceptTermsOfService(ctx, userInfo.Email, userAgent)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

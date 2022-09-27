@@ -84,13 +84,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 
 			},
-			ctx: func() context.Context {
-				ctx := context.Background()
-				return context.WithValue(ctx, domain.UserKey, &domain.User{
-					Email:       "admin@example.com",
-					Permissions: map[permissions.Permission]bool{},
-				})
-			},
+			ctx: testCreateUserWithoutPermissionsContext,
 			request: &api.ApproveIncomingAccessRequestRequest{
 				ServiceName:     "test-service",
 				AccessRequestID: 1,
@@ -182,9 +176,10 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 func testCreateAdminUserContext() context.Context {
 	ctx := context.Background()
 
-	return context.WithValue(ctx, domain.UserKey, &domain.User{
-		Email:     "admin@example.com",
-		UserAgent: "nlxctl",
+	ctxWithUserAgent := context.WithValue(ctx, domain.UserAgentKey, "nlxctl")
+
+	return context.WithValue(ctxWithUserAgent, domain.UserKey, &domain.User{
+		Email: "admin@example.com",
 		Permissions: map[permissions.Permission]bool{
 			permissions.ApproveIncomingAccessRequest:  true,
 			permissions.RejectIncomingAccessRequest:   true,
@@ -231,7 +226,9 @@ func testCreateUserWithoutPermissionsContext() context.Context {
 		"grpcgateway-user-agent": "nlxctl",
 	}))
 
-	return context.WithValue(ctx, domain.UserKey, &domain.User{
+	ctxWithUserAgent := context.WithValue(ctx, domain.UserAgentKey, "nlxctl")
+
+	return context.WithValue(ctxWithUserAgent, domain.UserKey, &domain.User{
 		Email:       "admin@example.com",
 		Permissions: map[permissions.Permission]bool{},
 	})

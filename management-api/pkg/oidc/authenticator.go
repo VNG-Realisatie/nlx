@@ -366,15 +366,15 @@ func (a *Authenticator) UnaryServerInterceptor(configDatabase database.ConfigDat
 			return nil, err
 		}
 
-		userInDB.UserAgent = userAgent
-
 		newContext := context.WithValue(ctx, domain.UserKey, userInDB)
 
-		return handler(newContext, req)
+		newContextWithUserAgent := context.WithValue(newContext, domain.UserAgentKey, userAgent)
+
+		return handler(newContextWithUserAgent, req)
 	}
 }
 
-func (a *Authenticator) StreamServerInterceptor(configDatabase database.ConfigDatabase, getUserFromDatabase func(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error)) grpc.StreamServerInterceptor {
+func (a *Authenticator) StreamServerInterceptor(_ database.ConfigDatabase, _ func(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error)) grpc.StreamServerInterceptor {
 	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		return fmt.Errorf("StreamServerInterceptor unimplemented")
 	}

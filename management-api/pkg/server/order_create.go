@@ -44,7 +44,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid outgoing order: %s", err))
 	}
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -69,7 +69,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		services[key] = true
 	}
 
-	err = s.auditLogger.OrderCreate(ctx, userInfo.Email, userInfo.UserAgent, order.Delegatee, accessProofsToAuditLogRecordServices(accessProofs))
+	err = s.auditLogger.OrderCreate(ctx, userInfo.Email, userAgent, order.Delegatee, accessProofsToAuditLogRecordServices(accessProofs))
 	if err != nil {
 		s.logger.Error("failed to write auditlog", zap.Error(err))
 

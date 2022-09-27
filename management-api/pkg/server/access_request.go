@@ -104,13 +104,13 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, status.Error(codes.AlreadyExists, "access request is already approved")
 	}
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.Email, userInfo.UserAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestAccept(ctx, userInfo.Email, userAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
@@ -148,13 +148,13 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, err
 	}
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
 	}
 
-	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.Email, userInfo.UserAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
+	err = s.auditLogger.IncomingAccessRequestReject(ctx, userInfo.Email, userAgent, accessRequest.Organization.SerialNumber, accessRequest.Organization.Name, req.ServiceName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}

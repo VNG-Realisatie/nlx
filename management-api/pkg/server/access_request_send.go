@@ -28,7 +28,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		return nil, err
 	}
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 
@@ -70,6 +70,7 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		l:                        s.logger,
 		al:                       s.auditLogger,
 		userInfo:                 userInfo,
+		userAgent:                userAgent,
 		organizationSerialNumber: req.OrganizationSerialNumber,
 		serviceName:              req.ServiceName,
 		publicKeyPEM:             req.PublicKeyPEM,
@@ -126,6 +127,7 @@ type createOutgoingAccessRequestArgs struct {
 	l                        *zap.Logger
 	al                       auditlog.Logger
 	userInfo                 *domain.User
+	userAgent                string
 	organizationSerialNumber string
 	serviceName              string
 	publicKeyPEM             string
@@ -153,7 +155,7 @@ func createOutgoingAccessRequest(args *createOutgoingAccessRequestArgs) (*databa
 		return nil, fmt.Errorf("database error: %e", err)
 	}
 
-	err = args.al.OutgoingAccessRequestCreate(args.ctx, args.userInfo.Email, args.userInfo.UserAgent, args.organizationSerialNumber, args.serviceName)
+	err = args.al.OutgoingAccessRequestCreate(args.ctx, args.userInfo.Email, args.userAgent, args.organizationSerialNumber, args.serviceName)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create audit log: %e", err)
 	}

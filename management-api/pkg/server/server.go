@@ -82,16 +82,26 @@ func errIsNotFound(err error) bool {
 	return errors.Is(err, database.ErrNotFound)
 }
 
-func retrieveUserFromContext(ctx context.Context) (*domain.User, error) {
+func retrieveUserFromContext(ctx context.Context) (userModel *domain.User, userAgent string, anError error) {
 	user := ctx.Value(domain.UserKey)
 	if user == nil {
-		return nil, fmt.Errorf("no user in context")
+		return nil, "", fmt.Errorf("no user in context")
 	}
 
 	convertedUser, ok := user.(*domain.User)
 	if !ok {
-		return nil, fmt.Errorf("user value in context is not a valid api user")
+		return nil, "", fmt.Errorf("user value in context is not a valid api user")
 	}
 
-	return convertedUser, nil
+	userAgentValue := ctx.Value(domain.UserAgentKey)
+	if userAgentValue == nil {
+		return nil, "", fmt.Errorf("no user agent in context")
+	}
+
+	convertedUserAgent, ok := userAgentValue.(string)
+	if !ok {
+		return nil, "", fmt.Errorf("user agent value in context is not a string")
+	}
+
+	return convertedUser, convertedUserAgent, nil
 }

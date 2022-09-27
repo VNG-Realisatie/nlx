@@ -60,7 +60,7 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, err
 	}
 
-	userInfo, err := retrieveUserFromContext(ctx)
+	userInfo, userAgent, err := retrieveUserFromContext(ctx)
 	if err != nil {
 		s.logger.Error("could not retrieve user info for audit log from grpc context", zap.Error(err))
 		return nil, status.Error(codes.Internal, "could not retrieve user info to create audit log")
@@ -77,7 +77,7 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
-	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.Email, userInfo.UserAgent, accessGrant.IncomingAccessRequest.Organization.SerialNumber, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
+	err = s.auditLogger.AccessGrantRevoke(ctx, userInfo.Email, userAgent, accessGrant.IncomingAccessRequest.Organization.SerialNumber, accessGrant.IncomingAccessRequest.Organization.Name, accessGrant.IncomingAccessRequest.Service.Name)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
