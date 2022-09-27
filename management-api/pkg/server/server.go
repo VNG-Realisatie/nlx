@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"go.uber.org/zap"
-	"google.golang.org/grpc/metadata"
 
 	"go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
@@ -81,40 +80,6 @@ func NewManagementService(args *NewManagementServiceArgs) *ManagementService {
 
 func errIsNotFound(err error) bool {
 	return errors.Is(err, database.ErrNotFound)
-}
-
-type auditLogInfoFromGRPC struct {
-	username  string
-	userEmail string
-	userAgent string
-}
-
-func retrieveUserInfoFromGRPCContext(ctx context.Context) (*auditLogInfoFromGRPC, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, errors.New("could not extract metadata from context")
-	}
-
-	username := ""
-	if len(md.Get("username")) > 0 {
-		username = md.Get("username")[0]
-	}
-
-	userEmail := ""
-	if len(md.Get("user-email")) > 0 {
-		userEmail = md.Get("user-email")[0]
-	}
-
-	userAgent := ""
-	if len(md.Get("grpcgateway-user-agent")) > 0 {
-		userAgent = md.Get("grpcgateway-user-agent")[0]
-	}
-
-	return &auditLogInfoFromGRPC{
-		username:  username,
-		userEmail: userEmail,
-		userAgent: userAgent,
-	}, nil
 }
 
 func retrieveUserFromContext(ctx context.Context) (*domain.User, error) {
