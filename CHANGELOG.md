@@ -1,3 +1,26 @@
+# [0.140.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.139.0...v0.140.0) (2022-09-28)
+
+
+### Bug Fixes
+
+* **management:** add missing organization name to toast when rejecting access ([1bbb9e7](https://gitlab.com/commonground/nlx/nlx/commit/1bbb9e7d6c368964d16e5b369187a1e4d8b91207)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** ensure Access Proof is synced when an AR gets approved ([9abd9aa](https://gitlab.com/commonground/nlx/nlx/commit/9abd9aa4b28abe65d3d01e9c698c0ed4505fad50)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+
+
+### Features
+
+* **management:** add sync & sync_all permissions to the readonly role ([d78d2eb](https://gitlab.com/commonground/nlx/nlx/commit/d78d2eb4c9085bfe3977ebc48cf02706317aeb6c)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** add sync of all outgoing access requests when adding an order ([757049c](https://gitlab.com/commonground/nlx/nlx/commit/757049c05a1c7c2047151829945c32190384da79)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** add sync of all outgoing access requests when opening the Directory overview ([da3e580](https://gitlab.com/commonground/nlx/nlx/commit/da3e580cc9d7b4120fd70330bb559defa1ceb2e0)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** add SyncAllOutgoingAccessRequests API endpoint ([b9a8254](https://gitlab.com/commonground/nlx/nlx/commit/b9a82549856b3605f176dbb1b30a1d00068d15ed)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** disable the scheduler job for Outgoing Access Requests ([a930af5](https://gitlab.com/commonground/nlx/nlx/commit/a930af5f6badd60a8828464fef229b963f86dc8e)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** display the organizations for which access syncing has failed ([a82047e](https://gitlab.com/commonground/nlx/nlx/commit/a82047ec6103d22f1d8da6161be8fedb01b206b4)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** display toaster if sync of Access Request fails for a directory service ([ea13f3b](https://gitlab.com/commonground/nlx/nlx/commit/ea13f3b0c79167330d8323babb049108dfaaba4a)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** introduce SyncOutgoingAccessRequests endpoint to enable syncing manually ([7754923](https://gitlab.com/commonground/nlx/nlx/commit/7754923242e7ecf64cf7babb1365add213bd3e87)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** pause syncing access requests if the user is visiting another tab ([2eee10f](https://gitlab.com/commonground/nlx/nlx/commit/2eee10f0b237822f9c0ebc39f9611d2acfad77ff)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** show spinner on Directory page until the sync has completed ([ddb5ef1](https://gitlab.com/commonground/nlx/nlx/commit/ddb5ef1680dab06d96226793ca24693b1b7b86e6)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+* **management:** synchronize access requests every 3 seconds for the Directory overview page ([0727739](https://gitlab.com/commonground/nlx/nlx/commit/0727739f4257fb7b3b3d4b16e1c4069603182edf)), closes [nlx#1602](https://gitlab.com/nlx/issues/1602)
+
 # [0.139.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.138.0...v0.139.0) (2022-09-21)
 
 
