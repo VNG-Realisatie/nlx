@@ -65,13 +65,6 @@ var createUserCommand = &cobra.Command{
 				os.Exit(invalidArgumentCode)
 			}
 
-			if errors.Is(err, &database.RoleNotFoundError{}) {
-				log.Fatalf(
-					"unable to create user because role '%s' was not found\n",
-					err.(*database.RoleNotFoundError).RoleName,
-				)
-			}
-
 			log.Fatal(err)
 		}
 

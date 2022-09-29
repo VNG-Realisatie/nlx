@@ -20,14 +20,6 @@ import (
 
 var ErrUserAlreadyExists = errors.New("user already exists")
 
-type RoleNotFoundError struct {
-	RoleName string
-}
-
-func (err *RoleNotFoundError) Error() string {
-	return fmt.Sprintf("role '%s' not found", err.RoleName)
-}
-
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
