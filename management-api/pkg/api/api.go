@@ -224,18 +224,23 @@ func getUserFromDatabase(ctx context.Context, configDatabase database.ConfigData
 	}
 
 	user := &domain.User{
-		Email:       userInDB.Email,
-		Permissions: make(map[permissions.Permission]bool),
+		Email: userInDB.Email,
+		Roles: make([]*domain.Role, len(userInDB.Roles)),
 	}
 
-	for _, role := range userInDB.Roles {
-		for _, permission := range role.Permissions {
+	for i, role := range userInDB.Roles {
+		user.Roles[i] = &domain.Role{
+			Code:        role.Code,
+			Permissions: make([]permissions.Permission, len(role.Permissions)),
+		}
+
+		for j, permission := range role.Permissions {
 			p, err := permissions.PermissionString(permission.Code)
 			if err != nil {
 				return nil, status.Errorf(codes.Internal, "invalid permission code %q", permission.Code)
 			}
 
-			user.Permissions[p] = true
+			user.Roles[i].Permissions[j] = p
 		}
 	}
 

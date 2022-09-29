@@ -6,8 +6,13 @@ package domain
 import "go.nlx.io/nlx/management-api/pkg/permissions"
 
 type User struct {
-	Email       string
-	Permissions map[permissions.Permission]bool
+	Email string
+	Roles []*Role
+}
+
+type Role struct {
+	Code        string
+	Permissions []permissions.Permission
 }
 
 type UserAgentContextKey string
