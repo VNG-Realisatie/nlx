@@ -296,3 +296,38 @@ insert into
 (user_id, role_code, created_at, updated_at)
 values
     ($1, $2, $3, $4);
+
+-- name: ListServices :many
+select
+    id,
+    name,
+    endpoint_url,
+    documentation_url,
+    api_specification_url,
+    internal,
+    tech_support_contact,
+    public_support_contact,
+    created_at,
+    updated_at,
+    one_time_costs,
+    monthly_costs,
+    request_costs
+from
+    nlx_management.services;
+
+-- name: ListInwaysForService :many
+select
+    inways.id,
+    inways.name,
+    inways.self_address,
+    inways.version,
+    inways.hostname,
+    inways.ip_address,
+    inways.created_at,
+    inways.updated_at
+from
+    nlx_management.inways_services
+join
+    nlx_management.inways on inways_services.inway_id = inways.id
+where
+    inways_services.service_id = $1;

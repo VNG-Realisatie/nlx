@@ -38,16 +38,54 @@ func (s *Service) TableName() string {
 }
 
 func (db *PostgresConfigDatabase) ListServices(ctx context.Context) ([]*Service, error) {
-	services := []*Service{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Inways").
-		Find(&services).Error; err != nil {
+	services, err := db.queries.ListServices(ctx)
+	if err != nil {
 		return nil, err
 	}
 
-	return services, nil
+	result := make([]*Service, len(services))
+
+	for i, service := range services {
+		inways, err := db.queries.ListInwaysForService(ctx, service.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		inwayModels := make([]*Inway, len(inways))
+
+		for j, inway := range inways {
+			inwayModels[j] = &Inway{
+				ID:          uint(inway.ID),
+				Name:        inway.Name,
+				Version:     inway.Version,
+				Hostname:    inway.Hostname,
+				IPAddress:   inway.IpAddress,
+				SelfAddress: inway.SelfAddress,
+				CreatedAt:   inway.CreatedAt,
+				UpdatedAt:   inway.UpdatedAt,
+			}
+		}
+
+		result[i] = &Service{
+			ID:                     uint(service.ID),
+			Name:                   service.Name,
+			EndpointURL:            service.EndpointUrl,
+			DocumentationURL:       service.DocumentationUrl,
+			APISpecificationURL:    service.ApiSpecificationUrl,
+			Internal:               service.Internal,
+			TechSupportContact:     service.TechSupportContact,
+			PublicSupportContact:   service.PublicSupportContact,
+			Inways:                 inwayModels,
+			IncomingAccessRequests: nil,
+			OneTimeCosts:           int(service.OneTimeCosts),
+			MonthlyCosts:           int(service.MonthlyCosts),
+			RequestCosts:           int(service.RequestCosts),
+			CreatedAt:              service.CreatedAt,
+			UpdatedAt:              service.UpdatedAt,
+		}
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetService(ctx context.Context, name string) (*Service, error) {

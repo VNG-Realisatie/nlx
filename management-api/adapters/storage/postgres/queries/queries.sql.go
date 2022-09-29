@@ -612,6 +612,56 @@ func (q *Queries) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*L
 	return items, nil
 }
 
+const listInwaysForService = `-- name: ListInwaysForService :many
+select
+    inways.id,
+    inways.name,
+    inways.self_address,
+    inways.version,
+    inways.hostname,
+    inways.ip_address,
+    inways.created_at,
+    inways.updated_at
+from
+    nlx_management.inways_services
+join
+    nlx_management.inways on inways_services.inway_id = inways.id
+where
+    inways_services.service_id = $1
+`
+
+func (q *Queries) ListInwaysForService(ctx context.Context, serviceID int32) ([]*NlxManagementInway, error) {
+	rows, err := q.query(ctx, q.listInwaysForServiceStmt, listInwaysForService, serviceID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*NlxManagementInway{}
+	for rows.Next() {
+		var i NlxManagementInway
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.SelfAddress,
+			&i.Version,
+			&i.Hostname,
+			&i.IpAddress,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listPermissions = `-- name: ListPermissions :many
 select code from nlx_management.permissions
 `
@@ -690,6 +740,62 @@ func (q *Queries) ListRolesForUser(ctx context.Context, userID int32) ([]string,
 			return nil, err
 		}
 		items = append(items, role_code)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listServices = `-- name: ListServices :many
+select
+    id,
+    name,
+    endpoint_url,
+    documentation_url,
+    api_specification_url,
+    internal,
+    tech_support_contact,
+    public_support_contact,
+    created_at,
+    updated_at,
+    one_time_costs,
+    monthly_costs,
+    request_costs
+from
+    nlx_management.services
+`
+
+func (q *Queries) ListServices(ctx context.Context) ([]*NlxManagementService, error) {
+	rows, err := q.query(ctx, q.listServicesStmt, listServices)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*NlxManagementService{}
+	for rows.Next() {
+		var i NlxManagementService
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.EndpointUrl,
+			&i.DocumentationUrl,
+			&i.ApiSpecificationUrl,
+			&i.Internal,
+			&i.TechSupportContact,
+			&i.PublicSupportContact,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.OneTimeCosts,
+			&i.MonthlyCosts,
+			&i.RequestCosts,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

@@ -60,6 +60,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listAllLatestOutgoingAccessRequestsStmt, err = db.PrepareContext(ctx, listAllLatestOutgoingAccessRequests); err != nil {
 		return nil, fmt.Errorf("error preparing query ListAllLatestOutgoingAccessRequests: %w", err)
 	}
+	if q.listInwaysForServiceStmt, err = db.PrepareContext(ctx, listInwaysForService); err != nil {
+		return nil, fmt.Errorf("error preparing query ListInwaysForService: %w", err)
+	}
 	if q.listPermissionsStmt, err = db.PrepareContext(ctx, listPermissions); err != nil {
 		return nil, fmt.Errorf("error preparing query ListPermissions: %w", err)
 	}
@@ -68,6 +71,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.listRolesForUserStmt, err = db.PrepareContext(ctx, listRolesForUser); err != nil {
 		return nil, fmt.Errorf("error preparing query ListRolesForUser: %w", err)
+	}
+	if q.listServicesStmt, err = db.PrepareContext(ctx, listServices); err != nil {
+		return nil, fmt.Errorf("error preparing query ListServices: %w", err)
 	}
 	if q.listTermsOfServiceStmt, err = db.PrepareContext(ctx, listTermsOfService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListTermsOfService: %w", err)
@@ -149,6 +155,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listAllLatestOutgoingAccessRequestsStmt: %w", cerr)
 		}
 	}
+	if q.listInwaysForServiceStmt != nil {
+		if cerr := q.listInwaysForServiceStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listInwaysForServiceStmt: %w", cerr)
+		}
+	}
 	if q.listPermissionsStmt != nil {
 		if cerr := q.listPermissionsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listPermissionsStmt: %w", cerr)
@@ -162,6 +173,11 @@ func (q *Queries) Close() error {
 	if q.listRolesForUserStmt != nil {
 		if cerr := q.listRolesForUserStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listRolesForUserStmt: %w", cerr)
+		}
+	}
+	if q.listServicesStmt != nil {
+		if cerr := q.listServicesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listServicesStmt: %w", cerr)
 		}
 	}
 	if q.listTermsOfServiceStmt != nil {
@@ -240,9 +256,11 @@ type Queries struct {
 	getUserByEmailStmt                      *sql.Stmt
 	listAccessGrantsForServiceStmt          *sql.Stmt
 	listAllLatestOutgoingAccessRequestsStmt *sql.Stmt
+	listInwaysForServiceStmt                *sql.Stmt
 	listPermissionsStmt                     *sql.Stmt
 	listPermissionsForRoleStmt              *sql.Stmt
 	listRolesForUserStmt                    *sql.Stmt
+	listServicesStmt                        *sql.Stmt
 	listTermsOfServiceStmt                  *sql.Stmt
 	revokeAccessGrantStmt                   *sql.Stmt
 	updateIncomingAccessRequestStmt         *sql.Stmt
@@ -266,9 +284,11 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getUserByEmailStmt:                      q.getUserByEmailStmt,
 		listAccessGrantsForServiceStmt:          q.listAccessGrantsForServiceStmt,
 		listAllLatestOutgoingAccessRequestsStmt: q.listAllLatestOutgoingAccessRequestsStmt,
+		listInwaysForServiceStmt:                q.listInwaysForServiceStmt,
 		listPermissionsStmt:                     q.listPermissionsStmt,
 		listPermissionsForRoleStmt:              q.listPermissionsForRoleStmt,
 		listRolesForUserStmt:                    q.listRolesForUserStmt,
+		listServicesStmt:                        q.listServicesStmt,
 		listTermsOfServiceStmt:                  q.listTermsOfServiceStmt,
 		revokeAccessGrantStmt:                   q.revokeAccessGrantStmt,
 		updateIncomingAccessRequestStmt:         q.updateIncomingAccessRequestStmt,
