@@ -34,7 +34,6 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/environment"
 	"go.nlx.io/nlx/management-api/pkg/management"
 	"go.nlx.io/nlx/management-api/pkg/outway"
-	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/server"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
@@ -214,34 +213,13 @@ func newGRPCServer(logger *zap.Logger, cert *common_tls.CertificateBundle, db da
 }
 
 func getUserFromDatabase(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error) {
-	userInDB, err := configDatabase.GetUser(ctx, email)
+	user, err := configDatabase.GetUser(ctx, email)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, status.Errorf(codes.Internal, "user %q not found in database while authorizing user", email)
 		}
 
 		return nil, status.Error(codes.Internal, "could not retrieve user from database while authorizing user")
-	}
-
-	user := &domain.User{
-		Email: userInDB.Email,
-		Roles: make([]*domain.Role, len(userInDB.Roles)),
-	}
-
-	for i, role := range userInDB.Roles {
-		user.Roles[i] = &domain.Role{
-			Code:        role.Code,
-			Permissions: make([]permissions.Permission, len(role.Permissions)),
-		}
-
-		for j, permission := range role.Permissions {
-			p, err := permissions.PermissionString(permission.Code)
-			if err != nil {
-				return nil, status.Errorf(codes.Internal, "invalid permission code %q", permission.Code)
-			}
-
-			user.Roles[i].Permissions[j] = p
-		}
 	}
 
 	return user, nil

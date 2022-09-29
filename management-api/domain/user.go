@@ -6,8 +6,10 @@ package domain
 import "go.nlx.io/nlx/management-api/pkg/permissions"
 
 type User struct {
-	Email string
-	Roles []*Role
+	ID       uint
+	Email    string
+	Password string
+	Roles    []*Role
 }
 
 type Role struct {

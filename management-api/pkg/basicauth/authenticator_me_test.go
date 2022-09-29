@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/domain"
 )
 
 //nolint:funlen // this is a test method
@@ -91,7 +91,7 @@ func Test_Me(t *testing.T) {
 				mocks.configDatabase.
 					EXPECT().
 					GetUser(gomock.Any(), "foo").
-					Return(&database.User{
+					Return(&domain.User{
 						ID:       42,
 						Email:    "foo@bar.com",
 						Password: "my-password",

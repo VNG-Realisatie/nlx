@@ -498,10 +498,10 @@ func (mr *MockConfigDatabaseMockRecorder) GetTermsOfServiceStatus(ctx interface{
 }
 
 // GetUser mocks base method.
-func (m *MockConfigDatabase) GetUser(ctx context.Context, email string) (*database.User, error) {
+func (m *MockConfigDatabase) GetUser(ctx context.Context, email string) (*domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", ctx, email)
-	ret0, _ := ret[0].(*database.User)
+	ret0, _ := ret[0].(*domain.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

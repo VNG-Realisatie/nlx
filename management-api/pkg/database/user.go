@@ -14,6 +14,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
+	"go.nlx.io/nlx/management-api/domain"
+	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
@@ -61,7 +63,7 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func (db *PostgresConfigDatabase) GetUser(ctx context.Context, email string) (*User, error) {
+func (db *PostgresConfigDatabase) GetUser(ctx context.Context, email string) (*domain.User, error) {
 	user, err := db.queries.GetUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -76,29 +78,32 @@ func (db *PostgresConfigDatabase) GetUser(ctx context.Context, email string) (*U
 		return nil, err
 	}
 
-	roleModels := make([]Role, len(roles))
+	roleModels := make([]*domain.Role, len(roles))
 
 	for i, role := range roles {
-		permissions, err := db.queries.ListPermissionsForRole(ctx, role)
+		permissionsForRole, err := db.queries.ListPermissionsForRole(ctx, role)
 		if err != nil {
 			return nil, err
 		}
 
-		permissionModels := make([]Permission, len(permissions))
+		permissionModels := make([]permissions.Permission, len(permissionsForRole))
 
-		for j, permission := range permissions {
-			permissionModels[j] = Permission{
-				Code: permission,
+		for j, permission := range permissionsForRole {
+			p, err := permissions.PermissionString(permission)
+			if err != nil {
+				return nil, fmt.Errorf("invalid permission %q", permission)
 			}
+
+			permissionModels[j] = p
 		}
 
-		roleModels[i] = Role{
+		roleModels[i] = &domain.Role{
 			Code:        role,
 			Permissions: permissionModels,
 		}
 	}
 
-	result := &User{
+	result := &domain.User{
 		ID:    uint(user.ID),
 		Email: user.Email,
 		Roles: roleModels,
