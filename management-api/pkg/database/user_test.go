@@ -13,6 +13,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 
+	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -86,7 +87,7 @@ func TestCreateUser(t *testing.T) {
 	tests := map[string]struct {
 		loadFixtures bool
 		args         args
-		expected     *database.User
+		expected     *domain.User
 		expectedErr  error
 	}{
 		"with_existing_email_address": {
@@ -108,9 +109,9 @@ func TestCreateUser(t *testing.T) {
 					"admin",
 				},
 			},
-			expected: &database.User{
+			expected: &domain.User{
 				Email: "john.doe@example.com",
-				Roles: []database.Role{
+				Roles: []*domain.Role{
 					{
 						Code: "admin",
 					},
@@ -127,9 +128,9 @@ func TestCreateUser(t *testing.T) {
 					"admin",
 				},
 			},
-			expected: &database.User{
+			expected: &domain.User{
 				Email: "jane.doe@example.com",
-				Roles: []database.Role{
+				Roles: []*domain.Role{
 					{
 						Code: "admin",
 					},

@@ -28,31 +28,6 @@ func (err *RoleNotFoundError) Error() string {
 	return fmt.Sprintf("role '%s' not found", err.RoleName)
 }
 
-const AdminRole = "admin"
-
-type User struct {
-	ID        uint
-	Email     string
-	Password  string
-	Roles     []Role `gorm:"many2many:nlx_management.users_roles;"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-func (*User) TableName() string {
-	return "nlx_management.users"
-}
-
-func (user *User) HasRole(code string) bool {
-	for _, role := range user.Roles {
-		if role.Code == code {
-			return true
-		}
-	}
-
-	return false
-}
-
 func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
