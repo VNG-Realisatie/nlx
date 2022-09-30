@@ -44,10 +44,10 @@ global:
 managementAPI:
   serviceParkeerrechten:
     name: parkeerrechten
-    endpointUrl: http://gemeente-stijns-parkeerrechten-api:8000
-    apiSpecificationUrl: http://gemeente-stijns-parkeerrechten-api:8000/schema?format=openapi-json
-    publicSupportContact: support@nlx.io
-    documentationUrl: https://docs.nlx.io
+    endpoint_url: http://gemeente-stijns-parkeerrechten-api:8000
+    api_specification_url: http://gemeente-stijns-parkeerrechten-api:8000/schema?format=openapi-json
+    public_support_contact: support@nlx.io
+    documentation_url: https://docs.nlx.io
     inways:
       - gemeente-stijns-nlx-inway
 

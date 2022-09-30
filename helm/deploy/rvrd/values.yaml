@@ -131,26 +131,26 @@ managementAPI:
     pullPolicy: IfNotPresent
   serviceKentekens:
     name: basisregister-fictieve-kentekens
-    endpointUrl: http://rvrd-basisregister-fictieve-kentekens
-    apiSpecificationUrl: http://rvrd-basisregister-fictieve-kentekens/openapi.json
-    publicSupportContact: support@nlx.io
-    documentationUrl: https://docs.nlx.io
+    endpoint_url: http://rvrd-basisregister-fictieve-kentekens
+    api_specification_url: http://rvrd-basisregister-fictieve-kentekens/openapi.json
+    public_support_contact: support@nlx.io
+    documentation_url: https://docs.nlx.io
     inways:
       - rvrd-nlx-inway
   serviceVideoStream:
     name: voorbeeld-video-stream
-    endpointUrl: https://storage.googleapis.com
-    apiSpecificationUrl:
-    publicSupportContact: support@nlx.io
-    documentationUrl: https://gist.githubusercontent.com/manico/f2e6dd3371f17737331d559219b354ab/raw/6e94be4814499c428d66bac9f0c401fe2c4c35c3/videos.txt
+    endpoint_url: https://storage.googleapis.com
+    api_specification_url:
+    public_support_contact: support@nlx.io
+    documentation_url: https://gist.githubusercontent.com/manico/f2e6dd3371f17737331d559219b354ab/raw/6e94be4814499c428d66bac9f0c401fe2c4c35c3/videos.txt
     inways:
       - rvrd-nlx-inway
   serviceWebsockets:
     name: voorbeeld-websockets
-    endpointUrl: http://rvrd-example-websockets
-    apiSpecificationUrl:
-    publicSupportContact: support@nlx.io
-    documentationUrl: https://hub.docker.com/r/ksdn117/web-socket-test
+    endpoint_url: http://rvrd-example-websockets
+    api_specification_url:
+    public_support_contact: support@nlx.io
+    documentation_url: https://hub.docker.com/r/ksdn117/web-socket-test
     inways:
       - rvrd-nlx-inway
   postgresql:
