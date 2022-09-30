@@ -6,9 +6,8 @@ NLX Management - E2E-tests - Selenium:
   image: node:18.5.0-alpine
   stage: E2E tests
   variables:
-    E2E_PARALLEL_COUNT: 5
+    E2E_PARALLEL_COUNT: 10
     E2E_CONFIG_FILE: "ci"
-    E2E_SELENIUM_URL: "http://hub.browserstack.com/wd/hub"
     E2E_GEMEENTE_STIJNS_MANAGEMENT_BASIC_AUTH: "false"
     E2E_GEMEENTE_STIJNS_MANAGEMENT_USERNAME: "admin@example.com"
     E2E_GEMEENTE_STIJNS_MANAGEMENT_PASSWORD: "password"
@@ -26,6 +25,7 @@ NLX Management - E2E-tests - Selenium:
     E2E_VERGUNNINGSOFTWARE_BV_OUTWAY_1_NAME: "vergunningsoftware-bv-nlx-outway"
   script:
     - apk --no-cache add bash curl
+    - export E2E_SELENIUM_URL="http://${E2E_SELENIUM_USERNAME}:${E2E_SELENIUM_ACCESS_KEY}@hub.browserstack.com/wd/hub"
     - export CI_ENV_URL=$([ -f ci_environment_url.txt ] && cat ci_environment_url.txt)
     - export E2E_DIRECTORY_URL=$([ -z "$CI_ENV_URL" ] && echo "https://directory.acc.nlx.io" || echo "https://directory-$CI_ENV_URL")
     - export E2E_GEMEENTE_STIJNS_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.gemeentestijns.nl" || echo "https://nlx-management-gemeente-stijns-$CI_ENV_URL")
