@@ -508,9 +508,8 @@ func TestExternalRequestAccess(t *testing.T) {
 				return ctx
 			},
 			want: &external.RequestAccessResponse{
-				ReferenceId:                  43,
-				AccessRequestState:           api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED,
-				AccessRequestStateDeprecated: api.AccessRequestStateDeprecated_APPROVED,
+				ReferenceId:        43,
+				AccessRequestState: api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED,
 			},
 		},
 	}
@@ -620,8 +619,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 				return ctx
 			},
 			want: &external.GetAccessRequestStateResponse{
-				State:           api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
-				StateDeprecated: api.AccessRequestStateDeprecated_RECEIVED,
+				State: api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 			},
 		},
 	}

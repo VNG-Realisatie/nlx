@@ -35,15 +35,15 @@ type proxyMetadata struct {
 
 const accessRequestStatePrefix = "ACCESS_REQUEST_STATE_%s"
 
-func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) int32 {
+func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) api.AccessRequestState {
 	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
 	protoState, ok := api.AccessRequestState_value[name]
 	if ok {
-		return int32(api.AccessRequestState(protoState))
+		return api.AccessRequestState(protoState)
 	}
 
-	return int32(api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED)
+	return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 }
 
 func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
@@ -287,9 +287,8 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 
 	if isIncomingAccessRequestStillActive(existingIncomingAccessRequest) {
 		return &external.RequestAccessResponse{
-			ReferenceId:                  uint64(existingIncomingAccessRequest.ID),
-			AccessRequestStateDeprecated: api.AccessRequestStateDeprecated(incomingAccessRequestStateToProto(existingIncomingAccessRequest.State)),
-			AccessRequestState:           api.AccessRequestState(incomingAccessRequestStateToProto(existingIncomingAccessRequest.State)),
+			ReferenceId:        uint64(existingIncomingAccessRequest.ID),
+			AccessRequestState: incomingAccessRequestStateToProto(existingIncomingAccessRequest.State),
 		}, nil
 	}
 
@@ -305,9 +304,8 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 	}
 
 	return &external.RequestAccessResponse{
-		ReferenceId:                  uint64(createdRequest.ID),
-		AccessRequestStateDeprecated: api.AccessRequestStateDeprecated(incomingAccessRequestStateToProto(createdRequest.State)),
-		AccessRequestState:           api.AccessRequestState(incomingAccessRequestStateToProto(createdRequest.State)),
+		ReferenceId:        uint64(createdRequest.ID),
+		AccessRequestState: incomingAccessRequestStateToProto(createdRequest.State),
 	}, nil
 }
 
@@ -335,8 +333,7 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 	}
 
 	return &external.GetAccessRequestStateResponse{
-		StateDeprecated: api.AccessRequestStateDeprecated(incomingAccessRequestStateToProto(request.State)),
-		State:           api.AccessRequestState(incomingAccessRequestStateToProto(request.State)),
+		State: incomingAccessRequestStateToProto(request.State),
 	}, nil
 }
 
@@ -353,7 +350,7 @@ func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest)
 			SerialNumber: accessRequest.Organization.SerialNumber,
 		},
 		ServiceName:          accessRequest.Service.Name,
-		State:                api.AccessRequestState(incomingAccessRequestStateToProto(accessRequest.State)),
+		State:                incomingAccessRequestStateToProto(accessRequest.State),
 		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
 		CreatedAt:            timestamppb.New(accessRequest.CreatedAt),
 		UpdatedAt:            timestamppb.New(accessRequest.UpdatedAt),

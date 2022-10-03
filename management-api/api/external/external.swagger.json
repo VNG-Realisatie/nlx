@@ -17,9 +17,6 @@
     "schemas" : {
       "externalGetAccessRequestStateResponse" : {
         "properties" : {
-          "state_deprecated" : {
-            "$ref" : "#/components/schemas/managementAccessRequestStateDeprecated"
-          },
           "state" : {
             "$ref" : "#/components/schemas/managementAccessRequestState"
           }
@@ -42,9 +39,6 @@
           "reference_id" : {
             "format" : "uint64",
             "type" : "string"
-          },
-          "access_request_state_deprecated" : {
-            "$ref" : "#/components/schemas/managementAccessRequestStateDeprecated"
           },
           "access_request_state" : {
             "$ref" : "#/components/schemas/managementAccessRequestState"
@@ -93,11 +87,6 @@
       "managementAccessRequestState" : {
         "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
         "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
-        "type" : "string"
-      },
-      "managementAccessRequestStateDeprecated" : {
-        "default" : "UNSPECIFIED",
-        "enum" : [ "UNSPECIFIED", "FAILED", "RECEIVED", "APPROVED", "REJECTED", "REVOKED" ],
         "type" : "string"
       },
       "managementIncomingOrder" : {

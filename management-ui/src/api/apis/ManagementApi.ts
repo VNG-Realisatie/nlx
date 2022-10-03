@@ -1054,7 +1054,7 @@ export class ManagementApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v1/access-requests/outgoing/{organizationSerialNumber}/services/{serviceName}/synchronize`.replace(`{${"organizationSerialNumber"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"serviceName"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            path: `/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize`.replace(`{${"organization_serial_number"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,

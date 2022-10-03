@@ -359,16 +359,6 @@ message GetInwayConfigResponse {
     }
 }
 
-enum AccessRequestStateDeprecated {
-  UNSPECIFIED = 0;
-  FAILED = 1;
-  reserved 2; // Removed deprecated option 'CREATED'
-  RECEIVED = 3;
-  APPROVED = 4;
-  REJECTED = 5;
-  REVOKED = 6;
-}
-
 enum AccessRequestState {
   ACCESS_REQUEST_STATE_UNSPECIFIED = 0;
   ACCESS_REQUEST_STATE_FAILED = 1;
