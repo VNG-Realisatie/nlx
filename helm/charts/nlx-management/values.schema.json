@@ -42,6 +42,18 @@
               "type": "string",
               "description": "The OIDC client secret"
             },
+            "clientSecretExistingSecret": {
+              "type": "object",
+              "description": "Use existing secret for OIDC client secret",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                }
+              }
+            },
             "discoveryURL": {
               "type": "string",
               "description": "The OIDC discovery URL"

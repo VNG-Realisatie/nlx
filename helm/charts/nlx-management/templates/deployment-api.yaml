@@ -119,8 +119,16 @@ spec:
                   key: oidc-session-sign-key
             - name: OIDC_CLIENT_ID
               value: {{ required "OIDC client ID is required" .Values.config.oidc.clientID }}
+          {{- if .Values.config.oidc.clientSecretExistingSecret.name }}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.oidc.clientSecretExistingSecret.name }}
+                  key: {{ required "OIDC existing secret key is required" .Values.config.oidc.clientSecretExistingSecret.key }}
+          {{- else }}
             - name: OIDC_CLIENT_SECRET
               value: {{ required "OIDC client secret is required" .Values.config.oidc.clientSecret }}
+          {{- end }}
             - name: OIDC_DISCOVERY_URL
               value: {{ required "OIDC discovery URL is required" .Values.config.oidc.discoveryURL }}
             - name: OIDC_REDIRECT_URL

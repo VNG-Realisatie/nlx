@@ -78,20 +78,22 @@ The following table lists the configurable parameters of the nlx-management Char
 
 ### NLX Management parameters
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `config.logType` | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no |
-| `config.logLevel` | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType` | `info` | no |
-| `config.directoryInspectionHostname` | Used to retrieve information about services from the directory. | `""` | yes |
-| `config.directoryRegistrationHostname` | Address of the NLX directory where this inway will register its services. | `""` | yes |
-| `config.txlogAPIAddress` | Address of the transaction log API | `false` | no |
-| `config.sessionCookieSecure` | If `true`, the API will use 'secure' cookies. | `false` | no |
-| `config.enableBasicAuth` | Enable HTTP basic authentication and disable OIDC | `false` | no |
-| `config.oidc.clientID` | The OIDC client ID | `"nlx-management"` | no |
-| `config.oidc.clientSecret` | The OIDC client secret | `""` | yes (if using OIDC) |
-| `config.oidc.discoveryURL` | The OIDC discovery URL | `""` | yes (if using OIDC) |
-| `config.oidc.redirectURL` | The OIDC redirect URL | `""` | yes (if using OIDC) |
-| `config.oidc.sessionSignKey` | The OIDC session sign key | `""` | yes (if using OIDC) |
+| Parameter                                     | Description                                                                                                                                     | Default | Required (yes/no)   |
+|-----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------| ------- |---------------------|
+| `config.logType`                              | Possible values: **live**, **local**. Affects the log output. See NewProduction and NewDevelopment at https://godoc.org/go.uber.org/zap#Logger. | `live` | no                  |
+| `config.logLevel`                             | Possible values: **debug**, **warn**, **info**. Override the default loglevel set by `config.logType`                                           | `info` | no                  |
+| `config.directoryInspectionHostname`          | Used to retrieve information about services from the directory.                                                                                 | `""` | yes                 |
+| `config.directoryRegistrationHostname`        | Address of the NLX directory where this inway will register its services.                                                                       | `""` | yes                 |
+| `config.txlogAPIAddress`                      | Address of the transaction log API                                                                                                              | `false` | no                  |
+| `config.sessionCookieSecure`                  | If `true`, the API will use 'secure' cookies.                                                                                                   | `false` | no                  |
+| `config.enableBasicAuth`                      | Enable HTTP basic authentication and disable OIDC                                                                                               | `false` | no                  |
+| `config.oidc.clientID`                        | The OIDC client ID                                                                                                                              | `"nlx-management"` | no                  |
+| `config.oidc.clientSecret`                    | The OIDC client secret                                                                                                                          | `""` | yes (if using OIDC) |
+| `config.oidc.clientSecretExistingSecret.name` | The name of the secret containing OIDC client secret                                                                                            | `""` | no                  |
+| `config.oidc.clientSecretExistingSecret.key`  | Key for OIDC client secret value in aforementioned existingSecret                                                                               | `""` | no                  |
+| `config.oidc.discoveryURL`                    | The OIDC discovery URL                                                                                                                          | `""` | yes (if using OIDC) |
+| `config.oidc.redirectURL`                     | The OIDC redirect URL                                                                                                                           | `""` | yes (if using OIDC) |
+| `config.oidc.sessionSignKey`                  | The OIDC session sign key                                                                                                                       | `""` | yes (if using OIDC) |
 
 ### TLS parameters
 

@@ -33,6 +33,9 @@ config:
   oidc:
     clientID: nlx-management
     clientSecret: ""
+    clientSecretExistingSecret:
+      name: ""
+      key: ""
     discoveryURL: ""
     redirectURL: ""
     sessionSignKey: ""
