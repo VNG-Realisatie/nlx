@@ -253,7 +253,7 @@ mocks-txlog-api:
 sqlc-txlog-api:
     FROM +deps
     COPY ./txlog-api/adapters/storage/postgres/queries /src/txlog-api/adapters/storage/postgres/queries
-    COPY ./txlog-api/migrations/sql /src/txlog-api/migrations/sql
+    COPY ./txlog-api/adapters/storage/postgres/migrations/sql /src/txlog-api/adapters/storage/postgres/migrations/sql
 
     WORKDIR /src/txlog-api/adapters/storage/postgres/queries
 

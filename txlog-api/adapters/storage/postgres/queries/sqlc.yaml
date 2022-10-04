@@ -6,7 +6,7 @@ packages:
   - name: "queries"
     path: "./"
     queries: "./queries.sql"
-    schema: "../../../../migrations/sql"
+    schema: "../migrations/sql"
     engine: "postgresql"
     emit_prepared_queries: true
     emit_interface: false
