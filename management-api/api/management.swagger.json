@@ -1775,7 +1775,7 @@
           "cause" : {
             "type" : "string"
           },
-          "stack_trace" : {
+          "stack_traces" : {
             "items" : {
               "type" : "string"
             },

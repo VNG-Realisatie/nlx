@@ -64,5 +64,10 @@ func dataModelToResponse(records []*query.Record) *api.ListRecordsResponse {
 }
 
 func directionToProto(direction string) api.ListRecordsResponse_Record_Direction {
-	return api.ListRecordsResponse_Record_Direction(api.ListRecordsResponse_Record_Direction_value[fmt.Sprintf("DIRECTION_%s", strings.ToUpper(direction))])
+	val, ok := api.ListRecordsResponse_Record_Direction_value[fmt.Sprintf("DIRECTION_%s", strings.ToUpper(direction))]
+	if !ok {
+		return api.ListRecordsResponse_Record_DIRECTION_UNSPECIFIED
+	}
+
+	return api.ListRecordsResponse_Record_Direction(val)
 }

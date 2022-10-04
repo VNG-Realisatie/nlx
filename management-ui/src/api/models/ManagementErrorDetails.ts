@@ -43,7 +43,7 @@ export interface ManagementErrorDetails {
      * @type {Array<string>}
      * @memberof ManagementErrorDetails
      */
-    stackTrace?: Array<string>;
+    stackTraces?: Array<string>;
 }
 
 export function ManagementErrorDetailsFromJSON(json: any): ManagementErrorDetails {
@@ -58,7 +58,7 @@ export function ManagementErrorDetailsFromJSONTyped(json: any, ignoreDiscriminat
         
         'code': !exists(json, 'code') ? undefined : ManagementErrorCodeFromJSON(json['code']),
         'cause': !exists(json, 'cause') ? undefined : json['cause'],
-        'stackTrace': !exists(json, 'stack_trace') ? undefined : json['stack_trace'],
+        'stackTraces': !exists(json, 'stack_traces') ? undefined : json['stack_traces'],
     };
 }
 
@@ -73,7 +73,7 @@ export function ManagementErrorDetailsToJSON(value?: ManagementErrorDetails | nu
         
         'code': ManagementErrorCodeToJSON(value.code),
         'cause': value.cause,
-        'stack_trace': value.stackTrace,
+        'stack_traces': value.stackTraces,
     };
 }
 

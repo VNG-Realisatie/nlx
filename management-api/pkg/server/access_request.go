@@ -39,22 +39,22 @@ func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState
 	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
 	protoState, ok := api.AccessRequestState_value[name]
-	if ok {
-		return api.AccessRequestState(protoState)
+	if !ok {
+		return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 	}
 
-	return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
+	return api.AccessRequestState(protoState)
 }
 
 func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
 	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
 	protoState, ok := api.AccessRequestState_value[name]
-	if ok {
-		return api.AccessRequestState(protoState)
+	if !ok {
+		return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 	}
 
-	return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
+	return api.AccessRequestState(protoState)
 }
 
 func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req *api.ListIncomingAccessRequestsRequest) (*api.ListIncomingAccessRequestsResponse, error) {
@@ -369,9 +369,9 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) *api.
 		}
 
 		details = &api.ErrorDetails{
-			Code:       code,
-			Cause:      request.ErrorCause,
-			StackTrace: request.ErrorStackTrace,
+			Code:        code,
+			Cause:       request.ErrorCause,
+			StackTraces: request.ErrorStackTrace,
 		}
 	}
 

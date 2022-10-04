@@ -378,7 +378,7 @@ enum ErrorCode {
 message ErrorDetails {
   ErrorCode code = 1;
   string cause = 2;
-  repeated string stack_trace = 3;
+  repeated string stack_traces = 3;
 }
 
 message OutgoingAccessRequest {
