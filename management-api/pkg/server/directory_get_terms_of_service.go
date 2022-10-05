@@ -11,13 +11,14 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 )
 
 func (s DirectoryService) GetTermsOfService(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
 	s.logger.Info("rpc request GetTermsOfService")
 
-	response, err := s.directoryClient.GetTermsOfService(ctx, &emptypb.Empty{})
+	response, err := s.directoryClient.GetTermsOfService(ctx, &directoryapi.GetTermsOfServiceRequest{})
 	if err != nil {
 		s.logger.Debug("unable to get terms of service from directory", zap.Error(err))
 		return nil, status.Error(codes.Internal, "unable to get terms of service from directory")

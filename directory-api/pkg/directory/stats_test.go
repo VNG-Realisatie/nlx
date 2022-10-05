@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
@@ -54,12 +53,12 @@ func TestListInOutwayStatistics(t *testing.T) {
 			expectedResponse: &directoryapi.ListInOutwayStatisticsResponse{
 				Versions: []*directoryapi.ListInOutwayStatisticsResponse_Statistics{
 					{
-						Type:    directoryapi.ListInOutwayStatisticsResponse_Statistics_OUTWAY,
+						Type:    directoryapi.ListInOutwayStatisticsResponse_Statistics_TYPE_OUTWAY,
 						Amount:  5,
 						Version: "0.0.1",
 					},
 					{
-						Type:    directoryapi.ListInOutwayStatisticsResponse_Statistics_INWAY,
+						Type:    directoryapi.ListInOutwayStatisticsResponse_Statistics_TYPE_INWAY,
 						Amount:  20,
 						Version: "0.0.3",
 					},
@@ -78,7 +77,7 @@ func TestListInOutwayStatistics(t *testing.T) {
 
 			tt.setup(mocks)
 
-			got, err := service.ListInOutwayStatistics(context.Background(), &emptypb.Empty{})
+			got, err := service.ListInOutwayStatistics(context.Background(), &directoryapi.ListInOutwayStatisticsRequest{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

@@ -9,7 +9,7 @@ export const mapListParticipantsAPIResponse = (response) => {
         name: participant.organization.name,
         serialNumber: participant.organization.serial_number || '',
       },
-      createdAt: new Date(participant.createdAt),
+      createdAt: new Date(participant.created_at),
       inwayCount: participant.statistics.inways,
       outwayCount: participant.statistics.outways,
       serviceCount: participant.statistics.services,

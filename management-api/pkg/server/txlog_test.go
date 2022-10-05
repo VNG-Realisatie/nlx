@@ -83,7 +83,7 @@ func TestTXLogListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			want:    nil,
@@ -93,7 +93,7 @@ func TestTXLogListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.m.
@@ -108,7 +108,7 @@ func TestTXLogListRecords(t *testing.T) {
 			setup: func(ctx context.Context, mocks *txlogServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{

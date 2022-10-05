@@ -57,48 +57,48 @@ var directoryServiceStateTests = []struct {
 	{
 		api.DirectoryService_STATE_UNSPECIFIED,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_UNKNOWN},
+			{State: directoryapi.Inway_STATE_UNSPECIFIED},
 		},
 	},
 	{
 		api.DirectoryService_STATE_UP,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_UP},
+			{State: directoryapi.Inway_STATE_UP},
 		},
 	},
 	{
 		api.DirectoryService_STATE_UP,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_UP},
-			{State: directoryapi.Inway_UP},
-			{State: directoryapi.Inway_UP},
+			{State: directoryapi.Inway_STATE_UP},
+			{State: directoryapi.Inway_STATE_UP},
+			{State: directoryapi.Inway_STATE_UP},
 		},
 	},
 	{
 		api.DirectoryService_STATE_DOWN,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_DOWN},
+			{State: directoryapi.Inway_STATE_DOWN},
 		},
 	},
 	{
 		api.DirectoryService_STATE_DOWN,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_DOWN},
-			{State: directoryapi.Inway_DOWN},
+			{State: directoryapi.Inway_STATE_DOWN},
+			{State: directoryapi.Inway_STATE_DOWN},
 		},
 	},
 	{
 		api.DirectoryService_STATE_DEGRADED,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_UP},
-			{State: directoryapi.Inway_DOWN},
+			{State: directoryapi.Inway_STATE_UP},
+			{State: directoryapi.Inway_STATE_DOWN},
 		},
 	},
 	{
 		api.DirectoryService_STATE_DEGRADED,
 		[]*directoryapi.Inway{
-			{State: directoryapi.Inway_DOWN},
-			{State: directoryapi.Inway_UNKNOWN},
+			{State: directoryapi.Inway_STATE_DOWN},
+			{State: directoryapi.Inway_STATE_UNSPECIFIED},
 		},
 	},
 }

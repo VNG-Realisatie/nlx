@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -39,7 +38,7 @@ func TestGetOrganizationService(t *testing.T) {
 			setup: func(ctx context.Context, mocks directoryServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -140,7 +139,7 @@ func TestGetOrganizationService(t *testing.T) {
 			setup: func(ctx context.Context, mocks directoryServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.db.
@@ -219,7 +218,7 @@ func TestGetOrganizationService(t *testing.T) {
 			setup: func(ctx context.Context, mocks directoryServiceMocks) {
 				mocks.d.
 					EXPECT().
-					ListOrganizations(ctx, &emptypb.Empty{}).
+					ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.db.

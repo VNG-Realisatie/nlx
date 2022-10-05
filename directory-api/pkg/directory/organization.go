@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
@@ -25,7 +24,7 @@ const (
 	ErrMessageUnableToComputeManagementAPIProxyAddress = "unable to compute organization management API proxy address"
 )
 
-func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *directoryapi.ClearOrganizationInwayRequest) (*directoryapi.ClearOrganizationInwayResponse, error) {
 	logger := h.logger.With(zap.String("handler", "ClearOrganizationInway"))
 
 	organization, err := h.getOrganizationInformationFromRequest(ctx)
@@ -39,7 +38,7 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 	if err != nil {
 		if errors.Is(err, storage.ErrNotFound) {
 			logger.Info("did not clear organization because the organization could not be found", zap.Any("organization", organization))
-			return &emptypb.Empty{}, nil
+			return &directoryapi.ClearOrganizationInwayResponse{}, nil
 		}
 
 		logger.Error("failed to clear the organization inway", zap.Error(err))
@@ -47,7 +46,7 @@ func (h *DirectoryService) ClearOrganizationInway(ctx context.Context, _ *emptyp
 		return nil, status.New(codes.Internal, ErrMessageDatabase).Err()
 	}
 
-	return &emptypb.Empty{}, nil
+	return &directoryapi.ClearOrganizationInwayResponse{}, nil
 }
 
 func (h *DirectoryService) GetOrganizationManagementAPIProxyAddress(ctx context.Context, req *directoryapi.GetOrganizationManagementAPIProxyAddressRequest) (*directoryapi.GetOrganizationManagementAPIProxyAddressResponse, error) {
@@ -101,7 +100,7 @@ func (h *DirectoryService) GetOrganizationInway(ctx context.Context, req *direct
 	}, nil
 }
 
-func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListOrganizationsResponse, error) {
+func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *directoryapi.ListOrganizationsRequest) (*directoryapi.ListOrganizationsResponse, error) {
 	h.logger.Info("rpc request ListOrganizations")
 
 	organizations, err := h.repository.ListOrganizations(ctx)
@@ -113,7 +112,7 @@ func (h *DirectoryService) ListOrganizations(ctx context.Context, _ *emptypb.Emp
 	return convertFromDatabaseOrganization(organizations), nil
 }
 
-func (h *DirectoryService) SetOrganizationContactDetails(ctx context.Context, req *directoryapi.SetOrganizationContactDetailsRequest) (*emptypb.Empty, error) {
+func (h *DirectoryService) SetOrganizationContactDetails(ctx context.Context, req *directoryapi.SetOrganizationContactDetailsRequest) (*directoryapi.SetOrganizationContactDetailsResponse, error) {
 	h.logger.Info("rpc request SetOrganizationContactDetailsRequest")
 
 	organization, err := h.getOrganizationFromRequest(ctx)
@@ -132,7 +131,7 @@ func (h *DirectoryService) SetOrganizationContactDetails(ctx context.Context, re
 		return nil, status.Error(codes.Internal, ErrMessageDatabase)
 	}
 
-	return &emptypb.Empty{}, nil
+	return &directoryapi.SetOrganizationContactDetailsResponse{}, nil
 }
 
 func (h *DirectoryService) getOrganizationFromRequest(ctx context.Context) (*domain.Organization, error) {

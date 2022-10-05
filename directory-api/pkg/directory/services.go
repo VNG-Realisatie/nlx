@@ -9,13 +9,12 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
-func (h *DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListServicesResponse, error) {
+func (h *DirectoryService) ListServices(ctx context.Context, _ *directoryapi.ListServicesRequest) (*directoryapi.ListServicesResponse, error) {
 	h.logger.Info("rpc request ListServices()")
 
 	organization, err := h.getOrganizationInformationFromRequest(ctx)
@@ -64,7 +63,7 @@ func convertFromDatabaseService(models []*domain.Service) *directoryapi.ListServ
 		for i, inway := range serviceInways {
 			service.Inways[i] = &directoryapi.Inway{
 				Address: inway.InwayAddress(),
-				State:   directoryapi.Inway_State(directoryapi.Inway_State_value[string(inway.State())]),
+				State:   convertInwayStateToProto(inway.State()),
 			}
 		}
 
@@ -72,4 +71,15 @@ func convertFromDatabaseService(models []*domain.Service) *directoryapi.ListServ
 	}
 
 	return response
+}
+
+func convertInwayStateToProto(state domain.ServiceInwayState) directoryapi.Inway_State {
+	switch state {
+	case domain.InwayUP:
+		return directoryapi.Inway_STATE_UP
+	case domain.InwayDOWN:
+		return directoryapi.Inway_STATE_DOWN
+	default:
+		return directoryapi.Inway_STATE_UNSPECIFIED
+	}
 }

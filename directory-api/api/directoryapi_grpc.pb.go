@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,17 +24,17 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryClient interface {
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
-	ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	SetOrganizationContactDetails(ctx context.Context, in *SetOrganizationContactDetailsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error)
-	ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error)
+	SetOrganizationContactDetails(ctx context.Context, in *SetOrganizationContactDetailsRequest, opts ...grpc.CallOption) (*SetOrganizationContactDetailsResponse, error)
+	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
 	GetOrganizationManagementAPIProxyAddress(ctx context.Context, in *GetOrganizationManagementAPIProxyAddressRequest, opts ...grpc.CallOption) (*GetOrganizationManagementAPIProxyAddressResponse, error)
-	ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
+	ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error)
-	ListParticipants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListParticipantsResponse, error)
-	GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
-	GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetVersionResponse, error)
+	ListParticipants(ctx context.Context, in *ListParticipantsRequest, opts ...grpc.CallOption) (*ListParticipantsResponse, error)
+	GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
+	GetVersion(ctx context.Context, in *GetVersionRequest, opts ...grpc.CallOption) (*GetVersionResponse, error)
 }
 
 type directoryClient struct {
@@ -55,8 +54,8 @@ func (c *directoryClient) RegisterInway(ctx context.Context, in *RegisterInwayRe
 	return out, nil
 }
 
-func (c *directoryClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *directoryClient) ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error) {
+	out := new(ClearOrganizationInwayResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ClearOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -64,8 +63,8 @@ func (c *directoryClient) ClearOrganizationInway(ctx context.Context, in *emptyp
 	return out, nil
 }
 
-func (c *directoryClient) SetOrganizationContactDetails(ctx context.Context, in *SetOrganizationContactDetailsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *directoryClient) SetOrganizationContactDetails(ctx context.Context, in *SetOrganizationContactDetailsRequest, opts ...grpc.CallOption) (*SetOrganizationContactDetailsResponse, error) {
+	out := new(SetOrganizationContactDetailsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/SetOrganizationContactDetails", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,7 +72,7 @@ func (c *directoryClient) SetOrganizationContactDetails(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *directoryClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error) {
+func (c *directoryClient) ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error) {
 	out := new(ListServicesResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ListServices", in, out, opts...)
 	if err != nil {
@@ -82,7 +81,7 @@ func (c *directoryClient) ListServices(ctx context.Context, in *emptypb.Empty, o
 	return out, nil
 }
 
-func (c *directoryClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
+func (c *directoryClient) ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
 	out := new(ListOrganizationsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ListOrganizations", in, out, opts...)
 	if err != nil {
@@ -109,7 +108,7 @@ func (c *directoryClient) GetOrganizationManagementAPIProxyAddress(ctx context.C
 	return out, nil
 }
 
-func (c *directoryClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
+func (c *directoryClient) ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
 	out := new(ListInOutwayStatisticsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ListInOutwayStatistics", in, out, opts...)
 	if err != nil {
@@ -127,7 +126,7 @@ func (c *directoryClient) RegisterOutway(ctx context.Context, in *RegisterOutway
 	return out, nil
 }
 
-func (c *directoryClient) ListParticipants(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListParticipantsResponse, error) {
+func (c *directoryClient) ListParticipants(ctx context.Context, in *ListParticipantsRequest, opts ...grpc.CallOption) (*ListParticipantsResponse, error) {
 	out := new(ListParticipantsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/ListParticipants", in, out, opts...)
 	if err != nil {
@@ -136,7 +135,7 @@ func (c *directoryClient) ListParticipants(ctx context.Context, in *emptypb.Empt
 	return out, nil
 }
 
-func (c *directoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
+func (c *directoryClient) GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
 	out := new(GetTermsOfServiceResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/GetTermsOfService", in, out, opts...)
 	if err != nil {
@@ -145,7 +144,7 @@ func (c *directoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Emp
 	return out, nil
 }
 
-func (c *directoryClient) GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetVersionResponse, error) {
+func (c *directoryClient) GetVersion(ctx context.Context, in *GetVersionRequest, opts ...grpc.CallOption) (*GetVersionResponse, error) {
 	out := new(GetVersionResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.Directory/GetVersion", in, out, opts...)
 	if err != nil {
@@ -159,17 +158,17 @@ func (c *directoryClient) GetVersion(ctx context.Context, in *emptypb.Empty, opt
 // for forward compatibility
 type DirectoryServer interface {
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
-	ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	SetOrganizationContactDetails(context.Context, *SetOrganizationContactDetailsRequest) (*emptypb.Empty, error)
-	ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error)
-	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
+	ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error)
+	SetOrganizationContactDetails(context.Context, *SetOrganizationContactDetailsRequest) (*SetOrganizationContactDetailsResponse, error)
+	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
 	GetOrganizationManagementAPIProxyAddress(context.Context, *GetOrganizationManagementAPIProxyAddressRequest) (*GetOrganizationManagementAPIProxyAddressResponse, error)
-	ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error)
+	ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error)
 	RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error)
-	ListParticipants(context.Context, *emptypb.Empty) (*ListParticipantsResponse, error)
-	GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error)
-	GetVersion(context.Context, *emptypb.Empty) (*GetVersionResponse, error)
+	ListParticipants(context.Context, *ListParticipantsRequest) (*ListParticipantsResponse, error)
+	GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error)
+	GetVersion(context.Context, *GetVersionRequest) (*GetVersionResponse, error)
 	mustEmbedUnimplementedDirectoryServer()
 }
 
@@ -180,16 +179,16 @@ type UnimplementedDirectoryServer struct {
 func (UnimplementedDirectoryServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
-func (UnimplementedDirectoryServer) ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedDirectoryServer) ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearOrganizationInway not implemented")
 }
-func (UnimplementedDirectoryServer) SetOrganizationContactDetails(context.Context, *SetOrganizationContactDetailsRequest) (*emptypb.Empty, error) {
+func (UnimplementedDirectoryServer) SetOrganizationContactDetails(context.Context, *SetOrganizationContactDetailsRequest) (*SetOrganizationContactDetailsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetOrganizationContactDetails not implemented")
 }
-func (UnimplementedDirectoryServer) ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error) {
+func (UnimplementedDirectoryServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-func (UnimplementedDirectoryServer) ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error) {
+func (UnimplementedDirectoryServer) ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizations not implemented")
 }
 func (UnimplementedDirectoryServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
@@ -198,19 +197,19 @@ func (UnimplementedDirectoryServer) GetOrganizationInway(context.Context, *GetOr
 func (UnimplementedDirectoryServer) GetOrganizationManagementAPIProxyAddress(context.Context, *GetOrganizationManagementAPIProxyAddressRequest) (*GetOrganizationManagementAPIProxyAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationManagementAPIProxyAddress not implemented")
 }
-func (UnimplementedDirectoryServer) ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error) {
+func (UnimplementedDirectoryServer) ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInOutwayStatistics not implemented")
 }
 func (UnimplementedDirectoryServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterOutway not implemented")
 }
-func (UnimplementedDirectoryServer) ListParticipants(context.Context, *emptypb.Empty) (*ListParticipantsResponse, error) {
+func (UnimplementedDirectoryServer) ListParticipants(context.Context, *ListParticipantsRequest) (*ListParticipantsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListParticipants not implemented")
 }
-func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error) {
+func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfService not implemented")
 }
-func (UnimplementedDirectoryServer) GetVersion(context.Context, *emptypb.Empty) (*GetVersionResponse, error) {
+func (UnimplementedDirectoryServer) GetVersion(context.Context, *GetVersionRequest) (*GetVersionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVersion not implemented")
 }
 func (UnimplementedDirectoryServer) mustEmbedUnimplementedDirectoryServer() {}
@@ -245,7 +244,7 @@ func _Directory_RegisterInway_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _Directory_ClearOrganizationInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ClearOrganizationInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -257,7 +256,7 @@ func _Directory_ClearOrganizationInway_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/directoryapi.Directory/ClearOrganizationInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ClearOrganizationInway(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).ClearOrganizationInway(ctx, req.(*ClearOrganizationInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -281,7 +280,7 @@ func _Directory_SetOrganizationContactDetails_Handler(srv interface{}, ctx conte
 }
 
 func _Directory_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -293,13 +292,13 @@ func _Directory_ListServices_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/directoryapi.Directory/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ListServices(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).ListServices(ctx, req.(*ListServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Directory_ListOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListOrganizationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -311,7 +310,7 @@ func _Directory_ListOrganizations_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/directoryapi.Directory/ListOrganizations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ListOrganizations(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).ListOrganizations(ctx, req.(*ListOrganizationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -353,7 +352,7 @@ func _Directory_GetOrganizationManagementAPIProxyAddress_Handler(srv interface{}
 }
 
 func _Directory_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListInOutwayStatisticsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -365,7 +364,7 @@ func _Directory_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/directoryapi.Directory/ListInOutwayStatistics",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ListInOutwayStatistics(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).ListInOutwayStatistics(ctx, req.(*ListInOutwayStatisticsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -389,7 +388,7 @@ func _Directory_RegisterOutway_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _Directory_ListParticipants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListParticipantsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -401,13 +400,13 @@ func _Directory_ListParticipants_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/directoryapi.Directory/ListParticipants",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ListParticipants(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).ListParticipants(ctx, req.(*ListParticipantsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetTermsOfServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -419,13 +418,13 @@ func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/directoryapi.Directory/GetTermsOfService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).GetTermsOfService(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).GetTermsOfService(ctx, req.(*GetTermsOfServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Directory_GetVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetVersionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -437,7 +436,7 @@ func _Directory_GetVersion_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/directoryapi.Directory/GetVersion",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).GetVersion(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).GetVersion(ctx, req.(*GetVersionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -507,11 +506,11 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryRegistrationClient interface {
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
-	ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error)
-	ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error)
+	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
-	ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
+	ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 }
 
 type directoryRegistrationClient struct {
@@ -531,8 +530,8 @@ func (c *directoryRegistrationClient) RegisterInway(ctx context.Context, in *Reg
 	return out, nil
 }
 
-func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error) {
+	out := new(ClearOrganizationInwayResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ClearOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -540,7 +539,7 @@ func (c *directoryRegistrationClient) ClearOrganizationInway(ctx context.Context
 	return out, nil
 }
 
-func (c *directoryRegistrationClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error) {
+func (c *directoryRegistrationClient) ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error) {
 	out := new(ListServicesResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ListServices", in, out, opts...)
 	if err != nil {
@@ -549,7 +548,7 @@ func (c *directoryRegistrationClient) ListServices(ctx context.Context, in *empt
 	return out, nil
 }
 
-func (c *directoryRegistrationClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
+func (c *directoryRegistrationClient) ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
 	out := new(ListOrganizationsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ListOrganizations", in, out, opts...)
 	if err != nil {
@@ -567,7 +566,7 @@ func (c *directoryRegistrationClient) GetOrganizationInway(ctx context.Context, 
 	return out, nil
 }
 
-func (c *directoryRegistrationClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
+func (c *directoryRegistrationClient) ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
 	out := new(ListInOutwayStatisticsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryRegistration/ListInOutwayStatistics", in, out, opts...)
 	if err != nil {
@@ -581,11 +580,11 @@ func (c *directoryRegistrationClient) ListInOutwayStatistics(ctx context.Context
 // for forward compatibility
 type DirectoryRegistrationServer interface {
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
-	ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error)
-	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
+	ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error)
+	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
-	ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error)
+	ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error)
 	mustEmbedUnimplementedDirectoryRegistrationServer()
 }
 
@@ -596,19 +595,19 @@ type UnimplementedDirectoryRegistrationServer struct {
 func (UnimplementedDirectoryRegistrationServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
-func (UnimplementedDirectoryRegistrationServer) ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedDirectoryRegistrationServer) ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearOrganizationInway not implemented")
 }
-func (UnimplementedDirectoryRegistrationServer) ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error) {
+func (UnimplementedDirectoryRegistrationServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-func (UnimplementedDirectoryRegistrationServer) ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error) {
+func (UnimplementedDirectoryRegistrationServer) ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizations not implemented")
 }
 func (UnimplementedDirectoryRegistrationServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationInway not implemented")
 }
-func (UnimplementedDirectoryRegistrationServer) ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error) {
+func (UnimplementedDirectoryRegistrationServer) ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInOutwayStatistics not implemented")
 }
 func (UnimplementedDirectoryRegistrationServer) mustEmbedUnimplementedDirectoryRegistrationServer() {}
@@ -643,7 +642,7 @@ func _DirectoryRegistration_RegisterInway_Handler(srv interface{}, ctx context.C
 }
 
 func _DirectoryRegistration_ClearOrganizationInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ClearOrganizationInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -655,13 +654,13 @@ func _DirectoryRegistration_ClearOrganizationInway_Handler(srv interface{}, ctx 
 		FullMethod: "/directoryapi.DirectoryRegistration/ClearOrganizationInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryRegistrationServer).ClearOrganizationInway(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryRegistrationServer).ClearOrganizationInway(ctx, req.(*ClearOrganizationInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DirectoryRegistration_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -673,13 +672,13 @@ func _DirectoryRegistration_ListServices_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/directoryapi.DirectoryRegistration/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryRegistrationServer).ListServices(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryRegistrationServer).ListServices(ctx, req.(*ListServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DirectoryRegistration_ListOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListOrganizationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -691,7 +690,7 @@ func _DirectoryRegistration_ListOrganizations_Handler(srv interface{}, ctx conte
 		FullMethod: "/directoryapi.DirectoryRegistration/ListOrganizations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryRegistrationServer).ListOrganizations(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryRegistrationServer).ListOrganizations(ctx, req.(*ListOrganizationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -715,7 +714,7 @@ func _DirectoryRegistration_GetOrganizationInway_Handler(srv interface{}, ctx co
 }
 
 func _DirectoryRegistration_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListInOutwayStatisticsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -727,7 +726,7 @@ func _DirectoryRegistration_ListInOutwayStatistics_Handler(srv interface{}, ctx 
 		FullMethod: "/directoryapi.DirectoryRegistration/ListInOutwayStatistics",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryRegistrationServer).ListInOutwayStatistics(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryRegistrationServer).ListInOutwayStatistics(ctx, req.(*ListInOutwayStatisticsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -773,11 +772,11 @@ var DirectoryRegistration_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryInspectionClient interface {
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
-	ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error)
-	ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error)
+	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
-	ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
+	ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 }
 
 type directoryInspectionClient struct {
@@ -797,8 +796,8 @@ func (c *directoryInspectionClient) RegisterInway(ctx context.Context, in *Regis
 	return out, nil
 }
 
-func (c *directoryInspectionClient) ClearOrganizationInway(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *directoryInspectionClient) ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error) {
+	out := new(ClearOrganizationInwayResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryInspection/ClearOrganizationInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -806,7 +805,7 @@ func (c *directoryInspectionClient) ClearOrganizationInway(ctx context.Context, 
 	return out, nil
 }
 
-func (c *directoryInspectionClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListServicesResponse, error) {
+func (c *directoryInspectionClient) ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error) {
 	out := new(ListServicesResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryInspection/ListServices", in, out, opts...)
 	if err != nil {
@@ -815,7 +814,7 @@ func (c *directoryInspectionClient) ListServices(ctx context.Context, in *emptyp
 	return out, nil
 }
 
-func (c *directoryInspectionClient) ListOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
+func (c *directoryInspectionClient) ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error) {
 	out := new(ListOrganizationsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryInspection/ListOrganizations", in, out, opts...)
 	if err != nil {
@@ -833,7 +832,7 @@ func (c *directoryInspectionClient) GetOrganizationInway(ctx context.Context, in
 	return out, nil
 }
 
-func (c *directoryInspectionClient) ListInOutwayStatistics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
+func (c *directoryInspectionClient) ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error) {
 	out := new(ListInOutwayStatisticsResponse)
 	err := c.cc.Invoke(ctx, "/directoryapi.DirectoryInspection/ListInOutwayStatistics", in, out, opts...)
 	if err != nil {
@@ -847,11 +846,11 @@ func (c *directoryInspectionClient) ListInOutwayStatistics(ctx context.Context, 
 // for forward compatibility
 type DirectoryInspectionServer interface {
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
-	ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error)
-	ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error)
+	ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error)
+	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
-	ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error)
+	ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error)
 	mustEmbedUnimplementedDirectoryInspectionServer()
 }
 
@@ -862,19 +861,19 @@ type UnimplementedDirectoryInspectionServer struct {
 func (UnimplementedDirectoryInspectionServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
-func (UnimplementedDirectoryInspectionServer) ClearOrganizationInway(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedDirectoryInspectionServer) ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClearOrganizationInway not implemented")
 }
-func (UnimplementedDirectoryInspectionServer) ListServices(context.Context, *emptypb.Empty) (*ListServicesResponse, error) {
+func (UnimplementedDirectoryInspectionServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-func (UnimplementedDirectoryInspectionServer) ListOrganizations(context.Context, *emptypb.Empty) (*ListOrganizationsResponse, error) {
+func (UnimplementedDirectoryInspectionServer) ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizations not implemented")
 }
 func (UnimplementedDirectoryInspectionServer) GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationInway not implemented")
 }
-func (UnimplementedDirectoryInspectionServer) ListInOutwayStatistics(context.Context, *emptypb.Empty) (*ListInOutwayStatisticsResponse, error) {
+func (UnimplementedDirectoryInspectionServer) ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInOutwayStatistics not implemented")
 }
 func (UnimplementedDirectoryInspectionServer) mustEmbedUnimplementedDirectoryInspectionServer() {}
@@ -909,7 +908,7 @@ func _DirectoryInspection_RegisterInway_Handler(srv interface{}, ctx context.Con
 }
 
 func _DirectoryInspection_ClearOrganizationInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ClearOrganizationInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -921,13 +920,13 @@ func _DirectoryInspection_ClearOrganizationInway_Handler(srv interface{}, ctx co
 		FullMethod: "/directoryapi.DirectoryInspection/ClearOrganizationInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryInspectionServer).ClearOrganizationInway(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryInspectionServer).ClearOrganizationInway(ctx, req.(*ClearOrganizationInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DirectoryInspection_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -939,13 +938,13 @@ func _DirectoryInspection_ListServices_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/directoryapi.DirectoryInspection/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryInspectionServer).ListServices(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryInspectionServer).ListServices(ctx, req.(*ListServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DirectoryInspection_ListOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListOrganizationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -957,7 +956,7 @@ func _DirectoryInspection_ListOrganizations_Handler(srv interface{}, ctx context
 		FullMethod: "/directoryapi.DirectoryInspection/ListOrganizations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryInspectionServer).ListOrganizations(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryInspectionServer).ListOrganizations(ctx, req.(*ListOrganizationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -981,7 +980,7 @@ func _DirectoryInspection_GetOrganizationInway_Handler(srv interface{}, ctx cont
 }
 
 func _DirectoryInspection_ListInOutwayStatistics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListInOutwayStatisticsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -993,7 +992,7 @@ func _DirectoryInspection_ListInOutwayStatistics_Handler(srv interface{}, ctx co
 		FullMethod: "/directoryapi.DirectoryInspection/ListInOutwayStatistics",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryInspectionServer).ListInOutwayStatistics(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryInspectionServer).ListInOutwayStatistics(ctx, req.(*ListInOutwayStatisticsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -6,12 +6,10 @@ package directory
 import (
 	"context"
 
-	"google.golang.org/protobuf/types/known/emptypb"
-
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
-func (h *DirectoryService) GetTermsOfService(_ context.Context, _ *emptypb.Empty) (*directoryapi.GetTermsOfServiceResponse, error) {
+func (h *DirectoryService) GetTermsOfService(_ context.Context, _ *directoryapi.GetTermsOfServiceRequest) (*directoryapi.GetTermsOfServiceResponse, error) {
 	h.logger.Info("rpc request GetTermsOfService")
 
 	return &directoryapi.GetTermsOfServiceResponse{

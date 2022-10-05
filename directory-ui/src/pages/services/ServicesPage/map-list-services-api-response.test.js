@@ -20,7 +20,7 @@ describe('reduce the inway states to a service status', () => {
     it('should return the state of the inway', () => {
       const inways = [
         {
-          state: 'UP',
+          state: 'STATE_UP',
         },
       ]
       const status = reduceInwayStatesToStatus(inways)
@@ -32,10 +32,10 @@ describe('reduce the inway states to a service status', () => {
     it('should return the same state', () => {
       const inways = [
         {
-          state: 'UP',
+          state: 'STATE_UP',
         },
         {
-          state: 'UP',
+          state: 'STATE_UP',
         },
       ]
 
@@ -48,10 +48,10 @@ describe('reduce the inway states to a service status', () => {
     it('should return degraded', () => {
       const inways = [
         {
-          state: 'UP',
+          state: 'STATE_UP',
         },
         {
-          state: 'DOWN',
+          state: 'STATE_DOWN',
         },
       ]
       const status = reduceInwayStatesToStatus(inways)
@@ -63,7 +63,7 @@ describe('reduce the inway states to a service status', () => {
     it('should return unknown', () => {
       const inways = [
         {
-          state: 'FOO',
+          state: 'STATE_UNSPECIFIED',
         },
       ]
       const status = reduceInwayStatesToStatus(inways)

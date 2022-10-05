@@ -64,7 +64,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{

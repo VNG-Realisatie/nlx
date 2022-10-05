@@ -15,7 +15,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
@@ -26,7 +25,7 @@ import (
 func TestClearOrganizationInway(t *testing.T) {
 	tests := map[string]struct {
 		setup            func(serviceMocks)
-		expectedResponse *emptypb.Empty
+		expectedResponse *directoryapi.ClearOrganizationInwayResponse
 		expectedError    error
 	}{
 		"database_error": {
@@ -46,7 +45,7 @@ func TestClearOrganizationInway(t *testing.T) {
 					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
 					Return(storage.ErrNotFound)
 			},
-			expectedResponse: &emptypb.Empty{},
+			expectedResponse: &directoryapi.ClearOrganizationInwayResponse{},
 			expectedError:    nil,
 		},
 		"happy_flow": {
@@ -56,7 +55,7 @@ func TestClearOrganizationInway(t *testing.T) {
 					ClearOrganizationInway(gomock.Any(), testOrganizationSerialNumber).
 					Return(nil)
 			},
-			expectedResponse: &emptypb.Empty{},
+			expectedResponse: &directoryapi.ClearOrganizationInwayResponse{},
 			expectedError:    nil,
 		},
 	}
@@ -73,7 +72,7 @@ func TestClearOrganizationInway(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			got, err := service.ClearOrganizationInway(context.Background(), &emptypb.Empty{})
+			got, err := service.ClearOrganizationInway(context.Background(), &directoryapi.ClearOrganizationInwayRequest{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)
@@ -85,7 +84,7 @@ func TestSetOrganizationEmailAddress(t *testing.T) {
 	tests := map[string]struct {
 		setup            func(serviceMocks)
 		req              *directoryapi.SetOrganizationContactDetailsRequest
-		expectedResponse *emptypb.Empty
+		expectedResponse *directoryapi.SetOrganizationContactDetailsResponse
 		expectedError    error
 	}{
 		"invalid_email_address": {
@@ -126,7 +125,7 @@ func TestSetOrganizationEmailAddress(t *testing.T) {
 			req: &directoryapi.SetOrganizationContactDetailsRequest{
 				EmailAddress: "mock@email.com",
 			},
-			expectedResponse: &emptypb.Empty{},
+			expectedResponse: &directoryapi.SetOrganizationContactDetailsResponse{},
 			expectedError:    nil,
 		},
 	}
@@ -205,7 +204,7 @@ func TestListOrganizations(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			got, err := service.ListOrganizations(context.Background(), &emptypb.Empty{})
+			got, err := service.ListOrganizations(context.Background(), &directoryapi.ListOrganizationsRequest{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

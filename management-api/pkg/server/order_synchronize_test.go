@@ -43,7 +43,7 @@ func TestSynchronizeOrders(t *testing.T) {
 			ctx:     testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(nil, errors.New("directory fails"))
 			},
 		},
@@ -53,7 +53,7 @@ func TestSynchronizeOrders(t *testing.T) {
 			ctx:  testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -74,7 +74,7 @@ func TestSynchronizeOrders(t *testing.T) {
 			ctx:  testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -102,7 +102,7 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -197,7 +197,7 @@ func TestSynchronizeOrders(t *testing.T) {
 			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -293,7 +293,7 @@ func TestSynchronizeOrders(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{

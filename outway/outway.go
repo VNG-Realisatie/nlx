@@ -27,7 +27,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
@@ -330,7 +329,7 @@ func (o *Outway) createService(
 	for _, inway := range serviceToImplement.Inways {
 		inwayAddress := inway.Address
 
-		healthy := inway.State == directoryapi.Inway_UP
+		healthy := inway.State == directoryapi.Inway_STATE_UP
 
 		if healthy {
 			// we want to use only healthy endpoints.
@@ -429,7 +428,7 @@ func (o *Outway) updateServiceList() error {
 
 	ctx := context.TODO()
 
-	resp, err := o.directoryClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{})
+	resp, err := o.directoryClient.ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &directoryapi.ListServicesRequest{})
 	if err != nil {
 		return errors.Wrap(err, "failed to fetch services from directory")
 	}

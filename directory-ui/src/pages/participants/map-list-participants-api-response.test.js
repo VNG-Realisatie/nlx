@@ -14,7 +14,7 @@ describe('mapping the API response', () => {
             name: 'foo',
             serial_number: '00000000000000000000',
           },
-          createdAt: '2021-01-01T00:00:00',
+          created_at: '2021-01-01T00:00:00',
           statistics: {
             inways: 10,
             outways: 3,

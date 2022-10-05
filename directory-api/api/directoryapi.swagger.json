@@ -219,19 +219,20 @@
     "InwayState": {
       "type": "string",
       "enum": [
-        "UNKNOWN",
-        "UP",
-        "DOWN"
+        "STATE_UNSPECIFIED",
+        "STATE_UP",
+        "STATE_DOWN"
       ],
-      "default": "UNKNOWN"
+      "default": "STATE_UNSPECIFIED"
     },
     "ListInOutwayStatisticsResponseStatisticsType": {
       "type": "string",
       "enum": [
-        "INWAY",
-        "OUTWAY"
+        "TYPE_UNSPECIFIED",
+        "TYPE_INWAY",
+        "TYPE_OUTWAY"
       ],
-      "default": "INWAY"
+      "default": "TYPE_UNSPECIFIED"
     },
     "ListParticipantsResponseParticipant": {
       "type": "object",
@@ -239,7 +240,7 @@
         "organization": {
           "$ref": "#/definitions/directoryapiOrganization"
         },
-        "createdAt": {
+        "created_at": {
           "type": "string",
           "format": "date-time"
         },
@@ -351,6 +352,9 @@
           "format": "int32"
         }
       }
+    },
+    "directoryapiClearOrganizationInwayResponse": {
+      "type": "object"
     },
     "directoryapiGetOrganizationInwayResponse": {
       "type": "object",
@@ -486,6 +490,9 @@
           "type": "string"
         }
       }
+    },
+    "directoryapiSetOrganizationContactDetailsResponse": {
+      "type": "object"
     },
     "protobufAny": {
       "type": "object",

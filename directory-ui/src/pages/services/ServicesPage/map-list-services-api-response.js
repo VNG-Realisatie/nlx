@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 
-const VALID_STATES = ['unknown', 'up', 'down']
+const STATE_PREFIX = 'STATE_'
 
 export const reduceInwayStatesToStatus = (inways = []) => {
   let status = 'down'
@@ -10,10 +10,10 @@ export const reduceInwayStatesToStatus = (inways = []) => {
   // Create an array of unique inway lowercase states
   const states = inways
     .map((inway) => {
-      const state = inway.state.toLowerCase()
-      if (VALID_STATES.includes(state) === false) {
-        return 'unknown'
-      }
+      const state = inway.state.replace(STATE_PREFIX, '').toLowerCase()
+
+      if (state === 'unspecified') return 'unknown'
+
       return state
     })
     .filter((element, index, array) => array.indexOf(element) === index)

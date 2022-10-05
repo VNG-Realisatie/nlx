@@ -4,7 +4,6 @@
 syntax = "proto3";
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 package directoryapi;
@@ -14,15 +13,15 @@ option go_package = ".;directoryapi";
 service Directory {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
 
-	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
+	rpc ClearOrganizationInway (ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
 
-	rpc SetOrganizationContactDetails (SetOrganizationContactDetailsRequest) returns (google.protobuf.Empty);
+	rpc SetOrganizationContactDetails (SetOrganizationContactDetailsRequest) returns (SetOrganizationContactDetailsResponse);
 
-	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {
+	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
 		option (google.api.http).get = "/api/directory/list-services";
 	}
 
-	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {
+	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {
 		option (google.api.http).get = "/api/directory/list-organizations";
 	}
 
@@ -34,21 +33,21 @@ service Directory {
         option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway/management-api-proxy-address";
     }
 
-    rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {
+    rpc ListInOutwayStatistics (ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {
         option (google.api.http).get = "/api/stats";
     }
 
 	rpc RegisterOutway (RegisterOutwayRequest) returns (RegisterOutwayResponse);
 
-	rpc ListParticipants (google.protobuf.Empty) returns (ListParticipantsResponse) {
+	rpc ListParticipants (ListParticipantsRequest) returns (ListParticipantsResponse) {
 		option (google.api.http).get = "/api/directory/participants";
 	};
 
-	rpc GetTermsOfService (google.protobuf.Empty) returns (GetTermsOfServiceResponse) {
+	rpc GetTermsOfService (GetTermsOfServiceRequest) returns (GetTermsOfServiceResponse) {
 		option (google.api.http).get = "/api/directory/terms-of-service";
 	};
 
-    rpc GetVersion (google.protobuf.Empty) returns (GetVersionResponse) {
+    rpc GetVersion (GetVersionRequest) returns (GetVersionResponse) {
         option (google.api.http).get = "/api/directory/version";
     };
 }
@@ -57,30 +56,30 @@ service Directory {
 service DirectoryRegistration {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
 
-	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
+	rpc ClearOrganizationInway (ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
 
-	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {}
+	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {}
 
-	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {}
+	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {}
 
 	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
 
-	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {}
+	rpc ListInOutwayStatistics (ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {}
 }
 
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
 service DirectoryInspection {
 	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
 
-	rpc ClearOrganizationInway (google.protobuf.Empty) returns (google.protobuf.Empty);
+	rpc ClearOrganizationInway (ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
 
-	rpc ListServices (google.protobuf.Empty) returns (ListServicesResponse) {}
+	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {}
 
-	rpc ListOrganizations (google.protobuf.Empty) returns (ListOrganizationsResponse) {}
+	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {}
 
 	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
 
-	rpc ListInOutwayStatistics (google.protobuf.Empty) returns (ListInOutwayStatisticsResponse) {}
+	rpc ListInOutwayStatistics (ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {}
 }
 
 message RegisterInwayRequest {
@@ -115,13 +114,15 @@ message Organization {
 
 message Inway {
 	enum State {
-		UNKNOWN = 0;
-		UP = 1;
-		DOWN = 2;
+		STATE_UNSPECIFIED = 0;
+		STATE_UP = 1;
+		STATE_DOWN = 2;
 	}
 	string address = 1;
 	State state = 2 ;
 }
+
+message ListServicesRequest {}
 
 message ListServicesResponse {
     message Costs {
@@ -144,6 +145,8 @@ message ListServicesResponse {
 	repeated Service services = 1;
 }
 
+message ListOrganizationsRequest {}
+
 message ListOrganizationsResponse {
 	repeated Organization organizations = 1;
 }
@@ -165,11 +168,14 @@ message GetOrganizationInwayResponse {
     string management_api_proxy_address = 2;
 }
 
+message ListInOutwayStatisticsRequest {}
+
 message ListInOutwayStatisticsResponse {
 	message Statistics {
 		enum Type {
-			INWAY = 0;
-			OUTWAY = 1;
+			TYPE_UNSPECIFIED = 0;
+			TYPE_INWAY = 1;
+			TYPE_OUTWAY = 2;
 		}
 
 		Type type = 1;
@@ -188,10 +194,12 @@ message RegisterOutwayResponse {
 	string error = 1;
 }
 
+message ListParticipantsRequest {}
+
 message ListParticipantsResponse {
 	message Participant {
 		Organization organization = 1;
-		google.protobuf.Timestamp createdAt = 2;
+		google.protobuf.Timestamp created_at = 2;
 
 		message Statistics {
 			uint32 inways = 1;
@@ -209,11 +217,21 @@ message SetOrganizationContactDetailsRequest {
 	string email_address = 1;
 }
 
+message SetOrganizationContactDetailsResponse{}
+
+message GetTermsOfServiceRequest {}
+
 message GetTermsOfServiceResponse {
 	bool enabled = 1;
 	string url = 2;
 }
 
+message GetVersionRequest {}
+
 message GetVersionResponse {
     string version = 1;
 }
+
+message ClearOrganizationInwayRequest {}
+
+message ClearOrganizationInwayResponse {}

@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
@@ -36,7 +35,7 @@ func TestGetVersion(t *testing.T) {
 				timeToReturn: time.Now(),
 			})
 
-			got, err := service.GetVersion(context.Background(), &emptypb.Empty{})
+			got, err := service.GetVersion(context.Background(), &directoryapi.GetVersionRequest{})
 			assert.NoError(t, err)
 
 			assert.Equal(t, tt.wantResponse, got)

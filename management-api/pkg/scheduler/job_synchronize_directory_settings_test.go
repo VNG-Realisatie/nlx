@@ -12,7 +12,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/domain"
@@ -79,7 +78,7 @@ func TestSynchronizeDirectorySettingsJob(t *testing.T) {
 					SetOrganizationContactDetails(gomock.Any(), &directoryapi.SetOrganizationContactDetailsRequest{
 						EmailAddress: "test@test.com",
 					}).
-					Return(&emptypb.Empty{}, nil)
+					Return(&directoryapi.SetOrganizationContactDetailsResponse{}, nil)
 			},
 			wantErr: nil,
 		},

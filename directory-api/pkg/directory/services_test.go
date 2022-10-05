@@ -14,7 +14,6 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
@@ -108,7 +107,7 @@ func TestListServices(t *testing.T) {
 						Inways: []*directoryapi.Inway{
 							{
 								Address: "inway-address-a",
-								State:   directoryapi.Inway_UP,
+								State:   directoryapi.Inway_STATE_UP,
 							},
 						},
 						Costs: &directoryapi.ListServicesResponse_Costs{
@@ -126,11 +125,11 @@ func TestListServices(t *testing.T) {
 						Inways: []*directoryapi.Inway{
 							{
 								Address: "inway-address-b",
-								State:   directoryapi.Inway_DOWN,
+								State:   directoryapi.Inway_STATE_DOWN,
 							},
 							{
 								Address: "inway-address-c",
-								State:   directoryapi.Inway_UP,
+								State:   directoryapi.Inway_STATE_UP,
 							},
 						},
 						Organization: &directoryapi.Organization{
@@ -161,7 +160,7 @@ func TestListServices(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			got, err := service.ListServices(context.Background(), &emptypb.Empty{})
+			got, err := service.ListServices(context.Background(), &directoryapi.ListServicesRequest{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

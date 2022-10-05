@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
@@ -39,14 +38,14 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 }
 
 // ClearOrganizationInway mocks base method.
-func (m *MockClient) ClearOrganizationInway(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockClient) ClearOrganizationInway(arg0 context.Context, arg1 *directoryapi.ClearOrganizationInwayRequest, arg2 ...grpc.CallOption) (*directoryapi.ClearOrganizationInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ClearOrganizationInway", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*directoryapi.ClearOrganizationInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -128,7 +127,7 @@ func (mr *MockClientMockRecorder) GetOrganizationManagementAPIProxyAddress(arg0,
 }
 
 // GetTermsOfService mocks base method.
-func (m *MockClient) GetTermsOfService(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.GetTermsOfServiceResponse, error) {
+func (m *MockClient) GetTermsOfService(arg0 context.Context, arg1 *directoryapi.GetTermsOfServiceRequest, arg2 ...grpc.CallOption) (*directoryapi.GetTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -148,7 +147,7 @@ func (mr *MockClientMockRecorder) GetTermsOfService(arg0, arg1 interface{}, arg2
 }
 
 // GetVersion mocks base method.
-func (m *MockClient) GetVersion(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.GetVersionResponse, error) {
+func (m *MockClient) GetVersion(arg0 context.Context, arg1 *directoryapi.GetVersionRequest, arg2 ...grpc.CallOption) (*directoryapi.GetVersionResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -168,7 +167,7 @@ func (mr *MockClientMockRecorder) GetVersion(arg0, arg1 interface{}, arg2 ...int
 }
 
 // ListInOutwayStatistics mocks base method.
-func (m *MockClient) ListInOutwayStatistics(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
+func (m *MockClient) ListInOutwayStatistics(arg0 context.Context, arg1 *directoryapi.ListInOutwayStatisticsRequest, arg2 ...grpc.CallOption) (*directoryapi.ListInOutwayStatisticsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -188,7 +187,7 @@ func (mr *MockClientMockRecorder) ListInOutwayStatistics(arg0, arg1 interface{},
 }
 
 // ListOrganizations mocks base method.
-func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListOrganizationsResponse, error) {
+func (m *MockClient) ListOrganizations(arg0 context.Context, arg1 *directoryapi.ListOrganizationsRequest, arg2 ...grpc.CallOption) (*directoryapi.ListOrganizationsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -208,7 +207,7 @@ func (mr *MockClientMockRecorder) ListOrganizations(arg0, arg1 interface{}, arg2
 }
 
 // ListParticipants mocks base method.
-func (m *MockClient) ListParticipants(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListParticipantsResponse, error) {
+func (m *MockClient) ListParticipants(arg0 context.Context, arg1 *directoryapi.ListParticipantsRequest, arg2 ...grpc.CallOption) (*directoryapi.ListParticipantsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -228,7 +227,7 @@ func (mr *MockClientMockRecorder) ListParticipants(arg0, arg1 interface{}, arg2 
 }
 
 // ListServices mocks base method.
-func (m *MockClient) ListServices(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*directoryapi.ListServicesResponse, error) {
+func (m *MockClient) ListServices(arg0 context.Context, arg1 *directoryapi.ListServicesRequest, arg2 ...grpc.CallOption) (*directoryapi.ListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
@@ -288,14 +287,14 @@ func (mr *MockClientMockRecorder) RegisterOutway(arg0, arg1 interface{}, arg2 ..
 }
 
 // SetOrganizationContactDetails mocks base method.
-func (m *MockClient) SetOrganizationContactDetails(arg0 context.Context, arg1 *directoryapi.SetOrganizationContactDetailsRequest, arg2 ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockClient) SetOrganizationContactDetails(arg0 context.Context, arg1 *directoryapi.SetOrganizationContactDetailsRequest, arg2 ...grpc.CallOption) (*directoryapi.SetOrganizationContactDetailsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "SetOrganizationContactDetails", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*directoryapi.SetOrganizationContactDetailsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -35,11 +35,11 @@ func TestNewRoundRobinLoadBalancer(t *testing.T) {
 		[]directoryapi.Inway{
 			{
 				Address: inwayAddresses[0],
-				State:   directoryapi.Inway_UP,
+				State:   directoryapi.Inway_STATE_UP,
 			},
 			{
 				Address: inwayAddresses[1],
-				State:   directoryapi.Inway_UP,
+				State:   directoryapi.Inway_STATE_UP,
 			},
 		})
 

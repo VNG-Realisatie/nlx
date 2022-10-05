@@ -47,7 +47,7 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty)
 		return nil, err
 	}
 
-	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 	if err != nil {
 		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to retrieve audit logs")

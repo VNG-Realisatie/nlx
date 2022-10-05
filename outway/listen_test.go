@@ -123,7 +123,7 @@ func TestOutwayListen(t *testing.T) {
 			Inways: []*directoryapi.Inway{
 				{
 					Address: "mock-service-a-1:123",
-					State:   directoryapi.Inway_UP,
+					State:   directoryapi.Inway_STATE_UP,
 				},
 			},
 		}
@@ -141,7 +141,7 @@ func TestOutwayListen(t *testing.T) {
 		Inways: []*directoryapi.Inway{
 			{
 				Address: "mock-service-fail-1:123",
-				State:   directoryapi.Inway_UP,
+				State:   directoryapi.Inway_STATE_UP,
 			},
 		},
 	}
@@ -533,7 +533,7 @@ func TestFailingTransport(t *testing.T) {
 		Inways: []*directoryapi.Inway{
 			{
 				Address: "mock-service-:123",
-				State:   directoryapi.Inway_UP,
+				State:   directoryapi.Inway_STATE_UP,
 			},
 		},
 	}
@@ -549,7 +549,7 @@ func TestFailingTransport(t *testing.T) {
 		"00000000000000000001", "mockservice",
 		[]directoryapi.Inway{{
 			Address: "inway.00000000000000000001",
-			State:   directoryapi.Inway_UP,
+			State:   directoryapi.Inway_STATE_UP,
 		}})
 
 	assert.Nil(t, err)

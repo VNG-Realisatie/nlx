@@ -52,12 +52,12 @@ func TestListDirectoryServices(t *testing.T) {
 
 	client := mock_directory.NewMockClient(mockCtrl)
 	client.EXPECT().
-		ListServices(ctx, &emptypb.Empty{}).
+		ListServices(ctx, &directoryapi.ListServicesRequest{}).
 		Return(&directoryapi.ListServicesResponse{Services: clientServices}, nil)
 
 	client.
 		EXPECT().
-		ListOrganizations(ctx, &emptypb.Empty{}).
+		ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{}).
 		Return(&directoryapi.ListOrganizationsResponse{
 			Organizations: []*directoryapi.Organization{
 				{

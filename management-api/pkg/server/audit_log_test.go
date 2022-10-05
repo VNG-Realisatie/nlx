@@ -48,7 +48,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			req:     &emptypb.Empty{},
@@ -60,7 +60,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
@@ -77,7 +77,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
@@ -96,7 +96,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
@@ -134,7 +134,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.
@@ -172,7 +172,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{
 						Organizations: []*directoryapi.Organization{
 							{
@@ -228,7 +228,7 @@ func TestListAuditLogs(t *testing.T) {
 			setup: func(mocks serviceMocks) {
 				mocks.dc.
 					EXPECT().
-					ListOrganizations(gomock.Any(), &emptypb.Empty{}).
+					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(&directoryapi.ListOrganizationsResponse{}, nil)
 
 				mocks.al.

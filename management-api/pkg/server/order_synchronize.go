@@ -26,7 +26,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 		return nil, err
 	}
 
-	response, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	response, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 	if err != nil {
 		s.logger.Error("failed to list response", zap.Error(err))
 		return nil, status.Error(codes.Internal, "failed to list response")

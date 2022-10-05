@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/domain"
@@ -30,7 +31,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 
 	s.logger.Info("rpc request ListOutgoingOrders")
 
-	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 	if err != nil {
 		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 		return nil, status.Error(codes.Internal, "internal error")
@@ -80,7 +81,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 
 	s.logger.Info("rpc request ListIncomingOrders")
 
-	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 	if err != nil {
 		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "internal error")

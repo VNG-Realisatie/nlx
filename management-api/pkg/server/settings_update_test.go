@@ -70,7 +70,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
 						EmailAddress: "mock@email.com",
 					}).
-					Return(&emptypb.Empty{}, nil)
+					Return(&directoryapi.SetOrganizationContactDetailsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
@@ -101,7 +101,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
 						EmailAddress: "mock@email.com",
 					}).
-					Return(&emptypb.Empty{}, nil)
+					Return(&directoryapi.SetOrganizationContactDetailsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().
@@ -153,7 +153,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 					SetOrganizationContactDetails(ctx, &directoryapi.SetOrganizationContactDetailsRequest{
 						EmailAddress: "mock@email.com",
 					}).
-					Return(&emptypb.Empty{}, nil)
+					Return(&directoryapi.SetOrganizationContactDetailsResponse{}, nil)
 
 				mocks.al.
 					EXPECT().

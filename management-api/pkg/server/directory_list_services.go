@@ -11,13 +11,14 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 )
 
 func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
-	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
+	resp, err := s.directoryClient.ListServices(ctx, &directoryapi.ListServicesRequest{})
 	if err != nil {
 		s.logger.Error("error getting services list from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "directory error")

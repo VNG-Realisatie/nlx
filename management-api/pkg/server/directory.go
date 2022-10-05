@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -31,9 +30,9 @@ type DirectoryService struct {
 }
 
 var inwayStateToDirectoryState = map[directoryapi.Inway_State]api.DirectoryService_State{
-	directoryapi.Inway_UNKNOWN: api.DirectoryService_STATE_UNSPECIFIED,
-	directoryapi.Inway_UP:      api.DirectoryService_STATE_UP,
-	directoryapi.Inway_DOWN:    api.DirectoryService_STATE_DOWN,
+	directoryapi.Inway_STATE_UNSPECIFIED: api.DirectoryService_STATE_UNSPECIFIED,
+	directoryapi.Inway_STATE_UP:          api.DirectoryService_STATE_UP,
+	directoryapi.Inway_STATE_DOWN:        api.DirectoryService_STATE_DOWN,
 }
 
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient directory.Client, configDatabase database.ConfigDatabase) *DirectoryService {
@@ -74,7 +73,7 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 }
 
 func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, organizationSerialNumber, serviceName string) (*directoryapi.ListServicesResponse_Service, error) {
-	resp, err := s.directoryClient.ListServices(ctx, &emptypb.Empty{})
+	resp, err := s.directoryClient.ListServices(ctx, &directoryapi.ListServicesRequest{})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "directory not available")
 	}
@@ -120,7 +119,7 @@ func getLatestAccessRequestStates(ctx context.Context, directoryClient directory
 		return nil, err
 	}
 
-	organizations, err := directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	organizations, err := directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 	if err != nil {
 		return nil, err
 	}

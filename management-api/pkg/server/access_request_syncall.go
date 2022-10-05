@@ -15,6 +15,7 @@ import (
 
 	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
 	common_tls "go.nlx.io/nlx/common/tls"
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
@@ -54,7 +55,7 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 	})
 
 	if len(oinsWithError) > 0 {
-		organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+		organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 		if err != nil {
 			s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "internal error")

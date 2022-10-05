@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/monitoring"
 	"go.nlx.io/nlx/common/nlxversion"
@@ -50,7 +49,7 @@ func TestUpdateServiceList(t *testing.T) {
 	// Make the mock directory client return an error when calling ListServices
 	client.EXPECT().ListServices(
 		nlxversion.NewGRPCContext(ctx, "outway"),
-		&emptypb.Empty{}).Return(nil, fmt.Errorf("mock error"))
+		&directoryapi.ListServicesRequest{}).Return(nil, fmt.Errorf("mock error"))
 
 	// Test of updateServiceList generates the correct error
 	err = o.updateServiceList()
@@ -59,27 +58,27 @@ func TestUpdateServiceList(t *testing.T) {
 	mockServiceAInways := []*directoryapi.Inway{
 		{
 			Address: "mock-service-a-1:123",
-			State:   directoryapi.Inway_UP,
+			State:   directoryapi.Inway_STATE_UP,
 		},
 		{
 			Address: "mock-service-a-2:123",
-			State:   directoryapi.Inway_DOWN,
+			State:   directoryapi.Inway_STATE_DOWN,
 		},
 	}
 
 	mockServiceBInways := []*directoryapi.Inway{
 		{
 			Address: "mock-service-b-1:123",
-			State:   directoryapi.Inway_UP,
+			State:   directoryapi.Inway_STATE_UP,
 		},
 		{
 			Address: "mock-service-b-2:123",
-			State:   directoryapi.Inway_UP,
+			State:   directoryapi.Inway_STATE_UP,
 		},
 	}
 
 	// Make the mock directory client provide a list of services when calling ListServices
-	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &emptypb.Empty{}).Return(
+	client.EXPECT().ListServices(nlxversion.NewGRPCContext(ctx, "outway"), &directoryapi.ListServicesRequest{}).Return(
 		&directoryapi.ListServicesResponse{
 			Services: []*directoryapi.ListServicesResponse_Service{
 				{

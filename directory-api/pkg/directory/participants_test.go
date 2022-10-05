@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -113,7 +112,7 @@ func TestListParticipants(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			got, err := service.ListParticipants(context.Background(), &emptypb.Empty{})
+			got, err := service.ListParticipants(context.Background(), &directoryapi.ListParticipantsRequest{})
 
 			assert.Equal(t, tt.expectedResponse, got)
 			assert.Equal(t, tt.expectedError, err)

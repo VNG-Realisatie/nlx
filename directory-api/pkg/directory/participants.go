@@ -9,14 +9,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/directory-api/domain"
 )
 
-func (h *DirectoryService) ListParticipants(ctx context.Context, _ *emptypb.Empty) (*directoryapi.ListParticipantsResponse, error) {
+func (h *DirectoryService) ListParticipants(ctx context.Context, _ *directoryapi.ListParticipantsRequest) (*directoryapi.ListParticipantsResponse, error) {
 	h.logger.Info("rpc request ListParticipants")
 
 	participants, err := h.repository.ListParticipants(ctx)

@@ -21,7 +21,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -33,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListServicesRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListServices(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -42,7 +41,7 @@ func request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListServicesRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListServices(ctx, &protoReq)
@@ -51,7 +50,7 @@ func local_request_Directory_ListServices_0(ctx context.Context, marshaler runti
 }
 
 func request_Directory_ListOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListOrganizationsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListOrganizations(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -60,7 +59,7 @@ func request_Directory_ListOrganizations_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Directory_ListOrganizations_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListOrganizationsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListOrganizations(ctx, &protoReq)
@@ -173,7 +172,7 @@ func local_request_Directory_GetOrganizationManagementAPIProxyAddress_0(ctx cont
 }
 
 func request_Directory_ListInOutwayStatistics_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListInOutwayStatisticsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListInOutwayStatistics(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -182,7 +181,7 @@ func request_Directory_ListInOutwayStatistics_0(ctx context.Context, marshaler r
 }
 
 func local_request_Directory_ListInOutwayStatistics_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListInOutwayStatisticsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListInOutwayStatistics(ctx, &protoReq)
@@ -191,7 +190,7 @@ func local_request_Directory_ListInOutwayStatistics_0(ctx context.Context, marsh
 }
 
 func request_Directory_ListParticipants_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListParticipantsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListParticipants(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -200,7 +199,7 @@ func request_Directory_ListParticipants_0(ctx context.Context, marshaler runtime
 }
 
 func local_request_Directory_ListParticipants_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListParticipantsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListParticipants(ctx, &protoReq)
@@ -209,7 +208,7 @@ func local_request_Directory_ListParticipants_0(ctx context.Context, marshaler r
 }
 
 func request_Directory_GetTermsOfService_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetTermsOfServiceRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetTermsOfService(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -218,7 +217,7 @@ func request_Directory_GetTermsOfService_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Directory_GetTermsOfService_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetTermsOfServiceRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetTermsOfService(ctx, &protoReq)
@@ -227,7 +226,7 @@ func local_request_Directory_GetTermsOfService_0(ctx context.Context, marshaler 
 }
 
 func request_Directory_GetVersion_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetVersionRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetVersion(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -236,7 +235,7 @@ func request_Directory_GetVersion_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_Directory_GetVersion_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetVersionRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetVersion(ctx, &protoReq)

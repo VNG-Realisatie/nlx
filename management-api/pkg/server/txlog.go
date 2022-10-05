@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
@@ -41,7 +42,7 @@ func (s *ManagementService) IsTXLogEnabled(context.Context, *emptypb.Empty) (*ap
 func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
-	organizations, err := s.directoryClient.ListOrganizations(ctx, &emptypb.Empty{})
+	organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
 	if err != nil {
 		s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "txlog error")

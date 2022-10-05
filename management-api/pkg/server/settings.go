@@ -72,7 +72,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 	}
 
 	if settings.OrganizationInwayName() == "" {
-		_, err = s.directoryClient.ClearOrganizationInway(ctx, &emptypb.Empty{})
+		_, err = s.directoryClient.ClearOrganizationInway(ctx, &directoryapi.ClearOrganizationInwayRequest{})
 		if err != nil {
 			logger.Error("could not clear the organization inway in the directory", zap.Error(err))
 			return nil, status.Error(codes.Internal, "nlx directory unreachable")
