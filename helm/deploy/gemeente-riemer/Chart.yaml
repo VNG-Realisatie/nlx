@@ -7,7 +7,7 @@ appVersion: 0.140.0
 
 dependencies:
   - name: dex
-    version: 0.11.1
+    version: 0.12.0
     repository: https://charts.dexidp.io
   - name: basisregister-fictieve-personen
     version: 0.1.0

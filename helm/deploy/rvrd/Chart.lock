@@ -1,7 +1,7 @@
 dependencies:
 - name: dex
   repository: https://charts.dexidp.io
-  version: 0.11.1
+  version: 0.12.0
 - name: basisregister-fictieve-kentekens
   repository: https://charts.commonground.nl
   version: 0.1.0
@@ -14,5 +14,5 @@ dependencies:
 - name: nlx-txlog-api
   repository: file://../../charts/nlx-txlog-api
   version: 0.140.0
-digest: sha256:665e1576efef77dbdcf5193d8a237b2301cd48b9fdc2292b7b72230b082f4a47
-generated: "2022-09-28T12:39:43.298029899Z"
+digest: sha256:b952c8a82716c82151e163954969bb48c595f58f982a29f1ef15d0e29434fc62
+generated: "2022-10-05T02:51:06.023540458Z"
