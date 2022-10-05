@@ -186,7 +186,7 @@ func setupTransactionLogger(logger *zap.Logger, postgresDSN, txLogAPIAddress str
 			return nil, err
 		}
 
-		return transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionOut)
+		return transactionlog.NewPostgresTransactionLogger(logger, logDB, transactionlog.DirectionIn)
 	}
 
 	if txLogAPIAddress != "" {

@@ -23,7 +23,8 @@ type PostgresTransactionLogger struct {
 
 func NewPostgresTransactionLogger(zapLogger *zap.Logger, logdb *sqlx.DB, direction Direction) (TransactionLogger, error) {
 	txl := &PostgresTransactionLogger{
-		logdb: logdb,
+		logdb:     logdb,
+		zapLogger: zapLogger,
 	}
 
 	switch direction {
