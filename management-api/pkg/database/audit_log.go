@@ -104,13 +104,14 @@ func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, audi
 	return auditLog, nil
 }
 
-func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error) {
+func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context, limit int) ([]*AuditLog, error) {
 	auditLogs := []*AuditLog{}
 
 	if err := db.DB.
 		WithContext(ctx).
 		Preload("Services").
 		Order("created_at desc").
+		Limit(limit).
 		Find(&auditLogs).Error; err != nil {
 		return nil, err
 	}

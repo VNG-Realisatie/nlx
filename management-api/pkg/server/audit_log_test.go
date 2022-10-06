@@ -30,6 +30,8 @@ func TestListAuditLogs(t *testing.T) {
 		}
 	}
 
+	const numberOfAuditLogs = 100
+
 	tests := map[string]struct {
 		ctx     context.Context
 		setup   func(serviceMocks)
@@ -65,7 +67,7 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(gomock.Any()).
+					List(gomock.Any(), numberOfAuditLogs).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			req:     &emptypb.Empty{},
@@ -82,7 +84,7 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(gomock.Any()).
+					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{}, nil)
 			},
 			req: &emptypb.Empty{},
@@ -101,7 +103,7 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(gomock.Any()).
+					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
@@ -139,7 +141,7 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(gomock.Any()).
+					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
@@ -184,7 +186,7 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(gomock.Any()).
+					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,
@@ -233,7 +235,7 @@ func TestListAuditLogs(t *testing.T) {
 
 				mocks.al.
 					EXPECT().
-					ListAll(gomock.Any()).
+					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
 							ID:         1,

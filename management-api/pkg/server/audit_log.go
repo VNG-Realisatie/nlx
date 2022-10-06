@@ -41,6 +41,8 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 	auditlog.OutwayDelete:                api.AuditLogRecord_ACTION_TYPE_OUTWAY_DELETE,
 }
 
+const maxAmountOfRecords = 100
+
 func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
 	err := s.authorize(ctx, permissions.ReadAuditLogs)
 	if err != nil {
@@ -55,7 +57,7 @@ func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty)
 
 	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
-	auditLogs, err := s.auditLogger.ListAll(ctx)
+	auditLogs, err := s.auditLogger.List(ctx, maxAmountOfRecords)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to retrieve audit logs")
 	}

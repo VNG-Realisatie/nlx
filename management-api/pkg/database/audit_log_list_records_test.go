@@ -72,7 +72,9 @@ func TestListAuditLogRecords(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.ListAuditLogRecords(context.Background())
+			numberOfAuditLogs := 100
+
+			got, err := configDb.ListAuditLogRecords(context.Background(), numberOfAuditLogs)
 			require.ErrorIs(t, err, tt.wantErr)
 
 			if tt.wantErr == nil {

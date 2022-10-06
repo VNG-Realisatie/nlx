@@ -33,8 +33,8 @@ func NewPostgresLogger(configDatabase database.ConfigDatabase, logger *zap.Logge
 	}
 }
 
-func (a *PostgresLogger) ListAll(ctx context.Context) ([]*Record, error) {
-	auditLogRecords, err := a.database.ListAuditLogRecords(ctx)
+func (a *PostgresLogger) List(ctx context.Context, limit int) ([]*Record, error) {
+	auditLogRecords, err := a.database.ListAuditLogRecords(ctx, limit)
 	if err != nil {
 		a.logger.Error("error retrieving audit log records from database", zap.Error(err))
 		return nil, errors.New("database error")

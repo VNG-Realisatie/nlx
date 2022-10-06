@@ -106,19 +106,19 @@ func (mr *MockLoggerMockRecorder) InwayDelete(ctx, userName, userAgent, inwayNam
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InwayDelete", reflect.TypeOf((*MockLogger)(nil).InwayDelete), ctx, userName, userAgent, inwayName)
 }
 
-// ListAll mocks base method.
-func (m *MockLogger) ListAll(ctx context.Context) ([]*auditlog.Record, error) {
+// List mocks base method.
+func (m *MockLogger) List(ctx context.Context, limit int) ([]*auditlog.Record, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAll", ctx)
+	ret := m.ctrl.Call(m, "List", ctx, limit)
 	ret0, _ := ret[0].([]*auditlog.Record)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListAll indicates an expected call of ListAll.
-func (mr *MockLoggerMockRecorder) ListAll(ctx interface{}) *gomock.Call {
+// List indicates an expected call of List.
+func (mr *MockLoggerMockRecorder) List(ctx, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAll", reflect.TypeOf((*MockLogger)(nil).ListAll), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockLogger)(nil).List), ctx, limit)
 }
 
 // LoginFail mocks base method.

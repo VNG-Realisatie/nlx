@@ -59,7 +59,7 @@ const (
 )
 
 type Logger interface {
-	ListAll(ctx context.Context) ([]*Record, error)
+	List(ctx context.Context, limit int) ([]*Record, error)
 
 	LoginSuccess(ctx context.Context, userName, userAgent string) error
 	LoginFail(ctx context.Context, userAgent string) error

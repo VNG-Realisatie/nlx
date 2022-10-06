@@ -68,7 +68,7 @@ type ConfigDatabase interface {
 	UpdateSettings(ctx context.Context, settings *domain.Settings) error
 
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
-	ListAuditLogRecords(ctx context.Context) ([]*AuditLog, error)
+	ListAuditLogRecords(ctx context.Context, limit int) ([]*AuditLog, error)
 
 	CreateOutgoingOrder(ctx context.Context, order *CreateOutgoingOrder) error
 	UpdateOutgoingOrder(ctx context.Context, order *UpdateOutgoingOrder) error

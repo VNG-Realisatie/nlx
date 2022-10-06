@@ -543,18 +543,18 @@ func (mr *MockConfigDatabaseMockRecorder) ListAllLatestOutgoingAccessRequests(ct
 }
 
 // ListAuditLogRecords mocks base method.
-func (m *MockConfigDatabase) ListAuditLogRecords(ctx context.Context) ([]*database.AuditLog, error) {
+func (m *MockConfigDatabase) ListAuditLogRecords(ctx context.Context, limit int) ([]*database.AuditLog, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAuditLogRecords", ctx)
+	ret := m.ctrl.Call(m, "ListAuditLogRecords", ctx, limit)
 	ret0, _ := ret[0].([]*database.AuditLog)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListAuditLogRecords indicates an expected call of ListAuditLogRecords.
-func (mr *MockConfigDatabaseMockRecorder) ListAuditLogRecords(ctx interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) ListAuditLogRecords(ctx, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogRecords", reflect.TypeOf((*MockConfigDatabase)(nil).ListAuditLogRecords), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuditLogRecords", reflect.TypeOf((*MockConfigDatabase)(nil).ListAuditLogRecords), ctx, limit)
 }
 
 // ListIncomingAccessRequests mocks base method.
