@@ -1,18 +1,18 @@
 dependencies:
 - name: apps-overview
   repository: file://../../charts/apps-overview
-  version: 0.140.0
+  version: 0.141.0
 - name: ca-certportal
   repository: file://../../charts/ca-certportal
-  version: 0.140.0
+  version: 0.141.0
 - name: ca-cfssl-unsafe
   repository: file://../../charts/ca-cfssl-unsafe
-  version: 0.140.0
+  version: 0.141.0
 - name: nlx-directory
   repository: file://../../charts/nlx-directory
-  version: 0.140.0
+  version: 0.141.0
 - name: nlx-docs
   repository: file://../../charts/nlx-docs
-  version: 0.140.0
-digest: sha256:30feab079cc00afd21bfad13f6eb55ff8c4bfd8e36aa837fdf6f216351823971
-generated: "2022-09-28T12:39:51.100707884Z"
+  version: 0.141.0
+digest: sha256:5299c8354b20389433cc0a13d7cb69c6b4e3aa8ee7891421b3926d93b8d9f4c6
+generated: "2022-10-06T07:17:03.149406191Z"

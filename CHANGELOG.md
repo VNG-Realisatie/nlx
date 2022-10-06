@@ -1,3 +1,17 @@
+# [0.141.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.140.0...v0.141.0) (2022-10-06)
+
+
+### Bug Fixes
+
+* add correct casing for creating services via nlxctl ([88ba50d](https://gitlab.com/commonground/nlx/nlx/commit/88ba50d6bd15be66dabaca8359097a0ffaee82e9)), closes [nlx#1612](https://gitlab.com/nlx/issues/1612)
+* **inway:** use correct transaction log direction in postgres txlogger ([4cb73f3](https://gitlab.com/commonground/nlx/nlx/commit/4cb73f35914b5fefe03646147b936df72039ef28)), closes [nlx#1630](https://gitlab.com/nlx/issues/1630)
+* let protoc openapiv2 output correct snake_case fieldnames ([b6dd8ba](https://gitlab.com/commonground/nlx/nlx/commit/b6dd8ba6330f8219bf2862e43c10cb6757ada407)), closes [nlx#1612](https://gitlab.com/nlx/issues/1612)
+
+
+### Features
+
+* **management:** configure OIDC client secret using an existing secret ([f738e3c](https://gitlab.com/commonground/nlx/nlx/commit/f738e3c677978c7401581e893cfd4c2d7c3819ab)), closes [nlx#1628](https://gitlab.com/nlx/issues/1628)
+
 # [0.140.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.139.0...v0.140.0) (2022-09-28)
 
 
