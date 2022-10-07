@@ -1,7 +1,7 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-FROM openpolicyagent/opa:0.44.0
+FROM openpolicyagent/opa:0.45.0
 
 COPY ./inway/rego/* /rego/
 COPY ./inway/data/* /data/
