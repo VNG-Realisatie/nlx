@@ -121,7 +121,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 	return &api.ListIncomingOrdersResponse{Orders: incomingOrders}, nil
 }
 
-func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*external.ListOrdersResponse, error) {
+func (s *ManagementService) ListOrders(ctx context.Context, _ *external.ListOrdersRequest) (*external.ListOrdersResponse, error) {
 	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to parse proxy metadata")

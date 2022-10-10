@@ -135,7 +135,7 @@ func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organiz
 
 	defer externalManagementClient.Close()
 
-	response, err := externalManagementClient.ListOrders(ctx, &emptypb.Empty{})
+	response, err := externalManagementClient.ListOrders(ctx, &external.ListOrdersRequest{})
 	if err != nil {
 		return nil, err
 	}

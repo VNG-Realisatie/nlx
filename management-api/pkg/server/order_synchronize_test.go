@@ -89,7 +89,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
-					ListOrders(gomock.Any(), &emptypb.Empty{}).
+					ListOrders(gomock.Any(), &external.ListOrdersRequest{}).
 					Return(nil, errors.New("management fails"))
 
 				mocks.mc.EXPECT().Close().Return(nil)
@@ -117,7 +117,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
-					ListOrders(gomock.Any(), &emptypb.Empty{}).
+					ListOrders(gomock.Any(), &external.ListOrdersRequest{}).
 					Return(&external.ListOrdersResponse{
 						Orders: []*external.IncomingOrder{
 							{
@@ -212,7 +212,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					Return("localhost:1234", nil)
 
 				mocks.mc.EXPECT().
-					ListOrders(gomock.Any(), &emptypb.Empty{}).
+					ListOrders(gomock.Any(), &external.ListOrdersRequest{}).
 					Return(&external.ListOrdersResponse{
 						Orders: []*external.IncomingOrder{
 							{
@@ -310,7 +310,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 				mocks.mc.
 					EXPECT().
-					ListOrders(gomock.Any(), &emptypb.Empty{}).
+					ListOrders(gomock.Any(), &external.ListOrdersRequest{}).
 					Return(&external.ListOrdersResponse{
 						Orders: []*external.IncomingOrder{
 							{

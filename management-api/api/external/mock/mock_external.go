@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	external "go.nlx.io/nlx/management-api/api/external"
 )
@@ -237,7 +236,7 @@ func (m *MockDelegationServiceClient) EXPECT() *MockDelegationServiceClientMockR
 }
 
 // ListOrders mocks base method.
-func (m *MockDelegationServiceClient) ListOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*external.ListOrdersResponse, error) {
+func (m *MockDelegationServiceClient) ListOrders(ctx context.Context, in *external.ListOrdersRequest, opts ...grpc.CallOption) (*external.ListOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -300,7 +299,7 @@ func (m *MockDelegationServiceServer) EXPECT() *MockDelegationServiceServerMockR
 }
 
 // ListOrders mocks base method.
-func (m *MockDelegationServiceServer) ListOrders(arg0 context.Context, arg1 *emptypb.Empty) (*external.ListOrdersResponse, error) {
+func (m *MockDelegationServiceServer) ListOrders(arg0 context.Context, arg1 *external.ListOrdersRequest) (*external.ListOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrders", arg0, arg1)
 	ret0, _ := ret[0].(*external.ListOrdersResponse)

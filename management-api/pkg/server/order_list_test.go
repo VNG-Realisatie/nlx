@@ -536,7 +536,7 @@ func TestListOrders(t *testing.T) {
 			service, certBundle, mocks := newService(t)
 			ctx := tt.setup(t, mocks, certBundle)
 
-			response, err := service.ListOrders(ctx, &emptypb.Empty{})
+			response, err := service.ListOrders(ctx, &external.ListOrdersRequest{})
 
 			if tt.wantErr == nil {
 				assert.Equal(t, tt.want, response)

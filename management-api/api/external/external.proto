@@ -18,7 +18,7 @@ service AccessRequestService {
 
 service DelegationService {
   rpc RequestClaim (RequestClaimRequest) returns (RequestClaimResponse);
-  rpc ListOrders (google.protobuf.Empty) returns (ListOrdersResponse);
+  rpc ListOrders (ListOrdersRequest) returns (ListOrdersResponse);
 }
 
 message Organization {

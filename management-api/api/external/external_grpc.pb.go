@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -183,7 +182,7 @@ var AccessRequestService_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DelegationServiceClient interface {
 	RequestClaim(ctx context.Context, in *RequestClaimRequest, opts ...grpc.CallOption) (*RequestClaimResponse, error)
-	ListOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrdersResponse, error)
+	ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (*ListOrdersResponse, error)
 }
 
 type delegationServiceClient struct {
@@ -203,7 +202,7 @@ func (c *delegationServiceClient) RequestClaim(ctx context.Context, in *RequestC
 	return out, nil
 }
 
-func (c *delegationServiceClient) ListOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOrdersResponse, error) {
+func (c *delegationServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (*ListOrdersResponse, error) {
 	out := new(ListOrdersResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.external.DelegationService/ListOrders", in, out, opts...)
 	if err != nil {
@@ -217,7 +216,7 @@ func (c *delegationServiceClient) ListOrders(ctx context.Context, in *emptypb.Em
 // for forward compatibility
 type DelegationServiceServer interface {
 	RequestClaim(context.Context, *RequestClaimRequest) (*RequestClaimResponse, error)
-	ListOrders(context.Context, *emptypb.Empty) (*ListOrdersResponse, error)
+	ListOrders(context.Context, *ListOrdersRequest) (*ListOrdersResponse, error)
 	mustEmbedUnimplementedDelegationServiceServer()
 }
 
@@ -228,7 +227,7 @@ type UnimplementedDelegationServiceServer struct {
 func (UnimplementedDelegationServiceServer) RequestClaim(context.Context, *RequestClaimRequest) (*RequestClaimResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestClaim not implemented")
 }
-func (UnimplementedDelegationServiceServer) ListOrders(context.Context, *emptypb.Empty) (*ListOrdersResponse, error) {
+func (UnimplementedDelegationServiceServer) ListOrders(context.Context, *ListOrdersRequest) (*ListOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrders not implemented")
 }
 func (UnimplementedDelegationServiceServer) mustEmbedUnimplementedDelegationServiceServer() {}
@@ -263,7 +262,7 @@ func _DelegationService_RequestClaim_Handler(srv interface{}, ctx context.Contex
 }
 
 func _DelegationService_ListOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -275,7 +274,7 @@ func _DelegationService_ListOrders_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/nlx.management.external.DelegationService/ListOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DelegationServiceServer).ListOrders(ctx, req.(*emptypb.Empty))
+		return srv.(DelegationServiceServer).ListOrders(ctx, req.(*ListOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	external "go.nlx.io/nlx/management-api/api/external"
 )
@@ -93,7 +92,7 @@ func (mr *MockClientMockRecorder) GetAccessRequestState(arg0, arg1 interface{}, 
 }
 
 // ListOrders mocks base method.
-func (m *MockClient) ListOrders(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*external.ListOrdersResponse, error) {
+func (m *MockClient) ListOrders(arg0 context.Context, arg1 *external.ListOrdersRequest, arg2 ...grpc.CallOption) (*external.ListOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
