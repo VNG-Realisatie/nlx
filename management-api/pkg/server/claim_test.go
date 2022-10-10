@@ -416,7 +416,7 @@ func TestRequestClaim(t *testing.T) {
 						ExpiresAt: timestamppb.New(now.Add(2 * time.Hour)),
 					}).
 					Return(&outwayapi.SignOrderClaimResponse{
-						SignedOrderclaim: "signed-string",
+						SignedOrderClaim: "signed-string",
 					}, nil)
 
 				return ctx
@@ -489,7 +489,7 @@ func TestRequestClaim(t *testing.T) {
 						ExpiresAt: timestamppb.New(now.Add(4 * time.Hour)),
 					}).
 					Return(&outwayapi.SignOrderClaimResponse{
-						SignedOrderclaim: "signed-string",
+						SignedOrderClaim: "signed-string",
 					}, nil)
 
 				return ctx

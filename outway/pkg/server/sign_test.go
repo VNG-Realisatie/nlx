@@ -78,7 +78,7 @@ func TestSignOrderClaim(t *testing.T) {
 				ExpiresAt: timestamppb.New(now),
 			},
 			want: &outwayapi.SignOrderClaimResponse{
-				SignedOrderclaim: mockSignedClaim,
+				SignedOrderClaim: mockSignedClaim,
 			},
 		},
 	}

@@ -46,7 +46,7 @@ func (s *OutwayService) SignOrderClaim(ctx context.Context, req *api.SignOrderCl
 	}
 
 	return &api.SignOrderClaimResponse{
-		SignedOrderclaim: signedClaim,
+		SignedOrderClaim: signedClaim,
 	}, nil
 }
 

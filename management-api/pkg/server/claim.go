@@ -103,7 +103,7 @@ func (s *ManagementService) RequestClaim(ctx context.Context, req *external.Requ
 	}
 
 	return &external.RequestClaimResponse{
-		Claim: signedOrderClaimResp.SignedOrderclaim,
+		Claim: signedOrderClaimResp.SignedOrderClaim,
 	}, nil
 }
 

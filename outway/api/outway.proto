@@ -15,18 +15,18 @@ service Outway {
 
 message SignOrderClaimRequest {
     string delegatee = 1;
-    string delegateePublicKeyFingerprint = 2;
-    string orderReference = 3;
-    AccessProof accessProof = 4;
-    google.protobuf.Timestamp expiresAt = 5;
+    string delegatee_public_key_fingerprint = 2;
+    string order_reference = 3;
+    AccessProof access_proof = 4;
+    google.protobuf.Timestamp expires_at = 5;
 }
 
 message SignOrderClaimResponse {
-    string signedOrderclaim = 1;
+    string signed_order_claim = 1;
 }
 
 message AccessProof {
-    string ServiceName = 1;
-	string OrganizationSerialNumber = 2;
-	string PublicKeyFingerprint = 3;
+    string service_name = 1;
+	string organization_serial_number = 2;
+	string public_key_fingerprint = 3;
 }
