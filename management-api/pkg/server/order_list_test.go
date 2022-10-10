@@ -262,7 +262,7 @@ func TestListIncomingOrders(t *testing.T) {
 					}, nil)
 			},
 			wantResponse: &api.ListIncomingOrdersResponse{
-				Orders: []*api.IncomingOrder{
+				Orders: []*external.IncomingOrder{
 					{
 						Reference:   "reference",
 						Description: "description",
@@ -272,7 +272,7 @@ func TestListIncomingOrders(t *testing.T) {
 						},
 						ValidFrom:  timestamppb.New(validFrom),
 						ValidUntil: timestamppb.New(validUntil),
-						Services: []*api.OrderService{
+						Services: []*external.OrderService{
 							{
 								Service: "service-a",
 								Organization: &external.Organization{
@@ -324,7 +324,7 @@ func TestListIncomingOrders(t *testing.T) {
 					}, nil)
 			},
 			wantResponse: &api.ListIncomingOrdersResponse{
-				Orders: []*api.IncomingOrder{
+				Orders: []*external.IncomingOrder{
 					{
 						Reference:   "reference",
 						Description: "description",
@@ -335,7 +335,7 @@ func TestListIncomingOrders(t *testing.T) {
 						ValidFrom:  timestamppb.New(validFrom),
 						ValidUntil: timestamppb.New(validUntil),
 						RevokedAt:  timestamppb.New(revokedAt),
-						Services: []*api.OrderService{
+						Services: []*external.OrderService{
 							{
 								Service: "service-a",
 								Organization: &external.Organization{

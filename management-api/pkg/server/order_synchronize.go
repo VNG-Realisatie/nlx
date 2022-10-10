@@ -94,7 +94,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 	}
 
 	if len(orders) == 0 {
-		return &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}}, nil
+		return &api.SynchronizeOrdersResponse{Orders: []*external.IncomingOrder{}}, nil
 	}
 
 	if err := s.configDatabase.SynchronizeOrders(ctx, orders); err != nil {
@@ -102,10 +102,10 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 		return nil, status.Error(codes.Internal, "failed to synchronize database orders")
 	}
 
-	incomingOrders := make([]*api.IncomingOrder, len(orders))
+	incomingOrders := make([]*external.IncomingOrder, len(orders))
 
 	for i, order := range orders {
-		incomingOrders[i] = &api.IncomingOrder{
+		incomingOrders[i] = &external.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
 			Delegator: &external.Organization{

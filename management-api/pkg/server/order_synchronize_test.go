@@ -49,7 +49,7 @@ func TestSynchronizeOrders(t *testing.T) {
 		},
 
 		"synchronize_does_not_fail_when_directory_get_organization_inway_proxy_address_errors": {
-			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
+			want: &api.SynchronizeOrdersResponse{Orders: []*external.IncomingOrder{}},
 			ctx:  testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
@@ -70,7 +70,7 @@ func TestSynchronizeOrders(t *testing.T) {
 		},
 
 		"synchronization_does_not_fail_when_management_list_orders_errors": {
-			want: &api.SynchronizeOrdersResponse{Orders: []*api.IncomingOrder{}},
+			want: &api.SynchronizeOrdersResponse{Orders: []*external.IncomingOrder{}},
 			ctx:  testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {
 				mocks.dc.EXPECT().
@@ -171,7 +171,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 		"synchronization_succeeds_on_happy_flow": {
 			want: &api.SynchronizeOrdersResponse{
-				Orders: []*api.IncomingOrder{
+				Orders: []*external.IncomingOrder{
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
@@ -182,7 +182,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						RevokedAt:  nil,
 						ValidFrom:  timestamppb.New(validFrom),
 						ValidUntil: timestamppb.New(validUntil),
-						Services: []*api.OrderService{
+						Services: []*external.OrderService{
 							{
 								Organization: &external.Organization{
 									Name:         "Organization One",
@@ -266,7 +266,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 		"synchronization_succeeds_on_happy_flow_revoked_orders": {
 			want: &api.SynchronizeOrdersResponse{
-				Orders: []*api.IncomingOrder{
+				Orders: []*external.IncomingOrder{
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
@@ -277,7 +277,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						RevokedAt:  timestamppb.New(revokedAt),
 						ValidFrom:  timestamppb.New(validFrom),
 						ValidUntil: timestamppb.New(validUntil),
-						Services: []*api.OrderService{
+						Services: []*external.OrderService{
 							{
 								Organization: &external.Organization{
 									Name:         "Organization One",

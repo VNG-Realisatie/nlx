@@ -1482,6 +1482,38 @@
         "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
         "type" : "string"
       },
+      "externalIncomingOrder" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "delegator" : {
+            "$ref" : "#/components/schemas/externalOrganization"
+          },
+          "valid_from" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "valid_until" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementexternalOrderService"
+            },
+            "type" : "array"
+          },
+          "revoked_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "externalOrganization" : {
         "properties" : {
           "serial_number" : {
@@ -2065,7 +2097,7 @@
         "properties" : {
           "orders" : {
             "items" : {
-              "$ref" : "#/components/schemas/nlxmanagementIncomingOrder"
+              "$ref" : "#/components/schemas/externalIncomingOrder"
             },
             "type" : "array"
           }
@@ -2337,7 +2369,7 @@
         "properties" : {
           "orders" : {
             "items" : {
-              "$ref" : "#/components/schemas/nlxmanagementIncomingOrder"
+              "$ref" : "#/components/schemas/externalIncomingOrder"
             },
             "type" : "array"
           }
@@ -2507,39 +2539,7 @@
         },
         "type" : "object"
       },
-      "nlxmanagementIncomingOrder" : {
-        "properties" : {
-          "reference" : {
-            "type" : "string"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "delegator" : {
-            "$ref" : "#/components/schemas/externalOrganization"
-          },
-          "valid_from" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "valid_until" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "services" : {
-            "items" : {
-              "$ref" : "#/components/schemas/nlxmanagementOrderService"
-            },
-            "type" : "array"
-          },
-          "revoked_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "nlxmanagementOrderService" : {
+      "managementexternalOrderService" : {
         "properties" : {
           "organization" : {
             "$ref" : "#/components/schemas/externalOrganization"

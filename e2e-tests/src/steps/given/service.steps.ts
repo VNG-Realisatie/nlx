@@ -10,7 +10,7 @@ import { getOutwayByName } from "../../utils/outway";
 import { default as logger } from "../../debug";
 import pWaitFor from "p-wait-for";
 import fetch from "cross-fetch";
-import { Given, When } from "@cucumber/cucumber";
+import { Given } from "@cucumber/cucumber";
 import assert from "assert";
 const debug = logger("e2e-tests:service");
 Given(

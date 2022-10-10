@@ -95,7 +95,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 		return nil, status.Errorf(codes.Internal, "failed to retrieve received orders")
 	}
 
-	incomingOrders := make([]*api.IncomingOrder, len(orders))
+	incomingOrders := make([]*external.IncomingOrder, len(orders))
 
 	for i, order := range orders {
 		var revokedAt *timestamppb.Timestamp
@@ -104,7 +104,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 			revokedAt = timestamppb.New(*order.RevokedAt())
 		}
 
-		incomingOrders[i] = &api.IncomingOrder{
+		incomingOrders[i] = &external.IncomingOrder{
 			Reference:   order.Reference(),
 			Description: order.Description(),
 			Delegator: &external.Organization{
@@ -152,11 +152,11 @@ func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*
 	return &external.ListOrdersResponse{Orders: incomingOrders}, nil
 }
 
-func convertIncomingOrderServices(services []database.IncomingOrderService, oinToOrgNameHash map[string]string) []*api.OrderService {
-	protoServices := make([]*api.OrderService, len(services))
+func convertIncomingOrderServices(services []database.IncomingOrderService, oinToOrgNameHash map[string]string) []*external.OrderService {
+	protoServices := make([]*external.OrderService, len(services))
 
 	for i, service := range services {
-		protoServices[i] = &api.OrderService{
+		protoServices[i] = &external.OrderService{
 			Organization: &external.Organization{
 				SerialNumber: service.Organization.SerialNumber,
 				Name:         oinToOrgNameHash[service.Organization.SerialNumber],
@@ -194,11 +194,11 @@ func convertOutgoingAccessProofsToOrderServices(outgoingOrderAccessProofs []*dat
 
 	return protoServices
 }
-func convertDomainIncomingOrderServices(services []domain.IncomingOrderService, oinToOrgNameHash map[string]string) []*api.OrderService {
-	protoServices := make([]*api.OrderService, len(services))
+func convertDomainIncomingOrderServices(services []domain.IncomingOrderService, oinToOrgNameHash map[string]string) []*external.OrderService {
+	protoServices := make([]*external.OrderService, len(services))
 
 	for i, service := range services {
-		protoServices[i] = &api.OrderService{
+		protoServices[i] = &external.OrderService{
 			Organization: &external.Organization{
 				SerialNumber: service.OrganizationSerialNumber(),
 				Name:         oinToOrgNameHash[service.OrganizationSerialNumber()],

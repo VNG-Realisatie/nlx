@@ -6,7 +6,7 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
 import {
-  ManagementIncomingOrder,
+  ExternalIncomingOrder,
   ManagementOutgoingOrder,
 } from "../../../../management-ui/src/api/models";
 import { default as logger } from "../../debug";
@@ -77,7 +77,7 @@ Then(
 
     assert.equal(
       orderResponse?.orders?.some(
-        (order: ManagementIncomingOrder) =>
+        (order: ExternalIncomingOrder) =>
           order.reference === orderReference &&
           order.delegator?.serialNumber === delegator.serialNumber &&
           order.revokedAt !== undefined
