@@ -43,8 +43,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/definitions/txlogCreateRecordResponse"
             }
           },
           "default": {
@@ -103,10 +102,10 @@
         "order": {
           "$ref": "#/definitions/RecordOrder"
         },
-        "TransactionID": {
+        "transaction_id": {
           "type": "string"
         },
-        "createdAt": {
+        "created_at": {
           "type": "string",
           "format": "date-time"
         }
@@ -135,7 +134,7 @@
     "RecordOrganization": {
       "type": "object",
       "properties": {
-        "serialNumber": {
+        "serial_number": {
           "type": "string"
         }
       }
@@ -178,22 +177,22 @@
     "txlogCreateRecordRequest": {
       "type": "object",
       "properties": {
-        "sourceOrganization": {
+        "source_organization": {
           "type": "string"
         },
-        "destOrganization": {
+        "dest_organization": {
           "type": "string"
         },
-        "serviceName": {
+        "service_name": {
           "type": "string"
         },
-        "transactionID": {
+        "transaction_id": {
           "type": "string"
         },
         "delegator": {
           "type": "string"
         },
-        "orderReference": {
+        "order_reference": {
           "type": "string"
         },
         "data": {
@@ -202,7 +201,7 @@
         "direction": {
           "$ref": "#/definitions/txlogCreateRecordRequestDirection"
         },
-        "dataSubjects": {
+        "data_subjects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CreateRecordRequestDataSubject"
@@ -213,10 +212,14 @@
     "txlogCreateRecordRequestDirection": {
       "type": "string",
       "enum": [
-        "IN",
-        "OUT"
+        "DIRECTION_UNSPECIFIED",
+        "DIRECTION_IN",
+        "DIRECTION_OUT"
       ],
-      "default": "IN"
+      "default": "DIRECTION_UNSPECIFIED"
+    },
+    "txlogCreateRecordResponse": {
+      "type": "object"
     },
     "txlogListRecordsResponse": {
       "type": "object",

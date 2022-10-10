@@ -15,6 +15,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/txlog"
+	txlogapi "go.nlx.io/nlx/txlog-api/api"
 )
 
 type TXLogService struct {
@@ -50,7 +51,7 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 
 	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
-	resp, err := s.txlogClient.ListRecords(ctx, &emptypb.Empty{})
+	resp, err := s.txlogClient.ListRecords(ctx, &txlogapi.ListRecordsRequest{})
 	if err != nil {
 		s.logger.Error("error getting records list from txlog", zap.Error(err))
 		return nil, status.Errorf(codes.Internal, "txlog error")
@@ -85,7 +86,7 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.
 			},
 			Order:         order,
 			Data:          r.Data,
-			TransactionId: r.TransactionID,
+			TransactionId: r.TransactionId,
 			CreatedAt:     r.CreatedAt,
 		}
 	}

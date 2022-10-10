@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,8 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TXLogClient interface {
-	ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListRecordsResponse, error)
-	CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListRecords(ctx context.Context, in *ListRecordsRequest, opts ...grpc.CallOption) (*ListRecordsResponse, error)
+	CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*CreateRecordResponse, error)
 }
 
 type tXLogClient struct {
@@ -36,7 +35,7 @@ func NewTXLogClient(cc grpc.ClientConnInterface) TXLogClient {
 	return &tXLogClient{cc}
 }
 
-func (c *tXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListRecordsResponse, error) {
+func (c *tXLogClient) ListRecords(ctx context.Context, in *ListRecordsRequest, opts ...grpc.CallOption) (*ListRecordsResponse, error) {
 	out := new(ListRecordsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.txlog.TXLog/ListRecords", in, out, opts...)
 	if err != nil {
@@ -45,8 +44,8 @@ func (c *tXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts .
 	return out, nil
 }
 
-func (c *tXLogClient) CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *tXLogClient) CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*CreateRecordResponse, error) {
+	out := new(CreateRecordResponse)
 	err := c.cc.Invoke(ctx, "/nlx.txlog.TXLog/CreateRecord", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -58,8 +57,8 @@ func (c *tXLogClient) CreateRecord(ctx context.Context, in *CreateRecordRequest,
 // All implementations must embed UnimplementedTXLogServer
 // for forward compatibility
 type TXLogServer interface {
-	ListRecords(context.Context, *emptypb.Empty) (*ListRecordsResponse, error)
-	CreateRecord(context.Context, *CreateRecordRequest) (*emptypb.Empty, error)
+	ListRecords(context.Context, *ListRecordsRequest) (*ListRecordsResponse, error)
+	CreateRecord(context.Context, *CreateRecordRequest) (*CreateRecordResponse, error)
 	mustEmbedUnimplementedTXLogServer()
 }
 
@@ -67,10 +66,10 @@ type TXLogServer interface {
 type UnimplementedTXLogServer struct {
 }
 
-func (UnimplementedTXLogServer) ListRecords(context.Context, *emptypb.Empty) (*ListRecordsResponse, error) {
+func (UnimplementedTXLogServer) ListRecords(context.Context, *ListRecordsRequest) (*ListRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRecords not implemented")
 }
-func (UnimplementedTXLogServer) CreateRecord(context.Context, *CreateRecordRequest) (*emptypb.Empty, error) {
+func (UnimplementedTXLogServer) CreateRecord(context.Context, *CreateRecordRequest) (*CreateRecordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRecord not implemented")
 }
 func (UnimplementedTXLogServer) mustEmbedUnimplementedTXLogServer() {}
@@ -87,7 +86,7 @@ func RegisterTXLogServer(s grpc.ServiceRegistrar, srv TXLogServer) {
 }
 
 func _TXLog_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListRecordsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +98,7 @@ func _TXLog_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/nlx.txlog.TXLog/ListRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXLogServer).ListRecords(ctx, req.(*emptypb.Empty))
+		return srv.(TXLogServer).ListRecords(ctx, req.(*ListRecordsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

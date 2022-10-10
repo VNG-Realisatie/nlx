@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/txlog-api/api"
@@ -78,7 +77,7 @@ func TestListRecords(t *testing.T) {
 							Reference: "test-reference",
 						},
 						Data:          `{"test": "data"}`,
-						TransactionID: "abcde",
+						TransactionId: "abcde",
 						CreatedAt:     timestamppb.New(now),
 					},
 				},
@@ -94,7 +93,7 @@ func TestListRecords(t *testing.T) {
 			service, mocks := newService(t)
 			tt.setup(context.Background(), mocks)
 
-			got, err := service.ListRecords(context.Background(), &emptypb.Empty{})
+			got, err := service.ListRecords(context.Background(), &api.ListRecordsRequest{})
 
 			t.Log(err)
 			assert.Equal(t, tt.wantErr, err)

@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/txlog-api/api"
@@ -19,7 +18,7 @@ import (
 
 const maxAmountOfRecords = 100
 
-func (s *Server) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.ListRecordsResponse, error) {
+func (s *Server) ListRecords(ctx context.Context, _ *api.ListRecordsRequest) (*api.ListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
 	records, err := s.app.Queries.ListRecords.Handle(ctx, maxAmountOfRecords)
@@ -54,7 +53,7 @@ func dataModelToResponse(records []*query.Record) *api.ListRecordsResponse {
 				Reference: r.OrderReference,
 			},
 			Data:          string(r.Data),
-			TransactionID: r.TransactionID,
+			TransactionId: r.TransactionID,
 			CreatedAt:     timestamppb.New(r.CreatedAt),
 		}
 		response.Records[i] = recordResponse

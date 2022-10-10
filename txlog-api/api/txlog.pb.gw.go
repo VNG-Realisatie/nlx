@@ -21,7 +21,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -33,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshaler, client TXLogClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListRecordsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListRecords(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -42,7 +41,7 @@ func request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshaler, server TXLogServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListRecordsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListRecords(ctx, &protoReq)

@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	api "go.nlx.io/nlx/txlog-api/api"
 )
@@ -39,14 +38,14 @@ func (m *MockTXLogClient) EXPECT() *MockTXLogClientMockRecorder {
 }
 
 // CreateRecord mocks base method.
-func (m *MockTXLogClient) CreateRecord(ctx context.Context, in *api.CreateRecordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockTXLogClient) CreateRecord(ctx context.Context, in *api.CreateRecordRequest, opts ...grpc.CallOption) (*api.CreateRecordResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateRecord", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.CreateRecordResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -59,7 +58,7 @@ func (mr *MockTXLogClientMockRecorder) CreateRecord(ctx, in interface{}, opts ..
 }
 
 // ListRecords mocks base method.
-func (m *MockTXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListRecordsResponse, error) {
+func (m *MockTXLogClient) ListRecords(ctx context.Context, in *api.ListRecordsRequest, opts ...grpc.CallOption) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -102,10 +101,10 @@ func (m *MockTXLogServer) EXPECT() *MockTXLogServerMockRecorder {
 }
 
 // CreateRecord mocks base method.
-func (m *MockTXLogServer) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest) (*emptypb.Empty, error) {
+func (m *MockTXLogServer) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest) (*api.CreateRecordResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRecord", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.CreateRecordResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -117,7 +116,7 @@ func (mr *MockTXLogServerMockRecorder) CreateRecord(arg0, arg1 interface{}) *gom
 }
 
 // ListRecords mocks base method.
-func (m *MockTXLogServer) ListRecords(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListRecordsResponse, error) {
+func (m *MockTXLogServer) ListRecords(arg0 context.Context, arg1 *api.ListRecordsRequest) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRecords", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListRecordsResponse)

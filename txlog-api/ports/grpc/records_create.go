@@ -7,18 +7,16 @@ import (
 	"context"
 	"encoding/json"
 
-	"google.golang.org/protobuf/types/known/emptypb"
-
 	"go.nlx.io/nlx/txlog-api/api"
 	"go.nlx.io/nlx/txlog-api/app/command"
 )
 
-func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*emptypb.Empty, error) {
+func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest) (*api.CreateRecordResponse, error) {
 	s.logger.Info("rpc request CreateRecord")
 
 	direction := "out"
 
-	if req.Direction == api.CreateRecordRequest_IN {
+	if req.Direction == api.CreateRecordRequest_DIRECTION_IN {
 		direction = "in"
 	}
 
@@ -36,12 +34,12 @@ func (s *Server) CreateRecord(ctx context.Context, req *api.CreateRecordRequest)
 		OrderReference:          req.OrderReference,
 		Delegator:               req.Delegator,
 		Data:                    json.RawMessage(req.Data),
-		TransactionID:           req.TransactionID,
+		TransactionID:           req.TransactionId,
 		DataSubjects:            dataSubjects,
 	})
 	if err != nil {
 		return nil, ResponseFromError(err)
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.CreateRecordResponse{}, nil
 }

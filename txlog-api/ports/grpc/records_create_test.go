@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/txlog-api/api"
 	"go.nlx.io/nlx/txlog-api/domain/record"
@@ -24,16 +23,16 @@ func TestCreateRecord(t *testing.T) {
 	tests := map[string]struct {
 		setup   func(context.Context, *txlog_mock.MockRepository)
 		req     *api.CreateRecordRequest
-		want    *emptypb.Empty
+		want    *api.CreateRecordResponse
 		wantErr error
 	}{
 		"without_source_org": {
 			setup: func(ctx context.Context, mocks *txlog_mock.MockRepository) {},
 			req: &api.CreateRecordRequest{
 				DestOrganization: "00000000000000000002",
-				Direction:        api.CreateRecordRequest_IN,
+				Direction:        api.CreateRecordRequest_DIRECTION_IN,
 				ServiceName:      "test-service",
-				TransactionID:    "42",
+				TransactionId:    "42",
 				Data:             `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -50,9 +49,9 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "",
-				Direction:          api.CreateRecordRequest_IN,
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
 				ServiceName:        "test-service",
-				TransactionID:      "42",
+				TransactionId:      "42",
 				Data:               `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -69,8 +68,8 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
-				Direction:          api.CreateRecordRequest_IN,
-				TransactionID:      "42",
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
+				TransactionId:      "42",
 				Data:               `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -87,8 +86,8 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
-				Direction:          api.CreateRecordRequest_IN,
-				TransactionID:      "42",
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
+				TransactionId:      "42",
 				Data:               `{"request-path":"/get"}`,
 				Delegator:          "00000000000000000003",
 				ServiceName:        "test-service",
@@ -107,8 +106,8 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
-				Direction:          api.CreateRecordRequest_IN,
-				TransactionID:      "42",
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
+				TransactionId:      "42",
 				Data:               `{"request-path":"/get"}`,
 				OrderReference:     "test-reference",
 				ServiceName:        "test-service",
@@ -146,9 +145,9 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
-				Direction:          api.CreateRecordRequest_IN,
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
 				ServiceName:        "test-service",
-				TransactionID:      "42",
+				TransactionId:      "42",
 				Delegator:          "00000000000000000003",
 				OrderReference:     "test-reference",
 				Data:               `{"request-path":"/get"}`,
@@ -184,9 +183,9 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
-				Direction:          api.CreateRecordRequest_IN,
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
 				ServiceName:        "test-service",
-				TransactionID:      "42",
+				TransactionId:      "42",
 				Data:               `{"request-path":"/get"}`,
 				DataSubjects: []*api.CreateRecordRequest_DataSubject{
 					{
@@ -195,7 +194,7 @@ func TestCreateRecord(t *testing.T) {
 					},
 				},
 			},
-			want:    &emptypb.Empty{},
+			want:    &api.CreateRecordResponse{},
 			wantErr: nil,
 		},
 		"happy_flow": {
@@ -222,9 +221,9 @@ func TestCreateRecord(t *testing.T) {
 			req: &api.CreateRecordRequest{
 				SourceOrganization: "00000000000000000001",
 				DestOrganization:   "00000000000000000002",
-				Direction:          api.CreateRecordRequest_IN,
+				Direction:          api.CreateRecordRequest_DIRECTION_IN,
 				ServiceName:        "test-service",
-				TransactionID:      "42",
+				TransactionId:      "42",
 				Delegator:          "00000000000000000003",
 				OrderReference:     "test-reference",
 				Data:               `{"request-path":"/get"}`,
@@ -235,7 +234,7 @@ func TestCreateRecord(t *testing.T) {
 					},
 				},
 			},
-			want:    &emptypb.Empty{},
+			want:    &api.CreateRecordResponse{},
 			wantErr: nil,
 		},
 	}

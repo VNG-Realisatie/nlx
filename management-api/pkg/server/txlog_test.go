@@ -98,7 +98,7 @@ func TestTXLogListRecords(t *testing.T) {
 
 				mocks.m.
 					EXPECT().
-					ListRecords(ctx, &emptypb.Empty{}).
+					ListRecords(ctx, &txlogapi.ListRecordsRequest{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
 			want:    nil,
@@ -127,7 +127,7 @@ func TestTXLogListRecords(t *testing.T) {
 
 				mocks.m.
 					EXPECT().
-					ListRecords(ctx, &emptypb.Empty{}).
+					ListRecords(ctx, &txlogapi.ListRecordsRequest{}).
 					Return(&txlogapi.ListRecordsResponse{
 						Records: []*txlogapi.ListRecordsResponse_Record{
 							{
@@ -146,7 +146,7 @@ func TestTXLogListRecords(t *testing.T) {
 									Reference: "test-reference",
 								},
 								Data:          `{"test":"data"}`,
-								TransactionID: "abcd",
+								TransactionId: "abcd",
 								CreatedAt:     timestamppb.New(now),
 							},
 						},

@@ -37,10 +37,10 @@ func NewAPITransactionLogger(args *NewAPITransactionLoggerArgs) (TransactionLogg
 
 	switch args.Direction {
 	case DirectionIn:
-		direction = api.CreateRecordRequest_IN
+		direction = api.CreateRecordRequest_DIRECTION_IN
 
 	case DirectionOut:
-		direction = api.CreateRecordRequest_OUT
+		direction = api.CreateRecordRequest_DIRECTION_OUT
 
 	default:
 		return nil, errors.New("invalid direction value")
@@ -97,7 +97,7 @@ func (txl *APITransactionLogger) AddRecord(rec *Record) error {
 		SourceOrganization: rec.SrcOrganization,
 		DestOrganization:   rec.DestOrganization,
 		ServiceName:        rec.ServiceName,
-		TransactionID:      rec.TransactionID,
+		TransactionId:      rec.TransactionID,
 		Delegator:          rec.Delegator,
 		OrderReference:     rec.OrderReference,
 		Data:               string(dataJSON),

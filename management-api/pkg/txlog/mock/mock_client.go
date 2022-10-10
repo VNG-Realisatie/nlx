@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	api "go.nlx.io/nlx/txlog-api/api"
 )
@@ -53,14 +52,14 @@ func (mr *MockClientMockRecorder) Close() *gomock.Call {
 }
 
 // CreateRecord mocks base method.
-func (m *MockClient) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest, arg2 ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockClient) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest, arg2 ...grpc.CallOption) (*api.CreateRecordResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateRecord", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.CreateRecordResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,7 +72,7 @@ func (mr *MockClientMockRecorder) CreateRecord(arg0, arg1 interface{}, arg2 ...i
 }
 
 // ListRecords mocks base method.
-func (m *MockClient) ListRecords(arg0 context.Context, arg1 *emptypb.Empty, arg2 ...grpc.CallOption) (*api.ListRecordsResponse, error) {
+func (m *MockClient) ListRecords(arg0 context.Context, arg1 *api.ListRecordsRequest, arg2 ...grpc.CallOption) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
