@@ -56,7 +56,7 @@ func printAccessRequest(details accessRequestDetails) {
 	updatedAt := timestamppb.New(details.UpdatedAt.AsTime())
 	state := "UNKNOWN"
 
-	if name, ok := api.AccessRequestState_name[int32(details.State)]; ok {
+	if name, ok := external.AccessRequestState_name[int32(details.State)]; ok {
 		state = name
 	}
 

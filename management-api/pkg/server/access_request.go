@@ -38,7 +38,7 @@ const accessRequestStatePrefix = "ACCESS_REQUEST_STATE_%s"
 func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) external.AccessRequestState {
 	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
-	protoState, ok := api.AccessRequestState_value[name]
+	protoState, ok := external.AccessRequestState_value[name]
 	if !ok {
 		return external.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 	}

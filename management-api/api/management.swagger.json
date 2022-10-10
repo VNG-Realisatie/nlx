@@ -1477,6 +1477,11 @@
         },
         "type" : "object"
       },
+      "externalAccessRequestState" : {
+        "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
+        "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
+        "type" : "string"
+      },
       "externalOrganization" : {
         "properties" : {
           "serial_number" : {
@@ -1957,7 +1962,7 @@
             "type" : "string"
           },
           "state" : {
-            "$ref" : "#/components/schemas/managementexternalAccessRequestState"
+            "$ref" : "#/components/schemas/externalAccessRequestState"
           },
           "created_at" : {
             "format" : "date-time",
@@ -2203,7 +2208,7 @@
             "type" : "string"
           },
           "state" : {
-            "$ref" : "#/components/schemas/managementexternalAccessRequestState"
+            "$ref" : "#/components/schemas/externalAccessRequestState"
           },
           "created_at" : {
             "format" : "date-time",
@@ -2501,11 +2506,6 @@
           }
         },
         "type" : "object"
-      },
-      "managementexternalAccessRequestState" : {
-        "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
-        "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
-        "type" : "string"
       },
       "nlxmanagementIncomingOrder" : {
         "properties" : {

@@ -7,6 +7,7 @@ models/AuditLogRecordActionType.ts
 models/DirectoryServiceAccessState.ts
 models/DirectoryServiceState.ts
 models/ExternalAccessProof.ts
+models/ExternalAccessRequestState.ts
 models/ExternalOrganization.ts
 models/ManagementAccessGrant.ts
 models/ManagementAuditLogRecord.ts
@@ -62,7 +63,6 @@ models/ManagementUpdateOutgoingOrderRequest.ts
 models/ManagementUpdateServiceRequest.ts
 models/ManagementUpdateServiceResponse.ts
 models/ManagementUpdateSettingsRequest.ts
-models/ManagementexternalAccessRequestState.ts
 models/NlxmanagementIncomingOrder.ts
 models/NlxmanagementOrderService.ts
 models/ProtobufAny.ts

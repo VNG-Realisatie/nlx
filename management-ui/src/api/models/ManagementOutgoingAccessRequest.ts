@@ -14,6 +14,12 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ExternalAccessRequestState,
+    ExternalAccessRequestStateFromJSON,
+    ExternalAccessRequestStateFromJSONTyped,
+    ExternalAccessRequestStateToJSON,
+} from './ExternalAccessRequestState';
+import {
     ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
@@ -25,12 +31,6 @@ import {
     ManagementErrorDetailsFromJSONTyped,
     ManagementErrorDetailsToJSON,
 } from './ManagementErrorDetails';
-import {
-    ManagementexternalAccessRequestState,
-    ManagementexternalAccessRequestStateFromJSON,
-    ManagementexternalAccessRequestStateFromJSONTyped,
-    ManagementexternalAccessRequestStateToJSON,
-} from './ManagementexternalAccessRequestState';
 
 /**
  * 
@@ -58,10 +58,10 @@ export interface ManagementOutgoingAccessRequest {
     serviceName?: string;
     /**
      * 
-     * @type {ManagementexternalAccessRequestState}
+     * @type {ExternalAccessRequestState}
      * @memberof ManagementOutgoingAccessRequest
      */
-    state?: ManagementexternalAccessRequestState;
+    state?: ExternalAccessRequestState;
     /**
      * 
      * @type {Date}
@@ -101,7 +101,7 @@ export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDi
         'id': !exists(json, 'id') ? undefined : json['id'],
         'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
-        'state': !exists(json, 'state') ? undefined : ManagementexternalAccessRequestStateFromJSON(json['state']),
+        'state': !exists(json, 'state') ? undefined : ExternalAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
         'errorDetails': !exists(json, 'error_details') ? undefined : ManagementErrorDetailsFromJSON(json['error_details']),
@@ -121,7 +121,7 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
         'id': value.id,
         'organization': ExternalOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
-        'state': ManagementexternalAccessRequestStateToJSON(value.state),
+        'state': ExternalAccessRequestStateToJSON(value.state),
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updated_at': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'error_details': ManagementErrorDetailsToJSON(value.errorDetails),
