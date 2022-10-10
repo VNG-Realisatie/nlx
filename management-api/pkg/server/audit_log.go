@@ -17,6 +17,7 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
@@ -121,7 +122,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record, oinToOrg
 
 		for j, service := range record.Services {
 			convertedRecords[i].Services[j] = &api.AuditLogRecord_Service{
-				Organization: &api.Organization{
+				Organization: &external.Organization{
 					SerialNumber: service.Organization.SerialNumber,
 					Name:         oinToOrgNameHash[service.Organization.SerialNumber],
 				},
@@ -160,14 +161,14 @@ func convertAuditLogMetadataFromDatabaseToModel(data *auditlog.RecordData, oinTo
 		metadata = &api.AuditLogRecordMetadata{}
 
 		if data.Delegatee != nil {
-			metadata.Delegatee = &api.Organization{
+			metadata.Delegatee = &external.Organization{
 				SerialNumber: *data.Delegatee,
 				Name:         oinToOrgNameHash[*data.Delegatee],
 			}
 		}
 
 		if data.Delegator != nil {
-			metadata.Delegator = &api.Organization{
+			metadata.Delegator = &external.Organization{
 				SerialNumber: *data.Delegator,
 				Name:         oinToOrgNameHash[*data.Delegator],
 			}

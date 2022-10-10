@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
@@ -115,7 +116,7 @@ func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
 
 	return &api.AccessGrant{
 		Id: uint64(accessGrant.ID),
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			Name:         accessGrant.IncomingAccessRequest.Organization.Name,
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},

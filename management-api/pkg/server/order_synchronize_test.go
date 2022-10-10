@@ -175,7 +175,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
-						Delegator: &api.Organization{
+						Delegator: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},
@@ -184,7 +184,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil: timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Organization: &api.Organization{
+								Organization: &external.Organization{
 									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},
@@ -270,7 +270,7 @@ func TestSynchronizeOrders(t *testing.T) {
 					{
 						Reference:   "ref-order-1",
 						Description: "Order number 1",
-						Delegator: &api.Organization{
+						Delegator: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},
@@ -279,7 +279,7 @@ func TestSynchronizeOrders(t *testing.T) {
 						ValidUntil: timestamppb.New(validUntil),
 						Services: []*api.OrderService{
 							{
-								Organization: &api.Organization{
+								Organization: &external.Organization{
 									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},

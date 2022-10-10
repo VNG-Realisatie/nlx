@@ -18,6 +18,7 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 )
 
@@ -214,7 +215,7 @@ func TestListAuditLogs(t *testing.T) {
 						Services:        []*api.AuditLogRecord_Service{},
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 						Data: &api.AuditLogRecordMetadata{
-							Delegatee: &api.Organization{
+							Delegatee: &external.Organization{
 								SerialNumber: "00000000000000000001",
 								Name:         "Organization One",
 							},

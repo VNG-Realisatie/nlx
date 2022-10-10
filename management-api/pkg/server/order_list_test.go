@@ -135,7 +135,7 @@ func TestListOutgoingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegatee: &api.Organization{
+						Delegatee: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},
@@ -144,7 +144,7 @@ func TestListOutgoingOrders(t *testing.T) {
 						ValidUntil:   timestamppb.New(validUntil),
 						AccessProofs: []*api.AccessProof{{
 							Id: 10,
-							Organization: &api.Organization{
+							Organization: &external.Organization{
 								SerialNumber: "00000000000000000002",
 								Name:         "Organization Two",
 							},
@@ -266,7 +266,7 @@ func TestListIncomingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator: &api.Organization{
+						Delegator: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},
@@ -275,7 +275,7 @@ func TestListIncomingOrders(t *testing.T) {
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",
-								Organization: &api.Organization{
+								Organization: &external.Organization{
 									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},
@@ -328,7 +328,7 @@ func TestListIncomingOrders(t *testing.T) {
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator: &api.Organization{
+						Delegator: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},
@@ -338,7 +338,7 @@ func TestListIncomingOrders(t *testing.T) {
 						Services: []*api.OrderService{
 							{
 								Service: "service-a",
-								Organization: &api.Organization{
+								Organization: &external.Organization{
 									Name:         "Organization One",
 									SerialNumber: "00000000000000000001",
 								},

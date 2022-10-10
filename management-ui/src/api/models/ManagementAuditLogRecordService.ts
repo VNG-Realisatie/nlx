@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementAuditLogRecordService {
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof ManagementAuditLogRecordService
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -50,7 +50,7 @@ export function ManagementAuditLogRecordServiceFromJSONTyped(json: any, ignoreDi
     }
     return {
         
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'service': !exists(json, 'service') ? undefined : json['service'],
     };
 }
@@ -64,7 +64,7 @@ export function ManagementAuditLogRecordServiceToJSON(value?: ManagementAuditLog
     }
     return {
         
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ExternalOrganizationToJSON(value.organization),
         'service': value.service,
     };
 }

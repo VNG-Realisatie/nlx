@@ -14,6 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
@@ -266,7 +267,7 @@ func (s *ManagementService) GetStatisticsOfServices(ctx context.Context, request
 
 func convertAccessGrantToAuthorizationSetting(accessGrant *database.AccessGrant) *api.ListServicesResponse_Service_AuthorizationSettings_Authorization {
 	return &api.ListServicesResponse_Service_AuthorizationSettings_Authorization{
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			Name:         accessGrant.IncomingAccessRequest.Organization.Name,
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},

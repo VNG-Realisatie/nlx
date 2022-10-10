@@ -14,6 +14,12 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
+import {
     ManagementErrorDetails,
     ManagementErrorDetailsFromJSON,
     ManagementErrorDetailsFromJSONTyped,
@@ -25,12 +31,6 @@ import {
     ManagementexternalAccessRequestStateFromJSONTyped,
     ManagementexternalAccessRequestStateToJSON,
 } from './ManagementexternalAccessRequestState';
-import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
 
 /**
  * 
@@ -46,10 +46,10 @@ export interface ManagementOutgoingAccessRequest {
     id?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof ManagementOutgoingAccessRequest
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -99,7 +99,7 @@ export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
         'state': !exists(json, 'state') ? undefined : ManagementexternalAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
@@ -119,7 +119,7 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
     return {
         
         'id': value.id,
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ExternalOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
         'state': ManagementexternalAccessRequestStateToJSON(value.state),
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

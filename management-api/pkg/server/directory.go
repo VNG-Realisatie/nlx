@@ -14,6 +14,7 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/environment"
@@ -56,7 +57,7 @@ func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.
 	}
 
 	if s.Organization != nil {
-		service.Organization = &api.Organization{
+		service.Organization = &external.Organization{
 			SerialNumber: s.Organization.SerialNumber,
 			Name:         s.Organization.Name,
 		}
@@ -161,7 +162,7 @@ func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 
 	return &api.AccessProof{
 		Id: uint64(accessProof.ID),
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			SerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,
 			Name:         accessProof.OutgoingAccessRequest.Organization.Name,
 		},

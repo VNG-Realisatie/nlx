@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface NlxmanagementOrderService {
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof NlxmanagementOrderService
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -50,7 +50,7 @@ export function NlxmanagementOrderServiceFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'service': !exists(json, 'service') ? undefined : json['service'],
     };
 }
@@ -64,7 +64,7 @@ export function NlxmanagementOrderServiceToJSON(value?: NlxmanagementOrderServic
     }
     return {
         
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ExternalOrganizationToJSON(value.organization),
         'service': value.service,
     };
 }

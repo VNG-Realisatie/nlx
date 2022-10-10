@@ -26,11 +26,11 @@ import {
     DirectoryServiceStateToJSON,
 } from './DirectoryServiceState';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
 
 /**
  * 
@@ -46,10 +46,10 @@ export interface ManagementDirectoryService {
     serviceName?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof ManagementDirectoryService
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -111,7 +111,7 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'apiSpecificationType': !exists(json, 'api_specification_type') ? undefined : json['api_specification_type'],
         'documentationUrl': !exists(json, 'documentation_url') ? undefined : json['documentation_url'],
         'publicSupportContact': !exists(json, 'public_support_contact') ? undefined : json['public_support_contact'],
@@ -133,7 +133,7 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
     return {
         
         'service_name': value.serviceName,
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ExternalOrganizationToJSON(value.organization),
         'api_specification_type': value.apiSpecificationType,
         'documentation_url': value.documentationUrl,
         'public_support_contact': value.publicSupportContact,

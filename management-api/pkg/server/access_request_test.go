@@ -737,7 +737,7 @@ func TestListIncomingAccessRequests(t *testing.T) {
 				AccessRequests: []*api.IncomingAccessRequest{
 					{
 						Id: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "test-organization",
 						},

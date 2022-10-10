@@ -127,11 +127,6 @@ service Management {
   }
 }
 
-message Organization {
-  string serial_number = 1;
-  string name = 2;
-}
-
 message SynchronizeOrdersResponse {
   repeated IncomingOrder orders = 1;
 }
@@ -291,7 +286,7 @@ message ListServicesResponse {
 
     message AuthorizationSettings {
       message Authorization  {
-        Organization organization = 1;
+        nlx.management.external.Organization organization = 1;
         string public_key_hash = 2;
         string public_key_pem = 3;
       }
@@ -351,7 +346,7 @@ message GetInwayConfigResponse {
 
         message AuthorizationSettings {
             message Authorization  {
-                Organization organization = 1;
+                nlx.management.external.Organization organization = 1;
                 string public_key_hash = 2;
                 string public_key_pem = 3;
             }
@@ -384,7 +379,7 @@ message ErrorDetails {
 
 message OutgoingAccessRequest {
   uint64 id = 1;
-  Organization organization = 2;
+  nlx.management.external.Organization organization = 2;
   string service_name = 3;
   nlx.management.external.AccessRequestState state = 4;
   google.protobuf.Timestamp created_at = 5;
@@ -395,7 +390,7 @@ message OutgoingAccessRequest {
 
 message IncomingAccessRequest {
   uint64 id = 1;
-  Organization organization = 2;
+  nlx.management.external.Organization organization = 2;
   string service_name = 3;
   nlx.management.external.AccessRequestState state = 4;
   google.protobuf.Timestamp created_at = 5;
@@ -445,7 +440,7 @@ message RevokeAccessGrantRequest {
 
 message AccessGrant {
   uint64 id = 1;
-  Organization organization = 2;
+  nlx.management.external.Organization organization = 2;
   string service_name = 3;
   string public_key_fingerprint = 4;
   google.protobuf.Timestamp created_at = 5;
@@ -455,7 +450,7 @@ message AccessGrant {
 
 message AccessProof {
   uint64 id = 1;
-  Organization organization = 2;
+  nlx.management.external.Organization organization = 2;
   string service_name = 3;
   google.protobuf.Timestamp created_at = 4;
   google.protobuf.Timestamp revoked_at = 5;
@@ -513,7 +508,7 @@ message DirectoryService {
   }
 
   string service_name = 1;
-  Organization organization = 2;
+  nlx.management.external.Organization organization = 2;
   string api_specification_type = 3;
   string documentation_url = 4;
   string public_support_contact = 5;
@@ -564,7 +559,7 @@ message AuditLogRecord {
   }
 
   message Service {
-    Organization organization = 1;
+    nlx.management.external.Organization organization = 1;
     string service = 2;
   }
 
@@ -580,8 +575,8 @@ message AuditLogRecord {
 }
 
 message AuditLogRecordMetadata {
-  Organization delegatee = 1;
-  Organization delegator = 2;
+  nlx.management.external.Organization delegatee = 1;
+  nlx.management.external.Organization delegator = 2;
   string reference = 3;
   string inway_name = 4;
   string outway_name = 5;
@@ -617,14 +612,14 @@ message RevokeOutgoingOrderRequest{
 }
 
 message OrderService {
-  Organization organization = 1;
+  nlx.management.external.Organization organization = 1;
   string service = 2;
 }
 
 message OutgoingOrder {
   string reference = 1;
   string description = 2;
-  Organization delegatee = 4;
+  nlx.management.external.Organization delegatee = 4;
   google.protobuf.Timestamp valid_from = 5;
   google.protobuf.Timestamp valid_until = 6;
   repeated AccessProof access_proofs = 7;
@@ -639,7 +634,7 @@ message ListOutgoingOrdersResponse {
 message IncomingOrder {
   string reference = 1;
   string description = 2;
-  Organization delegator = 3;
+  nlx.management.external.Organization delegator = 3;
   google.protobuf.Timestamp valid_from = 4;
   google.protobuf.Timestamp valid_until = 5;
   repeated OrderService services = 6;

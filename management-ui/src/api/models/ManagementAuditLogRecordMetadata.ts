@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
 
 /**
  * 
@@ -28,16 +28,16 @@ import {
 export interface ManagementAuditLogRecordMetadata {
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof ManagementAuditLogRecordMetadata
      */
-    delegatee?: NlxmanagementOrganization;
+    delegatee?: ExternalOrganization;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof ManagementAuditLogRecordMetadata
      */
-    delegator?: NlxmanagementOrganization;
+    delegator?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -68,8 +68,8 @@ export function ManagementAuditLogRecordMetadataFromJSONTyped(json: any, ignoreD
     }
     return {
         
-        'delegatee': !exists(json, 'delegatee') ? undefined : NlxmanagementOrganizationFromJSON(json['delegatee']),
-        'delegator': !exists(json, 'delegator') ? undefined : NlxmanagementOrganizationFromJSON(json['delegator']),
+        'delegatee': !exists(json, 'delegatee') ? undefined : ExternalOrganizationFromJSON(json['delegatee']),
+        'delegator': !exists(json, 'delegator') ? undefined : ExternalOrganizationFromJSON(json['delegator']),
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'inwayName': !exists(json, 'inway_name') ? undefined : json['inway_name'],
         'outwayName': !exists(json, 'outway_name') ? undefined : json['outway_name'],
@@ -85,8 +85,8 @@ export function ManagementAuditLogRecordMetadataToJSON(value?: ManagementAuditLo
     }
     return {
         
-        'delegatee': NlxmanagementOrganizationToJSON(value.delegatee),
-        'delegator': NlxmanagementOrganizationToJSON(value.delegator),
+        'delegatee': ExternalOrganizationToJSON(value.delegatee),
+        'delegator': ExternalOrganizationToJSON(value.delegator),
         'reference': value.reference,
         'inway_name': value.inwayName,
         'outway_name': value.outwayName,

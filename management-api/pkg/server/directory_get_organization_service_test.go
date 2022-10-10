@@ -97,7 +97,7 @@ func TestGetOrganizationService(t *testing.T) {
 					}, nil)
 			},
 			want: &api.DirectoryService{
-				Organization: &api.Organization{
+				Organization: &external.Organization{
 					SerialNumber: "00000000000000000001",
 					Name:         "Organization One",
 				},
@@ -107,7 +107,7 @@ func TestGetOrganizationService(t *testing.T) {
 					{
 						AccessRequest: &api.OutgoingAccessRequest{
 							Id: 1,
-							Organization: &api.Organization{
+							Organization: &external.Organization{
 								SerialNumber: "00000000000000000001",
 								Name:         "Organization One",
 							},
@@ -119,7 +119,7 @@ func TestGetOrganizationService(t *testing.T) {
 						},
 						AccessProof: &api.AccessProof{
 							Id: 1,
-							Organization: &api.Organization{
+							Organization: &external.Organization{
 								SerialNumber: "00000000000000000001",
 								Name:         "Organization One",
 							},
@@ -162,7 +162,7 @@ func TestGetOrganizationService(t *testing.T) {
 					}, nil)
 			},
 			want: &api.DirectoryService{
-				Organization: &api.Organization{
+				Organization: &external.Organization{
 					SerialNumber: "00000000000000000001",
 					Name:         "test-organization",
 				},

@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -525,7 +526,7 @@ func TestGetInwayConfig(t *testing.T) {
 						AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
 							Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
 								{
-									Organization: &api.Organization{
+									Organization: &external.Organization{
 										SerialNumber: "1111",
 										Name:         "org1",
 									},
@@ -615,7 +616,7 @@ func TestGetInwayConfig(t *testing.T) {
 						AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
 							Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
 								{
-									Organization: &api.Organization{
+									Organization: &external.Organization{
 										SerialNumber: "1111",
 										Name:         "org1",
 									},
@@ -623,7 +624,7 @@ func TestGetInwayConfig(t *testing.T) {
 									PublicKeyPem:  "def",
 								},
 								{
-									Organization: &api.Organization{
+									Organization: &external.Organization{
 										SerialNumber: "2222",
 										Name:         "org2",
 									},
@@ -638,7 +639,7 @@ func TestGetInwayConfig(t *testing.T) {
 						AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
 							Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
 								{
-									Organization: &api.Organization{
+									Organization: &external.Organization{
 										SerialNumber: "3333",
 										Name:         "org3",
 									},
@@ -646,7 +647,7 @@ func TestGetInwayConfig(t *testing.T) {
 									PublicKeyPem:  "jkl",
 								},
 								{
-									Organization: &api.Organization{
+									Organization: &external.Organization{
 										SerialNumber: "4444",
 										Name:         "org4",
 									},

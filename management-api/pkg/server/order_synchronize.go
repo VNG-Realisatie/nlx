@@ -108,7 +108,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 		incomingOrders[i] = &api.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
-			Delegator: &api.Organization{
+			Delegator: &external.Organization{
 				SerialNumber: order.Delegator,
 				Name:         oinToOrgNameHash[order.Delegator],
 			},

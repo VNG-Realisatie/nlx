@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
 
 /**
  * 
@@ -34,10 +34,10 @@ export interface NlxmanagementAccessProof {
     id?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof NlxmanagementAccessProof
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -81,7 +81,7 @@ export function NlxmanagementAccessProofFromJSONTyped(json: any, ignoreDiscrimin
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
@@ -100,7 +100,7 @@ export function NlxmanagementAccessProofToJSON(value?: NlxmanagementAccessProof 
     return {
         
         'id': value.id,
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ExternalOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),

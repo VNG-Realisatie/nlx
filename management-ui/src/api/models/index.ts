@@ -3,6 +3,7 @@
 export * from './AuditLogRecordActionType';
 export * from './DirectoryServiceAccessState';
 export * from './DirectoryServiceState';
+export * from './ExternalOrganization';
 export * from './ManagementAccessGrant';
 export * from './ManagementAuditLogRecord';
 export * from './ManagementAuditLogRecordMetadata';
@@ -61,6 +62,5 @@ export * from './ManagementexternalAccessRequestState';
 export * from './NlxmanagementAccessProof';
 export * from './NlxmanagementIncomingOrder';
 export * from './NlxmanagementOrderService';
-export * from './NlxmanagementOrganization';
 export * from './ProtobufAny';
 export * from './RpcStatus';

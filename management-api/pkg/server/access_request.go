@@ -345,7 +345,7 @@ func isIncomingAccessRequestStillActive(incomingAccessRequest *database.Incoming
 func convertIncomingAccessRequest(accessRequest *database.IncomingAccessRequest) *api.IncomingAccessRequest {
 	return &api.IncomingAccessRequest{
 		Id: uint64(accessRequest.ID),
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			Name:         accessRequest.Organization.Name,
 			SerialNumber: accessRequest.Organization.SerialNumber,
 		},
@@ -377,7 +377,7 @@ func convertOutgoingAccessRequest(request *database.OutgoingAccessRequest) *api.
 
 	return &api.OutgoingAccessRequest{
 		Id: uint64(request.ID),
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			SerialNumber: request.Organization.SerialNumber,
 			Name:         request.Organization.Name,
 		},

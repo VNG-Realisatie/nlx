@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementListServicesResponseServiceAuthorizationSettingsAuthorization {
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof ManagementListServicesResponseServiceAuthorizationSettingsAuthorization
      */
-    organization?: NlxmanagementOrganization;
+    organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
@@ -56,7 +56,7 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
     }
     return {
         
-        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'publicKeyHash': !exists(json, 'public_key_hash') ? undefined : json['public_key_hash'],
         'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
@@ -71,7 +71,7 @@ export function ManagementListServicesResponseServiceAuthorizationSettingsAuthor
     }
     return {
         
-        'organization': NlxmanagementOrganizationToJSON(value.organization),
+        'organization': ExternalOrganizationToJSON(value.organization),
         'public_key_hash': value.publicKeyHash,
         'public_key_pem': value.publicKeyPem,
     };

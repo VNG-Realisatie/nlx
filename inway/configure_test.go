@@ -14,6 +14,7 @@ import (
 
 	"go.nlx.io/nlx/inway/plugins"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	mock_api "go.nlx.io/nlx/management-api/api/mock"
 	common_testing "go.nlx.io/nlx/testing/testingutils"
 )
@@ -72,7 +73,7 @@ func TestStartConfigurationPolling(t *testing.T) {
 							AuthorizationSettings: &api.GetInwayConfigResponse_Service_AuthorizationSettings{
 								Authorizations: []*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
 									{
-										Organization: &api.Organization{
+										Organization: &external.Organization{
 											SerialNumber: "00000000000000000001",
 											Name:         "mock-org",
 										},

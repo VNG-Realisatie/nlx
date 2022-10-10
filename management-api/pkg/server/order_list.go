@@ -59,7 +59,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 			Reference:    order.Reference,
 			PublicKeyPem: order.PublicKeyPEM,
 			Description:  order.Description,
-			Delegatee: &api.Organization{
+			Delegatee: &external.Organization{
 				SerialNumber: order.Delegatee,
 				Name:         oinToOrgNameHash[order.Delegatee],
 			},
@@ -107,7 +107,7 @@ func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.E
 		incomingOrders[i] = &api.IncomingOrder{
 			Reference:   order.Reference(),
 			Description: order.Description(),
-			Delegator: &api.Organization{
+			Delegator: &external.Organization{
 				SerialNumber: order.Delegator(),
 				Name:         oinToOrgNameHash[order.Delegator()],
 			},
@@ -157,7 +157,7 @@ func convertIncomingOrderServices(services []database.IncomingOrderService, oinT
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
-			Organization: &api.Organization{
+			Organization: &external.Organization{
 				SerialNumber: service.Organization.SerialNumber,
 				Name:         oinToOrgNameHash[service.Organization.SerialNumber],
 			},
@@ -199,7 +199,7 @@ func convertDomainIncomingOrderServices(services []domain.IncomingOrderService, 
 
 	for i, service := range services {
 		protoServices[i] = &api.OrderService{
-			Organization: &api.Organization{
+			Organization: &external.Organization{
 				SerialNumber: service.OrganizationSerialNumber(),
 				Name:         oinToOrgNameHash[service.OrganizationSerialNumber()],
 			},

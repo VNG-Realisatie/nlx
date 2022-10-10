@@ -118,7 +118,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			want: &api.SendAccessRequestResponse{
 				OutgoingAccessRequest: &api.OutgoingAccessRequest{
 					Id: 42,
-					Organization: &api.Organization{
+					Organization: &external.Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "my-organization",
 					},
@@ -199,7 +199,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			want: &api.SendAccessRequestResponse{
 				OutgoingAccessRequest: &api.OutgoingAccessRequest{
 					Id: 42,
-					Organization: &api.Organization{
+					Organization: &external.Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "my-organization",
 					},
@@ -408,7 +408,7 @@ func Test_SendAccessRequest(t *testing.T) {
 			want: &api.SendAccessRequestResponse{
 				OutgoingAccessRequest: &api.OutgoingAccessRequest{
 					Id: 42,
-					Organization: &api.Organization{
+					Organization: &external.Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "my-organization",
 					},

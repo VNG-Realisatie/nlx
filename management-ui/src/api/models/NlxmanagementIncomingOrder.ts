@@ -14,17 +14,17 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ExternalOrganization,
+    ExternalOrganizationFromJSON,
+    ExternalOrganizationFromJSONTyped,
+    ExternalOrganizationToJSON,
+} from './ExternalOrganization';
+import {
     NlxmanagementOrderService,
     NlxmanagementOrderServiceFromJSON,
     NlxmanagementOrderServiceFromJSONTyped,
     NlxmanagementOrderServiceToJSON,
 } from './NlxmanagementOrderService';
-import {
-    NlxmanagementOrganization,
-    NlxmanagementOrganizationFromJSON,
-    NlxmanagementOrganizationFromJSONTyped,
-    NlxmanagementOrganizationToJSON,
-} from './NlxmanagementOrganization';
 
 /**
  * 
@@ -46,10 +46,10 @@ export interface NlxmanagementIncomingOrder {
     description?: string;
     /**
      * 
-     * @type {NlxmanagementOrganization}
+     * @type {ExternalOrganization}
      * @memberof NlxmanagementIncomingOrder
      */
-    delegator?: NlxmanagementOrganization;
+    delegator?: ExternalOrganization;
     /**
      * 
      * @type {Date}
@@ -88,7 +88,7 @@ export function NlxmanagementIncomingOrderFromJSONTyped(json: any, ignoreDiscrim
         
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'delegator': !exists(json, 'delegator') ? undefined : NlxmanagementOrganizationFromJSON(json['delegator']),
+        'delegator': !exists(json, 'delegator') ? undefined : ExternalOrganizationFromJSON(json['delegator']),
         'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
         'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(NlxmanagementOrderServiceFromJSON)),
@@ -107,7 +107,7 @@ export function NlxmanagementIncomingOrderToJSON(value?: NlxmanagementIncomingOr
         
         'reference': value.reference,
         'description': value.description,
-        'delegator': NlxmanagementOrganizationToJSON(value.delegator),
+        'delegator': ExternalOrganizationToJSON(value.delegator),
         'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(NlxmanagementOrderServiceToJSON)),

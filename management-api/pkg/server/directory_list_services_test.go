@@ -119,7 +119,7 @@ func TestListDirectoryServices(t *testing.T) {
 	expected := []*api.DirectoryService{
 		{
 			ServiceName: "test-service-1",
-			Organization: &api.Organization{
+			Organization: &external.Organization{
 				SerialNumber: "00000000000000000001",
 				Name:         "Organization One",
 			},
@@ -135,7 +135,7 @@ func TestListDirectoryServices(t *testing.T) {
 				{
 					AccessRequest: &api.OutgoingAccessRequest{
 						Id: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},
@@ -147,7 +147,7 @@ func TestListDirectoryServices(t *testing.T) {
 					},
 					AccessProof: &api.AccessProof{
 						Id: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "Organization One",
 						},

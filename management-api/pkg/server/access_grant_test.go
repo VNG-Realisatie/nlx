@@ -16,6 +16,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -59,7 +60,7 @@ func TestListAccessGrantsForService(t *testing.T) {
 				AccessGrants: []*api.AccessGrant{
 					{
 						Id: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							Name:         "test-organization",
 							SerialNumber: "00000000000000000001",
 						},
@@ -199,7 +200,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 				AccessGrantId: 42,
 			},
 			expectedResponse: &api.AccessGrant{
-				Organization: &api.Organization{},
+				Organization: &external.Organization{},
 				CreatedAt:    createTimestamp(createdAt),
 			},
 			expectedErr: nil,

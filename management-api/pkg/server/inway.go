@@ -16,6 +16,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
@@ -284,7 +285,7 @@ func convertFromDatabaseServiceToInwayService(model *database.Service) *api.GetI
 
 func convertAccessGrantToInwayAuthorizationSetting(accessGrant *database.AccessGrant) *api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization {
 	return &api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization{
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			Name:         accessGrant.IncomingAccessRequest.Organization.Name,
 			SerialNumber: accessGrant.IncomingAccessRequest.Organization.SerialNumber,
 		},
