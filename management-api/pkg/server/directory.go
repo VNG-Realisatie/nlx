@@ -151,7 +151,7 @@ func getLatestAccessRequestStates(ctx context.Context, directoryClient directory
 	return accessRequestStates, nil
 }
 
-func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
+func convertAccessProof(accessProof *database.AccessProof) *external.AccessProof {
 	createdAt := timestamppb.New(accessProof.CreatedAt)
 
 	var revokedAt *timestamppb.Timestamp
@@ -160,7 +160,7 @@ func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 		revokedAt = timestamppb.New(accessProof.RevokedAt.Time)
 	}
 
-	return &api.AccessProof{
+	return &external.AccessProof{
 		Id: uint64(accessProof.ID),
 		Organization: &external.Organization{
 			SerialNumber: accessProof.OutgoingAccessRequest.Organization.SerialNumber,

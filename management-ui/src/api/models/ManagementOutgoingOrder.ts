@@ -14,17 +14,17 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ExternalAccessProof,
+    ExternalAccessProofFromJSON,
+    ExternalAccessProofFromJSONTyped,
+    ExternalAccessProofToJSON,
+} from './ExternalAccessProof';
+import {
     ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
 } from './ExternalOrganization';
-import {
-    NlxmanagementAccessProof,
-    NlxmanagementAccessProofFromJSON,
-    NlxmanagementAccessProofFromJSONTyped,
-    NlxmanagementAccessProofToJSON,
-} from './NlxmanagementAccessProof';
 
 /**
  * 
@@ -64,10 +64,10 @@ export interface ManagementOutgoingOrder {
     validUntil?: Date;
     /**
      * 
-     * @type {Array<NlxmanagementAccessProof>}
+     * @type {Array<ExternalAccessProof>}
      * @memberof ManagementOutgoingOrder
      */
-    accessProofs?: Array<NlxmanagementAccessProof>;
+    accessProofs?: Array<ExternalAccessProof>;
     /**
      * 
      * @type {Date}
@@ -97,7 +97,7 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'delegatee': !exists(json, 'delegatee') ? undefined : ExternalOrganizationFromJSON(json['delegatee']),
         'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
         'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
-        'accessProofs': !exists(json, 'access_proofs') ? undefined : ((json['access_proofs'] as Array<any>).map(NlxmanagementAccessProofFromJSON)),
+        'accessProofs': !exists(json, 'access_proofs') ? undefined : ((json['access_proofs'] as Array<any>).map(ExternalAccessProofFromJSON)),
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
         'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
@@ -117,7 +117,7 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         'delegatee': ExternalOrganizationToJSON(value.delegatee),
         'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'access_proofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(NlxmanagementAccessProofToJSON)),
+        'access_proofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ExternalAccessProofToJSON)),
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
         'public_key_pem': value.publicKeyPem,
     };

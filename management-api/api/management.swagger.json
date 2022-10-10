@@ -1437,7 +1437,7 @@
             "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
           },
           "access_proof" : {
-            "$ref" : "#/components/schemas/nlxmanagementAccessProof"
+            "$ref" : "#/components/schemas/externalAccessProof"
           }
         },
         "type" : "object"
@@ -1446,6 +1446,36 @@
         "default" : "STATE_UNSPECIFIED",
         "enum" : [ "STATE_UNSPECIFIED", "STATE_UP", "STATE_DOWN", "STATE_DEGRADED" ],
         "type" : "string"
+      },
+      "externalAccessProof" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/externalOrganization"
+          },
+          "service_name" : {
+            "type" : "string"
+          },
+          "created_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "revoked_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "access_request_id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "public_key_fingerprint" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
       },
       "externalOrganization" : {
         "properties" : {
@@ -2213,7 +2243,7 @@
           },
           "access_proofs" : {
             "items" : {
-              "$ref" : "#/components/schemas/nlxmanagementAccessProof"
+              "$ref" : "#/components/schemas/externalAccessProof"
             },
             "type" : "array"
           },
@@ -2476,36 +2506,6 @@
         "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
         "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
         "type" : "string"
-      },
-      "nlxmanagementAccessProof" : {
-        "properties" : {
-          "id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "organization" : {
-            "$ref" : "#/components/schemas/externalOrganization"
-          },
-          "service_name" : {
-            "type" : "string"
-          },
-          "created_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "revoked_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "access_request_id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "public_key_fingerprint" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
       },
       "nlxmanagementIncomingOrder" : {
         "properties" : {

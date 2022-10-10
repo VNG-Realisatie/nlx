@@ -145,7 +145,7 @@ func TestListDirectoryServices(t *testing.T) {
 						CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 						UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 					},
-					AccessProof: &api.AccessProof{
+					AccessProof: &external.AccessProof{
 						Id: 1,
 						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
