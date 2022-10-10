@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementOrganization,
-    ManagementOrganizationFromJSON,
-    ManagementOrganizationFromJSONTyped,
-    ManagementOrganizationToJSON,
-} from './ManagementOrganization';
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
+} from './NlxmanagementOrganization';
 
 /**
  * 
@@ -34,10 +34,10 @@ export interface ManagementAccessGrant {
     id?: string;
     /**
      * 
-     * @type {ManagementOrganization}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementAccessGrant
      */
-    organization?: ManagementOrganization;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -81,7 +81,7 @@ export function ManagementAccessGrantFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
         'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
@@ -100,7 +100,7 @@ export function ManagementAccessGrantToJSON(value?: ManagementAccessGrant | null
     return {
         
         'id': value.id,
-        'organization': ManagementOrganizationToJSON(value.organization),
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
         'public_key_fingerprint': value.publicKeyFingerprint,
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),

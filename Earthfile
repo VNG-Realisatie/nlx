@@ -66,6 +66,7 @@ proto-management-api:
     RUN mkdir -p /dist/external || true && \
         protoc \
             -I. \
+            -I./external \
             -I/protobuf/include \
             -I/protobuf/googleapis \
             --go_out=/dist --go_opt=paths=source_relative \
@@ -77,7 +78,6 @@ proto-management-api:
         cd external && \
         protoc \
             -I. \
-            -I.. \
             -I/protobuf/include \
             -I/protobuf/googleapis \
             --go_out=/dist/external --go_opt=paths=source_relative \

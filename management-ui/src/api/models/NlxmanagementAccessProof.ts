@@ -14,18 +14,6 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementErrorDetails,
-    ManagementErrorDetailsFromJSON,
-    ManagementErrorDetailsFromJSONTyped,
-    ManagementErrorDetailsToJSON,
-} from './ManagementErrorDetails';
-import {
-    ManagementexternalAccessRequestState,
-    ManagementexternalAccessRequestStateFromJSON,
-    ManagementexternalAccessRequestStateFromJSONTyped,
-    ManagementexternalAccessRequestStateToJSON,
-} from './ManagementexternalAccessRequestState';
-import {
     NlxmanagementOrganization,
     NlxmanagementOrganizationFromJSON,
     NlxmanagementOrganizationFromJSONTyped,
@@ -35,64 +23,58 @@ import {
 /**
  * 
  * @export
- * @interface ManagementOutgoingAccessRequest
+ * @interface NlxmanagementAccessProof
  */
-export interface ManagementOutgoingAccessRequest {
+export interface NlxmanagementAccessProof {
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingAccessRequest
+     * @memberof NlxmanagementAccessProof
      */
     id?: string;
     /**
      * 
      * @type {NlxmanagementOrganization}
-     * @memberof ManagementOutgoingAccessRequest
+     * @memberof NlxmanagementAccessProof
      */
     organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingAccessRequest
+     * @memberof NlxmanagementAccessProof
      */
     serviceName?: string;
     /**
      * 
-     * @type {ManagementexternalAccessRequestState}
-     * @memberof ManagementOutgoingAccessRequest
-     */
-    state?: ManagementexternalAccessRequestState;
-    /**
-     * 
      * @type {Date}
-     * @memberof ManagementOutgoingAccessRequest
+     * @memberof NlxmanagementAccessProof
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementOutgoingAccessRequest
+     * @memberof NlxmanagementAccessProof
      */
-    updatedAt?: Date;
-    /**
-     * 
-     * @type {ManagementErrorDetails}
-     * @memberof ManagementOutgoingAccessRequest
-     */
-    errorDetails?: ManagementErrorDetails;
+    revokedAt?: Date;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingAccessRequest
+     * @memberof NlxmanagementAccessProof
+     */
+    accessRequestId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NlxmanagementAccessProof
      */
     publicKeyFingerprint?: string;
 }
 
-export function ManagementOutgoingAccessRequestFromJSON(json: any): ManagementOutgoingAccessRequest {
-    return ManagementOutgoingAccessRequestFromJSONTyped(json, false);
+export function NlxmanagementAccessProofFromJSON(json: any): NlxmanagementAccessProof {
+    return NlxmanagementAccessProofFromJSONTyped(json, false);
 }
 
-export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOutgoingAccessRequest {
+export function NlxmanagementAccessProofFromJSONTyped(json: any, ignoreDiscriminator: boolean): NlxmanagementAccessProof {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -101,15 +83,14 @@ export function ManagementOutgoingAccessRequestFromJSONTyped(json: any, ignoreDi
         'id': !exists(json, 'id') ? undefined : json['id'],
         'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
-        'state': !exists(json, 'state') ? undefined : ManagementexternalAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
-        'errorDetails': !exists(json, 'error_details') ? undefined : ManagementErrorDetailsFromJSON(json['error_details']),
+        'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
+        'accessRequestId': !exists(json, 'access_request_id') ? undefined : json['access_request_id'],
         'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
     };
 }
 
-export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoingAccessRequest | null): any {
+export function NlxmanagementAccessProofToJSON(value?: NlxmanagementAccessProof | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -121,10 +102,9 @@ export function ManagementOutgoingAccessRequestToJSON(value?: ManagementOutgoing
         'id': value.id,
         'organization': NlxmanagementOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
-        'state': ManagementexternalAccessRequestStateToJSON(value.state),
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
-        'updated_at': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
-        'error_details': ManagementErrorDetailsToJSON(value.errorDetails),
+        'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
+        'access_request_id': value.accessRequestId,
         'public_key_fingerprint': value.publicKeyFingerprint,
     };
 }

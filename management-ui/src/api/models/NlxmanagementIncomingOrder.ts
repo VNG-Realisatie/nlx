@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    NlxmanagementAccessProof,
-    NlxmanagementAccessProofFromJSON,
-    NlxmanagementAccessProofFromJSONTyped,
-    NlxmanagementAccessProofToJSON,
-} from './NlxmanagementAccessProof';
+    NlxmanagementOrderService,
+    NlxmanagementOrderServiceFromJSON,
+    NlxmanagementOrderServiceFromJSONTyped,
+    NlxmanagementOrderServiceToJSON,
+} from './NlxmanagementOrderService';
 import {
     NlxmanagementOrganization,
     NlxmanagementOrganizationFromJSON,
@@ -29,64 +29,58 @@ import {
 /**
  * 
  * @export
- * @interface ManagementOutgoingOrder
+ * @interface NlxmanagementIncomingOrder
  */
-export interface ManagementOutgoingOrder {
+export interface NlxmanagementIncomingOrder {
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingOrder
+     * @memberof NlxmanagementIncomingOrder
      */
     reference?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementOutgoingOrder
+     * @memberof NlxmanagementIncomingOrder
      */
     description?: string;
     /**
      * 
      * @type {NlxmanagementOrganization}
-     * @memberof ManagementOutgoingOrder
+     * @memberof NlxmanagementIncomingOrder
      */
-    delegatee?: NlxmanagementOrganization;
+    delegator?: NlxmanagementOrganization;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementOutgoingOrder
+     * @memberof NlxmanagementIncomingOrder
      */
     validFrom?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementOutgoingOrder
+     * @memberof NlxmanagementIncomingOrder
      */
     validUntil?: Date;
     /**
      * 
-     * @type {Array<NlxmanagementAccessProof>}
-     * @memberof ManagementOutgoingOrder
+     * @type {Array<NlxmanagementOrderService>}
+     * @memberof NlxmanagementIncomingOrder
      */
-    accessProofs?: Array<NlxmanagementAccessProof>;
+    services?: Array<NlxmanagementOrderService>;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementOutgoingOrder
+     * @memberof NlxmanagementIncomingOrder
      */
     revokedAt?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof ManagementOutgoingOrder
-     */
-    publicKeyPem?: string;
 }
 
-export function ManagementOutgoingOrderFromJSON(json: any): ManagementOutgoingOrder {
-    return ManagementOutgoingOrderFromJSONTyped(json, false);
+export function NlxmanagementIncomingOrderFromJSON(json: any): NlxmanagementIncomingOrder {
+    return NlxmanagementIncomingOrderFromJSONTyped(json, false);
 }
 
-export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementOutgoingOrder {
+export function NlxmanagementIncomingOrderFromJSONTyped(json: any, ignoreDiscriminator: boolean): NlxmanagementIncomingOrder {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -94,16 +88,15 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'delegatee': !exists(json, 'delegatee') ? undefined : NlxmanagementOrganizationFromJSON(json['delegatee']),
+        'delegator': !exists(json, 'delegator') ? undefined : NlxmanagementOrganizationFromJSON(json['delegator']),
         'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
         'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
-        'accessProofs': !exists(json, 'access_proofs') ? undefined : ((json['access_proofs'] as Array<any>).map(NlxmanagementAccessProofFromJSON)),
+        'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(NlxmanagementOrderServiceFromJSON)),
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
-        'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
 }
 
-export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | null): any {
+export function NlxmanagementIncomingOrderToJSON(value?: NlxmanagementIncomingOrder | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -114,12 +107,11 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         
         'reference': value.reference,
         'description': value.description,
-        'delegatee': NlxmanagementOrganizationToJSON(value.delegatee),
+        'delegator': NlxmanagementOrganizationToJSON(value.delegator),
         'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'access_proofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(NlxmanagementAccessProofToJSON)),
+        'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(NlxmanagementOrderServiceToJSON)),
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
-        'public_key_pem': value.publicKeyPem,
     };
 }
 

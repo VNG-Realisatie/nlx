@@ -437,19 +437,19 @@ func TestListOrders(t *testing.T) {
 				return ctx
 			},
 			want: &external.ListOrdersResponse{
-				Orders: []*api.IncomingOrder{
+				Orders: []*external.IncomingOrder{
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator: &api.Organization{
+						Delegator: &external.Organization{
 							SerialNumber: "00000000000000000001",
 						},
 						ValidFrom:  timestamppb.New(validFrom),
 						ValidUntil: timestamppb.New(validUntil),
-						Services: []*api.OrderService{
+						Services: []*external.OrderService{
 							{
 								Service: "service-a",
-								Organization: &api.Organization{
+								Organization: &external.Organization{
 									SerialNumber: "00000000000000000001",
 								},
 							},
@@ -502,20 +502,20 @@ func TestListOrders(t *testing.T) {
 				return ctx
 			},
 			want: &external.ListOrdersResponse{
-				Orders: []*api.IncomingOrder{
+				Orders: []*external.IncomingOrder{
 					{
 						Reference:   "reference",
 						Description: "description",
-						Delegator: &api.Organization{
+						Delegator: &external.Organization{
 							SerialNumber: "00000000000000000001",
 						},
 						ValidFrom:  timestamppb.New(validFrom),
 						ValidUntil: timestamppb.New(validUntil),
 						RevokedAt:  timestamppb.New(revokedAt),
-						Services: []*api.OrderService{
+						Services: []*external.OrderService{
 							{
 								Service: "service-a",
-								Organization: &api.Organization{
+								Organization: &external.Organization{
 									SerialNumber: "00000000000000000001",
 									Name:         "Organization One",
 								},

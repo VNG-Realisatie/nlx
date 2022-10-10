@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
-	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
 )
 
@@ -54,14 +53,14 @@ func (mr *MockClientMockRecorder) Close() *gomock.Call {
 }
 
 // GetAccessProof mocks base method.
-func (m *MockClient) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest, arg2 ...grpc.CallOption) (*api.AccessProof, error) {
+func (m *MockClient) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest, arg2 ...grpc.CallOption) (*external.AccessProof, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetAccessProof", varargs...)
-	ret0, _ := ret[0].(*api.AccessProof)
+	ret0, _ := ret[0].(*external.AccessProof)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

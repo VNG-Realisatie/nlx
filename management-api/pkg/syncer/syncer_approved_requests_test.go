@@ -15,7 +15,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/server"
@@ -116,9 +115,9 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&api.AccessProof{
+					Return(&external.AccessProof{
 						AccessRequestId: 999,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "my-organization",
 						},
@@ -170,9 +169,9 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&api.AccessProof{
+					Return(&external.AccessProof{
 						AccessRequestId: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "my-organization",
 						},
@@ -242,9 +241,9 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&api.AccessProof{
+					Return(&external.AccessProof{
 						AccessRequestId: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "my-organization",
 						},

@@ -1437,7 +1437,7 @@
             "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
           },
           "access_proof" : {
-            "$ref" : "#/components/schemas/managementAccessProof"
+            "$ref" : "#/components/schemas/nlxmanagementAccessProof"
           }
         },
         "type" : "object"
@@ -1454,7 +1454,7 @@
             "type" : "string"
           },
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "service_name" : {
             "type" : "string"
@@ -1476,41 +1476,6 @@
           }
         },
         "type" : "object"
-      },
-      "managementAccessProof" : {
-        "properties" : {
-          "id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
-          },
-          "service_name" : {
-            "type" : "string"
-          },
-          "created_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "revoked_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "access_request_id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "public_key_fingerprint" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementAccessRequestState" : {
-        "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
-        "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
-        "type" : "string"
       },
       "managementAuditLogRecord" : {
         "properties" : {
@@ -1552,10 +1517,10 @@
       "managementAuditLogRecordMetadata" : {
         "properties" : {
           "delegatee" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "delegator" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "reference" : {
             "type" : "string"
@@ -1572,7 +1537,7 @@
       "managementAuditLogRecordService" : {
         "properties" : {
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "service" : {
             "type" : "string"
@@ -1717,7 +1682,7 @@
             "type" : "string"
           },
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "api_specification_type" : {
             "type" : "string"
@@ -1853,7 +1818,7 @@
       "managementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization" : {
         "properties" : {
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "public_key_hash" : {
             "type" : "string"
@@ -1945,13 +1910,13 @@
             "type" : "string"
           },
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "service_name" : {
             "type" : "string"
           },
           "state" : {
-            "$ref" : "#/components/schemas/managementAccessRequestState"
+            "$ref" : "#/components/schemas/managementexternalAccessRequestState"
           },
           "created_at" : {
             "format" : "date-time",
@@ -1962,38 +1927,6 @@
             "type" : "string"
           },
           "public_key_fingerprint" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementIncomingOrder" : {
-        "properties" : {
-          "reference" : {
-            "type" : "string"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "delegator" : {
-            "$ref" : "#/components/schemas/managementOrganization"
-          },
-          "valid_from" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "valid_until" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "services" : {
-            "items" : {
-              "$ref" : "#/components/schemas/managementOrderService"
-            },
-            "type" : "array"
-          },
-          "revoked_at" : {
-            "format" : "date-time",
             "type" : "string"
           }
         },
@@ -2086,7 +2019,7 @@
         "properties" : {
           "orders" : {
             "items" : {
-              "$ref" : "#/components/schemas/managementIncomingOrder"
+              "$ref" : "#/components/schemas/nlxmanagementIncomingOrder"
             },
             "type" : "array"
           }
@@ -2205,34 +2138,12 @@
       "managementListServicesResponseServiceAuthorizationSettingsAuthorization" : {
         "properties" : {
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "public_key_hash" : {
             "type" : "string"
           },
           "public_key_pem" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementOrderService" : {
-        "properties" : {
-          "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
-          },
-          "service" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementOrganization" : {
-        "properties" : {
-          "serial_number" : {
-            "type" : "string"
-          },
-          "name" : {
             "type" : "string"
           }
         },
@@ -2245,13 +2156,13 @@
             "type" : "string"
           },
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "service_name" : {
             "type" : "string"
           },
           "state" : {
-            "$ref" : "#/components/schemas/managementAccessRequestState"
+            "$ref" : "#/components/schemas/managementexternalAccessRequestState"
           },
           "created_at" : {
             "format" : "date-time",
@@ -2279,7 +2190,7 @@
             "type" : "string"
           },
           "delegatee" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
           },
           "valid_from" : {
             "format" : "date-time",
@@ -2291,7 +2202,7 @@
           },
           "access_proofs" : {
             "items" : {
-              "$ref" : "#/components/schemas/managementAccessProof"
+              "$ref" : "#/components/schemas/nlxmanagementAccessProof"
             },
             "type" : "array"
           },
@@ -2380,7 +2291,7 @@
         "properties" : {
           "orders" : {
             "items" : {
-              "$ref" : "#/components/schemas/managementIncomingOrder"
+              "$ref" : "#/components/schemas/nlxmanagementIncomingOrder"
             },
             "type" : "array"
           }
@@ -2545,6 +2456,95 @@
             "type" : "string"
           },
           "organization_email_address" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "managementexternalAccessRequestState" : {
+        "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
+        "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
+        "type" : "string"
+      },
+      "nlxmanagementAccessProof" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
+          },
+          "service_name" : {
+            "type" : "string"
+          },
+          "created_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "revoked_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "access_request_id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "public_key_fingerprint" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "nlxmanagementIncomingOrder" : {
+        "properties" : {
+          "reference" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "delegator" : {
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
+          },
+          "valid_from" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "valid_until" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/nlxmanagementOrderService"
+            },
+            "type" : "array"
+          },
+          "revoked_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "nlxmanagementOrderService" : {
+        "properties" : {
+          "organization" : {
+            "$ref" : "#/components/schemas/nlxmanagementOrganization"
+          },
+          "service" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "nlxmanagementOrganization" : {
+        "properties" : {
+          "serial_number" : {
+            "type" : "string"
+          },
+          "name" : {
             "type" : "string"
           }
         },

@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
-	api "go.nlx.io/nlx/management-api/api"
 	external "go.nlx.io/nlx/management-api/api/external"
 )
 
@@ -40,14 +39,14 @@ func (m *MockAccessRequestServiceClient) EXPECT() *MockAccessRequestServiceClien
 }
 
 // GetAccessProof mocks base method.
-func (m *MockAccessRequestServiceClient) GetAccessProof(ctx context.Context, in *external.GetAccessProofRequest, opts ...grpc.CallOption) (*api.AccessProof, error) {
+func (m *MockAccessRequestServiceClient) GetAccessProof(ctx context.Context, in *external.GetAccessProofRequest, opts ...grpc.CallOption) (*external.AccessProof, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetAccessProof", varargs...)
-	ret0, _ := ret[0].(*api.AccessProof)
+	ret0, _ := ret[0].(*external.AccessProof)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -123,10 +122,10 @@ func (m *MockAccessRequestServiceServer) EXPECT() *MockAccessRequestServiceServe
 }
 
 // GetAccessProof mocks base method.
-func (m *MockAccessRequestServiceServer) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest) (*api.AccessProof, error) {
+func (m *MockAccessRequestServiceServer) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest) (*external.AccessProof, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccessProof", arg0, arg1)
-	ret0, _ := ret[0].(*api.AccessProof)
+	ret0, _ := ret[0].(*external.AccessProof)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

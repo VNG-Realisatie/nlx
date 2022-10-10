@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementIncomingOrder,
-    ManagementIncomingOrderFromJSON,
-    ManagementIncomingOrderFromJSONTyped,
-    ManagementIncomingOrderToJSON,
-} from './ManagementIncomingOrder';
+    NlxmanagementIncomingOrder,
+    NlxmanagementIncomingOrderFromJSON,
+    NlxmanagementIncomingOrderFromJSONTyped,
+    NlxmanagementIncomingOrderToJSON,
+} from './NlxmanagementIncomingOrder';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementSynchronizeOrdersResponse {
     /**
      * 
-     * @type {Array<ManagementIncomingOrder>}
+     * @type {Array<NlxmanagementIncomingOrder>}
      * @memberof ManagementSynchronizeOrdersResponse
      */
-    orders?: Array<ManagementIncomingOrder>;
+    orders?: Array<NlxmanagementIncomingOrder>;
 }
 
 export function ManagementSynchronizeOrdersResponseFromJSON(json: any): ManagementSynchronizeOrdersResponse {
@@ -44,7 +44,7 @@ export function ManagementSynchronizeOrdersResponseFromJSONTyped(json: any, igno
     }
     return {
         
-        'orders': !exists(json, 'orders') ? undefined : ((json['orders'] as Array<any>).map(ManagementIncomingOrderFromJSON)),
+        'orders': !exists(json, 'orders') ? undefined : ((json['orders'] as Array<any>).map(NlxmanagementIncomingOrderFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function ManagementSynchronizeOrdersResponseToJSON(value?: ManagementSync
     }
     return {
         
-        'orders': value.orders === undefined ? undefined : ((value.orders as Array<any>).map(ManagementIncomingOrderToJSON)),
+        'orders': value.orders === undefined ? undefined : ((value.orders as Array<any>).map(NlxmanagementIncomingOrderToJSON)),
     };
 }
 

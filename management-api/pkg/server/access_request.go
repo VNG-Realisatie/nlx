@@ -35,26 +35,26 @@ type proxyMetadata struct {
 
 const accessRequestStatePrefix = "ACCESS_REQUEST_STATE_%s"
 
-func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) api.AccessRequestState {
+func incomingAccessRequestStateToProto(state database.IncomingAccessRequestState) external.AccessRequestState {
 	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
 	protoState, ok := api.AccessRequestState_value[name]
 	if !ok {
-		return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
+		return external.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 	}
 
-	return api.AccessRequestState(protoState)
+	return external.AccessRequestState(protoState)
 }
 
-func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) api.AccessRequestState {
+func outgoingAccessRequestStateToProto(state database.OutgoingAccessRequestState) external.AccessRequestState {
 	name := fmt.Sprintf(accessRequestStatePrefix, strings.ToUpper(string(state)))
 
-	protoState, ok := api.AccessRequestState_value[name]
+	protoState, ok := external.AccessRequestState_value[name]
 	if !ok {
-		return api.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
+		return external.AccessRequestState_ACCESS_REQUEST_STATE_UNSPECIFIED
 	}
 
-	return api.AccessRequestState(protoState)
+	return external.AccessRequestState(protoState)
 }
 
 func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req *api.ListIncomingAccessRequestsRequest) (*api.ListIncomingAccessRequestsResponse, error) {

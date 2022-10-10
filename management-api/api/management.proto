@@ -7,6 +7,7 @@ package nlx.management;
 
 option go_package = "go.nlx.io/nlx/management-api/api";
 
+import "external.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
@@ -385,7 +386,7 @@ message OutgoingAccessRequest {
   uint64 id = 1;
   Organization organization = 2;
   string service_name = 3;
-  AccessRequestState state = 4;
+  nlx.management.external.AccessRequestState state = 4;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
   ErrorDetails error_details = 7;
@@ -396,7 +397,7 @@ message IncomingAccessRequest {
   uint64 id = 1;
   Organization organization = 2;
   string service_name = 3;
-  AccessRequestState state = 4;
+  nlx.management.external.AccessRequestState state = 4;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
   string public_key_fingerprint = 7;
@@ -493,7 +494,7 @@ message GetOrganizationServiceRequest {
 
 message DirectoryAccessRequest {
   string id = 1;
-  AccessRequestState state = 2;
+  nlx.management.external.AccessRequestState state = 2;
   google.protobuf.Timestamp created_at = 3;
   google.protobuf.Timestamp updated_at = 4;
 }

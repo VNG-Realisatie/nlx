@@ -14,17 +14,17 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementAccessRequestState,
-    ManagementAccessRequestStateFromJSON,
-    ManagementAccessRequestStateFromJSONTyped,
-    ManagementAccessRequestStateToJSON,
-} from './ManagementAccessRequestState';
+    ManagementexternalAccessRequestState,
+    ManagementexternalAccessRequestStateFromJSON,
+    ManagementexternalAccessRequestStateFromJSONTyped,
+    ManagementexternalAccessRequestStateToJSON,
+} from './ManagementexternalAccessRequestState';
 import {
-    ManagementOrganization,
-    ManagementOrganizationFromJSON,
-    ManagementOrganizationFromJSONTyped,
-    ManagementOrganizationToJSON,
-} from './ManagementOrganization';
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
+} from './NlxmanagementOrganization';
 
 /**
  * 
@@ -40,10 +40,10 @@ export interface ManagementIncomingAccessRequest {
     id?: string;
     /**
      * 
-     * @type {ManagementOrganization}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementIncomingAccessRequest
      */
-    organization?: ManagementOrganization;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -52,10 +52,10 @@ export interface ManagementIncomingAccessRequest {
     serviceName?: string;
     /**
      * 
-     * @type {ManagementAccessRequestState}
+     * @type {ManagementexternalAccessRequestState}
      * @memberof ManagementIncomingAccessRequest
      */
-    state?: ManagementAccessRequestState;
+    state?: ManagementexternalAccessRequestState;
     /**
      * 
      * @type {Date}
@@ -87,9 +87,9 @@ export function ManagementIncomingAccessRequestFromJSONTyped(json: any, ignoreDi
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
-        'state': !exists(json, 'state') ? undefined : ManagementAccessRequestStateFromJSON(json['state']),
+        'state': !exists(json, 'state') ? undefined : ManagementexternalAccessRequestStateFromJSON(json['state']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
         'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
@@ -106,9 +106,9 @@ export function ManagementIncomingAccessRequestToJSON(value?: ManagementIncoming
     return {
         
         'id': value.id,
-        'organization': ManagementOrganizationToJSON(value.organization),
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
-        'state': ManagementAccessRequestStateToJSON(value.state),
+        'state': ManagementexternalAccessRequestStateToJSON(value.state),
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updated_at': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'public_key_fingerprint': value.publicKeyFingerprint,

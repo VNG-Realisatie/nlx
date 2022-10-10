@@ -14,17 +14,17 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementAccessProof,
-    ManagementAccessProofFromJSON,
-    ManagementAccessProofFromJSONTyped,
-    ManagementAccessProofToJSON,
-} from './ManagementAccessProof';
-import {
     ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestFromJSONTyped,
     ManagementOutgoingAccessRequestToJSON,
 } from './ManagementOutgoingAccessRequest';
+import {
+    NlxmanagementAccessProof,
+    NlxmanagementAccessProofFromJSON,
+    NlxmanagementAccessProofFromJSONTyped,
+    NlxmanagementAccessProofToJSON,
+} from './NlxmanagementAccessProof';
 
 /**
  * 
@@ -40,10 +40,10 @@ export interface DirectoryServiceAccessState {
     accessRequest?: ManagementOutgoingAccessRequest;
     /**
      * 
-     * @type {ManagementAccessProof}
+     * @type {NlxmanagementAccessProof}
      * @memberof DirectoryServiceAccessState
      */
-    accessProof?: ManagementAccessProof;
+    accessProof?: NlxmanagementAccessProof;
 }
 
 export function DirectoryServiceAccessStateFromJSON(json: any): DirectoryServiceAccessState {
@@ -57,7 +57,7 @@ export function DirectoryServiceAccessStateFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'accessRequest': !exists(json, 'access_request') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['access_request']),
-        'accessProof': !exists(json, 'access_proof') ? undefined : ManagementAccessProofFromJSON(json['access_proof']),
+        'accessProof': !exists(json, 'access_proof') ? undefined : NlxmanagementAccessProofFromJSON(json['access_proof']),
     };
 }
 
@@ -71,7 +71,7 @@ export function DirectoryServiceAccessStateToJSON(value?: DirectoryServiceAccess
     return {
         
         'access_request': ManagementOutgoingAccessRequestToJSON(value.accessRequest),
-        'access_proof': ManagementAccessProofToJSON(value.accessProof),
+        'access_proof': NlxmanagementAccessProofToJSON(value.accessProof),
     };
 }
 

@@ -12,6 +12,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 )
 
 //nolint:gochecknoinits // recommended way to use Cobra
@@ -42,7 +43,7 @@ func init() {
 
 type accessRequestDetails struct {
 	ID                       uint64
-	State                    api.AccessRequestState
+	State                    external.AccessRequestState
 	OrganizationName         string
 	OrganizationSerialNumber string
 	ServiceName              string

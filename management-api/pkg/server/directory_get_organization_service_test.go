@@ -17,6 +17,7 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
@@ -112,7 +113,7 @@ func TestGetOrganizationService(t *testing.T) {
 							},
 							ServiceName:          "test-service",
 							PublicKeyFingerprint: "public-key-fingerprint",
-							State:                api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
+							State:                external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 							CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 							UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						},

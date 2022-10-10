@@ -15,53 +15,14 @@
   "paths" : { },
   "components" : {
     "schemas" : {
-      "externalGetAccessRequestStateResponse" : {
-        "properties" : {
-          "state" : {
-            "$ref" : "#/components/schemas/managementAccessRequestState"
-          }
-        },
-        "type" : "object"
-      },
-      "externalListOrdersResponse" : {
-        "properties" : {
-          "orders" : {
-            "items" : {
-              "$ref" : "#/components/schemas/managementIncomingOrder"
-            },
-            "type" : "array"
-          }
-        },
-        "type" : "object"
-      },
-      "externalRequestAccessResponse" : {
-        "properties" : {
-          "reference_id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "access_request_state" : {
-            "$ref" : "#/components/schemas/managementAccessRequestState"
-          }
-        },
-        "type" : "object"
-      },
-      "externalRequestClaimResponse" : {
-        "properties" : {
-          "claim" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "managementAccessProof" : {
+      "externalAccessProof" : {
         "properties" : {
           "id" : {
             "format" : "uint64",
             "type" : "string"
           },
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/externalOrganization"
           },
           "service_name" : {
             "type" : "string"
@@ -84,12 +45,20 @@
         },
         "type" : "object"
       },
-      "managementAccessRequestState" : {
+      "externalAccessRequestState" : {
         "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
         "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
         "type" : "string"
       },
-      "managementIncomingOrder" : {
+      "externalGetAccessRequestStateResponse" : {
+        "properties" : {
+          "state" : {
+            "$ref" : "#/components/schemas/externalAccessRequestState"
+          }
+        },
+        "type" : "object"
+      },
+      "externalIncomingOrder" : {
         "properties" : {
           "reference" : {
             "type" : "string"
@@ -98,7 +67,7 @@
             "type" : "string"
           },
           "delegator" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/externalOrganization"
           },
           "valid_from" : {
             "format" : "date-time",
@@ -110,7 +79,7 @@
           },
           "services" : {
             "items" : {
-              "$ref" : "#/components/schemas/managementOrderService"
+              "$ref" : "#/components/schemas/externalOrderService"
             },
             "type" : "array"
           },
@@ -121,10 +90,21 @@
         },
         "type" : "object"
       },
-      "managementOrderService" : {
+      "externalListOrdersResponse" : {
+        "properties" : {
+          "orders" : {
+            "items" : {
+              "$ref" : "#/components/schemas/externalIncomingOrder"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "externalOrderService" : {
         "properties" : {
           "organization" : {
-            "$ref" : "#/components/schemas/managementOrganization"
+            "$ref" : "#/components/schemas/externalOrganization"
           },
           "service" : {
             "type" : "string"
@@ -132,12 +112,32 @@
         },
         "type" : "object"
       },
-      "managementOrganization" : {
+      "externalOrganization" : {
         "properties" : {
           "serial_number" : {
             "type" : "string"
           },
           "name" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "externalRequestAccessResponse" : {
+        "properties" : {
+          "reference_id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "access_request_state" : {
+            "$ref" : "#/components/schemas/externalAccessRequestState"
+          }
+        },
+        "type" : "object"
+      },
+      "externalRequestClaimResponse" : {
+        "properties" : {
+          "claim" : {
             "type" : "string"
           }
         },

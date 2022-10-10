@@ -133,13 +133,13 @@ func (s *ManagementService) ListOrders(ctx context.Context, _ *emptypb.Empty) (*
 		return nil, status.Errorf(codes.Internal, "failed to retrieve external orders")
 	}
 
-	incomingOrders := make([]*api.IncomingOrder, len(orders))
+	incomingOrders := make([]*external.IncomingOrder, len(orders))
 
 	for i, order := range orders {
-		incomingOrders[i] = &api.IncomingOrder{
+		incomingOrders[i] = &external.IncomingOrder{
 			Reference:   order.Reference,
 			Description: order.Description,
-			Delegator: &api.Organization{
+			Delegator: &external.Organization{
 				SerialNumber: s.orgCert.Certificate().Subject.SerialNumber,
 			},
 			RevokedAt:  convert.SQLToProtoTimestamp(order.RevokedAt),
@@ -168,9 +168,9 @@ func convertIncomingOrderServices(services []database.IncomingOrderService, oinT
 	return protoServices
 }
 
-func convertOutgoingAccessProofsToOrderServices(outgoingOrderAccessProofs []*database.OutgoingOrderAccessProof) []*api.OrderService {
-	orderServices := make(map[string]*api.OrderService)
-	protoServices := make([]*api.OrderService, 0)
+func convertOutgoingAccessProofsToOrderServices(outgoingOrderAccessProofs []*database.OutgoingOrderAccessProof) []*external.OrderService {
+	orderServices := make(map[string]*external.OrderService)
+	protoServices := make([]*external.OrderService, 0)
 
 	for _, outgoingOrderAccessProof := range outgoingOrderAccessProofs {
 		orderServiceKey := fmt.Sprintf("%s.%s", outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber, outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.ServiceName)
@@ -180,8 +180,8 @@ func convertOutgoingAccessProofsToOrderServices(outgoingOrderAccessProofs []*dat
 			continue
 		}
 
-		orderService := &api.OrderService{
-			Organization: &api.Organization{
+		orderService := &external.OrderService{
+			Organization: &external.Organization{
 				SerialNumber: outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.SerialNumber,
 				Name:         outgoingOrderAccessProof.AccessProof.OutgoingAccessRequest.Organization.Name,
 			},

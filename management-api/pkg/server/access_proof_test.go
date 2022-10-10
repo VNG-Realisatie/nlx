@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/tls"
-	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
@@ -30,7 +29,7 @@ func TestGetAccessProof(t *testing.T) {
 
 	tests := map[string]struct {
 		setup   func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context
-		want    *api.AccessProof
+		want    *external.AccessProof
 		wantErr error
 	}{
 		"when_the_peer_context_is_missing": {
@@ -119,12 +118,12 @@ func TestGetAccessProof(t *testing.T) {
 
 				return ctx
 			},
-			want: &api.AccessProof{
+			want: &external.AccessProof{
 				Id:              1,
 				CreatedAt:       ts,
 				RevokedAt:       ts,
 				AccessRequestId: 1,
-				Organization: &api.Organization{
+				Organization: &external.Organization{
 					SerialNumber: "00000000000000000001",
 					Name:         "nlx-test",
 				},

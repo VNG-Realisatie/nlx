@@ -119,20 +119,20 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.mc.EXPECT().
 					ListOrders(gomock.Any(), &emptypb.Empty{}).
 					Return(&external.ListOrdersResponse{
-						Orders: []*api.IncomingOrder{
+						Orders: []*external.IncomingOrder{
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator: &api.Organization{
+								Delegator: &external.Organization{
 									SerialNumber: "00000000000000000001",
 									Name:         "Organization One",
 								},
 								RevokedAt:  nil,
 								ValidFrom:  timestamppb.New(validFrom),
 								ValidUntil: timestamppb.New(validUntil),
-								Services: []*api.OrderService{
+								Services: []*external.OrderService{
 									{
-										Organization: &api.Organization{
+										Organization: &external.Organization{
 											Name:         "organization-a",
 											SerialNumber: "00000000000000000001",
 										},
@@ -214,20 +214,20 @@ func TestSynchronizeOrders(t *testing.T) {
 				mocks.mc.EXPECT().
 					ListOrders(gomock.Any(), &emptypb.Empty{}).
 					Return(&external.ListOrdersResponse{
-						Orders: []*api.IncomingOrder{
+						Orders: []*external.IncomingOrder{
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator: &api.Organization{
+								Delegator: &external.Organization{
 									SerialNumber: "00000000000000000001",
 									Name:         "Organization One",
 								},
 								RevokedAt:  nil,
 								ValidFrom:  timestamppb.New(validFrom),
 								ValidUntil: timestamppb.New(validUntil),
-								Services: []*api.OrderService{
+								Services: []*external.OrderService{
 									{
-										Organization: &api.Organization{
+										Organization: &external.Organization{
 											Name:         "Organization One",
 											SerialNumber: "00000000000000000001",
 										},
@@ -312,20 +312,20 @@ func TestSynchronizeOrders(t *testing.T) {
 					EXPECT().
 					ListOrders(gomock.Any(), &emptypb.Empty{}).
 					Return(&external.ListOrdersResponse{
-						Orders: []*api.IncomingOrder{
+						Orders: []*external.IncomingOrder{
 							{
 								Reference:   "ref-order-1",
 								Description: "Order number 1",
-								Delegator: &api.Organization{
+								Delegator: &external.Organization{
 									SerialNumber: "00000000000000000001",
 									Name:         "Organization One",
 								},
 								RevokedAt:  timestamppb.New(revokedAt),
 								ValidFrom:  timestamppb.New(validFrom),
 								ValidUntil: timestamppb.New(validUntil),
-								Services: []*api.OrderService{
+								Services: []*external.OrderService{
 									{
-										Organization: &api.Organization{
+										Organization: &external.Organization{
 											Name:         "Organization One",
 											SerialNumber: "00000000000000000001",
 										},

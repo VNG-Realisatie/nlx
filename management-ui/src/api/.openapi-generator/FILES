@@ -7,8 +7,6 @@ models/AuditLogRecordActionType.ts
 models/DirectoryServiceAccessState.ts
 models/DirectoryServiceState.ts
 models/ManagementAccessGrant.ts
-models/ManagementAccessProof.ts
-models/ManagementAccessRequestState.ts
 models/ManagementAuditLogRecord.ts
 models/ManagementAuditLogRecordMetadata.ts
 models/ManagementAuditLogRecordService.ts
@@ -29,7 +27,6 @@ models/ManagementGetStatisticsOfServicesResponse.ts
 models/ManagementGetTermsOfServiceResponse.ts
 models/ManagementGetTermsOfServiceStatusResponse.ts
 models/ManagementIncomingAccessRequest.ts
-models/ManagementIncomingOrder.ts
 models/ManagementInway.ts
 models/ManagementInwayService.ts
 models/ManagementIsFinanceEnabledResponse.ts
@@ -45,8 +42,6 @@ models/ManagementListServicesResponse.ts
 models/ManagementListServicesResponseService.ts
 models/ManagementListServicesResponseServiceAuthorizationSettings.ts
 models/ManagementListServicesResponseServiceAuthorizationSettingsAuthorization.ts
-models/ManagementOrderService.ts
-models/ManagementOrganization.ts
 models/ManagementOutgoingAccessRequest.ts
 models/ManagementOutgoingOrder.ts
 models/ManagementOutway.ts
@@ -65,6 +60,11 @@ models/ManagementUpdateOutgoingOrderRequest.ts
 models/ManagementUpdateServiceRequest.ts
 models/ManagementUpdateServiceResponse.ts
 models/ManagementUpdateSettingsRequest.ts
+models/ManagementexternalAccessRequestState.ts
+models/NlxmanagementAccessProof.ts
+models/NlxmanagementIncomingOrder.ts
+models/NlxmanagementOrderService.ts
+models/NlxmanagementOrganization.ts
 models/ProtobufAny.ts
 models/RpcStatus.ts
 models/index.ts

@@ -15,7 +15,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/management"
@@ -134,21 +133,21 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 	}
 }
 
-func convertAccessRequestState(state api.AccessRequestState) (database.OutgoingAccessRequestState, error) {
+func convertAccessRequestState(state external.AccessRequestState) (database.OutgoingAccessRequestState, error) {
 	switch state {
-	case api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED:
+	case external.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED:
 		return database.OutgoingAccessRequestApproved, nil
-	case api.AccessRequestState_ACCESS_REQUEST_STATE_REJECTED:
+	case external.AccessRequestState_ACCESS_REQUEST_STATE_REJECTED:
 		return database.OutgoingAccessRequestRejected, nil
-	case api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED:
+	case external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED:
 		return database.OutgoingAccessRequestReceived, nil
-	case api.AccessRequestState_ACCESS_REQUEST_STATE_FAILED:
+	case external.AccessRequestState_ACCESS_REQUEST_STATE_FAILED:
 		return database.OutgoingAccessRequestFailed, nil
 		/*
 			If the returned state is revoked the outgoing access request state needs to be set to approved because it means the access proof still needs to be synced.
 			This can happen when an access request is rejected immediately after being approved.
 		*/
-	case api.AccessRequestState_ACCESS_REQUEST_STATE_REVOKED:
+	case external.AccessRequestState_ACCESS_REQUEST_STATE_REVOKED:
 		return database.OutgoingAccessRequestApproved, nil
 	default:
 		return "", fmt.Errorf("invalid state for outgoing access request: %s", state)
@@ -208,7 +207,7 @@ func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase
 
 var ErrInvalidTimeStamp = fmt.Errorf("invalid timestamp")
 
-func parseAccessProof(accessProof *api.AccessProof) (*database.AccessProof, error) {
+func parseAccessProof(accessProof *external.AccessProof) (*database.AccessProof, error) {
 	var createdAt time.Time
 
 	if accessProof.CreatedAt != nil {

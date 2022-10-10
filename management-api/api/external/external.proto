@@ -7,18 +7,23 @@ package nlx.management.external;
 
 option go_package = "go.nlx.io/nlx/management-api/api/external";
 
-import "management.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
   rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
-  rpc GetAccessProof (GetAccessProofRequest) returns (nlx.management.AccessProof);
+  rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof);
 }
 
 service DelegationService {
   rpc RequestClaim (RequestClaimRequest) returns (RequestClaimResponse);
   rpc ListOrders (google.protobuf.Empty) returns (ListOrdersResponse);
+}
+
+message Organization {
+  string serial_number = 1;
+  string name = 2;
 }
 
 message RequestAccessRequest {
@@ -31,8 +36,28 @@ message GetAccessRequestStateRequest {
   string public_key_fingerprint = 2;
 }
 
+message AccessProof {
+  uint64 id = 1;
+  Organization organization = 2;
+  string service_name = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp revoked_at = 5;
+  uint64 access_request_id = 6;
+  string public_key_fingerprint = 7;
+}
+
+enum AccessRequestState {
+  ACCESS_REQUEST_STATE_UNSPECIFIED = 0;
+  ACCESS_REQUEST_STATE_FAILED = 1;
+  reserved 2; // Removed deprecated option 'CREATED'
+  ACCESS_REQUEST_STATE_RECEIVED = 3;
+  ACCESS_REQUEST_STATE_APPROVED = 4;
+  ACCESS_REQUEST_STATE_REJECTED = 5;
+  ACCESS_REQUEST_STATE_REVOKED = 6;
+}
+
 message GetAccessRequestStateResponse {
-  nlx.management.AccessRequestState state = 1;
+  AccessRequestState state = 1;
 }
 
 message GetAccessProofRequest {
@@ -42,7 +67,7 @@ message GetAccessProofRequest {
 
 message RequestAccessResponse {
   uint64 reference_id = 1;
-  nlx.management.AccessRequestState access_request_state = 2;
+  AccessRequestState access_request_state = 2;
 }
 
 message RequestClaimRequest {
@@ -58,6 +83,21 @@ message RequestClaimResponse {
 message ListOrdersRequest {
 }
 
+message OrderService {
+  Organization organization = 1;
+  string service = 2;
+}
+
+message IncomingOrder {
+  string reference = 1;
+  string description = 2;
+  Organization delegator = 3;
+  google.protobuf.Timestamp valid_from = 4;
+  google.protobuf.Timestamp valid_until = 5;
+  repeated OrderService services = 6;
+  google.protobuf.Timestamp revoked_at = 7;
+}
+
 message ListOrdersResponse {
-  repeated nlx.management.IncomingOrder orders = 1;
+  repeated IncomingOrder orders = 1;
 }

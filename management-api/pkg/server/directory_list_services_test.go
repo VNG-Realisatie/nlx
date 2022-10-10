@@ -16,6 +16,7 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	mock_database "go.nlx.io/nlx/management-api/pkg/database/mock"
 	mock_directory "go.nlx.io/nlx/management-api/pkg/directory/mock"
@@ -140,7 +141,7 @@ func TestListDirectoryServices(t *testing.T) {
 						},
 						ServiceName:          "test-service-1",
 						PublicKeyFingerprint: "public-key-fingerprint",
-						State:                api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
+						State:                external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 						CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 						UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 12, 42, 42, 1337, time.UTC)),
 					},

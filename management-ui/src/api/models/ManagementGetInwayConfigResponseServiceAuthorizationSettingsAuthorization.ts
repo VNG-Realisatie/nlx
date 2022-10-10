@@ -14,11 +14,11 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ManagementOrganization,
-    ManagementOrganizationFromJSON,
-    ManagementOrganizationFromJSONTyped,
-    ManagementOrganizationToJSON,
-} from './ManagementOrganization';
+    NlxmanagementOrganization,
+    NlxmanagementOrganizationFromJSON,
+    NlxmanagementOrganizationFromJSONTyped,
+    NlxmanagementOrganizationToJSON,
+} from './NlxmanagementOrganization';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization {
     /**
      * 
-     * @type {ManagementOrganization}
+     * @type {NlxmanagementOrganization}
      * @memberof ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization
      */
-    organization?: ManagementOrganization;
+    organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
@@ -56,7 +56,7 @@ export function ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuth
     }
     return {
         
-        'organization': !exists(json, 'organization') ? undefined : ManagementOrganizationFromJSON(json['organization']),
+        'organization': !exists(json, 'organization') ? undefined : NlxmanagementOrganizationFromJSON(json['organization']),
         'publicKeyHash': !exists(json, 'public_key_hash') ? undefined : json['public_key_hash'],
         'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
@@ -71,7 +71,7 @@ export function ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuth
     }
     return {
         
-        'organization': ManagementOrganizationToJSON(value.organization),
+        'organization': NlxmanagementOrganizationToJSON(value.organization),
         'public_key_hash': value.publicKeyHash,
         'public_key_pem': value.publicKeyPem,
     };

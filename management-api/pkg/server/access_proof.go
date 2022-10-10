@@ -13,12 +13,11 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.GetAccessProofRequest) (*api.AccessProof, error) {
+func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.GetAccessProofRequest) (*external.AccessProof, error) {
 	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		s.logger.Error("failed to parse proxy metadata", zap.Error(err))
@@ -51,10 +50,10 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 	createdAt := timestamppb.New(grant.CreatedAt)
 	revokedAt := timestamppb.New(grant.RevokedAt.Time)
 
-	return &api.AccessProof{
+	return &external.AccessProof{
 		Id:              uint64(grant.ID),
 		AccessRequestId: uint64(grant.IncomingAccessRequest.ID),
-		Organization: &api.Organization{
+		Organization: &external.Organization{
 			SerialNumber: grant.IncomingAccessRequest.Organization.SerialNumber,
 			Name:         grant.IncomingAccessRequest.Organization.Name,
 		},

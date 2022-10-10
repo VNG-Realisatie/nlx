@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/server"
@@ -146,7 +145,7 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
+						State: external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 					}, nil)
 
 				mocks.db.
@@ -193,7 +192,7 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED,
+						State: external.AccessRequestState_ACCESS_REQUEST_STATE_APPROVED,
 					}, nil)
 
 				mocks.mc.
@@ -203,9 +202,9 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&api.AccessProof{
+					Return(&external.AccessProof{
 						AccessRequestId: 1,
-						Organization: &api.Organization{
+						Organization: &external.Organization{
 							SerialNumber: "00000000000000000001",
 							Name:         "my-organization",
 						},
@@ -267,7 +266,7 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
 					Return(&external.GetAccessRequestStateResponse{
-						State: api.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
+						State: external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
 					}, nil)
 
 				mocks.db.

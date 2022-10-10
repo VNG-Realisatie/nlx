@@ -15,6 +15,7 @@ import (
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
+	"go.nlx.io/nlx/management-api/api/external"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
@@ -34,7 +35,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 
 	oinToOrgNameHash := convertOrganizationsToHash(response)
 
-	ordersChan := make(chan *api.IncomingOrder)
+	ordersChan := make(chan *external.IncomingOrder)
 
 	wc := &sync.WaitGroup{}
 	wc.Add(len(response.Organizations))
@@ -121,7 +122,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 	return &api.SynchronizeOrdersResponse{Orders: incomingOrders}, nil
 }
 
-func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *directoryapi.Organization) ([]*api.IncomingOrder, error) {
+func (s *ManagementService) fetchOrganizationOrders(ctx context.Context, organization *directoryapi.Organization) ([]*external.IncomingOrder, error) {
 	inwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, organization.SerialNumber)
 	if err != nil {
 		return nil, err

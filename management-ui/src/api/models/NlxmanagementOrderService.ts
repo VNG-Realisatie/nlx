@@ -23,28 +23,28 @@ import {
 /**
  * 
  * @export
- * @interface ManagementAuditLogRecordService
+ * @interface NlxmanagementOrderService
  */
-export interface ManagementAuditLogRecordService {
+export interface NlxmanagementOrderService {
     /**
      * 
      * @type {NlxmanagementOrganization}
-     * @memberof ManagementAuditLogRecordService
+     * @memberof NlxmanagementOrderService
      */
     organization?: NlxmanagementOrganization;
     /**
      * 
      * @type {string}
-     * @memberof ManagementAuditLogRecordService
+     * @memberof NlxmanagementOrderService
      */
     service?: string;
 }
 
-export function ManagementAuditLogRecordServiceFromJSON(json: any): ManagementAuditLogRecordService {
-    return ManagementAuditLogRecordServiceFromJSONTyped(json, false);
+export function NlxmanagementOrderServiceFromJSON(json: any): NlxmanagementOrderService {
+    return NlxmanagementOrderServiceFromJSONTyped(json, false);
 }
 
-export function ManagementAuditLogRecordServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementAuditLogRecordService {
+export function NlxmanagementOrderServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): NlxmanagementOrderService {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -55,7 +55,7 @@ export function ManagementAuditLogRecordServiceFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function ManagementAuditLogRecordServiceToJSON(value?: ManagementAuditLogRecordService | null): any {
+export function NlxmanagementOrderServiceToJSON(value?: NlxmanagementOrderService | null): any {
     if (value === undefined) {
         return undefined;
     }
