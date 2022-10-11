@@ -6,7 +6,6 @@
 import { getOrgByName, Outway, Outways } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
 import pWaitFor from "p-wait-for";
-import { strict as assert } from "assert";
 
 export const hasOutwayRunning = async (
   world: CustomWorld,

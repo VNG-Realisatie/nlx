@@ -9,14 +9,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 	"go.nlx.io/nlx/management-api/pkg/syncer"
 )
 
-func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Context, req *api.SynchronizeOutgoingAccessRequestsRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Context, req *api.SynchronizeOutgoingAccessRequestsRequest) (*api.SynchronizeOutgoingAccessRequestsResponse, error) {
 	err := s.authorize(ctx, permissions.SyncOutgoingAccessRequests)
 	if err != nil {
 		return nil, err
@@ -32,7 +31,7 @@ func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Contex
 	}
 
 	if len(outgoingAccessRequests) < 1 {
-		return &emptypb.Empty{}, nil
+		return &api.SynchronizeOutgoingAccessRequestsResponse{}, nil
 	}
 
 	organizationInwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, req.OrganizationSerialNumber)
@@ -61,5 +60,5 @@ func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Contex
 		return nil, status.Errorf(codes.Internal, "error occurred while syncing at least one Outgoing Access Request")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.SynchronizeOutgoingAccessRequestsResponse{}, nil
 }

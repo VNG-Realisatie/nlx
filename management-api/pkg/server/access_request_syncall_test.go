@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
 )
@@ -25,7 +25,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 	type testCase struct {
 		ctx     context.Context
 		setup   func(mocks serviceMocks)
-		want    *emptypb.Empty
+		want    *api.SynchronizeAllOutgoingAccessRequestsResponse
 		wantErr error
 	}
 
@@ -89,7 +89,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 					ListAllLatestOutgoingAccessRequests(gomock.Any()).
 					Return([]*database.OutgoingAccessRequest{}, nil)
 			},
-			want:    &emptypb.Empty{},
+			want:    &api.SynchronizeAllOutgoingAccessRequestsResponse{},
 			wantErr: nil,
 		},
 		"happy_flow_multiple_access_requests_same_organization": {
@@ -134,7 +134,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 					Return(nil).
 					Times(2)
 			},
-			want:    &emptypb.Empty{},
+			want:    &api.SynchronizeAllOutgoingAccessRequestsResponse{},
 			wantErr: nil,
 		},
 	}
@@ -146,7 +146,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 			service, _, mocks := newService(t)
 
 			tc.setup(mocks)
-			got, err := service.SynchronizeAllOutgoingAccessRequests(tc.ctx, &emptypb.Empty{})
+			got, err := service.SynchronizeAllOutgoingAccessRequests(tc.ctx, &api.SynchronizeAllOutgoingAccessRequestsRequest{})
 
 			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.wantErr, err)

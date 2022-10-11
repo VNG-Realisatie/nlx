@@ -10,14 +10,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
 // GetTermsOfServiceStatus returns a Terms of Service status
-func (s *ManagementService) GetTermsOfServiceStatus(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceStatusResponse, error) {
+func (s *ManagementService) GetTermsOfServiceStatus(ctx context.Context, _ *api.GetTermsOfServiceStatusRequest) (*api.GetTermsOfServiceStatusResponse, error) {
 	err := s.authorize(ctx, permissions.ReadTermsOfServiceStatus)
 	if err != nil {
 		return nil, err
@@ -45,7 +44,7 @@ func (s *ManagementService) GetTermsOfServiceStatus(ctx context.Context, _ *empt
 }
 
 // AcceptTermsOfService accepts the Terms of Service
-func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *api.AcceptTermsOfServiceRequest) (*api.AcceptTermsOfServiceResponse, error) {
 	err := s.authorize(ctx, permissions.AcceptTermsOfService)
 	if err != nil {
 		return nil, err
@@ -67,7 +66,7 @@ func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb
 	}
 
 	if alreadyAccepted {
-		return &emptypb.Empty{}, nil
+		return &api.AcceptTermsOfServiceResponse{}, nil
 	}
 
 	err = s.auditLogger.AcceptTermsOfService(ctx, userInfo.Email, userAgent)
@@ -75,5 +74,5 @@ func (s *ManagementService) AcceptTermsOfService(ctx context.Context, _ *emptypb
 		return nil, status.Error(codes.Internal, "could not create audit log")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.AcceptTermsOfServiceResponse{}, nil
 }

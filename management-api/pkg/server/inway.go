@@ -13,7 +13,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -22,7 +21,9 @@ import (
 )
 
 // RegisterInway creates a new inway
-func (s *ManagementService) RegisterInway(ctx context.Context, inway *api.Inway) (*api.Inway, error) {
+func (s *ManagementService) RegisterInway(ctx context.Context, req *api.RegisterInwayRequest) (*api.RegisterInwayResponse, error) {
+	inway := req.Inway
+
 	logger := s.logger.With(zap.String("name", inway.Name))
 
 	logger.Info("rpc request RegisterInway")
@@ -61,11 +62,13 @@ func (s *ManagementService) RegisterInway(ctx context.Context, inway *api.Inway)
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return inway, nil
+	return &api.RegisterInwayResponse{
+		Inway: inway,
+	}, nil
 }
 
 // GetInway returns a specific inway
-func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayRequest) (*api.Inway, error) {
+func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayRequest) (*api.GetInwayResponse, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request GetInway")
 
@@ -104,10 +107,12 @@ func (s *ManagementService) GetInway(ctx context.Context, req *api.GetInwayReque
 		response.Services[i] = servicesResponse
 	}
 
-	return response, nil
+	return &api.GetInwayResponse{
+		Inway: response,
+	}, nil
 }
 
-func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwayRequest) (*api.Inway, error) {
+func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwayRequest) (*api.UpdateInwayResponse, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request UpdateInway")
 
@@ -148,10 +153,12 @@ func (s *ManagementService) UpdateInway(ctx context.Context, req *api.UpdateInwa
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return req.Inway, nil
+	return &api.UpdateInwayResponse{
+		Inway: req.Inway,
+	}, nil
 }
 
-func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwayRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwayRequest) (*api.DeleteInwayResponse, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteInway")
 
@@ -176,10 +183,10 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 	err = s.configDatabase.DeleteInway(ctx, req.Name)
 	if err != nil {
 		logger.Error("error deleting inway in DB", zap.Error(err))
-		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")
+		return &api.DeleteInwayResponse{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.DeleteInwayResponse{}, nil
 }
 
 // ListInways returns a list of inways

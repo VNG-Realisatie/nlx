@@ -7,7 +7,6 @@ package nlx.management.external;
 
 option go_package = "go.nlx.io/nlx/management-api/api/external";
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service AccessRequestService {

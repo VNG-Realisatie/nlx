@@ -13,7 +13,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
+func (s DirectoryService) GetOrganizationService(ctx context.Context, request *api.GetOrganizationServiceRequest) (*api.GetOrganizationServiceResponse, error) {
 	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request GetOrganizationService")
 
@@ -32,5 +32,7 @@ func (s DirectoryService) GetOrganizationService(ctx context.Context, request *a
 
 	directoryService.AccessStates = accessRequestStates
 
-	return directoryService, nil
+	return &api.GetOrganizationServiceResponse{
+		DirectoryService: directoryService,
+	}, nil
 }

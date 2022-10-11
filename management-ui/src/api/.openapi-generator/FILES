@@ -26,7 +26,10 @@ models/ManagementGetInwayConfigResponse.ts
 models/ManagementGetInwayConfigResponseService.ts
 models/ManagementGetInwayConfigResponseServiceAuthorizationSettings.ts
 models/ManagementGetInwayConfigResponseServiceAuthorizationSettingsAuthorization.ts
+models/ManagementGetInwayResponse.ts
+models/ManagementGetOrganizationServiceResponse.ts
 models/ManagementGetServiceResponse.ts
+models/ManagementGetSettingsResponse.ts
 models/ManagementGetStatisticsOfServicesResponse.ts
 models/ManagementGetTermsOfServiceResponse.ts
 models/ManagementGetTermsOfServiceStatusResponse.ts
@@ -49,7 +52,11 @@ models/ManagementListServicesResponseServiceAuthorizationSettingsAuthorization.t
 models/ManagementOutgoingAccessRequest.ts
 models/ManagementOutgoingOrder.ts
 models/ManagementOutway.ts
+models/ManagementRegisterInwayRequest.ts
+models/ManagementRegisterInwayResponse.ts
 models/ManagementRegisterOutwayRequest.ts
+models/ManagementRequestAccessToServiceResponse.ts
+models/ManagementRevokeAccessGrantResponse.ts
 models/ManagementSendAccessRequestResponse.ts
 models/ManagementServiceStatistics.ts
 models/ManagementSettings.ts
@@ -60,6 +67,7 @@ models/ManagementTXLogOrder.ts
 models/ManagementTXLogOrganization.ts
 models/ManagementTXLogRecord.ts
 models/ManagementTXLogService.ts
+models/ManagementUpdateInwayResponse.ts
 models/ManagementUpdateOutgoingOrderRequest.ts
 models/ManagementUpdateServiceRequest.ts
 models/ManagementUpdateServiceResponse.ts

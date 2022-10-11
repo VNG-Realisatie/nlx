@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	api "go.nlx.io/nlx/management-api/api"
 )
@@ -39,14 +38,14 @@ func (m *MockManagementClient) EXPECT() *MockManagementClientMockRecorder {
 }
 
 // AcceptTermsOfService mocks base method.
-func (m *MockManagementClient) AcceptTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) AcceptTermsOfService(ctx context.Context, in *api.AcceptTermsOfServiceRequest, opts ...grpc.CallOption) (*api.AcceptTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "AcceptTermsOfService", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.AcceptTermsOfServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -59,14 +58,14 @@ func (mr *MockManagementClientMockRecorder) AcceptTermsOfService(ctx, in interfa
 }
 
 // ApproveIncomingAccessRequest mocks base method.
-func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context, in *api.ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) ApproveIncomingAccessRequest(ctx context.Context, in *api.ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*api.ApproveIncomingAccessRequestResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ApproveIncomingAccessRequest", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.ApproveIncomingAccessRequestResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,14 +78,14 @@ func (mr *MockManagementClientMockRecorder) ApproveIncomingAccessRequest(ctx, in
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) CreateOutgoingOrder(ctx context.Context, in *api.CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*api.CreateOutgoingOrderResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateOutgoingOrder", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.CreateOutgoingOrderResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -119,14 +118,14 @@ func (mr *MockManagementClientMockRecorder) CreateService(ctx, in interface{}, o
 }
 
 // DeleteInway mocks base method.
-func (m *MockManagementClient) DeleteInway(ctx context.Context, in *api.DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) DeleteInway(ctx context.Context, in *api.DeleteInwayRequest, opts ...grpc.CallOption) (*api.DeleteInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteInway", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.DeleteInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -139,14 +138,14 @@ func (mr *MockManagementClientMockRecorder) DeleteInway(ctx, in interface{}, opt
 }
 
 // DeleteOutway mocks base method.
-func (m *MockManagementClient) DeleteOutway(ctx context.Context, in *api.DeleteOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) DeleteOutway(ctx context.Context, in *api.DeleteOutwayRequest, opts ...grpc.CallOption) (*api.DeleteOutwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteOutway", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.DeleteOutwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -159,14 +158,14 @@ func (mr *MockManagementClientMockRecorder) DeleteOutway(ctx, in interface{}, op
 }
 
 // DeleteService mocks base method.
-func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) DeleteService(ctx context.Context, in *api.DeleteServiceRequest, opts ...grpc.CallOption) (*api.DeleteServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DeleteService", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.DeleteServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -179,7 +178,7 @@ func (mr *MockManagementClientMockRecorder) DeleteService(ctx, in interface{}, o
 }
 
 // DownloadFinanceExport mocks base method.
-func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
+func (m *MockManagementClient) DownloadFinanceExport(ctx context.Context, in *api.DownloadFinanceExportRequest, opts ...grpc.CallOption) (*api.DownloadFinanceExportResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -199,14 +198,14 @@ func (mr *MockManagementClientMockRecorder) DownloadFinanceExport(ctx, in interf
 }
 
 // GetInway mocks base method.
-func (m *MockManagementClient) GetInway(ctx context.Context, in *api.GetInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
+func (m *MockManagementClient) GetInway(ctx context.Context, in *api.GetInwayRequest, opts ...grpc.CallOption) (*api.GetInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
+	ret0, _ := ret[0].(*api.GetInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -259,14 +258,14 @@ func (mr *MockManagementClientMockRecorder) GetService(ctx, in interface{}, opts
 }
 
 // GetSettings mocks base method.
-func (m *MockManagementClient) GetSettings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.Settings, error) {
+func (m *MockManagementClient) GetSettings(ctx context.Context, in *api.GetSettingsRequest, opts ...grpc.CallOption) (*api.GetSettingsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetSettings", varargs...)
-	ret0, _ := ret[0].(*api.Settings)
+	ret0, _ := ret[0].(*api.GetSettingsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -299,7 +298,7 @@ func (mr *MockManagementClientMockRecorder) GetStatisticsOfServices(ctx, in inte
 }
 
 // GetTermsOfServiceStatus mocks base method.
-func (m *MockManagementClient) GetTermsOfServiceStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.GetTermsOfServiceStatusResponse, error) {
+func (m *MockManagementClient) GetTermsOfServiceStatus(ctx context.Context, in *api.GetTermsOfServiceStatusRequest, opts ...grpc.CallOption) (*api.GetTermsOfServiceStatusResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -319,7 +318,7 @@ func (mr *MockManagementClientMockRecorder) GetTermsOfServiceStatus(ctx, in inte
 }
 
 // IsFinanceEnabled mocks base method.
-func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
+func (m *MockManagementClient) IsFinanceEnabled(ctx context.Context, in *api.IsFinanceEnabledRequest, opts ...grpc.CallOption) (*api.IsFinanceEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -339,7 +338,7 @@ func (mr *MockManagementClientMockRecorder) IsFinanceEnabled(ctx, in interface{}
 }
 
 // IsTXLogEnabled mocks base method.
-func (m *MockManagementClient) IsTXLogEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.IsTXLogEnabledResponse, error) {
+func (m *MockManagementClient) IsTXLogEnabled(ctx context.Context, in *api.IsTXLogEnabledRequest, opts ...grpc.CallOption) (*api.IsTXLogEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -379,7 +378,7 @@ func (mr *MockManagementClientMockRecorder) ListAccessGrantsForService(ctx, in i
 }
 
 // ListAuditLogs mocks base method.
-func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListAuditLogsResponse, error) {
+func (m *MockManagementClient) ListAuditLogs(ctx context.Context, in *api.ListAuditLogsRequest, opts ...grpc.CallOption) (*api.ListAuditLogsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -419,7 +418,7 @@ func (mr *MockManagementClientMockRecorder) ListIncomingAccessRequests(ctx, in i
 }
 
 // ListIncomingOrders mocks base method.
-func (m *MockManagementClient) ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListIncomingOrdersResponse, error) {
+func (m *MockManagementClient) ListIncomingOrders(ctx context.Context, in *api.ListIncomingOrdersRequest, opts ...grpc.CallOption) (*api.ListIncomingOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -459,7 +458,7 @@ func (mr *MockManagementClientMockRecorder) ListInways(ctx, in interface{}, opts
 }
 
 // ListOutgoingOrders mocks base method.
-func (m *MockManagementClient) ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.ListOutgoingOrdersResponse, error) {
+func (m *MockManagementClient) ListOutgoingOrders(ctx context.Context, in *api.ListOutgoingOrdersRequest, opts ...grpc.CallOption) (*api.ListOutgoingOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -519,14 +518,14 @@ func (mr *MockManagementClientMockRecorder) ListServices(ctx, in interface{}, op
 }
 
 // RegisterInway mocks base method.
-func (m *MockManagementClient) RegisterInway(ctx context.Context, in *api.Inway, opts ...grpc.CallOption) (*api.Inway, error) {
+func (m *MockManagementClient) RegisterInway(ctx context.Context, in *api.RegisterInwayRequest, opts ...grpc.CallOption) (*api.RegisterInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RegisterInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
+	ret0, _ := ret[0].(*api.RegisterInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -539,14 +538,14 @@ func (mr *MockManagementClientMockRecorder) RegisterInway(ctx, in interface{}, o
 }
 
 // RegisterOutway mocks base method.
-func (m *MockManagementClient) RegisterOutway(ctx context.Context, in *api.RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) RegisterOutway(ctx context.Context, in *api.RegisterOutwayRequest, opts ...grpc.CallOption) (*api.RegisterOutwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RegisterOutway", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.RegisterOutwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -559,14 +558,14 @@ func (mr *MockManagementClientMockRecorder) RegisterOutway(ctx, in interface{}, 
 }
 
 // RejectIncomingAccessRequest mocks base method.
-func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) RejectIncomingAccessRequest(ctx context.Context, in *api.RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*api.RejectIncomingAccessRequestResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.RejectIncomingAccessRequestResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -579,14 +578,14 @@ func (mr *MockManagementClientMockRecorder) RejectIncomingAccessRequest(ctx, in 
 }
 
 // RevokeAccessGrant mocks base method.
-func (m *MockManagementClient) RevokeAccessGrant(ctx context.Context, in *api.RevokeAccessGrantRequest, opts ...grpc.CallOption) (*api.AccessGrant, error) {
+func (m *MockManagementClient) RevokeAccessGrant(ctx context.Context, in *api.RevokeAccessGrantRequest, opts ...grpc.CallOption) (*api.RevokeAccessGrantResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RevokeAccessGrant", varargs...)
-	ret0, _ := ret[0].(*api.AccessGrant)
+	ret0, _ := ret[0].(*api.RevokeAccessGrantResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -599,14 +598,14 @@ func (mr *MockManagementClientMockRecorder) RevokeAccessGrant(ctx, in interface{
 }
 
 // RevokeOutgoingOrder mocks base method.
-func (m *MockManagementClient) RevokeOutgoingOrder(ctx context.Context, in *api.RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) RevokeOutgoingOrder(ctx context.Context, in *api.RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*api.RevokeOutgoingOrderResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RevokeOutgoingOrder", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.RevokeOutgoingOrderResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -639,14 +638,14 @@ func (mr *MockManagementClientMockRecorder) SendAccessRequest(ctx, in interface{
 }
 
 // SynchronizeAllOutgoingAccessRequests mocks base method.
-func (m *MockManagementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *api.SynchronizeAllOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*api.SynchronizeAllOutgoingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "SynchronizeAllOutgoingAccessRequests", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.SynchronizeAllOutgoingAccessRequestsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -659,7 +658,7 @@ func (mr *MockManagementClientMockRecorder) SynchronizeAllOutgoingAccessRequests
 }
 
 // SynchronizeOrders mocks base method.
-func (m *MockManagementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.SynchronizeOrdersResponse, error) {
+func (m *MockManagementClient) SynchronizeOrders(ctx context.Context, in *api.SynchronizeOrdersRequest, opts ...grpc.CallOption) (*api.SynchronizeOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -679,14 +678,14 @@ func (mr *MockManagementClientMockRecorder) SynchronizeOrders(ctx, in interface{
 }
 
 // SynchronizeOutgoingAccessRequests mocks base method.
-func (m *MockManagementClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *api.SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *api.SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*api.SynchronizeOutgoingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "SynchronizeOutgoingAccessRequests", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.SynchronizeOutgoingAccessRequestsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -699,14 +698,14 @@ func (mr *MockManagementClientMockRecorder) SynchronizeOutgoingAccessRequests(ct
 }
 
 // UpdateInway mocks base method.
-func (m *MockManagementClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.Inway, error) {
+func (m *MockManagementClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.UpdateInwayResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateInway", varargs...)
-	ret0, _ := ret[0].(*api.Inway)
+	ret0, _ := ret[0].(*api.UpdateInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -719,14 +718,14 @@ func (mr *MockManagementClientMockRecorder) UpdateInway(ctx, in interface{}, opt
 }
 
 // UpdateOutgoingOrder mocks base method.
-func (m *MockManagementClient) UpdateOutgoingOrder(ctx context.Context, in *api.UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) UpdateOutgoingOrder(ctx context.Context, in *api.UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*api.UpdateOutgoingOrderResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.UpdateOutgoingOrderResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -759,14 +758,14 @@ func (mr *MockManagementClientMockRecorder) UpdateService(ctx, in interface{}, o
 }
 
 // UpdateSettings mocks base method.
-func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (m *MockManagementClient) UpdateSettings(ctx context.Context, in *api.UpdateSettingsRequest, opts ...grpc.CallOption) (*api.UpdateSettingsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateSettings", varargs...)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.UpdateSettingsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -802,10 +801,10 @@ func (m *MockManagementServer) EXPECT() *MockManagementServerMockRecorder {
 }
 
 // AcceptTermsOfService mocks base method.
-func (m *MockManagementServer) AcceptTermsOfService(arg0 context.Context, arg1 *emptypb.Empty) (*emptypb.Empty, error) {
+func (m *MockManagementServer) AcceptTermsOfService(arg0 context.Context, arg1 *api.AcceptTermsOfServiceRequest) (*api.AcceptTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AcceptTermsOfService", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.AcceptTermsOfServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -817,10 +816,10 @@ func (mr *MockManagementServerMockRecorder) AcceptTermsOfService(arg0, arg1 inte
 }
 
 // ApproveIncomingAccessRequest mocks base method.
-func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context, arg1 *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) ApproveIncomingAccessRequest(arg0 context.Context, arg1 *api.ApproveIncomingAccessRequestRequest) (*api.ApproveIncomingAccessRequestResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApproveIncomingAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.ApproveIncomingAccessRequestResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -832,10 +831,10 @@ func (mr *MockManagementServerMockRecorder) ApproveIncomingAccessRequest(arg0, a
 }
 
 // CreateOutgoingOrder mocks base method.
-func (m *MockManagementServer) CreateOutgoingOrder(arg0 context.Context, arg1 *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) CreateOutgoingOrder(arg0 context.Context, arg1 *api.CreateOutgoingOrderRequest) (*api.CreateOutgoingOrderResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOutgoingOrder", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.CreateOutgoingOrderResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -862,10 +861,10 @@ func (mr *MockManagementServerMockRecorder) CreateService(arg0, arg1 interface{}
 }
 
 // DeleteInway mocks base method.
-func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.DeleteInwayRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) DeleteInway(arg0 context.Context, arg1 *api.DeleteInwayRequest) (*api.DeleteInwayResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteInway", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.DeleteInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -877,10 +876,10 @@ func (mr *MockManagementServerMockRecorder) DeleteInway(arg0, arg1 interface{}) 
 }
 
 // DeleteOutway mocks base method.
-func (m *MockManagementServer) DeleteOutway(arg0 context.Context, arg1 *api.DeleteOutwayRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) DeleteOutway(arg0 context.Context, arg1 *api.DeleteOutwayRequest) (*api.DeleteOutwayResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteOutway", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.DeleteOutwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -892,10 +891,10 @@ func (mr *MockManagementServerMockRecorder) DeleteOutway(arg0, arg1 interface{})
 }
 
 // DeleteService mocks base method.
-func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.DeleteServiceRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) DeleteService(arg0 context.Context, arg1 *api.DeleteServiceRequest) (*api.DeleteServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteService", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.DeleteServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -907,7 +906,7 @@ func (mr *MockManagementServerMockRecorder) DeleteService(arg0, arg1 interface{}
 }
 
 // DownloadFinanceExport mocks base method.
-func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
+func (m *MockManagementServer) DownloadFinanceExport(arg0 context.Context, arg1 *api.DownloadFinanceExportRequest) (*api.DownloadFinanceExportResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DownloadFinanceExport", arg0, arg1)
 	ret0, _ := ret[0].(*api.DownloadFinanceExportResponse)
@@ -922,10 +921,10 @@ func (mr *MockManagementServerMockRecorder) DownloadFinanceExport(arg0, arg1 int
 }
 
 // GetInway mocks base method.
-func (m *MockManagementServer) GetInway(arg0 context.Context, arg1 *api.GetInwayRequest) (*api.Inway, error) {
+func (m *MockManagementServer) GetInway(arg0 context.Context, arg1 *api.GetInwayRequest) (*api.GetInwayResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
+	ret0, _ := ret[0].(*api.GetInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -967,10 +966,10 @@ func (mr *MockManagementServerMockRecorder) GetService(arg0, arg1 interface{}) *
 }
 
 // GetSettings mocks base method.
-func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *emptypb.Empty) (*api.Settings, error) {
+func (m *MockManagementServer) GetSettings(arg0 context.Context, arg1 *api.GetSettingsRequest) (*api.GetSettingsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSettings", arg0, arg1)
-	ret0, _ := ret[0].(*api.Settings)
+	ret0, _ := ret[0].(*api.GetSettingsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -997,7 +996,7 @@ func (mr *MockManagementServerMockRecorder) GetStatisticsOfServices(arg0, arg1 i
 }
 
 // GetTermsOfServiceStatus mocks base method.
-func (m *MockManagementServer) GetTermsOfServiceStatus(arg0 context.Context, arg1 *emptypb.Empty) (*api.GetTermsOfServiceStatusResponse, error) {
+func (m *MockManagementServer) GetTermsOfServiceStatus(arg0 context.Context, arg1 *api.GetTermsOfServiceStatusRequest) (*api.GetTermsOfServiceStatusResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTermsOfServiceStatus", arg0, arg1)
 	ret0, _ := ret[0].(*api.GetTermsOfServiceStatusResponse)
@@ -1012,7 +1011,7 @@ func (mr *MockManagementServerMockRecorder) GetTermsOfServiceStatus(arg0, arg1 i
 }
 
 // IsFinanceEnabled mocks base method.
-func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
+func (m *MockManagementServer) IsFinanceEnabled(arg0 context.Context, arg1 *api.IsFinanceEnabledRequest) (*api.IsFinanceEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsFinanceEnabled", arg0, arg1)
 	ret0, _ := ret[0].(*api.IsFinanceEnabledResponse)
@@ -1027,7 +1026,7 @@ func (mr *MockManagementServerMockRecorder) IsFinanceEnabled(arg0, arg1 interfac
 }
 
 // IsTXLogEnabled mocks base method.
-func (m *MockManagementServer) IsTXLogEnabled(arg0 context.Context, arg1 *emptypb.Empty) (*api.IsTXLogEnabledResponse, error) {
+func (m *MockManagementServer) IsTXLogEnabled(arg0 context.Context, arg1 *api.IsTXLogEnabledRequest) (*api.IsTXLogEnabledResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IsTXLogEnabled", arg0, arg1)
 	ret0, _ := ret[0].(*api.IsTXLogEnabledResponse)
@@ -1057,7 +1056,7 @@ func (mr *MockManagementServerMockRecorder) ListAccessGrantsForService(arg0, arg
 }
 
 // ListAuditLogs mocks base method.
-func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
+func (m *MockManagementServer) ListAuditLogs(arg0 context.Context, arg1 *api.ListAuditLogsRequest) (*api.ListAuditLogsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAuditLogs", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListAuditLogsResponse)
@@ -1087,7 +1086,7 @@ func (mr *MockManagementServerMockRecorder) ListIncomingAccessRequests(arg0, arg
 }
 
 // ListIncomingOrders mocks base method.
-func (m *MockManagementServer) ListIncomingOrders(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListIncomingOrdersResponse, error) {
+func (m *MockManagementServer) ListIncomingOrders(arg0 context.Context, arg1 *api.ListIncomingOrdersRequest) (*api.ListIncomingOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListIncomingOrders", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListIncomingOrdersResponse)
@@ -1117,7 +1116,7 @@ func (mr *MockManagementServerMockRecorder) ListInways(arg0, arg1 interface{}) *
 }
 
 // ListOutgoingOrders mocks base method.
-func (m *MockManagementServer) ListOutgoingOrders(arg0 context.Context, arg1 *emptypb.Empty) (*api.ListOutgoingOrdersResponse, error) {
+func (m *MockManagementServer) ListOutgoingOrders(arg0 context.Context, arg1 *api.ListOutgoingOrdersRequest) (*api.ListOutgoingOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOutgoingOrders", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListOutgoingOrdersResponse)
@@ -1162,10 +1161,10 @@ func (mr *MockManagementServerMockRecorder) ListServices(arg0, arg1 interface{})
 }
 
 // RegisterInway mocks base method.
-func (m *MockManagementServer) RegisterInway(arg0 context.Context, arg1 *api.Inway) (*api.Inway, error) {
+func (m *MockManagementServer) RegisterInway(arg0 context.Context, arg1 *api.RegisterInwayRequest) (*api.RegisterInwayResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
+	ret0, _ := ret[0].(*api.RegisterInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1177,10 +1176,10 @@ func (mr *MockManagementServerMockRecorder) RegisterInway(arg0, arg1 interface{}
 }
 
 // RegisterOutway mocks base method.
-func (m *MockManagementServer) RegisterOutway(arg0 context.Context, arg1 *api.RegisterOutwayRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) RegisterOutway(arg0 context.Context, arg1 *api.RegisterOutwayRequest) (*api.RegisterOutwayResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterOutway", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.RegisterOutwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1192,10 +1191,10 @@ func (mr *MockManagementServerMockRecorder) RegisterOutway(arg0, arg1 interface{
 }
 
 // RejectIncomingAccessRequest mocks base method.
-func (m *MockManagementServer) RejectIncomingAccessRequest(arg0 context.Context, arg1 *api.RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) RejectIncomingAccessRequest(arg0 context.Context, arg1 *api.RejectIncomingAccessRequestRequest) (*api.RejectIncomingAccessRequestResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RejectIncomingAccessRequest", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.RejectIncomingAccessRequestResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1207,10 +1206,10 @@ func (mr *MockManagementServerMockRecorder) RejectIncomingAccessRequest(arg0, ar
 }
 
 // RevokeAccessGrant mocks base method.
-func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
+func (m *MockManagementServer) RevokeAccessGrant(arg0 context.Context, arg1 *api.RevokeAccessGrantRequest) (*api.RevokeAccessGrantResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RevokeAccessGrant", arg0, arg1)
-	ret0, _ := ret[0].(*api.AccessGrant)
+	ret0, _ := ret[0].(*api.RevokeAccessGrantResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1222,10 +1221,10 @@ func (mr *MockManagementServerMockRecorder) RevokeAccessGrant(arg0, arg1 interfa
 }
 
 // RevokeOutgoingOrder mocks base method.
-func (m *MockManagementServer) RevokeOutgoingOrder(arg0 context.Context, arg1 *api.RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) RevokeOutgoingOrder(arg0 context.Context, arg1 *api.RevokeOutgoingOrderRequest) (*api.RevokeOutgoingOrderResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RevokeOutgoingOrder", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.RevokeOutgoingOrderResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1252,10 +1251,10 @@ func (mr *MockManagementServerMockRecorder) SendAccessRequest(arg0, arg1 interfa
 }
 
 // SynchronizeAllOutgoingAccessRequests mocks base method.
-func (m *MockManagementServer) SynchronizeAllOutgoingAccessRequests(arg0 context.Context, arg1 *emptypb.Empty) (*emptypb.Empty, error) {
+func (m *MockManagementServer) SynchronizeAllOutgoingAccessRequests(arg0 context.Context, arg1 *api.SynchronizeAllOutgoingAccessRequestsRequest) (*api.SynchronizeAllOutgoingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SynchronizeAllOutgoingAccessRequests", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.SynchronizeAllOutgoingAccessRequestsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1267,7 +1266,7 @@ func (mr *MockManagementServerMockRecorder) SynchronizeAllOutgoingAccessRequests
 }
 
 // SynchronizeOrders mocks base method.
-func (m *MockManagementServer) SynchronizeOrders(arg0 context.Context, arg1 *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
+func (m *MockManagementServer) SynchronizeOrders(arg0 context.Context, arg1 *api.SynchronizeOrdersRequest) (*api.SynchronizeOrdersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SynchronizeOrders", arg0, arg1)
 	ret0, _ := ret[0].(*api.SynchronizeOrdersResponse)
@@ -1282,10 +1281,10 @@ func (mr *MockManagementServerMockRecorder) SynchronizeOrders(arg0, arg1 interfa
 }
 
 // SynchronizeOutgoingAccessRequests mocks base method.
-func (m *MockManagementServer) SynchronizeOutgoingAccessRequests(arg0 context.Context, arg1 *api.SynchronizeOutgoingAccessRequestsRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) SynchronizeOutgoingAccessRequests(arg0 context.Context, arg1 *api.SynchronizeOutgoingAccessRequestsRequest) (*api.SynchronizeOutgoingAccessRequestsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SynchronizeOutgoingAccessRequests", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.SynchronizeOutgoingAccessRequestsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1297,10 +1296,10 @@ func (mr *MockManagementServerMockRecorder) SynchronizeOutgoingAccessRequests(ar
 }
 
 // UpdateInway mocks base method.
-func (m *MockManagementServer) UpdateInway(arg0 context.Context, arg1 *api.UpdateInwayRequest) (*api.Inway, error) {
+func (m *MockManagementServer) UpdateInway(arg0 context.Context, arg1 *api.UpdateInwayRequest) (*api.UpdateInwayResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateInway", arg0, arg1)
-	ret0, _ := ret[0].(*api.Inway)
+	ret0, _ := ret[0].(*api.UpdateInwayResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1312,10 +1311,10 @@ func (mr *MockManagementServerMockRecorder) UpdateInway(arg0, arg1 interface{}) 
 }
 
 // UpdateOutgoingOrder mocks base method.
-func (m *MockManagementServer) UpdateOutgoingOrder(arg0 context.Context, arg1 *api.UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) UpdateOutgoingOrder(arg0 context.Context, arg1 *api.UpdateOutgoingOrderRequest) (*api.UpdateOutgoingOrderResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOutgoingOrder", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.UpdateOutgoingOrderResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1342,10 +1341,10 @@ func (mr *MockManagementServerMockRecorder) UpdateService(arg0, arg1 interface{}
 }
 
 // UpdateSettings mocks base method.
-func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
+func (m *MockManagementServer) UpdateSettings(arg0 context.Context, arg1 *api.UpdateSettingsRequest) (*api.UpdateSettingsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateSettings", arg0, arg1)
-	ret0, _ := ret[0].(*emptypb.Empty)
+	ret0, _ := ret[0].(*api.UpdateSettingsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1427,14 +1426,14 @@ func (m *MockDirectoryClient) EXPECT() *MockDirectoryClientMockRecorder {
 }
 
 // GetOrganizationService mocks base method.
-func (m *MockDirectoryClient) GetOrganizationService(ctx context.Context, in *api.GetOrganizationServiceRequest, opts ...grpc.CallOption) (*api.DirectoryService, error) {
+func (m *MockDirectoryClient) GetOrganizationService(ctx context.Context, in *api.GetOrganizationServiceRequest, opts ...grpc.CallOption) (*api.GetOrganizationServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetOrganizationService", varargs...)
-	ret0, _ := ret[0].(*api.DirectoryService)
+	ret0, _ := ret[0].(*api.GetOrganizationServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1447,7 +1446,7 @@ func (mr *MockDirectoryClientMockRecorder) GetOrganizationService(ctx, in interf
 }
 
 // GetTermsOfService mocks base method.
-func (m *MockDirectoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.GetTermsOfServiceResponse, error) {
+func (m *MockDirectoryClient) GetTermsOfService(ctx context.Context, in *api.GetTermsOfServiceRequest, opts ...grpc.CallOption) (*api.GetTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -1467,7 +1466,7 @@ func (mr *MockDirectoryClientMockRecorder) GetTermsOfService(ctx, in interface{}
 }
 
 // ListServices mocks base method.
-func (m *MockDirectoryClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
+func (m *MockDirectoryClient) ListServices(ctx context.Context, in *api.DirectoryListServicesRequest, opts ...grpc.CallOption) (*api.DirectoryListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -1530,10 +1529,10 @@ func (m *MockDirectoryServer) EXPECT() *MockDirectoryServerMockRecorder {
 }
 
 // GetOrganizationService mocks base method.
-func (m *MockDirectoryServer) GetOrganizationService(arg0 context.Context, arg1 *api.GetOrganizationServiceRequest) (*api.DirectoryService, error) {
+func (m *MockDirectoryServer) GetOrganizationService(arg0 context.Context, arg1 *api.GetOrganizationServiceRequest) (*api.GetOrganizationServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrganizationService", arg0, arg1)
-	ret0, _ := ret[0].(*api.DirectoryService)
+	ret0, _ := ret[0].(*api.GetOrganizationServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1545,7 +1544,7 @@ func (mr *MockDirectoryServerMockRecorder) GetOrganizationService(arg0, arg1 int
 }
 
 // GetTermsOfService mocks base method.
-func (m *MockDirectoryServer) GetTermsOfService(arg0 context.Context, arg1 *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
+func (m *MockDirectoryServer) GetTermsOfService(arg0 context.Context, arg1 *api.GetTermsOfServiceRequest) (*api.GetTermsOfServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTermsOfService", arg0, arg1)
 	ret0, _ := ret[0].(*api.GetTermsOfServiceResponse)
@@ -1560,7 +1559,7 @@ func (mr *MockDirectoryServerMockRecorder) GetTermsOfService(arg0, arg1 interfac
 }
 
 // ListServices mocks base method.
-func (m *MockDirectoryServer) ListServices(arg0 context.Context, arg1 *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
+func (m *MockDirectoryServer) ListServices(arg0 context.Context, arg1 *api.DirectoryListServicesRequest) (*api.DirectoryListServicesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListServices", arg0, arg1)
 	ret0, _ := ret[0].(*api.DirectoryListServicesResponse)
@@ -1660,7 +1659,7 @@ func (m *MockTXLogClient) EXPECT() *MockTXLogClientMockRecorder {
 }
 
 // ListRecords mocks base method.
-func (m *MockTXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*api.TXLogListRecordsResponse, error) {
+func (m *MockTXLogClient) ListRecords(ctx context.Context, in *api.TXLogListRecordsRequest, opts ...grpc.CallOption) (*api.TXLogListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -1703,7 +1702,7 @@ func (m *MockTXLogServer) EXPECT() *MockTXLogServerMockRecorder {
 }
 
 // ListRecords mocks base method.
-func (m *MockTXLogServer) ListRecords(arg0 context.Context, arg1 *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
+func (m *MockTXLogServer) ListRecords(arg0 context.Context, arg1 *api.TXLogListRecordsRequest) (*api.TXLogListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRecords", arg0, arg1)
 	ret0, _ := ret[0].(*api.TXLogListRecordsResponse)

@@ -14,7 +14,6 @@ import (
 	"go.uber.org/zap/zaptest"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -191,7 +190,7 @@ func TestTXLogListRecords(t *testing.T) {
 			service, mocks := newTXLogService(t)
 			tt.setup(context.Background(), mocks)
 
-			got, err := service.ListRecords(context.Background(), &emptypb.Empty{})
+			got, err := service.ListRecords(context.Background(), &api.TXLogListRecordsRequest{})
 
 			t.Log(err)
 			assert.Equal(t, tt.wantErr, err)

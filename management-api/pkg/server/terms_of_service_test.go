@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/domain"
@@ -26,7 +25,7 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 	tests := map[string]struct {
 		setup   func(context.Context, serviceMocks)
 		ctx     context.Context
-		want    *emptypb.Empty
+		want    *api.AcceptTermsOfServiceResponse
 		wantErr error
 	}{
 		"missing_required_permission": {
@@ -81,7 +80,7 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 					Return(false, nil)
 			},
 			ctx:     testCreateAdminUserContext(),
-			want:    &emptypb.Empty{},
+			want:    &api.AcceptTermsOfServiceResponse{},
 			wantErr: nil,
 		},
 		"happy_flow_already_accepted": {
@@ -92,7 +91,7 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 					Return(true, nil)
 			},
 			ctx:     testCreateAdminUserContext(),
-			want:    &emptypb.Empty{},
+			want:    &api.AcceptTermsOfServiceResponse{},
 			wantErr: nil,
 		},
 	}
@@ -104,7 +103,7 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 			service, _, mocks := newService(t)
 			tt.setup(tt.ctx, mocks)
 
-			got, err := service.AcceptTermsOfService(tt.ctx, &emptypb.Empty{})
+			got, err := service.AcceptTermsOfService(tt.ctx, &api.AcceptTermsOfServiceRequest{})
 
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.wantErr, err)
@@ -176,7 +175,7 @@ func TestGetTermsOfServiceStatus(t *testing.T) {
 			service, _, mocks := newService(t)
 			tt.setup(context.Background(), mocks)
 
-			got, err := service.GetTermsOfServiceStatus(tt.ctx, &emptypb.Empty{})
+			got, err := service.GetTermsOfServiceStatus(tt.ctx, &api.GetTermsOfServiceStatusRequest{})
 
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.wantErr, err)

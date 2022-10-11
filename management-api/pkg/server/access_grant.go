@@ -55,7 +55,7 @@ func (s *ManagementService) ListAccessGrantsForService(ctx context.Context, req 
 	return response, nil
 }
 
-func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.RevokeAccessGrantRequest) (*api.AccessGrant, error) {
+func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.RevokeAccessGrantRequest) (*api.RevokeAccessGrantResponse, error) {
 	err := s.authorize(ctx, permissions.RevokeAccessGrant)
 	if err != nil {
 		return nil, err
@@ -102,7 +102,9 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 
 	apiAccessGrant := convertAccessGrant(accessGrant)
 
-	return apiAccessGrant, nil
+	return &api.RevokeAccessGrantResponse{
+		AccessGrant: apiAccessGrant,
+	}, nil
 }
 
 func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {

@@ -15,12 +15,13 @@
 
 import * as runtime from '../runtime';
 import type {
-  ManagementAccessGrant,
   ManagementCreateOutgoingOrderRequest,
   ManagementCreateServiceRequest,
   ManagementCreateServiceResponse,
   ManagementDownloadFinanceExportResponse,
+  ManagementGetInwayResponse,
   ManagementGetServiceResponse,
+  ManagementGetSettingsResponse,
   ManagementGetStatisticsOfServicesResponse,
   ManagementGetTermsOfServiceStatusResponse,
   ManagementInway,
@@ -34,10 +35,13 @@ import type {
   ManagementListOutgoingOrdersResponse,
   ManagementListOutwaysResponse,
   ManagementListServicesResponse,
+  ManagementRegisterInwayRequest,
+  ManagementRegisterInwayResponse,
   ManagementRegisterOutwayRequest,
+  ManagementRevokeAccessGrantResponse,
   ManagementSendAccessRequestResponse,
-  ManagementSettings,
   ManagementSynchronizeOrdersResponse,
+  ManagementUpdateInwayResponse,
   ManagementUpdateOutgoingOrderRequest,
   ManagementUpdateServiceRequest,
   ManagementUpdateServiceResponse,
@@ -45,8 +49,6 @@ import type {
   RpcStatus,
 } from '../models';
 import {
-    ManagementAccessGrantFromJSON,
-    ManagementAccessGrantToJSON,
     ManagementCreateOutgoingOrderRequestFromJSON,
     ManagementCreateOutgoingOrderRequestToJSON,
     ManagementCreateServiceRequestFromJSON,
@@ -55,8 +57,12 @@ import {
     ManagementCreateServiceResponseToJSON,
     ManagementDownloadFinanceExportResponseFromJSON,
     ManagementDownloadFinanceExportResponseToJSON,
+    ManagementGetInwayResponseFromJSON,
+    ManagementGetInwayResponseToJSON,
     ManagementGetServiceResponseFromJSON,
     ManagementGetServiceResponseToJSON,
+    ManagementGetSettingsResponseFromJSON,
+    ManagementGetSettingsResponseToJSON,
     ManagementGetStatisticsOfServicesResponseFromJSON,
     ManagementGetStatisticsOfServicesResponseToJSON,
     ManagementGetTermsOfServiceStatusResponseFromJSON,
@@ -83,14 +89,20 @@ import {
     ManagementListOutwaysResponseToJSON,
     ManagementListServicesResponseFromJSON,
     ManagementListServicesResponseToJSON,
+    ManagementRegisterInwayRequestFromJSON,
+    ManagementRegisterInwayRequestToJSON,
+    ManagementRegisterInwayResponseFromJSON,
+    ManagementRegisterInwayResponseToJSON,
     ManagementRegisterOutwayRequestFromJSON,
     ManagementRegisterOutwayRequestToJSON,
+    ManagementRevokeAccessGrantResponseFromJSON,
+    ManagementRevokeAccessGrantResponseToJSON,
     ManagementSendAccessRequestResponseFromJSON,
     ManagementSendAccessRequestResponseToJSON,
-    ManagementSettingsFromJSON,
-    ManagementSettingsToJSON,
     ManagementSynchronizeOrdersResponseFromJSON,
     ManagementSynchronizeOrdersResponseToJSON,
+    ManagementUpdateInwayResponseFromJSON,
+    ManagementUpdateInwayResponseToJSON,
     ManagementUpdateOutgoingOrderRequestFromJSON,
     ManagementUpdateOutgoingOrderRequestToJSON,
     ManagementUpdateServiceRequestFromJSON,
@@ -144,8 +156,8 @@ export interface ManagementListIncomingAccessRequestsRequest {
     serviceName: string;
 }
 
-export interface ManagementRegisterInwayRequest {
-    body: ManagementInway;
+export interface ManagementRegisterInwayOperationRequest {
+    body: ManagementRegisterInwayRequest;
 }
 
 export interface ManagementRegisterOutwayOperationRequest {
@@ -428,7 +440,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetInwayRaw(requestParameters: ManagementGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementInway>> {
+    async managementGetInwayRaw(requestParameters: ManagementGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetInwayResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementGetInway.');
         }
@@ -444,12 +456,12 @@ export class ManagementApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInwayFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementGetInwayResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementGetInway(requestParameters: ManagementGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementInway> {
+    async managementGetInway(requestParameters: ManagementGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetInwayResponse> {
         const response = await this.managementGetInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -484,7 +496,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetSettingsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementSettings>> {
+    async managementGetSettingsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetSettingsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -496,12 +508,12 @@ export class ManagementApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementSettingsFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementGetSettingsResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementGetSettings(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementSettings> {
+    async managementGetSettings(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetSettingsResponse> {
         const response = await this.managementGetSettingsRaw(initOverrides);
         return await response.value();
     }
@@ -804,7 +816,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRegisterInwayRaw(requestParameters: ManagementRegisterInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementInway>> {
+    async managementRegisterInwayRaw(requestParameters: ManagementRegisterInwayOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementRegisterInwayResponse>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
             throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementRegisterInway.');
         }
@@ -820,15 +832,15 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementInwayToJSON(requestParameters.body),
+            body: ManagementRegisterInwayRequestToJSON(requestParameters.body),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInwayFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementRegisterInwayResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementRegisterInway(requestParameters: ManagementRegisterInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementInway> {
+    async managementRegisterInway(requestParameters: ManagementRegisterInwayOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementRegisterInwayResponse> {
         const response = await this.managementRegisterInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -898,7 +910,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRevokeAccessGrantRaw(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementAccessGrant>> {
+    async managementRevokeAccessGrantRaw(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementRevokeAccessGrantResponse>> {
         if (requestParameters.accessGrantId === null || requestParameters.accessGrantId === undefined) {
             throw new runtime.RequiredError('accessGrantId','Required parameter requestParameters.accessGrantId was null or undefined when calling managementRevokeAccessGrant.');
         }
@@ -914,12 +926,12 @@ export class ManagementApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementAccessGrantFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementRevokeAccessGrantResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementRevokeAccessGrant(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementAccessGrant> {
+    async managementRevokeAccessGrant(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementRevokeAccessGrantResponse> {
         const response = await this.managementRevokeAccessGrantRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -1074,7 +1086,7 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateInwayRaw(requestParameters: ManagementUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementInway>> {
+    async managementUpdateInwayRaw(requestParameters: ManagementUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementUpdateInwayResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementUpdateInway.');
         }
@@ -1097,12 +1109,12 @@ export class ManagementApi extends runtime.BaseAPI {
             body: ManagementInwayToJSON(requestParameters.inway),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementInwayFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementUpdateInwayResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async managementUpdateInway(requestParameters: ManagementUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementInway> {
+    async managementUpdateInway(requestParameters: ManagementUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementUpdateInwayResponse> {
         const response = await this.managementUpdateInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }

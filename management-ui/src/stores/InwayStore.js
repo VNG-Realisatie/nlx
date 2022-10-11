@@ -41,9 +41,9 @@ class InwayStore {
   }).bind(this)
 
   fetch = flow(function* fetch({ name }) {
-    const inwayData = yield this._managementApiClient.managementGetInway({
+    const inwayData = (yield this._managementApiClient.managementGetInway({
       name,
-    })
+    })).inway
     let inway = this.getByName(name)
 
     if (!inway) {

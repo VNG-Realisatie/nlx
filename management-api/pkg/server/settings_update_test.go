@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
@@ -26,7 +25,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 		setup   func(context.Context, serviceMocks)
 		ctx     context.Context
 		req     *api.UpdateSettingsRequest
-		want    *emptypb.Empty
+		want    *api.UpdateSettingsResponse
 		wantErr error
 	}{
 		"missing_required_permission": {
@@ -163,7 +162,7 @@ func TestManagementService_UpdateSettings(t *testing.T) {
 				OrganizationInway:        "inway-name",
 				OrganizationEmailAddress: "mock@email.com",
 			},
-			want:    &emptypb.Empty{},
+			want:    &api.UpdateSettingsResponse{},
 			wantErr: nil,
 		},
 	}

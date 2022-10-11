@@ -7,7 +7,6 @@ import { getOrgByName } from "./organizations";
 import { getOutwayByName } from "./outway";
 import { CustomWorld } from "../support/custom-world";
 import { default as logger } from "../debug";
-import dayjs from "dayjs";
 const debug = logger("e2e-tests:order");
 
 export const createOrder = async (

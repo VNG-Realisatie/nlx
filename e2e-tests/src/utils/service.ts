@@ -106,12 +106,14 @@ const getServiceFromDirectory = async (
   uniqueServiceName: string
 ): Promise<ManagementDirectoryService | undefined> => {
   try {
-    return await serviceProvider.apiClients.directory?.directoryGetOrganizationService(
-      {
-        organizationSerialNumber: serviceProvider.serialNumber,
-        serviceName: uniqueServiceName,
-      }
-    );
+    return (
+      await serviceProvider.apiClients.directory?.directoryGetOrganizationService(
+        {
+          organizationSerialNumber: serviceProvider.serialNumber,
+          serviceName: uniqueServiceName,
+        }
+      )
+    )?.directoryService;
   } catch (error) {
     return;
   }

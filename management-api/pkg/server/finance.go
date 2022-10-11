@@ -5,13 +5,13 @@ package server
 
 import (
 	"bytes"
+
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/common/transactionlog"
 	"go.nlx.io/nlx/management-api/api"
@@ -19,13 +19,13 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/txlogdb"
 )
 
-func (s *ManagementService) IsFinanceEnabled(ctx context.Context, request *emptypb.Empty) (*api.IsFinanceEnabledResponse, error) {
+func (s *ManagementService) IsFinanceEnabled(ctx context.Context, _ *api.IsFinanceEnabledRequest) (*api.IsFinanceEnabledResponse, error) {
 	return &api.IsFinanceEnabledResponse{
 		Enabled: s.txlogDatabase != nil,
 	}, nil
 }
 
-func (s *ManagementService) DownloadFinanceExport(ctx context.Context, request *emptypb.Empty) (*api.DownloadFinanceExportResponse, error) {
+func (s *ManagementService) DownloadFinanceExport(ctx context.Context, _ *api.DownloadFinanceExportRequest) (*api.DownloadFinanceExportResponse, error) {
 	err := s.authorize(ctx, permissions.ReadFinanceReport)
 	if err != nil {
 		return nil, err

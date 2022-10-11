@@ -16,10 +16,9 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *api.UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *api.UpdateOutgoingOrderRequest) (*api.UpdateOutgoingOrderResponse, error) {
 	err := s.authorize(ctx, permissions.UpdateOutgoingOrder)
 	if err != nil {
 		return nil, err
@@ -76,7 +75,7 @@ func (s *ManagementService) UpdateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Errorf(codes.Internal, "failed to update outgoing order")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.UpdateOutgoingOrderResponse{}, nil
 }
 
 func accessProofsToAuditLogRecordServices(accessProofs []*database.AccessProof) []auditlog.RecordService {

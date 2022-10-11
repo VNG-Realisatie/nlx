@@ -14,7 +14,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
@@ -22,7 +21,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
-func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.RegisterOutwayRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.RegisterOutwayRequest) (*api.RegisterOutwayResponse, error) {
 	logger := s.logger
 
 	logger.Info("rpc request RegisterOutway")
@@ -73,7 +72,7 @@ func (s *ManagementService) RegisterOutway(ctx context.Context, req *api.Registe
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.RegisterOutwayResponse{}, nil
 }
 
 // ListOutways returns a list of outways
@@ -102,7 +101,7 @@ func (s *ManagementService) ListOutways(ctx context.Context, req *api.ListOutway
 }
 
 // DeleteOutway deletes a specific outway
-func (s *ManagementService) DeleteOutway(ctx context.Context, req *api.DeleteOutwayRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) DeleteOutway(ctx context.Context, req *api.DeleteOutwayRequest) (*api.DeleteOutwayResponse, error) {
 	logger := s.logger.With(zap.String("name", req.Name))
 	logger.Info("rpc request DeleteOutway")
 
@@ -127,10 +126,10 @@ func (s *ManagementService) DeleteOutway(ctx context.Context, req *api.DeleteOut
 	err = s.configDatabase.DeleteOutway(ctx, req.Name)
 	if err != nil {
 		logger.Error("unable to delete the outway from the database", zap.Error(err))
-		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")
+		return &api.DeleteOutwayResponse{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.DeleteOutwayResponse{}, nil
 }
 
 func getCIDRFromTCPAddress(tcpAddress *net.TCPAddr) (*net.IPNet, error) {

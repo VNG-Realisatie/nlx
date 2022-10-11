@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -23,7 +22,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
 
-func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListOutgoingOrdersResponse, error) {
+func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *api.ListOutgoingOrdersRequest) (*api.ListOutgoingOrdersResponse, error) {
 	err := s.authorize(ctx, permissions.ReadOutgoingOrders)
 	if err != nil {
 		return nil, err
@@ -73,7 +72,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *emptypb.E
 	return &api.ListOutgoingOrdersResponse{Orders: outgoingOrders}, nil
 }
 
-func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *emptypb.Empty) (*api.ListIncomingOrdersResponse, error) {
+func (s *ManagementService) ListIncomingOrders(ctx context.Context, _ *api.ListIncomingOrdersRequest) (*api.ListIncomingOrdersResponse, error) {
 	err := s.authorize(ctx, permissions.ReadIncomingOrders)
 	if err != nil {
 		return nil, err

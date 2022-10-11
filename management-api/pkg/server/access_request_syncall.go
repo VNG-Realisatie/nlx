@@ -11,11 +11,11 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
 	common_tls "go.nlx.io/nlx/common/tls"
 	directoryapi "go.nlx.io/nlx/directory-api/api"
+	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
 	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
@@ -24,7 +24,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/syncer"
 )
 
-func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Context, _ *api.SynchronizeAllOutgoingAccessRequestsRequest) (*api.SynchronizeAllOutgoingAccessRequestsResponse, error) {
 	err := s.authorize(ctx, permissions.SyncOutgoingAccessRequests)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 	}
 
 	if len(outgoingAccessRequests) < 1 {
-		return &emptypb.Empty{}, nil
+		return &api.SynchronizeAllOutgoingAccessRequestsResponse{}, nil
 	}
 
 	accessRequestsByOin := groupAccessRequestsByOin(outgoingAccessRequests)
@@ -74,7 +74,7 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 		})
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.SynchronizeAllOutgoingAccessRequestsResponse{}, nil
 }
 
 func groupAccessRequestsByOin(accessRequests []*database.OutgoingAccessRequest) map[string][]*database.OutgoingAccessRequest {

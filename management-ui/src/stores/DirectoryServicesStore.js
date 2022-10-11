@@ -23,10 +23,10 @@ class DirectoryServicesStore {
   fetch = flow(function* fetch(organizationSerialNumber, serviceName) {
     try {
       const serviceData =
-        yield this._directoryApiClient.directoryGetOrganizationService({
+        (yield this._directoryApiClient.directoryGetOrganizationService({
           organizationSerialNumber,
           serviceName,
-        })
+        })).directoryService
 
       let directoryService = this.getService(
         organizationSerialNumber,

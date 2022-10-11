@@ -21,7 +21,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -33,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_Management_SynchronizeOrders_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq SynchronizeOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.SynchronizeOrders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -42,7 +41,7 @@ func request_Management_SynchronizeOrders_0(ctx context.Context, marshaler runti
 }
 
 func local_request_Management_SynchronizeOrders_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq SynchronizeOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.SynchronizeOrders(ctx, &protoReq)
@@ -51,7 +50,7 @@ func local_request_Management_SynchronizeOrders_0(ctx context.Context, marshaler
 }
 
 func request_Management_IsFinanceEnabled_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq IsFinanceEnabledRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.IsFinanceEnabled(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -60,7 +59,7 @@ func request_Management_IsFinanceEnabled_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Management_IsFinanceEnabled_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq IsFinanceEnabledRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.IsFinanceEnabled(ctx, &protoReq)
@@ -69,7 +68,7 @@ func local_request_Management_IsFinanceEnabled_0(ctx context.Context, marshaler 
 }
 
 func request_Management_IsTXLogEnabled_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq IsTXLogEnabledRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.IsTXLogEnabled(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -78,7 +77,7 @@ func request_Management_IsTXLogEnabled_0(ctx context.Context, marshaler runtime.
 }
 
 func local_request_Management_IsTXLogEnabled_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq IsTXLogEnabledRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.IsTXLogEnabled(ctx, &protoReq)
@@ -87,7 +86,7 @@ func local_request_Management_IsTXLogEnabled_0(ctx context.Context, marshaler ru
 }
 
 func request_Management_DownloadFinanceExport_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq DownloadFinanceExportRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.DownloadFinanceExport(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -96,7 +95,7 @@ func request_Management_DownloadFinanceExport_0(ctx context.Context, marshaler r
 }
 
 func local_request_Management_DownloadFinanceExport_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq DownloadFinanceExportRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.DownloadFinanceExport(ctx, &protoReq)
@@ -417,7 +416,7 @@ func local_request_Management_GetInway_0(ctx context.Context, marshaler runtime.
 }
 
 func request_Management_RegisterInway_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Inway
+	var protoReq RegisterInwayRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -434,7 +433,7 @@ func request_Management_RegisterInway_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_Management_RegisterInway_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Inway
+	var protoReq RegisterInwayRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -961,7 +960,7 @@ func local_request_Management_SendAccessRequest_0(ctx context.Context, marshaler
 }
 
 func request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetSettingsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetSettings(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -970,7 +969,7 @@ func request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_Management_GetSettings_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetSettingsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetSettings(ctx, &protoReq)
@@ -1117,7 +1116,7 @@ func local_request_Management_RevokeAccessGrant_0(ctx context.Context, marshaler
 }
 
 func request_Management_ListAuditLogs_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListAuditLogsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListAuditLogs(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1126,7 +1125,7 @@ func request_Management_ListAuditLogs_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_Management_ListAuditLogs_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListAuditLogsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListAuditLogs(ctx, &protoReq)
@@ -1275,7 +1274,7 @@ func local_request_Management_RevokeOutgoingOrder_0(ctx context.Context, marshal
 }
 
 func request_Management_ListOutgoingOrders_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListOutgoingOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListOutgoingOrders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1284,7 +1283,7 @@ func request_Management_ListOutgoingOrders_0(ctx context.Context, marshaler runt
 }
 
 func local_request_Management_ListOutgoingOrders_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListOutgoingOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListOutgoingOrders(ctx, &protoReq)
@@ -1293,7 +1292,7 @@ func local_request_Management_ListOutgoingOrders_0(ctx context.Context, marshale
 }
 
 func request_Management_ListIncomingOrders_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListIncomingOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListIncomingOrders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1302,7 +1301,7 @@ func request_Management_ListIncomingOrders_0(ctx context.Context, marshaler runt
 }
 
 func local_request_Management_ListIncomingOrders_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq ListIncomingOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListIncomingOrders(ctx, &protoReq)
@@ -1311,7 +1310,7 @@ func local_request_Management_ListIncomingOrders_0(ctx context.Context, marshale
 }
 
 func request_Management_GetTermsOfServiceStatus_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetTermsOfServiceStatusRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetTermsOfServiceStatus(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1320,7 +1319,7 @@ func request_Management_GetTermsOfServiceStatus_0(ctx context.Context, marshaler
 }
 
 func local_request_Management_GetTermsOfServiceStatus_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetTermsOfServiceStatusRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetTermsOfServiceStatus(ctx, &protoReq)
@@ -1329,7 +1328,7 @@ func local_request_Management_GetTermsOfServiceStatus_0(ctx context.Context, mar
 }
 
 func request_Management_AcceptTermsOfService_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq AcceptTermsOfServiceRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.AcceptTermsOfService(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1338,7 +1337,7 @@ func request_Management_AcceptTermsOfService_0(ctx context.Context, marshaler ru
 }
 
 func local_request_Management_AcceptTermsOfService_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq AcceptTermsOfServiceRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.AcceptTermsOfService(ctx, &protoReq)
@@ -1419,7 +1418,7 @@ func local_request_Management_SynchronizeOutgoingAccessRequests_0(ctx context.Co
 }
 
 func request_Management_SynchronizeAllOutgoingAccessRequests_0(ctx context.Context, marshaler runtime.Marshaler, client ManagementClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq SynchronizeAllOutgoingAccessRequestsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.SynchronizeAllOutgoingAccessRequests(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1428,7 +1427,7 @@ func request_Management_SynchronizeAllOutgoingAccessRequests_0(ctx context.Conte
 }
 
 func local_request_Management_SynchronizeAllOutgoingAccessRequests_0(ctx context.Context, marshaler runtime.Marshaler, server ManagementServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq SynchronizeAllOutgoingAccessRequestsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.SynchronizeAllOutgoingAccessRequests(ctx, &protoReq)
@@ -1437,7 +1436,7 @@ func local_request_Management_SynchronizeAllOutgoingAccessRequests_0(ctx context
 }
 
 func request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq DirectoryListServicesRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListServices(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1446,7 +1445,7 @@ func request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func local_request_Directory_ListServices_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq DirectoryListServicesRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListServices(ctx, &protoReq)
@@ -1599,7 +1598,7 @@ func local_request_Directory_RequestAccessToService_0(ctx context.Context, marsh
 }
 
 func request_Directory_GetTermsOfService_0(ctx context.Context, marshaler runtime.Marshaler, client DirectoryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetTermsOfServiceRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetTermsOfService(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1608,7 +1607,7 @@ func request_Directory_GetTermsOfService_0(ctx context.Context, marshaler runtim
 }
 
 func local_request_Directory_GetTermsOfService_0(ctx context.Context, marshaler runtime.Marshaler, server DirectoryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq GetTermsOfServiceRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetTermsOfService(ctx, &protoReq)
@@ -1617,7 +1616,7 @@ func local_request_Directory_GetTermsOfService_0(ctx context.Context, marshaler 
 }
 
 func request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshaler, client TXLogClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq TXLogListRecordsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.ListRecords(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -1626,7 +1625,7 @@ func request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_TXLog_ListRecords_0(ctx context.Context, marshaler runtime.Marshaler, server TXLogServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq emptypb.Empty
+	var protoReq TXLogListRecordsRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.ListRecords(ctx, &protoReq)

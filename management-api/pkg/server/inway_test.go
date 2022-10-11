@@ -28,13 +28,13 @@ func TestRegisterInway(t *testing.T) {
 	tests := map[string]struct {
 		peer       *peer.Peer
 		setupMocks func(mocks serviceMocks)
-		request    *api.Inway
+		request    *api.RegisterInwayRequest
 		wantErr    error
-		want       *api.Inway
+		want       *api.RegisterInwayResponse
 	}{
 		"peer_does_not_contain_address": {
 			peer:    &peer.Peer{Addr: nil},
-			request: &api.Inway{Name: "inway42.basic"},
+			request: &api.RegisterInwayRequest{Inway: &api.Inway{Name: "inway42.basic"}},
 			wantErr: status.Error(codes.Internal, "peer addr is invalid"),
 		},
 		"register_inway_database_call_fails": {
@@ -42,7 +42,7 @@ func TestRegisterInway(t *testing.T) {
 			setupMocks: func(mocks serviceMocks) {
 				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime}).Return(fmt.Errorf("arbitrary error"))
 			},
-			request: &api.Inway{Name: "inway42.basic"},
+			request: &api.RegisterInwayRequest{Inway: &api.Inway{Name: "inway42.basic"}},
 			wantErr: status.Error(codes.Internal, "database error"),
 		},
 		"happy_flow_address_from_peer": {
@@ -50,10 +50,12 @@ func TestRegisterInway(t *testing.T) {
 			setupMocks: func(mocks serviceMocks) {
 				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime})
 			},
-			request: &api.Inway{Name: "inway42.basic"},
-			want: &api.Inway{
-				Name:      "inway42.basic",
-				IpAddress: "127.1.1.1",
+			request: &api.RegisterInwayRequest{Inway: &api.Inway{Name: "inway42.basic"}},
+			want: &api.RegisterInwayResponse{
+				Inway: &api.Inway{
+					Name:      "inway42.basic",
+					IpAddress: "127.1.1.1",
+				},
 			},
 		},
 		"happy_flow_ipv6_address_from_peer": {
@@ -61,10 +63,12 @@ func TestRegisterInway(t *testing.T) {
 			setupMocks: func(mocks serviceMocks) {
 				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "::1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime})
 			},
-			request: &api.Inway{Name: "inway42.basic"},
-			want: &api.Inway{
-				Name:      "inway42.basic",
-				IpAddress: "::1",
+			request: &api.RegisterInwayRequest{Inway: &api.Inway{Name: "inway42.basic"}},
+			want: &api.RegisterInwayResponse{
+				Inway: &api.Inway{
+					Name:      "inway42.basic",
+					IpAddress: "::1",
+				},
 			},
 		},
 		"happy_flow_ip_address_from_request_ignored": {
@@ -72,10 +76,12 @@ func TestRegisterInway(t *testing.T) {
 			setupMocks: func(mocks serviceMocks) {
 				mocks.db.EXPECT().RegisterInway(gomock.Any(), &database.Inway{Name: "inway42.basic", IPAddress: "127.1.1.1", CreatedAt: fixtureTime, UpdatedAt: fixtureTime})
 			},
-			request: &api.Inway{Name: "inway42.basic", IpAddress: "127.2.2.2"},
-			want: &api.Inway{
-				Name:      "inway42.basic",
-				IpAddress: "127.1.1.1",
+			request: &api.RegisterInwayRequest{Inway: &api.Inway{Name: "inway42.basic", IpAddress: "127.2.2.2"}},
+			want: &api.RegisterInwayResponse{
+				Inway: &api.Inway{
+					Name:      "inway42.basic",
+					IpAddress: "127.1.1.1",
+				},
 			},
 		},
 	}
@@ -106,7 +112,7 @@ func TestGetInway(t *testing.T) {
 		setupMocks func(mocks serviceMocks)
 		request    *api.GetInwayRequest
 		wantErr    error
-		want       *api.Inway
+		want       *api.GetInwayResponse
 	}{
 		"missing_required_permission": {
 			ctx:        testCreateUserWithoutPermissionsContext(),
@@ -140,9 +146,11 @@ func TestGetInway(t *testing.T) {
 			request: &api.GetInwayRequest{
 				Name: "inway42.test",
 			},
-			want: &api.Inway{
-				Name:     "inway42.test",
-				Services: []*api.Inway_Service{{Name: "forty-two"}},
+			want: &api.GetInwayResponse{
+				Inway: &api.Inway{
+					Name:     "inway42.test",
+					Services: []*api.Inway_Service{{Name: "forty-two"}},
+				},
 			},
 		},
 	}
@@ -170,7 +178,7 @@ func TestUpdateInway(t *testing.T) {
 		setupMocks func(mocks serviceMocks)
 		request    *api.UpdateInwayRequest
 		wantErr    error
-		want       *api.Inway
+		want       *api.UpdateInwayResponse
 	}{
 		"missing_required_permission": {
 			ctx: testCreateAdminUserContext(),
@@ -247,8 +255,10 @@ func TestUpdateInway(t *testing.T) {
 					Name: "inway42.test",
 				},
 			},
-			want: &api.Inway{
-				Name: "inway42.test",
+			want: &api.UpdateInwayResponse{
+				Inway: &api.Inway{
+					Name: "inway42.test",
+				},
 			},
 		},
 	}

@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,43 +23,43 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ManagementClient interface {
-	SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error)
-	IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error)
-	IsTXLogEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error)
-	DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error)
+	SynchronizeOrders(ctx context.Context, in *SynchronizeOrdersRequest, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error)
+	IsFinanceEnabled(ctx context.Context, in *IsFinanceEnabledRequest, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error)
+	IsTXLogEnabled(ctx context.Context, in *IsTXLogEnabledRequest, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error)
+	DownloadFinanceExport(ctx context.Context, in *DownloadFinanceExportRequest, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error)
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
 	GetService(ctx context.Context, in *GetServiceRequest, opts ...grpc.CallOption) (*GetServiceResponse, error)
 	CreateService(ctx context.Context, in *CreateServiceRequest, opts ...grpc.CallOption) (*CreateServiceResponse, error)
 	UpdateService(ctx context.Context, in *UpdateServiceRequest, opts ...grpc.CallOption) (*UpdateServiceResponse, error)
-	DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error)
 	GetStatisticsOfServices(ctx context.Context, in *GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*GetStatisticsOfServicesResponse, error)
 	ListInways(ctx context.Context, in *ListInwaysRequest, opts ...grpc.CallOption) (*ListInwaysResponse, error)
-	GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*Inway, error)
-	RegisterInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error)
-	UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*Inway, error)
-	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*GetInwayResponse, error)
+	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
+	UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*UpdateInwayResponse, error)
+	DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*DeleteInwayResponse, error)
+	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error)
 	ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error)
-	DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*DeleteOutwayResponse, error)
 	ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
-	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*ApproveIncomingAccessRequestResponse, error)
+	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*RejectIncomingAccessRequestResponse, error)
 	SendAccessRequest(ctx context.Context, in *SendAccessRequestRequest, opts ...grpc.CallOption) (*SendAccessRequestResponse, error)
-	GetSettings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Settings, error)
-	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetSettings(ctx context.Context, in *GetSettingsRequest, opts ...grpc.CallOption) (*GetSettingsResponse, error)
+	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error)
 	ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error)
-	RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
-	ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
-	CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error)
-	ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error)
-	GetTermsOfServiceStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error)
-	AcceptTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*RevokeAccessGrantResponse, error)
+	ListAuditLogs(ctx context.Context, in *ListAuditLogsRequest, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
+	CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*CreateOutgoingOrderResponse, error)
+	UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*UpdateOutgoingOrderResponse, error)
+	RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*RevokeOutgoingOrderResponse, error)
+	ListOutgoingOrders(ctx context.Context, in *ListOutgoingOrdersRequest, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error)
+	ListIncomingOrders(ctx context.Context, in *ListIncomingOrdersRequest, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error)
+	GetTermsOfServiceStatus(ctx context.Context, in *GetTermsOfServiceStatusRequest, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error)
+	AcceptTermsOfService(ctx context.Context, in *AcceptTermsOfServiceRequest, opts ...grpc.CallOption) (*AcceptTermsOfServiceResponse, error)
 	GetInwayConfig(ctx context.Context, in *GetInwayConfigRequest, opts ...grpc.CallOption) (*GetInwayConfigResponse, error)
-	SynchronizeOutgoingAccessRequests(ctx context.Context, in *SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SynchronizeOutgoingAccessRequests(ctx context.Context, in *SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeOutgoingAccessRequestsResponse, error)
+	SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *SynchronizeAllOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeAllOutgoingAccessRequestsResponse, error)
 }
 
 type managementClient struct {
@@ -71,7 +70,7 @@ func NewManagementClient(cc grpc.ClientConnInterface) ManagementClient {
 	return &managementClient{cc}
 }
 
-func (c *managementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error) {
+func (c *managementClient) SynchronizeOrders(ctx context.Context, in *SynchronizeOrdersRequest, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error) {
 	out := new(SynchronizeOrdersResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeOrders", in, out, opts...)
 	if err != nil {
@@ -80,7 +79,7 @@ func (c *managementClient) SynchronizeOrders(ctx context.Context, in *emptypb.Em
 	return out, nil
 }
 
-func (c *managementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error) {
+func (c *managementClient) IsFinanceEnabled(ctx context.Context, in *IsFinanceEnabledRequest, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error) {
 	out := new(IsFinanceEnabledResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/IsFinanceEnabled", in, out, opts...)
 	if err != nil {
@@ -89,7 +88,7 @@ func (c *managementClient) IsFinanceEnabled(ctx context.Context, in *emptypb.Emp
 	return out, nil
 }
 
-func (c *managementClient) IsTXLogEnabled(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error) {
+func (c *managementClient) IsTXLogEnabled(ctx context.Context, in *IsTXLogEnabledRequest, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error) {
 	out := new(IsTXLogEnabledResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/IsTXLogEnabled", in, out, opts...)
 	if err != nil {
@@ -98,7 +97,7 @@ func (c *managementClient) IsTXLogEnabled(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
-func (c *managementClient) DownloadFinanceExport(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error) {
+func (c *managementClient) DownloadFinanceExport(ctx context.Context, in *DownloadFinanceExportRequest, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error) {
 	out := new(DownloadFinanceExportResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/DownloadFinanceExport", in, out, opts...)
 	if err != nil {
@@ -143,8 +142,8 @@ func (c *managementClient) UpdateService(ctx context.Context, in *UpdateServiceR
 	return out, nil
 }
 
-func (c *managementClient) DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error) {
+	out := new(DeleteServiceResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteService", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -170,8 +169,8 @@ func (c *managementClient) ListInways(ctx context.Context, in *ListInwaysRequest
 	return out, nil
 }
 
-func (c *managementClient) GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*Inway, error) {
-	out := new(Inway)
+func (c *managementClient) GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*GetInwayResponse, error) {
+	out := new(GetInwayResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -179,8 +178,8 @@ func (c *managementClient) GetInway(ctx context.Context, in *GetInwayRequest, op
 	return out, nil
 }
 
-func (c *managementClient) RegisterInway(ctx context.Context, in *Inway, opts ...grpc.CallOption) (*Inway, error) {
-	out := new(Inway)
+func (c *managementClient) RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error) {
+	out := new(RegisterInwayResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/RegisterInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -188,8 +187,8 @@ func (c *managementClient) RegisterInway(ctx context.Context, in *Inway, opts ..
 	return out, nil
 }
 
-func (c *managementClient) UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*Inway, error) {
-	out := new(Inway)
+func (c *managementClient) UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*UpdateInwayResponse, error) {
+	out := new(UpdateInwayResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -197,8 +196,8 @@ func (c *managementClient) UpdateInway(ctx context.Context, in *UpdateInwayReque
 	return out, nil
 }
 
-func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*DeleteInwayResponse, error) {
+	out := new(DeleteInwayResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteInway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -206,8 +205,8 @@ func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayReque
 	return out, nil
 }
 
-func (c *managementClient) RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error) {
+	out := new(RegisterOutwayResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/RegisterOutway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -224,8 +223,8 @@ func (c *managementClient) ListOutways(ctx context.Context, in *ListOutwaysReque
 	return out, nil
 }
 
-func (c *managementClient) DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*DeleteOutwayResponse, error) {
+	out := new(DeleteOutwayResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteOutway", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -242,8 +241,8 @@ func (c *managementClient) ListIncomingAccessRequests(ctx context.Context, in *L
 	return out, nil
 }
 
-func (c *managementClient) ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*ApproveIncomingAccessRequestResponse, error) {
+	out := new(ApproveIncomingAccessRequestResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/ApproveIncomingAccessRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -251,8 +250,8 @@ func (c *managementClient) ApproveIncomingAccessRequest(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *managementClient) RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*RejectIncomingAccessRequestResponse, error) {
+	out := new(RejectIncomingAccessRequestResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/RejectIncomingAccessRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -269,8 +268,8 @@ func (c *managementClient) SendAccessRequest(ctx context.Context, in *SendAccess
 	return out, nil
 }
 
-func (c *managementClient) GetSettings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Settings, error) {
-	out := new(Settings)
+func (c *managementClient) GetSettings(ctx context.Context, in *GetSettingsRequest, opts ...grpc.CallOption) (*GetSettingsResponse, error) {
+	out := new(GetSettingsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -278,8 +277,8 @@ func (c *managementClient) GetSettings(ctx context.Context, in *emptypb.Empty, o
 	return out, nil
 }
 
-func (c *managementClient) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error) {
+	out := new(UpdateSettingsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -296,8 +295,8 @@ func (c *managementClient) ListAccessGrantsForService(ctx context.Context, in *L
 	return out, nil
 }
 
-func (c *managementClient) RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error) {
-	out := new(AccessGrant)
+func (c *managementClient) RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*RevokeAccessGrantResponse, error) {
+	out := new(RevokeAccessGrantResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/RevokeAccessGrant", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -305,7 +304,7 @@ func (c *managementClient) RevokeAccessGrant(ctx context.Context, in *RevokeAcce
 	return out, nil
 }
 
-func (c *managementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListAuditLogsResponse, error) {
+func (c *managementClient) ListAuditLogs(ctx context.Context, in *ListAuditLogsRequest, opts ...grpc.CallOption) (*ListAuditLogsResponse, error) {
 	out := new(ListAuditLogsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListAuditLogs", in, out, opts...)
 	if err != nil {
@@ -314,8 +313,8 @@ func (c *managementClient) ListAuditLogs(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
-func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*CreateOutgoingOrderResponse, error) {
+	out := new(CreateOutgoingOrderResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -323,8 +322,8 @@ func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOu
 	return out, nil
 }
 
-func (c *managementClient) UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*UpdateOutgoingOrderResponse, error) {
+	out := new(UpdateOutgoingOrderResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -332,8 +331,8 @@ func (c *managementClient) UpdateOutgoingOrder(ctx context.Context, in *UpdateOu
 	return out, nil
 }
 
-func (c *managementClient) RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*RevokeOutgoingOrderResponse, error) {
+	out := new(RevokeOutgoingOrderResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/RevokeOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -341,7 +340,7 @@ func (c *managementClient) RevokeOutgoingOrder(ctx context.Context, in *RevokeOu
 	return out, nil
 }
 
-func (c *managementClient) ListOutgoingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error) {
+func (c *managementClient) ListOutgoingOrders(ctx context.Context, in *ListOutgoingOrdersRequest, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error) {
 	out := new(ListOutgoingOrdersResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutgoingOrders", in, out, opts...)
 	if err != nil {
@@ -350,7 +349,7 @@ func (c *managementClient) ListOutgoingOrders(ctx context.Context, in *emptypb.E
 	return out, nil
 }
 
-func (c *managementClient) ListIncomingOrders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error) {
+func (c *managementClient) ListIncomingOrders(ctx context.Context, in *ListIncomingOrdersRequest, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error) {
 	out := new(ListIncomingOrdersResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIncomingOrders", in, out, opts...)
 	if err != nil {
@@ -359,7 +358,7 @@ func (c *managementClient) ListIncomingOrders(ctx context.Context, in *emptypb.E
 	return out, nil
 }
 
-func (c *managementClient) GetTermsOfServiceStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error) {
+func (c *managementClient) GetTermsOfServiceStatus(ctx context.Context, in *GetTermsOfServiceStatusRequest, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error) {
 	out := new(GetTermsOfServiceStatusResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetTermsOfServiceStatus", in, out, opts...)
 	if err != nil {
@@ -368,8 +367,8 @@ func (c *managementClient) GetTermsOfServiceStatus(ctx context.Context, in *empt
 	return out, nil
 }
 
-func (c *managementClient) AcceptTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) AcceptTermsOfService(ctx context.Context, in *AcceptTermsOfServiceRequest, opts ...grpc.CallOption) (*AcceptTermsOfServiceResponse, error) {
+	out := new(AcceptTermsOfServiceResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/AcceptTermsOfService", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -386,8 +385,8 @@ func (c *managementClient) GetInwayConfig(ctx context.Context, in *GetInwayConfi
 	return out, nil
 }
 
-func (c *managementClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeOutgoingAccessRequestsResponse, error) {
+	out := new(SynchronizeOutgoingAccessRequestsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeOutgoingAccessRequests", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -395,8 +394,8 @@ func (c *managementClient) SynchronizeOutgoingAccessRequests(ctx context.Context
 	return out, nil
 }
 
-func (c *managementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *managementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *SynchronizeAllOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeAllOutgoingAccessRequestsResponse, error) {
+	out := new(SynchronizeAllOutgoingAccessRequestsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeAllOutgoingAccessRequests", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -408,43 +407,43 @@ func (c *managementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Cont
 // All implementations must embed UnimplementedManagementServer
 // for forward compatibility
 type ManagementServer interface {
-	SynchronizeOrders(context.Context, *emptypb.Empty) (*SynchronizeOrdersResponse, error)
-	IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error)
-	IsTXLogEnabled(context.Context, *emptypb.Empty) (*IsTXLogEnabledResponse, error)
-	DownloadFinanceExport(context.Context, *emptypb.Empty) (*DownloadFinanceExportResponse, error)
+	SynchronizeOrders(context.Context, *SynchronizeOrdersRequest) (*SynchronizeOrdersResponse, error)
+	IsFinanceEnabled(context.Context, *IsFinanceEnabledRequest) (*IsFinanceEnabledResponse, error)
+	IsTXLogEnabled(context.Context, *IsTXLogEnabledRequest) (*IsTXLogEnabledResponse, error)
+	DownloadFinanceExport(context.Context, *DownloadFinanceExportRequest) (*DownloadFinanceExportResponse, error)
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
 	GetService(context.Context, *GetServiceRequest) (*GetServiceResponse, error)
 	CreateService(context.Context, *CreateServiceRequest) (*CreateServiceResponse, error)
 	UpdateService(context.Context, *UpdateServiceRequest) (*UpdateServiceResponse, error)
-	DeleteService(context.Context, *DeleteServiceRequest) (*emptypb.Empty, error)
+	DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error)
 	GetStatisticsOfServices(context.Context, *GetStatisticsOfServicesRequest) (*GetStatisticsOfServicesResponse, error)
 	ListInways(context.Context, *ListInwaysRequest) (*ListInwaysResponse, error)
-	GetInway(context.Context, *GetInwayRequest) (*Inway, error)
-	RegisterInway(context.Context, *Inway) (*Inway, error)
-	UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error)
-	DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error)
-	RegisterOutway(context.Context, *RegisterOutwayRequest) (*emptypb.Empty, error)
+	GetInway(context.Context, *GetInwayRequest) (*GetInwayResponse, error)
+	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
+	UpdateInway(context.Context, *UpdateInwayRequest) (*UpdateInwayResponse, error)
+	DeleteInway(context.Context, *DeleteInwayRequest) (*DeleteInwayResponse, error)
+	RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error)
 	ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error)
-	DeleteOutway(context.Context, *DeleteOutwayRequest) (*emptypb.Empty, error)
+	DeleteOutway(context.Context, *DeleteOutwayRequest) (*DeleteOutwayResponse, error)
 	ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error)
-	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error)
-	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error)
+	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*ApproveIncomingAccessRequestResponse, error)
+	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*RejectIncomingAccessRequestResponse, error)
 	SendAccessRequest(context.Context, *SendAccessRequestRequest) (*SendAccessRequestResponse, error)
-	GetSettings(context.Context, *emptypb.Empty) (*Settings, error)
-	UpdateSettings(context.Context, *UpdateSettingsRequest) (*emptypb.Empty, error)
+	GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error)
+	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
 	ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error)
-	RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error)
-	ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error)
-	CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error)
-	UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error)
-	RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error)
-	ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error)
-	ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error)
-	GetTermsOfServiceStatus(context.Context, *emptypb.Empty) (*GetTermsOfServiceStatusResponse, error)
-	AcceptTermsOfService(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*RevokeAccessGrantResponse, error)
+	ListAuditLogs(context.Context, *ListAuditLogsRequest) (*ListAuditLogsResponse, error)
+	CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*CreateOutgoingOrderResponse, error)
+	UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*UpdateOutgoingOrderResponse, error)
+	RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*RevokeOutgoingOrderResponse, error)
+	ListOutgoingOrders(context.Context, *ListOutgoingOrdersRequest) (*ListOutgoingOrdersResponse, error)
+	ListIncomingOrders(context.Context, *ListIncomingOrdersRequest) (*ListIncomingOrdersResponse, error)
+	GetTermsOfServiceStatus(context.Context, *GetTermsOfServiceStatusRequest) (*GetTermsOfServiceStatusResponse, error)
+	AcceptTermsOfService(context.Context, *AcceptTermsOfServiceRequest) (*AcceptTermsOfServiceResponse, error)
 	GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error)
-	SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*emptypb.Empty, error)
-	SynchronizeAllOutgoingAccessRequests(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*SynchronizeOutgoingAccessRequestsResponse, error)
+	SynchronizeAllOutgoingAccessRequests(context.Context, *SynchronizeAllOutgoingAccessRequestsRequest) (*SynchronizeAllOutgoingAccessRequestsResponse, error)
 	mustEmbedUnimplementedManagementServer()
 }
 
@@ -452,16 +451,16 @@ type ManagementServer interface {
 type UnimplementedManagementServer struct {
 }
 
-func (UnimplementedManagementServer) SynchronizeOrders(context.Context, *emptypb.Empty) (*SynchronizeOrdersResponse, error) {
+func (UnimplementedManagementServer) SynchronizeOrders(context.Context, *SynchronizeOrdersRequest) (*SynchronizeOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeOrders not implemented")
 }
-func (UnimplementedManagementServer) IsFinanceEnabled(context.Context, *emptypb.Empty) (*IsFinanceEnabledResponse, error) {
+func (UnimplementedManagementServer) IsFinanceEnabled(context.Context, *IsFinanceEnabledRequest) (*IsFinanceEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFinanceEnabled not implemented")
 }
-func (UnimplementedManagementServer) IsTXLogEnabled(context.Context, *emptypb.Empty) (*IsTXLogEnabledResponse, error) {
+func (UnimplementedManagementServer) IsTXLogEnabled(context.Context, *IsTXLogEnabledRequest) (*IsTXLogEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsTXLogEnabled not implemented")
 }
-func (UnimplementedManagementServer) DownloadFinanceExport(context.Context, *emptypb.Empty) (*DownloadFinanceExportResponse, error) {
+func (UnimplementedManagementServer) DownloadFinanceExport(context.Context, *DownloadFinanceExportRequest) (*DownloadFinanceExportResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadFinanceExport not implemented")
 }
 func (UnimplementedManagementServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
@@ -476,7 +475,7 @@ func (UnimplementedManagementServer) CreateService(context.Context, *CreateServi
 func (UnimplementedManagementServer) UpdateService(context.Context, *UpdateServiceRequest) (*UpdateServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateService not implemented")
 }
-func (UnimplementedManagementServer) DeleteService(context.Context, *DeleteServiceRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteService not implemented")
 }
 func (UnimplementedManagementServer) GetStatisticsOfServices(context.Context, *GetStatisticsOfServicesRequest) (*GetStatisticsOfServicesResponse, error) {
@@ -485,82 +484,82 @@ func (UnimplementedManagementServer) GetStatisticsOfServices(context.Context, *G
 func (UnimplementedManagementServer) ListInways(context.Context, *ListInwaysRequest) (*ListInwaysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInways not implemented")
 }
-func (UnimplementedManagementServer) GetInway(context.Context, *GetInwayRequest) (*Inway, error) {
+func (UnimplementedManagementServer) GetInway(context.Context, *GetInwayRequest) (*GetInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInway not implemented")
 }
-func (UnimplementedManagementServer) RegisterInway(context.Context, *Inway) (*Inway, error) {
+func (UnimplementedManagementServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
-func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRequest) (*Inway, error) {
+func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRequest) (*UpdateInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateInway not implemented")
 }
-func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*DeleteInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteInway not implemented")
 }
-func (UnimplementedManagementServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterOutway not implemented")
 }
 func (UnimplementedManagementServer) ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutways not implemented")
 }
-func (UnimplementedManagementServer) DeleteOutway(context.Context, *DeleteOutwayRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) DeleteOutway(context.Context, *DeleteOutwayRequest) (*DeleteOutwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOutway not implemented")
 }
 func (UnimplementedManagementServer) ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequests not implemented")
 }
-func (UnimplementedManagementServer) ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*ApproveIncomingAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApproveIncomingAccessRequest not implemented")
 }
-func (UnimplementedManagementServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*RejectIncomingAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RejectIncomingAccessRequest not implemented")
 }
 func (UnimplementedManagementServer) SendAccessRequest(context.Context, *SendAccessRequestRequest) (*SendAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendAccessRequest not implemented")
 }
-func (UnimplementedManagementServer) GetSettings(context.Context, *emptypb.Empty) (*Settings, error) {
+func (UnimplementedManagementServer) GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSettings not implemented")
 }
-func (UnimplementedManagementServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
 }
 func (UnimplementedManagementServer) ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAccessGrantsForService not implemented")
 }
-func (UnimplementedManagementServer) RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*AccessGrant, error) {
+func (UnimplementedManagementServer) RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*RevokeAccessGrantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeAccessGrant not implemented")
 }
-func (UnimplementedManagementServer) ListAuditLogs(context.Context, *emptypb.Empty) (*ListAuditLogsResponse, error) {
+func (UnimplementedManagementServer) ListAuditLogs(context.Context, *ListAuditLogsRequest) (*ListAuditLogsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuditLogs not implemented")
 }
-func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*CreateOutgoingOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*UpdateOutgoingOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*RevokeOutgoingOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) ListOutgoingOrders(context.Context, *emptypb.Empty) (*ListOutgoingOrdersResponse, error) {
+func (UnimplementedManagementServer) ListOutgoingOrders(context.Context, *ListOutgoingOrdersRequest) (*ListOutgoingOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingOrders not implemented")
 }
-func (UnimplementedManagementServer) ListIncomingOrders(context.Context, *emptypb.Empty) (*ListIncomingOrdersResponse, error) {
+func (UnimplementedManagementServer) ListIncomingOrders(context.Context, *ListIncomingOrdersRequest) (*ListIncomingOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingOrders not implemented")
 }
-func (UnimplementedManagementServer) GetTermsOfServiceStatus(context.Context, *emptypb.Empty) (*GetTermsOfServiceStatusResponse, error) {
+func (UnimplementedManagementServer) GetTermsOfServiceStatus(context.Context, *GetTermsOfServiceStatusRequest) (*GetTermsOfServiceStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfServiceStatus not implemented")
 }
-func (UnimplementedManagementServer) AcceptTermsOfService(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) AcceptTermsOfService(context.Context, *AcceptTermsOfServiceRequest) (*AcceptTermsOfServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptTermsOfService not implemented")
 }
 func (UnimplementedManagementServer) GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInwayConfig not implemented")
 }
-func (UnimplementedManagementServer) SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*SynchronizeOutgoingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeOutgoingAccessRequests not implemented")
 }
-func (UnimplementedManagementServer) SynchronizeAllOutgoingAccessRequests(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedManagementServer) SynchronizeAllOutgoingAccessRequests(context.Context, *SynchronizeAllOutgoingAccessRequestsRequest) (*SynchronizeAllOutgoingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeAllOutgoingAccessRequests not implemented")
 }
 func (UnimplementedManagementServer) mustEmbedUnimplementedManagementServer() {}
@@ -577,7 +576,7 @@ func RegisterManagementServer(s grpc.ServiceRegistrar, srv ManagementServer) {
 }
 
 func _Management_SynchronizeOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(SynchronizeOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -589,13 +588,13 @@ func _Management_SynchronizeOrders_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/nlx.management.Management/SynchronizeOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).SynchronizeOrders(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).SynchronizeOrders(ctx, req.(*SynchronizeOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_IsFinanceEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(IsFinanceEnabledRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -607,13 +606,13 @@ func _Management_IsFinanceEnabled_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/nlx.management.Management/IsFinanceEnabled",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).IsFinanceEnabled(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).IsFinanceEnabled(ctx, req.(*IsFinanceEnabledRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_IsTXLogEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(IsTXLogEnabledRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -625,13 +624,13 @@ func _Management_IsTXLogEnabled_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/nlx.management.Management/IsTXLogEnabled",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).IsTXLogEnabled(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).IsTXLogEnabled(ctx, req.(*IsTXLogEnabledRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_DownloadFinanceExport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(DownloadFinanceExportRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -643,7 +642,7 @@ func _Management_DownloadFinanceExport_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/nlx.management.Management/DownloadFinanceExport",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).DownloadFinanceExport(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).DownloadFinanceExport(ctx, req.(*DownloadFinanceExportRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -793,7 +792,7 @@ func _Management_GetInway_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _Management_RegisterInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Inway)
+	in := new(RegisterInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -805,7 +804,7 @@ func _Management_RegisterInway_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/nlx.management.Management/RegisterInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RegisterInway(ctx, req.(*Inway))
+		return srv.(ManagementServer).RegisterInway(ctx, req.(*RegisterInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -973,7 +972,7 @@ func _Management_SendAccessRequest_Handler(srv interface{}, ctx context.Context,
 }
 
 func _Management_GetSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetSettingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -985,7 +984,7 @@ func _Management_GetSettings_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/nlx.management.Management/GetSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetSettings(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).GetSettings(ctx, req.(*GetSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1045,7 +1044,7 @@ func _Management_RevokeAccessGrant_Handler(srv interface{}, ctx context.Context,
 }
 
 func _Management_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListAuditLogsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1057,7 +1056,7 @@ func _Management_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/nlx.management.Management/ListAuditLogs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListAuditLogs(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).ListAuditLogs(ctx, req.(*ListAuditLogsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1117,7 +1116,7 @@ func _Management_RevokeOutgoingOrder_Handler(srv interface{}, ctx context.Contex
 }
 
 func _Management_ListOutgoingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListOutgoingOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1129,13 +1128,13 @@ func _Management_ListOutgoingOrders_Handler(srv interface{}, ctx context.Context
 		FullMethod: "/nlx.management.Management/ListOutgoingOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListOutgoingOrders(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).ListOutgoingOrders(ctx, req.(*ListOutgoingOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_ListIncomingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListIncomingOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1147,13 +1146,13 @@ func _Management_ListIncomingOrders_Handler(srv interface{}, ctx context.Context
 		FullMethod: "/nlx.management.Management/ListIncomingOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListIncomingOrders(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).ListIncomingOrders(ctx, req.(*ListIncomingOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_GetTermsOfServiceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetTermsOfServiceStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1165,13 +1164,13 @@ func _Management_GetTermsOfServiceStatus_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/nlx.management.Management/GetTermsOfServiceStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetTermsOfServiceStatus(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).GetTermsOfServiceStatus(ctx, req.(*GetTermsOfServiceStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Management_AcceptTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(AcceptTermsOfServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1183,7 +1182,7 @@ func _Management_AcceptTermsOfService_Handler(srv interface{}, ctx context.Conte
 		FullMethod: "/nlx.management.Management/AcceptTermsOfService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).AcceptTermsOfService(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).AcceptTermsOfService(ctx, req.(*AcceptTermsOfServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1225,7 +1224,7 @@ func _Management_SynchronizeOutgoingAccessRequests_Handler(srv interface{}, ctx 
 }
 
 func _Management_SynchronizeAllOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(SynchronizeAllOutgoingAccessRequestsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1237,7 +1236,7 @@ func _Management_SynchronizeAllOutgoingAccessRequests_Handler(srv interface{}, c
 		FullMethod: "/nlx.management.Management/SynchronizeAllOutgoingAccessRequests",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).SynchronizeAllOutgoingAccessRequests(ctx, req.(*emptypb.Empty))
+		return srv.(ManagementServer).SynchronizeAllOutgoingAccessRequests(ctx, req.(*SynchronizeAllOutgoingAccessRequestsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1406,10 +1405,10 @@ var Management_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryClient interface {
-	ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error)
-	GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*DirectoryService, error)
-	RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error)
-	GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
+	ListServices(ctx context.Context, in *DirectoryListServicesRequest, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error)
+	GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*GetOrganizationServiceResponse, error)
+	RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*RequestAccessToServiceResponse, error)
+	GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
 }
 
 type directoryClient struct {
@@ -1420,7 +1419,7 @@ func NewDirectoryClient(cc grpc.ClientConnInterface) DirectoryClient {
 	return &directoryClient{cc}
 }
 
-func (c *directoryClient) ListServices(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error) {
+func (c *directoryClient) ListServices(ctx context.Context, in *DirectoryListServicesRequest, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error) {
 	out := new(DirectoryListServicesResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Directory/ListServices", in, out, opts...)
 	if err != nil {
@@ -1429,8 +1428,8 @@ func (c *directoryClient) ListServices(ctx context.Context, in *emptypb.Empty, o
 	return out, nil
 }
 
-func (c *directoryClient) GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*DirectoryService, error) {
-	out := new(DirectoryService)
+func (c *directoryClient) GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*GetOrganizationServiceResponse, error) {
+	out := new(GetOrganizationServiceResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Directory/GetOrganizationService", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1438,8 +1437,8 @@ func (c *directoryClient) GetOrganizationService(ctx context.Context, in *GetOrg
 	return out, nil
 }
 
-func (c *directoryClient) RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*OutgoingAccessRequest, error) {
-	out := new(OutgoingAccessRequest)
+func (c *directoryClient) RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*RequestAccessToServiceResponse, error) {
+	out := new(RequestAccessToServiceResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Directory/RequestAccessToService", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1447,7 +1446,7 @@ func (c *directoryClient) RequestAccessToService(ctx context.Context, in *Reques
 	return out, nil
 }
 
-func (c *directoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
+func (c *directoryClient) GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
 	out := new(GetTermsOfServiceResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.Directory/GetTermsOfService", in, out, opts...)
 	if err != nil {
@@ -1460,10 +1459,10 @@ func (c *directoryClient) GetTermsOfService(ctx context.Context, in *emptypb.Emp
 // All implementations must embed UnimplementedDirectoryServer
 // for forward compatibility
 type DirectoryServer interface {
-	ListServices(context.Context, *emptypb.Empty) (*DirectoryListServicesResponse, error)
-	GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*DirectoryService, error)
-	RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*OutgoingAccessRequest, error)
-	GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error)
+	ListServices(context.Context, *DirectoryListServicesRequest) (*DirectoryListServicesResponse, error)
+	GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*GetOrganizationServiceResponse, error)
+	RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*RequestAccessToServiceResponse, error)
+	GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error)
 	mustEmbedUnimplementedDirectoryServer()
 }
 
@@ -1471,16 +1470,16 @@ type DirectoryServer interface {
 type UnimplementedDirectoryServer struct {
 }
 
-func (UnimplementedDirectoryServer) ListServices(context.Context, *emptypb.Empty) (*DirectoryListServicesResponse, error) {
+func (UnimplementedDirectoryServer) ListServices(context.Context, *DirectoryListServicesRequest) (*DirectoryListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-func (UnimplementedDirectoryServer) GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*DirectoryService, error) {
+func (UnimplementedDirectoryServer) GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*GetOrganizationServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationService not implemented")
 }
-func (UnimplementedDirectoryServer) RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*OutgoingAccessRequest, error) {
+func (UnimplementedDirectoryServer) RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*RequestAccessToServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToService not implemented")
 }
-func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *emptypb.Empty) (*GetTermsOfServiceResponse, error) {
+func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfService not implemented")
 }
 func (UnimplementedDirectoryServer) mustEmbedUnimplementedDirectoryServer() {}
@@ -1497,7 +1496,7 @@ func RegisterDirectoryServer(s grpc.ServiceRegistrar, srv DirectoryServer) {
 }
 
 func _Directory_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(DirectoryListServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1509,7 +1508,7 @@ func _Directory_ListServices_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/nlx.management.Directory/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ListServices(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).ListServices(ctx, req.(*DirectoryListServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1551,7 +1550,7 @@ func _Directory_RequestAccessToService_Handler(srv interface{}, ctx context.Cont
 }
 
 func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetTermsOfServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1563,7 +1562,7 @@ func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/nlx.management.Directory/GetTermsOfService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).GetTermsOfService(ctx, req.(*emptypb.Empty))
+		return srv.(DirectoryServer).GetTermsOfService(ctx, req.(*GetTermsOfServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1600,7 +1599,7 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TXLogClient interface {
-	ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TXLogListRecordsResponse, error)
+	ListRecords(ctx context.Context, in *TXLogListRecordsRequest, opts ...grpc.CallOption) (*TXLogListRecordsResponse, error)
 }
 
 type tXLogClient struct {
@@ -1611,7 +1610,7 @@ func NewTXLogClient(cc grpc.ClientConnInterface) TXLogClient {
 	return &tXLogClient{cc}
 }
 
-func (c *tXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TXLogListRecordsResponse, error) {
+func (c *tXLogClient) ListRecords(ctx context.Context, in *TXLogListRecordsRequest, opts ...grpc.CallOption) (*TXLogListRecordsResponse, error) {
 	out := new(TXLogListRecordsResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.TXLog/ListRecords", in, out, opts...)
 	if err != nil {
@@ -1624,7 +1623,7 @@ func (c *tXLogClient) ListRecords(ctx context.Context, in *emptypb.Empty, opts .
 // All implementations must embed UnimplementedTXLogServer
 // for forward compatibility
 type TXLogServer interface {
-	ListRecords(context.Context, *emptypb.Empty) (*TXLogListRecordsResponse, error)
+	ListRecords(context.Context, *TXLogListRecordsRequest) (*TXLogListRecordsResponse, error)
 	mustEmbedUnimplementedTXLogServer()
 }
 
@@ -1632,7 +1631,7 @@ type TXLogServer interface {
 type UnimplementedTXLogServer struct {
 }
 
-func (UnimplementedTXLogServer) ListRecords(context.Context, *emptypb.Empty) (*TXLogListRecordsResponse, error) {
+func (UnimplementedTXLogServer) ListRecords(context.Context, *TXLogListRecordsRequest) (*TXLogListRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRecords not implemented")
 }
 func (UnimplementedTXLogServer) mustEmbedUnimplementedTXLogServer() {}
@@ -1649,7 +1648,7 @@ func RegisterTXLogServer(s grpc.ServiceRegistrar, srv TXLogServer) {
 }
 
 func _TXLog_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(TXLogListRecordsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1661,7 +1660,7 @@ func _TXLog_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/nlx.management.TXLog/ListRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXLogServer).ListRecords(ctx, req.(*emptypb.Empty))
+		return srv.(TXLogServer).ListRecords(ctx, req.(*TXLogListRecordsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -17,7 +17,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/tls"
@@ -39,7 +38,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		ctx      func() context.Context
 		setup    func(serviceMocks)
 		request  *api.ApproveIncomingAccessRequestRequest
-		response *emptypb.Empty
+		response *api.ApproveIncomingAccessRequestResponse
 		err      error
 	}{
 
@@ -152,7 +151,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 				ServiceName:     "test-service",
 				AccessRequestId: 1,
 			},
-			response: &emptypb.Empty{},
+			response: &api.ApproveIncomingAccessRequestResponse{},
 			err:      nil,
 		},
 	}
@@ -249,7 +248,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		accessRequestErr error
 		expectUpdateCall bool
 		updateErr        error
-		response         *emptypb.Empty
+		response         *api.RejectIncomingAccessRequestResponse
 		err              error
 	}{
 		"missing_required_permission": {
@@ -328,7 +327,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 				ServiceName:     "test-service",
 				AccessRequestId: 1,
 			},
-			response: &emptypb.Empty{},
+			response: &api.RejectIncomingAccessRequestResponse{},
 			err:      nil,
 		},
 	}

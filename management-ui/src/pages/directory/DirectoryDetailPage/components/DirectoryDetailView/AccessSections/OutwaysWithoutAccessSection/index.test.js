@@ -38,12 +38,14 @@ test('Outways without access section', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
-      name: 'my-service',
-      organization: {
-        organizationName: 'my-organization',
-        organizationSerialNumber: '00000000000000000001',
+      directoryService: {
+        name: 'my-service',
+        organization: {
+          organizationName: 'my-organization',
+          organizationSerialNumber: '00000000000000000001',
+        },
+        accessStates: [],
       },
-      accessStates: [],
     })
 
   const rootStore = new RootStore({
@@ -120,12 +122,14 @@ test('Request access - permission denied', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
-      name: 'my-service',
-      organization: {
-        organizationName: 'my-organization',
-        organizationSerialNumber: '00000000000000000001',
+      directoryService: {
+        name: 'my-service',
+        organization: {
+          organizationName: 'my-organization',
+          organizationSerialNumber: '00000000000000000001',
+        },
+        accessStates: [],
       },
-      accessStates: [],
     })
 
   const rootStore = new RootStore({

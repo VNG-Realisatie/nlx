@@ -77,29 +77,33 @@ test('fetching a single service', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValueOnce({
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'Org A',
+      directoryService: {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
+        },
+        serviceName: 'Service A',
       },
-      serviceName: 'Service A',
     })
     .mockReturnValue({
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'Org A',
-      },
-      serviceName: 'Service A',
-      accessStates: [
-        {
-          accessRequest: {
-            id: 'abc',
-            state: ACCESS_REQUEST_STATES.APPROVED,
-            publicKeyFingerprint:
-              'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-          },
-          accessProof: { id: 'abc' },
+      directoryService: {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
         },
-      ],
+        serviceName: 'Service A',
+        accessStates: [
+          {
+            accessRequest: {
+              id: 'abc',
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint:
+                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+            },
+            accessProof: { id: 'abc' },
+          },
+        ],
+      },
     })
 
   const rootStore = new RootStore({
@@ -136,11 +140,13 @@ test('fetching a single service which has been removed', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValueOnce({
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'Org A',
+      directoryService: {
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Org A',
+        },
+        serviceName: 'Service A',
       },
-      serviceName: 'Service A',
     })
     .mockRejectedValue({
       status: 404,

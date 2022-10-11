@@ -33,20 +33,22 @@ test('Outways with access section', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
-      name: 'my-service',
-      organization: {
-        organizationName: 'my-organization',
-        organizationSerialNumber: '00000000000000000001',
-      },
-      accessStates: [
-        {
-          accessRequest: {
-            state: ACCESS_REQUEST_STATES.APPROVED,
-            publicKeyFingerprint: 'public-key-fingerprint-1',
-          },
-          accessProof: {},
+      directoryService: {
+        name: 'my-service',
+        organization: {
+          organizationName: 'my-organization',
+          organizationSerialNumber: '00000000000000000001',
         },
-      ],
+        accessStates: [
+          {
+            accessRequest: {
+              state: ACCESS_REQUEST_STATES.APPROVED,
+              publicKeyFingerprint: 'public-key-fingerprint-1',
+            },
+            accessProof: {},
+          },
+        ],
+      },
     })
 
   const rootStore = new RootStore({

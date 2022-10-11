@@ -9,13 +9,12 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func (s DirectoryService) GetTermsOfService(ctx context.Context, _ *emptypb.Empty) (*api.GetTermsOfServiceResponse, error) {
+func (s DirectoryService) GetTermsOfService(ctx context.Context, _ *api.GetTermsOfServiceRequest) (*api.GetTermsOfServiceResponse, error) {
 	s.logger.Info("rpc request GetTermsOfService")
 
 	response, err := s.directoryClient.GetTermsOfService(ctx, &directoryapi.GetTermsOfServiceRequest{})

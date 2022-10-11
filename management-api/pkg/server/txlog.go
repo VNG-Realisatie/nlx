@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
@@ -34,13 +33,13 @@ func NewTXLogService(logger *zap.Logger, txlogClient txlog.Client, directoryClie
 	}
 }
 
-func (s *ManagementService) IsTXLogEnabled(context.Context, *emptypb.Empty) (*api.IsTXLogEnabledResponse, error) {
+func (s *ManagementService) IsTXLogEnabled(context.Context, *api.IsTXLogEnabledRequest) (*api.IsTXLogEnabledResponse, error) {
 	return &api.IsTXLogEnabledResponse{
 		Enabled: s.txlogClient != nil,
 	}, nil
 }
 
-func (s *TXLogService) ListRecords(ctx context.Context, _ *emptypb.Empty) (*api.TXLogListRecordsResponse, error) {
+func (s *TXLogService) ListRecords(ctx context.Context, _ *api.TXLogListRecordsRequest) (*api.TXLogListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
 	organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})

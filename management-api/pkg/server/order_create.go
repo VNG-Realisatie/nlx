@@ -14,7 +14,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/management-api/api"
@@ -22,7 +21,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
-func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.CreateOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *api.CreateOutgoingOrderRequest) (*api.CreateOutgoingOrderResponse, error) {
 	err := s.authorize(ctx, permissions.CreateOutgoingOrder)
 	if err != nil {
 		return nil, err
@@ -86,7 +85,7 @@ func (s *ManagementService) CreateOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Errorf(codes.Internal, "failed to create outgoing order")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.CreateOutgoingOrderResponse{}, nil
 }
 
 func validateOrganizationSerialNumber(value interface{}) error {

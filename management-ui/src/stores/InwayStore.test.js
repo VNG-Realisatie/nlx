@@ -41,7 +41,7 @@ test('fetching a single inway', async () => {
 
   managementApiClient.managementGetInway = jest
     .fn()
-    .mockResolvedValue({ name: 'Inway A' })
+    .mockResolvedValue({ inway: { name: 'Inway A' } })
 
   const inwayStore = new InwayStore({
     rootStore: {},

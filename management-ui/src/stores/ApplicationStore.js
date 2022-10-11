@@ -47,7 +47,7 @@ class ApplicationStore {
   getGeneralSettings = flow(function* getGeneralSettings() {
     try {
       const response = yield this._managementApiClient.managementGetSettings()
-      return response
+      return response.settings
     } catch (e) {
       this.error = e
       throw new Error(e)

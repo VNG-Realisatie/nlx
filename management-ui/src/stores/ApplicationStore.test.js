@@ -35,7 +35,9 @@ describe('the general settings', () => {
     it('should return the settings', async () => {
       const managementApiClient = new ManagementApi()
       managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
-        inway: 'inway-01',
+        settings: {
+          inway: 'inway-01',
+        },
       })
       const applicationStore = new ApplicationStore({
         rootStore: {},

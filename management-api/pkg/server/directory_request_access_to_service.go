@@ -12,7 +12,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
+func (s DirectoryService) RequestAccessToService(ctx context.Context, request *api.RequestAccessToServiceRequest) (*api.RequestAccessToServiceResponse, error) {
 	logger := s.logger.With(zap.String("organizationSerialNumber", request.OrganizationSerialNumber), zap.String("serviceName", request.ServiceName))
 	logger.Info("rpc request RequestAccessToService")
 
@@ -39,5 +39,7 @@ func (s DirectoryService) RequestAccessToService(ctx context.Context, request *a
 
 	logger.Debug("send access request to inway")
 
-	return response, nil
+	return &api.RequestAccessToServiceResponse{
+		OutgoingAccessRequest: response,
+	}, nil
 }

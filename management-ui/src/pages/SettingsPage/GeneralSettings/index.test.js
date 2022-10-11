@@ -16,7 +16,7 @@ describe('the General settings section', () => {
   it('on initialization', async () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
-      inway: { name: 'inway1' },
+      settings: { inway: { name: 'inway1' } },
     })
 
     const store = new RootStore({ managementApiClient })
@@ -37,7 +37,7 @@ describe('the General settings section', () => {
     const managementApiClient = new ManagementApi()
 
     managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
-      organizationInway: 'inway1',
+      settings: { organizationInway: 'inway1' },
     })
 
     managementApiClient.managementUpdateSettings = jest.fn()
@@ -91,7 +91,7 @@ describe('the General settings section', () => {
     const managementApiClient = new ManagementApi()
     managementApiClient.managementGetSettings = jest
       .fn()
-      .mockResolvedValue({ organizationInway: 'inway1' })
+      .mockResolvedValue({ settings: { organizationInway: 'inway1' } })
 
     managementApiClient.managementUpdateSettings = jest
       .fn()

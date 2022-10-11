@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/api/external"
@@ -161,7 +160,7 @@ func (s *ManagementService) UpdateService(ctx context.Context, req *api.UpdateSe
 	return convertToUpdateServiceResponseFromUpdateServiceRequest(req), nil
 }
 
-func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteServiceRequest) (*api.DeleteServiceResponse, error) {
 	err := s.authorize(ctx, permissions.DeleteService)
 	if err != nil {
 		return nil, err
@@ -186,10 +185,10 @@ func (s *ManagementService) DeleteService(ctx context.Context, req *api.DeleteSe
 	err = s.configDatabase.DeleteService(ctx, req.Name, organizationSerialNumber)
 	if err != nil {
 		logger.Error("error deleting service in DB", zap.Error(err))
-		return &emptypb.Empty{}, status.Error(codes.Internal, "database error")
+		return &api.DeleteServiceResponse{}, status.Error(codes.Internal, "database error")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.DeleteServiceResponse{}, nil
 }
 
 func (s *ManagementService) ListServices(ctx context.Context, req *api.ListServicesRequest) (*api.ListServicesResponse, error) {

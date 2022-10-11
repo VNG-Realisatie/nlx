@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -21,7 +20,37 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/util/convert"
 )
 
-func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Empty) (*api.SynchronizeOrdersResponse, error) {
+func convertIncomingOrderToDatabase(incomingOrders chan *external.IncomingOrder) []*database.IncomingOrder {
+	orders := []*database.IncomingOrder{}
+
+	for order := range incomingOrders {
+		services := make([]database.IncomingOrderService, len(order.Services))
+
+		for i, service := range order.Services {
+			services[i] = database.IncomingOrderService{
+				Organization: database.IncomingOrderServiceOrganization{
+					Name:         service.Organization.Name,
+					SerialNumber: service.Organization.SerialNumber,
+				},
+				Service: service.Service,
+			}
+		}
+
+		orders = append(orders, &database.IncomingOrder{
+			Reference:   order.Reference,
+			Description: order.Description,
+			Delegator:   order.Delegator.SerialNumber,
+			RevokedAt:   convert.ProtoToSQLTimestamp(order.RevokedAt),
+			ValidFrom:   order.ValidFrom.AsTime(),
+			ValidUntil:  order.ValidUntil.AsTime(),
+			Services:    services,
+		})
+	}
+
+	return orders
+}
+
+func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *api.SynchronizeOrdersRequest) (*api.SynchronizeOrdersResponse, error) {
 	err := s.authorize(ctx, permissions.SynchronizeIncomingOrders)
 	if err != nil {
 		return nil, err
@@ -67,31 +96,7 @@ func (s *ManagementService) SynchronizeOrders(ctx context.Context, _ *emptypb.Em
 		}(organization)
 	}
 
-	orders := []*database.IncomingOrder{}
-
-	for order := range ordersChan {
-		services := make([]database.IncomingOrderService, len(order.Services))
-
-		for i, service := range order.Services {
-			services[i] = database.IncomingOrderService{
-				Organization: database.IncomingOrderServiceOrganization{
-					Name:         service.Organization.Name,
-					SerialNumber: service.Organization.SerialNumber,
-				},
-				Service: service.Service,
-			}
-		}
-
-		orders = append(orders, &database.IncomingOrder{
-			Reference:   order.Reference,
-			Description: order.Description,
-			Delegator:   order.Delegator.SerialNumber,
-			RevokedAt:   convert.ProtoToSQLTimestamp(order.RevokedAt),
-			ValidFrom:   order.ValidFrom.AsTime(),
-			ValidUntil:  order.ValidUntil.AsTime(),
-			Services:    services,
-		})
-	}
+	orders := convertIncomingOrderToDatabase(ordersChan)
 
 	if len(orders) == 0 {
 		return &api.SynchronizeOrdersResponse{Orders: []*external.IncomingOrder{}}, nil

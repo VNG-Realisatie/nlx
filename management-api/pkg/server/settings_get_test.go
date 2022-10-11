@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/domain"
@@ -24,7 +23,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 	tests := map[string]struct {
 		setup   func(context.Context, serviceMocks)
 		ctx     context.Context
-		want    *api.Settings
+		want    *api.GetSettingsResponse
 		wantErr error
 	}{
 		"missing_required_permission": {
@@ -52,9 +51,11 @@ func TestManagementService_GetSettings(t *testing.T) {
 					Return(nil, database.ErrNotFound)
 			},
 			ctx: testCreateAdminUserContext(),
-			want: &api.Settings{
-				OrganizationInway:        "",
-				OrganizationEmailAddress: "",
+			want: &api.GetSettingsResponse{
+				Settings: &api.Settings{
+					OrganizationInway:        "",
+					OrganizationEmailAddress: "",
+				},
 			},
 			wantErr: nil,
 		},
@@ -69,9 +70,11 @@ func TestManagementService_GetSettings(t *testing.T) {
 					Return(settings, nil)
 			},
 			ctx: testCreateAdminUserContext(),
-			want: &api.Settings{
-				OrganizationInway:        "inway-name",
-				OrganizationEmailAddress: "mock@email.com",
+			want: &api.GetSettingsResponse{
+				Settings: &api.Settings{
+					OrganizationInway:        "inway-name",
+					OrganizationEmailAddress: "mock@email.com",
+				},
 			},
 			wantErr: nil,
 		},
@@ -84,7 +87,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 			service, _, mocks := newService(t)
 			tt.setup(tt.ctx, mocks)
 
-			got, err := service.GetSettings(tt.ctx, &emptypb.Empty{})
+			got, err := service.GetSettings(tt.ctx, &api.GetSettingsRequest{})
 
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.wantErr, err)

@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -19,7 +18,7 @@ import (
 )
 
 // nolint dupl: we have both incoming and outgoing orders
-func (s *ManagementService) RevokeOutgoingOrder(ctx context.Context, request *api.RevokeOutgoingOrderRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) RevokeOutgoingOrder(ctx context.Context, request *api.RevokeOutgoingOrderRequest) (*api.RevokeOutgoingOrderResponse, error) {
 	err := s.authorize(ctx, permissions.RevokeOutgoingOrder)
 	if err != nil {
 		return nil, err
@@ -58,5 +57,5 @@ func (s *ManagementService) RevokeOutgoingOrder(ctx context.Context, request *ap
 		return nil, status.Errorf(codes.Internal, "failed to revoke outgoing order")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.RevokeOutgoingOrderResponse{}, nil
 }

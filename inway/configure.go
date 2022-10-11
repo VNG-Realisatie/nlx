@@ -197,11 +197,13 @@ func (i *Inway) registerToManagement(ctx context.Context) error {
 		i.logger.Warn("failed to get inway hostname", zap.Error(err))
 	}
 
-	_, err = i.managementClient.RegisterInway(ctx, &api.Inway{
-		Name:        i.name,
-		Version:     version.BuildVersion,
-		Hostname:    hostname,
-		SelfAddress: i.address,
+	_, err = i.managementClient.RegisterInway(ctx, &api.RegisterInwayRequest{
+		Inway: &api.Inway{
+			Name:        i.name,
+			Version:     version.BuildVersion,
+			Hostname:    hostname,
+			SelfAddress: i.address,
+		},
 	})
 
 	return err

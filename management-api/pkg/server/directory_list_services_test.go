@@ -11,7 +11,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -113,7 +112,7 @@ func TestListDirectoryServices(t *testing.T) {
 		client,
 		db,
 	)
-	response, err := directoryService.ListServices(ctx, &emptypb.Empty{})
+	response, err := directoryService.ListServices(ctx, &api.DirectoryListServicesRequest{})
 	assert.NoError(t, err)
 
 	expected := []*api.DirectoryService{

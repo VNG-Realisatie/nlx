@@ -32,15 +32,17 @@ test('can request access', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
-      id: 'Test Organization/Test Service',
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'Test Organization',
+      directoryService: {
+        id: 'Test Organization/Test Service',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Test Organization',
+        },
+        serviceName: 'Test Service',
+        state: 'degraded',
+        apiSpecificationType: 'API',
+        accessStates: [],
       },
-      serviceName: 'Test Service',
-      state: 'degraded',
-      apiSpecificationType: 'API',
-      accessStates: [],
     })
 
   const rootStore = new RootStore({
@@ -100,34 +102,36 @@ test('display error when requesting access failed', async () => {
   directoryApiClient.directoryGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
-      id: 'Test Organization/Test Service',
-      organization: {
-        serialNumber: '00000000000000000001',
-        name: 'Test Organization',
-      },
-      serviceName: 'Test Service',
-      state: 'degraded',
-      apiSpecificationType: 'API',
-      accessStates: [
-        {
-          accessRequest: {
-            id: 'my-latest-access-request',
-            organization: {
-              serialNumber: '00000000000000000002',
-              name: 'organization',
-            },
-            serviceName: 'service',
-            state: ACCESS_REQUEST_STATES.FAILED,
-            createdAt: new Date('2020-06-30T08:31:41.106Z'),
-            updatedAt: new Date('2020-06-30T08:31:41.106Z'),
-            errorDetails: {
-              cause: 'Something went wrong',
-            },
-            publicKeyFingerprint: 'public-key-fingerprint',
-          },
-          accessProof: null,
+      directoryService: {
+        id: 'Test Organization/Test Service',
+        organization: {
+          serialNumber: '00000000000000000001',
+          name: 'Test Organization',
         },
-      ],
+        serviceName: 'Test Service',
+        state: 'degraded',
+        apiSpecificationType: 'API',
+        accessStates: [
+          {
+            accessRequest: {
+              id: 'my-latest-access-request',
+              organization: {
+                serialNumber: '00000000000000000002',
+                name: 'organization',
+              },
+              serviceName: 'service',
+              state: ACCESS_REQUEST_STATES.FAILED,
+              createdAt: new Date('2020-06-30T08:31:41.106Z'),
+              updatedAt: new Date('2020-06-30T08:31:41.106Z'),
+              errorDetails: {
+                cause: 'Something went wrong',
+              },
+              publicKeyFingerprint: 'public-key-fingerprint',
+            },
+            accessProof: null,
+          },
+        ],
+      },
     })
 
   const rootStore = new RootStore({

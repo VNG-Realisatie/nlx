@@ -68,7 +68,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementAccessGrant"
+                  "$ref" : "#/components/schemas/managementRevokeAccessGrantResponse"
                 }
               }
             },
@@ -148,7 +148,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementApproveIncomingAccessRequestResponse"
                 }
               }
             },
@@ -192,7 +192,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementRejectIncomingAccessRequestResponse"
                 }
               }
             },
@@ -220,7 +220,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementSynchronizeAllOutgoingAccessRequestsResponse"
                 }
               }
             },
@@ -312,7 +312,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementSynchronizeOutgoingAccessRequestsResponse"
                 }
               }
             },
@@ -383,7 +383,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementDirectoryService"
+                  "$ref" : "#/components/schemas/managementGetOrganizationServiceResponse"
                 }
               }
             },
@@ -426,7 +426,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+                  "$ref" : "#/components/schemas/managementRequestAccessToServiceResponse"
                 }
               }
             },
@@ -591,7 +591,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/managementInway"
+                "$ref" : "#/components/schemas/managementRegisterInwayRequest"
               }
             }
           },
@@ -602,7 +602,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementInway"
+                  "$ref" : "#/components/schemas/managementRegisterInwayResponse"
                 }
               }
             },
@@ -639,7 +639,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementDeleteInwayResponse"
                 }
               }
             },
@@ -673,7 +673,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementInway"
+                  "$ref" : "#/components/schemas/managementGetInwayResponse"
                 }
               }
             },
@@ -717,7 +717,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementInway"
+                  "$ref" : "#/components/schemas/managementUpdateInwayResponse"
                 }
               }
             },
@@ -810,7 +810,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementCreateOutgoingOrderResponse"
                 }
               }
             },
@@ -847,7 +847,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementUpdateOutgoingOrderResponse"
                 }
               }
             },
@@ -891,7 +891,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementRevokeOutgoingOrderResponse"
                 }
               }
             },
@@ -983,7 +983,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementRegisterOutwayResponse"
                 }
               }
             },
@@ -1020,7 +1020,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementDeleteOutwayResponse"
                 }
               }
             },
@@ -1121,7 +1121,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementDeleteServiceResponse"
                 }
               }
             },
@@ -1228,7 +1228,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementSettings"
+                  "$ref" : "#/components/schemas/managementGetSettingsResponse"
                 }
               }
             },
@@ -1264,7 +1264,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementUpdateSettingsResponse"
                 }
               }
             },
@@ -1347,7 +1347,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/managementAcceptTermsOfServiceResponse"
                 }
               }
             },
@@ -1525,6 +1525,9 @@
         },
         "type" : "object"
       },
+      "managementAcceptTermsOfServiceResponse" : {
+        "type" : "object"
+      },
       "managementAccessGrant" : {
         "properties" : {
           "id" : {
@@ -1553,6 +1556,9 @@
             "type" : "string"
           }
         },
+        "type" : "object"
+      },
+      "managementApproveIncomingAccessRequestResponse" : {
         "type" : "object"
       },
       "managementAuditLogRecord" : {
@@ -1655,6 +1661,9 @@
         },
         "type" : "object"
       },
+      "managementCreateOutgoingOrderResponse" : {
+        "type" : "object"
+      },
       "managementCreateServiceRequest" : {
         "properties" : {
           "name" : {
@@ -1741,6 +1750,15 @@
             "type" : "integer"
           }
         },
+        "type" : "object"
+      },
+      "managementDeleteInwayResponse" : {
+        "type" : "object"
+      },
+      "managementDeleteOutwayResponse" : {
+        "type" : "object"
+      },
+      "managementDeleteServiceResponse" : {
         "type" : "object"
       },
       "managementDirectoryListServicesResponse" : {
@@ -1907,6 +1925,22 @@
         },
         "type" : "object"
       },
+      "managementGetInwayResponse" : {
+        "properties" : {
+          "inway" : {
+            "$ref" : "#/components/schemas/managementInway"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetOrganizationServiceResponse" : {
+        "properties" : {
+          "directory_service" : {
+            "$ref" : "#/components/schemas/managementDirectoryService"
+          }
+        },
+        "type" : "object"
+      },
       "managementGetServiceResponse" : {
         "properties" : {
           "name" : {
@@ -1947,6 +1981,14 @@
           "request_costs" : {
             "format" : "int32",
             "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "managementGetSettingsResponse" : {
+        "properties" : {
+          "settings" : {
+            "$ref" : "#/components/schemas/managementSettings"
           }
         },
         "type" : "object"
@@ -2317,6 +2359,22 @@
         },
         "type" : "object"
       },
+      "managementRegisterInwayRequest" : {
+        "properties" : {
+          "inway" : {
+            "$ref" : "#/components/schemas/managementInway"
+          }
+        },
+        "type" : "object"
+      },
+      "managementRegisterInwayResponse" : {
+        "properties" : {
+          "inway" : {
+            "$ref" : "#/components/schemas/managementInway"
+          }
+        },
+        "type" : "object"
+      },
       "managementRegisterOutwayRequest" : {
         "properties" : {
           "name" : {
@@ -2332,6 +2390,31 @@
             "type" : "string"
           }
         },
+        "type" : "object"
+      },
+      "managementRegisterOutwayResponse" : {
+        "type" : "object"
+      },
+      "managementRejectIncomingAccessRequestResponse" : {
+        "type" : "object"
+      },
+      "managementRequestAccessToServiceResponse" : {
+        "properties" : {
+          "outgoing_access_request" : {
+            "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
+          }
+        },
+        "type" : "object"
+      },
+      "managementRevokeAccessGrantResponse" : {
+        "properties" : {
+          "access_grant" : {
+            "$ref" : "#/components/schemas/managementAccessGrant"
+          }
+        },
+        "type" : "object"
+      },
+      "managementRevokeOutgoingOrderResponse" : {
         "type" : "object"
       },
       "managementSendAccessRequestResponse" : {
@@ -2365,6 +2448,9 @@
         },
         "type" : "object"
       },
+      "managementSynchronizeAllOutgoingAccessRequestsResponse" : {
+        "type" : "object"
+      },
       "managementSynchronizeOrdersResponse" : {
         "properties" : {
           "orders" : {
@@ -2374,6 +2460,9 @@
             "type" : "array"
           }
         },
+        "type" : "object"
+      },
+      "managementSynchronizeOutgoingAccessRequestsResponse" : {
         "type" : "object"
       },
       "managementTXLogDirection" : {
@@ -2452,6 +2541,14 @@
         },
         "type" : "object"
       },
+      "managementUpdateInwayResponse" : {
+        "properties" : {
+          "inway" : {
+            "$ref" : "#/components/schemas/managementInway"
+          }
+        },
+        "type" : "object"
+      },
       "managementUpdateOutgoingOrderRequest" : {
         "properties" : {
           "reference" : {
@@ -2482,6 +2579,9 @@
             "type" : "array"
           }
         },
+        "type" : "object"
+      },
+      "managementUpdateOutgoingOrderResponse" : {
         "type" : "object"
       },
       "managementUpdateServiceResponse" : {
@@ -2537,6 +2637,9 @@
             "type" : "string"
           }
         },
+        "type" : "object"
+      },
+      "managementUpdateSettingsResponse" : {
         "type" : "object"
       },
       "managementexternalOrderService" : {

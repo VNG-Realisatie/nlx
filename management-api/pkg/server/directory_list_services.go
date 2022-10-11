@@ -9,13 +9,12 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func (s DirectoryService) ListServices(ctx context.Context, _ *emptypb.Empty) (*api.DirectoryListServicesResponse, error) {
+func (s DirectoryService) ListServices(ctx context.Context, _ *api.DirectoryListServicesRequest) (*api.DirectoryListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
 	resp, err := s.directoryClient.ListServices(ctx, &directoryapi.ListServicesRequest{})

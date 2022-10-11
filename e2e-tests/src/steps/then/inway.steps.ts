@@ -17,9 +17,9 @@ Then(
     const resp = await org.apiClients.management?.managementGetSettings();
 
     assert.equal(
-      resp?.organizationInway,
+      resp?.settings?.organizationInway,
       "",
-      `organization ${orgName} still has an inway set: '${resp?.organizationInway}'`
+      `organization ${orgName} still has an inway set: '${resp?.settings?.organizationInway}'`
     );
 
     await isManagementAPIProxyAddressForDirectoryEqualTo(org, "");

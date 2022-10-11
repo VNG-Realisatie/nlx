@@ -12,7 +12,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -378,7 +377,7 @@ func TestSynchronizeOrders(t *testing.T) {
 
 			tt.setup(mocks)
 
-			orders, err := service.SynchronizeOrders(tt.ctx, &emptypb.Empty{})
+			orders, err := service.SynchronizeOrders(tt.ctx, &api.SynchronizeOrdersRequest{})
 
 			if tt.wantErr {
 				assert.Error(t, err)

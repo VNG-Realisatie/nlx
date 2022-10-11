@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
@@ -19,7 +18,7 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/permissions"
 )
 
-func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (*api.Settings, error) {
+func (s *ManagementService) GetSettings(ctx context.Context, _ *api.GetSettingsRequest) (*api.GetSettingsResponse, error) {
 	err := s.authorize(ctx, permissions.ReadOrganizationSettings)
 	if err != nil {
 		return nil, err
@@ -30,9 +29,11 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (
 	settings, err := s.configDatabase.GetSettings(ctx)
 	if err != nil {
 		if errIsNotFound(err) {
-			return &api.Settings{
-				OrganizationInway:        "",
-				OrganizationEmailAddress: "",
+			return &api.GetSettingsResponse{
+				Settings: &api.Settings{
+					OrganizationInway:        "",
+					OrganizationEmailAddress: "",
+				},
 			}, nil
 		}
 
@@ -43,10 +44,12 @@ func (s *ManagementService) GetSettings(ctx context.Context, _ *emptypb.Empty) (
 
 	result := convertFromDatabaseSettings(settings)
 
-	return result, nil
+	return &api.GetSettingsResponse{
+		Settings: result,
+	}, nil
 }
 
-func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateSettingsRequest) (*api.UpdateSettingsResponse, error) {
 	err := s.authorize(ctx, permissions.UpdateOrganizationSettings)
 	if err != nil {
 		return nil, err
@@ -99,7 +102,7 @@ func (s *ManagementService) UpdateSettings(ctx context.Context, req *api.UpdateS
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.UpdateSettingsResponse{}, nil
 }
 
 func convertFromDatabaseSettings(model *domain.Settings) *api.Settings {

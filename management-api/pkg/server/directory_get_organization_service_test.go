@@ -28,7 +28,7 @@ func TestGetOrganizationService(t *testing.T) {
 	tests := map[string]struct {
 		req     *api.GetOrganizationServiceRequest
 		setup   func(context.Context, directoryServiceMocks)
-		want    *api.DirectoryService
+		want    *api.GetOrganizationServiceResponse
 		wantErr error
 	}{
 		"happy_flow": {
@@ -96,36 +96,38 @@ func TestGetOrganizationService(t *testing.T) {
 						}},
 					}, nil)
 			},
-			want: &api.DirectoryService{
-				Organization: &external.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "Organization One",
-				},
-				ServiceName: "test-service",
-				//nolint dupl: this is a test
-				AccessStates: []*api.DirectoryService_AccessState{
-					{
-						AccessRequest: &api.OutgoingAccessRequest{
-							Id: 1,
-							Organization: &external.Organization{
-								SerialNumber: "00000000000000000001",
-								Name:         "Organization One",
+			want: &api.GetOrganizationServiceResponse{
+				DirectoryService: &api.DirectoryService{
+					Organization: &external.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "Organization One",
+					},
+					ServiceName: "test-service",
+					//nolint dupl: this is a test
+					AccessStates: []*api.DirectoryService_AccessState{
+						{
+							AccessRequest: &api.OutgoingAccessRequest{
+								Id: 1,
+								Organization: &external.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+								ServiceName:          "test-service",
+								PublicKeyFingerprint: "public-key-fingerprint",
+								State:                external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
+								CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
+								UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 							},
-							ServiceName:          "test-service",
-							PublicKeyFingerprint: "public-key-fingerprint",
-							State:                external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
-							CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-							UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
-						},
-						AccessProof: &external.AccessProof{
-							Id: 1,
-							Organization: &external.Organization{
-								SerialNumber: "00000000000000000001",
-								Name:         "Organization One",
+							AccessProof: &external.AccessProof{
+								Id: 1,
+								Organization: &external.Organization{
+									SerialNumber: "00000000000000000001",
+									Name:         "Organization One",
+								},
+								ServiceName:     "test-service",
+								AccessRequestId: 1,
+								CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 							},
-							ServiceName:     "test-service",
-							AccessRequestId: 1,
-							CreatedAt:       timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 						},
 					},
 				},
@@ -161,13 +163,15 @@ func TestGetOrganizationService(t *testing.T) {
 						}},
 					}, nil)
 			},
-			want: &api.DirectoryService{
-				Organization: &external.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "test-organization",
+			want: &api.GetOrganizationServiceResponse{
+				DirectoryService: &api.DirectoryService{
+					Organization: &external.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "test-organization",
+					},
+					ServiceName:  "test-service",
+					AccessStates: []*api.DirectoryService_AccessState{},
 				},
-				ServiceName:  "test-service",
-				AccessStates: []*api.DirectoryService_AccessState{},
 			},
 			wantErr: nil,
 		},

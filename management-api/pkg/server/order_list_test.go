@@ -17,7 +17,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	common_tls "go.nlx.io/nlx/common/tls"
@@ -170,7 +169,7 @@ func TestListOutgoingOrders(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			response, err := service.ListOutgoingOrders(tt.ctx, &emptypb.Empty{})
+			response, err := service.ListOutgoingOrders(tt.ctx, &api.ListOutgoingOrdersRequest{})
 
 			if tt.wantErr == nil {
 				assert.Equal(t, tt.wantResponse, response)
@@ -360,7 +359,7 @@ func TestListIncomingOrders(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			response, err := service.ListIncomingOrders(tt.ctx, &emptypb.Empty{})
+			response, err := service.ListIncomingOrders(tt.ctx, &api.ListIncomingOrdersRequest{})
 
 			if tt.wantErr == nil {
 				assert.Equal(t, tt.wantResponse, response)

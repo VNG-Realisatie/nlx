@@ -15,7 +15,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/common/diagnostics"
@@ -92,7 +91,7 @@ func (s *ManagementService) ListIncomingAccessRequests(ctx context.Context, req 
 	}, nil
 }
 
-func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, req *api.ApproveIncomingAccessRequestRequest) (*api.ApproveIncomingAccessRequestResponse, error) {
 	err := s.authorize(ctx, permissions.ApproveIncomingAccessRequest)
 	if err != nil {
 		return nil, err
@@ -130,10 +129,10 @@ func (s *ManagementService) ApproveIncomingAccessRequest(ctx context.Context, re
 		return nil, status.Error(codes.Internal, "creating access grant")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.ApproveIncomingAccessRequestResponse{}, nil
 }
 
-func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req *api.RejectIncomingAccessRequestRequest) (*emptypb.Empty, error) {
+func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req *api.RejectIncomingAccessRequestRequest) (*api.RejectIncomingAccessRequestResponse, error) {
 	err := s.authorize(ctx, permissions.RejectIncomingAccessRequest)
 	if err != nil {
 		return nil, err
@@ -168,7 +167,7 @@ func (s *ManagementService) RejectIncomingAccessRequest(ctx context.Context, req
 		return nil, status.Error(codes.Internal, "database error")
 	}
 
-	return &emptypb.Empty{}, nil
+	return &api.RejectIncomingAccessRequestResponse{}, nil
 }
 
 func (s *ManagementService) getIncomingAccessRequest(ctx context.Context, accessRequestID uint64) (*database.IncomingAccessRequest, error) {

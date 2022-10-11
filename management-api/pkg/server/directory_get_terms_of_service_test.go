@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
@@ -62,7 +61,7 @@ func TestGetTermsOfService(t *testing.T) {
 
 			tt.setup(ctx, mocks)
 
-			result, err := service.GetTermsOfService(ctx, &emptypb.Empty{})
+			result, err := service.GetTermsOfService(ctx, &api.GetTermsOfServiceRequest{})
 
 			assert.Equal(t, tt.wantResult, result)
 			assert.Equal(t, tt.wantErr, err)

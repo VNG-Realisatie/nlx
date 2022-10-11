@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"xojoc.pw/useragent"
 
@@ -44,7 +43,7 @@ var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
 
 const maxAmountOfRecords = 100
 
-func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *emptypb.Empty) (*api.ListAuditLogsResponse, error) {
+func (s *ManagementService) ListAuditLogs(ctx context.Context, _ *api.ListAuditLogsRequest) (*api.ListAuditLogsResponse, error) {
 	err := s.authorize(ctx, permissions.ReadAuditLogs)
 	if err != nil {
 		return nil, err

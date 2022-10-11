@@ -153,7 +153,7 @@ func TestRevokeAccessGrant(t *testing.T) {
 		setup            func(context.Context, serviceMocks)
 		ctx              context.Context
 		req              *api.RevokeAccessGrantRequest
-		expectedResponse *api.AccessGrant
+		expectedResponse *api.RevokeAccessGrantResponse
 		expectedErr      error
 	}{
 		"happy_flow": {
@@ -199,9 +199,11 @@ func TestRevokeAccessGrant(t *testing.T) {
 			req: &api.RevokeAccessGrantRequest{
 				AccessGrantId: 42,
 			},
-			expectedResponse: &api.AccessGrant{
-				Organization: &external.Organization{},
-				CreatedAt:    createTimestamp(createdAt),
+			expectedResponse: &api.RevokeAccessGrantResponse{
+				AccessGrant: &api.AccessGrant{
+					Organization: &external.Organization{},
+					CreatedAt:    createTimestamp(createdAt),
+				},
 			},
 			expectedErr: nil,
 		},

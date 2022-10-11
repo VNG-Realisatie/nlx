@@ -7,8 +7,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -82,7 +82,7 @@ var createInwayCommand = &cobra.Command{
 	Use:   "create",
 	Short: "Create an inway",
 	Run: func(cmd *cobra.Command, arg []string) {
-		configBytes, err := ioutil.ReadFile(inwayOptions.configPath)
+		configBytes, err := os.ReadFile(inwayOptions.configPath)
 		if err != nil {
 			panic(err)
 		}
@@ -96,7 +96,9 @@ var createInwayCommand = &cobra.Command{
 			}
 
 			ctx := context.Background()
-			_, err = getManagementClient().RegisterInway(ctx, inway)
+			_, err = getManagementClient().RegisterInway(ctx, &api.RegisterInwayRequest{
+				Inway: inway,
+			})
 			if err != nil {
 				panic(err)
 			}
@@ -111,7 +113,7 @@ var updateInwayCommand = &cobra.Command{
 	Use:   "update",
 	Short: "Update an inway",
 	Run: func(cmd *cobra.Command, arg []string) {
-		configBytes, err := ioutil.ReadFile(inwayOptions.configPath)
+		configBytes, err := os.ReadFile(inwayOptions.configPath)
 		if err != nil {
 			panic(err)
 		}

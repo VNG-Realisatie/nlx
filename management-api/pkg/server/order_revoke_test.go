@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
@@ -24,7 +23,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 		setup            func(context.Context, serviceMocks)
 		ctx              context.Context
 		req              *api.RevokeOutgoingOrderRequest
-		expectedResponse *emptypb.Empty
+		expectedResponse *api.RevokeOutgoingOrderResponse
 		expectedErr      error
 	}{
 		"missing_required_permission": {
@@ -150,7 +149,7 @@ func TestRevokeOutgoingOrder(t *testing.T) {
 				Delegatee: "00000000000000000001",
 				Reference: "test-reference",
 			},
-			expectedResponse: &emptypb.Empty{},
+			expectedResponse: &api.RevokeOutgoingOrderResponse{},
 			expectedErr:      nil,
 		},
 	}

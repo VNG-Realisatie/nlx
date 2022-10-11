@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
@@ -36,7 +35,7 @@ func TestListAuditLogs(t *testing.T) {
 	tests := map[string]struct {
 		ctx     context.Context
 		setup   func(serviceMocks)
-		req     *emptypb.Empty
+		req     *api.ListAuditLogsRequest
 		want    *api.ListAuditLogsResponse
 		wantErr error
 	}{
@@ -54,7 +53,7 @@ func TestListAuditLogs(t *testing.T) {
 					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
 					Return(nil, errors.New("arbitrary error"))
 			},
-			req:     &emptypb.Empty{},
+			req:     &api.ListAuditLogsRequest{},
 			want:    nil,
 			wantErr: status.New(codes.Internal, "failed to retrieve audit logs").Err(),
 		},
@@ -71,7 +70,7 @@ func TestListAuditLogs(t *testing.T) {
 					List(gomock.Any(), numberOfAuditLogs).
 					Return(nil, errors.New("arbitrary error"))
 			},
-			req:     &emptypb.Empty{},
+			req:     &api.ListAuditLogsRequest{},
 			want:    nil,
 			wantErr: status.New(codes.Internal, "failed to retrieve audit logs").Err(),
 		},
@@ -88,7 +87,7 @@ func TestListAuditLogs(t *testing.T) {
 					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{}, nil)
 			},
-			req: &emptypb.Empty{},
+			req: &api.ListAuditLogsRequest{},
 			want: &api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{},
 			},
@@ -115,7 +114,7 @@ func TestListAuditLogs(t *testing.T) {
 						},
 					}, nil)
 			},
-			req: &emptypb.Empty{},
+			req: &api.ListAuditLogsRequest{},
 			want: &api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{
 					{
@@ -153,7 +152,7 @@ func TestListAuditLogs(t *testing.T) {
 						},
 					}, nil)
 			},
-			req: &emptypb.Empty{},
+			req: &api.ListAuditLogsRequest{},
 			want: &api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{
 					{
@@ -202,7 +201,7 @@ func TestListAuditLogs(t *testing.T) {
 						},
 					}, nil)
 			},
-			req: &emptypb.Empty{},
+			req: &api.ListAuditLogsRequest{},
 			want: &api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{
 					{
@@ -250,7 +249,7 @@ func TestListAuditLogs(t *testing.T) {
 						},
 					}, nil)
 			},
-			req: &emptypb.Empty{},
+			req: &api.ListAuditLogsRequest{},
 			want: &api.ListAuditLogsResponse{
 				AuditLogs: []*api.AuditLogRecord{
 					{

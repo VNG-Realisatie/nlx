@@ -15,7 +15,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api"
@@ -398,7 +397,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 			response, err := service.CreateOutgoingOrder(tt.ctx, tt.request)
 
 			if tt.wantErr == nil {
-				assert.IsType(t, &emptypb.Empty{}, response)
+				assert.IsType(t, &api.CreateOutgoingOrderResponse{}, response)
 			} else {
 				assert.Error(t, err)
 				assert.ErrorIs(t, err, tt.wantErr)
