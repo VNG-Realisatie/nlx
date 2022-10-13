@@ -16,7 +16,7 @@ helm repo update
 helm install \
   postgresql bitnami/postgresql \
   --namespace nlx \
-  --version 11.8.1 \
+  --version 11.9.8 \
   --set auth.database=nlx_management
 ```
 
