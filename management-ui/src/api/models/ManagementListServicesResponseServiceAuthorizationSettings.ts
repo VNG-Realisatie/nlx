@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementListServicesResponseServiceAuthorizationSettingsAuthorization } from './ManagementListServicesResponseServiceAuthorizationSettingsAuthorization';
 import {
-    ManagementListServicesResponseServiceAuthorizationSettingsAuthorization,
     ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSON,
     ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationFromJSONTyped,
     ManagementListServicesResponseServiceAuthorizationSettingsAuthorizationToJSON,
@@ -38,6 +38,15 @@ export interface ManagementListServicesResponseServiceAuthorizationSettings {
      * @memberof ManagementListServicesResponseServiceAuthorizationSettings
      */
     authorizations?: Array<ManagementListServicesResponseServiceAuthorizationSettingsAuthorization>;
+}
+
+/**
+ * Check if a given object implements the ManagementListServicesResponseServiceAuthorizationSettings interface.
+ */
+export function instanceOfManagementListServicesResponseServiceAuthorizationSettings(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementListServicesResponseServiceAuthorizationSettingsFromJSON(json: any): ManagementListServicesResponseServiceAuthorizationSettings {

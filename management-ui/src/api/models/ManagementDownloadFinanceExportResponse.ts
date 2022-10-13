@@ -27,6 +27,15 @@ export interface ManagementDownloadFinanceExportResponse {
     data?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementDownloadFinanceExportResponse interface.
+ */
+export function instanceOfManagementDownloadFinanceExportResponse(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementDownloadFinanceExportResponseFromJSON(json: any): ManagementDownloadFinanceExportResponse {
     return ManagementDownloadFinanceExportResponseFromJSONTyped(json, false);
 }

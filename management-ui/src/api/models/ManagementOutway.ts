@@ -57,6 +57,15 @@ export interface ManagementOutway {
     selfAddressApi?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementOutway interface.
+ */
+export function instanceOfManagementOutway(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementOutwayFromJSON(json: any): ManagementOutway {
     return ManagementOutwayFromJSONTyped(json, false);
 }

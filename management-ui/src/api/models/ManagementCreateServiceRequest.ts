@@ -87,6 +87,15 @@ export interface ManagementCreateServiceRequest {
     requestCosts?: number;
 }
 
+/**
+ * Check if a given object implements the ManagementCreateServiceRequest interface.
+ */
+export function instanceOfManagementCreateServiceRequest(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementCreateServiceRequestFromJSON(json: any): ManagementCreateServiceRequest {
     return ManagementCreateServiceRequestFromJSONTyped(json, false);
 }

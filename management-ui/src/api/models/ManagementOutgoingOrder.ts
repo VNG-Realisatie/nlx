@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalAccessProof } from './ExternalAccessProof';
 import {
-    ExternalAccessProof,
     ExternalAccessProofFromJSON,
     ExternalAccessProofFromJSONTyped,
     ExternalAccessProofToJSON,
 } from './ExternalAccessProof';
+import type { ExternalOrganization } from './ExternalOrganization';
 import {
-    ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
@@ -80,6 +80,15 @@ export interface ManagementOutgoingOrder {
      * @memberof ManagementOutgoingOrder
      */
     publicKeyPem?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementOutgoingOrder interface.
+ */
+export function instanceOfManagementOutgoingOrder(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementOutgoingOrderFromJSON(json: any): ManagementOutgoingOrder {

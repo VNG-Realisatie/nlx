@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalAccessRequestState } from './ExternalAccessRequestState';
 import {
-    ExternalAccessRequestState,
     ExternalAccessRequestStateFromJSON,
     ExternalAccessRequestStateFromJSONTyped,
     ExternalAccessRequestStateToJSON,
 } from './ExternalAccessRequestState';
+import type { ExternalOrganization } from './ExternalOrganization';
 import {
-    ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
@@ -74,6 +74,15 @@ export interface ManagementIncomingAccessRequest {
      * @memberof ManagementIncomingAccessRequest
      */
     publicKeyFingerprint?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementIncomingAccessRequest interface.
+ */
+export function instanceOfManagementIncomingAccessRequest(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementIncomingAccessRequestFromJSON(json: any): ManagementIncomingAccessRequest {

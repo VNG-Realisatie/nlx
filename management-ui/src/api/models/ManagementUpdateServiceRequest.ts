@@ -81,6 +81,15 @@ export interface ManagementUpdateServiceRequest {
     requestCosts?: number;
 }
 
+/**
+ * Check if a given object implements the ManagementUpdateServiceRequest interface.
+ */
+export function instanceOfManagementUpdateServiceRequest(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementUpdateServiceRequestFromJSON(json: any): ManagementUpdateServiceRequest {
     return ManagementUpdateServiceRequestFromJSONTyped(json, false);
 }

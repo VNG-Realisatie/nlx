@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalIncomingOrder } from './ExternalIncomingOrder';
 import {
-    ExternalIncomingOrder,
     ExternalIncomingOrderFromJSON,
     ExternalIncomingOrderFromJSONTyped,
     ExternalIncomingOrderToJSON,
@@ -32,6 +32,15 @@ export interface ManagementSynchronizeOrdersResponse {
      * @memberof ManagementSynchronizeOrdersResponse
      */
     orders?: Array<ExternalIncomingOrder>;
+}
+
+/**
+ * Check if a given object implements the ManagementSynchronizeOrdersResponse interface.
+ */
+export function instanceOfManagementSynchronizeOrdersResponse(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementSynchronizeOrdersResponseFromJSON(json: any): ManagementSynchronizeOrdersResponse {

@@ -33,6 +33,15 @@ export interface ExternalOrganization {
     name?: string;
 }
 
+/**
+ * Check if a given object implements the ExternalOrganization interface.
+ */
+export function instanceOfExternalOrganization(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ExternalOrganizationFromJSON(json: any): ExternalOrganization {
     return ExternalOrganizationFromJSONTyped(json, false);
 }

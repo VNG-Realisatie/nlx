@@ -27,6 +27,15 @@ export interface ManagementIsFinanceEnabledResponse {
     enabled?: boolean;
 }
 
+/**
+ * Check if a given object implements the ManagementIsFinanceEnabledResponse interface.
+ */
+export function instanceOfManagementIsFinanceEnabledResponse(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementIsFinanceEnabledResponseFromJSON(json: any): ManagementIsFinanceEnabledResponse {
     return ManagementIsFinanceEnabledResponseFromJSONTyped(json, false);
 }

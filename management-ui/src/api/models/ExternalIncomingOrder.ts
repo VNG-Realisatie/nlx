@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalOrganization } from './ExternalOrganization';
 import {
-    ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
 } from './ExternalOrganization';
+import type { ManagementexternalOrderService } from './ManagementexternalOrderService';
 import {
-    ManagementexternalOrderService,
     ManagementexternalOrderServiceFromJSON,
     ManagementexternalOrderServiceFromJSONTyped,
     ManagementexternalOrderServiceToJSON,
@@ -74,6 +74,15 @@ export interface ExternalIncomingOrder {
      * @memberof ExternalIncomingOrder
      */
     revokedAt?: Date;
+}
+
+/**
+ * Check if a given object implements the ExternalIncomingOrder interface.
+ */
+export function instanceOfExternalIncomingOrder(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ExternalIncomingOrderFromJSON(json: any): ExternalIncomingOrder {

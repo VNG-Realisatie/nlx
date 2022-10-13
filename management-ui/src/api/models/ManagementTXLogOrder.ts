@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ManagementTXLogOrganization } from './ManagementTXLogOrganization';
 import {
-    ManagementTXLogOrganization,
     ManagementTXLogOrganizationFromJSON,
     ManagementTXLogOrganizationFromJSONTyped,
     ManagementTXLogOrganizationToJSON,
@@ -38,6 +38,15 @@ export interface ManagementTXLogOrder {
      * @memberof ManagementTXLogOrder
      */
     reference?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementTXLogOrder interface.
+ */
+export function instanceOfManagementTXLogOrder(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementTXLogOrderFromJSON(json: any): ManagementTXLogOrder {

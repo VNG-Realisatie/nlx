@@ -13,14 +13,14 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalAccessProof } from './ExternalAccessProof';
 import {
-    ExternalAccessProof,
     ExternalAccessProofFromJSON,
     ExternalAccessProofFromJSONTyped,
     ExternalAccessProofToJSON,
 } from './ExternalAccessProof';
+import type { ManagementOutgoingAccessRequest } from './ManagementOutgoingAccessRequest';
 import {
-    ManagementOutgoingAccessRequest,
     ManagementOutgoingAccessRequestFromJSON,
     ManagementOutgoingAccessRequestFromJSONTyped,
     ManagementOutgoingAccessRequestToJSON,
@@ -44,6 +44,15 @@ export interface DirectoryServiceAccessState {
      * @memberof DirectoryServiceAccessState
      */
     accessProof?: ExternalAccessProof;
+}
+
+/**
+ * Check if a given object implements the DirectoryServiceAccessState interface.
+ */
+export function instanceOfDirectoryServiceAccessState(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function DirectoryServiceAccessStateFromJSON(json: any): DirectoryServiceAccessState {

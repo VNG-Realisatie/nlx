@@ -27,6 +27,15 @@ export interface ManagementIsTXLogEnabledResponse {
     enabled?: boolean;
 }
 
+/**
+ * Check if a given object implements the ManagementIsTXLogEnabledResponse interface.
+ */
+export function instanceOfManagementIsTXLogEnabledResponse(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementIsTXLogEnabledResponseFromJSON(json: any): ManagementIsTXLogEnabledResponse {
     return ManagementIsTXLogEnabledResponseFromJSONTyped(json, false);
 }

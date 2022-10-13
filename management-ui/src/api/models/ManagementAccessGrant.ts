@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalOrganization } from './ExternalOrganization';
 import {
-    ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
@@ -68,6 +68,15 @@ export interface ManagementAccessGrant {
      * @memberof ManagementAccessGrant
      */
     accessRequestId?: string;
+}
+
+/**
+ * Check if a given object implements the ManagementAccessGrant interface.
+ */
+export function instanceOfManagementAccessGrant(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ManagementAccessGrantFromJSON(json: any): ManagementAccessGrant {

@@ -63,6 +63,15 @@ export interface ManagementUpdateOutgoingOrderRequest {
     accessProofIds?: Array<string>;
 }
 
+/**
+ * Check if a given object implements the ManagementUpdateOutgoingOrderRequest interface.
+ */
+export function instanceOfManagementUpdateOutgoingOrderRequest(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementUpdateOutgoingOrderRequestFromJSON(json: any): ManagementUpdateOutgoingOrderRequest {
     return ManagementUpdateOutgoingOrderRequestFromJSONTyped(json, false);
 }

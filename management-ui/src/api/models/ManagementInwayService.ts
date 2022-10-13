@@ -27,6 +27,15 @@ export interface ManagementInwayService {
     name?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementInwayService interface.
+ */
+export function instanceOfManagementInwayService(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementInwayServiceFromJSON(json: any): ManagementInwayService {
     return ManagementInwayServiceFromJSONTyped(json, false);
 }

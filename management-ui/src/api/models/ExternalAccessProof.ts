@@ -13,8 +13,8 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { ExternalOrganization } from './ExternalOrganization';
 import {
-    ExternalOrganization,
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
@@ -68,6 +68,15 @@ export interface ExternalAccessProof {
      * @memberof ExternalAccessProof
      */
     publicKeyFingerprint?: string;
+}
+
+/**
+ * Check if a given object implements the ExternalAccessProof interface.
+ */
+export function instanceOfExternalAccessProof(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
 }
 
 export function ExternalAccessProofFromJSON(json: any): ExternalAccessProof {

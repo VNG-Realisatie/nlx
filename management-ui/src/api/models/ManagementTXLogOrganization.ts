@@ -33,6 +33,15 @@ export interface ManagementTXLogOrganization {
     name?: string;
 }
 
+/**
+ * Check if a given object implements the ManagementTXLogOrganization interface.
+ */
+export function instanceOfManagementTXLogOrganization(value: object): boolean {
+    let isInstance = true;
+
+    return isInstance;
+}
+
 export function ManagementTXLogOrganizationFromJSON(json: any): ManagementTXLogOrganization {
     return ManagementTXLogOrganizationFromJSONTyped(json, false);
 }
