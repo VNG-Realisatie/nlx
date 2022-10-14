@@ -47,7 +47,7 @@ func (s *ManagementService) ListOutgoingOrders(ctx context.Context, _ *api.ListO
 	outgoingOrders := make([]*api.OutgoingOrder, len(orders))
 
 	for i, order := range orders {
-		accessProofs := make([]*external.AccessProof, len(order.OutgoingOrderAccessProofs))
+		accessProofs := make([]*api.AccessProof, len(order.OutgoingOrderAccessProofs))
 
 		for j, outgoingOrderAccessProofs := range order.OutgoingOrderAccessProofs {
 			outgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest.Organization.Name = oinToOrgNameHash[outgoingOrderAccessProofs.AccessProof.OutgoingAccessRequest.Organization.SerialNumber]

@@ -1437,7 +1437,7 @@
             "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
           },
           "access_proof" : {
-            "$ref" : "#/components/schemas/externalAccessProof"
+            "$ref" : "#/components/schemas/managementAccessProof"
           }
         },
         "type" : "object"
@@ -1446,36 +1446,6 @@
         "default" : "STATE_UNSPECIFIED",
         "enum" : [ "STATE_UNSPECIFIED", "STATE_UP", "STATE_DOWN", "STATE_DEGRADED" ],
         "type" : "string"
-      },
-      "externalAccessProof" : {
-        "properties" : {
-          "id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "organization" : {
-            "$ref" : "#/components/schemas/externalOrganization"
-          },
-          "service_name" : {
-            "type" : "string"
-          },
-          "created_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "revoked_at" : {
-            "format" : "date-time",
-            "type" : "string"
-          },
-          "access_request_id" : {
-            "format" : "uint64",
-            "type" : "string"
-          },
-          "public_key_fingerprint" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object"
       },
       "externalAccessRequestState" : {
         "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
@@ -1528,7 +1498,7 @@
       "managementAcceptTermsOfServiceResponse" : {
         "type" : "object"
       },
-      "managementAccessGrant" : {
+      "managementAccessProof" : {
         "properties" : {
           "id" : {
             "format" : "uint64",
@@ -1538,9 +1508,6 @@
             "$ref" : "#/components/schemas/externalOrganization"
           },
           "service_name" : {
-            "type" : "string"
-          },
-          "public_key_fingerprint" : {
             "type" : "string"
           },
           "created_at" : {
@@ -1553,6 +1520,9 @@
           },
           "access_request_id" : {
             "format" : "uint64",
+            "type" : "string"
+          },
+          "public_key_fingerprint" : {
             "type" : "string"
           }
         },
@@ -2106,7 +2076,7 @@
         "properties" : {
           "access_grants" : {
             "items" : {
-              "$ref" : "#/components/schemas/managementAccessGrant"
+              "$ref" : "#/components/schemas/nlxmanagementAccessGrant"
             },
             "type" : "array"
           }
@@ -2322,7 +2292,7 @@
           },
           "access_proofs" : {
             "items" : {
-              "$ref" : "#/components/schemas/externalAccessProof"
+              "$ref" : "#/components/schemas/managementAccessProof"
             },
             "type" : "array"
           },
@@ -2409,7 +2379,7 @@
       "managementRevokeAccessGrantResponse" : {
         "properties" : {
           "access_grant" : {
-            "$ref" : "#/components/schemas/managementAccessGrant"
+            "$ref" : "#/components/schemas/nlxmanagementAccessGrant"
           }
         },
         "type" : "object"
@@ -2648,6 +2618,36 @@
             "$ref" : "#/components/schemas/externalOrganization"
           },
           "service" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "nlxmanagementAccessGrant" : {
+        "properties" : {
+          "id" : {
+            "format" : "uint64",
+            "type" : "string"
+          },
+          "organization" : {
+            "$ref" : "#/components/schemas/externalOrganization"
+          },
+          "service_name" : {
+            "type" : "string"
+          },
+          "public_key_fingerprint" : {
+            "type" : "string"
+          },
+          "created_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "revoked_at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "access_request_id" : {
+            "format" : "uint64",
             "type" : "string"
           }
         },

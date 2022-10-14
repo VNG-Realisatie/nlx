@@ -22,14 +22,14 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/server"
 )
 
-//nolint:funlen // its a unittest
-func TestGetAccessProof(t *testing.T) {
+// nolint:funlen // this is a test
+func TestGetAccessGrant(t *testing.T) {
 	now := time.Now()
 	ts := timestamppb.New(now)
 
 	tests := map[string]struct {
 		setup   func(*testing.T, *mock_database.MockConfigDatabase, *tls.CertificateBundle) context.Context
-		want    *external.AccessGrant
+		want    *external.GetAccessGrantResponse
 		wantErr error
 	}{
 		"when_the_peer_context_is_missing": {
@@ -87,6 +87,7 @@ func TestGetAccessProof(t *testing.T) {
 			},
 		},
 		"happy_flow": {
+			// nolint:dupl // this is testing deprecated function which is almost the same
 			setup: func(t *testing.T, db *mock_database.MockConfigDatabase, certBundle *tls.CertificateBundle) context.Context {
 				ctx := setProxyMetadataWithCertBundle(t, context.Background(), certBundle)
 
@@ -118,16 +119,18 @@ func TestGetAccessProof(t *testing.T) {
 
 				return ctx
 			},
-			want: &external.AccessGrant{
-				Id:              1,
-				CreatedAt:       ts,
-				RevokedAt:       ts,
-				AccessRequestId: 1,
-				Organization: &external.Organization{
-					SerialNumber: "00000000000000000001",
-					Name:         "nlx-test",
+			want: &external.GetAccessGrantResponse{
+				AccessGrant: &external.AccessGrant{
+					Id:              1,
+					CreatedAt:       ts,
+					RevokedAt:       ts,
+					AccessRequestId: 1,
+					Organization: &external.Organization{
+						SerialNumber: "00000000000000000001",
+						Name:         "nlx-test",
+					},
+					ServiceName: "service",
 				},
-				ServiceName: "service",
 			},
 		},
 	}
@@ -139,7 +142,7 @@ func TestGetAccessProof(t *testing.T) {
 			service, certBundle, mocks := newService(t)
 			ctx := tt.setup(t, mocks.db, certBundle)
 
-			actual, err := service.GetAccessProof(ctx, &external.GetAccessGrantRequest{
+			actual, err := service.GetAccessGrant(ctx, &external.GetAccessGrantRequest{
 				ServiceName:          "service",
 				PublicKeyFingerprint: "public-key-fingerprint",
 			})

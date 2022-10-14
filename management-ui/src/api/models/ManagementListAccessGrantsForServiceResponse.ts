@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementAccessGrant } from './ManagementAccessGrant';
+import type { NlxmanagementAccessGrant } from './NlxmanagementAccessGrant';
 import {
-    ManagementAccessGrantFromJSON,
-    ManagementAccessGrantFromJSONTyped,
-    ManagementAccessGrantToJSON,
-} from './ManagementAccessGrant';
+    NlxmanagementAccessGrantFromJSON,
+    NlxmanagementAccessGrantFromJSONTyped,
+    NlxmanagementAccessGrantToJSON,
+} from './NlxmanagementAccessGrant';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementListAccessGrantsForServiceResponse {
     /**
      * 
-     * @type {Array<ManagementAccessGrant>}
+     * @type {Array<NlxmanagementAccessGrant>}
      * @memberof ManagementListAccessGrantsForServiceResponse
      */
-    accessGrants?: Array<ManagementAccessGrant>;
+    accessGrants?: Array<NlxmanagementAccessGrant>;
 }
 
 /**
@@ -53,7 +53,7 @@ export function ManagementListAccessGrantsForServiceResponseFromJSONTyped(json: 
     }
     return {
         
-        'accessGrants': !exists(json, 'access_grants') ? undefined : ((json['access_grants'] as Array<any>).map(ManagementAccessGrantFromJSON)),
+        'accessGrants': !exists(json, 'access_grants') ? undefined : ((json['access_grants'] as Array<any>).map(NlxmanagementAccessGrantFromJSON)),
     };
 }
 
@@ -66,7 +66,7 @@ export function ManagementListAccessGrantsForServiceResponseToJSON(value?: Manag
     }
     return {
         
-        'access_grants': value.accessGrants === undefined ? undefined : ((value.accessGrants as Array<any>).map(ManagementAccessGrantToJSON)),
+        'access_grants': value.accessGrants === undefined ? undefined : ((value.accessGrants as Array<any>).map(NlxmanagementAccessGrantToJSON)),
     };
 }
 

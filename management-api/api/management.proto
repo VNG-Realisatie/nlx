@@ -531,7 +531,7 @@ message DirectoryService {
 
   message AccessState {
     OutgoingAccessRequest access_request = 1;
-    nlx.management.external.AccessProof access_proof = 2;
+    AccessProof access_proof = 2;
   }
 
   string service_name = 1;
@@ -663,13 +663,23 @@ message OrderService {
   string service = 2;
 }
 
+message AccessProof {
+  uint64 id = 1;
+  nlx.management.external.Organization organization = 2;
+  string service_name = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp revoked_at = 5;
+  uint64 access_request_id = 6;
+  string public_key_fingerprint = 7;
+}
+
 message OutgoingOrder {
   string reference = 1;
   string description = 2;
   nlx.management.external.Organization delegatee = 4;
   google.protobuf.Timestamp valid_from = 5;
   google.protobuf.Timestamp valid_until = 6;
-  repeated nlx.management.external.AccessProof access_proofs = 7;
+  repeated AccessProof access_proofs = 7;
   google.protobuf.Timestamp revoked_at = 8;
   string public_key_pem = 9;
 }

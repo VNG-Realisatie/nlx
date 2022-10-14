@@ -5,19 +5,14 @@ package server
 
 import (
 	"context"
-	"errors"
-
-	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	"go.nlx.io/nlx/management-api/api/external"
-	"go.nlx.io/nlx/management-api/pkg/database"
 )
 
-func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.GetAccessProofRequest) (*external.AccessProof, error) {
+// Deprecated: use GetAccessGrant instead
+func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.GetAccessGrantRequest) (*external.AccessGrant, error) {
 	md, err := s.parseProxyMetadata(ctx)
 	if err != nil {
 		s.logger.Error("failed to parse proxy metadata", zap.Error(err))
@@ -25,40 +20,15 @@ func (s *ManagementService) GetAccessProof(ctx context.Context, req *external.Ge
 		return nil, err
 	}
 
-	_, err = s.configDatabase.GetService(ctx, req.ServiceName)
+	s.logger.Warn("The organization is using deprecated GetAccessProof RPC. Please use GetAccessGrant instead.", zap.String("organization-name", md.OrganizationName), zap.String("organization-serial-number", md.OrganizationSerialNumber))
+
+	res, err := s.GetAccessGrant(ctx, &external.GetAccessGrantRequest{
+		ServiceName:          req.ServiceName,
+		PublicKeyFingerprint: req.PublicKeyFingerprint,
+	})
 	if err != nil {
-		s.logger.Error("failed to get service for access proof", zap.Error(err))
-
-		if errIsNotFound(err) {
-			return nil, ErrServiceDoesNotExist
-		}
-
-		return nil, status.Error(codes.Internal, "database error")
+		return nil, err
 	}
 
-	grant, err := s.configDatabase.GetLatestAccessGrantForService(ctx, md.OrganizationSerialNumber, req.ServiceName, req.PublicKeyFingerprint)
-	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
-			return nil, status.Error(codes.NotFound, "access proof not found")
-		}
-
-		s.logger.Error("failed to get latest proof latest for service", zap.Error(err))
-
-		return nil, status.Error(codes.Internal, "database error")
-	}
-
-	createdAt := timestamppb.New(grant.CreatedAt)
-	revokedAt := timestamppb.New(grant.RevokedAt.Time)
-
-	return &external.AccessProof{
-		Id:              uint64(grant.ID),
-		AccessRequestId: uint64(grant.IncomingAccessRequest.ID),
-		Organization: &external.Organization{
-			SerialNumber: grant.IncomingAccessRequest.Organization.SerialNumber,
-			Name:         grant.IncomingAccessRequest.Organization.Name,
-		},
-		ServiceName: grant.IncomingAccessRequest.Service.Name,
-		CreatedAt:   createdAt,
-		RevokedAt:   revokedAt,
-	}, nil
+	return res.AccessGrant, nil
 }

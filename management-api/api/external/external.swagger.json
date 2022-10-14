@@ -15,7 +15,7 @@
   "paths" : { },
   "components" : {
     "schemas" : {
-      "externalAccessProof" : {
+      "externalAccessGrant" : {
         "properties" : {
           "id" : {
             "format" : "uint64",
@@ -49,6 +49,14 @@
         "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
         "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
         "type" : "string"
+      },
+      "externalGetAccessGrantResponse" : {
+        "properties" : {
+          "access_grant" : {
+            "$ref" : "#/components/schemas/externalAccessGrant"
+          }
+        },
+        "type" : "object"
       },
       "externalGetAccessRequestStateResponse" : {
         "properties" : {

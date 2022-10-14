@@ -33,8 +33,8 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
-					GetAccessProof(gomock.Any(),
-						&external.GetAccessProofRequest{
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
@@ -67,8 +67,8 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
-					GetAccessProof(gomock.Any(),
-						&external.GetAccessProofRequest{
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
@@ -110,19 +110,21 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
-					GetAccessProof(gomock.Any(),
-						&external.GetAccessProofRequest{
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&external.AccessProof{
-						AccessRequestId: 999,
-						Organization: &external.Organization{
-							SerialNumber: "00000000000000000001",
-							Name:         "my-organization",
+					Return(&external.GetAccessGrantResponse{
+						AccessGrant: &external.AccessGrant{
+							AccessRequestId: 999,
+							Organization: &external.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName: "my-service",
+							RevokedAt:   nil,
 						},
-						ServiceName: "my-service",
-						RevokedAt:   nil,
 					}, nil)
 
 				mocks.db.
@@ -164,19 +166,21 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 
 				mocks.mc.
 					EXPECT().
-					GetAccessProof(gomock.Any(),
-						&external.GetAccessProofRequest{
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&external.AccessProof{
-						AccessRequestId: 1,
-						Organization: &external.Organization{
-							SerialNumber: "00000000000000000001",
-							Name:         "my-organization",
+					Return(&external.GetAccessGrantResponse{
+						AccessGrant: &external.AccessGrant{
+							AccessRequestId: 1,
+							Organization: &external.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName: "my-service",
+							RevokedAt:   revokedAt,
 						},
-						ServiceName: "my-service",
-						RevokedAt:   revokedAt,
 					}, nil)
 
 				mocks.db.
@@ -236,19 +240,21 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 			setup: func(mocks syncMocks) {
 				mocks.mc.
 					EXPECT().
-					GetAccessProof(gomock.Any(),
-						&external.GetAccessProofRequest{
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
 							ServiceName:          "my-service",
 							PublicKeyFingerprint: testPublicKeyFingerprint,
 						}).
-					Return(&external.AccessProof{
-						AccessRequestId: 1,
-						Organization: &external.Organization{
-							SerialNumber: "00000000000000000001",
-							Name:         "my-organization",
+					Return(&external.GetAccessGrantResponse{
+						AccessGrant: &external.AccessGrant{
+							AccessRequestId: 1,
+							Organization: &external.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName: "my-service",
+							RevokedAt:   nil,
 						},
-						ServiceName: "my-service",
-						RevokedAt:   nil,
 					}, nil)
 
 				mocks.db.

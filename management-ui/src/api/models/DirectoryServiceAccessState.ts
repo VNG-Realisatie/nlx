@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ExternalAccessProof } from './ExternalAccessProof';
+import type { ManagementAccessProof } from './ManagementAccessProof';
 import {
-    ExternalAccessProofFromJSON,
-    ExternalAccessProofFromJSONTyped,
-    ExternalAccessProofToJSON,
-} from './ExternalAccessProof';
+    ManagementAccessProofFromJSON,
+    ManagementAccessProofFromJSONTyped,
+    ManagementAccessProofToJSON,
+} from './ManagementAccessProof';
 import type { ManagementOutgoingAccessRequest } from './ManagementOutgoingAccessRequest';
 import {
     ManagementOutgoingAccessRequestFromJSON,
@@ -40,10 +40,10 @@ export interface DirectoryServiceAccessState {
     accessRequest?: ManagementOutgoingAccessRequest;
     /**
      * 
-     * @type {ExternalAccessProof}
+     * @type {ManagementAccessProof}
      * @memberof DirectoryServiceAccessState
      */
-    accessProof?: ExternalAccessProof;
+    accessProof?: ManagementAccessProof;
 }
 
 /**
@@ -66,7 +66,7 @@ export function DirectoryServiceAccessStateFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'accessRequest': !exists(json, 'access_request') ? undefined : ManagementOutgoingAccessRequestFromJSON(json['access_request']),
-        'accessProof': !exists(json, 'access_proof') ? undefined : ExternalAccessProofFromJSON(json['access_proof']),
+        'accessProof': !exists(json, 'access_proof') ? undefined : ManagementAccessProofFromJSON(json['access_proof']),
     };
 }
 
@@ -80,7 +80,7 @@ export function DirectoryServiceAccessStateToJSON(value?: DirectoryServiceAccess
     return {
         
         'access_request': ManagementOutgoingAccessRequestToJSON(value.accessRequest),
-        'access_proof': ExternalAccessProofToJSON(value.accessProof),
+        'access_proof': ManagementAccessProofToJSON(value.accessProof),
     };
 }
 

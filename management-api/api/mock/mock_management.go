@@ -1486,14 +1486,14 @@ func (mr *MockDirectoryClientMockRecorder) ListServices(ctx, in interface{}, opt
 }
 
 // RequestAccessToService mocks base method.
-func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *api.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*api.OutgoingAccessRequest, error) {
+func (m *MockDirectoryClient) RequestAccessToService(ctx context.Context, in *api.RequestAccessToServiceRequest, opts ...grpc.CallOption) (*api.RequestAccessToServiceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RequestAccessToService", varargs...)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret0, _ := ret[0].(*api.RequestAccessToServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -1574,10 +1574,10 @@ func (mr *MockDirectoryServerMockRecorder) ListServices(arg0, arg1 interface{}) 
 }
 
 // RequestAccessToService mocks base method.
-func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *api.RequestAccessToServiceRequest) (*api.OutgoingAccessRequest, error) {
+func (m *MockDirectoryServer) RequestAccessToService(arg0 context.Context, arg1 *api.RequestAccessToServiceRequest) (*api.RequestAccessToServiceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RequestAccessToService", arg0, arg1)
-	ret0, _ := ret[0].(*api.OutgoingAccessRequest)
+	ret0, _ := ret[0].(*api.RequestAccessToServiceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

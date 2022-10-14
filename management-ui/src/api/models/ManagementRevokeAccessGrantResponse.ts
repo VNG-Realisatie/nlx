@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementAccessGrant } from './ManagementAccessGrant';
+import type { NlxmanagementAccessGrant } from './NlxmanagementAccessGrant';
 import {
-    ManagementAccessGrantFromJSON,
-    ManagementAccessGrantFromJSONTyped,
-    ManagementAccessGrantToJSON,
-} from './ManagementAccessGrant';
+    NlxmanagementAccessGrantFromJSON,
+    NlxmanagementAccessGrantFromJSONTyped,
+    NlxmanagementAccessGrantToJSON,
+} from './NlxmanagementAccessGrant';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementRevokeAccessGrantResponse {
     /**
      * 
-     * @type {ManagementAccessGrant}
+     * @type {NlxmanagementAccessGrant}
      * @memberof ManagementRevokeAccessGrantResponse
      */
-    accessGrant?: ManagementAccessGrant;
+    accessGrant?: NlxmanagementAccessGrant;
 }
 
 /**
@@ -53,7 +53,7 @@ export function ManagementRevokeAccessGrantResponseFromJSONTyped(json: any, igno
     }
     return {
         
-        'accessGrant': !exists(json, 'access_grant') ? undefined : ManagementAccessGrantFromJSON(json['access_grant']),
+        'accessGrant': !exists(json, 'access_grant') ? undefined : NlxmanagementAccessGrantFromJSON(json['access_grant']),
     };
 }
 
@@ -66,7 +66,7 @@ export function ManagementRevokeAccessGrantResponseToJSON(value?: ManagementRevo
     }
     return {
         
-        'access_grant': ManagementAccessGrantToJSON(value.accessGrant),
+        'access_grant': NlxmanagementAccessGrantToJSON(value.accessGrant),
     };
 }
 

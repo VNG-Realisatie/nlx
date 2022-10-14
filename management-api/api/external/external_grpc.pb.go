@@ -25,7 +25,9 @@ const _ = grpc.SupportPackageIsVersion7
 type AccessRequestServiceClient interface {
 	RequestAccess(ctx context.Context, in *RequestAccessRequest, opts ...grpc.CallOption) (*RequestAccessResponse, error)
 	GetAccessRequestState(ctx context.Context, in *GetAccessRequestStateRequest, opts ...grpc.CallOption) (*GetAccessRequestStateResponse, error)
-	GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*AccessProof, error)
+	// Deprecated: Do not use.
+	GetAccessProof(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
+	GetAccessGrant(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*GetAccessGrantResponse, error)
 }
 
 type accessRequestServiceClient struct {
@@ -54,9 +56,19 @@ func (c *accessRequestServiceClient) GetAccessRequestState(ctx context.Context, 
 	return out, nil
 }
 
-func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *GetAccessProofRequest, opts ...grpc.CallOption) (*AccessProof, error) {
-	out := new(AccessProof)
+// Deprecated: Do not use.
+func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error) {
+	out := new(AccessGrant)
 	err := c.cc.Invoke(ctx, "/nlx.management.external.AccessRequestService/GetAccessProof", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accessRequestServiceClient) GetAccessGrant(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*GetAccessGrantResponse, error) {
+	out := new(GetAccessGrantResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.external.AccessRequestService/GetAccessGrant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +81,9 @@ func (c *accessRequestServiceClient) GetAccessProof(ctx context.Context, in *Get
 type AccessRequestServiceServer interface {
 	RequestAccess(context.Context, *RequestAccessRequest) (*RequestAccessResponse, error)
 	GetAccessRequestState(context.Context, *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error)
-	GetAccessProof(context.Context, *GetAccessProofRequest) (*AccessProof, error)
+	// Deprecated: Do not use.
+	GetAccessProof(context.Context, *GetAccessGrantRequest) (*AccessGrant, error)
+	GetAccessGrant(context.Context, *GetAccessGrantRequest) (*GetAccessGrantResponse, error)
 	mustEmbedUnimplementedAccessRequestServiceServer()
 }
 
@@ -83,8 +97,11 @@ func (UnimplementedAccessRequestServiceServer) RequestAccess(context.Context, *R
 func (UnimplementedAccessRequestServiceServer) GetAccessRequestState(context.Context, *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessRequestState not implemented")
 }
-func (UnimplementedAccessRequestServiceServer) GetAccessProof(context.Context, *GetAccessProofRequest) (*AccessProof, error) {
+func (UnimplementedAccessRequestServiceServer) GetAccessProof(context.Context, *GetAccessGrantRequest) (*AccessGrant, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessProof not implemented")
+}
+func (UnimplementedAccessRequestServiceServer) GetAccessGrant(context.Context, *GetAccessGrantRequest) (*GetAccessGrantResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccessGrant not implemented")
 }
 func (UnimplementedAccessRequestServiceServer) mustEmbedUnimplementedAccessRequestServiceServer() {}
 
@@ -136,7 +153,7 @@ func _AccessRequestService_GetAccessRequestState_Handler(srv interface{}, ctx co
 }
 
 func _AccessRequestService_GetAccessProof_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAccessProofRequest)
+	in := new(GetAccessGrantRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -148,7 +165,25 @@ func _AccessRequestService_GetAccessProof_Handler(srv interface{}, ctx context.C
 		FullMethod: "/nlx.management.external.AccessRequestService/GetAccessProof",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccessRequestServiceServer).GetAccessProof(ctx, req.(*GetAccessProofRequest))
+		return srv.(AccessRequestServiceServer).GetAccessProof(ctx, req.(*GetAccessGrantRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccessRequestService_GetAccessGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccessGrantRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccessRequestServiceServer).GetAccessGrant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.external.AccessRequestService/GetAccessGrant",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccessRequestServiceServer).GetAccessGrant(ctx, req.(*GetAccessGrantRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -171,6 +206,10 @@ var AccessRequestService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAccessProof",
 			Handler:    _AccessRequestService_GetAccessProof_Handler,
+		},
+		{
+			MethodName: "GetAccessGrant",
+			Handler:    _AccessRequestService_GetAccessGrant_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

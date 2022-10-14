@@ -118,7 +118,7 @@ func TestGetOrganizationService(t *testing.T) {
 								CreatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 								UpdatedAt:            timestamppb.New(time.Date(2020, time.June, 26, 13, 42, 42, 0, time.UTC)),
 							},
-							AccessProof: &external.AccessProof{
+							AccessProof: &api.AccessProof{
 								Id: 1,
 								Organization: &external.Organization{
 									SerialNumber: "00000000000000000001",

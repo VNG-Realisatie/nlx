@@ -13,18 +13,18 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ExternalAccessProof } from './ExternalAccessProof';
-import {
-    ExternalAccessProofFromJSON,
-    ExternalAccessProofFromJSONTyped,
-    ExternalAccessProofToJSON,
-} from './ExternalAccessProof';
 import type { ExternalOrganization } from './ExternalOrganization';
 import {
     ExternalOrganizationFromJSON,
     ExternalOrganizationFromJSONTyped,
     ExternalOrganizationToJSON,
 } from './ExternalOrganization';
+import type { ManagementAccessProof } from './ManagementAccessProof';
+import {
+    ManagementAccessProofFromJSON,
+    ManagementAccessProofFromJSONTyped,
+    ManagementAccessProofToJSON,
+} from './ManagementAccessProof';
 
 /**
  * 
@@ -64,10 +64,10 @@ export interface ManagementOutgoingOrder {
     validUntil?: Date;
     /**
      * 
-     * @type {Array<ExternalAccessProof>}
+     * @type {Array<ManagementAccessProof>}
      * @memberof ManagementOutgoingOrder
      */
-    accessProofs?: Array<ExternalAccessProof>;
+    accessProofs?: Array<ManagementAccessProof>;
     /**
      * 
      * @type {Date}
@@ -106,7 +106,7 @@ export function ManagementOutgoingOrderFromJSONTyped(json: any, ignoreDiscrimina
         'delegatee': !exists(json, 'delegatee') ? undefined : ExternalOrganizationFromJSON(json['delegatee']),
         'validFrom': !exists(json, 'valid_from') ? undefined : (new Date(json['valid_from'])),
         'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
-        'accessProofs': !exists(json, 'access_proofs') ? undefined : ((json['access_proofs'] as Array<any>).map(ExternalAccessProofFromJSON)),
+        'accessProofs': !exists(json, 'access_proofs') ? undefined : ((json['access_proofs'] as Array<any>).map(ManagementAccessProofFromJSON)),
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
         'publicKeyPem': !exists(json, 'public_key_pem') ? undefined : json['public_key_pem'],
     };
@@ -126,7 +126,7 @@ export function ManagementOutgoingOrderToJSON(value?: ManagementOutgoingOrder | 
         'delegatee': ExternalOrganizationToJSON(value.delegatee),
         'valid_from': value.validFrom === undefined ? undefined : (value.validFrom.toISOString()),
         'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString()),
-        'access_proofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ExternalAccessProofToJSON)),
+        'access_proofs': value.accessProofs === undefined ? undefined : ((value.accessProofs as Array<any>).map(ManagementAccessProofToJSON)),
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
         'public_key_pem': value.publicKeyPem,
     };

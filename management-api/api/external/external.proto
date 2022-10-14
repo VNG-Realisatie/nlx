@@ -12,7 +12,10 @@ import "google/protobuf/timestamp.proto";
 service AccessRequestService {
   rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
   rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
-  rpc GetAccessProof (GetAccessProofRequest) returns (AccessProof);
+  rpc GetAccessProof (GetAccessGrantRequest) returns (AccessGrant) {
+    option deprecated = true;
+  };
+  rpc GetAccessGrant (GetAccessGrantRequest) returns (GetAccessGrantResponse);
 }
 
 service DelegationService {
@@ -35,7 +38,7 @@ message GetAccessRequestStateRequest {
   string public_key_fingerprint = 2;
 }
 
-message AccessProof {
+message AccessGrant {
   uint64 id = 1;
   Organization organization = 2;
   string service_name = 3;
@@ -59,9 +62,13 @@ message GetAccessRequestStateResponse {
   AccessRequestState state = 1;
 }
 
-message GetAccessProofRequest {
+message GetAccessGrantRequest {
   string service_name = 1;
   string public_key_fingerprint = 2;
+}
+
+message GetAccessGrantResponse {
+  AccessGrant access_grant = 1;
 }
 
 message RequestAccessResponse {

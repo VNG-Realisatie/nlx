@@ -141,7 +141,7 @@ func TestListOutgoingOrders(t *testing.T) {
 						PublicKeyPem: "public_key",
 						ValidFrom:    timestamppb.New(validFrom),
 						ValidUntil:   timestamppb.New(validUntil),
-						AccessProofs: []*external.AccessProof{{
+						AccessProofs: []*api.AccessProof{{
 							Id: 10,
 							Organization: &external.Organization{
 								SerialNumber: "00000000000000000002",

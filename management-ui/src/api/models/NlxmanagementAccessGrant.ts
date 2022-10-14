@@ -23,67 +23,67 @@ import {
 /**
  * 
  * @export
- * @interface ManagementAccessProof
+ * @interface NlxmanagementAccessGrant
  */
-export interface ManagementAccessProof {
+export interface NlxmanagementAccessGrant {
     /**
      * 
      * @type {string}
-     * @memberof ManagementAccessProof
+     * @memberof NlxmanagementAccessGrant
      */
     id?: string;
     /**
      * 
      * @type {ExternalOrganization}
-     * @memberof ManagementAccessProof
+     * @memberof NlxmanagementAccessGrant
      */
     organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
-     * @memberof ManagementAccessProof
+     * @memberof NlxmanagementAccessGrant
      */
     serviceName?: string;
     /**
      * 
+     * @type {string}
+     * @memberof NlxmanagementAccessGrant
+     */
+    publicKeyFingerprint?: string;
+    /**
+     * 
      * @type {Date}
-     * @memberof ManagementAccessProof
+     * @memberof NlxmanagementAccessGrant
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof ManagementAccessProof
+     * @memberof NlxmanagementAccessGrant
      */
     revokedAt?: Date;
     /**
      * 
      * @type {string}
-     * @memberof ManagementAccessProof
+     * @memberof NlxmanagementAccessGrant
      */
     accessRequestId?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ManagementAccessProof
-     */
-    publicKeyFingerprint?: string;
 }
 
 /**
- * Check if a given object implements the ManagementAccessProof interface.
+ * Check if a given object implements the NlxmanagementAccessGrant interface.
  */
-export function instanceOfManagementAccessProof(value: object): boolean {
+export function instanceOfNlxmanagementAccessGrant(value: object): boolean {
     let isInstance = true;
 
     return isInstance;
 }
 
-export function ManagementAccessProofFromJSON(json: any): ManagementAccessProof {
-    return ManagementAccessProofFromJSONTyped(json, false);
+export function NlxmanagementAccessGrantFromJSON(json: any): NlxmanagementAccessGrant {
+    return NlxmanagementAccessGrantFromJSONTyped(json, false);
 }
 
-export function ManagementAccessProofFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementAccessProof {
+export function NlxmanagementAccessGrantFromJSONTyped(json: any, ignoreDiscriminator: boolean): NlxmanagementAccessGrant {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -92,14 +92,14 @@ export function ManagementAccessProofFromJSONTyped(json: any, ignoreDiscriminato
         'id': !exists(json, 'id') ? undefined : json['id'],
         'organization': !exists(json, 'organization') ? undefined : ExternalOrganizationFromJSON(json['organization']),
         'serviceName': !exists(json, 'service_name') ? undefined : json['service_name'],
+        'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
         'accessRequestId': !exists(json, 'access_request_id') ? undefined : json['access_request_id'],
-        'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
     };
 }
 
-export function ManagementAccessProofToJSON(value?: ManagementAccessProof | null): any {
+export function NlxmanagementAccessGrantToJSON(value?: NlxmanagementAccessGrant | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -111,10 +111,10 @@ export function ManagementAccessProofToJSON(value?: ManagementAccessProof | null
         'id': value.id,
         'organization': ExternalOrganizationToJSON(value.organization),
         'service_name': value.serviceName,
+        'public_key_fingerprint': value.publicKeyFingerprint,
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
         'access_request_id': value.accessRequestId,
-        'public_key_fingerprint': value.publicKeyFingerprint,
     };
 }
 

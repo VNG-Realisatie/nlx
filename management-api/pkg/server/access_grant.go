@@ -107,6 +107,54 @@ func (s *ManagementService) RevokeAccessGrant(ctx context.Context, req *api.Revo
 	}, nil
 }
 
+func (s *ManagementService) GetAccessGrant(ctx context.Context, req *external.GetAccessGrantRequest) (*external.GetAccessGrantResponse, error) {
+	md, err := s.parseProxyMetadata(ctx)
+	if err != nil {
+		s.logger.Error("failed to parse proxy metadata", zap.Error(err))
+
+		return nil, err
+	}
+
+	_, err = s.configDatabase.GetService(ctx, req.ServiceName)
+	if err != nil {
+		s.logger.Error("failed to get service for access grant", zap.Error(err))
+
+		if errIsNotFound(err) {
+			return nil, ErrServiceDoesNotExist
+		}
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	grant, err := s.configDatabase.GetLatestAccessGrantForService(ctx, md.OrganizationSerialNumber, req.ServiceName, req.PublicKeyFingerprint)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, status.Error(codes.NotFound, "access grant not found")
+		}
+
+		s.logger.Error("failed to get latest grant latest for service", zap.Error(err))
+
+		return nil, status.Error(codes.Internal, "database error")
+	}
+
+	createdAt := timestamppb.New(grant.CreatedAt)
+	revokedAt := timestamppb.New(grant.RevokedAt.Time)
+
+	return &external.GetAccessGrantResponse{
+		AccessGrant: &external.AccessGrant{
+			Id:              uint64(grant.ID),
+			AccessRequestId: uint64(grant.IncomingAccessRequest.ID),
+			Organization: &external.Organization{
+				SerialNumber: grant.IncomingAccessRequest.Organization.SerialNumber,
+				Name:         grant.IncomingAccessRequest.Organization.Name,
+			},
+			ServiceName: grant.IncomingAccessRequest.Service.Name,
+			CreatedAt:   createdAt,
+			RevokedAt:   revokedAt,
+		},
+	}, nil
+}
+
 func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
 	createdAt := timestamppb.New(accessGrant.CreatedAt)
 

@@ -37,15 +37,35 @@ func (m *MockAccessRequestServiceClient) EXPECT() *MockAccessRequestServiceClien
 	return m.recorder
 }
 
+// GetAccessGrant mocks base method.
+func (m *MockAccessRequestServiceClient) GetAccessGrant(ctx context.Context, in *external.GetAccessGrantRequest, opts ...grpc.CallOption) (*external.GetAccessGrantResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetAccessGrant", varargs...)
+	ret0, _ := ret[0].(*external.GetAccessGrantResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessGrant indicates an expected call of GetAccessGrant.
+func (mr *MockAccessRequestServiceClientMockRecorder) GetAccessGrant(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessGrant", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).GetAccessGrant), varargs...)
+}
+
 // GetAccessProof mocks base method.
-func (m *MockAccessRequestServiceClient) GetAccessProof(ctx context.Context, in *external.GetAccessProofRequest, opts ...grpc.CallOption) (*external.AccessProof, error) {
+func (m *MockAccessRequestServiceClient) GetAccessProof(ctx context.Context, in *external.GetAccessGrantRequest, opts ...grpc.CallOption) (*external.AccessGrant, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetAccessProof", varargs...)
-	ret0, _ := ret[0].(*external.AccessProof)
+	ret0, _ := ret[0].(*external.AccessGrant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -120,11 +140,26 @@ func (m *MockAccessRequestServiceServer) EXPECT() *MockAccessRequestServiceServe
 	return m.recorder
 }
 
+// GetAccessGrant mocks base method.
+func (m *MockAccessRequestServiceServer) GetAccessGrant(arg0 context.Context, arg1 *external.GetAccessGrantRequest) (*external.GetAccessGrantResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccessGrant", arg0, arg1)
+	ret0, _ := ret[0].(*external.GetAccessGrantResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessGrant indicates an expected call of GetAccessGrant.
+func (mr *MockAccessRequestServiceServerMockRecorder) GetAccessGrant(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessGrant", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).GetAccessGrant), arg0, arg1)
+}
+
 // GetAccessProof mocks base method.
-func (m *MockAccessRequestServiceServer) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessProofRequest) (*external.AccessProof, error) {
+func (m *MockAccessRequestServiceServer) GetAccessProof(arg0 context.Context, arg1 *external.GetAccessGrantRequest) (*external.AccessGrant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccessProof", arg0, arg1)
-	ret0, _ := ret[0].(*external.AccessProof)
+	ret0, _ := ret[0].(*external.AccessGrant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

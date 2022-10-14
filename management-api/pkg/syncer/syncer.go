@@ -155,7 +155,7 @@ func convertAccessRequestState(state external.AccessRequestState) (database.Outg
 }
 
 func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase, client management.Client, outgoingAccessRequest *database.OutgoingAccessRequest) error {
-	accessProof, err := client.GetAccessProof(ctx, &external.GetAccessProofRequest{
+	response, err := client.GetAccessGrant(ctx, &external.GetAccessGrantRequest{
 		ServiceName:          outgoingAccessRequest.ServiceName,
 		PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
 	})
@@ -163,7 +163,7 @@ func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase
 		return err
 	}
 
-	remoteProof, err := parseAccessProof(accessProof)
+	remoteProof, err := convertAccessGrantToDatabaseProof(response.AccessGrant)
 	if err != nil {
 		return fmt.Errorf("parse access proof: %v", err)
 	}
@@ -207,42 +207,42 @@ func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase
 
 var ErrInvalidTimeStamp = fmt.Errorf("invalid timestamp")
 
-func parseAccessProof(accessProof *external.AccessProof) (*database.AccessProof, error) {
+func convertAccessGrantToDatabaseProof(accessGrant *external.AccessGrant) (*database.AccessProof, error) {
 	var createdAt time.Time
 
-	if accessProof.CreatedAt != nil {
-		err := accessProof.CreatedAt.CheckValid()
+	if accessGrant.CreatedAt != nil {
+		err := accessGrant.CreatedAt.CheckValid()
 		if err != nil {
 			return nil, ErrInvalidTimeStamp
 		}
 
-		createdAt = accessProof.CreatedAt.AsTime()
+		createdAt = accessGrant.CreatedAt.AsTime()
 	}
 
-	revokedAt := accessProof.RevokedAt.AsTime()
+	revokedAt := accessGrant.RevokedAt.AsTime()
 
-	err := accessProof.RevokedAt.CheckValid()
+	err := accessGrant.RevokedAt.CheckValid()
 	if err != nil {
 		revokedAt = time.Time{}
 	}
 
 	dbAccessProof := &database.AccessProof{
-		ID:        uint(accessProof.Id),
+		ID:        uint(accessGrant.Id),
 		CreatedAt: createdAt,
 		RevokedAt: sql.NullTime{
 			Time:  revokedAt,
 			Valid: !revokedAt.IsZero(),
 		},
 		OutgoingAccessRequest: &database.OutgoingAccessRequest{
-			ID:          uint(accessProof.AccessRequestId),
-			ServiceName: accessProof.ServiceName,
+			ID:          uint(accessGrant.AccessRequestId),
+			ServiceName: accessGrant.ServiceName,
 		},
 	}
 
-	if accessProof.Organization != nil {
+	if accessGrant.Organization != nil {
 		dbAccessProof.OutgoingAccessRequest.Organization = database.Organization{
-			SerialNumber: accessProof.Organization.SerialNumber,
-			Name:         accessProof.Organization.Name,
+			SerialNumber: accessGrant.Organization.SerialNumber,
+			Name:         accessGrant.Organization.Name,
 		}
 	}
 
