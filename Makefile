@@ -8,3 +8,7 @@ fix-copyright-headers:
 .PHONY: fix-newlines
 fix-newlines:
 	./scripts/eol-at-eof-linter.sh -f
+
+.PHONY: fix-proto-formatting
+fix-proto-formatting:
+	docker run --rm -v ${PWD}:/src --workdir /src bufbuild/buf:1.8.0 format -w

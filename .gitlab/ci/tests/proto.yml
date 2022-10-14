@@ -1,0 +1,87 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
+.proto-lint-base:
+  stage: Tests
+  image:
+    name: bufbuild/buf:1.8.0
+    entrypoint: [""]
+  script:
+    - cd ${PROTO_PATH}
+    - buf lint
+  needs: []
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+.proto-fmt-base:
+  stage: Tests
+  image:
+    name: bufbuild/buf:1.8.0
+    entrypoint: [""]
+  script:
+    - cd ${PROTO_PATH}
+    - buf format -d --exit-code
+  needs: []
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+Proto check breaking changes external:
+  stage: Tests
+  image:
+    name: bufbuild/buf:1.8.0
+    entrypoint: [""]
+  script:
+    - cd management-api/api/external
+    - buf breaking --against 'https://gitlab.com/commonground/nlx/nlx.git#branch=master,subdir=management-api/api/external'
+  needs: []
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  tags:
+    - docker
+    - linux
+
+Proto lint external:
+  extends: .proto-lint-base
+  variables:
+    PROTO_PATH: management-api/api/external
+
+Proto lint api:
+  extends: .proto-lint-base
+  variables:
+    PROTO_PATH: management-api/api
+
+Proto lint txlog:
+  extends: .proto-lint-base
+  variables:
+    PROTO_PATH: txlog-api/api
+
+Proto lint outway:
+  extends: .proto-lint-base
+  variables:
+    PROTO_PATH: outway/api
+
+Proto fmt external:
+  extends: .proto-fmt-base
+  variables:
+    PROTO_PATH: management-api/api/external
+
+Proto fmt management:
+  extends: .proto-fmt-base
+  variables:
+    PROTO_PATH: management-api/api
+
+Proto fmt txlog:
+  extends: .proto-fmt-base
+  variables:
+    PROTO_PATH: txlog-api/api
+
+Proto fmt outway:
+  extends: .proto-fmt-base
+  variables:
+    PROTO_PATH: outway/api
