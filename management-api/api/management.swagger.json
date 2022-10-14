@@ -8,16 +8,16 @@
     "url" : "/"
   } ],
   "tags" : [ {
-    "name" : "Management"
+    "name" : "ManagementService"
   }, {
-    "name" : "Directory"
+    "name" : "DirectoryService"
   }, {
-    "name" : "TXLog"
+    "name" : "TXLogService"
   } ],
   "paths" : {
     "/api/v1/access-grants/services/{service_name}" : {
       "get" : {
-        "operationId" : "Management_ListAccessGrantsForService",
+        "operationId" : "ManagementService_ListAccessGrantsForService",
         "parameters" : [ {
           "in" : "path",
           "name" : "service_name",
@@ -48,12 +48,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-grants/{access_grant_id}/revoke" : {
       "post" : {
-        "operationId" : "Management_RevokeAccessGrant",
+        "operationId" : "ManagementService_RevokeAccessGrant",
         "parameters" : [ {
           "in" : "path",
           "name" : "access_grant_id",
@@ -85,12 +85,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-requests/incoming/services/{service_name}" : {
       "get" : {
-        "operationId" : "Management_ListIncomingAccessRequests",
+        "operationId" : "ManagementService_ListIncomingAccessRequests",
         "parameters" : [ {
           "in" : "path",
           "name" : "service_name",
@@ -121,12 +121,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve" : {
       "post" : {
-        "operationId" : "Management_ApproveIncomingAccessRequest",
+        "operationId" : "ManagementService_ApproveIncomingAccessRequest",
         "parameters" : [ {
           "in" : "path",
           "name" : "service_name",
@@ -165,12 +165,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject" : {
       "post" : {
-        "operationId" : "Management_RejectIncomingAccessRequest",
+        "operationId" : "ManagementService_RejectIncomingAccessRequest",
         "parameters" : [ {
           "in" : "path",
           "name" : "service_name",
@@ -209,12 +209,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-requests/outgoing/synchronize" : {
       "get" : {
-        "operationId" : "Management_SynchronizeAllOutgoingAccessRequests",
+        "operationId" : "ManagementService_SynchronizeAllOutgoingAccessRequests",
         "responses" : {
           "200" : {
             "content" : {
@@ -237,12 +237,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}" : {
       "post" : {
-        "operationId" : "Management_SendAccessRequest",
+        "operationId" : "ManagementService_SendAccessRequest",
         "parameters" : [ {
           "in" : "path",
           "name" : "organization_serial_number",
@@ -286,12 +286,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize" : {
       "get" : {
-        "operationId" : "Management_SynchronizeOutgoingAccessRequests",
+        "operationId" : "ManagementService_SynchronizeOutgoingAccessRequests",
         "parameters" : [ {
           "in" : "path",
           "name" : "organization_serial_number",
@@ -329,12 +329,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/audit-logs" : {
       "get" : {
-        "operationId" : "Management_ListAuditLogs",
+        "operationId" : "ManagementService_ListAuditLogs",
         "responses" : {
           "200" : {
             "content" : {
@@ -357,12 +357,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}" : {
       "get" : {
-        "operationId" : "Directory_GetOrganizationService",
+        "operationId" : "DirectoryService_GetOrganizationService",
         "parameters" : [ {
           "in" : "path",
           "name" : "organization_serial_number",
@@ -400,12 +400,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Directory" ]
+        "tags" : [ "DirectoryService" ]
       }
     },
     "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests" : {
       "post" : {
-        "operationId" : "Directory_RequestAccessToService",
+        "operationId" : "DirectoryService_RequestAccessToService",
         "parameters" : [ {
           "in" : "path",
           "name" : "organization_serial_number",
@@ -443,18 +443,18 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Directory" ]
+        "tags" : [ "DirectoryService" ]
       }
     },
     "/api/v1/directory/services" : {
       "get" : {
-        "operationId" : "Directory_ListServices",
+        "operationId" : "DirectoryService_ListServices",
         "responses" : {
           "200" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementDirectoryListServicesResponse"
+                  "$ref" : "#/components/schemas/managementDirectoryServiceListServicesResponse"
                 }
               }
             },
@@ -471,12 +471,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Directory" ]
+        "tags" : [ "DirectoryService" ]
       }
     },
     "/api/v1/directory/terms-of-service" : {
       "get" : {
-        "operationId" : "Directory_GetTermsOfService",
+        "operationId" : "DirectoryService_GetTermsOfService",
         "responses" : {
           "200" : {
             "content" : {
@@ -499,12 +499,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Directory" ]
+        "tags" : [ "DirectoryService" ]
       }
     },
     "/api/v1/finance/enabled" : {
       "get" : {
-        "operationId" : "Management_IsFinanceEnabled",
+        "operationId" : "ManagementService_IsFinanceEnabled",
         "responses" : {
           "200" : {
             "content" : {
@@ -527,12 +527,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/finance/export" : {
       "get" : {
-        "operationId" : "Management_DownloadFinanceExport",
+        "operationId" : "ManagementService_DownloadFinanceExport",
         "responses" : {
           "200" : {
             "content" : {
@@ -555,12 +555,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/inways" : {
       "get" : {
-        "operationId" : "Management_ListInways",
+        "operationId" : "ManagementService_ListInways",
         "responses" : {
           "200" : {
             "content" : {
@@ -583,10 +583,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "post" : {
-        "operationId" : "Management_RegisterInway",
+        "operationId" : "ManagementService_RegisterInway",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -619,13 +619,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       }
     },
     "/api/v1/inways/{name}" : {
       "delete" : {
-        "operationId" : "Management_DeleteInway",
+        "operationId" : "ManagementService_DeleteInway",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -656,10 +656,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "get" : {
-        "operationId" : "Management_GetInway",
+        "operationId" : "ManagementService_GetInway",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -690,10 +690,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "put" : {
-        "operationId" : "Management_UpdateInway",
+        "operationId" : "ManagementService_UpdateInway",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -734,13 +734,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "inway"
       }
     },
     "/api/v1/orders/incoming" : {
       "get" : {
-        "operationId" : "Management_ListIncomingOrders",
+        "operationId" : "ManagementService_ListIncomingOrders",
         "responses" : {
           "200" : {
             "content" : {
@@ -763,12 +763,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/orders/outgoing" : {
       "get" : {
-        "operationId" : "Management_ListOutgoingOrders",
+        "operationId" : "ManagementService_ListOutgoingOrders",
         "responses" : {
           "200" : {
             "content" : {
@@ -791,10 +791,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "post" : {
-        "operationId" : "Management_CreateOutgoingOrder",
+        "operationId" : "ManagementService_CreateOutgoingOrder",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -827,11 +827,11 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       },
       "put" : {
-        "operationId" : "Management_UpdateOutgoingOrder",
+        "operationId" : "ManagementService_UpdateOutgoingOrder",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -864,13 +864,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       }
     },
     "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke" : {
       "put" : {
-        "operationId" : "Management_RevokeOutgoingOrder",
+        "operationId" : "ManagementService_RevokeOutgoingOrder",
         "parameters" : [ {
           "in" : "path",
           "name" : "delegatee",
@@ -908,12 +908,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/orders/synchronize" : {
       "post" : {
-        "operationId" : "Management_SynchronizeOrders",
+        "operationId" : "ManagementService_SynchronizeOrders",
         "responses" : {
           "200" : {
             "content" : {
@@ -936,12 +936,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/outways" : {
       "get" : {
-        "operationId" : "Management_ListOutways",
+        "operationId" : "ManagementService_ListOutways",
         "responses" : {
           "200" : {
             "content" : {
@@ -964,10 +964,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "post" : {
-        "operationId" : "Management_RegisterOutway",
+        "operationId" : "ManagementService_RegisterOutway",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1000,13 +1000,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       }
     },
     "/api/v1/outways/{name}" : {
       "delete" : {
-        "operationId" : "Management_DeleteOutway",
+        "operationId" : "ManagementService_DeleteOutway",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -1037,12 +1037,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/services" : {
       "get" : {
-        "operationId" : "Management_ListServices",
+        "operationId" : "ManagementService_ListServices",
         "responses" : {
           "200" : {
             "content" : {
@@ -1065,10 +1065,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "post" : {
-        "operationId" : "Management_CreateService",
+        "operationId" : "ManagementService_CreateService",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1101,13 +1101,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       }
     },
     "/api/v1/services/{name}" : {
       "delete" : {
-        "operationId" : "Management_DeleteService",
+        "operationId" : "ManagementService_DeleteService",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -1138,10 +1138,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "get" : {
-        "operationId" : "Management_GetService",
+        "operationId" : "ManagementService_GetService",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -1172,10 +1172,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "put" : {
-        "operationId" : "Management_UpdateService",
+        "operationId" : "ManagementService_UpdateService",
         "parameters" : [ {
           "in" : "path",
           "name" : "name",
@@ -1188,7 +1188,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Management_UpdateService_request"
+                "$ref" : "#/components/schemas/ManagementService_UpdateService_request"
               }
             }
           },
@@ -1216,13 +1216,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       }
     },
     "/api/v1/settings" : {
       "get" : {
-        "operationId" : "Management_GetSettings",
+        "operationId" : "ManagementService_GetSettings",
         "responses" : {
           "200" : {
             "content" : {
@@ -1245,10 +1245,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "put" : {
-        "operationId" : "Management_UpdateSettings",
+        "operationId" : "ManagementService_UpdateSettings",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1281,13 +1281,13 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ],
+        "tags" : [ "ManagementService" ],
         "x-codegen-request-body-name" : "body"
       }
     },
     "/api/v1/statistics/services" : {
       "get" : {
-        "operationId" : "Management_GetStatisticsOfServices",
+        "operationId" : "ManagementService_GetStatisticsOfServices",
         "responses" : {
           "200" : {
             "content" : {
@@ -1310,12 +1310,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/terms-of-service" : {
       "get" : {
-        "operationId" : "Management_GetTermsOfServiceStatus",
+        "operationId" : "ManagementService_GetTermsOfServiceStatus",
         "responses" : {
           "200" : {
             "content" : {
@@ -1338,10 +1338,10 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       },
       "post" : {
-        "operationId" : "Management_AcceptTermsOfService",
+        "operationId" : "ManagementService_AcceptTermsOfService",
         "responses" : {
           "200" : {
             "content" : {
@@ -1364,12 +1364,12 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/txlog/enabled" : {
       "get" : {
-        "operationId" : "Management_IsTXLogEnabled",
+        "operationId" : "ManagementService_IsTXLogEnabled",
         "responses" : {
           "200" : {
             "content" : {
@@ -1392,18 +1392,18 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "Management" ]
+        "tags" : [ "ManagementService" ]
       }
     },
     "/api/v1/txlog/records" : {
       "get" : {
-        "operationId" : "TXLog_ListRecords",
+        "operationId" : "TXLogService_ListRecords",
         "responses" : {
           "200" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/managementTXLogListRecordsResponse"
+                  "$ref" : "#/components/schemas/managementTXLogServiceListRecordsResponse"
                 }
               }
             },
@@ -1420,7 +1420,7 @@
             "description" : "An unexpected error response."
           }
         },
-        "tags" : [ "TXLog" ]
+        "tags" : [ "TXLogService" ]
       }
     }
   },
@@ -1431,7 +1431,7 @@
         "enum" : [ "ACTION_TYPE_UNSPECIFIED", "ACTION_TYPE_LOGIN_SUCCESS", "ACTION_TYPE_LOGIN_FAIL", "ACTION_TYPE_LOGOUT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT", "ACTION_TYPE_ACCESS_GRANT_REVOKE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_FAIL", "ACTION_TYPE_SERVICE_CREATE", "ACTION_TYPE_SERVICE_UPDATE", "ACTION_TYPE_SERVICE_DELETE", "ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE", "ACTION_TYPE_ORDER_CREATE", "ACTION_TYPE_ORDER_OUTGOING_REVOKE", "ACTION_TYPE_ORDER_INCOMING_REVOKE", "ACTION_TYPE_INWAY_DELETE", "ACTION_TYPE_ORDER_OUTGOING_UPDATE", "ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE", "ACTION_TYPE_OUTWAY_DELETE" ],
         "type" : "string"
       },
-      "DirectoryServiceAccessState" : {
+      "DirectoryNlxServiceAccessState" : {
         "properties" : {
           "access_request" : {
             "$ref" : "#/components/schemas/managementOutgoingAccessRequest"
@@ -1442,7 +1442,7 @@
         },
         "type" : "object"
       },
-      "DirectoryServiceState" : {
+      "DirectoryNlxServiceState" : {
         "default" : "STATE_UNSPECIFIED",
         "enum" : [ "STATE_UNSPECIFIED", "STATE_UP", "STATE_DOWN", "STATE_DEGRADED" ],
         "type" : "string"
@@ -1731,18 +1731,7 @@
       "managementDeleteServiceResponse" : {
         "type" : "object"
       },
-      "managementDirectoryListServicesResponse" : {
-        "properties" : {
-          "services" : {
-            "items" : {
-              "$ref" : "#/components/schemas/managementDirectoryService"
-            },
-            "type" : "array"
-          }
-        },
-        "type" : "object"
-      },
-      "managementDirectoryService" : {
+      "managementDirectoryNlxService" : {
         "properties" : {
           "service_name" : {
             "type" : "string"
@@ -1760,7 +1749,7 @@
             "type" : "string"
           },
           "state" : {
-            "$ref" : "#/components/schemas/DirectoryServiceState"
+            "$ref" : "#/components/schemas/DirectoryNlxServiceState"
           },
           "one_time_costs" : {
             "format" : "int32",
@@ -1776,7 +1765,18 @@
           },
           "access_states" : {
             "items" : {
-              "$ref" : "#/components/schemas/DirectoryServiceAccessState"
+              "$ref" : "#/components/schemas/DirectoryNlxServiceAccessState"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "managementDirectoryServiceListServicesResponse" : {
+        "properties" : {
+          "services" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementDirectoryNlxService"
             },
             "type" : "array"
           }
@@ -1906,7 +1906,7 @@
       "managementGetOrganizationServiceResponse" : {
         "properties" : {
           "directory_service" : {
-            "$ref" : "#/components/schemas/managementDirectoryService"
+            "$ref" : "#/components/schemas/managementDirectoryNlxService"
           }
         },
         "type" : "object"
@@ -2440,13 +2440,10 @@
         "enum" : [ "TX_LOG_DIRECTION_UNSPECIFIED", "TX_LOG_DIRECTION_IN", "TX_LOG_DIRECTION_OUT" ],
         "type" : "string"
       },
-      "managementTXLogListRecordsResponse" : {
+      "managementTXLogNlxService" : {
         "properties" : {
-          "records" : {
-            "items" : {
-              "$ref" : "#/components/schemas/managementTXLogRecord"
-            },
-            "type" : "array"
+          "name" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -2485,7 +2482,7 @@
             "$ref" : "#/components/schemas/managementTXLogDirection"
           },
           "service" : {
-            "$ref" : "#/components/schemas/managementTXLogService"
+            "$ref" : "#/components/schemas/managementTXLogNlxService"
           },
           "data" : {
             "type" : "string"
@@ -2503,10 +2500,13 @@
         },
         "type" : "object"
       },
-      "managementTXLogService" : {
+      "managementTXLogServiceListRecordsResponse" : {
         "properties" : {
-          "name" : {
-            "type" : "string"
+          "records" : {
+            "items" : {
+              "$ref" : "#/components/schemas/managementTXLogRecord"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"
@@ -2682,7 +2682,7 @@
         },
         "type" : "object"
       },
-      "Management_UpdateService_request" : {
+      "ManagementService_UpdateService_request" : {
         "properties" : {
           "endpoint_url" : {
             "type" : "string"

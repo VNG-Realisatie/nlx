@@ -40,10 +40,10 @@ import type {
   ManagementRegisterOutwayRequest,
   ManagementRevokeAccessGrantResponse,
   ManagementSendAccessRequestResponse,
+  ManagementServiceUpdateServiceRequest,
   ManagementSynchronizeOrdersResponse,
   ManagementUpdateInwayResponse,
   ManagementUpdateOutgoingOrderRequest,
-  ManagementUpdateServiceRequest,
   ManagementUpdateServiceResponse,
   ManagementUpdateSettingsRequest,
   RpcStatus,
@@ -99,14 +99,14 @@ import {
     ManagementRevokeAccessGrantResponseToJSON,
     ManagementSendAccessRequestResponseFromJSON,
     ManagementSendAccessRequestResponseToJSON,
+    ManagementServiceUpdateServiceRequestFromJSON,
+    ManagementServiceUpdateServiceRequestToJSON,
     ManagementSynchronizeOrdersResponseFromJSON,
     ManagementSynchronizeOrdersResponseToJSON,
     ManagementUpdateInwayResponseFromJSON,
     ManagementUpdateInwayResponseToJSON,
     ManagementUpdateOutgoingOrderRequestFromJSON,
     ManagementUpdateOutgoingOrderRequestToJSON,
-    ManagementUpdateServiceRequestFromJSON,
-    ManagementUpdateServiceRequestToJSON,
     ManagementUpdateServiceResponseFromJSON,
     ManagementUpdateServiceResponseToJSON,
     ManagementUpdateSettingsRequestFromJSON,
@@ -115,106 +115,106 @@ import {
     RpcStatusToJSON,
 } from '../models';
 
-export interface ManagementApproveIncomingAccessRequestRequest {
+export interface ManagementServiceApproveIncomingAccessRequestRequest {
     serviceName: string;
     accessRequestId: string;
 }
 
-export interface ManagementCreateOutgoingOrderOperationRequest {
+export interface ManagementServiceCreateOutgoingOrderRequest {
     body: ManagementCreateOutgoingOrderRequest;
 }
 
-export interface ManagementCreateServiceOperationRequest {
+export interface ManagementServiceCreateServiceRequest {
     body: ManagementCreateServiceRequest;
 }
 
-export interface ManagementDeleteInwayRequest {
+export interface ManagementServiceDeleteInwayRequest {
     name: string;
 }
 
-export interface ManagementDeleteOutwayRequest {
+export interface ManagementServiceDeleteOutwayRequest {
     name: string;
 }
 
-export interface ManagementDeleteServiceRequest {
+export interface ManagementServiceDeleteServiceRequest {
     name: string;
 }
 
-export interface ManagementGetInwayRequest {
+export interface ManagementServiceGetInwayRequest {
     name: string;
 }
 
-export interface ManagementGetServiceRequest {
+export interface ManagementServiceGetServiceRequest {
     name: string;
 }
 
-export interface ManagementListAccessGrantsForServiceRequest {
+export interface ManagementServiceListAccessGrantsForServiceRequest {
     serviceName: string;
 }
 
-export interface ManagementListIncomingAccessRequestsRequest {
+export interface ManagementServiceListIncomingAccessRequestsRequest {
     serviceName: string;
 }
 
-export interface ManagementRegisterInwayOperationRequest {
+export interface ManagementServiceRegisterInwayRequest {
     body: ManagementRegisterInwayRequest;
 }
 
-export interface ManagementRegisterOutwayOperationRequest {
+export interface ManagementServiceRegisterOutwayRequest {
     body: ManagementRegisterOutwayRequest;
 }
 
-export interface ManagementRejectIncomingAccessRequestRequest {
+export interface ManagementServiceRejectIncomingAccessRequestRequest {
     serviceName: string;
     accessRequestId: string;
 }
 
-export interface ManagementRevokeAccessGrantRequest {
+export interface ManagementServiceRevokeAccessGrantRequest {
     accessGrantId: string;
 }
 
-export interface ManagementRevokeOutgoingOrderRequest {
+export interface ManagementServiceRevokeOutgoingOrderRequest {
     delegatee: string;
     reference: string;
 }
 
-export interface ManagementSendAccessRequestRequest {
+export interface ManagementServiceSendAccessRequestRequest {
     organizationSerialNumber: string;
     serviceName: string;
     publicKeyPem?: string;
 }
 
-export interface ManagementSynchronizeOutgoingAccessRequestsRequest {
+export interface ManagementServiceSynchronizeOutgoingAccessRequestsRequest {
     organizationSerialNumber: string;
     serviceName: string;
 }
 
-export interface ManagementUpdateInwayRequest {
+export interface ManagementServiceUpdateInwayRequest {
     name: string;
     inway: ManagementInway;
 }
 
-export interface ManagementUpdateOutgoingOrderOperationRequest {
+export interface ManagementServiceUpdateOutgoingOrderRequest {
     body: ManagementUpdateOutgoingOrderRequest;
 }
 
-export interface ManagementUpdateServiceOperationRequest {
+export interface ManagementServiceUpdateServiceOperationRequest {
     name: string;
-    body: ManagementUpdateServiceRequest;
+    body: ManagementServiceUpdateServiceRequest;
 }
 
-export interface ManagementUpdateSettingsOperationRequest {
+export interface ManagementServiceUpdateSettingsRequest {
     body: ManagementUpdateSettingsRequest;
 }
 
 /**
  * 
  */
-export class ManagementApi extends runtime.BaseAPI {
+export class ManagementServiceApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementAcceptTermsOfServiceRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceAcceptTermsOfServiceRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -231,20 +231,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementAcceptTermsOfService(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementAcceptTermsOfServiceRaw(initOverrides);
+    async managementServiceAcceptTermsOfService(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceAcceptTermsOfServiceRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementApproveIncomingAccessRequestRaw(requestParameters: ManagementApproveIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceApproveIncomingAccessRequestRaw(requestParameters: ManagementServiceApproveIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementApproveIncomingAccessRequest.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceApproveIncomingAccessRequest.');
         }
 
         if (requestParameters.accessRequestId === null || requestParameters.accessRequestId === undefined) {
-            throw new runtime.RequiredError('accessRequestId','Required parameter requestParameters.accessRequestId was null or undefined when calling managementApproveIncomingAccessRequest.');
+            throw new runtime.RequiredError('accessRequestId','Required parameter requestParameters.accessRequestId was null or undefined when calling managementServiceApproveIncomingAccessRequest.');
         }
 
         const queryParameters: any = {};
@@ -263,16 +263,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementApproveIncomingAccessRequest(requestParameters: ManagementApproveIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementApproveIncomingAccessRequestRaw(requestParameters, initOverrides);
+    async managementServiceApproveIncomingAccessRequest(requestParameters: ManagementServiceApproveIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceApproveIncomingAccessRequestRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementCreateOutgoingOrderRaw(requestParameters: ManagementCreateOutgoingOrderOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceCreateOutgoingOrderRaw(requestParameters: ManagementServiceCreateOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateOutgoingOrder.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceCreateOutgoingOrder.');
         }
 
         const queryParameters: any = {};
@@ -294,16 +294,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateOutgoingOrder(requestParameters: ManagementCreateOutgoingOrderOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementCreateOutgoingOrderRaw(requestParameters, initOverrides);
+    async managementServiceCreateOutgoingOrder(requestParameters: ManagementServiceCreateOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceCreateOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementCreateServiceRaw(requestParameters: ManagementCreateServiceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementCreateServiceResponse>> {
+    async managementServiceCreateServiceRaw(requestParameters: ManagementServiceCreateServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementCreateServiceResponse>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementCreateService.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceCreateService.');
         }
 
         const queryParameters: any = {};
@@ -325,16 +325,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementCreateService(requestParameters: ManagementCreateServiceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementCreateServiceResponse> {
-        const response = await this.managementCreateServiceRaw(requestParameters, initOverrides);
+    async managementServiceCreateService(requestParameters: ManagementServiceCreateServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementCreateServiceResponse> {
+        const response = await this.managementServiceCreateServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementDeleteInwayRaw(requestParameters: ManagementDeleteInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceDeleteInwayRaw(requestParameters: ManagementServiceDeleteInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementDeleteInway.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceDeleteInway.');
         }
 
         const queryParameters: any = {};
@@ -353,16 +353,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementDeleteInway(requestParameters: ManagementDeleteInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementDeleteInwayRaw(requestParameters, initOverrides);
+    async managementServiceDeleteInway(requestParameters: ManagementServiceDeleteInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceDeleteInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementDeleteOutwayRaw(requestParameters: ManagementDeleteOutwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceDeleteOutwayRaw(requestParameters: ManagementServiceDeleteOutwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementDeleteOutway.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceDeleteOutway.');
         }
 
         const queryParameters: any = {};
@@ -381,16 +381,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementDeleteOutway(requestParameters: ManagementDeleteOutwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementDeleteOutwayRaw(requestParameters, initOverrides);
+    async managementServiceDeleteOutway(requestParameters: ManagementServiceDeleteOutwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceDeleteOutwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementDeleteServiceRaw(requestParameters: ManagementDeleteServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceDeleteServiceRaw(requestParameters: ManagementServiceDeleteServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementDeleteService.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceDeleteService.');
         }
 
         const queryParameters: any = {};
@@ -409,14 +409,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementDeleteService(requestParameters: ManagementDeleteServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementDeleteServiceRaw(requestParameters, initOverrides);
+    async managementServiceDeleteService(requestParameters: ManagementServiceDeleteServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceDeleteServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementDownloadFinanceExportRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementDownloadFinanceExportResponse>> {
+    async managementServiceDownloadFinanceExportRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementDownloadFinanceExportResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -433,16 +433,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementDownloadFinanceExport(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementDownloadFinanceExportResponse> {
-        const response = await this.managementDownloadFinanceExportRaw(initOverrides);
+    async managementServiceDownloadFinanceExport(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementDownloadFinanceExportResponse> {
+        const response = await this.managementServiceDownloadFinanceExportRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementGetInwayRaw(requestParameters: ManagementGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetInwayResponse>> {
+    async managementServiceGetInwayRaw(requestParameters: ManagementServiceGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetInwayResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementGetInway.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceGetInway.');
         }
 
         const queryParameters: any = {};
@@ -461,16 +461,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetInway(requestParameters: ManagementGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetInwayResponse> {
-        const response = await this.managementGetInwayRaw(requestParameters, initOverrides);
+    async managementServiceGetInway(requestParameters: ManagementServiceGetInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetInwayResponse> {
+        const response = await this.managementServiceGetInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementGetServiceRaw(requestParameters: ManagementGetServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetServiceResponse>> {
+    async managementServiceGetServiceRaw(requestParameters: ManagementServiceGetServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetServiceResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementGetService.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceGetService.');
         }
 
         const queryParameters: any = {};
@@ -489,14 +489,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetService(requestParameters: ManagementGetServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetServiceResponse> {
-        const response = await this.managementGetServiceRaw(requestParameters, initOverrides);
+    async managementServiceGetService(requestParameters: ManagementServiceGetServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetServiceResponse> {
+        const response = await this.managementServiceGetServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementGetSettingsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetSettingsResponse>> {
+    async managementServiceGetSettingsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetSettingsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -513,14 +513,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetSettings(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetSettingsResponse> {
-        const response = await this.managementGetSettingsRaw(initOverrides);
+    async managementServiceGetSettings(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetSettingsResponse> {
+        const response = await this.managementServiceGetSettingsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementGetStatisticsOfServicesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetStatisticsOfServicesResponse>> {
+    async managementServiceGetStatisticsOfServicesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetStatisticsOfServicesResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -537,14 +537,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetStatisticsOfServices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetStatisticsOfServicesResponse> {
-        const response = await this.managementGetStatisticsOfServicesRaw(initOverrides);
+    async managementServiceGetStatisticsOfServices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetStatisticsOfServicesResponse> {
+        const response = await this.managementServiceGetStatisticsOfServicesRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementGetTermsOfServiceStatusRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetTermsOfServiceStatusResponse>> {
+    async managementServiceGetTermsOfServiceStatusRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementGetTermsOfServiceStatusResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -561,14 +561,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementGetTermsOfServiceStatus(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetTermsOfServiceStatusResponse> {
-        const response = await this.managementGetTermsOfServiceStatusRaw(initOverrides);
+    async managementServiceGetTermsOfServiceStatus(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementGetTermsOfServiceStatusResponse> {
+        const response = await this.managementServiceGetTermsOfServiceStatusRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementIsFinanceEnabledRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementIsFinanceEnabledResponse>> {
+    async managementServiceIsFinanceEnabledRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementIsFinanceEnabledResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -585,14 +585,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementIsFinanceEnabled(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementIsFinanceEnabledResponse> {
-        const response = await this.managementIsFinanceEnabledRaw(initOverrides);
+    async managementServiceIsFinanceEnabled(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementIsFinanceEnabledResponse> {
+        const response = await this.managementServiceIsFinanceEnabledRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementIsTXLogEnabledRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementIsTXLogEnabledResponse>> {
+    async managementServiceIsTXLogEnabledRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementIsTXLogEnabledResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -609,16 +609,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementIsTXLogEnabled(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementIsTXLogEnabledResponse> {
-        const response = await this.managementIsTXLogEnabledRaw(initOverrides);
+    async managementServiceIsTXLogEnabled(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementIsTXLogEnabledResponse> {
+        const response = await this.managementServiceIsTXLogEnabledRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListAccessGrantsForServiceRaw(requestParameters: ManagementListAccessGrantsForServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListAccessGrantsForServiceResponse>> {
+    async managementServiceListAccessGrantsForServiceRaw(requestParameters: ManagementServiceListAccessGrantsForServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListAccessGrantsForServiceResponse>> {
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementListAccessGrantsForService.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceListAccessGrantsForService.');
         }
 
         const queryParameters: any = {};
@@ -637,14 +637,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListAccessGrantsForService(requestParameters: ManagementListAccessGrantsForServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListAccessGrantsForServiceResponse> {
-        const response = await this.managementListAccessGrantsForServiceRaw(requestParameters, initOverrides);
+    async managementServiceListAccessGrantsForService(requestParameters: ManagementServiceListAccessGrantsForServiceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListAccessGrantsForServiceResponse> {
+        const response = await this.managementServiceListAccessGrantsForServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListAuditLogsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListAuditLogsResponse>> {
+    async managementServiceListAuditLogsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListAuditLogsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -661,16 +661,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListAuditLogs(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListAuditLogsResponse> {
-        const response = await this.managementListAuditLogsRaw(initOverrides);
+    async managementServiceListAuditLogs(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListAuditLogsResponse> {
+        const response = await this.managementServiceListAuditLogsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListIncomingAccessRequestsRaw(requestParameters: ManagementListIncomingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListIncomingAccessRequestsResponse>> {
+    async managementServiceListIncomingAccessRequestsRaw(requestParameters: ManagementServiceListIncomingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListIncomingAccessRequestsResponse>> {
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementListIncomingAccessRequests.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceListIncomingAccessRequests.');
         }
 
         const queryParameters: any = {};
@@ -689,14 +689,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListIncomingAccessRequests(requestParameters: ManagementListIncomingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListIncomingAccessRequestsResponse> {
-        const response = await this.managementListIncomingAccessRequestsRaw(requestParameters, initOverrides);
+    async managementServiceListIncomingAccessRequests(requestParameters: ManagementServiceListIncomingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListIncomingAccessRequestsResponse> {
+        const response = await this.managementServiceListIncomingAccessRequestsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListIncomingOrdersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListIncomingOrdersResponse>> {
+    async managementServiceListIncomingOrdersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListIncomingOrdersResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -713,14 +713,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListIncomingOrders(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListIncomingOrdersResponse> {
-        const response = await this.managementListIncomingOrdersRaw(initOverrides);
+    async managementServiceListIncomingOrders(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListIncomingOrdersResponse> {
+        const response = await this.managementServiceListIncomingOrdersRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListInwaysRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListInwaysResponse>> {
+    async managementServiceListInwaysRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListInwaysResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -737,14 +737,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListInways(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListInwaysResponse> {
-        const response = await this.managementListInwaysRaw(initOverrides);
+    async managementServiceListInways(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListInwaysResponse> {
+        const response = await this.managementServiceListInwaysRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListOutgoingOrdersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListOutgoingOrdersResponse>> {
+    async managementServiceListOutgoingOrdersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListOutgoingOrdersResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -761,14 +761,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListOutgoingOrders(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListOutgoingOrdersResponse> {
-        const response = await this.managementListOutgoingOrdersRaw(initOverrides);
+    async managementServiceListOutgoingOrders(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListOutgoingOrdersResponse> {
+        const response = await this.managementServiceListOutgoingOrdersRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListOutwaysRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListOutwaysResponse>> {
+    async managementServiceListOutwaysRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListOutwaysResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -785,14 +785,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListOutways(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListOutwaysResponse> {
-        const response = await this.managementListOutwaysRaw(initOverrides);
+    async managementServiceListOutways(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListOutwaysResponse> {
+        const response = await this.managementServiceListOutwaysRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementListServicesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListServicesResponse>> {
+    async managementServiceListServicesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementListServicesResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -809,16 +809,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementListServices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListServicesResponse> {
-        const response = await this.managementListServicesRaw(initOverrides);
+    async managementServiceListServices(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementListServicesResponse> {
+        const response = await this.managementServiceListServicesRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementRegisterInwayRaw(requestParameters: ManagementRegisterInwayOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementRegisterInwayResponse>> {
+    async managementServiceRegisterInwayRaw(requestParameters: ManagementServiceRegisterInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementRegisterInwayResponse>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementRegisterInway.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceRegisterInway.');
         }
 
         const queryParameters: any = {};
@@ -840,16 +840,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRegisterInway(requestParameters: ManagementRegisterInwayOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementRegisterInwayResponse> {
-        const response = await this.managementRegisterInwayRaw(requestParameters, initOverrides);
+    async managementServiceRegisterInway(requestParameters: ManagementServiceRegisterInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementRegisterInwayResponse> {
+        const response = await this.managementServiceRegisterInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementRegisterOutwayRaw(requestParameters: ManagementRegisterOutwayOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceRegisterOutwayRaw(requestParameters: ManagementServiceRegisterOutwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementRegisterOutway.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceRegisterOutway.');
         }
 
         const queryParameters: any = {};
@@ -871,20 +871,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRegisterOutway(requestParameters: ManagementRegisterOutwayOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementRegisterOutwayRaw(requestParameters, initOverrides);
+    async managementServiceRegisterOutway(requestParameters: ManagementServiceRegisterOutwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceRegisterOutwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementRejectIncomingAccessRequestRaw(requestParameters: ManagementRejectIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceRejectIncomingAccessRequestRaw(requestParameters: ManagementServiceRejectIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementRejectIncomingAccessRequest.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceRejectIncomingAccessRequest.');
         }
 
         if (requestParameters.accessRequestId === null || requestParameters.accessRequestId === undefined) {
-            throw new runtime.RequiredError('accessRequestId','Required parameter requestParameters.accessRequestId was null or undefined when calling managementRejectIncomingAccessRequest.');
+            throw new runtime.RequiredError('accessRequestId','Required parameter requestParameters.accessRequestId was null or undefined when calling managementServiceRejectIncomingAccessRequest.');
         }
 
         const queryParameters: any = {};
@@ -903,16 +903,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRejectIncomingAccessRequest(requestParameters: ManagementRejectIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementRejectIncomingAccessRequestRaw(requestParameters, initOverrides);
+    async managementServiceRejectIncomingAccessRequest(requestParameters: ManagementServiceRejectIncomingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceRejectIncomingAccessRequestRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementRevokeAccessGrantRaw(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementRevokeAccessGrantResponse>> {
+    async managementServiceRevokeAccessGrantRaw(requestParameters: ManagementServiceRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementRevokeAccessGrantResponse>> {
         if (requestParameters.accessGrantId === null || requestParameters.accessGrantId === undefined) {
-            throw new runtime.RequiredError('accessGrantId','Required parameter requestParameters.accessGrantId was null or undefined when calling managementRevokeAccessGrant.');
+            throw new runtime.RequiredError('accessGrantId','Required parameter requestParameters.accessGrantId was null or undefined when calling managementServiceRevokeAccessGrant.');
         }
 
         const queryParameters: any = {};
@@ -931,20 +931,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRevokeAccessGrant(requestParameters: ManagementRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementRevokeAccessGrantResponse> {
-        const response = await this.managementRevokeAccessGrantRaw(requestParameters, initOverrides);
+    async managementServiceRevokeAccessGrant(requestParameters: ManagementServiceRevokeAccessGrantRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementRevokeAccessGrantResponse> {
+        const response = await this.managementServiceRevokeAccessGrantRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementRevokeOutgoingOrderRaw(requestParameters: ManagementRevokeOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceRevokeOutgoingOrderRaw(requestParameters: ManagementServiceRevokeOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.delegatee === null || requestParameters.delegatee === undefined) {
-            throw new runtime.RequiredError('delegatee','Required parameter requestParameters.delegatee was null or undefined when calling managementRevokeOutgoingOrder.');
+            throw new runtime.RequiredError('delegatee','Required parameter requestParameters.delegatee was null or undefined when calling managementServiceRevokeOutgoingOrder.');
         }
 
         if (requestParameters.reference === null || requestParameters.reference === undefined) {
-            throw new runtime.RequiredError('reference','Required parameter requestParameters.reference was null or undefined when calling managementRevokeOutgoingOrder.');
+            throw new runtime.RequiredError('reference','Required parameter requestParameters.reference was null or undefined when calling managementServiceRevokeOutgoingOrder.');
         }
 
         const queryParameters: any = {};
@@ -963,20 +963,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementRevokeOutgoingOrder(requestParameters: ManagementRevokeOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementRevokeOutgoingOrderRaw(requestParameters, initOverrides);
+    async managementServiceRevokeOutgoingOrder(requestParameters: ManagementServiceRevokeOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceRevokeOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementSendAccessRequestRaw(requestParameters: ManagementSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementSendAccessRequestResponse>> {
+    async managementServiceSendAccessRequestRaw(requestParameters: ManagementServiceSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementSendAccessRequestResponse>> {
         if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
-            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementSendAccessRequest.');
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementServiceSendAccessRequest.');
         }
 
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementSendAccessRequest.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceSendAccessRequest.');
         }
 
         const queryParameters: any = {};
@@ -999,14 +999,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementSendAccessRequest(requestParameters: ManagementSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementSendAccessRequestResponse> {
-        const response = await this.managementSendAccessRequestRaw(requestParameters, initOverrides);
+    async managementServiceSendAccessRequest(requestParameters: ManagementServiceSendAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementSendAccessRequestResponse> {
+        const response = await this.managementServiceSendAccessRequestRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementSynchronizeAllOutgoingAccessRequestsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceSynchronizeAllOutgoingAccessRequestsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1023,14 +1023,14 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementSynchronizeAllOutgoingAccessRequests(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementSynchronizeAllOutgoingAccessRequestsRaw(initOverrides);
+    async managementServiceSynchronizeAllOutgoingAccessRequests(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceSynchronizeAllOutgoingAccessRequestsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementSynchronizeOrdersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementSynchronizeOrdersResponse>> {
+    async managementServiceSynchronizeOrdersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementSynchronizeOrdersResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1047,20 +1047,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementSynchronizeOrders(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementSynchronizeOrdersResponse> {
-        const response = await this.managementSynchronizeOrdersRaw(initOverrides);
+    async managementServiceSynchronizeOrders(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementSynchronizeOrdersResponse> {
+        const response = await this.managementServiceSynchronizeOrdersRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementSynchronizeOutgoingAccessRequestsRaw(requestParameters: ManagementSynchronizeOutgoingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceSynchronizeOutgoingAccessRequestsRaw(requestParameters: ManagementServiceSynchronizeOutgoingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
-            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementSynchronizeOutgoingAccessRequests.');
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementServiceSynchronizeOutgoingAccessRequests.');
         }
 
         if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
-            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementSynchronizeOutgoingAccessRequests.');
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceSynchronizeOutgoingAccessRequests.');
         }
 
         const queryParameters: any = {};
@@ -1079,20 +1079,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementSynchronizeOutgoingAccessRequests(requestParameters: ManagementSynchronizeOutgoingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementSynchronizeOutgoingAccessRequestsRaw(requestParameters, initOverrides);
+    async managementServiceSynchronizeOutgoingAccessRequests(requestParameters: ManagementServiceSynchronizeOutgoingAccessRequestsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceSynchronizeOutgoingAccessRequestsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementUpdateInwayRaw(requestParameters: ManagementUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementUpdateInwayResponse>> {
+    async managementServiceUpdateInwayRaw(requestParameters: ManagementServiceUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementUpdateInwayResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementUpdateInway.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceUpdateInway.');
         }
 
         if (requestParameters.inway === null || requestParameters.inway === undefined) {
-            throw new runtime.RequiredError('inway','Required parameter requestParameters.inway was null or undefined when calling managementUpdateInway.');
+            throw new runtime.RequiredError('inway','Required parameter requestParameters.inway was null or undefined when calling managementServiceUpdateInway.');
         }
 
         const queryParameters: any = {};
@@ -1114,16 +1114,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateInway(requestParameters: ManagementUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementUpdateInwayResponse> {
-        const response = await this.managementUpdateInwayRaw(requestParameters, initOverrides);
+    async managementServiceUpdateInway(requestParameters: ManagementServiceUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementUpdateInwayResponse> {
+        const response = await this.managementServiceUpdateInwayRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementUpdateOutgoingOrderRaw(requestParameters: ManagementUpdateOutgoingOrderOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceUpdateOutgoingOrderRaw(requestParameters: ManagementServiceUpdateOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementUpdateOutgoingOrder.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceUpdateOutgoingOrder.');
         }
 
         const queryParameters: any = {};
@@ -1145,20 +1145,20 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateOutgoingOrder(requestParameters: ManagementUpdateOutgoingOrderOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementUpdateOutgoingOrderRaw(requestParameters, initOverrides);
+    async managementServiceUpdateOutgoingOrder(requestParameters: ManagementServiceUpdateOutgoingOrderRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceUpdateOutgoingOrderRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementUpdateServiceRaw(requestParameters: ManagementUpdateServiceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementUpdateServiceResponse>> {
+    async managementServiceUpdateServiceRaw(requestParameters: ManagementServiceUpdateServiceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementUpdateServiceResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
-            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementUpdateService.');
+            throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceUpdateService.');
         }
 
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementUpdateService.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceUpdateService.');
         }
 
         const queryParameters: any = {};
@@ -1172,7 +1172,7 @@ export class ManagementApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ManagementUpdateServiceRequestToJSON(requestParameters.body),
+            body: ManagementServiceUpdateServiceRequestToJSON(requestParameters.body),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ManagementUpdateServiceResponseFromJSON(jsonValue));
@@ -1180,16 +1180,16 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateService(requestParameters: ManagementUpdateServiceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementUpdateServiceResponse> {
-        const response = await this.managementUpdateServiceRaw(requestParameters, initOverrides);
+    async managementServiceUpdateService(requestParameters: ManagementServiceUpdateServiceOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementUpdateServiceResponse> {
+        const response = await this.managementServiceUpdateServiceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async managementUpdateSettingsRaw(requestParameters: ManagementUpdateSettingsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async managementServiceUpdateSettingsRaw(requestParameters: ManagementServiceUpdateSettingsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.body === null || requestParameters.body === undefined) {
-            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementUpdateSettings.');
+            throw new runtime.RequiredError('body','Required parameter requestParameters.body was null or undefined when calling managementServiceUpdateSettings.');
         }
 
         const queryParameters: any = {};
@@ -1211,8 +1211,8 @@ export class ManagementApi extends runtime.BaseAPI {
 
     /**
      */
-    async managementUpdateSettings(requestParameters: ManagementUpdateSettingsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.managementUpdateSettingsRaw(requestParameters, initOverrides);
+    async managementServiceUpdateSettings(requestParameters: ManagementServiceUpdateSettingsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceUpdateSettingsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

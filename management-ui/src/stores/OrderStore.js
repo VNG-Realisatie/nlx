@@ -30,7 +30,7 @@ class OrderStore {
   }
 
   create = flow(function* create(formData) {
-    yield this._managementApiClient.managementCreateOutgoingOrder({
+    yield this._managementApiClient.managementServiceCreateOutgoingOrder({
       body: {
         reference: formData.reference,
         description: formData.description,
@@ -48,7 +48,7 @@ class OrderStore {
 
     try {
       const result =
-        yield this._managementApiClient.managementListOutgoingOrders()
+        yield this._managementApiClient.managementServiceListOutgoingOrders()
 
       result.orders.forEach((order) => {
         order.accessProofs = order.accessProofs || []
@@ -78,7 +78,7 @@ class OrderStore {
 
   updateOutgoing = flow(function* updateOutgoing(order) {
     try {
-      yield this._managementApiClient.managementUpdateOutgoingOrder({
+      yield this._managementApiClient.managementServiceUpdateOutgoingOrder({
         body: order,
       })
     } catch (err) {
@@ -96,7 +96,7 @@ class OrderStore {
   }
 
   revokeOutgoing = flow(function* revokeOutgoing(order) {
-    yield this._managementApiClient.managementRevokeOutgoingOrder({
+    yield this._managementApiClient.managementServiceRevokeOutgoingOrder({
       delegatee: order.delegatee.serialNumber,
       reference: order.reference,
     })
@@ -109,7 +109,7 @@ class OrderStore {
 
     try {
       const result =
-        yield this._managementApiClient.managementListIncomingOrders()
+        yield this._managementApiClient.managementServiceListIncomingOrders()
 
       result.orders.forEach((order) => {
         const orderModel = new IncomingOrderModel({
@@ -141,7 +141,7 @@ class OrderStore {
 
     try {
       const result =
-        yield this._managementApiClient.managementSynchronizeOrders()
+        yield this._managementApiClient.managementServiceSynchronizeOrders()
 
       result.orders.forEach((order) => {
         const orderModel = new IncomingOrderModel({

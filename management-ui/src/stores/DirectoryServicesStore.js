@@ -23,7 +23,7 @@ class DirectoryServicesStore {
   fetch = flow(function* fetch(organizationSerialNumber, serviceName) {
     try {
       const serviceData =
-        (yield this._directoryApiClient.directoryGetOrganizationService({
+        (yield this._directoryApiClient.directoryServiceGetOrganizationService({
           organizationSerialNumber,
           serviceName,
         })).directoryService
@@ -52,7 +52,7 @@ class DirectoryServicesStore {
     organizationSerialNumber,
     serviceName,
   ) {
-    return yield this._managementApiClient.managementSynchronizeOutgoingAccessRequests(
+    return yield this._managementApiClient.managementServiceSynchronizeOutgoingAccessRequests(
       {
         organizationSerialNumber,
         serviceName,
@@ -61,7 +61,7 @@ class DirectoryServicesStore {
   })
 
   syncAllOutgoingAccessRequests = flow(function* fetch() {
-    return yield this._managementApiClient.managementSynchronizeAllOutgoingAccessRequests()
+    return yield this._managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests()
   })
 
   fetchAll = flow(function* fetchAll() {
@@ -74,7 +74,7 @@ class DirectoryServicesStore {
 
     try {
       const servicesData =
-        yield this._directoryApiClient.directoryListServices()
+        yield this._directoryApiClient.directoryServiceListServices()
 
       this.services = servicesData.services.map((serviceData) =>
         this._updateFromServer(serviceData),
@@ -97,7 +97,7 @@ class DirectoryServicesStore {
   }
 
   async requestAccess(organizationSerialNumber, serviceName, publicKeyPem) {
-    return this._managementApiClient.managementSendAccessRequest({
+    return this._managementApiClient.managementServiceSendAccessRequest({
       organizationSerialNumber: organizationSerialNumber,
       serviceName: serviceName,
       publicKeyPem: publicKeyPem,

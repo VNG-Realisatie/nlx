@@ -2,13 +2,13 @@
 // Licensed under the EUPL
 //
 import { configure } from 'mobx'
-import { TXLogApi, ManagementApi } from '../api'
+import { TXLogServiceApi, ManagementServiceApi } from '../api'
 import TransactionLogModel from './models/TransactionLogModel'
 import TransactionLogStore from './TransactionLogStore'
 
 test('initializing the store', () => {
-  const txLogApiClient = new TXLogApi()
-  const managementApiClient = new ManagementApi()
+  const txLogApiClient = new TXLogServiceApi()
+  const managementApiClient = new ManagementServiceApi()
   const transactionLogStore = new TransactionLogStore({
     txLogApiClient: txLogApiClient,
     managementApiClient: managementApiClient,
@@ -20,13 +20,15 @@ test('initializing the store', () => {
 test('fetching, getting and updating from server', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
-    enabled: true,
-  })
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceIsTXLogEnabled = jest
+    .fn()
+    .mockResolvedValue({
+      enabled: true,
+    })
 
-  const txLogApiClient = new TXLogApi()
-  txLogApiClient.tXLogListRecords = jest
+  const txLogApiClient = new TXLogServiceApi()
+  txLogApiClient.tXLogServiceListRecords = jest
     .fn()
     .mockResolvedValueOnce({
       records: [

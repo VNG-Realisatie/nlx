@@ -112,10 +112,10 @@ func TestListDirectoryServices(t *testing.T) {
 		client,
 		db,
 	)
-	response, err := directoryService.ListServices(ctx, &api.DirectoryListServicesRequest{})
+	response, err := directoryService.ListServices(ctx, &api.DirectoryServiceListServicesRequest{})
 	assert.NoError(t, err)
 
-	expected := []*api.DirectoryService{
+	expected := []*api.DirectoryNlxService{
 		{
 			ServiceName: "test-service-1",
 			Organization: &external.Organization{
@@ -125,12 +125,12 @@ func TestListDirectoryServices(t *testing.T) {
 			ApiSpecificationType: "OpenAPI3",
 			DocumentationUrl:     "https://example.com",
 			PublicSupportContact: "test@example.com",
-			State:                api.DirectoryService_STATE_UNSPECIFIED,
+			State:                api.DirectoryNlxService_STATE_UNSPECIFIED,
 			OneTimeCosts:         1,
 			MonthlyCosts:         5,
 			RequestCosts:         250,
 			//nolint dupl: this is a test
-			AccessStates: []*api.DirectoryService_AccessState{
+			AccessStates: []*api.DirectoryNlxService_AccessState{
 				{
 					AccessRequest: &api.OutgoingAccessRequest{
 						Id: 1,

@@ -8,7 +8,7 @@ import { createMemoryHistory } from 'history'
 import { renderWithAllProviders } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import OrdersPage from './index'
 
 const createOrdersPage = (managementApiClient) => {
@@ -32,8 +32,8 @@ const createOrdersPage = (managementApiClient) => {
 }
 
 test('rendering the orders page', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListOutgoingOrders = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [
@@ -47,7 +47,7 @@ test('rendering the orders page', async () => {
       ],
     })
 
-  managementApiClient.managementListIncomingOrders = jest
+  managementApiClient.managementServiceListIncomingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
@@ -65,12 +65,12 @@ test('rendering the orders page', async () => {
 })
 
 test('no outgoing orders present', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListOutgoingOrders = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
-  managementApiClient.managementListIncomingOrders = jest
+  managementApiClient.managementServiceListIncomingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
@@ -85,8 +85,8 @@ test('no outgoing orders present', async () => {
 })
 
 test('failed to load outgoing orders', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListOutgoingOrders = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
@@ -101,12 +101,12 @@ test('failed to load outgoing orders', async () => {
 })
 
 test('no incoming orders present', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListOutgoingOrders = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
-  managementApiClient.managementListIncomingOrders = jest
+  managementApiClient.managementServiceListIncomingOrders = jest
     .fn()
     .mockResolvedValue({ orders: [] })
 
@@ -128,8 +128,8 @@ test('no incoming orders present', async () => {
 })
 
 test('failed to load incoming orders', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListIncomingOrders = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListIncomingOrders = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 

@@ -13,7 +13,7 @@ import { createMemoryHistory } from 'history'
 import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import ServiceDetailPage from './index'
 
 // eslint-disable-next-line react/prop-types
@@ -26,17 +26,19 @@ jest.mock('./ServiceDetailView', () => ({ removeHandler }) => (
 ))
 
 test('display service details', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-    name: 'my-service',
-  })
+  managementApiClient.managementServiceGetService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'my-service',
+    })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({ accessRequests: [] })
 
-  managementApiClient.managementListAccessGrantsForService = jest
+  managementApiClient.managementServiceListAccessGrantsForService = jest
     .fn()
     .mockResolvedValue({ accessGrants: [] })
 
@@ -57,9 +59,9 @@ test('display service details', async () => {
 })
 
 test('fetching a non-existing service', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetService = jest
+  managementApiClient.managementServiceGetService = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
@@ -88,21 +90,23 @@ test('fetching a non-existing service', async () => {
 test('removing the service', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-    name: 'my-service',
-  })
+  managementApiClient.managementServiceGetService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'my-service',
+    })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({ accessRequests: [] })
 
-  managementApiClient.managementListAccessGrantsForService = jest
+  managementApiClient.managementServiceListAccessGrantsForService = jest
     .fn()
     .mockResolvedValue({ accessGrants: [] })
 
-  managementApiClient.managementDeleteService = jest
+  managementApiClient.managementServiceDeleteService = jest
     .fn()
     .mockRejectedValueOnce({
       response: {

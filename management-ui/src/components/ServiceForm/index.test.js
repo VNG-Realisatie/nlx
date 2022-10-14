@@ -7,7 +7,7 @@ import { fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../test-utils'
 import { RootStore, StoreProvider } from '../../stores'
-import { ManagementApi } from '../../api'
+import { ManagementServiceApi } from '../../api'
 import ServiceForm, { checkStep } from './index'
 
 jest.mock('../FormikFocusError', () => () => <></>)
@@ -23,10 +23,12 @@ describe('checkStep yup test', () => {
 })
 
 test('with initial values', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [{ name: 'inway1' }, { name: 'inway2' }],
-  })
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [{ name: 'inway1' }, { name: 'inway2' }],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -83,8 +85,8 @@ test('with initial values', async () => {
 test('the form values of the onSubmitHandler', async () => {
   const onSubmitHandlerSpy = jest.fn()
 
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListInways = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListInways = jest
     .fn()
     .mockResolvedValue({ inways: [] })
 
@@ -163,8 +165,8 @@ describe('when showing inways', () => {
   }
 
   it('should show a warning when there are no inways registered', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [] })
 
@@ -187,8 +189,8 @@ describe('when showing inways', () => {
   })
 
   it('should show a warning when the service is published and no inways are selected', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
 
@@ -211,8 +213,8 @@ describe('when showing inways', () => {
   })
 
   it('should not show a warning when the service is private and no inways are selected', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
 
@@ -233,8 +235,8 @@ describe('when showing inways', () => {
   })
 
   it('should save an inway selection', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
 
@@ -270,10 +272,12 @@ describe('when showing inways', () => {
   })
 
   it('should be able to remove an inway from the selection', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-      inways: [{ name: 'inway-one' }, { name: 'inway-two' }],
-    })
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
+      .fn()
+      .mockResolvedValue({
+        inways: [{ name: 'inway-one' }, { name: 'inway-two' }],
+      })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -311,8 +315,8 @@ describe('when showing inways', () => {
   })
 
   it('should clear costs when disabling finance', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
 
@@ -356,8 +360,8 @@ describe('when showing inways', () => {
   })
 
   it('should save costs when finance was already enabled', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
 
@@ -397,8 +401,8 @@ describe('when showing inways', () => {
   })
 
   it('should save costs when finance is enabled', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListInways = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListInways = jest
       .fn()
       .mockResolvedValue({ inways: [{ name: 'inway-one' }] })
 

@@ -7,7 +7,7 @@ import { renderWithAllProviders, waitFor } from '../../../test-utils'
 import { INTERVAL } from '../../../hooks/use-polling'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import ServicesPage from './index'
 
 jest.mock(
@@ -24,11 +24,13 @@ jest.mock('./ServicesPageView', () => () => (
 jest.mock('../../../components/OrganizationName', () => () => <span>test</span>)
 
 test('fetching all services', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [{ name: 'my-first-service' }],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [{ name: 'my-first-service' }],
+    })
 
   const store = new RootStore({
     managementApiClient,
@@ -59,9 +61,9 @@ test('fetching all services', async () => {
 })
 
 test('failed to load services', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest
+  managementApiClient.managementServiceListServices = jest
     .fn()
     .mockRejectedValue('arbitrary error')
 
@@ -88,13 +90,15 @@ test('failed to load services', async () => {
 
 test('service statistics should be polled', () => {
   jest.useFakeTimers()
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [{ name: 'my-first-service' }],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [{ name: 'my-first-service' }],
+    })
 
-  managementApiClient.managementGetStatisticsOfServices = jest
+  managementApiClient.managementServiceGetStatisticsOfServices = jest
     .fn()
     .mockResolvedValue({
       services: [],
@@ -119,7 +123,7 @@ test('service statistics should be polled', () => {
   jest.advanceTimersByTime(INTERVAL * 2)
 
   expect(
-    managementApiClient.managementGetStatisticsOfServices,
+    managementApiClient.managementServiceGetStatisticsOfServices,
   ).toHaveBeenCalledTimes(2)
 
   jest.useRealTimers()

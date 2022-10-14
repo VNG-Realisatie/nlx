@@ -52,9 +52,11 @@ class AccessGrantStore {
 
   returnForService = async ({ name }) => {
     const result =
-      await this._managementApiClient.managementListAccessGrantsForService({
-        serviceName: name,
-      })
+      await this._managementApiClient.managementServiceListAccessGrantsForService(
+        {
+          serviceName: name,
+        },
+      )
 
     return result.accessGrants
   }
@@ -68,7 +70,7 @@ class AccessGrantStore {
   }
 
   revokeAccessGrant = async ({ id, serviceName }) => {
-    await this._managementApiClient.managementRevokeAccessGrant({
+    await this._managementApiClient.managementServiceRevokeAccessGrant({
       accessGrantId: id,
     })
     this.fetchForService({ name: serviceName })

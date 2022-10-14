@@ -11,7 +11,7 @@ import {
 } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
 import { STATES } from '../../../../../stores/models/IncomingAccessRequestModel'
-import { ManagementApi } from '../../../../../api'
+import { ManagementServiceApi } from '../../../../../api'
 import { INTERVAL } from '../../../../../hooks/use-polling'
 import AccessRequestsSection from './index'
 
@@ -21,17 +21,19 @@ beforeEach(() => {
 
 test('polling with access request section collapsed', async () => {
   jest.useFakeTimers()
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        name: 'service-a',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          name: 'service-a',
+        },
+      ],
+    })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [
@@ -72,13 +74,15 @@ test('polling with access request section collapsed', async () => {
 test('polling with access request section expanded', async () => {
   jest.useFakeTimers()
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-    name: 'service-a',
-  })
+  managementApiClient.managementServiceGetService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'service-a',
+    })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValueOnce({
       accessRequests: [
@@ -100,7 +104,7 @@ test('polling with access request section expanded', async () => {
       accessRequests: [],
     })
 
-  managementApiClient.managementListAccessGrantsForService = jest
+  managementApiClient.managementServiceListAccessGrantsForService = jest
     .fn()
     .mockResolvedValue({
       accessGrants: [],

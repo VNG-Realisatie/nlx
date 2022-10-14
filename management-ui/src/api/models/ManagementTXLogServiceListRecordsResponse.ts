@@ -23,31 +23,31 @@ import {
 /**
  * 
  * @export
- * @interface ManagementTXLogListRecordsResponse
+ * @interface ManagementTXLogServiceListRecordsResponse
  */
-export interface ManagementTXLogListRecordsResponse {
+export interface ManagementTXLogServiceListRecordsResponse {
     /**
      * 
      * @type {Array<ManagementTXLogRecord>}
-     * @memberof ManagementTXLogListRecordsResponse
+     * @memberof ManagementTXLogServiceListRecordsResponse
      */
     records?: Array<ManagementTXLogRecord>;
 }
 
 /**
- * Check if a given object implements the ManagementTXLogListRecordsResponse interface.
+ * Check if a given object implements the ManagementTXLogServiceListRecordsResponse interface.
  */
-export function instanceOfManagementTXLogListRecordsResponse(value: object): boolean {
+export function instanceOfManagementTXLogServiceListRecordsResponse(value: object): boolean {
     let isInstance = true;
 
     return isInstance;
 }
 
-export function ManagementTXLogListRecordsResponseFromJSON(json: any): ManagementTXLogListRecordsResponse {
-    return ManagementTXLogListRecordsResponseFromJSONTyped(json, false);
+export function ManagementTXLogServiceListRecordsResponseFromJSON(json: any): ManagementTXLogServiceListRecordsResponse {
+    return ManagementTXLogServiceListRecordsResponseFromJSONTyped(json, false);
 }
 
-export function ManagementTXLogListRecordsResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementTXLogListRecordsResponse {
+export function ManagementTXLogServiceListRecordsResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementTXLogServiceListRecordsResponse {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -57,7 +57,7 @@ export function ManagementTXLogListRecordsResponseFromJSONTyped(json: any, ignor
     };
 }
 
-export function ManagementTXLogListRecordsResponseToJSON(value?: ManagementTXLogListRecordsResponse | null): any {
+export function ManagementTXLogServiceListRecordsResponseToJSON(value?: ManagementTXLogServiceListRecordsResponse | null): any {
     if (value === undefined) {
         return undefined;
     }

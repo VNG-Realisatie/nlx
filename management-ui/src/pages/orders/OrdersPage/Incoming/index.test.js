@@ -14,12 +14,12 @@ import {
   renderWithProviders,
   renderWithAllProviders,
 } from '../../../../test-utils'
-import { ManagementApi } from '../../../../api'
+import { ManagementServiceApi } from '../../../../api'
 import IncomingOrderModel from '../../../../stores/models/IncomingOrderModel'
 import Incoming from './index'
 
 test('displays an order row for each order', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   const orders = [
@@ -68,7 +68,7 @@ test('displays an order row for each order', () => {
 })
 
 test('displays text to indicate there are no orders', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   const { getByText } = renderWithProviders(
@@ -82,7 +82,7 @@ test('displays text to indicate there are no orders', () => {
 test('content should render expected data', () => {
   const day = 86400000
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   const orders = [

@@ -7,7 +7,7 @@ import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders, waitFor } from '../../../test-utils'
 import { UserContextProvider } from '../../../user-context'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import InwaysAndOutwaysPage from './index'
 
 jest.mock('../../../components/PageTemplate')
@@ -25,33 +25,37 @@ function renderPage(rootStore) {
 }
 
 test('the InwaysAndOutwaysPage', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [
-      {
-        name: 'name',
-        version: 'version',
-        hostname: 'hostname',
-        selfAddress: 'self-address',
-        services: [
-          {
-            name: 'service-1',
-          },
-        ],
-      },
-    ],
-  })
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [
+        {
+          name: 'name',
+          version: 'version',
+          hostname: 'hostname',
+          selfAddress: 'self-address',
+          services: [
+            {
+              name: 'service-1',
+            },
+          ],
+        },
+      ],
+    })
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'Outway Name',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem',
-        version: '0.0.42',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'Outway Name',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem',
+          version: '0.0.42',
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -80,21 +84,23 @@ test('the InwaysAndOutwaysPage', async () => {
 })
 
 test('failed to load inways', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListInways = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListInways = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'name',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem',
-        version: 'version',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'name',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem',
+          version: 'version',
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,

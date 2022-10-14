@@ -6,16 +6,16 @@ import React from 'react'
 import { act, render, screen } from '@testing-library/react'
 import { renderWithProviders } from '../test-utils'
 import { RootStore, StoreProvider } from '../stores'
-import { DirectoryApi, ManagementApi } from '../api'
+import { DirectoryServiceApi, ManagementServiceApi } from '../api'
 import { ToSContextProvider } from './index'
 import ToSContext from './index'
 
 describe('ToSContext', () => {
   describe('Provider', () => {
     it('should fetch the current terms of service', async () => {
-      const directoryApiClient = new DirectoryApi()
+      const directoryApiClient = new DirectoryServiceApi()
 
-      directoryApiClient.directoryGetTermsOfService = jest
+      directoryApiClient.directoryServiceGetTermsOfService = jest
         .fn()
         .mockResolvedValue({
           url: '',
@@ -34,23 +34,23 @@ describe('ToSContext', () => {
         ),
       )
       expect(
-        directoryApiClient.directoryGetTermsOfService,
+        directoryApiClient.directoryServiceGetTermsOfService,
       ).toHaveBeenCalledTimes(1)
     })
 
     it('should fetch the terms of service status if enabled', async () => {
-      const directoryApiClient = new DirectoryApi()
+      const directoryApiClient = new DirectoryServiceApi()
 
-      directoryApiClient.directoryGetTermsOfService = jest
+      directoryApiClient.directoryServiceGetTermsOfService = jest
         .fn()
         .mockResolvedValue({
           url: 'https://example.com',
           enabled: true,
         })
 
-      const managementApiClient = new ManagementApi()
+      const managementApiClient = new ManagementServiceApi()
 
-      managementApiClient.managementGetTermsOfServiceStatus = jest
+      managementApiClient.managementServiceGetTermsOfServiceStatus = jest
         .fn()
         .mockResolvedValue({
           accepted: true,
@@ -69,23 +69,23 @@ describe('ToSContext', () => {
         ),
       )
       expect(
-        directoryApiClient.directoryGetTermsOfService,
+        directoryApiClient.directoryServiceGetTermsOfService,
       ).toHaveBeenCalledTimes(1)
       expect(
-        managementApiClient.managementGetTermsOfServiceStatus,
+        managementApiClient.managementServiceGetTermsOfServiceStatus,
       ).toHaveBeenCalledTimes(1)
     })
 
     it('should disable ToS if directory is not available', async () => {
-      const directoryApiClient = new DirectoryApi()
+      const directoryApiClient = new DirectoryServiceApi()
 
-      directoryApiClient.directoryGetTermsOfService = jest
+      directoryApiClient.directoryServiceGetTermsOfService = jest
         .fn()
         .mockRejectedValue(new Error('arbitrary error'))
 
-      const managementApiClient = new ManagementApi()
+      const managementApiClient = new ManagementServiceApi()
 
-      managementApiClient.managementGetTermsOfServiceStatus = jest.fn()
+      managementApiClient.managementServiceGetTermsOfServiceStatus = jest.fn()
 
       const store = new RootStore({
         directoryApiClient,
@@ -108,10 +108,10 @@ describe('ToSContext', () => {
         ),
       )
       expect(
-        directoryApiClient.directoryGetTermsOfService,
+        directoryApiClient.directoryServiceGetTermsOfService,
       ).toHaveBeenCalledTimes(1)
       expect(
-        managementApiClient.managementGetTermsOfServiceStatus,
+        managementApiClient.managementServiceGetTermsOfServiceStatus,
       ).toHaveBeenCalledTimes(0)
 
       expect(screen.getByTestId('tos-enabled')).toHaveTextContent('false')

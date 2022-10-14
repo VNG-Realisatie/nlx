@@ -2,12 +2,12 @@
 // Licensed under the EUPL
 //
 import { configure } from 'mobx'
-import { ManagementApi } from '../api'
+import { ManagementServiceApi } from '../api'
 import InwayModel from '../stores/models/InwayModel'
 import InwayStore from './InwayStore'
 
 test('initializing the store', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const store = new InwayStore({
     rootStore: {},
@@ -19,11 +19,13 @@ test('initializing the store', () => {
 })
 
 test('fetching inways', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [{ name: 'Inway A' }, { name: 'Inway B' }],
-  })
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [{ name: 'Inway A' }, { name: 'Inway B' }],
+    })
 
   const inwayStore = new InwayStore({
     rootStore: {},
@@ -37,9 +39,9 @@ test('fetching inways', async () => {
 })
 
 test('fetching a single inway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetInway = jest
+  managementApiClient.managementServiceGetInway = jest
     .fn()
     .mockResolvedValue({ inway: { name: 'Inway A' } })
 
@@ -50,7 +52,7 @@ test('fetching a single inway', async () => {
 
   const inway = await inwayStore.fetch({ name: 'Inway A' })
 
-  expect(managementApiClient.managementGetInway).toHaveBeenCalledWith({
+  expect(managementApiClient.managementServiceGetInway).toHaveBeenCalledWith({
     name: 'Inway A',
   })
   expect(inway).toBeInstanceOf(InwayModel)
@@ -58,9 +60,9 @@ test('fetching a single inway', async () => {
 })
 
 test('handle error while fetching inways', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest
+  managementApiClient.managementServiceListInways = jest
     .fn()
     .mockRejectedValue('arbitrary error')
 
@@ -77,11 +79,13 @@ test('handle error while fetching inways', async () => {
 })
 
 test('getting an inway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [{ name: 'Inway A' }],
-  })
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [{ name: 'Inway A' }],
+    })
 
   const inwayStore = new InwayStore({
     rootStore: {},
@@ -100,9 +104,9 @@ test('getting an inway', async () => {
 test('removing an inway', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest
+  managementApiClient.managementServiceListInways = jest
     .fn()
     .mockResolvedValueOnce({
       inways: [{ name: 'Inway A' }, { name: 'Inway B' }, { name: 'Inway C' }],
@@ -111,7 +115,9 @@ test('removing an inway', async () => {
       inways: [{ name: 'Inway A' }, { name: 'Inway C' }],
     })
 
-  managementApiClient.managementDeleteInway = jest.fn().mockResolvedValue({})
+  managementApiClient.managementServiceDeleteInway = jest
+    .fn()
+    .mockResolvedValue({})
 
   const inwayStore = new InwayStore({
     rootStore: {},
@@ -127,9 +133,11 @@ test('removing an inway', async () => {
 
   await inwayStore.removeInway('Inway B')
 
-  expect(managementApiClient.managementDeleteInway).toHaveBeenCalledWith({
-    name: 'Inway B',
-  })
+  expect(managementApiClient.managementServiceDeleteInway).toHaveBeenCalledWith(
+    {
+      name: 'Inway B',
+    },
+  )
 
   expect(inwayStore.fetchInways).toHaveBeenCalledTimes(1)
   expect(inwayStore.getByName('Inway A')).toBeDefined()

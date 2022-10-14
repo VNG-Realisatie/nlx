@@ -32,7 +32,7 @@ class DirectoryServiceModel {
   constructor({ directoryServicesStore, serviceData, accessStates }) {
     makeAutoObservable(this)
 
-    this.directoryServicesStore = directoryServicesStore
+    this.directoryServiceServicesStore = directoryServicesStore
 
     this.update({ serviceData, accessStates })
   }
@@ -111,21 +111,21 @@ class DirectoryServiceModel {
   }
 
   fetch = async () => {
-    await this.directoryServicesStore.fetch(
+    await this.directoryServiceServicesStore.fetch(
       this.organization.serialNumber,
       this.serviceName,
     )
   }
 
   syncOutgoingAccessRequests = flow(function* syncOutgoingAccessRequests() {
-    yield this.directoryServicesStore.syncOutgoingAccessRequests(
+    yield this.directoryServiceServicesStore.syncOutgoingAccessRequests(
       this.organization.serialNumber,
       this.serviceName,
     )
   }).bind(this)
 
   requestAccess = flow(function* requestAccess(publicKeyPem) {
-    yield this.directoryServicesStore.requestAccess(
+    yield this.directoryServiceServicesStore.requestAccess(
       this.organization.serialNumber,
       this.serviceName,
       publicKeyPem,

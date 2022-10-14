@@ -4,7 +4,7 @@
 
 import { configure } from 'mobx'
 import OrderStore from '../OrderStore'
-import { ManagementApi } from '../../api'
+import { ManagementServiceApi } from '../../api'
 import OutgoingOrderModel from './OutgoingOrderModel'
 import AccessProofModel from './AccessProofModel'
 
@@ -42,7 +42,7 @@ test('creating instance', () => {
 
 test('revoke order', async () => {
   configure({ safeDescriptors: false })
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const store = new OrderStore({
     rootStore: {},

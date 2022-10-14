@@ -5,11 +5,11 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import OrganizationInwayCheck from './index'
 
 test('providing services but no organization inway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   managementApiClientWithService(managementApiClient)
 
   const rootStore = new RootStore({
@@ -38,7 +38,7 @@ test('providing services but no organization inway', async () => {
 })
 
 test('having outgoing orders but no organization Inway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   managementApiClientWithOutgoingOrder(managementApiClient)
 
   const rootStore = new RootStore({
@@ -67,7 +67,7 @@ test('having outgoing orders but no organization Inway', async () => {
 })
 
 test('organization inway is set with services and outgoing orders present', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -99,17 +99,19 @@ test('organization inway is set with services and outgoing orders present', () =
 })
 
 function managementApiClientWithService(managementApiClient) {
-  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-    name: 'service',
-  })
+  managementApiClient.managementServiceGetService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'service',
+    })
 
-  managementApiClient.managementListAccessGrantsForService = jest
+  managementApiClient.managementServiceListAccessGrantsForService = jest
     .fn()
     .mockResolvedValue({
       accessGrants: [],
     })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [],
@@ -117,7 +119,7 @@ function managementApiClientWithService(managementApiClient) {
 }
 
 function managementApiClientWithOutgoingOrder(managementApiClient) {
-  managementApiClient.managementListOutgoingOrders = jest
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [

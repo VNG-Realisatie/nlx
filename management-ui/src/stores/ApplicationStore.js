@@ -46,7 +46,8 @@ class ApplicationStore {
 
   getGeneralSettings = flow(function* getGeneralSettings() {
     try {
-      const response = yield this._managementApiClient.managementGetSettings()
+      const response =
+        yield this._managementApiClient.managementServiceGetSettings()
       return response.settings
     } catch (e) {
       this.error = e
@@ -55,19 +56,19 @@ class ApplicationStore {
   }).bind(this)
 
   async getTermsOfService() {
-    return this._directoryApiClient.directoryGetTermsOfService()
+    return this._directoryApiClient.directoryServiceGetTermsOfService()
   }
 
   async getTermsOfServiceStatus() {
-    return this._managementApiClient.managementGetTermsOfServiceStatus()
+    return this._managementApiClient.managementServiceGetTermsOfServiceStatus()
   }
 
   async acceptTermsOfService() {
-    return this._managementApiClient.managementAcceptTermsOfService()
+    return this._managementApiClient.managementServiceAcceptTermsOfService()
   }
 
   async updateGeneralSettings(settings) {
-    return await this._managementApiClient.managementUpdateSettings({
+    return await this._managementApiClient.managementServiceUpdateSettings({
       body: settings,
     })
   }

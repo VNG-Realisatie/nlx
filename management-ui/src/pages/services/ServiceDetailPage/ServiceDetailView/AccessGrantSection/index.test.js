@@ -10,7 +10,7 @@ import {
   renderWithAllProviders,
 } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
-import { ManagementApi } from '../../../../../api'
+import { ManagementServiceApi } from '../../../../../api'
 import { INTERVAL } from '../../../../../hooks/use-polling'
 import AccessGrantSection from './index'
 
@@ -23,21 +23,23 @@ afterEach(() => {
 })
 
 test('polling with access grant section collapsed', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        name: 'service-a',
-        organization: {
-          name: 'organization-a',
-          serialNumber: '00000000000000000001',
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          name: 'service-a',
+          organization: {
+            name: 'organization-a',
+            serialNumber: '00000000000000000001',
+          },
         },
-      },
-    ],
-  })
+      ],
+    })
 
-  managementApiClient.managementListAccessGrantsForService = jest
+  managementApiClient.managementServiceListAccessGrantsForService = jest
     .fn()
     .mockResolvedValue({
       accessGrants: [
@@ -74,13 +76,15 @@ test('polling with access grant section collapsed', async () => {
 })
 
 test('polling with access grant section expanded', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-    name: 'service-a',
-  })
+  managementApiClient.managementServiceGetService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'service-a',
+    })
 
-  managementApiClient.managementListAccessGrantsForService = jest
+  managementApiClient.managementServiceListAccessGrantsForService = jest
     .fn()
     .mockResolvedValueOnce({
       accessGrants: [
@@ -100,7 +104,7 @@ test('polling with access grant section expanded', async () => {
       accessGrants: [],
     })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [],

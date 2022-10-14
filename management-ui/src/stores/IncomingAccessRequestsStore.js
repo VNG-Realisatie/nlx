@@ -59,9 +59,11 @@ class IncomingAccessRequestsStore {
 
   returnForService = async ({ name }) => {
     const result =
-      await this._managementApiClient.managementListIncomingAccessRequests({
-        serviceName: name,
-      })
+      await this._managementApiClient.managementServiceListIncomingAccessRequests(
+        {
+          serviceName: name,
+        },
+      )
     return result.accessRequests
   }
 
@@ -75,18 +77,22 @@ class IncomingAccessRequestsStore {
   }
 
   approveAccessRequest = async ({ serviceName, id }) => {
-    await this._managementApiClient.managementApproveIncomingAccessRequest({
-      serviceName,
-      accessRequestId: id,
-    })
+    await this._managementApiClient.managementServiceApproveIncomingAccessRequest(
+      {
+        serviceName,
+        accessRequestId: id,
+      },
+    )
     this.fetchForService({ name: serviceName })
   }
 
   rejectAccessRequest = async ({ serviceName, id }) => {
-    await this._managementApiClient.managementRejectIncomingAccessRequest({
-      serviceName,
-      accessRequestId: id,
-    })
+    await this._managementApiClient.managementServiceRejectIncomingAccessRequest(
+      {
+        serviceName,
+        accessRequestId: id,
+      },
+    )
     this.fetchForService({ name: serviceName })
   }
 

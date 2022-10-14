@@ -41,9 +41,11 @@ Given(
     const outway = await getOutwayByName(orgConsumerName, outwayName);
 
     const response =
-      await org.apiClients.management?.managementListAccessGrantsForService({
-        serviceName: serviceName,
-      });
+      await org.apiClients.management?.managementServiceListAccessGrantsForService(
+        {
+          serviceName: serviceName,
+        }
+      );
 
     const accessGrant = response?.accessGrants?.find((accessGrant) => {
       return (
@@ -54,7 +56,7 @@ Given(
 
     assert.notEqual(accessGrant, undefined);
 
-    await org.apiClients.management?.managementRevokeAccessGrant({
+    await org.apiClients.management?.managementServiceRevokeAccessGrant({
       accessGrantId: `${accessGrant?.id}`,
     });
 

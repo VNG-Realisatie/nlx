@@ -17,24 +17,24 @@
  * 
  * @export
  */
-export const DirectoryServiceState = {
+export const DirectoryNlxServiceState = {
     UNSPECIFIED: 'STATE_UNSPECIFIED',
     UP: 'STATE_UP',
     DOWN: 'STATE_DOWN',
     DEGRADED: 'STATE_DEGRADED'
 } as const;
-export type DirectoryServiceState = typeof DirectoryServiceState[keyof typeof DirectoryServiceState];
+export type DirectoryNlxServiceState = typeof DirectoryNlxServiceState[keyof typeof DirectoryNlxServiceState];
 
 
-export function DirectoryServiceStateFromJSON(json: any): DirectoryServiceState {
-    return DirectoryServiceStateFromJSONTyped(json, false);
+export function DirectoryNlxServiceStateFromJSON(json: any): DirectoryNlxServiceState {
+    return DirectoryNlxServiceStateFromJSONTyped(json, false);
 }
 
-export function DirectoryServiceStateFromJSONTyped(json: any, ignoreDiscriminator: boolean): DirectoryServiceState {
-    return json as DirectoryServiceState;
+export function DirectoryNlxServiceStateFromJSONTyped(json: any, ignoreDiscriminator: boolean): DirectoryNlxServiceState {
+    return json as DirectoryNlxServiceState;
 }
 
-export function DirectoryServiceStateToJSON(value?: DirectoryServiceState | null): any {
+export function DirectoryNlxServiceStateToJSON(value?: DirectoryNlxServiceState | null): any {
     return value as any;
 }
 

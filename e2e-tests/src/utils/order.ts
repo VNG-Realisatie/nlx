@@ -38,7 +38,7 @@ export const createOrder = async (
   );
 
   const directoryServices =
-    await delegator.apiClients.directory?.directoryListServices();
+    await delegator.apiClients.directory?.directoryServiceListServices();
 
   const directoryService = directoryServices?.services?.find(
     (directoryService) =>
@@ -63,17 +63,19 @@ export const createOrder = async (
   );
 
   try {
-    await delegator.apiClients.management?.managementCreateOutgoingOrder({
-      body: {
-        reference: orderReference,
-        description: "arbitrary description",
-        delegatee: delegatee.serialNumber,
-        publicKeyPem: delegateeOutway.publicKeyPem,
-        validFrom: validFrom,
-        validUntil: validUntil,
-        accessProofIds: [`${accessStateForService?.accessProof?.id}`],
-      },
-    });
+    await delegator.apiClients.management?.managementServiceCreateOutgoingOrder(
+      {
+        body: {
+          reference: orderReference,
+          description: "arbitrary description",
+          delegatee: delegatee.serialNumber,
+          publicKeyPem: delegateeOutway.publicKeyPem,
+          validFrom: validFrom,
+          validUntil: validUntil,
+          accessProofIds: [`${accessStateForService?.accessProof?.id}`],
+        },
+      }
+    );
   } catch (err) {
     const response = err as Response;
     const responseAsJson = await response.json();
@@ -102,10 +104,12 @@ export const revokeOrder = async (
   );
 
   try {
-    await delegator.apiClients.management?.managementRevokeOutgoingOrder({
-      delegatee: delegatee.serialNumber,
-      reference: orderReference,
-    });
+    await delegator.apiClients.management?.managementServiceRevokeOutgoingOrder(
+      {
+        delegatee: delegatee.serialNumber,
+        reference: orderReference,
+      }
+    );
   } catch (err) {
     const response = err as Response;
     const responseAsJson = await response.json();

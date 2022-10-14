@@ -15,12 +15,12 @@
 
 import * as runtime from '../runtime';
 import type {
-  ManagementTXLogListRecordsResponse,
+  ManagementTXLogServiceListRecordsResponse,
   RpcStatus,
 } from '../models';
 import {
-    ManagementTXLogListRecordsResponseFromJSON,
-    ManagementTXLogListRecordsResponseToJSON,
+    ManagementTXLogServiceListRecordsResponseFromJSON,
+    ManagementTXLogServiceListRecordsResponseToJSON,
     RpcStatusFromJSON,
     RpcStatusToJSON,
 } from '../models';
@@ -28,11 +28,11 @@ import {
 /**
  * 
  */
-export class TXLogApi extends runtime.BaseAPI {
+export class TXLogServiceApi extends runtime.BaseAPI {
 
     /**
      */
-    async tXLogListRecordsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementTXLogListRecordsResponse>> {
+    async tXLogServiceListRecordsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementTXLogServiceListRecordsResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -44,13 +44,13 @@ export class TXLogApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementTXLogListRecordsResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ManagementTXLogServiceListRecordsResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async tXLogListRecords(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementTXLogListRecordsResponse> {
-        const response = await this.tXLogListRecordsRaw(initOverrides);
+    async tXLogServiceListRecords(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ManagementTXLogServiceListRecordsResponse> {
+        const response = await this.tXLogServiceListRecordsRaw(initOverrides);
         return await response.value();
     }
 

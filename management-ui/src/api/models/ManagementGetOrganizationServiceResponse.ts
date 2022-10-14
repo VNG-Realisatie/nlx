@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ManagementDirectoryService } from './ManagementDirectoryService';
+import type { ManagementDirectoryNlxService } from './ManagementDirectoryNlxService';
 import {
-    ManagementDirectoryServiceFromJSON,
-    ManagementDirectoryServiceFromJSONTyped,
-    ManagementDirectoryServiceToJSON,
-} from './ManagementDirectoryService';
+    ManagementDirectoryNlxServiceFromJSON,
+    ManagementDirectoryNlxServiceFromJSONTyped,
+    ManagementDirectoryNlxServiceToJSON,
+} from './ManagementDirectoryNlxService';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface ManagementGetOrganizationServiceResponse {
     /**
      * 
-     * @type {ManagementDirectoryService}
+     * @type {ManagementDirectoryNlxService}
      * @memberof ManagementGetOrganizationServiceResponse
      */
-    directoryService?: ManagementDirectoryService;
+    directoryService?: ManagementDirectoryNlxService;
 }
 
 /**
@@ -53,7 +53,7 @@ export function ManagementGetOrganizationServiceResponseFromJSONTyped(json: any,
     }
     return {
         
-        'directoryService': !exists(json, 'directory_service') ? undefined : ManagementDirectoryServiceFromJSON(json['directory_service']),
+        'directoryService': !exists(json, 'directory_service') ? undefined : ManagementDirectoryNlxServiceFromJSON(json['directory_service']),
     };
 }
 
@@ -66,7 +66,7 @@ export function ManagementGetOrganizationServiceResponseToJSON(value?: Managemen
     }
     return {
         
-        'directory_service': ManagementDirectoryServiceToJSON(value.directoryService),
+        'directory_service': ManagementDirectoryNlxServiceToJSON(value.directoryService),
     };
 }
 

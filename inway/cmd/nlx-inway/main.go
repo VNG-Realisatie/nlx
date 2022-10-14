@@ -128,7 +128,7 @@ func main() {
 		Context:                         context.Background(),
 		Logger:                          logger,
 		Txlogger:                        txLogger,
-		ManagementClient:                api.NewManagementClient(conn),
+		ManagementClient:                api.NewManagementServiceClient(conn),
 		ManagementProxy:                 managementProxy,
 		Name:                            options.Name,
 		Address:                         options.Address,

@@ -57,7 +57,7 @@ type Inway struct {
 	logger                          *zap.Logger
 	serverTLS                       *http.Server
 	monitoringService               *monitoring.Service
-	managementClient                api.ManagementClient
+	managementClient                api.ManagementServiceClient
 	managementProxy                 *grpcproxy.Proxy
 	directoryClient                 directoryapi.DirectoryClient
 	plugins                         []plugins.Plugin
@@ -69,7 +69,7 @@ type Params struct {
 	Context                         context.Context
 	Logger                          *zap.Logger
 	Txlogger                        transactionlog.TransactionLogger
-	ManagementClient                api.ManagementClient
+	ManagementClient                api.ManagementServiceClient
 	ManagementProxy                 *grpcproxy.Proxy
 	Name                            string
 	Address                         string

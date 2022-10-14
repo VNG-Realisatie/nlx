@@ -3,7 +3,7 @@
 //
 import { configure } from 'mobx'
 import DirectoryServiceModel from '../stores/models/DirectoryServiceModel'
-import { DirectoryApi, ManagementApi } from '../api'
+import { DirectoryServiceApi, ManagementServiceApi } from '../api'
 import { ACCESS_REQUEST_STATES } from './models/OutgoingAccessRequestModel'
 import DirectoryServicesStore from './DirectoryServicesStore'
 import { RootStore } from './index'
@@ -18,26 +18,28 @@ test('initializing the store', async () => {
 })
 
 test('fetching all directory services', async () => {
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'Org A',
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Org A',
+          },
+          serviceName: 'Service A',
         },
-        serviceName: 'Service A',
-      },
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'Org A',
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Org A',
+          },
+          serviceName: 'Service B',
         },
-        serviceName: 'Service B',
-      },
-    ],
-  })
+      ],
+    })
 
   const rootStore = new RootStore({
     directoryApiClient,
@@ -53,9 +55,9 @@ test('fetching all directory services', async () => {
 test('handle error while fetching all directory services', async () => {
   global.console.error = jest.fn()
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryListServices = jest
+  directoryApiClient.directoryServiceListServices = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
@@ -72,9 +74,9 @@ test('handle error while fetching all directory services', async () => {
 })
 
 test('fetching a single service', async () => {
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValueOnce({
       directoryService: {
@@ -135,9 +137,9 @@ test('fetching a single service', async () => {
 })
 
 test('fetching a single service which has been removed', async () => {
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValueOnce({
       directoryService: {
@@ -179,9 +181,9 @@ test('fetching a single service which has been removed', async () => {
 test('requesting access to a service in the directory', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementSendAccessRequest = jest
+  managementApiClient.managementServiceSendAccessRequest = jest
     .fn()
     .mockResolvedValue()
 
@@ -205,7 +207,9 @@ test('requesting access to a service in the directory', async () => {
     'public-key-pem',
   )
 
-  expect(managementApiClient.managementSendAccessRequest).toHaveBeenCalledWith({
+  expect(
+    managementApiClient.managementServiceSendAccessRequest,
+  ).toHaveBeenCalledWith({
     organizationSerialNumber: '00000000000000000001',
     serviceName: 'service',
     publicKeyPem: 'public-key-pem',
@@ -215,28 +219,30 @@ test('requesting access to a service in the directory', async () => {
 test('retrieving all services with access', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'Org A',
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Org A',
+          },
+          serviceName: 'Service A',
         },
-        serviceName: 'Service A',
-      },
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'Org A',
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Org A',
+          },
+          serviceName: 'Service B',
         },
-        serviceName: 'Service B',
-      },
-    ],
-  })
+      ],
+    })
 
   const rootStore = new RootStore({
     directoryApiClient,
@@ -268,9 +274,9 @@ test('retrieving all services with access', async () => {
 test('syncing outgoing access requests for a service', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementSynchronizeOutgoingAccessRequests = jest
+  managementApiClient.managementServiceSynchronizeOutgoingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       foo: 'bar',
@@ -287,7 +293,7 @@ test('syncing outgoing access requests for a service', async () => {
     )
 
   expect(
-    managementApiClient.managementSynchronizeOutgoingAccessRequests,
+    managementApiClient.managementServiceSynchronizeOutgoingAccessRequests,
   ).toHaveBeenCalledWith({
     organizationSerialNumber: '00000000000000000001',
     serviceName: 'Service A',
@@ -298,11 +304,10 @@ test('syncing outgoing access requests for a service', async () => {
 test('syncing all outgoing access requests', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementSynchronizeAllOutgoingAccessRequests = jest
-    .fn()
-    .mockResolvedValue({
+  managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests =
+    jest.fn().mockResolvedValue({
       foo: 'bar',
     })
 
@@ -314,7 +319,7 @@ test('syncing all outgoing access requests', async () => {
     await rootStore.directoryServicesStore.syncAllOutgoingAccessRequests()
 
   expect(
-    managementApiClient.managementSynchronizeAllOutgoingAccessRequests,
+    managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests,
   ).toHaveBeenCalled()
   expect(result).toEqual({ foo: 'bar' })
 })

@@ -14,31 +14,31 @@ import (
 	api "go.nlx.io/nlx/txlog-api/api"
 )
 
-// MockTXLogClient is a mock of TXLogClient interface.
-type MockTXLogClient struct {
+// MockTXLogServiceClient is a mock of TXLogServiceClient interface.
+type MockTXLogServiceClient struct {
 	ctrl     *gomock.Controller
-	recorder *MockTXLogClientMockRecorder
+	recorder *MockTXLogServiceClientMockRecorder
 }
 
-// MockTXLogClientMockRecorder is the mock recorder for MockTXLogClient.
-type MockTXLogClientMockRecorder struct {
-	mock *MockTXLogClient
+// MockTXLogServiceClientMockRecorder is the mock recorder for MockTXLogServiceClient.
+type MockTXLogServiceClientMockRecorder struct {
+	mock *MockTXLogServiceClient
 }
 
-// NewMockTXLogClient creates a new mock instance.
-func NewMockTXLogClient(ctrl *gomock.Controller) *MockTXLogClient {
-	mock := &MockTXLogClient{ctrl: ctrl}
-	mock.recorder = &MockTXLogClientMockRecorder{mock}
+// NewMockTXLogServiceClient creates a new mock instance.
+func NewMockTXLogServiceClient(ctrl *gomock.Controller) *MockTXLogServiceClient {
+	mock := &MockTXLogServiceClient{ctrl: ctrl}
+	mock.recorder = &MockTXLogServiceClientMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTXLogClient) EXPECT() *MockTXLogClientMockRecorder {
+func (m *MockTXLogServiceClient) EXPECT() *MockTXLogServiceClientMockRecorder {
 	return m.recorder
 }
 
 // CreateRecord mocks base method.
-func (m *MockTXLogClient) CreateRecord(ctx context.Context, in *api.CreateRecordRequest, opts ...grpc.CallOption) (*api.CreateRecordResponse, error) {
+func (m *MockTXLogServiceClient) CreateRecord(ctx context.Context, in *api.CreateRecordRequest, opts ...grpc.CallOption) (*api.CreateRecordResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -51,14 +51,14 @@ func (m *MockTXLogClient) CreateRecord(ctx context.Context, in *api.CreateRecord
 }
 
 // CreateRecord indicates an expected call of CreateRecord.
-func (mr *MockTXLogClientMockRecorder) CreateRecord(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockTXLogServiceClientMockRecorder) CreateRecord(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockTXLogClient)(nil).CreateRecord), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockTXLogServiceClient)(nil).CreateRecord), varargs...)
 }
 
 // ListRecords mocks base method.
-func (m *MockTXLogClient) ListRecords(ctx context.Context, in *api.ListRecordsRequest, opts ...grpc.CallOption) (*api.ListRecordsResponse, error) {
+func (m *MockTXLogServiceClient) ListRecords(ctx context.Context, in *api.ListRecordsRequest, opts ...grpc.CallOption) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -71,37 +71,37 @@ func (m *MockTXLogClient) ListRecords(ctx context.Context, in *api.ListRecordsRe
 }
 
 // ListRecords indicates an expected call of ListRecords.
-func (mr *MockTXLogClientMockRecorder) ListRecords(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockTXLogServiceClientMockRecorder) ListRecords(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRecords", reflect.TypeOf((*MockTXLogClient)(nil).ListRecords), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRecords", reflect.TypeOf((*MockTXLogServiceClient)(nil).ListRecords), varargs...)
 }
 
-// MockTXLogServer is a mock of TXLogServer interface.
-type MockTXLogServer struct {
+// MockTXLogServiceServer is a mock of TXLogServiceServer interface.
+type MockTXLogServiceServer struct {
 	ctrl     *gomock.Controller
-	recorder *MockTXLogServerMockRecorder
+	recorder *MockTXLogServiceServerMockRecorder
 }
 
-// MockTXLogServerMockRecorder is the mock recorder for MockTXLogServer.
-type MockTXLogServerMockRecorder struct {
-	mock *MockTXLogServer
+// MockTXLogServiceServerMockRecorder is the mock recorder for MockTXLogServiceServer.
+type MockTXLogServiceServerMockRecorder struct {
+	mock *MockTXLogServiceServer
 }
 
-// NewMockTXLogServer creates a new mock instance.
-func NewMockTXLogServer(ctrl *gomock.Controller) *MockTXLogServer {
-	mock := &MockTXLogServer{ctrl: ctrl}
-	mock.recorder = &MockTXLogServerMockRecorder{mock}
+// NewMockTXLogServiceServer creates a new mock instance.
+func NewMockTXLogServiceServer(ctrl *gomock.Controller) *MockTXLogServiceServer {
+	mock := &MockTXLogServiceServer{ctrl: ctrl}
+	mock.recorder = &MockTXLogServiceServerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTXLogServer) EXPECT() *MockTXLogServerMockRecorder {
+func (m *MockTXLogServiceServer) EXPECT() *MockTXLogServiceServerMockRecorder {
 	return m.recorder
 }
 
 // CreateRecord mocks base method.
-func (m *MockTXLogServer) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest) (*api.CreateRecordResponse, error) {
+func (m *MockTXLogServiceServer) CreateRecord(arg0 context.Context, arg1 *api.CreateRecordRequest) (*api.CreateRecordResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRecord", arg0, arg1)
 	ret0, _ := ret[0].(*api.CreateRecordResponse)
@@ -110,13 +110,13 @@ func (m *MockTXLogServer) CreateRecord(arg0 context.Context, arg1 *api.CreateRec
 }
 
 // CreateRecord indicates an expected call of CreateRecord.
-func (mr *MockTXLogServerMockRecorder) CreateRecord(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockTXLogServiceServerMockRecorder) CreateRecord(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockTXLogServer)(nil).CreateRecord), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRecord", reflect.TypeOf((*MockTXLogServiceServer)(nil).CreateRecord), arg0, arg1)
 }
 
 // ListRecords mocks base method.
-func (m *MockTXLogServer) ListRecords(arg0 context.Context, arg1 *api.ListRecordsRequest) (*api.ListRecordsResponse, error) {
+func (m *MockTXLogServiceServer) ListRecords(arg0 context.Context, arg1 *api.ListRecordsRequest) (*api.ListRecordsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRecords", arg0, arg1)
 	ret0, _ := ret[0].(*api.ListRecordsResponse)
@@ -125,54 +125,54 @@ func (m *MockTXLogServer) ListRecords(arg0 context.Context, arg1 *api.ListRecord
 }
 
 // ListRecords indicates an expected call of ListRecords.
-func (mr *MockTXLogServerMockRecorder) ListRecords(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockTXLogServiceServerMockRecorder) ListRecords(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRecords", reflect.TypeOf((*MockTXLogServer)(nil).ListRecords), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRecords", reflect.TypeOf((*MockTXLogServiceServer)(nil).ListRecords), arg0, arg1)
 }
 
-// mustEmbedUnimplementedTXLogServer mocks base method.
-func (m *MockTXLogServer) mustEmbedUnimplementedTXLogServer() {
+// mustEmbedUnimplementedTXLogServiceServer mocks base method.
+func (m *MockTXLogServiceServer) mustEmbedUnimplementedTXLogServiceServer() {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "mustEmbedUnimplementedTXLogServer")
+	m.ctrl.Call(m, "mustEmbedUnimplementedTXLogServiceServer")
 }
 
-// mustEmbedUnimplementedTXLogServer indicates an expected call of mustEmbedUnimplementedTXLogServer.
-func (mr *MockTXLogServerMockRecorder) mustEmbedUnimplementedTXLogServer() *gomock.Call {
+// mustEmbedUnimplementedTXLogServiceServer indicates an expected call of mustEmbedUnimplementedTXLogServiceServer.
+func (mr *MockTXLogServiceServerMockRecorder) mustEmbedUnimplementedTXLogServiceServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedTXLogServer", reflect.TypeOf((*MockTXLogServer)(nil).mustEmbedUnimplementedTXLogServer))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedTXLogServiceServer", reflect.TypeOf((*MockTXLogServiceServer)(nil).mustEmbedUnimplementedTXLogServiceServer))
 }
 
-// MockUnsafeTXLogServer is a mock of UnsafeTXLogServer interface.
-type MockUnsafeTXLogServer struct {
+// MockUnsafeTXLogServiceServer is a mock of UnsafeTXLogServiceServer interface.
+type MockUnsafeTXLogServiceServer struct {
 	ctrl     *gomock.Controller
-	recorder *MockUnsafeTXLogServerMockRecorder
+	recorder *MockUnsafeTXLogServiceServerMockRecorder
 }
 
-// MockUnsafeTXLogServerMockRecorder is the mock recorder for MockUnsafeTXLogServer.
-type MockUnsafeTXLogServerMockRecorder struct {
-	mock *MockUnsafeTXLogServer
+// MockUnsafeTXLogServiceServerMockRecorder is the mock recorder for MockUnsafeTXLogServiceServer.
+type MockUnsafeTXLogServiceServerMockRecorder struct {
+	mock *MockUnsafeTXLogServiceServer
 }
 
-// NewMockUnsafeTXLogServer creates a new mock instance.
-func NewMockUnsafeTXLogServer(ctrl *gomock.Controller) *MockUnsafeTXLogServer {
-	mock := &MockUnsafeTXLogServer{ctrl: ctrl}
-	mock.recorder = &MockUnsafeTXLogServerMockRecorder{mock}
+// NewMockUnsafeTXLogServiceServer creates a new mock instance.
+func NewMockUnsafeTXLogServiceServer(ctrl *gomock.Controller) *MockUnsafeTXLogServiceServer {
+	mock := &MockUnsafeTXLogServiceServer{ctrl: ctrl}
+	mock.recorder = &MockUnsafeTXLogServiceServerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUnsafeTXLogServer) EXPECT() *MockUnsafeTXLogServerMockRecorder {
+func (m *MockUnsafeTXLogServiceServer) EXPECT() *MockUnsafeTXLogServiceServerMockRecorder {
 	return m.recorder
 }
 
-// mustEmbedUnimplementedTXLogServer mocks base method.
-func (m *MockUnsafeTXLogServer) mustEmbedUnimplementedTXLogServer() {
+// mustEmbedUnimplementedTXLogServiceServer mocks base method.
+func (m *MockUnsafeTXLogServiceServer) mustEmbedUnimplementedTXLogServiceServer() {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "mustEmbedUnimplementedTXLogServer")
+	m.ctrl.Call(m, "mustEmbedUnimplementedTXLogServiceServer")
 }
 
-// mustEmbedUnimplementedTXLogServer indicates an expected call of mustEmbedUnimplementedTXLogServer.
-func (mr *MockUnsafeTXLogServerMockRecorder) mustEmbedUnimplementedTXLogServer() *gomock.Call {
+// mustEmbedUnimplementedTXLogServiceServer indicates an expected call of mustEmbedUnimplementedTXLogServiceServer.
+func (mr *MockUnsafeTXLogServiceServerMockRecorder) mustEmbedUnimplementedTXLogServiceServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedTXLogServer", reflect.TypeOf((*MockUnsafeTXLogServer)(nil).mustEmbedUnimplementedTXLogServer))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedTXLogServiceServer", reflect.TypeOf((*MockUnsafeTXLogServiceServer)(nil).mustEmbedUnimplementedTXLogServiceServer))
 }

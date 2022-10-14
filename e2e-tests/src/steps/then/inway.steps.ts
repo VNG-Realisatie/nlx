@@ -14,7 +14,8 @@ Then(
   async function (this: CustomWorld, orgName: string) {
     const org = getOrgByName(orgName);
 
-    const resp = await org.apiClients.management?.managementGetSettings();
+    const resp =
+      await org.apiClients.management?.managementServiceGetSettings();
 
     assert.equal(
       resp?.settings?.organizationInway,
@@ -32,7 +33,7 @@ Then(
     const org = getOrgByName(orgName);
 
     try {
-      const inway = await org.apiClients.management?.managementGetInway({
+      const inway = await org.apiClients.management?.managementServiceGetInway({
         name: org.defaultInway.name,
       });
 

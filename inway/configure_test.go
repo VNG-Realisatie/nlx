@@ -25,15 +25,15 @@ func TestStartConfigurationPolling(t *testing.T) {
 	require.NoError(t, err)
 
 	tests := map[string]struct {
-		managementClient          func(ctrl *gomock.Controller) *mock_api.MockManagementClient
+		managementClient          func(ctrl *gomock.Controller) *mock_api.MockManagementServiceClient
 		expectError               bool
 		expectedErrorMessage      string
 		expectedService           *plugins.Service
 		shouldBeOrganizationInway bool
 	}{
 		"management_api_unavailable": {
-			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
-				managementClient := mock_api.NewMockManagementClient(ctrl)
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementServiceClient {
+				managementClient := mock_api.NewMockManagementServiceClient(ctrl)
 				managementClient.EXPECT().GetInwayConfig(gomock.Any(), gomock.Any()).Return(nil, errManagementAPIUnavailable)
 
 				return managementClient
@@ -43,8 +43,8 @@ func TestStartConfigurationPolling(t *testing.T) {
 			shouldBeOrganizationInway: false,
 		},
 		"get_inway_config_arbitrary error": {
-			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
-				managementClient := mock_api.NewMockManagementClient(ctrl)
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementServiceClient {
+				managementClient := mock_api.NewMockManagementServiceClient(ctrl)
 				managementClient.EXPECT().GetInwayConfig(gomock.Any(), gomock.Any()).Return(nil, errors.New("arbitrary error"))
 
 				return managementClient
@@ -54,8 +54,8 @@ func TestStartConfigurationPolling(t *testing.T) {
 			shouldBeOrganizationInway: false,
 		},
 		"happy_flow_organization_inway": {
-			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
-				managementClient := mock_api.NewMockManagementClient(ctrl)
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementServiceClient {
+				managementClient := mock_api.NewMockManagementServiceClient(ctrl)
 
 				managementClient.EXPECT().GetInwayConfig(gomock.Any(), &api.GetInwayConfigRequest{
 					Name: "mock-inway",
@@ -107,8 +107,8 @@ func TestStartConfigurationPolling(t *testing.T) {
 			shouldBeOrganizationInway: true,
 		},
 		"happy_flow_not_organization_inway": {
-			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementClient {
-				managementClient := mock_api.NewMockManagementClient(ctrl)
+			managementClient: func(ctrl *gomock.Controller) *mock_api.MockManagementServiceClient {
+				managementClient := mock_api.NewMockManagementServiceClient(ctrl)
 
 				managementClient.EXPECT().GetInwayConfig(gomock.Any(), &api.GetInwayConfigRequest{
 					Name: "mock-inway",

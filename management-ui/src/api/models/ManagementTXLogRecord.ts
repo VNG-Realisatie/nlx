@@ -19,6 +19,12 @@ import {
     ManagementTXLogDirectionFromJSONTyped,
     ManagementTXLogDirectionToJSON,
 } from './ManagementTXLogDirection';
+import type { ManagementTXLogNlxService } from './ManagementTXLogNlxService';
+import {
+    ManagementTXLogNlxServiceFromJSON,
+    ManagementTXLogNlxServiceFromJSONTyped,
+    ManagementTXLogNlxServiceToJSON,
+} from './ManagementTXLogNlxService';
 import type { ManagementTXLogOrder } from './ManagementTXLogOrder';
 import {
     ManagementTXLogOrderFromJSON,
@@ -31,12 +37,6 @@ import {
     ManagementTXLogOrganizationFromJSONTyped,
     ManagementTXLogOrganizationToJSON,
 } from './ManagementTXLogOrganization';
-import type { ManagementTXLogService } from './ManagementTXLogService';
-import {
-    ManagementTXLogServiceFromJSON,
-    ManagementTXLogServiceFromJSONTyped,
-    ManagementTXLogServiceToJSON,
-} from './ManagementTXLogService';
 
 /**
  * 
@@ -64,10 +64,10 @@ export interface ManagementTXLogRecord {
     direction?: ManagementTXLogDirection;
     /**
      * 
-     * @type {ManagementTXLogService}
+     * @type {ManagementTXLogNlxService}
      * @memberof ManagementTXLogRecord
      */
-    service?: ManagementTXLogService;
+    service?: ManagementTXLogNlxService;
     /**
      * 
      * @type {string}
@@ -116,7 +116,7 @@ export function ManagementTXLogRecordFromJSONTyped(json: any, ignoreDiscriminato
         'source': !exists(json, 'source') ? undefined : ManagementTXLogOrganizationFromJSON(json['source']),
         'destination': !exists(json, 'destination') ? undefined : ManagementTXLogOrganizationFromJSON(json['destination']),
         'direction': !exists(json, 'direction') ? undefined : ManagementTXLogDirectionFromJSON(json['direction']),
-        'service': !exists(json, 'service') ? undefined : ManagementTXLogServiceFromJSON(json['service']),
+        'service': !exists(json, 'service') ? undefined : ManagementTXLogNlxServiceFromJSON(json['service']),
         'data': !exists(json, 'data') ? undefined : json['data'],
         'order': !exists(json, 'order') ? undefined : ManagementTXLogOrderFromJSON(json['order']),
         'transactionId': !exists(json, 'transaction_id') ? undefined : json['transaction_id'],
@@ -136,7 +136,7 @@ export function ManagementTXLogRecordToJSON(value?: ManagementTXLogRecord | null
         'source': ManagementTXLogOrganizationToJSON(value.source),
         'destination': ManagementTXLogOrganizationToJSON(value.destination),
         'direction': ManagementTXLogDirectionToJSON(value.direction),
-        'service': ManagementTXLogServiceToJSON(value.service),
+        'service': ManagementTXLogNlxServiceToJSON(value.service),
         'data': value.data,
         'order': ManagementTXLogOrderToJSON(value.order),
         'transaction_id': value.transactionId,

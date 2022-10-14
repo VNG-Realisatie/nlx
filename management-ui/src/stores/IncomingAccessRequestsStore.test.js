@@ -5,7 +5,7 @@ import { configure } from 'mobx'
 import IncomingAccessRequestModel, {
   STATES,
 } from '../stores/models/IncomingAccessRequestModel'
-import { ManagementApi } from '../api'
+import { ManagementServiceApi } from '../api'
 import IncomingAccessRequestsStore from './IncomingAccessRequestsStore'
 import { RootStore } from './index'
 
@@ -17,8 +17,8 @@ test('initializing the store', () => {
 test('fetching, getting and updating from server', async () => {
   const service = { name: 'Service' }
 
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementListIncomingAccessRequests = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValue({
       accessRequests: [
@@ -56,7 +56,7 @@ test('fetching, getting and updating from server', async () => {
   await incomingAccessRequestStore.fetchForService(service)
 
   expect(
-    managementApiClient.managementListIncomingAccessRequests,
+    managementApiClient.managementServiceListIncomingAccessRequests,
   ).toHaveBeenCalledWith({ serviceName: 'Service' })
   expect(incomingAccessRequestStore.incomingAccessRequests.size).toEqual(1)
 
@@ -79,8 +79,8 @@ test('fetching, getting and updating from server', async () => {
 
 test('approving an access request', async () => {
   configure({ safeDescriptors: false })
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementApproveIncomingAccessRequest = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceApproveIncomingAccessRequest = jest
     .fn()
     .mockResolvedValue()
 
@@ -98,14 +98,14 @@ test('approving an access request', async () => {
   })
 
   expect(
-    managementApiClient.managementApproveIncomingAccessRequest,
+    managementApiClient.managementServiceApproveIncomingAccessRequest,
   ).toHaveBeenCalled()
   expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
 })
 
 test('rejecting an access request', async () => {
-  const managementApiClient = new ManagementApi()
-  managementApiClient.managementRejectIncomingAccessRequest = jest
+  const managementApiClient = new ManagementServiceApi()
+  managementApiClient.managementServiceRejectIncomingAccessRequest = jest
     .fn()
     .mockResolvedValue()
 
@@ -123,19 +123,19 @@ test('rejecting an access request', async () => {
   })
 
   expect(
-    managementApiClient.managementRejectIncomingAccessRequest,
+    managementApiClient.managementServiceRejectIncomingAccessRequest,
   ).toHaveBeenCalled()
   expect(fetchForServiceSpy).toHaveBeenCalledWith({ name: 'Service' })
 })
 
 test('fetching for a service should update existing in-memory models instead of recreating them', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const incomingAccessRequestStore = new IncomingAccessRequestsStore({
     managementApiClient,
   })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValueOnce({
       accessRequests: [
@@ -210,11 +210,13 @@ describe('have the access requests been changed for a service', () => {
   }
 
   beforeEach(async () => {
-    managementApiClient = new ManagementApi()
+    managementApiClient = new ManagementServiceApi()
 
-    managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-      name: 'service-a',
-    })
+    managementApiClient.managementServiceGetService = jest
+      .fn()
+      .mockResolvedValue({
+        name: 'service-a',
+      })
 
     rootStore = new RootStore({
       managementApiClient,
@@ -227,7 +229,7 @@ describe('have the access requests been changed for a service', () => {
   })
 
   it('should indicate changed if the number of access requests have changed', async () => {
-    managementApiClient.managementListIncomingAccessRequests = jest
+    managementApiClient.managementServiceListIncomingAccessRequests = jest
       .fn()
       .mockResolvedValueOnce({ accessRequests: [] })
       .mockResolvedValue({
@@ -243,7 +245,7 @@ describe('have the access requests been changed for a service', () => {
   })
 
   it('should indicate changed if the changed access request has a different id', async () => {
-    managementApiClient.managementListIncomingAccessRequests = jest
+    managementApiClient.managementServiceListIncomingAccessRequests = jest
       .fn()
       .mockResolvedValueOnce({
         accessRequests: [ACCESS_REQUEST_ONE],
@@ -261,7 +263,7 @@ describe('have the access requests been changed for a service', () => {
   })
 
   it('should not indicate changed if the latest access request is the same', async () => {
-    managementApiClient.managementListIncomingAccessRequests = jest
+    managementApiClient.managementServiceListIncomingAccessRequests = jest
       .fn()
       .mockResolvedValue({
         accessRequests: [ACCESS_REQUEST_ONE],

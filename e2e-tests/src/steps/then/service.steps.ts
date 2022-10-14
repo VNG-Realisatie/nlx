@@ -15,9 +15,10 @@ Then(
 
     const org = getOrgByName(orgName);
 
-    const response = await org.apiClients.management?.managementGetService({
-      name: serviceName,
-    });
+    const response =
+      await org.apiClients.management?.managementServiceGetService({
+        name: serviceName,
+      });
 
     assert.equal(response?.name, serviceName);
   }
@@ -31,7 +32,7 @@ Then(
     const org = getOrgByName(orgName);
 
     try {
-      await org.apiClients.management?.managementGetService({
+      await org.apiClients.management?.managementServiceGetService({
         name: serviceName,
       });
       throw new Error(

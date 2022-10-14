@@ -14,7 +14,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func (s DirectoryService) ListServices(ctx context.Context, _ *api.DirectoryListServicesRequest) (*api.DirectoryListServicesResponse, error) {
+func (s DirectoryService) ListServices(ctx context.Context, _ *api.DirectoryServiceListServicesRequest) (*api.DirectoryServiceListServicesResponse, error) {
 	s.logger.Info("rpc request ListServices")
 
 	resp, err := s.directoryClient.ListServices(ctx, &directoryapi.ListServicesRequest{})
@@ -23,7 +23,7 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *api.DirectoryList
 		return nil, status.Errorf(codes.Internal, "directory error")
 	}
 
-	services := make([]*api.DirectoryService, len(resp.Services))
+	services := make([]*api.DirectoryNlxService, len(resp.Services))
 
 	for i, service := range resp.Services {
 		convertedService := convertDirectoryService(service)
@@ -39,5 +39,5 @@ func (s DirectoryService) ListServices(ctx context.Context, _ *api.DirectoryList
 		services[i] = convertedService
 	}
 
-	return &api.DirectoryListServicesResponse{Services: services}, nil
+	return &api.DirectoryServiceListServicesResponse{Services: services}, nil
 }

@@ -7,7 +7,10 @@ import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { configure } from 'mobx'
 import { act } from 'react-dom/test-utils'
 import { renderWithAllProviders } from '../../../../../../../test-utils'
-import { DirectoryApi, ManagementApi } from '../../../../../../../api'
+import {
+  DirectoryServiceApi,
+  ManagementServiceApi,
+} from '../../../../../../../api'
 import { RootStore, StoreProvider } from '../../../../../../../stores'
 import OutwaysWithoutAccessSection from './index'
 
@@ -16,26 +19,28 @@ jest.mock('../../../../../../../components/Modal')
 test('Outways without access section', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-1',
-        publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPem: 'public-key-pem-1',
-      },
-      {
-        name: 'outway-2',
-        publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPem: 'public-key-pem-2',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-1',
+          publicKeyFingerprint: 'public-key-fingerprint-1',
+          publicKeyPem: 'public-key-pem-1',
+        },
+        {
+          name: 'outway-2',
+          publicKeyFingerprint: 'public-key-fingerprint-1',
+          publicKeyPem: 'public-key-pem-2',
+        },
+      ],
+    })
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
       directoryService: {
@@ -105,21 +110,23 @@ test('Outways without access section', async () => {
 test('Request access - permission denied', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-1',
-        publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPem: 'public-key-pem-1',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-1',
+          publicKeyFingerprint: 'public-key-fingerprint-1',
+          publicKeyPem: 'public-key-pem-1',
+        },
+      ],
+    })
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
       directoryService: {

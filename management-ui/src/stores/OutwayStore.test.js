@@ -2,32 +2,34 @@
 // Licensed under the EUPL
 //
 import { configure } from 'mobx'
-import { ManagementApi } from '../api'
+import { ManagementServiceApi } from '../api'
 import OutwayModel from './models/OutwayModel'
 import OutwayStore from './OutwayStore'
 
 test('initializing the store', () => {
   const store = new OutwayStore({
-    managementApiClient: new ManagementApi(),
+    managementApiClient: new ManagementServiceApi(),
   })
 
   expect(store.outways).toEqual([])
 })
 
 test('fetching all outways', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'my-outway',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem',
-        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-        version: 'v0.0.42',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'my-outway',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem',
+          publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+          version: 'v0.0.42',
+        },
+      ],
+    })
 
   const store = new OutwayStore({
     managementApiClient,
@@ -40,9 +42,9 @@ test('fetching all outways', async () => {
 })
 
 test('fetching a single outway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetOutway = jest.fn().mockResolvedValue({
+  managementApiClient.managementServiceGetOutway = jest.fn().mockResolvedValue({
     name: 'My Outway',
     ipAddress: '127.0.0.1',
     publicKeyPem: 'public-key-pem',
@@ -59,7 +61,7 @@ test('fetching a single outway', async () => {
 
   const outway = await outwayStore.fetch({ name: 'My Outway' })
 
-  expect(managementApiClient.managementGetOutway).toHaveBeenCalledWith({
+  expect(managementApiClient.managementServiceGetOutway).toHaveBeenCalledWith({
     name: 'My Outway',
   })
   expect(outway).toBeInstanceOf(OutwayModel)
@@ -69,33 +71,35 @@ test('fetching a single outway', async () => {
 })
 
 test('retrieving the public key fingerprints', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'my-outway-1',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem-a',
-        publicKeyFingerprint: 'public-key-fingerprint-a',
-        version: 'v0.0.42',
-      },
-      {
-        name: 'my-outway-2',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem-b',
-        publicKeyFingerprint: 'public-key-fingerprint-b',
-        version: 'v0.0.42',
-      },
-      {
-        name: 'my-outway-3',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem-c',
-        publicKeyFingerprint: 'public-key-fingerprint-a',
-        version: 'v0.0.42',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'my-outway-1',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem-a',
+          publicKeyFingerprint: 'public-key-fingerprint-a',
+          version: 'v0.0.42',
+        },
+        {
+          name: 'my-outway-2',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem-b',
+          publicKeyFingerprint: 'public-key-fingerprint-b',
+          version: 'v0.0.42',
+        },
+        {
+          name: 'my-outway-3',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem-c',
+          publicKeyFingerprint: 'public-key-fingerprint-a',
+          version: 'v0.0.42',
+        },
+      ],
+    })
 
   const store = new OutwayStore({
     managementApiClient,
@@ -109,26 +113,28 @@ test('retrieving the public key fingerprints', async () => {
 })
 
 test('get outways by public key fingerprint', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'my-outway-1',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem',
-        publicKeyFingerprint: 'public-key-fingerprint-a',
-        version: 'v0.0.42',
-      },
-      {
-        name: 'my-outway-2',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'public-key-pem',
-        publicKeyFingerprint: 'public-key-fingerprint-b',
-        version: 'v0.0.42',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'my-outway-1',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem',
+          publicKeyFingerprint: 'public-key-fingerprint-a',
+          version: 'v0.0.42',
+        },
+        {
+          name: 'my-outway-2',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'public-key-pem',
+          publicKeyFingerprint: 'public-key-fingerprint-b',
+          version: 'v0.0.42',
+        },
+      ],
+    })
 
   const store = new OutwayStore({
     managementApiClient,
@@ -143,9 +149,9 @@ test('get outways by public key fingerprint', async () => {
 test('removing an outway', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest
+  managementApiClient.managementServiceListOutways = jest
     .fn()
     .mockResolvedValueOnce({
       outways: [
@@ -158,7 +164,9 @@ test('removing an outway', async () => {
       outways: [{ name: 'Outway A' }, { name: 'Outway C' }],
     })
 
-  managementApiClient.managementDeleteOutway = jest.fn().mockResolvedValue({})
+  managementApiClient.managementServiceDeleteOutway = jest
+    .fn()
+    .mockResolvedValue({})
 
   const outwayStore = new OutwayStore({
     rootStore: {},
@@ -174,7 +182,9 @@ test('removing an outway', async () => {
 
   await outwayStore.removeOutway('Outway B')
 
-  expect(managementApiClient.managementDeleteOutway).toHaveBeenCalledWith({
+  expect(
+    managementApiClient.managementServiceDeleteOutway,
+  ).toHaveBeenCalledWith({
     name: 'Outway B',
   })
 

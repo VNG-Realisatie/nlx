@@ -21,7 +21,7 @@ import (
 )
 
 type DirectoryService struct {
-	api.UnimplementedDirectoryServer
+	api.UnimplementedDirectoryServiceServer
 
 	logger      *zap.Logger
 	environment *environment.Environment
@@ -30,10 +30,10 @@ type DirectoryService struct {
 	configDatabase  database.ConfigDatabase
 }
 
-var inwayStateToDirectoryState = map[directoryapi.Inway_State]api.DirectoryService_State{
-	directoryapi.Inway_STATE_UNSPECIFIED: api.DirectoryService_STATE_UNSPECIFIED,
-	directoryapi.Inway_STATE_UP:          api.DirectoryService_STATE_UP,
-	directoryapi.Inway_STATE_DOWN:        api.DirectoryService_STATE_DOWN,
+var inwayStateToDirectoryState = map[directoryapi.Inway_State]api.DirectoryNlxService_State{
+	directoryapi.Inway_STATE_UNSPECIFIED: api.DirectoryNlxService_STATE_UNSPECIFIED,
+	directoryapi.Inway_STATE_UP:          api.DirectoryNlxService_STATE_UP,
+	directoryapi.Inway_STATE_DOWN:        api.DirectoryNlxService_STATE_DOWN,
 }
 
 func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directoryClient directory.Client, configDatabase database.ConfigDatabase) *DirectoryService {
@@ -45,10 +45,10 @@ func NewDirectoryService(logger *zap.Logger, e *environment.Environment, directo
 	}
 }
 
-func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.DirectoryService {
+func convertDirectoryService(s *directoryapi.ListServicesResponse_Service) *api.DirectoryNlxService {
 	serviceState := determineDirectoryServiceState(s.Inways)
 
-	service := &api.DirectoryService{
+	service := &api.DirectoryNlxService{
 		ServiceName:          s.Name,
 		ApiSpecificationType: s.ApiSpecificationType,
 		DocumentationUrl:     s.DocumentationUrl,
@@ -90,8 +90,8 @@ func (s DirectoryService) getService(ctx context.Context, logger *zap.Logger, or
 	return nil, status.Error(codes.NotFound, "service not found")
 }
 
-func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryService_State {
-	serviceState := api.DirectoryService_STATE_UNSPECIFIED
+func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryNlxService_State {
+	serviceState := api.DirectoryNlxService_STATE_UNSPECIFIED
 
 	if len(inways) == 0 {
 		return serviceState
@@ -104,7 +104,7 @@ func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryS
 	}
 
 	if len(stateMap) > 1 {
-		return api.DirectoryService_STATE_DEGRADED
+		return api.DirectoryNlxService_STATE_DEGRADED
 	}
 
 	for state := range stateMap {
@@ -114,7 +114,7 @@ func determineDirectoryServiceState(inways []*directoryapi.Inway) api.DirectoryS
 	return serviceState
 }
 
-func getLatestAccessRequestStates(ctx context.Context, directoryClient directory.Client, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryService_AccessState, error) {
+func getLatestAccessRequestStates(ctx context.Context, directoryClient directory.Client, configDatabase database.ConfigDatabase, organizationSerialNumber, serviceName string) ([]*api.DirectoryNlxService_AccessState, error) {
 	outgoingAccessRequests, err := configDatabase.ListLatestOutgoingAccessRequests(ctx, organizationSerialNumber, serviceName)
 	if err != nil {
 		return nil, err
@@ -127,12 +127,12 @@ func getLatestAccessRequestStates(ctx context.Context, directoryClient directory
 
 	oinToOrgNameHash := convertOrganizationsToHash(organizations)
 
-	accessRequestStates := make([]*api.DirectoryService_AccessState, len(outgoingAccessRequests))
+	accessRequestStates := make([]*api.DirectoryNlxService_AccessState, len(outgoingAccessRequests))
 
 	for i, outgoingAccessRequest := range outgoingAccessRequests {
 		outgoingAccessRequest.Organization.Name = oinToOrgNameHash[outgoingAccessRequest.Organization.SerialNumber]
 
-		accessRequestState := &api.DirectoryService_AccessState{
+		accessRequestState := &api.DirectoryNlxService_AccessState{
 			AccessRequest: convertOutgoingAccessRequest(outgoingAccessRequest),
 		}
 		accessRequestStates[i] = accessRequestState

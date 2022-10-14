@@ -16,85 +16,85 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ManagementUpdateServiceRequest
+ * @interface ManagementServiceUpdateServiceRequest
  */
-export interface ManagementUpdateServiceRequest {
+export interface ManagementServiceUpdateServiceRequest {
     /**
      * 
      * @type {string}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     endpointUrl?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     documentationUrl?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     apiSpecificationUrl?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     internal?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     techSupportContact?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     publicSupportContact?: string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     inways?: Array<string>;
     /**
      * 
      * @type {number}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     oneTimeCosts?: number;
     /**
      * 
      * @type {number}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     monthlyCosts?: number;
     /**
      * 
      * @type {number}
-     * @memberof ManagementUpdateServiceRequest
+     * @memberof ManagementServiceUpdateServiceRequest
      */
     requestCosts?: number;
 }
 
 /**
- * Check if a given object implements the ManagementUpdateServiceRequest interface.
+ * Check if a given object implements the ManagementServiceUpdateServiceRequest interface.
  */
-export function instanceOfManagementUpdateServiceRequest(value: object): boolean {
+export function instanceOfManagementServiceUpdateServiceRequest(value: object): boolean {
     let isInstance = true;
 
     return isInstance;
 }
 
-export function ManagementUpdateServiceRequestFromJSON(json: any): ManagementUpdateServiceRequest {
-    return ManagementUpdateServiceRequestFromJSONTyped(json, false);
+export function ManagementServiceUpdateServiceRequestFromJSON(json: any): ManagementServiceUpdateServiceRequest {
+    return ManagementServiceUpdateServiceRequestFromJSONTyped(json, false);
 }
 
-export function ManagementUpdateServiceRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementUpdateServiceRequest {
+export function ManagementServiceUpdateServiceRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementServiceUpdateServiceRequest {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -113,7 +113,7 @@ export function ManagementUpdateServiceRequestFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function ManagementUpdateServiceRequestToJSON(value?: ManagementUpdateServiceRequest | null): any {
+export function ManagementServiceUpdateServiceRequestToJSON(value?: ManagementServiceUpdateServiceRequest | null): any {
     if (value === undefined) {
         return undefined;
     }

@@ -16,31 +16,31 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ManagementTXLogService
+ * @interface ManagementTXLogNlxService
  */
-export interface ManagementTXLogService {
+export interface ManagementTXLogNlxService {
     /**
      * 
      * @type {string}
-     * @memberof ManagementTXLogService
+     * @memberof ManagementTXLogNlxService
      */
     name?: string;
 }
 
 /**
- * Check if a given object implements the ManagementTXLogService interface.
+ * Check if a given object implements the ManagementTXLogNlxService interface.
  */
-export function instanceOfManagementTXLogService(value: object): boolean {
+export function instanceOfManagementTXLogNlxService(value: object): boolean {
     let isInstance = true;
 
     return isInstance;
 }
 
-export function ManagementTXLogServiceFromJSON(json: any): ManagementTXLogService {
-    return ManagementTXLogServiceFromJSONTyped(json, false);
+export function ManagementTXLogNlxServiceFromJSON(json: any): ManagementTXLogNlxService {
+    return ManagementTXLogNlxServiceFromJSONTyped(json, false);
 }
 
-export function ManagementTXLogServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementTXLogService {
+export function ManagementTXLogNlxServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementTXLogNlxService {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -50,7 +50,7 @@ export function ManagementTXLogServiceFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function ManagementTXLogServiceToJSON(value?: ManagementTXLogService | null): any {
+export function ManagementTXLogNlxServiceToJSON(value?: ManagementTXLogNlxService | null): any {
     if (value === undefined) {
         return undefined;
     }

@@ -31,7 +31,7 @@ import (
 )
 
 type Server struct {
-	api.UnimplementedTXLogServer
+	api.UnimplementedTXLogServiceServer
 	app        *app.Application
 	logger     logger.Logger
 	mux        *runtime.ServeMux
@@ -68,7 +68,7 @@ func New(lgr logger.Logger, a *app.Application, cert *common_tls.CertificateBund
 		cert:    cert,
 	}
 
-	api.RegisterTXLogServer(grpcServer, server)
+	api.RegisterTXLogServiceServer(grpcServer, server)
 
 	return server
 }
@@ -124,7 +124,7 @@ func (s *Server) ListenAndServe(address, addressPlain string) error {
 		),
 	}
 
-	err = api.RegisterTXLogHandlerFromEndpoint(ctx, s.mux, address, gatewayDialOptions)
+	err = api.RegisterTXLogServiceHandlerFromEndpoint(ctx, s.mux, address, gatewayDialOptions)
 	if err != nil {
 		return err
 	}

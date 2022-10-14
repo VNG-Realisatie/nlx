@@ -7,27 +7,29 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import InwayDetailPage from './index'
 
 test('display inway details', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [
-      {
-        name: 'my-inway',
-        version: 'version',
-        hostname: 'hostname',
-        selfAddress: 'self-address',
-        services: [
-          {
-            name: 'service-1',
-          },
-        ],
-      },
-    ],
-  })
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [
+        {
+          name: 'my-inway',
+          version: 'version',
+          hostname: 'hostname',
+          selfAddress: 'self-address',
+          services: [
+            {
+              name: 'service-1',
+            },
+          ],
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -72,25 +74,27 @@ test('display a non-existing inway', async () => {
 test('remove an Inway', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [
-      {
-        name: 'my-inway',
-        version: 'version',
-        hostname: 'hostname',
-        selfAddress: 'self-address',
-        services: [
-          {
-            name: 'service-1',
-          },
-        ],
-      },
-    ],
-  })
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [
+        {
+          name: 'my-inway',
+          version: 'version',
+          hostname: 'hostname',
+          selfAddress: 'self-address',
+          services: [
+            {
+              name: 'service-1',
+            },
+          ],
+        },
+      ],
+    })
 
-  managementApiClient.managementDeleteInway = jest
+  managementApiClient.managementServiceDeleteInway = jest
     .fn()
     .mockRejectedValueOnce({ response: { status: 403 } })
     .mockResolvedValue({})

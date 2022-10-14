@@ -10,7 +10,12 @@ import './i18n'
 import { RootStore, StoreProvider } from './stores'
 import { UserContextProvider } from './user-context'
 import App from './App'
-import { Configuration, DirectoryApi, ManagementApi, TXLogApi } from './api'
+import {
+  Configuration,
+  DirectoryServiceApi,
+  ManagementServiceApi,
+  TXLogServiceApi,
+} from './api'
 import Routes from './routes'
 import UserRepositoryOIDC from './domain/user-repository-oidc'
 import UserRepositoryBasicAuth from './domain/user-repository-basic-auth'
@@ -18,19 +23,19 @@ import LoginBasicAuthPage from './pages/LoginBasicAuthPage'
 import LoginOIDCPage from './pages/LoginOIDCPage'
 import { AUTH_BASIC_AUTH, AUTH_OIDC } from './stores/ApplicationStore'
 
-const directoryApiClient = new DirectoryApi(
+const directoryApiClient = new DirectoryServiceApi(
   new Configuration({
     basePath: '',
   }),
 )
 
-const managementApiClient = new ManagementApi(
+const managementApiClient = new ManagementServiceApi(
   new Configuration({
     basePath: '',
   }),
 )
 
-const txLogApiClient = new TXLogApi(
+const txLogApiClient = new TXLogServiceApi(
   new Configuration({
     basePath: '',
   }),

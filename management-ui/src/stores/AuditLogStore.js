@@ -24,7 +24,8 @@ class AuditLogStore {
   fetchAll = flow(function* fetchAll() {
     try {
       this._isLoading = true
-      const result = yield this._managementApiClient.managementListAuditLogs()
+      const result =
+        yield this._managementApiClient.managementServiceListAuditLogs()
       const auditLogsData = result.auditLogs
 
       // delete audit logs which do not exist anymore

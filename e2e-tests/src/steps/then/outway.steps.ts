@@ -176,7 +176,8 @@ Then(
     const org = getOrgByName(orgName);
 
     try {
-      const res = await org.apiClients.management?.managementListOutways();
+      const res =
+        await org.apiClients.management?.managementServiceListOutways();
 
       res?.outways?.forEach((o) => {
         if (o.name == outwayName) {

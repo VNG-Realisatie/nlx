@@ -3,7 +3,10 @@
  * Licensed under the EUPL
  */
 
-import { DirectoryApi, ManagementApi } from "../../../management-ui/src/api";
+import {
+  DirectoryServiceApi,
+  ManagementServiceApi,
+} from "../../../management-ui/src/api";
 import { strict as assert } from "assert";
 
 export interface Organization {
@@ -20,8 +23,8 @@ export interface Organization {
     password: string;
   };
   apiClients: {
-    management: ManagementApi | undefined;
-    directory: DirectoryApi | undefined;
+    management: ManagementServiceApi | undefined;
+    directory: DirectoryServiceApi | undefined;
   };
   createdItems: CreatedItems;
 }

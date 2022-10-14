@@ -4,7 +4,7 @@
 import { configure } from 'mobx'
 import ServiceStore from '../ServiceStore'
 import { RootStore } from '../index'
-import { ManagementApi } from '../../api'
+import { ManagementServiceApi } from '../../api'
 import IncomingAccessRequestModel, {
   STATES,
 } from '../../stores/models/IncomingAccessRequestModel'
@@ -117,18 +117,20 @@ test('get related incoming access requests', () => {
 })
 
 test('automatically update incomingAccessRequestCount when related incoming access requests changes', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        name: 'service-a',
-        incomingAccessRequestCount: 1,
-      },
-    ],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          name: 'service-a',
+          incomingAccessRequestCount: 1,
+        },
+      ],
+    })
 
-  managementApiClient.managementListIncomingAccessRequests = jest
+  managementApiClient.managementServiceListIncomingAccessRequests = jest
     .fn()
     .mockResolvedValueOnce({
       accessRequests: [
@@ -159,7 +161,7 @@ test('automatically update incomingAccessRequestCount when related incoming acce
   })
 
   expect(
-    managementApiClient.managementListIncomingAccessRequests,
+    managementApiClient.managementServiceListIncomingAccessRequests,
   ).toHaveBeenCalled()
   expect(serviceModel.incomingAccessRequests).toHaveLength(2)
   expect(serviceModel.incomingAccessRequestCount).toBe(2)

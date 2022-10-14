@@ -23,12 +23,12 @@ var (
 )
 
 type Client interface {
-	txlogapi.TXLogClient
+	txlogapi.TXLogServiceClient
 	Close() error
 }
 
 type client struct {
-	txlogapi.TXLogClient
+	txlogapi.TXLogServiceClient
 	cancel context.CancelFunc
 	conn   *grpc.ClientConn
 }
@@ -53,9 +53,9 @@ func NewClient(ctx context.Context, txlogAddress string, cert *common_tls.Certif
 	}
 
 	c := &client{
-		TXLogClient: txlogapi.NewTXLogClient(txlogConn),
-		cancel:      cancel,
-		conn:        txlogConn,
+		TXLogServiceClient: txlogapi.NewTXLogServiceClient(txlogConn),
+		cancel:             cancel,
+		conn:               txlogConn,
 	}
 
 	return c, nil

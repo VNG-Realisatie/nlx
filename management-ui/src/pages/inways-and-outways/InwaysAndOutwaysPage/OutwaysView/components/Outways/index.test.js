@@ -7,11 +7,11 @@ import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../../../../test-utils'
 import OutwayModel from '../../../../../../stores/models/OutwayModel'
 import { RootStore, StoreProvider } from '../../../../../../stores'
-import { ManagementApi } from '../../../../../../api'
+import { ManagementServiceApi } from '../../../../../../api'
 import Outways from './index'
 
 const render = (outways) => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   return renderWithProviders(

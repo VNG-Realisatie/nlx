@@ -26,7 +26,11 @@ type AccessRequestServiceClient interface {
 	RequestAccess(ctx context.Context, in *RequestAccessRequest, opts ...grpc.CallOption) (*RequestAccessResponse, error)
 	GetAccessRequestState(ctx context.Context, in *GetAccessRequestStateRequest, opts ...grpc.CallOption) (*GetAccessRequestStateResponse, error)
 	// Deprecated: Do not use.
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	// buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+	// buf:lint:ignore RPC_REQUEST_STANDARD_NAME
 	GetAccessProof(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE // Remove this ignore when 'GetAccessProof' is removed
 	GetAccessGrant(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*GetAccessGrantResponse, error)
 }
 
@@ -82,7 +86,11 @@ type AccessRequestServiceServer interface {
 	RequestAccess(context.Context, *RequestAccessRequest) (*RequestAccessResponse, error)
 	GetAccessRequestState(context.Context, *GetAccessRequestStateRequest) (*GetAccessRequestStateResponse, error)
 	// Deprecated: Do not use.
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	// buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+	// buf:lint:ignore RPC_REQUEST_STANDARD_NAME
 	GetAccessProof(context.Context, *GetAccessGrantRequest) (*AccessGrant, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE // Remove this ignore when 'GetAccessProof' is removed
 	GetAccessGrant(context.Context, *GetAccessGrantRequest) (*GetAccessGrantResponse, error)
 	mustEmbedUnimplementedAccessRequestServiceServer()
 }

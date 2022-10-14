@@ -11,5 +11,5 @@ const debug = logger("e2e-tests:tos");
 export const acceptToS = async (world: CustomWorld, orgName: string) => {
   debug(`accepting ToS for ${orgName}`);
   const org = getOrgByName(orgName);
-  await org.apiClients.management?.managementAcceptTermsOfService();
+  await org.apiClients.management?.managementServiceAcceptTermsOfService();
 };

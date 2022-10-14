@@ -32,7 +32,7 @@ Then(
     const org = getOrgByName(orgName);
 
     const orderResponse =
-      await delegator.apiClients.management?.managementListOutgoingOrders();
+      await delegator.apiClients.management?.managementServiceListOutgoingOrders();
 
     assert.equal(
       orderResponse?.orders?.some(
@@ -65,10 +65,10 @@ Then(
     const delegator = getOrgByName(delegatorOrgName);
     const delegatee = getOrgByName(delegateeOrgName);
 
-    await delegatee.apiClients.management?.managementSynchronizeOrders();
+    await delegatee.apiClients.management?.managementServiceSynchronizeOrders();
 
     const orderResponse =
-      await delegatee.apiClients.management?.managementListIncomingOrders();
+      await delegatee.apiClients.management?.managementServiceListIncomingOrders();
 
     debug(
       "incoming order",

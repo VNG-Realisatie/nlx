@@ -7,7 +7,7 @@ import { getOrgByName, Organization } from "./organizations";
 import { getOutwayByName } from "./outway";
 import { CustomWorld } from "../support/custom-world";
 import {
-  ManagementDirectoryService,
+  ManagementDirectoryNlxService,
   ManagementIncomingAccessRequest,
 } from "../../../management-ui/src/api/models";
 import { default as logger } from "../debug";
@@ -47,9 +47,9 @@ const isAccessRequestApprovedForService = async (
 const getDirectoryService = async (
   serviceName: string,
   org: Organization
-): Promise<ManagementDirectoryService | undefined> => {
+): Promise<ManagementDirectoryNlxService | undefined> => {
   const directoryServicesResponse =
-    await org.apiClients.directory?.directoryListServices();
+    await org.apiClients.directory?.directoryServiceListServices();
 
   return directoryServicesResponse?.services?.find(
     (service) => service.serviceName === serviceName
@@ -63,7 +63,7 @@ const getIncomingAccessRequest = async (
   publicKeyFingerprint: string
 ): Promise<ManagementIncomingAccessRequest | undefined> => {
   const responseIncomingAccessRequests =
-    await serviceProvider.apiClients.management?.managementListIncomingAccessRequests(
+    await serviceProvider.apiClients.management?.managementServiceListIncomingAccessRequests(
       {
         serviceName: uniqueServiceName,
       }
@@ -104,10 +104,10 @@ const isServicePresentInDirectory = async (
 const getServiceFromDirectory = async (
   serviceProvider: Organization,
   uniqueServiceName: string
-): Promise<ManagementDirectoryService | undefined> => {
+): Promise<ManagementDirectoryNlxService | undefined> => {
   try {
     return (
-      await serviceProvider.apiClients.directory?.directoryGetOrganizationService(
+      await serviceProvider.apiClients.directory?.directoryServiceGetOrganizationService(
         {
           organizationSerialNumber: serviceProvider.serialNumber,
           serviceName: uniqueServiceName,
@@ -130,14 +130,16 @@ export const createService = async (
   const uniqueServiceName = `${serviceName}-${world.id}`;
 
   const createServiceResponse =
-    await serviceProvider.apiClients.management?.managementCreateService({
-      body: {
-        name: uniqueServiceName,
-        endpointUrl: "https://postman-echo.com",
-        inways: [serviceProvider.defaultInway.name],
-        internal: false,
-      },
-    });
+    await serviceProvider.apiClients.management?.managementServiceCreateService(
+      {
+        body: {
+          name: uniqueServiceName,
+          endpointUrl: "https://postman-echo.com",
+          inways: [serviceProvider.defaultInway.name],
+          internal: false,
+        },
+      }
+    );
   assert.equal(createServiceResponse?.name, uniqueServiceName);
 
   serviceProvider.createdItems[world.id].services.push(uniqueServiceName);
@@ -197,11 +199,13 @@ export const getAccessToService = async (
 
   // request access to new service
   const createAccessRequestResponse =
-    await serviceConsumer.apiClients.management?.managementSendAccessRequest({
-      organizationSerialNumber: serviceProvider.serialNumber,
-      serviceName: uniqueServiceName,
-      publicKeyPem: outway.publicKeyPem,
-    });
+    await serviceConsumer.apiClients.management?.managementServiceSendAccessRequest(
+      {
+        organizationSerialNumber: serviceProvider.serialNumber,
+        serviceName: uniqueServiceName,
+        publicKeyPem: outway.publicKeyPem,
+      }
+    );
 
   assert.equal(
     createAccessRequestResponse?.outgoingAccessRequest?.serviceName,
@@ -217,14 +221,14 @@ export const getAccessToService = async (
 
   assert.notEqual(incomingAccessRequest, undefined);
 
-  await serviceProvider.apiClients.management?.managementApproveIncomingAccessRequest(
+  await serviceProvider.apiClients.management?.managementServiceApproveIncomingAccessRequest(
     {
       serviceName: uniqueServiceName,
       accessRequestId: incomingAccessRequest?.id as string,
     }
   );
 
-  await serviceConsumer.apiClients.management?.managementSynchronizeOutgoingAccessRequests(
+  await serviceConsumer.apiClients.management?.managementServiceSynchronizeOutgoingAccessRequests(
     {
       organizationSerialNumber: serviceProvider.serialNumber,
       serviceName: uniqueServiceName,

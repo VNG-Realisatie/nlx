@@ -8,7 +8,7 @@ import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../../../test-utils'
 import { ACCESS_REQUEST_STATES } from '../../../../../stores/models/OutgoingAccessRequestModel'
 import { RootStore, StoreProvider } from '../../../../../stores'
-import { DirectoryApi, ManagementApi } from '../../../../../api'
+import { DirectoryServiceApi, ManagementServiceApi } from '../../../../../api'
 import DirectoryDetailView from './index'
 
 jest.mock('../../../../../components/Modal')
@@ -16,20 +16,22 @@ jest.mock('../../../../../components/Modal')
 test('can request access', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-1',
-        publicKeyFingerprint: 'public-key-fingerprint-1',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-1',
+          publicKeyFingerprint: 'public-key-fingerprint-1',
+        },
+      ],
+    })
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
       directoryService: {
@@ -86,20 +88,22 @@ test('can request access', async () => {
 test('display error when requesting access failed', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-1',
-        publicKeyFingerprint: 'public-key-fingerprint',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-1',
+          publicKeyFingerprint: 'public-key-fingerprint',
+        },
+      ],
+    })
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
       directoryService: {

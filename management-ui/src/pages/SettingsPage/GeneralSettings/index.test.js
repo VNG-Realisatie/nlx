@@ -5,7 +5,7 @@ import React from 'react'
 import { fireEvent, act, screen } from '@testing-library/react'
 import { renderWithAllProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import GeneralSettings from './index'
 
 describe('the General settings section', () => {
@@ -14,10 +14,12 @@ describe('the General settings section', () => {
   })
 
   it('on initialization', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
-      settings: { inway: { name: 'inway1' } },
-    })
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceGetSettings = jest
+      .fn()
+      .mockResolvedValue({
+        settings: { inway: { name: 'inway1' } },
+      })
 
     const store = new RootStore({ managementApiClient })
 
@@ -34,13 +36,15 @@ describe('the General settings section', () => {
   })
 
   it('successfully submits the form', async () => {
-    const managementApiClient = new ManagementApi()
+    const managementApiClient = new ManagementServiceApi()
 
-    managementApiClient.managementGetSettings = jest.fn().mockResolvedValue({
-      settings: { organizationInway: 'inway1' },
-    })
+    managementApiClient.managementServiceGetSettings = jest
+      .fn()
+      .mockResolvedValue({
+        settings: { organizationInway: 'inway1' },
+      })
 
-    managementApiClient.managementUpdateSettings = jest.fn()
+    managementApiClient.managementServiceUpdateSettings = jest.fn()
 
     const store = new RootStore({ managementApiClient })
 
@@ -88,12 +92,12 @@ describe('the General settings section', () => {
   })
 
   it('should re-submit the form when the previous submission went wrong', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementGetSettings = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceGetSettings = jest
       .fn()
       .mockResolvedValue({ settings: { organizationInway: 'inway1' } })
 
-    managementApiClient.managementUpdateSettings = jest
+    managementApiClient.managementServiceUpdateSettings = jest
       .fn()
       .mockRejectedValueOnce(new Error('arbitrary error'))
       .mockResolvedValueOnce([])
@@ -120,9 +124,9 @@ describe('the General settings section', () => {
       fireEvent.submit(settingsForm)
     })
 
-    expect(managementApiClient.managementUpdateSettings).toHaveBeenCalledTimes(
-      2,
-    )
+    expect(
+      managementApiClient.managementServiceUpdateSettings,
+    ).toHaveBeenCalledTimes(2)
     expect(getAllByRole('alert')[1].textContent).toBe(
       'Successfully updated the settings',
     )

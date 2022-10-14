@@ -133,7 +133,7 @@ func main() {
 		Ctx:                 context.Background(),
 		Logger:              logger,
 		Txlogger:            txLogger,
-		ManagementAPIClient: api.NewManagementClient(managementAPIConn),
+		ManagementAPIClient: api.NewManagementServiceClient(managementAPIConn),
 		MonitoringAddress:   options.MonitoringAddress,
 		OrgCert:             orgCert,
 		InternalCert:        cert,

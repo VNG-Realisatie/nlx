@@ -41,7 +41,8 @@ class OutwayStore {
     this._isFetching = true
 
     try {
-      const result = yield this._managementApiClient.managementListOutways()
+      const result =
+        yield this._managementApiClient.managementServiceListOutways()
       this._outways = result.outways.map(
         (outway) => new OutwayModel({ store: this, outwayData: outway }),
       )
@@ -53,9 +54,10 @@ class OutwayStore {
   }).bind(this)
 
   fetch = flow(function* fetch({ name }) {
-    const outwayData = yield this._managementApiClient.managementGetOutway({
-      name,
-    })
+    const outwayData =
+      yield this._managementApiClient.managementServiceGetOutway({
+        name,
+      })
     let outway = this.getByName({ name })
 
     if (!outway) {
@@ -78,7 +80,7 @@ class OutwayStore {
   }
 
   removeOutway = flow(function* removeOutway(name) {
-    yield this._managementApiClient.managementDeleteOutway({
+    yield this._managementApiClient.managementServiceDeleteOutway({
       name,
     })
 

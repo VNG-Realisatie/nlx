@@ -5,7 +5,7 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { screen } from '@testing-library/react'
-import { ManagementApi } from '../../api'
+import { ManagementServiceApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
 import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
@@ -13,16 +13,18 @@ import { ACTION_LOGIN_SUCCESS } from '../../stores/models/AuditLogModel'
 import AuditLogPage from './index'
 
 test('fetching the audit logs', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListAuditLogs = jest.fn().mockResolvedValue({
-    auditLogs: [
-      {
-        id: 42,
-        action: ACTION_LOGIN_SUCCESS,
-      },
-    ],
-  })
+  managementApiClient.managementServiceListAuditLogs = jest
+    .fn()
+    .mockResolvedValue({
+      auditLogs: [
+        {
+          id: 42,
+          action: ACTION_LOGIN_SUCCESS,
+        },
+      ],
+    })
 
   const store = new RootStore({
     managementApiClient,
@@ -45,9 +47,9 @@ test('fetching the audit logs', async () => {
 })
 
 test('failed to load audit logs', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListAuditLogs = jest
+  managementApiClient.managementServiceListAuditLogs = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 

@@ -45,7 +45,7 @@ class OutgoingAccessRequestStore {
     publicKeyPem,
   ) {
     const response =
-      yield this._managementApiClient.managementSendAccessRequest({
+      yield this._managementApiClient.managementServiceSendAccessRequest({
         body: {
           organizationSerialNumber,
           serviceName,

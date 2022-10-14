@@ -8,12 +8,12 @@ package nlx.management;
 option go_package = "go.nlx.io/nlx/management-api/api";
 
 enum ErrorReason {
-    // Do not use this default value.
-    ERROR_REASON_UNSPECIFIED = 0;
+  // Do not use this default value.
+  ERROR_REASON_UNSPECIFIED = 0;
 
-    // Something went wrong while trying to retrieve the claim
-    UNABLE_TO_RETRIEVE_CLAIM = 1;
+  // Something went wrong while trying to retrieve the claim
+  ERROR_REASON_UNABLE_TO_RETRIEVE_CLAIM = 1;
 
-    // Something went wrong while trying to sign the claim
-    UNABLE_TO_SIGN_CLAIM = 2;
+  // Something went wrong while trying to sign the claim
+  ERROR_REASON_UNABLE_TO_SIGN_CLAIM = 2;
 }

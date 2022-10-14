@@ -28,7 +28,7 @@ export const getOutways = async (orgName: string): Promise<Outways> => {
   const org = getOrgByName(orgName);
 
   const outwaysResponse =
-    await org.apiClients.management?.managementListOutways();
+    await org.apiClients.management?.managementServiceListOutways();
 
   const outways = outwaysResponse?.outways;
   outways?.forEach((outway) => {

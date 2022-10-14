@@ -5,18 +5,23 @@ syntax = "proto3";
 
 package nlx.txlog;
 
-option go_package = "go.nlx.io/nlx/txlog-api/api";
-
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-service TXLog {
-  rpc ListRecords (ListRecordsRequest) returns (ListRecordsResponse) {
-    option (google.api.http) = {get: "/api/v1/records"};
+option go_package = "go.nlx.io/nlx/txlog-api/api";
+
+service TXLogService {
+  rpc ListRecords(ListRecordsRequest) returns (ListRecordsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/records"
+    };
   }
 
-  rpc CreateRecord (CreateRecordRequest) returns (CreateRecordResponse) {
-    option (google.api.http) = {post: "/api/v1/records" body: '*'};
+  rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/records"
+      body: '*'
+    };
   }
 }
 
@@ -35,7 +40,7 @@ message ListRecordsResponse {
     }
 
     message Service {
-       string name = 1;
+      string name = 1;
     }
 
     message Order {
@@ -60,26 +65,26 @@ message ListRecordsResponse {
 }
 
 message CreateRecordRequest {
-    enum Direction {
-        DIRECTION_UNSPECIFIED = 0;
-        DIRECTION_IN = 1;
-        DIRECTION_OUT = 2;
-    }
+  enum Direction {
+    DIRECTION_UNSPECIFIED = 0;
+    DIRECTION_IN = 1;
+    DIRECTION_OUT = 2;
+  }
 
-    message DataSubject {
-        string key = 1;
-        string value = 2;
-    }
+  message DataSubject {
+    string key = 1;
+    string value = 2;
+  }
 
-    string source_organization = 1;
-    string dest_organization = 2;
-    string service_name = 3;
-    string transaction_id = 4;
-    string delegator = 5;
-    string order_reference = 6;
-    string data = 7;
-    Direction direction = 8;
-    repeated DataSubject data_subjects = 9;
+  string source_organization = 1;
+  string dest_organization = 2;
+  string service_name = 3;
+  string transaction_id = 4;
+  string delegator = 5;
+  string order_reference = 6;
+  string data = 7;
+  Direction direction = 8;
+  repeated DataSubject data_subjects = 9;
 }
 
 message CreateRecordResponse {}

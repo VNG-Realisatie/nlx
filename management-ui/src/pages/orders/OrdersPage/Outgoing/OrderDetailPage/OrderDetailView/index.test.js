@@ -4,19 +4,24 @@
 import React from 'react'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../test-utils'
-import { DirectoryApi, ManagementApi } from '../../../../../../api'
+import {
+  DirectoryServiceApi,
+  ManagementServiceApi,
+} from '../../../../../../api'
 import { RootStore, StoreProvider } from '../../../../../../stores'
 import OutgoingOrderModel from '../../../../../../stores/models/OutgoingOrderModel'
 import OrderDetailView from './index'
 
 test('display order details', () => {
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [],
-  })
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [],
+    })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const rootStore = new RootStore({
     managementApiClient,

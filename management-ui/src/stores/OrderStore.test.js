@@ -3,7 +3,7 @@
 //
 import { configure } from 'mobx'
 import { waitFor } from '@testing-library/react'
-import { ManagementApi } from '../api'
+import { ManagementServiceApi } from '../api'
 import OrderStore from './OrderStore'
 import OutgoingOrderModel from './models/OutgoingOrderModel'
 import IncomingOrderModel from './models/IncomingOrderModel'
@@ -11,7 +11,7 @@ import { RootStore } from './index'
 
 test('initializing the store', () => {
   const auditLogStore = new OrderStore({
-    managementApiClient: new ManagementApi(),
+    managementApiClient: new ManagementServiceApi(),
   })
 
   expect(auditLogStore.isLoading).toEqual(false)
@@ -19,9 +19,9 @@ test('initializing the store', () => {
 })
 
 test('fetch outgoing orders', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutgoingOrders = jest
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockRejectedValueOnce(new Error('arbitrary error'))
     .mockResolvedValue({
@@ -63,9 +63,9 @@ test('fetch outgoing orders', async () => {
 
 test('revoke outgoing order', async () => {
   configure({ safeDescriptors: false })
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutgoingOrders = jest
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [
@@ -79,7 +79,7 @@ test('revoke outgoing order', async () => {
       ],
     })
 
-  managementApiClient.managementRevokeOutgoingOrder = jest
+  managementApiClient.managementServiceRevokeOutgoingOrder = jest
     .fn()
     .mockResolvedValue()
 
@@ -96,7 +96,9 @@ test('revoke outgoing order', async () => {
 
   await store.revokeOutgoing(firstOrder)
 
-  expect(managementApiClient.managementRevokeOutgoingOrder).toBeCalledWith({
+  expect(
+    managementApiClient.managementServiceRevokeOutgoingOrder,
+  ).toBeCalledWith({
     delegatee: '00000000000000000001',
     reference: 'reference',
   })
@@ -105,9 +107,9 @@ test('revoke outgoing order', async () => {
 })
 
 test('creating an outgoing order', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementCreateOutgoingOrder = jest
+  managementApiClient.managementServiceCreateOutgoingOrder = jest
     .fn()
     .mockResolvedValue()
 
@@ -129,9 +131,9 @@ test('creating an outgoing order', async () => {
 })
 
 test('fetch incoming orders', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListIncomingOrders = jest
+  managementApiClient.managementServiceListIncomingOrders = jest
     .fn()
     .mockRejectedValueOnce(new Error('arbitrary error'))
     .mockResolvedValue({

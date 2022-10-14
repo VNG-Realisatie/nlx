@@ -13,7 +13,7 @@ import { configure } from 'mobx'
 import { createMemoryHistory } from 'history'
 import { renderWithAllProviders, screen } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
-import { DirectoryApi, ManagementApi } from '../../../../../api'
+import { DirectoryServiceApi, ManagementServiceApi } from '../../../../../api'
 import OrderDetailPage from './index'
 
 jest.mock('../../../../../components/Modal')
@@ -29,15 +29,17 @@ afterEach(() => {
 test('display order details', async () => {
   configure({ safeDescriptors: false })
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [],
-  })
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [],
+    })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutgoingOrders = jest
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [
@@ -53,7 +55,7 @@ test('display order details', async () => {
       ],
     })
 
-  managementApiClient.managementRevokeOutgoingOrder = jest
+  managementApiClient.managementServiceRevokeOutgoingOrder = jest
     .fn()
     .mockRejectedValueOnce({
       response: {
@@ -124,7 +126,7 @@ test('display order details', async () => {
 })
 
 test('display error for a non-existing order', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   renderWithAllProviders(

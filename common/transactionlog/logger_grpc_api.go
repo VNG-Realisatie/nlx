@@ -20,7 +20,7 @@ import (
 type APITransactionLogger struct {
 	logger     *zap.Logger
 	direction  api.CreateRecordRequest_Direction
-	client     api.TXLogClient
+	client     api.TXLogServiceClient
 	connection *grpc.ClientConn
 	cancelFunc context.CancelFunc
 }
@@ -61,7 +61,7 @@ func NewAPITransactionLogger(args *NewAPITransactionLoggerArgs) (TransactionLogg
 		return nil, err
 	}
 
-	txlogClient := api.NewTXLogClient(txlogConn)
+	txlogClient := api.NewTXLogServiceClient(txlogConn)
 
 	result := &APITransactionLogger{
 		logger:     args.Logger,

@@ -19,10 +19,10 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ManagementClient is the client API for Management service.
+// ManagementServiceClient is the client API for ManagementService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ManagementClient interface {
+type ManagementServiceClient interface {
 	SynchronizeOrders(ctx context.Context, in *SynchronizeOrdersRequest, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error)
 	IsFinanceEnabled(ctx context.Context, in *IsFinanceEnabledRequest, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error)
 	IsTXLogEnabled(ctx context.Context, in *IsTXLogEnabledRequest, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error)
@@ -62,351 +62,351 @@ type ManagementClient interface {
 	SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *SynchronizeAllOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeAllOutgoingAccessRequestsResponse, error)
 }
 
-type managementClient struct {
+type managementServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewManagementClient(cc grpc.ClientConnInterface) ManagementClient {
-	return &managementClient{cc}
+func NewManagementServiceClient(cc grpc.ClientConnInterface) ManagementServiceClient {
+	return &managementServiceClient{cc}
 }
 
-func (c *managementClient) SynchronizeOrders(ctx context.Context, in *SynchronizeOrdersRequest, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error) {
+func (c *managementServiceClient) SynchronizeOrders(ctx context.Context, in *SynchronizeOrdersRequest, opts ...grpc.CallOption) (*SynchronizeOrdersResponse, error) {
 	out := new(SynchronizeOrdersResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeOrders", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/SynchronizeOrders", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) IsFinanceEnabled(ctx context.Context, in *IsFinanceEnabledRequest, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error) {
+func (c *managementServiceClient) IsFinanceEnabled(ctx context.Context, in *IsFinanceEnabledRequest, opts ...grpc.CallOption) (*IsFinanceEnabledResponse, error) {
 	out := new(IsFinanceEnabledResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/IsFinanceEnabled", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/IsFinanceEnabled", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) IsTXLogEnabled(ctx context.Context, in *IsTXLogEnabledRequest, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error) {
+func (c *managementServiceClient) IsTXLogEnabled(ctx context.Context, in *IsTXLogEnabledRequest, opts ...grpc.CallOption) (*IsTXLogEnabledResponse, error) {
 	out := new(IsTXLogEnabledResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/IsTXLogEnabled", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/IsTXLogEnabled", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) DownloadFinanceExport(ctx context.Context, in *DownloadFinanceExportRequest, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error) {
+func (c *managementServiceClient) DownloadFinanceExport(ctx context.Context, in *DownloadFinanceExportRequest, opts ...grpc.CallOption) (*DownloadFinanceExportResponse, error) {
 	out := new(DownloadFinanceExportResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/DownloadFinanceExport", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/DownloadFinanceExport", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error) {
+func (c *managementServiceClient) ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error) {
 	out := new(ListServicesResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListServices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListServices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) GetService(ctx context.Context, in *GetServiceRequest, opts ...grpc.CallOption) (*GetServiceResponse, error) {
+func (c *managementServiceClient) GetService(ctx context.Context, in *GetServiceRequest, opts ...grpc.CallOption) (*GetServiceResponse, error) {
 	out := new(GetServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/GetService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) CreateService(ctx context.Context, in *CreateServiceRequest, opts ...grpc.CallOption) (*CreateServiceResponse, error) {
+func (c *managementServiceClient) CreateService(ctx context.Context, in *CreateServiceRequest, opts ...grpc.CallOption) (*CreateServiceResponse, error) {
 	out := new(CreateServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/CreateService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) UpdateService(ctx context.Context, in *UpdateServiceRequest, opts ...grpc.CallOption) (*UpdateServiceResponse, error) {
+func (c *managementServiceClient) UpdateService(ctx context.Context, in *UpdateServiceRequest, opts ...grpc.CallOption) (*UpdateServiceResponse, error) {
 	out := new(UpdateServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/UpdateService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error) {
+func (c *managementServiceClient) DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error) {
 	out := new(DeleteServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/DeleteService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) GetStatisticsOfServices(ctx context.Context, in *GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*GetStatisticsOfServicesResponse, error) {
+func (c *managementServiceClient) GetStatisticsOfServices(ctx context.Context, in *GetStatisticsOfServicesRequest, opts ...grpc.CallOption) (*GetStatisticsOfServicesResponse, error) {
 	out := new(GetStatisticsOfServicesResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetStatisticsOfServices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/GetStatisticsOfServices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListInways(ctx context.Context, in *ListInwaysRequest, opts ...grpc.CallOption) (*ListInwaysResponse, error) {
+func (c *managementServiceClient) ListInways(ctx context.Context, in *ListInwaysRequest, opts ...grpc.CallOption) (*ListInwaysResponse, error) {
 	out := new(ListInwaysResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListInways", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListInways", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*GetInwayResponse, error) {
+func (c *managementServiceClient) GetInway(ctx context.Context, in *GetInwayRequest, opts ...grpc.CallOption) (*GetInwayResponse, error) {
 	out := new(GetInwayResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/GetInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error) {
+func (c *managementServiceClient) RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error) {
 	out := new(RegisterInwayResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RegisterInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/RegisterInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*UpdateInwayResponse, error) {
+func (c *managementServiceClient) UpdateInway(ctx context.Context, in *UpdateInwayRequest, opts ...grpc.CallOption) (*UpdateInwayResponse, error) {
 	out := new(UpdateInwayResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/UpdateInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*DeleteInwayResponse, error) {
+func (c *managementServiceClient) DeleteInway(ctx context.Context, in *DeleteInwayRequest, opts ...grpc.CallOption) (*DeleteInwayResponse, error) {
 	out := new(DeleteInwayResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteInway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/DeleteInway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error) {
+func (c *managementServiceClient) RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error) {
 	out := new(RegisterOutwayResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RegisterOutway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/RegisterOutway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error) {
+func (c *managementServiceClient) ListOutways(ctx context.Context, in *ListOutwaysRequest, opts ...grpc.CallOption) (*ListOutwaysResponse, error) {
 	out := new(ListOutwaysResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutways", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListOutways", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*DeleteOutwayResponse, error) {
+func (c *managementServiceClient) DeleteOutway(ctx context.Context, in *DeleteOutwayRequest, opts ...grpc.CallOption) (*DeleteOutwayResponse, error) {
 	out := new(DeleteOutwayResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/DeleteOutway", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/DeleteOutway", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error) {
+func (c *managementServiceClient) ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error) {
 	out := new(ListIncomingAccessRequestsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIncomingAccessRequests", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListIncomingAccessRequests", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*ApproveIncomingAccessRequestResponse, error) {
+func (c *managementServiceClient) ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*ApproveIncomingAccessRequestResponse, error) {
 	out := new(ApproveIncomingAccessRequestResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ApproveIncomingAccessRequest", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ApproveIncomingAccessRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*RejectIncomingAccessRequestResponse, error) {
+func (c *managementServiceClient) RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*RejectIncomingAccessRequestResponse, error) {
 	out := new(RejectIncomingAccessRequestResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RejectIncomingAccessRequest", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/RejectIncomingAccessRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) SendAccessRequest(ctx context.Context, in *SendAccessRequestRequest, opts ...grpc.CallOption) (*SendAccessRequestResponse, error) {
+func (c *managementServiceClient) SendAccessRequest(ctx context.Context, in *SendAccessRequestRequest, opts ...grpc.CallOption) (*SendAccessRequestResponse, error) {
 	out := new(SendAccessRequestResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/SendAccessRequest", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/SendAccessRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) GetSettings(ctx context.Context, in *GetSettingsRequest, opts ...grpc.CallOption) (*GetSettingsResponse, error) {
+func (c *managementServiceClient) GetSettings(ctx context.Context, in *GetSettingsRequest, opts ...grpc.CallOption) (*GetSettingsResponse, error) {
 	out := new(GetSettingsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetSettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/GetSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error) {
+func (c *managementServiceClient) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error) {
 	out := new(UpdateSettingsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateSettings", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/UpdateSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error) {
+func (c *managementServiceClient) ListAccessGrantsForService(ctx context.Context, in *ListAccessGrantsForServiceRequest, opts ...grpc.CallOption) (*ListAccessGrantsForServiceResponse, error) {
 	out := new(ListAccessGrantsForServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListAccessGrantsForService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListAccessGrantsForService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*RevokeAccessGrantResponse, error) {
+func (c *managementServiceClient) RevokeAccessGrant(ctx context.Context, in *RevokeAccessGrantRequest, opts ...grpc.CallOption) (*RevokeAccessGrantResponse, error) {
 	out := new(RevokeAccessGrantResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RevokeAccessGrant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/RevokeAccessGrant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListAuditLogs(ctx context.Context, in *ListAuditLogsRequest, opts ...grpc.CallOption) (*ListAuditLogsResponse, error) {
+func (c *managementServiceClient) ListAuditLogs(ctx context.Context, in *ListAuditLogsRequest, opts ...grpc.CallOption) (*ListAuditLogsResponse, error) {
 	out := new(ListAuditLogsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListAuditLogs", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListAuditLogs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*CreateOutgoingOrderResponse, error) {
+func (c *managementServiceClient) CreateOutgoingOrder(ctx context.Context, in *CreateOutgoingOrderRequest, opts ...grpc.CallOption) (*CreateOutgoingOrderResponse, error) {
 	out := new(CreateOutgoingOrderResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/CreateOutgoingOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/CreateOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*UpdateOutgoingOrderResponse, error) {
+func (c *managementServiceClient) UpdateOutgoingOrder(ctx context.Context, in *UpdateOutgoingOrderRequest, opts ...grpc.CallOption) (*UpdateOutgoingOrderResponse, error) {
 	out := new(UpdateOutgoingOrderResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/UpdateOutgoingOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/UpdateOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*RevokeOutgoingOrderResponse, error) {
+func (c *managementServiceClient) RevokeOutgoingOrder(ctx context.Context, in *RevokeOutgoingOrderRequest, opts ...grpc.CallOption) (*RevokeOutgoingOrderResponse, error) {
 	out := new(RevokeOutgoingOrderResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/RevokeOutgoingOrder", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/RevokeOutgoingOrder", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListOutgoingOrders(ctx context.Context, in *ListOutgoingOrdersRequest, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error) {
+func (c *managementServiceClient) ListOutgoingOrders(ctx context.Context, in *ListOutgoingOrdersRequest, opts ...grpc.CallOption) (*ListOutgoingOrdersResponse, error) {
 	out := new(ListOutgoingOrdersResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListOutgoingOrders", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListOutgoingOrders", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) ListIncomingOrders(ctx context.Context, in *ListIncomingOrdersRequest, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error) {
+func (c *managementServiceClient) ListIncomingOrders(ctx context.Context, in *ListIncomingOrdersRequest, opts ...grpc.CallOption) (*ListIncomingOrdersResponse, error) {
 	out := new(ListIncomingOrdersResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/ListIncomingOrders", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/ListIncomingOrders", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) GetTermsOfServiceStatus(ctx context.Context, in *GetTermsOfServiceStatusRequest, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error) {
+func (c *managementServiceClient) GetTermsOfServiceStatus(ctx context.Context, in *GetTermsOfServiceStatusRequest, opts ...grpc.CallOption) (*GetTermsOfServiceStatusResponse, error) {
 	out := new(GetTermsOfServiceStatusResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetTermsOfServiceStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/GetTermsOfServiceStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) AcceptTermsOfService(ctx context.Context, in *AcceptTermsOfServiceRequest, opts ...grpc.CallOption) (*AcceptTermsOfServiceResponse, error) {
+func (c *managementServiceClient) AcceptTermsOfService(ctx context.Context, in *AcceptTermsOfServiceRequest, opts ...grpc.CallOption) (*AcceptTermsOfServiceResponse, error) {
 	out := new(AcceptTermsOfServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/AcceptTermsOfService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/AcceptTermsOfService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) GetInwayConfig(ctx context.Context, in *GetInwayConfigRequest, opts ...grpc.CallOption) (*GetInwayConfigResponse, error) {
+func (c *managementServiceClient) GetInwayConfig(ctx context.Context, in *GetInwayConfigRequest, opts ...grpc.CallOption) (*GetInwayConfigResponse, error) {
 	out := new(GetInwayConfigResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/GetInwayConfig", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/GetInwayConfig", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeOutgoingAccessRequestsResponse, error) {
+func (c *managementServiceClient) SynchronizeOutgoingAccessRequests(ctx context.Context, in *SynchronizeOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeOutgoingAccessRequestsResponse, error) {
 	out := new(SynchronizeOutgoingAccessRequestsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeOutgoingAccessRequests", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/SynchronizeOutgoingAccessRequests", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *managementClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *SynchronizeAllOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeAllOutgoingAccessRequestsResponse, error) {
+func (c *managementServiceClient) SynchronizeAllOutgoingAccessRequests(ctx context.Context, in *SynchronizeAllOutgoingAccessRequestsRequest, opts ...grpc.CallOption) (*SynchronizeAllOutgoingAccessRequestsResponse, error) {
 	out := new(SynchronizeAllOutgoingAccessRequestsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Management/SynchronizeAllOutgoingAccessRequests", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/SynchronizeAllOutgoingAccessRequests", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ManagementServer is the server API for Management service.
-// All implementations must embed UnimplementedManagementServer
+// ManagementServiceServer is the server API for ManagementService service.
+// All implementations must embed UnimplementedManagementServiceServer
 // for forward compatibility
-type ManagementServer interface {
+type ManagementServiceServer interface {
 	SynchronizeOrders(context.Context, *SynchronizeOrdersRequest) (*SynchronizeOrdersResponse, error)
 	IsFinanceEnabled(context.Context, *IsFinanceEnabledRequest) (*IsFinanceEnabledResponse, error)
 	IsTXLogEnabled(context.Context, *IsTXLogEnabledRequest) (*IsTXLogEnabledResponse, error)
@@ -444,1237 +444,1237 @@ type ManagementServer interface {
 	GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error)
 	SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*SynchronizeOutgoingAccessRequestsResponse, error)
 	SynchronizeAllOutgoingAccessRequests(context.Context, *SynchronizeAllOutgoingAccessRequestsRequest) (*SynchronizeAllOutgoingAccessRequestsResponse, error)
-	mustEmbedUnimplementedManagementServer()
+	mustEmbedUnimplementedManagementServiceServer()
 }
 
-// UnimplementedManagementServer must be embedded to have forward compatible implementations.
-type UnimplementedManagementServer struct {
+// UnimplementedManagementServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedManagementServiceServer struct {
 }
 
-func (UnimplementedManagementServer) SynchronizeOrders(context.Context, *SynchronizeOrdersRequest) (*SynchronizeOrdersResponse, error) {
+func (UnimplementedManagementServiceServer) SynchronizeOrders(context.Context, *SynchronizeOrdersRequest) (*SynchronizeOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeOrders not implemented")
 }
-func (UnimplementedManagementServer) IsFinanceEnabled(context.Context, *IsFinanceEnabledRequest) (*IsFinanceEnabledResponse, error) {
+func (UnimplementedManagementServiceServer) IsFinanceEnabled(context.Context, *IsFinanceEnabledRequest) (*IsFinanceEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFinanceEnabled not implemented")
 }
-func (UnimplementedManagementServer) IsTXLogEnabled(context.Context, *IsTXLogEnabledRequest) (*IsTXLogEnabledResponse, error) {
+func (UnimplementedManagementServiceServer) IsTXLogEnabled(context.Context, *IsTXLogEnabledRequest) (*IsTXLogEnabledResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsTXLogEnabled not implemented")
 }
-func (UnimplementedManagementServer) DownloadFinanceExport(context.Context, *DownloadFinanceExportRequest) (*DownloadFinanceExportResponse, error) {
+func (UnimplementedManagementServiceServer) DownloadFinanceExport(context.Context, *DownloadFinanceExportRequest) (*DownloadFinanceExportResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadFinanceExport not implemented")
 }
-func (UnimplementedManagementServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
+func (UnimplementedManagementServiceServer) ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-func (UnimplementedManagementServer) GetService(context.Context, *GetServiceRequest) (*GetServiceResponse, error) {
+func (UnimplementedManagementServiceServer) GetService(context.Context, *GetServiceRequest) (*GetServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetService not implemented")
 }
-func (UnimplementedManagementServer) CreateService(context.Context, *CreateServiceRequest) (*CreateServiceResponse, error) {
+func (UnimplementedManagementServiceServer) CreateService(context.Context, *CreateServiceRequest) (*CreateServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateService not implemented")
 }
-func (UnimplementedManagementServer) UpdateService(context.Context, *UpdateServiceRequest) (*UpdateServiceResponse, error) {
+func (UnimplementedManagementServiceServer) UpdateService(context.Context, *UpdateServiceRequest) (*UpdateServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateService not implemented")
 }
-func (UnimplementedManagementServer) DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error) {
+func (UnimplementedManagementServiceServer) DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteService not implemented")
 }
-func (UnimplementedManagementServer) GetStatisticsOfServices(context.Context, *GetStatisticsOfServicesRequest) (*GetStatisticsOfServicesResponse, error) {
+func (UnimplementedManagementServiceServer) GetStatisticsOfServices(context.Context, *GetStatisticsOfServicesRequest) (*GetStatisticsOfServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStatisticsOfServices not implemented")
 }
-func (UnimplementedManagementServer) ListInways(context.Context, *ListInwaysRequest) (*ListInwaysResponse, error) {
+func (UnimplementedManagementServiceServer) ListInways(context.Context, *ListInwaysRequest) (*ListInwaysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInways not implemented")
 }
-func (UnimplementedManagementServer) GetInway(context.Context, *GetInwayRequest) (*GetInwayResponse, error) {
+func (UnimplementedManagementServiceServer) GetInway(context.Context, *GetInwayRequest) (*GetInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInway not implemented")
 }
-func (UnimplementedManagementServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
+func (UnimplementedManagementServiceServer) RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInway not implemented")
 }
-func (UnimplementedManagementServer) UpdateInway(context.Context, *UpdateInwayRequest) (*UpdateInwayResponse, error) {
+func (UnimplementedManagementServiceServer) UpdateInway(context.Context, *UpdateInwayRequest) (*UpdateInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateInway not implemented")
 }
-func (UnimplementedManagementServer) DeleteInway(context.Context, *DeleteInwayRequest) (*DeleteInwayResponse, error) {
+func (UnimplementedManagementServiceServer) DeleteInway(context.Context, *DeleteInwayRequest) (*DeleteInwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteInway not implemented")
 }
-func (UnimplementedManagementServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error) {
+func (UnimplementedManagementServiceServer) RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterOutway not implemented")
 }
-func (UnimplementedManagementServer) ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error) {
+func (UnimplementedManagementServiceServer) ListOutways(context.Context, *ListOutwaysRequest) (*ListOutwaysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutways not implemented")
 }
-func (UnimplementedManagementServer) DeleteOutway(context.Context, *DeleteOutwayRequest) (*DeleteOutwayResponse, error) {
+func (UnimplementedManagementServiceServer) DeleteOutway(context.Context, *DeleteOutwayRequest) (*DeleteOutwayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOutway not implemented")
 }
-func (UnimplementedManagementServer) ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error) {
+func (UnimplementedManagementServiceServer) ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingAccessRequests not implemented")
 }
-func (UnimplementedManagementServer) ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*ApproveIncomingAccessRequestResponse, error) {
+func (UnimplementedManagementServiceServer) ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*ApproveIncomingAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApproveIncomingAccessRequest not implemented")
 }
-func (UnimplementedManagementServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*RejectIncomingAccessRequestResponse, error) {
+func (UnimplementedManagementServiceServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*RejectIncomingAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RejectIncomingAccessRequest not implemented")
 }
-func (UnimplementedManagementServer) SendAccessRequest(context.Context, *SendAccessRequestRequest) (*SendAccessRequestResponse, error) {
+func (UnimplementedManagementServiceServer) SendAccessRequest(context.Context, *SendAccessRequestRequest) (*SendAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendAccessRequest not implemented")
 }
-func (UnimplementedManagementServer) GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error) {
+func (UnimplementedManagementServiceServer) GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSettings not implemented")
 }
-func (UnimplementedManagementServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+func (UnimplementedManagementServiceServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
 }
-func (UnimplementedManagementServer) ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error) {
+func (UnimplementedManagementServiceServer) ListAccessGrantsForService(context.Context, *ListAccessGrantsForServiceRequest) (*ListAccessGrantsForServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAccessGrantsForService not implemented")
 }
-func (UnimplementedManagementServer) RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*RevokeAccessGrantResponse, error) {
+func (UnimplementedManagementServiceServer) RevokeAccessGrant(context.Context, *RevokeAccessGrantRequest) (*RevokeAccessGrantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeAccessGrant not implemented")
 }
-func (UnimplementedManagementServer) ListAuditLogs(context.Context, *ListAuditLogsRequest) (*ListAuditLogsResponse, error) {
+func (UnimplementedManagementServiceServer) ListAuditLogs(context.Context, *ListAuditLogsRequest) (*ListAuditLogsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuditLogs not implemented")
 }
-func (UnimplementedManagementServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*CreateOutgoingOrderResponse, error) {
+func (UnimplementedManagementServiceServer) CreateOutgoingOrder(context.Context, *CreateOutgoingOrderRequest) (*CreateOutgoingOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*UpdateOutgoingOrderResponse, error) {
+func (UnimplementedManagementServiceServer) UpdateOutgoingOrder(context.Context, *UpdateOutgoingOrderRequest) (*UpdateOutgoingOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*RevokeOutgoingOrderResponse, error) {
+func (UnimplementedManagementServiceServer) RevokeOutgoingOrder(context.Context, *RevokeOutgoingOrderRequest) (*RevokeOutgoingOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeOutgoingOrder not implemented")
 }
-func (UnimplementedManagementServer) ListOutgoingOrders(context.Context, *ListOutgoingOrdersRequest) (*ListOutgoingOrdersResponse, error) {
+func (UnimplementedManagementServiceServer) ListOutgoingOrders(context.Context, *ListOutgoingOrdersRequest) (*ListOutgoingOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOutgoingOrders not implemented")
 }
-func (UnimplementedManagementServer) ListIncomingOrders(context.Context, *ListIncomingOrdersRequest) (*ListIncomingOrdersResponse, error) {
+func (UnimplementedManagementServiceServer) ListIncomingOrders(context.Context, *ListIncomingOrdersRequest) (*ListIncomingOrdersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIncomingOrders not implemented")
 }
-func (UnimplementedManagementServer) GetTermsOfServiceStatus(context.Context, *GetTermsOfServiceStatusRequest) (*GetTermsOfServiceStatusResponse, error) {
+func (UnimplementedManagementServiceServer) GetTermsOfServiceStatus(context.Context, *GetTermsOfServiceStatusRequest) (*GetTermsOfServiceStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfServiceStatus not implemented")
 }
-func (UnimplementedManagementServer) AcceptTermsOfService(context.Context, *AcceptTermsOfServiceRequest) (*AcceptTermsOfServiceResponse, error) {
+func (UnimplementedManagementServiceServer) AcceptTermsOfService(context.Context, *AcceptTermsOfServiceRequest) (*AcceptTermsOfServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptTermsOfService not implemented")
 }
-func (UnimplementedManagementServer) GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error) {
+func (UnimplementedManagementServiceServer) GetInwayConfig(context.Context, *GetInwayConfigRequest) (*GetInwayConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInwayConfig not implemented")
 }
-func (UnimplementedManagementServer) SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*SynchronizeOutgoingAccessRequestsResponse, error) {
+func (UnimplementedManagementServiceServer) SynchronizeOutgoingAccessRequests(context.Context, *SynchronizeOutgoingAccessRequestsRequest) (*SynchronizeOutgoingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeOutgoingAccessRequests not implemented")
 }
-func (UnimplementedManagementServer) SynchronizeAllOutgoingAccessRequests(context.Context, *SynchronizeAllOutgoingAccessRequestsRequest) (*SynchronizeAllOutgoingAccessRequestsResponse, error) {
+func (UnimplementedManagementServiceServer) SynchronizeAllOutgoingAccessRequests(context.Context, *SynchronizeAllOutgoingAccessRequestsRequest) (*SynchronizeAllOutgoingAccessRequestsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SynchronizeAllOutgoingAccessRequests not implemented")
 }
-func (UnimplementedManagementServer) mustEmbedUnimplementedManagementServer() {}
+func (UnimplementedManagementServiceServer) mustEmbedUnimplementedManagementServiceServer() {}
 
-// UnsafeManagementServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ManagementServer will
+// UnsafeManagementServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ManagementServiceServer will
 // result in compilation errors.
-type UnsafeManagementServer interface {
-	mustEmbedUnimplementedManagementServer()
+type UnsafeManagementServiceServer interface {
+	mustEmbedUnimplementedManagementServiceServer()
 }
 
-func RegisterManagementServer(s grpc.ServiceRegistrar, srv ManagementServer) {
-	s.RegisterService(&Management_ServiceDesc, srv)
+func RegisterManagementServiceServer(s grpc.ServiceRegistrar, srv ManagementServiceServer) {
+	s.RegisterService(&ManagementService_ServiceDesc, srv)
 }
 
-func _Management_SynchronizeOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_SynchronizeOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SynchronizeOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).SynchronizeOrders(ctx, in)
+		return srv.(ManagementServiceServer).SynchronizeOrders(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/SynchronizeOrders",
+		FullMethod: "/nlx.management.ManagementService/SynchronizeOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).SynchronizeOrders(ctx, req.(*SynchronizeOrdersRequest))
+		return srv.(ManagementServiceServer).SynchronizeOrders(ctx, req.(*SynchronizeOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_IsFinanceEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_IsFinanceEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IsFinanceEnabledRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).IsFinanceEnabled(ctx, in)
+		return srv.(ManagementServiceServer).IsFinanceEnabled(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/IsFinanceEnabled",
+		FullMethod: "/nlx.management.ManagementService/IsFinanceEnabled",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).IsFinanceEnabled(ctx, req.(*IsFinanceEnabledRequest))
+		return srv.(ManagementServiceServer).IsFinanceEnabled(ctx, req.(*IsFinanceEnabledRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_IsTXLogEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_IsTXLogEnabled_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IsTXLogEnabledRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).IsTXLogEnabled(ctx, in)
+		return srv.(ManagementServiceServer).IsTXLogEnabled(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/IsTXLogEnabled",
+		FullMethod: "/nlx.management.ManagementService/IsTXLogEnabled",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).IsTXLogEnabled(ctx, req.(*IsTXLogEnabledRequest))
+		return srv.(ManagementServiceServer).IsTXLogEnabled(ctx, req.(*IsTXLogEnabledRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_DownloadFinanceExport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_DownloadFinanceExport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DownloadFinanceExportRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).DownloadFinanceExport(ctx, in)
+		return srv.(ManagementServiceServer).DownloadFinanceExport(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/DownloadFinanceExport",
+		FullMethod: "/nlx.management.ManagementService/DownloadFinanceExport",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).DownloadFinanceExport(ctx, req.(*DownloadFinanceExportRequest))
+		return srv.(ManagementServiceServer).DownloadFinanceExport(ctx, req.(*DownloadFinanceExportRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListServices(ctx, in)
+		return srv.(ManagementServiceServer).ListServices(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListServices",
+		FullMethod: "/nlx.management.ManagementService/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListServices(ctx, req.(*ListServicesRequest))
+		return srv.(ManagementServiceServer).ListServices(ctx, req.(*ListServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_GetService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_GetService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).GetService(ctx, in)
+		return srv.(ManagementServiceServer).GetService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetService",
+		FullMethod: "/nlx.management.ManagementService/GetService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetService(ctx, req.(*GetServiceRequest))
+		return srv.(ManagementServiceServer).GetService(ctx, req.(*GetServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_CreateService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_CreateService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).CreateService(ctx, in)
+		return srv.(ManagementServiceServer).CreateService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/CreateService",
+		FullMethod: "/nlx.management.ManagementService/CreateService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).CreateService(ctx, req.(*CreateServiceRequest))
+		return srv.(ManagementServiceServer).CreateService(ctx, req.(*CreateServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_UpdateService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_UpdateService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).UpdateService(ctx, in)
+		return srv.(ManagementServiceServer).UpdateService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/UpdateService",
+		FullMethod: "/nlx.management.ManagementService/UpdateService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).UpdateService(ctx, req.(*UpdateServiceRequest))
+		return srv.(ManagementServiceServer).UpdateService(ctx, req.(*UpdateServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_DeleteService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_DeleteService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).DeleteService(ctx, in)
+		return srv.(ManagementServiceServer).DeleteService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/DeleteService",
+		FullMethod: "/nlx.management.ManagementService/DeleteService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).DeleteService(ctx, req.(*DeleteServiceRequest))
+		return srv.(ManagementServiceServer).DeleteService(ctx, req.(*DeleteServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_GetStatisticsOfServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_GetStatisticsOfServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetStatisticsOfServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).GetStatisticsOfServices(ctx, in)
+		return srv.(ManagementServiceServer).GetStatisticsOfServices(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetStatisticsOfServices",
+		FullMethod: "/nlx.management.ManagementService/GetStatisticsOfServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetStatisticsOfServices(ctx, req.(*GetStatisticsOfServicesRequest))
+		return srv.(ManagementServiceServer).GetStatisticsOfServices(ctx, req.(*GetStatisticsOfServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListInways_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListInways_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListInwaysRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListInways(ctx, in)
+		return srv.(ManagementServiceServer).ListInways(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListInways",
+		FullMethod: "/nlx.management.ManagementService/ListInways",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListInways(ctx, req.(*ListInwaysRequest))
+		return srv.(ManagementServiceServer).ListInways(ctx, req.(*ListInwaysRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_GetInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_GetInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).GetInway(ctx, in)
+		return srv.(ManagementServiceServer).GetInway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetInway",
+		FullMethod: "/nlx.management.ManagementService/GetInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetInway(ctx, req.(*GetInwayRequest))
+		return srv.(ManagementServiceServer).GetInway(ctx, req.(*GetInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RegisterInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_RegisterInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegisterInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).RegisterInway(ctx, in)
+		return srv.(ManagementServiceServer).RegisterInway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/RegisterInway",
+		FullMethod: "/nlx.management.ManagementService/RegisterInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RegisterInway(ctx, req.(*RegisterInwayRequest))
+		return srv.(ManagementServiceServer).RegisterInway(ctx, req.(*RegisterInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_UpdateInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_UpdateInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).UpdateInway(ctx, in)
+		return srv.(ManagementServiceServer).UpdateInway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/UpdateInway",
+		FullMethod: "/nlx.management.ManagementService/UpdateInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).UpdateInway(ctx, req.(*UpdateInwayRequest))
+		return srv.(ManagementServiceServer).UpdateInway(ctx, req.(*UpdateInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_DeleteInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_DeleteInway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteInwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).DeleteInway(ctx, in)
+		return srv.(ManagementServiceServer).DeleteInway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/DeleteInway",
+		FullMethod: "/nlx.management.ManagementService/DeleteInway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).DeleteInway(ctx, req.(*DeleteInwayRequest))
+		return srv.(ManagementServiceServer).DeleteInway(ctx, req.(*DeleteInwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RegisterOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_RegisterOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegisterOutwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).RegisterOutway(ctx, in)
+		return srv.(ManagementServiceServer).RegisterOutway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/RegisterOutway",
+		FullMethod: "/nlx.management.ManagementService/RegisterOutway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RegisterOutway(ctx, req.(*RegisterOutwayRequest))
+		return srv.(ManagementServiceServer).RegisterOutway(ctx, req.(*RegisterOutwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListOutways_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListOutways_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListOutwaysRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListOutways(ctx, in)
+		return srv.(ManagementServiceServer).ListOutways(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListOutways",
+		FullMethod: "/nlx.management.ManagementService/ListOutways",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListOutways(ctx, req.(*ListOutwaysRequest))
+		return srv.(ManagementServiceServer).ListOutways(ctx, req.(*ListOutwaysRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_DeleteOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_DeleteOutway_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteOutwayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).DeleteOutway(ctx, in)
+		return srv.(ManagementServiceServer).DeleteOutway(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/DeleteOutway",
+		FullMethod: "/nlx.management.ManagementService/DeleteOutway",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).DeleteOutway(ctx, req.(*DeleteOutwayRequest))
+		return srv.(ManagementServiceServer).DeleteOutway(ctx, req.(*DeleteOutwayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListIncomingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListIncomingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListIncomingAccessRequestsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListIncomingAccessRequests(ctx, in)
+		return srv.(ManagementServiceServer).ListIncomingAccessRequests(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListIncomingAccessRequests",
+		FullMethod: "/nlx.management.ManagementService/ListIncomingAccessRequests",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListIncomingAccessRequests(ctx, req.(*ListIncomingAccessRequestsRequest))
+		return srv.(ManagementServiceServer).ListIncomingAccessRequests(ctx, req.(*ListIncomingAccessRequestsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ApproveIncomingAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ApproveIncomingAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ApproveIncomingAccessRequestRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ApproveIncomingAccessRequest(ctx, in)
+		return srv.(ManagementServiceServer).ApproveIncomingAccessRequest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ApproveIncomingAccessRequest",
+		FullMethod: "/nlx.management.ManagementService/ApproveIncomingAccessRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ApproveIncomingAccessRequest(ctx, req.(*ApproveIncomingAccessRequestRequest))
+		return srv.(ManagementServiceServer).ApproveIncomingAccessRequest(ctx, req.(*ApproveIncomingAccessRequestRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RejectIncomingAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_RejectIncomingAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RejectIncomingAccessRequestRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).RejectIncomingAccessRequest(ctx, in)
+		return srv.(ManagementServiceServer).RejectIncomingAccessRequest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/RejectIncomingAccessRequest",
+		FullMethod: "/nlx.management.ManagementService/RejectIncomingAccessRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RejectIncomingAccessRequest(ctx, req.(*RejectIncomingAccessRequestRequest))
+		return srv.(ManagementServiceServer).RejectIncomingAccessRequest(ctx, req.(*RejectIncomingAccessRequestRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_SendAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_SendAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendAccessRequestRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).SendAccessRequest(ctx, in)
+		return srv.(ManagementServiceServer).SendAccessRequest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/SendAccessRequest",
+		FullMethod: "/nlx.management.ManagementService/SendAccessRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).SendAccessRequest(ctx, req.(*SendAccessRequestRequest))
+		return srv.(ManagementServiceServer).SendAccessRequest(ctx, req.(*SendAccessRequestRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_GetSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_GetSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSettingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).GetSettings(ctx, in)
+		return srv.(ManagementServiceServer).GetSettings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetSettings",
+		FullMethod: "/nlx.management.ManagementService/GetSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetSettings(ctx, req.(*GetSettingsRequest))
+		return srv.(ManagementServiceServer).GetSettings(ctx, req.(*GetSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_UpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_UpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateSettingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).UpdateSettings(ctx, in)
+		return srv.(ManagementServiceServer).UpdateSettings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/UpdateSettings",
+		FullMethod: "/nlx.management.ManagementService/UpdateSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+		return srv.(ManagementServiceServer).UpdateSettings(ctx, req.(*UpdateSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListAccessGrantsForService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListAccessGrantsForService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListAccessGrantsForServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListAccessGrantsForService(ctx, in)
+		return srv.(ManagementServiceServer).ListAccessGrantsForService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListAccessGrantsForService",
+		FullMethod: "/nlx.management.ManagementService/ListAccessGrantsForService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListAccessGrantsForService(ctx, req.(*ListAccessGrantsForServiceRequest))
+		return srv.(ManagementServiceServer).ListAccessGrantsForService(ctx, req.(*ListAccessGrantsForServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RevokeAccessGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_RevokeAccessGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RevokeAccessGrantRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).RevokeAccessGrant(ctx, in)
+		return srv.(ManagementServiceServer).RevokeAccessGrant(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/RevokeAccessGrant",
+		FullMethod: "/nlx.management.ManagementService/RevokeAccessGrant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RevokeAccessGrant(ctx, req.(*RevokeAccessGrantRequest))
+		return srv.(ManagementServiceServer).RevokeAccessGrant(ctx, req.(*RevokeAccessGrantRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListAuditLogsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListAuditLogs(ctx, in)
+		return srv.(ManagementServiceServer).ListAuditLogs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListAuditLogs",
+		FullMethod: "/nlx.management.ManagementService/ListAuditLogs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListAuditLogs(ctx, req.(*ListAuditLogsRequest))
+		return srv.(ManagementServiceServer).ListAuditLogs(ctx, req.(*ListAuditLogsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_CreateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateOutgoingOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).CreateOutgoingOrder(ctx, in)
+		return srv.(ManagementServiceServer).CreateOutgoingOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/CreateOutgoingOrder",
+		FullMethod: "/nlx.management.ManagementService/CreateOutgoingOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).CreateOutgoingOrder(ctx, req.(*CreateOutgoingOrderRequest))
+		return srv.(ManagementServiceServer).CreateOutgoingOrder(ctx, req.(*CreateOutgoingOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_UpdateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_UpdateOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateOutgoingOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).UpdateOutgoingOrder(ctx, in)
+		return srv.(ManagementServiceServer).UpdateOutgoingOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/UpdateOutgoingOrder",
+		FullMethod: "/nlx.management.ManagementService/UpdateOutgoingOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).UpdateOutgoingOrder(ctx, req.(*UpdateOutgoingOrderRequest))
+		return srv.(ManagementServiceServer).UpdateOutgoingOrder(ctx, req.(*UpdateOutgoingOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_RevokeOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_RevokeOutgoingOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RevokeOutgoingOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).RevokeOutgoingOrder(ctx, in)
+		return srv.(ManagementServiceServer).RevokeOutgoingOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/RevokeOutgoingOrder",
+		FullMethod: "/nlx.management.ManagementService/RevokeOutgoingOrder",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).RevokeOutgoingOrder(ctx, req.(*RevokeOutgoingOrderRequest))
+		return srv.(ManagementServiceServer).RevokeOutgoingOrder(ctx, req.(*RevokeOutgoingOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListOutgoingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListOutgoingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListOutgoingOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListOutgoingOrders(ctx, in)
+		return srv.(ManagementServiceServer).ListOutgoingOrders(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListOutgoingOrders",
+		FullMethod: "/nlx.management.ManagementService/ListOutgoingOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListOutgoingOrders(ctx, req.(*ListOutgoingOrdersRequest))
+		return srv.(ManagementServiceServer).ListOutgoingOrders(ctx, req.(*ListOutgoingOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_ListIncomingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_ListIncomingOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListIncomingOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).ListIncomingOrders(ctx, in)
+		return srv.(ManagementServiceServer).ListIncomingOrders(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/ListIncomingOrders",
+		FullMethod: "/nlx.management.ManagementService/ListIncomingOrders",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).ListIncomingOrders(ctx, req.(*ListIncomingOrdersRequest))
+		return srv.(ManagementServiceServer).ListIncomingOrders(ctx, req.(*ListIncomingOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_GetTermsOfServiceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_GetTermsOfServiceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTermsOfServiceStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).GetTermsOfServiceStatus(ctx, in)
+		return srv.(ManagementServiceServer).GetTermsOfServiceStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetTermsOfServiceStatus",
+		FullMethod: "/nlx.management.ManagementService/GetTermsOfServiceStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetTermsOfServiceStatus(ctx, req.(*GetTermsOfServiceStatusRequest))
+		return srv.(ManagementServiceServer).GetTermsOfServiceStatus(ctx, req.(*GetTermsOfServiceStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_AcceptTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_AcceptTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AcceptTermsOfServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).AcceptTermsOfService(ctx, in)
+		return srv.(ManagementServiceServer).AcceptTermsOfService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/AcceptTermsOfService",
+		FullMethod: "/nlx.management.ManagementService/AcceptTermsOfService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).AcceptTermsOfService(ctx, req.(*AcceptTermsOfServiceRequest))
+		return srv.(ManagementServiceServer).AcceptTermsOfService(ctx, req.(*AcceptTermsOfServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_GetInwayConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_GetInwayConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetInwayConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).GetInwayConfig(ctx, in)
+		return srv.(ManagementServiceServer).GetInwayConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/GetInwayConfig",
+		FullMethod: "/nlx.management.ManagementService/GetInwayConfig",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).GetInwayConfig(ctx, req.(*GetInwayConfigRequest))
+		return srv.(ManagementServiceServer).GetInwayConfig(ctx, req.(*GetInwayConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_SynchronizeOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_SynchronizeOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SynchronizeOutgoingAccessRequestsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).SynchronizeOutgoingAccessRequests(ctx, in)
+		return srv.(ManagementServiceServer).SynchronizeOutgoingAccessRequests(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/SynchronizeOutgoingAccessRequests",
+		FullMethod: "/nlx.management.ManagementService/SynchronizeOutgoingAccessRequests",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).SynchronizeOutgoingAccessRequests(ctx, req.(*SynchronizeOutgoingAccessRequestsRequest))
+		return srv.(ManagementServiceServer).SynchronizeOutgoingAccessRequests(ctx, req.(*SynchronizeOutgoingAccessRequestsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Management_SynchronizeAllOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ManagementService_SynchronizeAllOutgoingAccessRequests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SynchronizeAllOutgoingAccessRequestsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ManagementServer).SynchronizeAllOutgoingAccessRequests(ctx, in)
+		return srv.(ManagementServiceServer).SynchronizeAllOutgoingAccessRequests(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Management/SynchronizeAllOutgoingAccessRequests",
+		FullMethod: "/nlx.management.ManagementService/SynchronizeAllOutgoingAccessRequests",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ManagementServer).SynchronizeAllOutgoingAccessRequests(ctx, req.(*SynchronizeAllOutgoingAccessRequestsRequest))
+		return srv.(ManagementServiceServer).SynchronizeAllOutgoingAccessRequests(ctx, req.(*SynchronizeAllOutgoingAccessRequestsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Management_ServiceDesc is the grpc.ServiceDesc for Management service.
+// ManagementService_ServiceDesc is the grpc.ServiceDesc for ManagementService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Management_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "nlx.management.Management",
-	HandlerType: (*ManagementServer)(nil),
+var ManagementService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "nlx.management.ManagementService",
+	HandlerType: (*ManagementServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SynchronizeOrders",
-			Handler:    _Management_SynchronizeOrders_Handler,
+			Handler:    _ManagementService_SynchronizeOrders_Handler,
 		},
 		{
 			MethodName: "IsFinanceEnabled",
-			Handler:    _Management_IsFinanceEnabled_Handler,
+			Handler:    _ManagementService_IsFinanceEnabled_Handler,
 		},
 		{
 			MethodName: "IsTXLogEnabled",
-			Handler:    _Management_IsTXLogEnabled_Handler,
+			Handler:    _ManagementService_IsTXLogEnabled_Handler,
 		},
 		{
 			MethodName: "DownloadFinanceExport",
-			Handler:    _Management_DownloadFinanceExport_Handler,
+			Handler:    _ManagementService_DownloadFinanceExport_Handler,
 		},
 		{
 			MethodName: "ListServices",
-			Handler:    _Management_ListServices_Handler,
+			Handler:    _ManagementService_ListServices_Handler,
 		},
 		{
 			MethodName: "GetService",
-			Handler:    _Management_GetService_Handler,
+			Handler:    _ManagementService_GetService_Handler,
 		},
 		{
 			MethodName: "CreateService",
-			Handler:    _Management_CreateService_Handler,
+			Handler:    _ManagementService_CreateService_Handler,
 		},
 		{
 			MethodName: "UpdateService",
-			Handler:    _Management_UpdateService_Handler,
+			Handler:    _ManagementService_UpdateService_Handler,
 		},
 		{
 			MethodName: "DeleteService",
-			Handler:    _Management_DeleteService_Handler,
+			Handler:    _ManagementService_DeleteService_Handler,
 		},
 		{
 			MethodName: "GetStatisticsOfServices",
-			Handler:    _Management_GetStatisticsOfServices_Handler,
+			Handler:    _ManagementService_GetStatisticsOfServices_Handler,
 		},
 		{
 			MethodName: "ListInways",
-			Handler:    _Management_ListInways_Handler,
+			Handler:    _ManagementService_ListInways_Handler,
 		},
 		{
 			MethodName: "GetInway",
-			Handler:    _Management_GetInway_Handler,
+			Handler:    _ManagementService_GetInway_Handler,
 		},
 		{
 			MethodName: "RegisterInway",
-			Handler:    _Management_RegisterInway_Handler,
+			Handler:    _ManagementService_RegisterInway_Handler,
 		},
 		{
 			MethodName: "UpdateInway",
-			Handler:    _Management_UpdateInway_Handler,
+			Handler:    _ManagementService_UpdateInway_Handler,
 		},
 		{
 			MethodName: "DeleteInway",
-			Handler:    _Management_DeleteInway_Handler,
+			Handler:    _ManagementService_DeleteInway_Handler,
 		},
 		{
 			MethodName: "RegisterOutway",
-			Handler:    _Management_RegisterOutway_Handler,
+			Handler:    _ManagementService_RegisterOutway_Handler,
 		},
 		{
 			MethodName: "ListOutways",
-			Handler:    _Management_ListOutways_Handler,
+			Handler:    _ManagementService_ListOutways_Handler,
 		},
 		{
 			MethodName: "DeleteOutway",
-			Handler:    _Management_DeleteOutway_Handler,
+			Handler:    _ManagementService_DeleteOutway_Handler,
 		},
 		{
 			MethodName: "ListIncomingAccessRequests",
-			Handler:    _Management_ListIncomingAccessRequests_Handler,
+			Handler:    _ManagementService_ListIncomingAccessRequests_Handler,
 		},
 		{
 			MethodName: "ApproveIncomingAccessRequest",
-			Handler:    _Management_ApproveIncomingAccessRequest_Handler,
+			Handler:    _ManagementService_ApproveIncomingAccessRequest_Handler,
 		},
 		{
 			MethodName: "RejectIncomingAccessRequest",
-			Handler:    _Management_RejectIncomingAccessRequest_Handler,
+			Handler:    _ManagementService_RejectIncomingAccessRequest_Handler,
 		},
 		{
 			MethodName: "SendAccessRequest",
-			Handler:    _Management_SendAccessRequest_Handler,
+			Handler:    _ManagementService_SendAccessRequest_Handler,
 		},
 		{
 			MethodName: "GetSettings",
-			Handler:    _Management_GetSettings_Handler,
+			Handler:    _ManagementService_GetSettings_Handler,
 		},
 		{
 			MethodName: "UpdateSettings",
-			Handler:    _Management_UpdateSettings_Handler,
+			Handler:    _ManagementService_UpdateSettings_Handler,
 		},
 		{
 			MethodName: "ListAccessGrantsForService",
-			Handler:    _Management_ListAccessGrantsForService_Handler,
+			Handler:    _ManagementService_ListAccessGrantsForService_Handler,
 		},
 		{
 			MethodName: "RevokeAccessGrant",
-			Handler:    _Management_RevokeAccessGrant_Handler,
+			Handler:    _ManagementService_RevokeAccessGrant_Handler,
 		},
 		{
 			MethodName: "ListAuditLogs",
-			Handler:    _Management_ListAuditLogs_Handler,
+			Handler:    _ManagementService_ListAuditLogs_Handler,
 		},
 		{
 			MethodName: "CreateOutgoingOrder",
-			Handler:    _Management_CreateOutgoingOrder_Handler,
+			Handler:    _ManagementService_CreateOutgoingOrder_Handler,
 		},
 		{
 			MethodName: "UpdateOutgoingOrder",
-			Handler:    _Management_UpdateOutgoingOrder_Handler,
+			Handler:    _ManagementService_UpdateOutgoingOrder_Handler,
 		},
 		{
 			MethodName: "RevokeOutgoingOrder",
-			Handler:    _Management_RevokeOutgoingOrder_Handler,
+			Handler:    _ManagementService_RevokeOutgoingOrder_Handler,
 		},
 		{
 			MethodName: "ListOutgoingOrders",
-			Handler:    _Management_ListOutgoingOrders_Handler,
+			Handler:    _ManagementService_ListOutgoingOrders_Handler,
 		},
 		{
 			MethodName: "ListIncomingOrders",
-			Handler:    _Management_ListIncomingOrders_Handler,
+			Handler:    _ManagementService_ListIncomingOrders_Handler,
 		},
 		{
 			MethodName: "GetTermsOfServiceStatus",
-			Handler:    _Management_GetTermsOfServiceStatus_Handler,
+			Handler:    _ManagementService_GetTermsOfServiceStatus_Handler,
 		},
 		{
 			MethodName: "AcceptTermsOfService",
-			Handler:    _Management_AcceptTermsOfService_Handler,
+			Handler:    _ManagementService_AcceptTermsOfService_Handler,
 		},
 		{
 			MethodName: "GetInwayConfig",
-			Handler:    _Management_GetInwayConfig_Handler,
+			Handler:    _ManagementService_GetInwayConfig_Handler,
 		},
 		{
 			MethodName: "SynchronizeOutgoingAccessRequests",
-			Handler:    _Management_SynchronizeOutgoingAccessRequests_Handler,
+			Handler:    _ManagementService_SynchronizeOutgoingAccessRequests_Handler,
 		},
 		{
 			MethodName: "SynchronizeAllOutgoingAccessRequests",
-			Handler:    _Management_SynchronizeAllOutgoingAccessRequests_Handler,
+			Handler:    _ManagementService_SynchronizeAllOutgoingAccessRequests_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "management.proto",
 }
 
-// DirectoryClient is the client API for Directory service.
+// DirectoryServiceClient is the client API for DirectoryService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type DirectoryClient interface {
-	ListServices(ctx context.Context, in *DirectoryListServicesRequest, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error)
+type DirectoryServiceClient interface {
+	ListServices(ctx context.Context, in *DirectoryServiceListServicesRequest, opts ...grpc.CallOption) (*DirectoryServiceListServicesResponse, error)
 	GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*GetOrganizationServiceResponse, error)
 	RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*RequestAccessToServiceResponse, error)
 	GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error)
 }
 
-type directoryClient struct {
+type directoryServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDirectoryClient(cc grpc.ClientConnInterface) DirectoryClient {
-	return &directoryClient{cc}
+func NewDirectoryServiceClient(cc grpc.ClientConnInterface) DirectoryServiceClient {
+	return &directoryServiceClient{cc}
 }
 
-func (c *directoryClient) ListServices(ctx context.Context, in *DirectoryListServicesRequest, opts ...grpc.CallOption) (*DirectoryListServicesResponse, error) {
-	out := new(DirectoryListServicesResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Directory/ListServices", in, out, opts...)
+func (c *directoryServiceClient) ListServices(ctx context.Context, in *DirectoryServiceListServicesRequest, opts ...grpc.CallOption) (*DirectoryServiceListServicesResponse, error) {
+	out := new(DirectoryServiceListServicesResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.DirectoryService/ListServices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *directoryClient) GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*GetOrganizationServiceResponse, error) {
+func (c *directoryServiceClient) GetOrganizationService(ctx context.Context, in *GetOrganizationServiceRequest, opts ...grpc.CallOption) (*GetOrganizationServiceResponse, error) {
 	out := new(GetOrganizationServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Directory/GetOrganizationService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.DirectoryService/GetOrganizationService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *directoryClient) RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*RequestAccessToServiceResponse, error) {
+func (c *directoryServiceClient) RequestAccessToService(ctx context.Context, in *RequestAccessToServiceRequest, opts ...grpc.CallOption) (*RequestAccessToServiceResponse, error) {
 	out := new(RequestAccessToServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Directory/RequestAccessToService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.DirectoryService/RequestAccessToService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *directoryClient) GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
+func (c *directoryServiceClient) GetTermsOfService(ctx context.Context, in *GetTermsOfServiceRequest, opts ...grpc.CallOption) (*GetTermsOfServiceResponse, error) {
 	out := new(GetTermsOfServiceResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.Directory/GetTermsOfService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nlx.management.DirectoryService/GetTermsOfService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// DirectoryServer is the server API for Directory service.
-// All implementations must embed UnimplementedDirectoryServer
+// DirectoryServiceServer is the server API for DirectoryService service.
+// All implementations must embed UnimplementedDirectoryServiceServer
 // for forward compatibility
-type DirectoryServer interface {
-	ListServices(context.Context, *DirectoryListServicesRequest) (*DirectoryListServicesResponse, error)
+type DirectoryServiceServer interface {
+	ListServices(context.Context, *DirectoryServiceListServicesRequest) (*DirectoryServiceListServicesResponse, error)
 	GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*GetOrganizationServiceResponse, error)
 	RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*RequestAccessToServiceResponse, error)
 	GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error)
-	mustEmbedUnimplementedDirectoryServer()
+	mustEmbedUnimplementedDirectoryServiceServer()
 }
 
-// UnimplementedDirectoryServer must be embedded to have forward compatible implementations.
-type UnimplementedDirectoryServer struct {
+// UnimplementedDirectoryServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedDirectoryServiceServer struct {
 }
 
-func (UnimplementedDirectoryServer) ListServices(context.Context, *DirectoryListServicesRequest) (*DirectoryListServicesResponse, error) {
+func (UnimplementedDirectoryServiceServer) ListServices(context.Context, *DirectoryServiceListServicesRequest) (*DirectoryServiceListServicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListServices not implemented")
 }
-func (UnimplementedDirectoryServer) GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*GetOrganizationServiceResponse, error) {
+func (UnimplementedDirectoryServiceServer) GetOrganizationService(context.Context, *GetOrganizationServiceRequest) (*GetOrganizationServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationService not implemented")
 }
-func (UnimplementedDirectoryServer) RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*RequestAccessToServiceResponse, error) {
+func (UnimplementedDirectoryServiceServer) RequestAccessToService(context.Context, *RequestAccessToServiceRequest) (*RequestAccessToServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestAccessToService not implemented")
 }
-func (UnimplementedDirectoryServer) GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error) {
+func (UnimplementedDirectoryServiceServer) GetTermsOfService(context.Context, *GetTermsOfServiceRequest) (*GetTermsOfServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTermsOfService not implemented")
 }
-func (UnimplementedDirectoryServer) mustEmbedUnimplementedDirectoryServer() {}
+func (UnimplementedDirectoryServiceServer) mustEmbedUnimplementedDirectoryServiceServer() {}
 
-// UnsafeDirectoryServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to DirectoryServer will
+// UnsafeDirectoryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DirectoryServiceServer will
 // result in compilation errors.
-type UnsafeDirectoryServer interface {
-	mustEmbedUnimplementedDirectoryServer()
+type UnsafeDirectoryServiceServer interface {
+	mustEmbedUnimplementedDirectoryServiceServer()
 }
 
-func RegisterDirectoryServer(s grpc.ServiceRegistrar, srv DirectoryServer) {
-	s.RegisterService(&Directory_ServiceDesc, srv)
+func RegisterDirectoryServiceServer(s grpc.ServiceRegistrar, srv DirectoryServiceServer) {
+	s.RegisterService(&DirectoryService_ServiceDesc, srv)
 }
 
-func _Directory_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DirectoryListServicesRequest)
+func _DirectoryService_ListServices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DirectoryServiceListServicesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DirectoryServer).ListServices(ctx, in)
+		return srv.(DirectoryServiceServer).ListServices(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Directory/ListServices",
+		FullMethod: "/nlx.management.DirectoryService/ListServices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).ListServices(ctx, req.(*DirectoryListServicesRequest))
+		return srv.(DirectoryServiceServer).ListServices(ctx, req.(*DirectoryServiceListServicesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Directory_GetOrganizationService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DirectoryService_GetOrganizationService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetOrganizationServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DirectoryServer).GetOrganizationService(ctx, in)
+		return srv.(DirectoryServiceServer).GetOrganizationService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Directory/GetOrganizationService",
+		FullMethod: "/nlx.management.DirectoryService/GetOrganizationService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).GetOrganizationService(ctx, req.(*GetOrganizationServiceRequest))
+		return srv.(DirectoryServiceServer).GetOrganizationService(ctx, req.(*GetOrganizationServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Directory_RequestAccessToService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DirectoryService_RequestAccessToService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RequestAccessToServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DirectoryServer).RequestAccessToService(ctx, in)
+		return srv.(DirectoryServiceServer).RequestAccessToService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Directory/RequestAccessToService",
+		FullMethod: "/nlx.management.DirectoryService/RequestAccessToService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).RequestAccessToService(ctx, req.(*RequestAccessToServiceRequest))
+		return srv.(DirectoryServiceServer).RequestAccessToService(ctx, req.(*RequestAccessToServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Directory_GetTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DirectoryService_GetTermsOfService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTermsOfServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DirectoryServer).GetTermsOfService(ctx, in)
+		return srv.(DirectoryServiceServer).GetTermsOfService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.Directory/GetTermsOfService",
+		FullMethod: "/nlx.management.DirectoryService/GetTermsOfService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DirectoryServer).GetTermsOfService(ctx, req.(*GetTermsOfServiceRequest))
+		return srv.(DirectoryServiceServer).GetTermsOfService(ctx, req.(*GetTermsOfServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Directory_ServiceDesc is the grpc.ServiceDesc for Directory service.
+// DirectoryService_ServiceDesc is the grpc.ServiceDesc for DirectoryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Directory_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "nlx.management.Directory",
-	HandlerType: (*DirectoryServer)(nil),
+var DirectoryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "nlx.management.DirectoryService",
+	HandlerType: (*DirectoryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ListServices",
-			Handler:    _Directory_ListServices_Handler,
+			Handler:    _DirectoryService_ListServices_Handler,
 		},
 		{
 			MethodName: "GetOrganizationService",
-			Handler:    _Directory_GetOrganizationService_Handler,
+			Handler:    _DirectoryService_GetOrganizationService_Handler,
 		},
 		{
 			MethodName: "RequestAccessToService",
-			Handler:    _Directory_RequestAccessToService_Handler,
+			Handler:    _DirectoryService_RequestAccessToService_Handler,
 		},
 		{
 			MethodName: "GetTermsOfService",
-			Handler:    _Directory_GetTermsOfService_Handler,
+			Handler:    _DirectoryService_GetTermsOfService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "management.proto",
 }
 
-// TXLogClient is the client API for TXLog service.
+// TXLogServiceClient is the client API for TXLogService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TXLogClient interface {
-	ListRecords(ctx context.Context, in *TXLogListRecordsRequest, opts ...grpc.CallOption) (*TXLogListRecordsResponse, error)
+type TXLogServiceClient interface {
+	ListRecords(ctx context.Context, in *TXLogServiceListRecordsRequest, opts ...grpc.CallOption) (*TXLogServiceListRecordsResponse, error)
 }
 
-type tXLogClient struct {
+type tXLogServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewTXLogClient(cc grpc.ClientConnInterface) TXLogClient {
-	return &tXLogClient{cc}
+func NewTXLogServiceClient(cc grpc.ClientConnInterface) TXLogServiceClient {
+	return &tXLogServiceClient{cc}
 }
 
-func (c *tXLogClient) ListRecords(ctx context.Context, in *TXLogListRecordsRequest, opts ...grpc.CallOption) (*TXLogListRecordsResponse, error) {
-	out := new(TXLogListRecordsResponse)
-	err := c.cc.Invoke(ctx, "/nlx.management.TXLog/ListRecords", in, out, opts...)
+func (c *tXLogServiceClient) ListRecords(ctx context.Context, in *TXLogServiceListRecordsRequest, opts ...grpc.CallOption) (*TXLogServiceListRecordsResponse, error) {
+	out := new(TXLogServiceListRecordsResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.TXLogService/ListRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// TXLogServer is the server API for TXLog service.
-// All implementations must embed UnimplementedTXLogServer
+// TXLogServiceServer is the server API for TXLogService service.
+// All implementations must embed UnimplementedTXLogServiceServer
 // for forward compatibility
-type TXLogServer interface {
-	ListRecords(context.Context, *TXLogListRecordsRequest) (*TXLogListRecordsResponse, error)
-	mustEmbedUnimplementedTXLogServer()
+type TXLogServiceServer interface {
+	ListRecords(context.Context, *TXLogServiceListRecordsRequest) (*TXLogServiceListRecordsResponse, error)
+	mustEmbedUnimplementedTXLogServiceServer()
 }
 
-// UnimplementedTXLogServer must be embedded to have forward compatible implementations.
-type UnimplementedTXLogServer struct {
+// UnimplementedTXLogServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedTXLogServiceServer struct {
 }
 
-func (UnimplementedTXLogServer) ListRecords(context.Context, *TXLogListRecordsRequest) (*TXLogListRecordsResponse, error) {
+func (UnimplementedTXLogServiceServer) ListRecords(context.Context, *TXLogServiceListRecordsRequest) (*TXLogServiceListRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRecords not implemented")
 }
-func (UnimplementedTXLogServer) mustEmbedUnimplementedTXLogServer() {}
+func (UnimplementedTXLogServiceServer) mustEmbedUnimplementedTXLogServiceServer() {}
 
-// UnsafeTXLogServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TXLogServer will
+// UnsafeTXLogServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TXLogServiceServer will
 // result in compilation errors.
-type UnsafeTXLogServer interface {
-	mustEmbedUnimplementedTXLogServer()
+type UnsafeTXLogServiceServer interface {
+	mustEmbedUnimplementedTXLogServiceServer()
 }
 
-func RegisterTXLogServer(s grpc.ServiceRegistrar, srv TXLogServer) {
-	s.RegisterService(&TXLog_ServiceDesc, srv)
+func RegisterTXLogServiceServer(s grpc.ServiceRegistrar, srv TXLogServiceServer) {
+	s.RegisterService(&TXLogService_ServiceDesc, srv)
 }
 
-func _TXLog_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TXLogListRecordsRequest)
+func _TXLogService_ListRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TXLogServiceListRecordsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TXLogServer).ListRecords(ctx, in)
+		return srv.(TXLogServiceServer).ListRecords(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nlx.management.TXLog/ListRecords",
+		FullMethod: "/nlx.management.TXLogService/ListRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TXLogServer).ListRecords(ctx, req.(*TXLogListRecordsRequest))
+		return srv.(TXLogServiceServer).ListRecords(ctx, req.(*TXLogServiceListRecordsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// TXLog_ServiceDesc is the grpc.ServiceDesc for TXLog service.
+// TXLogService_ServiceDesc is the grpc.ServiceDesc for TXLogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var TXLog_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "nlx.management.TXLog",
-	HandlerType: (*TXLogServer)(nil),
+var TXLogService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "nlx.management.TXLogService",
+	HandlerType: (*TXLogServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ListRecords",
-			Handler:    _TXLog_ListRecords_Handler,
+			Handler:    _TXLogService_ListRecords_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

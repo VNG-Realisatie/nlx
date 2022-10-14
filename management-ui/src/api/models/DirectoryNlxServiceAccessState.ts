@@ -29,37 +29,37 @@ import {
 /**
  * 
  * @export
- * @interface DirectoryServiceAccessState
+ * @interface DirectoryNlxServiceAccessState
  */
-export interface DirectoryServiceAccessState {
+export interface DirectoryNlxServiceAccessState {
     /**
      * 
      * @type {ManagementOutgoingAccessRequest}
-     * @memberof DirectoryServiceAccessState
+     * @memberof DirectoryNlxServiceAccessState
      */
     accessRequest?: ManagementOutgoingAccessRequest;
     /**
      * 
      * @type {ManagementAccessProof}
-     * @memberof DirectoryServiceAccessState
+     * @memberof DirectoryNlxServiceAccessState
      */
     accessProof?: ManagementAccessProof;
 }
 
 /**
- * Check if a given object implements the DirectoryServiceAccessState interface.
+ * Check if a given object implements the DirectoryNlxServiceAccessState interface.
  */
-export function instanceOfDirectoryServiceAccessState(value: object): boolean {
+export function instanceOfDirectoryNlxServiceAccessState(value: object): boolean {
     let isInstance = true;
 
     return isInstance;
 }
 
-export function DirectoryServiceAccessStateFromJSON(json: any): DirectoryServiceAccessState {
-    return DirectoryServiceAccessStateFromJSONTyped(json, false);
+export function DirectoryNlxServiceAccessStateFromJSON(json: any): DirectoryNlxServiceAccessState {
+    return DirectoryNlxServiceAccessStateFromJSONTyped(json, false);
 }
 
-export function DirectoryServiceAccessStateFromJSONTyped(json: any, ignoreDiscriminator: boolean): DirectoryServiceAccessState {
+export function DirectoryNlxServiceAccessStateFromJSONTyped(json: any, ignoreDiscriminator: boolean): DirectoryNlxServiceAccessState {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -70,7 +70,7 @@ export function DirectoryServiceAccessStateFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function DirectoryServiceAccessStateToJSON(value?: DirectoryServiceAccessState | null): any {
+export function DirectoryNlxServiceAccessStateToJSON(value?: DirectoryNlxServiceAccessState | null): any {
     if (value === undefined) {
         return undefined;
     }

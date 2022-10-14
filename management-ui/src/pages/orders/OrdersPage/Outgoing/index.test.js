@@ -14,12 +14,12 @@ import {
   renderWithProviders,
   renderWithAllProviders,
 } from '../../../../test-utils'
-import { ManagementApi } from '../../../../api'
+import { ManagementServiceApi } from '../../../../api'
 import OutgoingOrderModel from '../../../../stores/models/OutgoingOrderModel'
 import Outgoing from './index'
 
 test('displays an order row for each order', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   const orders = [
@@ -66,7 +66,7 @@ test('displays an order row for each order', () => {
 })
 
 test('displays text to indicate there are no orders', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   renderWithProviders(
@@ -82,9 +82,9 @@ test('displays text to indicate there are no orders', () => {
 test('content should render expected data', async () => {
   const oneDay = 86400000
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutgoingOrders = jest
+  managementApiClient.managementServiceListOutgoingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [

@@ -53,18 +53,18 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 		),
 	}
 
-	err = api.RegisterManagementHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
+	err = api.RegisterManagementServiceHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 	if err != nil {
 		return err
 	}
 
-	err = api.RegisterDirectoryHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
+	err = api.RegisterDirectoryServiceHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 	if err != nil {
 		return err
 	}
 
 	if a.txlogClient != nil {
-		err = api.RegisterTXLogHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
+		err = api.RegisterTXLogServiceHandlerFromEndpoint(ctx, a.mux, configAddress, gatewayDialOptions)
 		if err != nil {
 			return err
 		}

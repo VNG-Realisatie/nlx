@@ -5,7 +5,7 @@ import React from 'react'
 import { Route, Routes, MemoryRouter } from 'react-router-dom'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../test-utils'
-import { DirectoryApi, ManagementApi } from '../../../api'
+import { DirectoryServiceApi, ManagementServiceApi } from '../../../api'
 import { RootStore, StoreProvider } from '../../../stores'
 import { SERVICE_STATE_DEGRADED } from '../../../components/StateIndicator'
 import DirectoryDetailPage from './index'
@@ -15,28 +15,32 @@ jest.mock('./components/DirectoryDetailView', () => () => (
 ))
 
 test('display directory service details', async () => {
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'Test Organization',
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Test Organization',
+          },
+          serviceName: 'Test Service',
+          state: SERVICE_STATE_DEGRADED,
+          apiSpecificationType: 'API',
+          latestAccessRequest: null,
         },
-        serviceName: 'Test Service',
-        state: SERVICE_STATE_DEGRADED,
-        apiSpecificationType: 'API',
-        latestAccessRequest: null,
-      },
-    ],
-  })
+      ],
+    })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [],
+    })
 
   const rootStore = new RootStore({
     directoryApiClient,
@@ -63,7 +67,7 @@ test('display directory service details', async () => {
   expect(screen.getByText('state-degraded.svg')).toBeInTheDocument()
   expect(screen.getByTestId('directory-service-details')).toBeInTheDocument()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockRejectedValue({
       status: 404,
@@ -78,17 +82,19 @@ test('display directory service details', async () => {
 })
 
 test('service does not exist', () => {
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockRejectedValue(new Error('arbitrary error'))
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [],
+    })
 
   const rootStore = new RootStore({
     directoryApiClient,

@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { TXLogApi, ManagementApi } from '../../api'
+import { TXLogServiceApi, ManagementServiceApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
 import { renderWithProviders, waitFor } from '../../test-utils'
 import { UserContextProvider } from '../../user-context'
@@ -12,15 +12,17 @@ import { DIRECTION_IN } from '../../stores/models/TransactionLogModel'
 import TransactionLogPage from './index'
 
 test('fetching the transaction logs', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
-    enabled: true,
-  })
+  managementApiClient.managementServiceIsTXLogEnabled = jest
+    .fn()
+    .mockResolvedValue({
+      enabled: true,
+    })
 
-  const txLogApiClient = new TXLogApi()
+  const txLogApiClient = new TXLogServiceApi()
 
-  txLogApiClient.tXLogListRecords = jest.fn().mockResolvedValue({
+  txLogApiClient.tXLogServiceListRecords = jest.fn().mockResolvedValue({
     records: [
       {
         source: {
@@ -58,15 +60,17 @@ test('fetching the transaction logs', async () => {
 })
 
 test('failed to load transaction logs', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
-    enabled: true,
-  })
+  managementApiClient.managementServiceIsTXLogEnabled = jest
+    .fn()
+    .mockResolvedValue({
+      enabled: true,
+    })
 
-  const txLogApiClient = new TXLogApi()
+  const txLogApiClient = new TXLogServiceApi()
 
-  txLogApiClient.managementListTransactionRecords = jest
+  txLogApiClient.managementServiceListTransactionRecords = jest
     .fn()
     .mockRejectedValue(Error('arbitrary error'))
 
@@ -98,15 +102,17 @@ test('failed to load transaction logs', async () => {
 })
 
 test('it shows a message when txlog is disabled', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementIsTXLogEnabled = jest.fn().mockResolvedValue({
-    enabled: false,
-  })
+  managementApiClient.managementServiceIsTXLogEnabled = jest
+    .fn()
+    .mockResolvedValue({
+      enabled: false,
+    })
 
-  const txLogApiClient = new TXLogApi()
+  const txLogApiClient = new TXLogServiceApi()
 
-  txLogApiClient.tXLogListRecords = jest.fn().mockResolvedValue({
+  txLogApiClient.tXLogServiceListRecords = jest.fn().mockResolvedValue({
     records: [
       {
         source: {

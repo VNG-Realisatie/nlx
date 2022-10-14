@@ -26,9 +26,10 @@ class ServiceStore {
 
   fetch = flow(function* fetch({ name }) {
     try {
-      const serviceData = yield this._managementApiClient.managementGetService({
-        name,
-      })
+      const serviceData =
+        yield this._managementApiClient.managementServiceGetService({
+          name,
+        })
 
       let service = this.getByName(name)
       if (!service) {
@@ -58,7 +59,7 @@ class ServiceStore {
 
     try {
       const servicesData =
-        yield this._managementApiClient.managementListServices({})
+        yield this._managementApiClient.managementServiceListServices({})
 
       this.services = servicesData.services.map(
         (serviceData) =>
@@ -77,7 +78,7 @@ class ServiceStore {
 
   fetchStats = flow(function* fetchStats() {
     const result =
-      yield this._managementApiClient.managementGetStatisticsOfServices()
+      yield this._managementApiClient.managementServiceGetStatisticsOfServices()
     const stats = result.services
     if (stats.length < 1) return
 
@@ -112,8 +113,8 @@ class ServiceStore {
     monthlyCosts,
     requestCosts,
   }) {
-    const serviceData = yield this._managementApiClient.managementCreateService(
-      {
+    const serviceData =
+      yield this._managementApiClient.managementServiceCreateService({
         body: {
           name,
           endpointUrl,
@@ -127,8 +128,7 @@ class ServiceStore {
           monthlyCosts: monthlyCosts * 100,
           requestCosts: requestCosts * 100,
         },
-      },
-    )
+      })
     const service = new ServiceModel({
       servicesStore: this,
       serviceData,
@@ -162,8 +162,8 @@ class ServiceStore {
       throw new Error('Can not edit a service that does not exist')
     }
 
-    const serviceData = yield this._managementApiClient.managementUpdateService(
-      {
+    const serviceData =
+      yield this._managementApiClient.managementServiceUpdateService({
         name,
         body: {
           name,
@@ -178,8 +178,7 @@ class ServiceStore {
           monthlyCosts: monthlyCosts * 100,
           requestCosts: requestCosts * 100,
         },
-      },
-    )
+      })
 
     service.update(serviceData)
   }).bind(this)
@@ -188,7 +187,7 @@ class ServiceStore {
     const service = this.getByName(name)
     const index = this.services.indexOf(service)
 
-    yield this._managementApiClient.managementDeleteService({
+    yield this._managementApiClient.managementServiceDeleteService({
       name,
     })
 

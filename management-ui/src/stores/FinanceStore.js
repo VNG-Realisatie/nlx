@@ -21,7 +21,7 @@ class FinanceStore {
     try {
       this._isLoading = true
       const result =
-        yield this._managementApiClient.managementIsFinanceEnabled()
+        yield this._managementApiClient.managementServiceIsFinanceEnabled()
 
       this.enabled = result.enabled
       this._isLoading = false
@@ -37,7 +37,7 @@ class FinanceStore {
   async downloadExport() {
     try {
       const result =
-        await this._managementApiClient.managementDownloadFinanceExport()
+        await this._managementApiClient.managementServiceDownloadFinanceExport()
 
       return result
     } catch (err) {

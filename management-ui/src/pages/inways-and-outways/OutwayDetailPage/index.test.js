@@ -6,22 +6,24 @@ import { Route, MemoryRouter, Routes } from 'react-router-dom'
 import { screen, fireEvent, waitFor, within } from '@testing-library/react'
 import { configure } from 'mobx'
 import { renderWithAllProviders } from '../../../test-utils'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import { RootStore, StoreProvider } from '../../../stores'
 import OutwayDetailPage from './index'
 
 test('display outway details', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'my-outway',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'publicKeyPem',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'my-outway',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'publicKeyPem',
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -42,7 +44,7 @@ test('display outway details', async () => {
 })
 
 test('display a non-existing outway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   renderWithAllProviders(
@@ -66,19 +68,21 @@ test('display a non-existing outway', async () => {
 test('remove an Outway', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'my-outway',
-        ipAddress: '127.0.0.1',
-        publicKeyPem: 'publicKeyPem',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'my-outway',
+          ipAddress: '127.0.0.1',
+          publicKeyPem: 'publicKeyPem',
+        },
+      ],
+    })
 
-  managementApiClient.managementDeleteOutway = jest
+  managementApiClient.managementServiceDeleteOutway = jest
     .fn()
     .mockRejectedValueOnce({ response: { status: 403 } })
     .mockResolvedValue({})

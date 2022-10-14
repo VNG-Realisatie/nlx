@@ -12,7 +12,7 @@ import { configure } from 'mobx'
 import { createMemoryHistory } from 'history'
 import { renderWithAllProviders, screen } from '../../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../../stores'
-import { ManagementApi } from '../../../../../api'
+import { ManagementServiceApi } from '../../../../../api'
 import OrderDetailPage from './index'
 
 jest.mock('../../../../../components/Modal')
@@ -28,9 +28,9 @@ afterEach(() => {
 test('display order details', async () => {
   configure({ safeDescriptors: false })
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListIncomingOrders = jest
+  managementApiClient.managementServiceListIncomingOrders = jest
     .fn()
     .mockResolvedValue({
       orders: [
@@ -69,7 +69,7 @@ test('display order details', async () => {
 })
 
 test('display error for a non-existing order', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   renderWithAllProviders(

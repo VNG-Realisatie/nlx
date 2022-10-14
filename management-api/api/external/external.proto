@@ -5,22 +5,28 @@ syntax = "proto3";
 
 package nlx.management.external;
 
-option go_package = "go.nlx.io/nlx/management-api/api/external";
-
 import "google/protobuf/timestamp.proto";
 
+option go_package = "go.nlx.io/nlx/management-api/api/external";
+
 service AccessRequestService {
-  rpc RequestAccess (RequestAccessRequest) returns (RequestAccessResponse);
-  rpc GetAccessRequestState (GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
-  rpc GetAccessProof (GetAccessGrantRequest) returns (AccessGrant) {
+  rpc RequestAccess(RequestAccessRequest) returns (RequestAccessResponse);
+  rpc GetAccessRequestState(GetAccessRequestStateRequest) returns (GetAccessRequestStateResponse);
+
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  // buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+  // buf:lint:ignore RPC_REQUEST_STANDARD_NAME
+  rpc GetAccessProof(GetAccessGrantRequest) returns (AccessGrant) {
     option deprecated = true;
-  };
-  rpc GetAccessGrant (GetAccessGrantRequest) returns (GetAccessGrantResponse);
+  }
+
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE // Remove this ignore when 'GetAccessProof' is removed
+  rpc GetAccessGrant(GetAccessGrantRequest) returns (GetAccessGrantResponse);
 }
 
 service DelegationService {
-  rpc RequestClaim (RequestClaimRequest) returns (RequestClaimResponse);
-  rpc ListOrders (ListOrdersRequest) returns (ListOrdersResponse);
+  rpc RequestClaim(RequestClaimRequest) returns (RequestClaimResponse);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
 }
 
 message Organization {
@@ -86,8 +92,7 @@ message RequestClaimResponse {
   string claim = 1;
 }
 
-message ListOrdersRequest {
-}
+message ListOrdersRequest {}
 
 message OrderService {
   Organization organization = 1;

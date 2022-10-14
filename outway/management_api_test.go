@@ -32,14 +32,14 @@ func TestRegisterToManagementAPI(t *testing.T) {
 	tests := map[string]struct {
 		outwayName          string
 		outwaySelfAddress   string
-		managementAPIClient func(ctx context.Context, ctrl *gomock.Controller) *mock_management_api.MockManagementClient
+		managementAPIClient func(ctx context.Context, ctrl *gomock.Controller) *mock_management_api.MockManagementServiceClient
 		expectedError       error
 	}{
 		"registration_failed": {
 			outwayName:        "mock-outway",
 			outwaySelfAddress: "outway.address.com",
-			managementAPIClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_management_api.MockManagementClient {
-				managementClient := mock_management_api.NewMockManagementClient(ctrl)
+			managementAPIClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_management_api.MockManagementServiceClient {
+				managementClient := mock_management_api.NewMockManagementServiceClient(ctrl)
 				managementClient.EXPECT().RegisterOutway(gomock.Any(), &management_api.RegisterOutwayRequest{
 					Name:           "mock-outway",
 					SelfAddressApi: "outway.address.com",
@@ -54,8 +54,8 @@ func TestRegisterToManagementAPI(t *testing.T) {
 		"happy_flow": {
 			outwayName:        "mock-outway",
 			outwaySelfAddress: "outway.address.com",
-			managementAPIClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_management_api.MockManagementClient {
-				managementClient := mock_management_api.NewMockManagementClient(ctrl)
+			managementAPIClient: func(ctx context.Context, ctrl *gomock.Controller) *mock_management_api.MockManagementServiceClient {
+				managementClient := mock_management_api.NewMockManagementServiceClient(ctrl)
 				managementClient.EXPECT().RegisterOutway(gomock.Any(), &management_api.RegisterOutwayRequest{
 					Name:           "mock-outway",
 					SelfAddressApi: "outway.address.com",

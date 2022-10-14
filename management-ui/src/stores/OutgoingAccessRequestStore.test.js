@@ -4,7 +4,7 @@
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from '../stores/models/OutgoingAccessRequestModel'
-import { ManagementApi } from '../api'
+import { ManagementServiceApi } from '../api'
 import OutgoingAccessRequestStore from './OutgoingAccessRequestStore'
 import { RootStore } from './index'
 
@@ -17,9 +17,9 @@ test('initializing the store', () => {
 })
 
 test('sending an outgoing access request', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementSendAccessRequest = jest
+  managementApiClient.managementServiceSendAccessRequest = jest
     .fn()
     .mockResolvedValue({
       outgoingAccessRequest: {
@@ -45,7 +45,9 @@ test('sending an outgoing access request', async () => {
     'public-key-pem',
   )
 
-  expect(managementApiClient.managementSendAccessRequest).toHaveBeenCalledWith({
+  expect(
+    managementApiClient.managementServiceSendAccessRequest,
+  ).toHaveBeenCalledWith({
     body: {
       organizationSerialNumber: '00000000000000000001',
       serviceName: 'service-name',

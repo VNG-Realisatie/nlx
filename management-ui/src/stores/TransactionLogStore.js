@@ -36,16 +36,14 @@ class TransactionLogStore {
     try {
       this._isLoading = true
       if (this._enabled === null) {
-        const result = yield this._managementApiClient.managementIsTXLogEnabled(
-          {},
-        )
+        const result =
+          yield this._managementApiClient.managementServiceIsTXLogEnabled({})
         this._enabled = result.enabled
       }
 
       if (this._enabled) {
-        const transactionLogsData = yield this._txLogApiClient.tXLogListRecords(
-          {},
-        )
+        const transactionLogsData =
+          yield this._txLogApiClient.tXLogServiceListRecords({})
         this._transactionLogs = transactionLogsData.records.map(
           (transactionLogData) =>
             new TransactionLogModel({

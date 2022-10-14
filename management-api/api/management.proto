@@ -5,124 +5,218 @@ syntax = "proto3";
 
 package nlx.management;
 
-option go_package = "go.nlx.io/nlx/management-api/api";
-
-import "external.proto";
+import "external/external.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-service Management {
+option go_package = "go.nlx.io/nlx/management-api/api";
+
+service ManagementService {
   rpc SynchronizeOrders(SynchronizeOrdersRequest) returns (SynchronizeOrdersResponse) {
-    option (google.api.http) = {post: "/api/v1/orders/synchronize" response_body: '*'};
+    option (google.api.http) = {
+      post: "/api/v1/orders/synchronize"
+      response_body: '*'
+    };
   }
-  rpc IsFinanceEnabled (IsFinanceEnabledRequest) returns (IsFinanceEnabledResponse) {
-    option (google.api.http) = {get: "/api/v1/finance/enabled"};
+  rpc IsFinanceEnabled(IsFinanceEnabledRequest) returns (IsFinanceEnabledResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/finance/enabled"
+    };
   }
-  rpc IsTXLogEnabled (IsTXLogEnabledRequest) returns (IsTXLogEnabledResponse) {
-    option (google.api.http) = {get: "/api/v1/txlog/enabled"};
+  rpc IsTXLogEnabled(IsTXLogEnabledRequest) returns (IsTXLogEnabledResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/txlog/enabled"
+    };
   }
-  rpc DownloadFinanceExport (DownloadFinanceExportRequest) returns (DownloadFinanceExportResponse) {
-    option (google.api.http) = {get: "/api/v1/finance/export"};
+  rpc DownloadFinanceExport(DownloadFinanceExportRequest) returns (DownloadFinanceExportResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/finance/export"
+    };
   }
-  rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
-    option (google.api.http) = {get: "/api/v1/services"};
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/services"
+    };
   }
-  rpc GetService (GetServiceRequest) returns (GetServiceResponse) {
-    option (google.api.http) = {get: "/api/v1/services/{name}"};
+  rpc GetService(GetServiceRequest) returns (GetServiceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/services/{name}"
+    };
   }
-  rpc CreateService (CreateServiceRequest) returns (CreateServiceResponse) {
-    option (google.api.http) = {post: "/api/v1/services" body: "*" response_body: '*'};
+  rpc CreateService(CreateServiceRequest) returns (CreateServiceResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/services"
+      body: "*"
+      response_body: '*'
+    };
   }
-  rpc UpdateService (UpdateServiceRequest) returns (UpdateServiceResponse) {
-    option (google.api.http) = {put: "/api/v1/services/{name}" body: "*" response_body: '*'};
+  rpc UpdateService(UpdateServiceRequest) returns (UpdateServiceResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/services/{name}"
+      body: "*"
+      response_body: '*'
+    };
   }
-  rpc DeleteService (DeleteServiceRequest) returns (DeleteServiceResponse) {
-    option (google.api.http) = {delete: "/api/v1/services/{name}" response_body: '*'};
+  rpc DeleteService(DeleteServiceRequest) returns (DeleteServiceResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/services/{name}"
+      response_body: '*'
+    };
   }
-  rpc GetStatisticsOfServices (GetStatisticsOfServicesRequest) returns (GetStatisticsOfServicesResponse) {
-    option (google.api.http) = {get: "/api/v1/statistics/services"};
+  rpc GetStatisticsOfServices(GetStatisticsOfServicesRequest) returns (GetStatisticsOfServicesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/statistics/services"
+    };
   }
-  rpc ListInways (ListInwaysRequest) returns (ListInwaysResponse) {
-    option (google.api.http) = {get: "/api/v1/inways"};
+  rpc ListInways(ListInwaysRequest) returns (ListInwaysResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/inways"
+    };
   }
-  rpc GetInway (GetInwayRequest) returns (GetInwayResponse) {
-    option (google.api.http) = {get: "/api/v1/inways/{name}"};
+  rpc GetInway(GetInwayRequest) returns (GetInwayResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/inways/{name}"
+    };
   }
-  rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse) {
-    option (google.api.http) = {post: "/api/v1/inways" body: "*"};
+  rpc RegisterInway(RegisterInwayRequest) returns (RegisterInwayResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/inways"
+      body: "*"
+    };
   }
-  rpc UpdateInway (UpdateInwayRequest) returns (UpdateInwayResponse) {
-    option (google.api.http) = {put: "/api/v1/inways/{name}" body: "inway"};
+  rpc UpdateInway(UpdateInwayRequest) returns (UpdateInwayResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/inways/{name}"
+      body: "inway"
+    };
   }
-  rpc DeleteInway (DeleteInwayRequest) returns (DeleteInwayResponse) {
-    option (google.api.http) = {delete: "/api/v1/inways/{name}" response_body: '*'};
+  rpc DeleteInway(DeleteInwayRequest) returns (DeleteInwayResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/inways/{name}"
+      response_body: '*'
+    };
   }
-  rpc RegisterOutway (RegisterOutwayRequest) returns (RegisterOutwayResponse) {
-    option (google.api.http) = {post: "/api/v1/outways" body: "*"};
+  rpc RegisterOutway(RegisterOutwayRequest) returns (RegisterOutwayResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/outways"
+      body: "*"
+    };
   }
-  rpc ListOutways(ListOutwaysRequest) returns (ListOutwaysResponse){
-    option (google.api.http) = {get :"/api/v1/outways"};
+  rpc ListOutways(ListOutwaysRequest) returns (ListOutwaysResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/outways"
+    };
   }
-  rpc DeleteOutway (DeleteOutwayRequest) returns (DeleteOutwayResponse) {
-    option (google.api.http) = {delete: "/api/v1/outways/{name}" response_body: '*'};
+  rpc DeleteOutway(DeleteOutwayRequest) returns (DeleteOutwayResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/outways/{name}"
+      response_body: '*'
+    };
   }
-  rpc ListIncomingAccessRequests (ListIncomingAccessRequestsRequest) returns (ListIncomingAccessRequestsResponse) {
-    option (google.api.http) = {get: "/api/v1/access-requests/incoming/services/{service_name}"};
+  rpc ListIncomingAccessRequests(ListIncomingAccessRequestsRequest) returns (ListIncomingAccessRequestsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/access-requests/incoming/services/{service_name}"
+    };
   }
-  rpc ApproveIncomingAccessRequest (ApproveIncomingAccessRequestRequest) returns (ApproveIncomingAccessRequestResponse) {
-    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve" response_body: '*'};
+  rpc ApproveIncomingAccessRequest(ApproveIncomingAccessRequestRequest) returns (ApproveIncomingAccessRequestResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/approve"
+      response_body: '*'
+    };
   }
-  rpc RejectIncomingAccessRequest (RejectIncomingAccessRequestRequest) returns (RejectIncomingAccessRequestResponse) {
-    option (google.api.http) = {post: "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject" response_body: '*'};
+  rpc RejectIncomingAccessRequest(RejectIncomingAccessRequestRequest) returns (RejectIncomingAccessRequestResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/access-requests/incoming/services/{service_name}/{access_request_id}/reject"
+      response_body: '*'
+    };
   }
-  rpc SendAccessRequest (SendAccessRequestRequest) returns (SendAccessRequestResponse) {
-    option (google.api.http) = {post: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}"};
+  rpc SendAccessRequest(SendAccessRequestRequest) returns (SendAccessRequestResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}"
+    };
   }
-  rpc GetSettings (GetSettingsRequest) returns (GetSettingsResponse) {
-    option (google.api.http) = {get: "/api/v1/settings"};
+  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/settings"
+    };
   }
   rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse) {
-    option (google.api.http) = {put: "/api/v1/settings", body: "*" response_body: '*'};
+    option (google.api.http) = {
+      put: "/api/v1/settings",
+      body: "*"
+      response_body: '*'
+    };
   }
-  rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns(ListAccessGrantsForServiceResponse) {
-    option (google.api.http) = {get: "/api/v1/access-grants/services/{service_name}"};
+  rpc ListAccessGrantsForService(ListAccessGrantsForServiceRequest) returns (ListAccessGrantsForServiceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/access-grants/services/{service_name}"
+    };
   }
   rpc RevokeAccessGrant(RevokeAccessGrantRequest) returns (RevokeAccessGrantResponse) {
-    option (google.api.http) = {post: "/api/v1/access-grants/{access_grant_id}/revoke" response_body: '*'};
+    option (google.api.http) = {
+      post: "/api/v1/access-grants/{access_grant_id}/revoke"
+      response_body: '*'
+    };
   }
-  rpc ListAuditLogs (ListAuditLogsRequest) returns (ListAuditLogsResponse) {
-    option (google.api.http) = {get: "/api/v1/audit-logs"};
+  rpc ListAuditLogs(ListAuditLogsRequest) returns (ListAuditLogsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/audit-logs"
+    };
   }
-  rpc CreateOutgoingOrder (CreateOutgoingOrderRequest) returns (CreateOutgoingOrderResponse) {
-    option (google.api.http) = {post: "/api/v1/orders/outgoing" body: "*" response_body: '*'};
+  rpc CreateOutgoingOrder(CreateOutgoingOrderRequest) returns (CreateOutgoingOrderResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/orders/outgoing"
+      body: "*"
+      response_body: '*'
+    };
   }
-  rpc UpdateOutgoingOrder (UpdateOutgoingOrderRequest) returns (UpdateOutgoingOrderResponse) {
-    option (google.api.http) = {put: "/api/v1/orders/outgoing" body: "*" response_body: '*'};
+  rpc UpdateOutgoingOrder(UpdateOutgoingOrderRequest) returns (UpdateOutgoingOrderResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/orders/outgoing"
+      body: "*"
+      response_body: '*'
+    };
   }
-  rpc RevokeOutgoingOrder (RevokeOutgoingOrderRequest) returns (RevokeOutgoingOrderResponse){
-    option (google.api.http) = {put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke" response_body: '*'};
+  rpc RevokeOutgoingOrder(RevokeOutgoingOrderRequest) returns (RevokeOutgoingOrderResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/orders/outgoing/{delegatee}/{reference}/revoke"
+      response_body: '*'
+    };
   }
-  rpc ListOutgoingOrders (ListOutgoingOrdersRequest) returns (ListOutgoingOrdersResponse) {
-    option (google.api.http) = {get: "/api/v1/orders/outgoing"};
+  rpc ListOutgoingOrders(ListOutgoingOrdersRequest) returns (ListOutgoingOrdersResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/orders/outgoing"
+    };
   }
-  rpc ListIncomingOrders (ListIncomingOrdersRequest) returns (ListIncomingOrdersResponse) {
-    option (google.api.http) = {get: "/api/v1/orders/incoming"};
+  rpc ListIncomingOrders(ListIncomingOrdersRequest) returns (ListIncomingOrdersResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/orders/incoming"
+    };
   }
-  rpc GetTermsOfServiceStatus (GetTermsOfServiceStatusRequest) returns (GetTermsOfServiceStatusResponse) {
-    option (google.api.http) = {get: "/api/v1/terms-of-service"};
+  rpc GetTermsOfServiceStatus(GetTermsOfServiceStatusRequest) returns (GetTermsOfServiceStatusResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/terms-of-service"
+    };
   }
-  rpc AcceptTermsOfService (AcceptTermsOfServiceRequest) returns (AcceptTermsOfServiceResponse) {
-    option (google.api.http) = {post: "/api/v1/terms-of-service" response_body: '*'};
+  rpc AcceptTermsOfService(AcceptTermsOfServiceRequest) returns (AcceptTermsOfServiceResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/terms-of-service"
+      response_body: '*'
+    };
   }
 
-  rpc GetInwayConfig (GetInwayConfigRequest) returns (GetInwayConfigResponse) {}
+  rpc GetInwayConfig(GetInwayConfigRequest) returns (GetInwayConfigResponse) {}
 
-  rpc SynchronizeOutgoingAccessRequests (SynchronizeOutgoingAccessRequestsRequest) returns (SynchronizeOutgoingAccessRequestsResponse) {
-    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize"};
+  rpc SynchronizeOutgoingAccessRequests(SynchronizeOutgoingAccessRequestsRequest) returns (SynchronizeOutgoingAccessRequestsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/synchronize"
+    };
   }
 
-  rpc SynchronizeAllOutgoingAccessRequests (SynchronizeAllOutgoingAccessRequestsRequest) returns (SynchronizeAllOutgoingAccessRequestsResponse) {
-    option (google.api.http) = {get: "/api/v1/access-requests/outgoing/synchronize"};
+  rpc SynchronizeAllOutgoingAccessRequests(SynchronizeAllOutgoingAccessRequestsRequest) returns (SynchronizeAllOutgoingAccessRequestsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/access-requests/outgoing/synchronize"
+    };
   }
 }
 
@@ -274,8 +368,7 @@ message ServiceStatistics {
   uint32 incoming_access_request_count = 2;
 }
 
-message ListServicesRequest {
-}
+message ListServicesRequest {}
 
 message ListServicesResponse {
   repeated Service services = 1;
@@ -296,7 +389,7 @@ message ListServicesResponse {
     int32 request_costs = 13;
 
     message AuthorizationSettings {
-      message Authorization  {
+      message Authorization {
         nlx.management.external.Organization organization = 1;
         string public_key_hash = 2;
         string public_key_pem = 3;
@@ -356,34 +449,34 @@ message DeleteInwayRequest {
 message DeleteInwayResponse {}
 
 message GetInwayConfigRequest {
-    string name = 1;
+  string name = 1;
 }
 message GetInwayConfigResponse {
-    repeated Service services = 1;
-    bool is_organization_inway = 2;
+  repeated Service services = 1;
+  bool is_organization_inway = 2;
 
-    message Service {
-        string name = 1;
-        string endpoint_url = 2;
-        string documentation_url = 3;
-        string api_specification_url = 4;
-        bool internal = 5;
-        string tech_support_contact = 6;
-        string public_support_contact = 7;
-        AuthorizationSettings authorization_settings = 8;
-        int32 one_time_costs = 9;
-        int32 monthly_costs = 10;
-        int32 request_costs = 11;
+  message Service {
+    string name = 1;
+    string endpoint_url = 2;
+    string documentation_url = 3;
+    string api_specification_url = 4;
+    bool internal = 5;
+    string tech_support_contact = 6;
+    string public_support_contact = 7;
+    AuthorizationSettings authorization_settings = 8;
+    int32 one_time_costs = 9;
+    int32 monthly_costs = 10;
+    int32 request_costs = 11;
 
-        message AuthorizationSettings {
-            message Authorization  {
-                nlx.management.external.Organization organization = 1;
-                string public_key_hash = 2;
-                string public_key_pem = 3;
-            }
-            repeated Authorization authorizations = 1;
-        }
+    message AuthorizationSettings {
+      message Authorization {
+        nlx.management.external.Organization organization = 1;
+        string public_key_hash = 2;
+        string public_key_pem = 3;
+      }
+      repeated Authorization authorizations = 1;
     }
+  }
 }
 
 enum ErrorCode {
@@ -442,13 +535,13 @@ message RejectIncomingAccessRequestRequest {
 message RejectIncomingAccessRequestResponse {}
 
 message SendAccessRequestRequest {
-    string organization_serial_number = 1;
-    string service_name = 2;
-    string public_key_pem = 3;
+  string organization_serial_number = 1;
+  string service_name = 2;
+  string public_key_pem = 3;
 }
 
 message SendAccessRequestResponse {
-    OutgoingAccessRequest outgoing_access_request = 1;
+  OutgoingAccessRequest outgoing_access_request = 1;
 }
 
 message ListAccessGrantsForServiceRequest {
@@ -477,32 +570,40 @@ message AccessGrant {
   uint64 access_request_id = 7;
 }
 
-service Directory {
-  rpc ListServices (DirectoryListServicesRequest) returns (DirectoryListServicesResponse) {
-    option (google.api.http) = {get: "/api/v1/directory/services"};
+service DirectoryService {
+  rpc ListServices(DirectoryServiceListServicesRequest) returns (DirectoryServiceListServicesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/directory/services"
+    };
   }
-  rpc GetOrganizationService (GetOrganizationServiceRequest) returns (GetOrganizationServiceResponse) {
-    option (google.api.http) = {get: "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}"};
+  rpc GetOrganizationService(GetOrganizationServiceRequest) returns (GetOrganizationServiceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}"
+    };
   }
-  rpc RequestAccessToService (RequestAccessToServiceRequest) returns (RequestAccessToServiceResponse) {
-    option (google.api.http) = {post: "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests"};
+  rpc RequestAccessToService(RequestAccessToServiceRequest) returns (RequestAccessToServiceResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/directory/organizations/{organization_serial_number}/services/{service_name}/access-requests"
+    };
   }
-  rpc GetTermsOfService (GetTermsOfServiceRequest) returns (GetTermsOfServiceResponse) {
-      option (google.api.http) = {get: "/api/v1/directory/terms-of-service"};
+  rpc GetTermsOfService(GetTermsOfServiceRequest) returns (GetTermsOfServiceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/directory/terms-of-service"
+    };
   }
 }
 
-message DirectoryListServicesRequest {}
+message DirectoryServiceListServicesRequest {}
 
-message DirectoryListServicesResponse {
-  repeated DirectoryService services = 1;
+message DirectoryServiceListServicesResponse {
+  repeated DirectoryNlxService services = 1;
 }
 
 message GetTermsOfServiceRequest {}
 
 message GetTermsOfServiceResponse {
-    bool enabled = 1;
-    string url = 2;
+  bool enabled = 1;
+  string url = 2;
 }
 
 message GetOrganizationServiceRequest {
@@ -511,7 +612,7 @@ message GetOrganizationServiceRequest {
 }
 
 message GetOrganizationServiceResponse {
-  DirectoryService directory_service = 1;
+  DirectoryNlxService directory_service = 1;
 }
 
 message DirectoryAccessRequest {
@@ -521,7 +622,7 @@ message DirectoryAccessRequest {
   google.protobuf.Timestamp updated_at = 4;
 }
 
-message DirectoryService {
+message DirectoryNlxService {
   enum State {
     STATE_UNSPECIFIED = 0;
     STATE_UP = 1;
@@ -566,7 +667,7 @@ message GetSettingsResponse {
   Settings settings = 1;
 }
 
-message UpdateSettingsRequest{
+message UpdateSettingsRequest {
   string organization_inway = 1;
   string organization_email_address = 2;
 }
@@ -640,18 +741,18 @@ message CreateOutgoingOrderRequest {
 message CreateOutgoingOrderResponse {}
 
 message UpdateOutgoingOrderRequest {
-    string reference = 1;
-    string description = 2;
-    string public_key_pem = 3;
-    string delegatee = 4;
-    google.protobuf.Timestamp valid_from = 5;
-    google.protobuf.Timestamp valid_until = 6;
-    repeated uint64 access_proof_ids = 7;
+  string reference = 1;
+  string description = 2;
+  string public_key_pem = 3;
+  string delegatee = 4;
+  google.protobuf.Timestamp valid_from = 5;
+  google.protobuf.Timestamp valid_until = 6;
+  repeated uint64 access_proof_ids = 7;
 }
 
 message UpdateOutgoingOrderResponse {}
 
-message RevokeOutgoingOrderRequest{
+message RevokeOutgoingOrderRequest {
   string delegatee = 1;
   string reference = 2;
 }
@@ -697,8 +798,8 @@ message ListIncomingOrdersResponse {
 }
 
 message SynchronizeOutgoingAccessRequestsRequest {
-    string organization_serial_number = 1;
-    string service_name = 2;
+  string organization_serial_number = 1;
+  string service_name = 2;
 }
 
 message SynchronizeOutgoingAccessRequestsResponse {}
@@ -706,9 +807,11 @@ message SynchronizeOutgoingAccessRequestsResponse {}
 message SynchronizeAllOutgoingAccessRequestsRequest {}
 message SynchronizeAllOutgoingAccessRequestsResponse {}
 
-service TXLog {
-  rpc ListRecords (TXLogListRecordsRequest) returns (TXLogListRecordsResponse) {
-    option (google.api.http) = {get: "/api/v1/txlog/records"};
+service TXLogService {
+  rpc ListRecords(TXLogServiceListRecordsRequest) returns (TXLogServiceListRecordsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/txlog/records"
+    };
   }
 }
 
@@ -723,7 +826,7 @@ message TXLogOrganization {
   string name = 2;
 }
 
-message TXLogService {
+message TXLogNlxService {
   string name = 1;
 }
 
@@ -737,7 +840,7 @@ message TXLogRecord {
   TXLogOrganization destination = 2;
 
   TXLogDirection direction = 3;
-  TXLogService service = 4;
+  TXLogNlxService service = 4;
   string data = 5;
   TXLogOrder order = 6;
 
@@ -746,9 +849,9 @@ message TXLogRecord {
   google.protobuf.Timestamp created_at = 9;
 }
 
-message TXLogListRecordsRequest {}
+message TXLogServiceListRecordsRequest {}
 
-message TXLogListRecordsResponse {
+message TXLogServiceListRecordsResponse {
   repeated TXLogRecord records = 1;
 }
 

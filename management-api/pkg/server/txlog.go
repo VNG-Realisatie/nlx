@@ -18,7 +18,7 @@ import (
 )
 
 type TXLogService struct {
-	api.UnimplementedTXLogServer
+	api.UnimplementedTXLogServiceServer
 
 	logger          *zap.Logger
 	txlogClient     txlog.Client
@@ -39,7 +39,7 @@ func (s *ManagementService) IsTXLogEnabled(context.Context, *api.IsTXLogEnabledR
 	}, nil
 }
 
-func (s *TXLogService) ListRecords(ctx context.Context, _ *api.TXLogListRecordsRequest) (*api.TXLogListRecordsResponse, error) {
+func (s *TXLogService) ListRecords(ctx context.Context, _ *api.TXLogServiceListRecordsRequest) (*api.TXLogServiceListRecordsResponse, error) {
 	s.logger.Info("rpc request ListRecords")
 
 	organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
@@ -80,7 +80,7 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *api.TXLogListRecordsR
 				Name:         oinToOrgNameHash[r.Destination.SerialNumber],
 			},
 			Direction: api.TXLogDirection(r.Direction),
-			Service: &api.TXLogService{
+			Service: &api.TXLogNlxService{
 				Name: r.Service.Name,
 			},
 			Order:         order,
@@ -90,5 +90,5 @@ func (s *TXLogService) ListRecords(ctx context.Context, _ *api.TXLogListRecordsR
 		}
 	}
 
-	return &api.TXLogListRecordsResponse{Records: records}, nil
+	return &api.TXLogServiceListRecordsResponse{Records: records}, nil
 }

@@ -2,12 +2,12 @@
 // Licensed under the EUPL
 //
 import { configure } from 'mobx'
-import { ManagementApi } from '../api'
+import { ManagementServiceApi } from '../api'
 import ServiceModel from './models/ServiceModel'
 import { RootStore } from './index'
 
 test('initializing the store', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({
     managementApiClient,
   })
@@ -20,11 +20,13 @@ test('initializing the store', async () => {
 
 test('fetch and getting a single service', async () => {
   configure({ safeDescriptors: false })
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementGetService = jest.fn().mockResolvedValue({
-    name: 'Service A',
-  })
+  managementApiClient.managementServiceGetService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'Service A',
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -50,11 +52,13 @@ test('fetch and getting a single service', async () => {
 })
 
 test('fetching services', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [{ name: 'Service A' }, { name: 'Service B' }],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [{ name: 'Service A' }, { name: 'Service B' }],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -68,9 +72,9 @@ test('fetching services', async () => {
 })
 
 test('handle error while fetching services', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest
+  managementApiClient.managementServiceListServices = jest
     .fn()
     .mockRejectedValue('arbitrary error')
 
@@ -87,12 +91,14 @@ test('handle error while fetching services', async () => {
 })
 
 test('creating a service', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementCreateService = jest.fn().mockResolvedValue({
-    name: 'New service',
-    endpointUrl: 'api.io',
-  })
+  managementApiClient.managementServiceCreateService = jest
+    .fn()
+    .mockResolvedValue({
+      name: 'New service',
+      endpointUrl: 'api.io',
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -109,13 +115,17 @@ test('creating a service', async () => {
 })
 
 test('removing a service', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [{ name: 'Service A' }],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [{ name: 'Service A' }],
+    })
 
-  managementApiClient.managementDeleteService = jest.fn().mockResolvedValue()
+  managementApiClient.managementServiceDeleteService = jest
+    .fn()
+    .mockResolvedValue()
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -126,19 +136,23 @@ test('removing a service', async () => {
   expect(serviceStore.getByName('Service A')).toBeInstanceOf(ServiceModel)
 
   await serviceStore.removeService('Service A')
-  expect(managementApiClient.managementDeleteService).toHaveBeenCalledWith({
+  expect(
+    managementApiClient.managementServiceDeleteService,
+  ).toHaveBeenCalledWith({
     name: 'Service A',
   })
 })
 
 test('fetching statistics', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-    services: [{ name: 'Service', incomingAccessRequestCount: 0 }],
-  })
+  managementApiClient.managementServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [{ name: 'Service', incomingAccessRequestCount: 0 }],
+    })
 
-  managementApiClient.managementGetStatisticsOfServices = jest
+  managementApiClient.managementServiceGetStatisticsOfServices = jest
     .fn()
     .mockResolvedValue({
       services: [{ name: 'Service', incomingAccessRequestCount: 1 }],
@@ -156,7 +170,7 @@ test('fetching statistics', async () => {
   await serviceStore.fetchStats()
 
   expect(
-    managementApiClient.managementGetStatisticsOfServices,
+    managementApiClient.managementServiceGetStatisticsOfServices,
   ).toHaveBeenCalledTimes(1)
   expect(serviceStore.getByName('Service').incomingAccessRequestCount).toBe(1)
 })

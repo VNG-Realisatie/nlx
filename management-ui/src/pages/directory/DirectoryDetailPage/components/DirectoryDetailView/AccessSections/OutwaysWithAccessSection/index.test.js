@@ -5,32 +5,37 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../../test-utils'
-import { DirectoryApi, ManagementApi } from '../../../../../../../api'
+import {
+  DirectoryServiceApi,
+  ManagementServiceApi,
+} from '../../../../../../../api'
 import { RootStore, StoreProvider } from '../../../../../../../stores'
 import { ACCESS_REQUEST_STATES } from '../../../../../../../stores/models/OutgoingAccessRequestModel'
 import OutwaysWithAccessSection from './index'
 
 test('Outways with access section', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-1',
-        publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPem: 'public-key-pem-1',
-      },
-      {
-        name: 'outway-2',
-        publicKeyFingerprint: 'public-key-fingerprint-1',
-        publicKeyPem: 'public-key-pem-1',
-      },
-    ],
-  })
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-1',
+          publicKeyFingerprint: 'public-key-fingerprint-1',
+          publicKeyPem: 'public-key-pem-1',
+        },
+        {
+          name: 'outway-2',
+          publicKeyFingerprint: 'public-key-fingerprint-1',
+          publicKeyPem: 'public-key-pem-1',
+        },
+      ],
+    })
 
-  const directoryApiClient = new DirectoryApi()
+  const directoryApiClient = new DirectoryServiceApi()
 
-  directoryApiClient.directoryGetOrganizationService = jest
+  directoryApiClient.directoryServiceGetOrganizationService = jest
     .fn()
     .mockResolvedValue({
       directoryService: {

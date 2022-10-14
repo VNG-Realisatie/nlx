@@ -5,11 +5,11 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import OrganizationEmailAddressCheck from './index'
 
 test('no organization email address', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -33,7 +33,7 @@ test('no organization email address', async () => {
 })
 
 test('organization email address is set', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
   const rootStore = new RootStore({
     managementApiClient,

@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "TXLog"
+      "name": "TXLogService"
     }
   ],
   "consumes": [
@@ -18,7 +18,7 @@
   "paths": {
     "/api/v1/records": {
       "get": {
-        "operationId": "TXLog_ListRecords",
+        "operationId": "TXLogService_ListRecords",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -34,11 +34,11 @@
           }
         },
         "tags": [
-          "TXLog"
+          "TXLogService"
         ]
       },
       "post": {
-        "operationId": "TXLog_CreateRecord",
+        "operationId": "TXLogService_CreateRecord",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -64,7 +64,7 @@
           }
         ],
         "tags": [
-          "TXLog"
+          "TXLogService"
         ]
       }
     }

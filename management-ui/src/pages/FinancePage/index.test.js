@@ -4,18 +4,20 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders } from '../../test-utils'
-import { ManagementApi } from '../../api'
+import { ManagementServiceApi } from '../../api'
 import { RootStore, StoreProvider } from '../../stores'
 import FinancePage from './index'
 
 jest.mock('../../components/PageTemplate')
 
 test('it shows a message when finance is disabled', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementIsFinanceEnabled = jest.fn().mockResolvedValue({
-    enabled: false,
-  })
+  managementApiClient.managementServiceIsFinanceEnabled = jest
+    .fn()
+    .mockResolvedValue({
+      enabled: false,
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -35,11 +37,13 @@ test('it shows a message when finance is disabled', async () => {
 })
 
 test('it shows download link when finance is enabled', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementIsFinanceEnabled = jest.fn().mockResolvedValue({
-    enabled: true,
-  })
+  managementApiClient.managementServiceIsFinanceEnabled = jest
+    .fn()
+    .mockResolvedValue({
+      enabled: true,
+    })
 
   const rootStore = new RootStore({
     managementApiClient,

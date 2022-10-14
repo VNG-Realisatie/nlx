@@ -8,17 +8,19 @@ import { waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../stores'
-import { ManagementApi } from '../../../../api'
+import { ManagementServiceApi } from '../../../../api'
 import Form from './index'
 
 jest.mock('../../../../components/FormikFocusError', () => () => <></>)
 
 test('changing organization inway', async () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListInways = jest.fn().mockResolvedValue({
-    inways: [{ name: 'inway-a' }],
-  })
+  managementApiClient.managementServiceListInways = jest
+    .fn()
+    .mockResolvedValue({
+      inways: [{ name: 'inway-a' }],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,

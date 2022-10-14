@@ -7,8 +7,8 @@ import { getOrgByName } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
 import {
   Configuration,
-  DirectoryApi,
-  ManagementApi,
+  DirectoryServiceApi,
+  ManagementServiceApi,
 } from "../../../management-ui/src/api";
 import { default as logger } from "../debug";
 import { By } from "selenium-webdriver";
@@ -44,7 +44,7 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
     );
     const credentialsBase64 = credentialsBuffer.toString("base64");
 
-    org.apiClients.management = new ManagementApi(
+    org.apiClients.management = new ManagementServiceApi(
       new Configuration({
         basePath: org.management.url,
         fetchApi: fetch,
@@ -54,7 +54,7 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
       })
     );
 
-    org.apiClients.directory = new DirectoryApi(
+    org.apiClients.directory = new DirectoryServiceApi(
       new Configuration({
         basePath: org.management.url,
         fetchApi: fetch,
@@ -74,7 +74,7 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
 
     const cookie = await driver.manage().getCookie("nlx_management_session");
 
-    org.apiClients.management = new ManagementApi(
+    org.apiClients.management = new ManagementServiceApi(
       new Configuration({
         basePath: org.management.url,
         fetchApi: fetch,
@@ -84,7 +84,7 @@ export const authenticate = async (world: CustomWorld, orgName: string) => {
       })
     );
 
-    org.apiClients.directory = new DirectoryApi(
+    org.apiClients.directory = new DirectoryServiceApi(
       new Configuration({
         basePath: org.management.url,
         fetchApi: fetch,

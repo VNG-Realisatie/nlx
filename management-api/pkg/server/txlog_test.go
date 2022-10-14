@@ -75,7 +75,7 @@ func TestTXLogListRecords(t *testing.T) {
 
 	tests := map[string]struct {
 		setup   func(context.Context, *txlogServiceMocks)
-		want    *api.TXLogListRecordsResponse
+		want    *api.TXLogServiceListRecordsResponse
 		wantErr error
 	}{
 		"when_directory_client_errors": {
@@ -151,7 +151,7 @@ func TestTXLogListRecords(t *testing.T) {
 						},
 					}, nil)
 			},
-			want: &api.TXLogListRecordsResponse{
+			want: &api.TXLogServiceListRecordsResponse{
 				Records: []*api.TXLogRecord{
 					{
 						Source: &api.TXLogOrganization{
@@ -163,7 +163,7 @@ func TestTXLogListRecords(t *testing.T) {
 							Name:         "Organization Two",
 						},
 						Direction: api.TXLogDirection_TX_LOG_DIRECTION_IN,
-						Service: &api.TXLogService{
+						Service: &api.TXLogNlxService{
 							Name: "test-service",
 						},
 						Order: &api.TXLogOrder{
@@ -190,7 +190,7 @@ func TestTXLogListRecords(t *testing.T) {
 			service, mocks := newTXLogService(t)
 			tt.setup(context.Background(), mocks)
 
-			got, err := service.ListRecords(context.Background(), &api.TXLogListRecordsRequest{})
+			got, err := service.ListRecords(context.Background(), &api.TXLogServiceListRecordsRequest{})
 
 			t.Log(err)
 			assert.Equal(t, tt.wantErr, err)

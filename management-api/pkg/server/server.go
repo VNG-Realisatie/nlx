@@ -29,9 +29,9 @@ type Clock interface {
 }
 
 type ManagementService struct {
-	api.UnimplementedDirectoryServer
-	api.UnimplementedManagementServer
-	api.UnimplementedTXLogServer
+	api.UnimplementedDirectoryServiceServer
+	api.UnimplementedManagementServiceServer
+	api.UnimplementedTXLogServiceServer
 	external.UnimplementedAccessRequestServiceServer
 	external.UnimplementedDelegationServiceServer
 

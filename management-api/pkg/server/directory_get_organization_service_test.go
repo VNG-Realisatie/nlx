@@ -97,14 +97,14 @@ func TestGetOrganizationService(t *testing.T) {
 					}, nil)
 			},
 			want: &api.GetOrganizationServiceResponse{
-				DirectoryService: &api.DirectoryService{
+				DirectoryService: &api.DirectoryNlxService{
 					Organization: &external.Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "Organization One",
 					},
 					ServiceName: "test-service",
 					//nolint dupl: this is a test
-					AccessStates: []*api.DirectoryService_AccessState{
+					AccessStates: []*api.DirectoryNlxService_AccessState{
 						{
 							AccessRequest: &api.OutgoingAccessRequest{
 								Id: 1,
@@ -164,13 +164,13 @@ func TestGetOrganizationService(t *testing.T) {
 					}, nil)
 			},
 			want: &api.GetOrganizationServiceResponse{
-				DirectoryService: &api.DirectoryService{
+				DirectoryService: &api.DirectoryNlxService{
 					Organization: &external.Organization{
 						SerialNumber: "00000000000000000001",
 						Name:         "test-organization",
 					},
 					ServiceName:  "test-service",
-					AccessStates: []*api.DirectoryService_AccessState{},
+					AccessStates: []*api.DirectoryNlxService_AccessState{},
 				},
 			},
 			wantErr: nil,

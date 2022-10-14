@@ -13,18 +13,18 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { DirectoryServiceAccessState } from './DirectoryServiceAccessState';
+import type { DirectoryNlxServiceAccessState } from './DirectoryNlxServiceAccessState';
 import {
-    DirectoryServiceAccessStateFromJSON,
-    DirectoryServiceAccessStateFromJSONTyped,
-    DirectoryServiceAccessStateToJSON,
-} from './DirectoryServiceAccessState';
-import type { DirectoryServiceState } from './DirectoryServiceState';
+    DirectoryNlxServiceAccessStateFromJSON,
+    DirectoryNlxServiceAccessStateFromJSONTyped,
+    DirectoryNlxServiceAccessStateToJSON,
+} from './DirectoryNlxServiceAccessState';
+import type { DirectoryNlxServiceState } from './DirectoryNlxServiceState';
 import {
-    DirectoryServiceStateFromJSON,
-    DirectoryServiceStateFromJSONTyped,
-    DirectoryServiceStateToJSON,
-} from './DirectoryServiceState';
+    DirectoryNlxServiceStateFromJSON,
+    DirectoryNlxServiceStateFromJSONTyped,
+    DirectoryNlxServiceStateToJSON,
+} from './DirectoryNlxServiceState';
 import type { ExternalOrganization } from './ExternalOrganization';
 import {
     ExternalOrganizationFromJSON,
@@ -35,85 +35,85 @@ import {
 /**
  * 
  * @export
- * @interface ManagementDirectoryService
+ * @interface ManagementDirectoryNlxService
  */
-export interface ManagementDirectoryService {
+export interface ManagementDirectoryNlxService {
     /**
      * 
      * @type {string}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     serviceName?: string;
     /**
      * 
      * @type {ExternalOrganization}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     organization?: ExternalOrganization;
     /**
      * 
      * @type {string}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     apiSpecificationType?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     documentationUrl?: string;
     /**
      * 
      * @type {string}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     publicSupportContact?: string;
     /**
      * 
-     * @type {DirectoryServiceState}
-     * @memberof ManagementDirectoryService
+     * @type {DirectoryNlxServiceState}
+     * @memberof ManagementDirectoryNlxService
      */
-    state?: DirectoryServiceState;
+    state?: DirectoryNlxServiceState;
     /**
      * 
      * @type {number}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     oneTimeCosts?: number;
     /**
      * 
      * @type {number}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     monthlyCosts?: number;
     /**
      * 
      * @type {number}
-     * @memberof ManagementDirectoryService
+     * @memberof ManagementDirectoryNlxService
      */
     requestCosts?: number;
     /**
      * 
-     * @type {Array<DirectoryServiceAccessState>}
-     * @memberof ManagementDirectoryService
+     * @type {Array<DirectoryNlxServiceAccessState>}
+     * @memberof ManagementDirectoryNlxService
      */
-    accessStates?: Array<DirectoryServiceAccessState>;
+    accessStates?: Array<DirectoryNlxServiceAccessState>;
 }
 
 /**
- * Check if a given object implements the ManagementDirectoryService interface.
+ * Check if a given object implements the ManagementDirectoryNlxService interface.
  */
-export function instanceOfManagementDirectoryService(value: object): boolean {
+export function instanceOfManagementDirectoryNlxService(value: object): boolean {
     let isInstance = true;
 
     return isInstance;
 }
 
-export function ManagementDirectoryServiceFromJSON(json: any): ManagementDirectoryService {
-    return ManagementDirectoryServiceFromJSONTyped(json, false);
+export function ManagementDirectoryNlxServiceFromJSON(json: any): ManagementDirectoryNlxService {
+    return ManagementDirectoryNlxServiceFromJSONTyped(json, false);
 }
 
-export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementDirectoryService {
+export function ManagementDirectoryNlxServiceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ManagementDirectoryNlxService {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -124,15 +124,15 @@ export function ManagementDirectoryServiceFromJSONTyped(json: any, ignoreDiscrim
         'apiSpecificationType': !exists(json, 'api_specification_type') ? undefined : json['api_specification_type'],
         'documentationUrl': !exists(json, 'documentation_url') ? undefined : json['documentation_url'],
         'publicSupportContact': !exists(json, 'public_support_contact') ? undefined : json['public_support_contact'],
-        'state': !exists(json, 'state') ? undefined : DirectoryServiceStateFromJSON(json['state']),
+        'state': !exists(json, 'state') ? undefined : DirectoryNlxServiceStateFromJSON(json['state']),
         'oneTimeCosts': !exists(json, 'one_time_costs') ? undefined : json['one_time_costs'],
         'monthlyCosts': !exists(json, 'monthly_costs') ? undefined : json['monthly_costs'],
         'requestCosts': !exists(json, 'request_costs') ? undefined : json['request_costs'],
-        'accessStates': !exists(json, 'access_states') ? undefined : ((json['access_states'] as Array<any>).map(DirectoryServiceAccessStateFromJSON)),
+        'accessStates': !exists(json, 'access_states') ? undefined : ((json['access_states'] as Array<any>).map(DirectoryNlxServiceAccessStateFromJSON)),
     };
 }
 
-export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryService | null): any {
+export function ManagementDirectoryNlxServiceToJSON(value?: ManagementDirectoryNlxService | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -146,11 +146,11 @@ export function ManagementDirectoryServiceToJSON(value?: ManagementDirectoryServ
         'api_specification_type': value.apiSpecificationType,
         'documentation_url': value.documentationUrl,
         'public_support_contact': value.publicSupportContact,
-        'state': DirectoryServiceStateToJSON(value.state),
+        'state': DirectoryNlxServiceStateToJSON(value.state),
         'one_time_costs': value.oneTimeCosts,
         'monthly_costs': value.monthlyCosts,
         'request_costs': value.requestCosts,
-        'access_states': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryServiceAccessStateToJSON)),
+        'access_states': value.accessStates === undefined ? undefined : ((value.accessStates as Array<any>).map(DirectoryNlxServiceAccessStateToJSON)),
     };
 }
 

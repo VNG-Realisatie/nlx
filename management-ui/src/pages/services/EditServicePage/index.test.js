@@ -13,7 +13,7 @@ import { createMemoryHistory } from 'history'
 import UserContext from '../../../user-context'
 import { renderWithProviders } from '../../../test-utils'
 import { RootStore, StoreProvider } from '../../../stores'
-import { ManagementApi } from '../../../api'
+import { ManagementServiceApi } from '../../../api'
 import EditServicePage from './index'
 
 jest.mock(
@@ -48,7 +48,7 @@ describe('the EditServicePage', () => {
     jest.useFakeTimers()
 
     const rootStore = new RootStore({
-      managementApiClient: new ManagementApi(),
+      managementApiClient: new ManagementServiceApi(),
     })
 
     const userContext = { user: { id: '42' } }
@@ -70,8 +70,8 @@ describe('the EditServicePage', () => {
   })
 
   it('when fetching the services fails', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementCreateService = jest
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceCreateService = jest
       .fn()
       .mockRejectedValue(new Error('arbitrary error'))
 
@@ -99,10 +99,12 @@ describe('the EditServicePage', () => {
   })
 
   it('after the service has been fetched', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-      services: [{ name: 'mock-service' }],
-    })
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceListServices = jest
+      .fn()
+      .mockResolvedValue({
+        services: [{ name: 'mock-service' }],
+      })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -127,13 +129,17 @@ describe('the EditServicePage', () => {
   })
 
   it('successfully submitting the form', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementUpdateService = jest.fn().mockResolvedValue({
-      name: 'mock-service',
-    })
-    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-      services: [{ name: 'mock-service' }],
-    })
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceUpdateService = jest
+      .fn()
+      .mockResolvedValue({
+        name: 'mock-service',
+      })
+    managementApiClient.managementServiceListServices = jest
+      .fn()
+      .mockResolvedValue({
+        services: [{ name: 'mock-service' }],
+      })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -161,24 +167,28 @@ describe('the EditServicePage', () => {
       fireEvent.submit(editServiceForm)
     })
 
-    expect(managementApiClient.managementUpdateService).toHaveBeenCalled()
+    expect(
+      managementApiClient.managementServiceUpdateService,
+    ).toHaveBeenCalled()
     expect(history.location.pathname).toEqual('/services/mock-service')
     expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('re-submitting the form when the previous submission went wrong', async () => {
-    const managementApiClient = new ManagementApi()
+    const managementApiClient = new ManagementServiceApi()
 
-    managementApiClient.managementUpdateService = jest
+    managementApiClient.managementServiceUpdateService = jest
       .fn()
       .mockResolvedValue({
         name: 'mock-service',
       })
       .mockRejectedValueOnce(new Error('arbitrary error'))
 
-    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-      services: [{ name: 'mock-service' }],
-    })
+    managementApiClient.managementServiceListServices = jest
+      .fn()
+      .mockResolvedValue({
+        services: [{ name: 'mock-service' }],
+      })
 
     const rootStore = new RootStore({
       managementApiClient,
@@ -207,7 +217,9 @@ describe('the EditServicePage', () => {
       await fireEvent.submit(editServiceForm)
     })
 
-    expect(managementApiClient.managementUpdateService).toHaveBeenCalledTimes(1)
+    expect(
+      managementApiClient.managementServiceUpdateService,
+    ).toHaveBeenCalledTimes(1)
     expect(screen.queryByRole('alert')).toBeTruthy()
     expect(screen.queryByRole('alert')).toHaveTextContent(
       'Failed to update the service',
@@ -217,23 +229,29 @@ describe('the EditServicePage', () => {
       fireEvent.submit(editServiceForm)
     })
 
-    expect(managementApiClient.managementUpdateService).toHaveBeenCalledTimes(2)
+    expect(
+      managementApiClient.managementServiceUpdateService,
+    ).toHaveBeenCalledTimes(2)
 
     expect(history.location.pathname).toEqual('/services/mock-service')
     expect(history.location.search).toEqual('?lastAction=edited')
   })
 
   it('submitting when the HTTP response is not ok', async () => {
-    const managementApiClient = new ManagementApi()
-    managementApiClient.managementUpdateService = jest.fn().mockRejectedValue({
-      response: {
-        status: 403,
-      },
-    })
+    const managementApiClient = new ManagementServiceApi()
+    managementApiClient.managementServiceUpdateService = jest
+      .fn()
+      .mockRejectedValue({
+        response: {
+          status: 403,
+        },
+      })
 
-    managementApiClient.managementListServices = jest.fn().mockResolvedValue({
-      services: [{ name: 'mock-service' }],
-    })
+    managementApiClient.managementServiceListServices = jest
+      .fn()
+      .mockResolvedValue({
+        services: [{ name: 'mock-service' }],
+      })
 
     const rootStore = new RootStore({
       managementApiClient,

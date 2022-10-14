@@ -127,7 +127,7 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 
 	grpcServer := newGRPCServer(args.Logger, args.InternalCert, args.DB, args.Authenticator)
 
-	api.RegisterManagementServer(grpcServer, managementService)
+	api.RegisterManagementServiceServer(grpcServer, managementService)
 	external.RegisterAccessRequestServiceServer(grpcServer, managementService)
 	external.RegisterDelegationServiceServer(grpcServer, managementService)
 
@@ -138,11 +138,11 @@ func NewAPI(args *NewAPIArgs) (*API, error) {
 
 	directoryService := server.NewDirectoryService(args.Logger, e, directoryClient, args.DB)
 
-	api.RegisterDirectoryServer(grpcServer, directoryService)
+	api.RegisterDirectoryServiceServer(grpcServer, directoryService)
 
 	if args.TXLogAddress != "" {
 		txlogService := server.NewTXLogService(args.Logger, txlogClient, directoryClient)
-		api.RegisterTXLogServer(grpcServer, txlogService)
+		api.RegisterTXLogServiceServer(grpcServer, txlogService)
 	}
 
 	mux := runtime.NewServeMux(

@@ -36,10 +36,11 @@ const isInwayRunning = async (
   inwayName: string
 ): Promise<boolean> => {
   try {
-    const response = await org.apiClients.management?.managementListInways();
+    const response =
+      await org.apiClients.management?.managementServiceListInways();
 
     const isPresent = response?.inways?.some(
-      (inway: ManagementInway) => inway.name === inwayName
+      (inway) => inway.name === inwayName
     );
 
     return Promise.resolve(!!isPresent);
@@ -69,11 +70,12 @@ export const setDefaultInwayAsOrganizationInway = async (
 ) => {
   debug(`setting default inway as organization inway for ${organizationName}`);
   const org = getOrgByName(organizationName);
-  const response = await org.apiClients.management?.managementUpdateSettings({
-    body: {
-      organizationInway: org.defaultInway.name,
-    },
-  });
+  const response =
+    await org.apiClients.management?.managementServiceUpdateSettings({
+      body: {
+        organizationInway: org.defaultInway.name,
+      },
+    });
 
   if (!response) {
     throw new Error(

@@ -57,7 +57,7 @@ type Outway struct {
 	logger              *zap.Logger
 	txlogger            transactionlog.TransactionLogger
 	directoryClient     directoryapi.DirectoryClient
-	managementAPIClient managementapi.ManagementClient
+	managementAPIClient managementapi.ManagementServiceClient
 	httpServer          *http.Server
 	grpcServer          *grpc.Server
 	monitorService      *monitoring.Service
@@ -75,7 +75,7 @@ type NewOutwayArgs struct {
 	Ctx                 context.Context
 	Logger              *zap.Logger
 	Txlogger            transactionlog.TransactionLogger
-	ManagementAPIClient managementapi.ManagementClient
+	ManagementAPIClient managementapi.ManagementServiceClient
 	MonitoringAddress   string
 	OrgCert             *common_tls.CertificateBundle
 	InternalCert        *common_tls.CertificateBundle

@@ -110,7 +110,7 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
     for (const service of org.createdItems[this.id].services) {
       debug(`deleting service: ${service}`);
       requests.push(
-        org.apiClients.management?.managementDeleteService({
+        org.apiClients.management?.managementServiceDeleteService({
           name: service,
         })
       );

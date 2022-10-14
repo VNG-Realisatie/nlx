@@ -28,7 +28,8 @@ class InwayStore {
     this.error = ''
 
     try {
-      const result = yield this._managementApiClient.managementListInways()
+      const result =
+        yield this._managementApiClient.managementServiceListInways()
       this.inways = result.inways.map(
         (inway) => new InwayModel({ store: this, inway }),
       )
@@ -41,9 +42,10 @@ class InwayStore {
   }).bind(this)
 
   fetch = flow(function* fetch({ name }) {
-    const inwayData = (yield this._managementApiClient.managementGetInway({
-      name,
-    })).inway
+    const inwayData =
+      (yield this._managementApiClient.managementServiceGetInway({
+        name,
+      })).inway
     let inway = this.getByName(name)
 
     if (!inway) {
@@ -60,7 +62,7 @@ class InwayStore {
   }
 
   removeInway = flow(function* removeInway(name) {
-    yield this._managementApiClient.managementDeleteInway({
+    yield this._managementApiClient.managementServiceDeleteInway({
       name,
     })
 

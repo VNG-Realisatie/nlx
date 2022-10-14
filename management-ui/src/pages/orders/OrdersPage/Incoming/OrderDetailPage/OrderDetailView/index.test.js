@@ -5,12 +5,12 @@ import React from 'react'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '../../../../../../test-utils'
 import IncomingOrderModel from '../../../../../../stores/models/IncomingOrderModel'
-import { ManagementApi } from '../../../../../../api'
+import { ManagementServiceApi } from '../../../../../../api'
 import { RootStore } from '../../../../../../stores'
 import OrderDetailView from './index'
 
 test('display order details', () => {
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
   const rootStore = new RootStore({ managementApiClient })
 
   const order = new IncomingOrderModel({

@@ -14,7 +14,7 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 )
 
-func getManagementClient() api.ManagementClient {
+func getManagementClient() api.ManagementServiceClient {
 	privateKeyPath := viper.GetString("key-path")
 	if errValidate := common_tls.VerifyPrivateKeyPermissions(privateKeyPath); errValidate != nil {
 		log.Printf("invalid private key permissions file: %s err: %s", privateKeyPath, errValidate)
@@ -32,5 +32,5 @@ func getManagementClient() api.ManagementClient {
 		log.Fatal(err)
 	}
 
-	return api.NewManagementClient(c)
+	return api.NewManagementServiceClient(c)
 }

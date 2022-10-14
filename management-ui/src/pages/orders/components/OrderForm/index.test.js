@@ -7,55 +7,59 @@ import { waitFor, fireEvent, screen } from '@testing-library/react'
 import selectEvent, { openMenu } from 'react-select-event'
 import { renderWithProviders } from '../../../../test-utils'
 import { RootStore, StoreProvider } from '../../../../stores'
-import { DirectoryApi, ManagementApi } from '../../../../api'
+import { DirectoryServiceApi, ManagementServiceApi } from '../../../../api'
 import { ACCESS_REQUEST_STATES } from '../../../../stores/models/OutgoingAccessRequestModel'
 import OrderForm from './index'
 
 test('with initial values', async () => {
   const onSubmitHandlerMock = jest.fn()
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-a',
-        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-      },
-    ],
-  })
-
-  const directoryApiClient = new DirectoryApi()
-
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'organization-a',
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-a',
+          publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
         },
-        serviceName: 'service-a',
-        accessStates: [
-          {
-            accessRequest: {
-              id: '1',
-              state: ACCESS_REQUEST_STATES.APPROVED,
-              publicKeyFingerprint:
-                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-            },
-            accessProof: {
-              id: '1',
-              organization: {
-                serialNumber: '00000000000000000001',
-                name: 'organization-a',
-              },
-              serviceName: 'service-a',
-            },
+      ],
+    })
+
+  const directoryApiClient = new DirectoryServiceApi()
+
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
           },
-        ],
-      },
-    ],
-  })
+          serviceName: 'service-a',
+          accessStates: [
+            {
+              accessRequest: {
+                id: '1',
+                state: ACCESS_REQUEST_STATES.APPROVED,
+                publicKeyFingerprint:
+                  'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+              },
+              accessProof: {
+                id: '1',
+                organization: {
+                  serialNumber: '00000000000000000001',
+                  name: 'organization-a',
+                },
+                serviceName: 'service-a',
+              },
+            },
+          ],
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -113,48 +117,52 @@ test('with initial values', async () => {
 test('the form values of the onSubmitHandler', async () => {
   const onSubmitHandlerMock = jest.fn()
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-a',
-        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-      },
-    ],
-  })
-
-  const directoryApiClient = new DirectoryApi()
-
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'organization-a',
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-a',
+          publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
         },
-        serviceName: 'service-a',
-        accessStates: [
-          {
-            accessRequest: {
-              id: '1',
-              state: ACCESS_REQUEST_STATES.APPROVED,
-              publicKeyFingerprint:
-                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-            },
-            accessProof: {
-              id: '1',
-              organization: {
-                serialNumber: '00000000000000000001',
-                name: 'organization-a',
-              },
-              serviceName: 'service-a',
-            },
+      ],
+    })
+
+  const directoryApiClient = new DirectoryServiceApi()
+
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
           },
-        ],
-      },
-    ],
-  })
+          serviceName: 'service-a',
+          accessStates: [
+            {
+              accessRequest: {
+                id: '1',
+                state: ACCESS_REQUEST_STATES.APPROVED,
+                publicKeyFingerprint:
+                  'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+              },
+              accessProof: {
+                id: '1',
+                organization: {
+                  serialNumber: '00000000000000000001',
+                  name: 'organization-a',
+                },
+                serviceName: 'service-a',
+              },
+            },
+          ],
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
@@ -206,93 +214,97 @@ test('the form values of the onSubmitHandler', async () => {
 test('access proofs for which the same service has already been selected should be disabled', async () => {
   const onSubmitHandlerMock = jest.fn()
 
-  const managementApiClient = new ManagementApi()
+  const managementApiClient = new ManagementServiceApi()
 
-  managementApiClient.managementListOutways = jest.fn().mockResolvedValue({
-    outways: [
-      {
-        name: 'outway-a',
-        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-      },
-      {
-        name: 'outway-b',
-        publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yd=',
-      },
-    ],
-  })
-
-  const directoryApiClient = new DirectoryApi()
-
-  directoryApiClient.directoryListServices = jest.fn().mockResolvedValue({
-    services: [
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'organization-a',
+  managementApiClient.managementServiceListOutways = jest
+    .fn()
+    .mockResolvedValue({
+      outways: [
+        {
+          name: 'outway-a',
+          publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
         },
-        serviceName: 'service-a',
-        accessStates: [
-          {
-            accessRequest: {
-              id: '1',
-              state: ACCESS_REQUEST_STATES.APPROVED,
-              publicKeyFingerprint:
-                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-            },
-            accessProof: {
-              id: '1',
-              organization: {
-                serialNumber: '00000000000000000001',
-                name: 'organization-a',
-              },
-              serviceName: 'service-a',
-            },
-          },
-          {
-            accessRequest: {
-              id: '2',
-              state: ACCESS_REQUEST_STATES.APPROVED,
-              publicKeyFingerprint:
-                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yd=',
-            },
-            accessProof: {
-              id: '2',
-              organization: {
-                serialNumber: '00000000000000000001',
-                name: 'organization-a',
-              },
-              serviceName: 'service-a',
-            },
-          },
-        ],
-      },
-      {
-        organization: {
-          serialNumber: '00000000000000000001',
-          name: 'organization-a',
+        {
+          name: 'outway-b',
+          publicKeyFingerprint: 'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yd=',
         },
-        serviceName: 'service-b',
-        accessStates: [
-          {
-            accessRequest: {
-              id: '3',
-              state: ACCESS_REQUEST_STATES.APPROVED,
-              publicKeyFingerprint:
-                'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
-            },
-            accessProof: {
-              id: '3',
-              organization: {
-                serialNumber: '00000000000000000001',
-                name: 'organization-a',
-              },
-              serviceName: 'service-b',
-            },
+      ],
+    })
+
+  const directoryApiClient = new DirectoryServiceApi()
+
+  directoryApiClient.directoryServiceListServices = jest
+    .fn()
+    .mockResolvedValue({
+      services: [
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
           },
-        ],
-      },
-    ],
-  })
+          serviceName: 'service-a',
+          accessStates: [
+            {
+              accessRequest: {
+                id: '1',
+                state: ACCESS_REQUEST_STATES.APPROVED,
+                publicKeyFingerprint:
+                  'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+              },
+              accessProof: {
+                id: '1',
+                organization: {
+                  serialNumber: '00000000000000000001',
+                  name: 'organization-a',
+                },
+                serviceName: 'service-a',
+              },
+            },
+            {
+              accessRequest: {
+                id: '2',
+                state: ACCESS_REQUEST_STATES.APPROVED,
+                publicKeyFingerprint:
+                  'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yd=',
+              },
+              accessProof: {
+                id: '2',
+                organization: {
+                  serialNumber: '00000000000000000001',
+                  name: 'organization-a',
+                },
+                serviceName: 'service-a',
+              },
+            },
+          ],
+        },
+        {
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'organization-a',
+          },
+          serviceName: 'service-b',
+          accessStates: [
+            {
+              accessRequest: {
+                id: '3',
+                state: ACCESS_REQUEST_STATES.APPROVED,
+                publicKeyFingerprint:
+                  'h+jpuLAMFzM09tOZpb0Ehslhje4S/IsIxSWsS4E16Yc=',
+              },
+              accessProof: {
+                id: '3',
+                organization: {
+                  serialNumber: '00000000000000000001',
+                  name: 'organization-a',
+                },
+                serviceName: 'service-b',
+              },
+            },
+          ],
+        },
+      ],
+    })
 
   const rootStore = new RootStore({
     managementApiClient,
