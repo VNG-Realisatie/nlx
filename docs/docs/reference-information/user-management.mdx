@@ -1,0 +1,76 @@
+---
+id: user-management
+title: User management
+---
+
+NLX Management supports authentication for users with various roles. In this guide we'll explain how to add users and roles.
+
+## Adding a new user
+
+A new user can be added using the Management API binary which is included in the Docker image named `nlxio/management-api`.
+
+The command below adds a new user with email address `admin@nlx.local` and role `admin`. The PostgreSQL DSN should be replaced with your own credentials.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs
+    groupId="user-management-add-user"
+    defaultValue="oidc"
+    values={[
+      { label: 'OIDC', value: 'oidc' },
+      { label: 'Basic auth', value: 'basic-auth' },
+    ]}
+  >
+  <TabItem value="oidc">
+
+```bash
+docker run --rm --net=host nlxio/management-api nlx-management-api create-user --email admin@nlx.local --role admin \
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+```
+
+  </TabItem>
+
+  <TabItem value="basic-auth">
+
+```bash
+docker run --rm --net=host nlxio/management-api nlx-management-api create-user --email admin@nlx.local --password password --role admin \
+    --postgres-dsn "postgres://postgres:postgres@127.0.0.1:5432/nlx_management_org_a?sslmode=disable"
+```
+
+  </TabItem>
+</Tabs>
+
+## Adding a new role
+
+A new role can be added by running a SQL query directly in the PostgreSQL database.
+
+The example query below adds a new role named 'readonly' with a limited set of read only permissions.
+For all options, please take a look at [the complete list of available permission codes](https://gitlab.com/commonground/nlx/nlx/-/blob/master/management-api/pkg/permissions/permissions.go).
+
+```sql
+BEGIN transaction;
+
+INSERT INTO nlx_management.roles (code) VALUES ('readonly');
+
+INSERT INTO nlx_management.permissions_roles
+    (role_code, permission_code)
+VALUES
+    ('readonly', 'permissions.incoming_access_requests.read'),
+    ('readonly', 'permissions.access_grants.read'),
+    ('readonly', 'permissions.audit_logs.read'),
+    ('readonly', 'permissions.finance_report.read'),
+    ('readonly', 'permissions.inway.read'),
+    ('readonly', 'permissions.inways.read'),
+    ('readonly', 'permissions.outgoing_orders.read'),
+    ('readonly', 'permissions.incoming_orders.read'),
+    ('readonly', 'permissions.outways.read'),
+    ('readonly', 'permissions.service.read'),
+    ('readonly', 'permissions.services.read'),
+    ('readonly', 'permissions.services_statistics.read'),
+    ('readonly', 'permissions.organization_settings.read'),
+    ('readonly', 'permissions.terms_of_service_status.read'),
+    ('readonly', 'permissions.transaction_logs.read');
+
+COMMIT;
+```

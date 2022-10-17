@@ -88,6 +88,7 @@ module.exports = {
         'reference-information/rewrite-base-url',
         'reference-information/add-headers-with-proxy',
         'reference-information/tls-between-inway-and-service',
+        'reference-information/user-management',
       ],
     },
     {
