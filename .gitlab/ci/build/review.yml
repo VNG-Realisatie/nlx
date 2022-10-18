@@ -3,9 +3,9 @@
 
 .build-review-base:
   stage: Build
-  image: docker:20.10.19-git
+  image: docker:20.10.20-git
   services:
-    - docker:20.10.19-dind
+    - docker:20.10.20-dind
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
