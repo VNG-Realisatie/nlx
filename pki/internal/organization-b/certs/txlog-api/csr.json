@@ -1,0 +1,10 @@
+{
+    "CN": "txlog-api.organization-b.nlx.local",
+    "key": {
+      "algo": "rsa",
+      "size": 4096
+    },
+    "hosts": [
+      "txlog-api.organization-b.nlx.local"
+    ]
+  }
