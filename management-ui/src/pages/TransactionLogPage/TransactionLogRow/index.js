@@ -11,6 +11,25 @@ import TransactionLogModel, {
 
 const TransactionLogRow = ({ transactionLog, ...props }) => {
   const { t } = useTranslation()
+
+  const getOrgText = (transactionLog) => {
+    let text = ''
+
+    if (transactionLog.direction === DIRECTION_IN) {
+      text = transactionLog.source.name
+    } else {
+      text = transactionLog.destination.name
+    }
+
+    if (transactionLog.order?.delegator?.serialNumber !== undefined) {
+      text = `${text} ${t('On behalf of')} ${
+        transactionLog.order.delegator.name
+      }`
+    }
+
+    return text
+  }
+
   return (
     <Table.Tr data-testid="transaction-log-record" {...props}>
       <Table.Td>
@@ -22,17 +41,7 @@ const TransactionLogRow = ({ transactionLog, ...props }) => {
           ? t('Incoming from')
           : t('Outgoing to')}
       </Table.Td>
-      <Table.Td>
-        {transactionLog.direction === DIRECTION_IN
-          ? transactionLog.order &&
-            transactionLog.order.delegator &&
-            transactionLog.order.delegator.serialNumber
-            ? `${transactionLog.source.name} ${t('On behalf of')} ${
-                transactionLog.order.delegator.name
-              }`
-            : transactionLog.source.name
-          : transactionLog.destination.name}
-      </Table.Td>
+      <Table.Td>{getOrgText(transactionLog)}</Table.Td>
       <Table.Td>{transactionLog.serviceName}</Table.Td>
     </Table.Tr>
   )
