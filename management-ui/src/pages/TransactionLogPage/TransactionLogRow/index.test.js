@@ -24,6 +24,12 @@ test('transaction row direction IN should render expected data', () => {
       service: {
         name: 'my-service',
       },
+      order: {
+        delegator: {
+          serialNumber: '',
+          name: '',
+        },
+      },
       direction: DIRECTION_IN,
       createdAt: new Date(),
     },
@@ -80,6 +86,12 @@ test('transaction row with direction OUT should render expected data', () => {
       },
       service: {
         name: 'my-service',
+      },
+      order: {
+        delegator: {
+          serialNumber: '',
+          name: '',
+        },
       },
       direction: DIRECTION_OUT,
       createdAt: new Date(),

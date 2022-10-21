@@ -21,7 +21,11 @@ const TransactionLogRow = ({ transactionLog, ...props }) => {
       text = transactionLog.destination.name
     }
 
-    if (transactionLog.order?.delegator?.serialNumber !== undefined) {
+    if (
+      transactionLog.order &&
+      transactionLog.order.delegator &&
+      transactionLog.order.delegator.serialNumber !== ''
+    ) {
       text = `${text} ${t('On behalf of')} ${
         transactionLog.order.delegator.name
       }`
