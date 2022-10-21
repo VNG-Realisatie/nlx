@@ -99,6 +99,7 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
     );
 
     if (result.status === "FAILED") {
+      debug(`creating screenshot of failed test`);
       await this.snapshot();
     }
   }
