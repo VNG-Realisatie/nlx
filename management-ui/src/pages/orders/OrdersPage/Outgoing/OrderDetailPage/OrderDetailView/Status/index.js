@@ -4,14 +4,12 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { instanceOf } from 'prop-types'
 import StatusIcon from '../../../../StatusIcon'
 import OutgoingOrderModel from '../../../../../../../stores/models/OutgoingOrderModel'
 import { StyledContainer, StateDetail } from './index.styles'
 
-const Status: React.FC<{ order: OutgoingOrderModel }> = ({
-  order,
-  ...props
-}) => {
+const Status = ({ order, ...props }) => {
   const { t } = useTranslation()
 
   const Content = () => {
@@ -26,8 +24,7 @@ const Status: React.FC<{ order: OutgoingOrderModel }> = ({
         </>
       )
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+
     if (order.validFrom > new Date()) {
       // Order that is not yet active
       return (
@@ -39,8 +36,7 @@ const Status: React.FC<{ order: OutgoingOrderModel }> = ({
         </>
       )
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+
     if (order.validUntil < new Date()) {
       // Expired order
       return (
@@ -69,6 +65,10 @@ const Status: React.FC<{ order: OutgoingOrderModel }> = ({
       <Content />
     </StyledContainer>
   )
+}
+
+Status.propTypes = {
+  order: instanceOf(OutgoingOrderModel),
 }
 
 export default Status
