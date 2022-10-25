@@ -1,14 +1,26 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-.proto-lint-base:
+Proto lint:
   stage: Tests
   image:
     name: bufbuild/buf:1.8.0
     entrypoint: [""]
+  variables:
+    PROTO_DIRS_TO_CHECK: "management-api/api/external management-api/api txlog-api/api outway/api directory-api/api"
+  before_script:
+    - source ./.gitlab/ci/functions.sh
   script:
-    - cd ${PROTO_PATH}
-    - buf lint
+    - |
+      for PROTO_DIR in ${PROTO_DIRS_TO_CHECK}; do
+        start_section lint_${PROTO_DIR} "Linting proto '${PROTO_DIR}'"
+
+        cd "${PROTO_DIR}"
+        buf lint
+        cd "${CI_PROJECT_DIR}"
+
+        stop_section lint_${PROTO_DIR}
+      done
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
@@ -16,14 +28,26 @@
     - docker
     - linux
 
-.proto-fmt-base:
+Proto fmt:
   stage: Tests
   image:
     name: bufbuild/buf:1.8.0
     entrypoint: [""]
+  variables:
+    PROTO_DIRS_TO_CHECK: "management-api/api/external management-api/api txlog-api/api outway/api directory-api/api"
+  before_script:
+    - source ./.gitlab/ci/functions.sh
   script:
-    - cd ${PROTO_PATH}
-    - buf format -d --exit-code
+    - |
+      for PROTO_DIR in ${PROTO_DIRS_TO_CHECK}; do
+        start_section fmt_${PROTO_DIR} "Formatting proto '${PROTO_DIR}'"
+
+        cd "${PROTO_DIR}"
+        buf format -d --exit-code
+        cd "${CI_PROJECT_DIR}"
+
+        stop_section fmt_${PROTO_DIR}
+      done
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
@@ -31,57 +55,29 @@
     - docker
     - linux
 
-Proto check breaking changes external:
+Proto breaking changes:
   stage: Tests
   image:
     name: bufbuild/buf:1.8.0
     entrypoint: [""]
+  variables:
+    PROTO_DIRS_TO_CHECK: "management-api/api/external"
+  before_script:
+    - source ./.gitlab/ci/functions.sh
   script:
-    - cd management-api/api/external
-    - buf breaking --against 'https://gitlab.com/commonground/nlx/nlx.git#branch=master,subdir=management-api/api/external'
+    - |
+      for PROTO_DIR in ${PROTO_DIRS_TO_CHECK}; do
+        start_section breaking_${PROTO_DIR} "Checking proto for breaking changes '${PROTO_DIR}'"
+
+        cd "${PROTO_DIR}"
+        buf breaking --against 'https://gitlab.com/commonground/nlx/nlx.git#branch=master,subdir='${PROTO_DIR}''
+        cd "${CI_PROJECT_DIR}"
+
+        stop_section breaking_${PROTO_DIR}
+      done
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
     - docker
     - linux
-
-Proto lint external:
-  extends: .proto-lint-base
-  variables:
-    PROTO_PATH: management-api/api/external
-
-Proto lint api:
-  extends: .proto-lint-base
-  variables:
-    PROTO_PATH: management-api/api
-
-Proto lint txlog:
-  extends: .proto-lint-base
-  variables:
-    PROTO_PATH: txlog-api/api
-
-Proto lint outway:
-  extends: .proto-lint-base
-  variables:
-    PROTO_PATH: outway/api
-
-Proto fmt external:
-  extends: .proto-fmt-base
-  variables:
-    PROTO_PATH: management-api/api/external
-
-Proto fmt management:
-  extends: .proto-fmt-base
-  variables:
-    PROTO_PATH: management-api/api
-
-Proto fmt txlog:
-  extends: .proto-fmt-base
-  variables:
-    PROTO_PATH: txlog-api/api
-
-Proto fmt outway:
-  extends: .proto-fmt-base
-  variables:
-    PROTO_PATH: outway/api

@@ -1,0 +1,17 @@
+# Copyright © VNG Realisatie 2022
+# Licensed under the EUPL
+
+version: v1
+lint:
+  use:
+    - DEFAULT
+    - PACKAGE_NO_IMPORT_CYCLE
+  except:
+    - PACKAGE_VERSION_SUFFIX
+    - PACKAGE_DIRECTORY_MATCH
+  allow_comment_ignores: true
+breaking:
+  use:
+    - WIRE
+deps:
+  - buf.build/googleapis/googleapis

@@ -3,233 +3,254 @@
 
 syntax = "proto3";
 
+package directoryapi;
+
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-package directoryapi;
-
 option go_package = ".;directoryapi";
 
+// buf:lint:ignore SERVICE_SUFFIX
 service Directory {
-	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc RegisterInway(RegisterInwayRequest) returns (RegisterInwayResponse);
 
-	rpc ClearOrganizationInway (ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ClearOrganizationInway(ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
 
-	rpc SetOrganizationContactDetails (SetOrganizationContactDetailsRequest) returns (SetOrganizationContactDetailsResponse);
+  rpc SetOrganizationContactDetails(SetOrganizationContactDetailsRequest) returns (SetOrganizationContactDetailsResponse);
 
-	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {
-		option (google.api.http).get = "/api/directory/list-services";
-	}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {
+    option (google.api.http).get = "/api/directory/list-services";
+  }
 
-	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {
-		option (google.api.http).get = "/api/directory/list-organizations";
-	}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse) {
+    option (google.api.http).get = "/api/directory/list-organizations";
+  }
 
-    rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {
-        option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway";
-    }
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc GetOrganizationInway(GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {
+    option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway";
+  }
 
-    rpc GetOrganizationManagementAPIProxyAddress (GetOrganizationManagementAPIProxyAddressRequest) returns (GetOrganizationManagementAPIProxyAddressResponse) {
-        option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway/management-api-proxy-address";
-    }
+  rpc GetOrganizationManagementAPIProxyAddress(GetOrganizationManagementAPIProxyAddressRequest) returns (GetOrganizationManagementAPIProxyAddressResponse) {
+    option (google.api.http).get = "/api/directory/organizations/{organization_serial_number}/inway/management-api-proxy-address";
+  }
 
-    rpc ListInOutwayStatistics (ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {
-        option (google.api.http).get = "/api/stats";
-    }
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListInOutwayStatistics(ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {
+    option (google.api.http).get = "/api/stats";
+  }
 
-	rpc RegisterOutway (RegisterOutwayRequest) returns (RegisterOutwayResponse);
+  rpc RegisterOutway(RegisterOutwayRequest) returns (RegisterOutwayResponse);
 
-	rpc ListParticipants (ListParticipantsRequest) returns (ListParticipantsResponse) {
-		option (google.api.http).get = "/api/directory/participants";
-	};
+  rpc ListParticipants(ListParticipantsRequest) returns (ListParticipantsResponse) {
+    option (google.api.http).get = "/api/directory/participants";
+  }
 
-	rpc GetTermsOfService (GetTermsOfServiceRequest) returns (GetTermsOfServiceResponse) {
-		option (google.api.http).get = "/api/directory/terms-of-service";
-	};
+  rpc GetTermsOfService(GetTermsOfServiceRequest) returns (GetTermsOfServiceResponse) {
+    option (google.api.http).get = "/api/directory/terms-of-service";
+  }
 
-    rpc GetVersion (GetVersionRequest) returns (GetVersionResponse) {
-        option (google.api.http).get = "/api/directory/version";
-    };
+  rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {
+    option (google.api.http).get = "/api/directory/version";
+  }
 }
 
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
+// buf:lint:ignore SERVICE_SUFFIX
 service DirectoryRegistration {
-	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc RegisterInway(RegisterInwayRequest) returns (RegisterInwayResponse);
 
-	rpc ClearOrganizationInway (ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ClearOrganizationInway(ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
 
-	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {}
 
-	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse) {}
 
-	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc GetOrganizationInway(GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
 
-	rpc ListInOutwayStatistics (ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListInOutwayStatistics(ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {}
 }
 
 // Added this service to ensure backwards compatibility after merging the directory inspection and registration api into a single api
+// buf:lint:ignore SERVICE_SUFFIX
 service DirectoryInspection {
-	rpc RegisterInway (RegisterInwayRequest) returns (RegisterInwayResponse);
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc RegisterInway(RegisterInwayRequest) returns (RegisterInwayResponse);
 
-	rpc ClearOrganizationInway (ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ClearOrganizationInway(ClearOrganizationInwayRequest) returns (ClearOrganizationInwayResponse);
 
-	rpc ListServices (ListServicesRequest) returns (ListServicesResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {}
 
-	rpc ListOrganizations (ListOrganizationsRequest) returns (ListOrganizationsResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse) {}
 
-	rpc GetOrganizationInway (GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc GetOrganizationInway(GetOrganizationInwayRequest) returns (GetOrganizationInwayResponse) {}
 
-	rpc ListInOutwayStatistics (ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {}
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc ListInOutwayStatistics(ListInOutwayStatisticsRequest) returns (ListInOutwayStatisticsResponse) {}
 }
 
 message RegisterInwayRequest {
-	message RegisterService {
-		string name = 1;
-		string documentation_url = 2;
-		string api_specification_type = 3; // Deprecated. Type is deduced from api_specification_document_url
-		string api_specification_document_url = 4;
-		bool internal = 7;
-		string public_support_contact = 8;
-		string tech_support_contact = 9;
-		int32 one_time_costs = 10;
-		int32 monthly_costs = 11;
-		int32 request_costs = 12;
-	}
+  message RegisterService {
+    string name = 1;
+    string documentation_url = 2;
+    string api_specification_type = 3; // Deprecated. Type is deduced from api_specification_document_url
+    string api_specification_document_url = 4;
+    bool internal = 7;
+    string public_support_contact = 8;
+    string tech_support_contact = 9;
+    int32 one_time_costs = 10;
+    int32 monthly_costs = 11;
+    int32 request_costs = 12;
+  }
 
-	string inway_address = 1;
-	repeated RegisterService services = 2;
-	string inway_name = 3;
-	bool is_organization_inway = 4;
-    string management_api_proxy_address = 5;
+  string inway_address = 1;
+  repeated RegisterService services = 2;
+  string inway_name = 3;
+  bool is_organization_inway = 4;
+  string management_api_proxy_address = 5;
 }
 
 message RegisterInwayResponse {
-	string error = 1;
+  string error = 1;
 }
 
 message Organization {
-	string serial_number = 1;
-	string name = 2;
+  string serial_number = 1;
+  string name = 2;
 }
 
 message Inway {
-	enum State {
-		STATE_UNSPECIFIED = 0;
-		STATE_UP = 1;
-		STATE_DOWN = 2;
-	}
-	string address = 1;
-	State state = 2 ;
+  enum State {
+    STATE_UNSPECIFIED = 0;
+    STATE_UP = 1;
+    STATE_DOWN = 2;
+  }
+  string address = 1;
+  State state = 2;
 }
 
 message ListServicesRequest {}
 
 message ListServicesResponse {
-    message Costs {
-        int32 one_time = 1;
-        int32 monthly = 2;
-        int32 request = 3;
-    }
+  message Costs {
+    int32 one_time = 1;
+    int32 monthly = 2;
+    int32 request = 3;
+  }
 
-	message Service {
-		string name = 1;
-		string documentation_url = 2;
-		string api_specification_type = 3;
-		bool internal = 4;
-		string public_support_contact = 5;
-		repeated Inway inways = 6;
-        Costs costs = 7;
-        Organization organization = 8;
-	}
+  message Service {
+    string name = 1;
+    string documentation_url = 2;
+    string api_specification_type = 3;
+    bool internal = 4;
+    string public_support_contact = 5;
+    repeated Inway inways = 6;
+    Costs costs = 7;
+    Organization organization = 8;
+  }
 
-	repeated Service services = 1;
+  repeated Service services = 1;
 }
 
 message ListOrganizationsRequest {}
 
 message ListOrganizationsResponse {
-	repeated Organization organizations = 1;
+  repeated Organization organizations = 1;
 }
 
 message GetOrganizationManagementAPIProxyAddressRequest {
-    string organization_serial_number = 1;
+  string organization_serial_number = 1;
 }
 
 message GetOrganizationManagementAPIProxyAddressResponse {
-    string address = 1;
+  string address = 1;
 }
 
 message GetOrganizationInwayRequest {
-	string organization_serial_number = 1;
+  string organization_serial_number = 1;
 }
 
 message GetOrganizationInwayResponse {
-	string address = 1;
-    string management_api_proxy_address = 2;
+  string address = 1;
+  string management_api_proxy_address = 2;
 }
 
 message ListInOutwayStatisticsRequest {}
 
 message ListInOutwayStatisticsResponse {
-	message Statistics {
-		enum Type {
-			TYPE_UNSPECIFIED = 0;
-			TYPE_INWAY = 1;
-			TYPE_OUTWAY = 2;
-		}
+  message Statistics {
+    enum Type {
+      TYPE_UNSPECIFIED = 0;
+      TYPE_INWAY = 1;
+      TYPE_OUTWAY = 2;
+    }
 
-		Type type = 1;
-		string version = 2;
-		uint32 amount = 3;
-	}
+    Type type = 1;
+    string version = 2;
+    uint32 amount = 3;
+  }
 
-	repeated Statistics versions = 1;
+  repeated Statistics versions = 1;
 }
 
 message RegisterOutwayRequest {
-	string name = 1;
+  string name = 1;
 }
 
 message RegisterOutwayResponse {
-	string error = 1;
+  string error = 1;
 }
 
 message ListParticipantsRequest {}
 
 message ListParticipantsResponse {
-	message Participant {
-		Organization organization = 1;
-		google.protobuf.Timestamp created_at = 2;
+  message Participant {
+    Organization organization = 1;
+    google.protobuf.Timestamp created_at = 2;
 
-		message Statistics {
-			uint32 inways = 1;
-			uint32 outways = 2;
-			uint32 services = 3;
-		}
+    message Statistics {
+      uint32 inways = 1;
+      uint32 outways = 2;
+      uint32 services = 3;
+    }
 
-		Statistics statistics = 3;
-	}
+    Statistics statistics = 3;
+  }
 
-	repeated Participant participants = 1;
+  repeated Participant participants = 1;
 }
 
 message SetOrganizationContactDetailsRequest {
-	string email_address = 1;
+  string email_address = 1;
 }
 
-message SetOrganizationContactDetailsResponse{}
+message SetOrganizationContactDetailsResponse {}
 
 message GetTermsOfServiceRequest {}
 
 message GetTermsOfServiceResponse {
-	bool enabled = 1;
-	string url = 2;
+  bool enabled = 1;
+  string url = 2;
 }
 
 message GetVersionRequest {}
 
 message GetVersionResponse {
-    string version = 1;
+  string version = 1;
 }
 
 message ClearOrganizationInwayRequest {}
