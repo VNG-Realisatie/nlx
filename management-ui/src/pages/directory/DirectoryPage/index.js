@@ -3,7 +3,7 @@
 //
 import React, { useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import { Route, Routes, useParams } from 'react-router-dom'
+import { Route, Routes, useMatch, useParams } from 'react-router-dom'
 import { Alert, ToasterContext } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import LoadingMessage from '../../../components/LoadingMessage'
@@ -22,14 +22,33 @@ const DirectoryPage = () => {
   const { showToast } = useContext(ToasterContext)
   const directoryServiceStore = useDirectoryServiceStore()
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isPollRequestRunning, setIsPollRequestRunning] = useState(false)
+  const directoryDetailPageMatch = useMatch(
+    '/directory/:organizationSerialNumber/:serviceName',
+  )
 
-  const [pausePolling, continuePolling] = usePolling(() => {
+  usePolling(() => {
     async function fetchData() {
-      pausePolling()
+      if (document.hidden) {
+        return
+      }
+
+      if (directoryDetailPageMatch) {
+        return
+      }
+
+      if (directoryServiceStore.services.length === 0) {
+        return
+      }
+
+      if (isPollRequestRunning) {
+        return
+      }
+
+      setIsPollRequestRunning(true)
 
       try {
         await directoryServiceStore.syncAllOutgoingAccessRequests()
-        await directoryServiceStore.fetchAll()
       } catch (error) {
         let message = ''
 
@@ -46,7 +65,7 @@ const DirectoryPage = () => {
         })
       }
 
-      continuePolling()
+      setIsPollRequestRunning(false)
     }
 
     fetchData()
@@ -54,36 +73,20 @@ const DirectoryPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      directoryServiceStore.fetchAll()
-      directoryServiceStore.syncAllOutgoingAccessRequests()
+      await directoryServiceStore.fetchAll()
+
+      if (directoryServiceStore.services.length !== 0) {
+        directoryServiceStore.syncAllOutgoingAccessRequests()
+      }
 
       const env = await EnvironmentRepository.getCurrent()
-      setSubjectSerialNumber(env.organizationSerialNumber)
 
+      setSubjectSerialNumber(env.organizationSerialNumber)
       setIsLoaded(true)
     }
 
     fetchData()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    document.addEventListener('visibilitychange', onVisibilityChangeHandler)
-
-    return () => {
-      document.removeEventListener(
-        'visibilitychange',
-        onVisibilityChangeHandler,
-      )
-    }
-  })
-
-  const onVisibilityChangeHandler = () => {
-    if (document.hidden) {
-      pausePolling()
-    } else {
-      continuePolling()
-    }
-  }
 
   const DirectoryCount = () => {
     if (isLoaded && !directoryServiceStore.error) {
