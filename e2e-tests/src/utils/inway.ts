@@ -70,16 +70,16 @@ export const setDefaultInwayAsOrganizationInway = async (
 ) => {
   debug(`setting default inway as organization inway for ${organizationName}`);
   const org = getOrgByName(organizationName);
-  const response =
+
+  try {
     await org.apiClients.management?.managementServiceUpdateSettings({
       body: {
         organizationInway: org.defaultInway.name,
       },
     });
-
-  if (!response) {
+  } catch (error) {
     throw new Error(
-      `unable to set organization Inway for ${organizationName}, did you for get to authenticate this organization?`
+      `unable to set organization Inway for ${organizationName}, did you for get to authenticate this organization? error: ${error}`
     );
   }
 

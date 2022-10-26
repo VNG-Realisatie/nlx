@@ -13,16 +13,20 @@ import (
 	"github.com/spf13/cobra"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
+	sessionstore_migrations "go.nlx.io/nlx/management-api/pkg/oidc/pgsessionstore/migrations"
 )
 
 var migrateOpts struct {
-	PostgresDSN string
+	PostgresDSN     string
+	EnableBasicAuth bool
 }
 
 //nolint:gochecknoinits // this is the recommended way to use cobra
 func init() {
 	migrateUpCommand.Flags().StringVarP(&migrateOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")
+	migrateUpCommand.Flags().BoolVarP(&migrateOpts.EnableBasicAuth, "enable-basic-auth", "", false, "Enable HTTP basic authentication and disable OIDC")
 	migrateStatusCommand.Flags().StringVarP(&migrateOpts.PostgresDSN, "postgres-dsn", "", "", "Postgres Connection URL")
+	migrateStatusCommand.Flags().BoolVarP(&migrateOpts.EnableBasicAuth, "enable-basic-auth", "", false, "Enable HTTP basic authentication and disable OIDC")
 
 	if err := migrateUpCommand.MarkFlagRequired("postgres-dsn"); err != nil {
 		log.Fatal(err)
@@ -51,6 +55,13 @@ var migrateUpCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		if !migrateOpts.EnableBasicAuth {
+			err = sessionstore_migrations.PerformMigrations(migrateOpts.PostgresDSN)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
 		os.Exit(0)
 	},
 }
@@ -64,6 +75,15 @@ var migrateStatusCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		fmt.Printf("dirty=%v version=%d\n", dirty, version)
+		fmt.Printf("nlx_management: dirty=%v version=%d\n", dirty, version)
+
+		if !migrateOpts.EnableBasicAuth {
+			version, dirty, err = sessionstore_migrations.MigrationStatus(migrateOpts.PostgresDSN)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Printf("http_sessions: dirty=%v version=%d\n", dirty, version)
+		}
 	},
 }

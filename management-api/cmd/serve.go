@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"log"
 	"time"
@@ -203,7 +204,13 @@ var serveCommand = &cobra.Command{
 
 			verifier := oidcProvider.Verifier(oidcConfig)
 
-			authenticator = oidc.NewAuthenticator(db, auditLogger, logger, oidcProvider, verifier, func(idToken *oidc_server.IDToken) (*oidc.IDTokenClaims, error) {
+			var httpsessionsDB *sql.DB
+			httpsessionsDB, err = sql.Open("postgres", serveOpts.PostgresDSN)
+			if err != nil {
+				logger.Fatal("could not open httpsessions DB", zap.Error((err)))
+			}
+
+			authenticator, err = oidc.NewAuthenticator(httpsessionsDB, db, auditLogger, logger, oidcProvider, verifier, func(idToken *oidc_server.IDToken) (*oidc.IDTokenClaims, error) {
 				claims := &oidc.IDTokenClaims{}
 				err = idToken.Claims(claims)
 				if err != nil {
@@ -212,6 +219,9 @@ var serveCommand = &cobra.Command{
 
 				return claims, nil
 			}, &serveOpts.oidcOptions)
+			if err != nil {
+				logger.Fatal("could not initialize OIDC authenticator", zap.Error(err))
+			}
 		}
 
 		a, err := api.NewAPI(

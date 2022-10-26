@@ -5,11 +5,13 @@ package oidc
 
 import (
 	"context"
+	"database/sql"
 	"encoding/gob"
 	"errors"
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/go-chi/chi/v5"
@@ -26,14 +28,17 @@ import (
 	"go.nlx.io/nlx/management-api/domain"
 	"go.nlx.io/nlx/management-api/pkg/auditlog"
 	"go.nlx.io/nlx/management-api/pkg/database"
+	"go.nlx.io/nlx/management-api/pkg/oidc/pgsessionstore"
 )
 
 var ErrUnauthenticated = errors.New("not authenticated")
 
 const (
-	bearer     string = "bearer"
-	cookieName string = "nlx_management_session"
-	tokenName  string = "authorization"
+	bearer          string = "bearer"
+	cookieName      string = "nlx_management_session"
+	tokenName       string = "authorization"
+	cleanupInterval        = time.Minute * 5
+	maxSessionSize         = 1024 * 1024 * 1 // 1 MB
 )
 
 type OAuth2Config interface {
@@ -68,6 +73,7 @@ type Authenticator struct {
 	oidcVerifier Verifier
 	getClaims    GetClaimsFromTokenFunc
 	db           database.ConfigDatabase
+	close        func()
 }
 
 type IDTokenClaims struct {
@@ -77,10 +83,24 @@ type IDTokenClaims struct {
 
 type OurUserInfoGetter struct{}
 
-func NewAuthenticator(db database.ConfigDatabase, auditLogger auditlog.Logger, logger *zap.Logger, provider *oidc.Provider, verifier Verifier, getClaims GetClaimsFromTokenFunc, options *Options) *Authenticator {
+func NewAuthenticator(httpsessionsDB *sql.DB, db database.ConfigDatabase, auditLogger auditlog.Logger, logger *zap.Logger, provider *oidc.Provider, verifier Verifier, getClaims GetClaimsFromTokenFunc, options *Options) (*Authenticator, error) {
 	gob.Register(&Claims{})
 
-	store := sessions.NewCookieStore([]byte(options.SecretKey))
+	store, err := pgsessionstore.New(logger, httpsessionsDB, []byte(options.SecretKey))
+	if err != nil {
+		return nil, err
+	}
+
+	store.MaxLength(maxSessionSize)
+
+	// Run a background goroutine to clean up expired sessions from the database.
+	quit, done := store.StartCleanup(cleanupInterval)
+
+	closeFn := func() {
+		store.StopCleanup(quit, done)
+		store.Close()
+	}
+
 	store.Options = &sessions.Options{
 		HttpOnly: true,
 		SameSite: http.SameSiteStrictMode,
@@ -111,7 +131,12 @@ func NewAuthenticator(db database.ConfigDatabase, auditLogger auditlog.Logger, l
 		oidcProvider: provider,
 		oidcVerifier: verifier,
 		getClaims:    getClaims,
-	}
+		close:        closeFn,
+	}, nil
+}
+
+func (a *Authenticator) Close() {
+	a.close()
 }
 
 func (a *Authenticator) MountRoutes(r chi.Router) {
@@ -153,6 +178,7 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 		a.logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
 
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
+
 		return
 	}
 
@@ -163,6 +189,7 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 			a.logger.Error("cannot verify token", zap.Error(err))
 
 			http.Redirect(w, r, "/", http.StatusFound)
+
 			return
 		}
 	}
@@ -175,6 +202,7 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 			a.logger.Error("unable to save session", zap.Error(err))
 
 			http.Error(w, "unable to save session", http.StatusInternalServerError)
+
 			return
 		}
 	}
@@ -188,6 +216,7 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 		a.logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
 
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
+
 		return
 	}
 
@@ -202,6 +231,7 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 		a.logger.Error("cannot verify token", zap.Error(err))
 
 		http.Error(w, "unauthorized request, invalid token", http.StatusUnauthorized)
+
 		return
 	}
 
@@ -212,6 +242,7 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 		a.logger.Error("unable to parse id token claims", zap.Error(err))
 
 		http.Error(w, "unauthorized request, could not parse token", http.StatusUnauthorized)
+
 		return
 	}
 
@@ -250,6 +281,10 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 		}
 
 		session.Values[tokenName] = accessToken.AccessToken
+
+		// Convert Unix timestamp in claim to amount of seconds from now.
+		// MaxAge needs seconds from now
+		session.Options.MaxAge = int(time.Until(time.Unix(claims.ExpiresAt, 0)).Seconds())
 
 		if err = session.Save(r, w); err != nil {
 			return fmt.Errorf("failed to save session: %w", err)
@@ -319,6 +354,7 @@ func (a *Authenticator) logout(w http.ResponseWriter, r *http.Request) {
 		a.logger.Error("unable to save session", zap.Error(err))
 
 		http.Error(w, "unable to save session", http.StatusInternalServerError)
+
 		return
 	}
 

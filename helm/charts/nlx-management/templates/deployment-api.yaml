@@ -197,6 +197,10 @@ spec:
               value: {{ .Values.postgresql.connectTimeout | quote }}
             - name: POSTGRES_DSN
               value: 'postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)'
+          {{- if .Values.config.enableBasicAuth }}
+            - name: ENABLE_BASIC_AUTH
+              value: "true"
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

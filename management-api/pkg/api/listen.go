@@ -123,6 +123,8 @@ func (a *API) Shutdown(ctx context.Context) error {
 		a.logger.Error("cannot close txlog client", zap.Error(err))
 	}
 
+	a.authenticator.Close()
+
 	return g.Wait()
 }
 

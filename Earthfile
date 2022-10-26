@@ -286,13 +286,21 @@ sqlc-management-api:
     COPY ./management-api/adapters/storage/postgres/queries /src/management-api/adapters/storage/postgres/queries
     COPY ./management-api/migrations /src/management-api/migrations
 
+    COPY ./management-api/pkg/oidc/pgsessionstore/queries /src/management-api/pkg/oidc/pgsessionstore/queries
+    COPY ./management-api/pkg/oidc/pgsessionstore//migrations /src/management-api/pkg/oidc/pgsessionstore/migrations
+
     WORKDIR /src/management-api/adapters/storage/postgres/queries
+
+    RUN /usr/bin/sqlc generate
+
+    WORKDIR /src/management-api/pkg/oidc/pgsessionstore/queries
 
     RUN /usr/bin/sqlc generate
 
     RUN goimports -w -local "go.nlx.io" /src/
 
     SAVE ARTIFACT /src/management-api/adapters/storage/postgres/queries/* AS LOCAL ./management-api/adapters/storage/postgres/queries/
+    SAVE ARTIFACT /src/management-api/pkg/oidc/pgsessionstore/queries/* AS LOCAL ./management-api/pkg/oidc/pgsessionstore/queries/
 
 enums-permissions:
     FROM +deps

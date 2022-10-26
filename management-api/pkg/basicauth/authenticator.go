@@ -39,6 +39,8 @@ func NewAuthenticator(configDatabase database.ConfigDatabase, auditLogger auditl
 	}
 }
 
+func (a *Authenticator) Close() {}
+
 func (a *Authenticator) MountRoutes(r chi.Router) {
 	routes := chi.NewRouter()
 	routes.Get("/", a.root)

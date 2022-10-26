@@ -77,6 +77,7 @@ type Authenticator interface {
 	OnlyAuthenticated(h http.Handler) http.Handler
 	UnaryServerInterceptor(configDatabase database.ConfigDatabase, getUserFromDatabase func(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error)) grpc.UnaryServerInterceptor
 	StreamServerInterceptor(configDatabase database.ConfigDatabase, getUserFromDatabase func(ctx context.Context, configDatabase database.ConfigDatabase, email string) (*domain.User, error)) grpc.StreamServerInterceptor
+	Close()
 }
 
 //nolint:gocyclo // parameter validation
