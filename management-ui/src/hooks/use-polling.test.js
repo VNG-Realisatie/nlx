@@ -13,6 +13,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  jest.useRealTimers()
   pollFunctionA.mockReset()
   pollFunctionB.mockReset()
 })
