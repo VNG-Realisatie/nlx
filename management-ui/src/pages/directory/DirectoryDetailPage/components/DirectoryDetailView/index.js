@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { SectionGroup } from '../../../../../components/DetailView'
 import CostsSection from '../../../../../components/CostsSection'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
-import usePolling from '../../../../../hooks/use-polling'
+import usePollingEffect from '../../../../../hooks/use-polling-effect'
 import ExternalLinkSection from './ExternalLinkSection'
 import ContactSection from './ContactSection'
 import {
@@ -18,44 +18,47 @@ import {
 } from './AccessSections'
 
 const DirectoryDetailView = ({ service }) => {
-  const [isLoading, setIsLoading] = useState(false)
   const { showToast } = useContext(ToasterContext)
   const { t } = useTranslation()
-  const [pauseFetchPolling, continueFetchPolling] = usePolling(async () => {
-    if (isLoading) {
-      return
-    }
+  const [isPollingPaused, setIsPollingPaused] = useState(false)
 
-    setIsLoading(true)
+  usePollingEffect(
+    async () => {
+      if (isPollingPaused) {
+        return
+      }
 
-    try {
-      await service.syncOutgoingAccessRequests()
-    } catch (error) {
-      showToast({
-        title: t('Failed to synchronize access states'),
-        body: t('The organization (Inway) might be unavailable.'),
-        variant: 'error',
-      })
-    }
+      try {
+        await service.fetch()
+      } catch (error) {
+        showToast({
+          title: t('Failed to retrieve service details'),
+          variant: 'error',
+        })
+      }
 
-    try {
-      await service.fetch()
-    } catch (error) {
-      showToast({
-        title: t('Failed to retrieve service details'),
-        variant: 'error',
-      })
-    }
-
-    setIsLoading(false)
-  })
+      try {
+        await service.syncOutgoingAccessRequests()
+      } catch (error) {
+        showToast({
+          title: t('Failed to synchronize access states'),
+          body: t('The organization (Inway) might be unavailable.'),
+          variant: 'error',
+        })
+      }
+    },
+    [isPollingPaused],
+    {
+      interval: 3000,
+    },
+  )
 
   const onShowConfirmRequestAccessModalHandler = () => {
-    pauseFetchPolling()
+    setIsPollingPaused(true)
   }
 
   const onHideConfirmRequestAccessModalHandler = () => {
-    continueFetchPolling()
+    setIsPollingPaused(false)
   }
 
   return (

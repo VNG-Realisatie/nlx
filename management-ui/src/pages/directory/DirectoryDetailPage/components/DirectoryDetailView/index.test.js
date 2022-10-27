@@ -85,7 +85,7 @@ test('can request access', async () => {
   await waitFor(() => expect(serviceModel.requestAccess).toHaveBeenCalled())
 })
 
-test('display error when requesting access failed', async () => {
+test('display error when existing access request failed', async () => {
   configure({ safeDescriptors: false })
 
   const managementApiClient = new ManagementServiceApi()
@@ -100,6 +100,10 @@ test('display error when requesting access failed', async () => {
         },
       ],
     })
+
+  managementApiClient.managementServiceSynchronizeOutgoingAccessRequests = jest
+    .fn()
+    .mockResolvedValue({})
 
   const directoryApiClient = new DirectoryServiceApi()
 
