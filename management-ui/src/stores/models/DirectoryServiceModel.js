@@ -139,8 +139,25 @@ class DirectoryServiceModel {
     return !!(
       accessRequest.state === ACCESS_REQUEST_STATES.APPROVED &&
       accessProof &&
-      !accessProof.revokedAt
+      !accessProof.revokedAt &&
+      !accessProof.terminatedAt
     )
+  }
+
+  async terminateAccessRequest(publicKeyFingerPrint) {
+    const { accessRequest } = this._accessStates.get(publicKeyFingerPrint)
+    await accessRequest.terminate()
+
+    const accessState = this._accessStates.get(publicKeyFingerPrint)
+    accessState.accessProof.terminatedAt = new Date()
+  }
+
+  async withdrawAccessRequest(publicKeyFingerPrint) {
+    const { accessRequest } = this._accessStates.get(publicKeyFingerPrint)
+    await accessRequest.withdraw()
+
+    const accessState = this._accessStates.get(publicKeyFingerPrint)
+    accessState.accessRequest.state = ACCESS_REQUEST_STATES.WITHDRAWN
   }
 
   hasAccess(publicKeyFingerprint) {

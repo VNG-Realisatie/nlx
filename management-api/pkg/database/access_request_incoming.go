@@ -15,10 +15,10 @@ import (
 type IncomingAccessRequestState string
 
 const (
-	IncomingAccessRequestReceived IncomingAccessRequestState = "received"
-	IncomingAccessRequestApproved IncomingAccessRequestState = "approved"
-	IncomingAccessRequestRejected IncomingAccessRequestState = "rejected"
-	IncomingAccessRequestRevoked  IncomingAccessRequestState = "revoked"
+	IncomingAccessRequestReceived  IncomingAccessRequestState = "received"
+	IncomingAccessRequestApproved  IncomingAccessRequestState = "approved"
+	IncomingAccessRequestRejected  IncomingAccessRequestState = "rejected"
+	IncomingAccessRequestWithdrawn IncomingAccessRequestState = "withdrawn"
 )
 
 type IncomingAccessRequestOrganization struct {
@@ -144,4 +144,8 @@ func (db *PostgresConfigDatabase) UpdateIncomingAccessRequestState(ctx context.C
 		Omit(clause.Associations).
 		Select("state", "updated_at").
 		Save(incomingAccessRequest).Error
+}
+
+func (db *PostgresConfigDatabase) DeleteIncomingAccessRequest(ctx context.Context, id uint) error {
+	return db.queries.DeleteIncomingAccessRequest(ctx, int32(id))
 }

@@ -11,6 +11,8 @@ const (
 	RejectIncomingAccessRequest                         // permissions.incoming_access_request.reject
 	ReadIncomingAccessRequests                          // permissions.incoming_access_requests.read
 	UpdateOutgoingAccessRequest                         // permissions.outgoing_access_request.update
+	WithDrawOutgoingAccessRequest                       // permissions.outgoing_access_request.withdraw
+	TerminateAccess                                     // permissions.access.terminate
 	SendOutgoingAccessRequest                           // permissions.outgoing_access_request.send
 	SyncOutgoingAccessRequests                          // permissions.outgoing_access_requests.sync
 	SyncAllOutgoingAccessRequests                       // permissions.outgoing_access_requests.sync_all

@@ -31,4 +31,13 @@ enum ErrorReason {
 
   // Something went wrong while trying to sign the claim
   ERROR_REASON_UNABLE_TO_SIGN_CLAIM = 7;
+
+  // Access request is in a invalid state
+  ERROR_REASON_ACCESS_REQUEST_INVALID_STATE = 8;
+
+  // Access request is not found
+  ERROR_REASON_ACCESS_REQUEST_NOT_FOUND = 9;
+
+  // Access grant has already been terminated
+  ERROR_REASON_ACCESS_GRANT_ALREADY_TERMINATED = 10;
 }

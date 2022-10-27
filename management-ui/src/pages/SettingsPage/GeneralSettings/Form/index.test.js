@@ -43,7 +43,8 @@ test('changing organization inway', async () => {
   await userEvent.type(organizationEmailAddressInput, 'my@organization.com')
 
   const submitButton = getByText('Save settings')
-  userEvent.click(submitButton)
+
+  await userEvent.click(submitButton)
 
   await waitFor(() => {
     expect(onSubmitHandlerSpy).toHaveBeenCalledWith({

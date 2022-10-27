@@ -1,0 +1,49 @@
+@startuml
+title: Terminates or cancels access
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+
+box "Organization A"
+actor "User" as userOrgA
+participant "NLX Management" as managementUIOrgA
+participant "Management API" as managementAPIOrgA
+database "Management database" as managementDatabaseOrgA
+end box
+
+box "Organization B"
+actor "User" as userOrgB
+participant "Inway" as inwayOrgB
+participant "Management API" as managementAPIOrgB
+database "Management database" as managementDatabaseOrgB
+end box
+
+alt access has been granted
+userOrgA -> managementUIOrgA: Terminate access to service X
+managementUIOrgA -> managementAPIOrgA: Terminate access to service X
+managementAPIOrgA -> managementDatabaseOrgA: Write auditlog "X terminates access to service Y"
+managementAPIOrgA -> inwayOrgB: Terminate access to service X
+inwayOrgB -> managementAPIOrgB: Terminate access to service X
+managementAPIOrgB -> managementDatabaseOrgB: Set terminatedAt of access grant to current timestamp
+managementAPIOrgB -> managementAPIOrgA: Return terminatedAt timestamp
+managementAPIOrgA -> managementDatabaseOrgA: Set terminatedAt of access proof to current timestamp
+managementAPIOrgA -> managementUIOrgA: Return access terminated
+managementUIOrgA -> userOrgA: Display dialog "Access terminated for service X"
+end
+
+
+alt access is pending
+userOrgA -> managementUIOrgA: Witdraw access request
+managementUIOrgA -> managementAPIOrgA: Witdraw access request
+managementAPIOrgA -> managementDatabaseOrgA: Write auditlog "X outgoing access request to service Y has been withdrawn"
+managementAPIOrgA -> inwayOrgB: Withdraw access request
+inwayOrgB -> managementAPIOrgB: Withdraw access request
+managementAPIOrgB -> managementDatabaseOrgB: Update state of incoming access request to withdraw
+managementAPIOrgB -> managementAPIOrgA: Return access request withdrawn
+managementAPIOrgA -> managementDatabaseOrgA: Update state of outgoing access request to withdraw
+managementAPIOrgA -> managementUIOrgA: Return access request withdrawn
+managementUIOrgA -> userOrgA: Display dialog "Access request for service X withdrawn"
+end
+
+@enduml

@@ -68,6 +68,12 @@ export interface NlxmanagementAccessGrant {
      * @memberof NlxmanagementAccessGrant
      */
     accessRequestId?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof NlxmanagementAccessGrant
+     */
+    terminatedAt?: Date;
 }
 
 /**
@@ -96,6 +102,7 @@ export function NlxmanagementAccessGrantFromJSONTyped(json: any, ignoreDiscrimin
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
         'accessRequestId': !exists(json, 'access_request_id') ? undefined : json['access_request_id'],
+        'terminatedAt': !exists(json, 'terminated_at') ? undefined : (new Date(json['terminated_at'])),
     };
 }
 
@@ -115,6 +122,7 @@ export function NlxmanagementAccessGrantToJSON(value?: NlxmanagementAccessGrant 
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
         'access_request_id': value.accessRequestId,
+        'terminated_at': value.terminatedAt === undefined ? undefined : (value.terminatedAt.toISOString()),
     };
 }
 

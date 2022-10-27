@@ -187,6 +187,8 @@ func testCreateAdminUserContext() context.Context {
 					permissions.RejectIncomingAccessRequest,
 					permissions.ReadIncomingAccessRequests,
 					permissions.UpdateOutgoingAccessRequest,
+					permissions.TerminateAccess,
+					permissions.WithDrawOutgoingAccessRequest,
 					permissions.SyncOutgoingAccessRequests,
 					permissions.SyncAllOutgoingAccessRequests,
 					permissions.SendOutgoingAccessRequest,
@@ -503,6 +505,11 @@ func TestExternalRequestAccess(t *testing.T) {
 						State:                database.IncomingAccessRequestApproved,
 						PublicKeyFingerprint: certBundle.PublicKeyFingerprint(),
 					}, nil)
+
+				db.
+					EXPECT().
+					GetLatestAccessGrantForService(ctx, gomock.Any(), "service", orgCert.PublicKeyFingerprint()).
+					Return(&database.AccessGrant{ID: 2}, nil)
 
 				return ctx
 			},

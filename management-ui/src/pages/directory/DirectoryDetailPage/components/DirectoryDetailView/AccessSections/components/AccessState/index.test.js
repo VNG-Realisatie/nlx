@@ -147,3 +147,29 @@ test('Access revoked', () => {
   fireEvent.click(screen.getByText('Request access'))
   expect(requestAccessSpy).toHaveBeenCalled()
 })
+
+test('Access request canceled', () => {
+  const requestAccessSpy = jest.fn()
+
+  const accessRequest = new OutgoingAccessRequestModel({
+    accessRequestData: {
+      state: ACCESS_REQUEST_STATES.WITHDRAWN,
+    },
+    outgoingAccessRequestStore: null,
+  })
+
+  renderWithProviders(
+    <AccessState
+      accessRequest={accessRequest}
+      accessProof={null}
+      onRequestAccess={requestAccessSpy}
+    />,
+  )
+
+  expect(
+    screen.getByText('Latest access request has been withdrawn'),
+  ).toBeInTheDocument()
+
+  fireEvent.click(screen.getByText('Request access'))
+  expect(requestAccessSpy).toHaveBeenCalled()
+})

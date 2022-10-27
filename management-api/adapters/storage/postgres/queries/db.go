@@ -39,11 +39,23 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createUserRolesStmt, err = db.PrepareContext(ctx, createUserRoles); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateUserRoles: %w", err)
 	}
+	if q.deleteIncomingAccessRequestStmt, err = db.PrepareContext(ctx, deleteIncomingAccessRequest); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteIncomingAccessRequest: %w", err)
+	}
+	if q.deleteOutgoingAccessRequestStmt, err = db.PrepareContext(ctx, deleteOutgoingAccessRequest); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteOutgoingAccessRequest: %w", err)
+	}
 	if q.doesInwayExistByNameStmt, err = db.PrepareContext(ctx, doesInwayExistByName); err != nil {
 		return nil, fmt.Errorf("error preparing query DoesInwayExistByName: %w", err)
 	}
 	if q.getAccessGrantStmt, err = db.PrepareContext(ctx, getAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query GetAccessGrant: %w", err)
+	}
+	if q.getAccessGrantIDOfIncomingAccessRequestStmt, err = db.PrepareContext(ctx, getAccessGrantIDOfIncomingAccessRequest); err != nil {
+		return nil, fmt.Errorf("error preparing query GetAccessGrantIDOfIncomingAccessRequest: %w", err)
+	}
+	if q.getAccessProofStmt, err = db.PrepareContext(ctx, getAccessProof); err != nil {
+		return nil, fmt.Errorf("error preparing query GetAccessProof: %w", err)
 	}
 	if q.getLatestAccessGrantForServiceStmt, err = db.PrepareContext(ctx, getLatestAccessGrantForService); err != nil {
 		return nil, fmt.Errorf("error preparing query GetLatestAccessGrantForService: %w", err)
@@ -81,8 +93,20 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.revokeAccessGrantStmt, err = db.PrepareContext(ctx, revokeAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query RevokeAccessGrant: %w", err)
 	}
+	if q.setAuditLogAsSucceededStmt, err = db.PrepareContext(ctx, setAuditLogAsSucceeded); err != nil {
+		return nil, fmt.Errorf("error preparing query SetAuditLogAsSucceeded: %w", err)
+	}
+	if q.terminateAccessGrantStmt, err = db.PrepareContext(ctx, terminateAccessGrant); err != nil {
+		return nil, fmt.Errorf("error preparing query TerminateAccessGrant: %w", err)
+	}
+	if q.terminateAccessProofStmt, err = db.PrepareContext(ctx, terminateAccessProof); err != nil {
+		return nil, fmt.Errorf("error preparing query TerminateAccessProof: %w", err)
+	}
 	if q.updateIncomingAccessRequestStmt, err = db.PrepareContext(ctx, updateIncomingAccessRequest); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateIncomingAccessRequest: %w", err)
+	}
+	if q.updateOutgoingAccessRequestStateStmt, err = db.PrepareContext(ctx, updateOutgoingAccessRequestState); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateOutgoingAccessRequestState: %w", err)
 	}
 	if q.updateSettingsStmt, err = db.PrepareContext(ctx, updateSettings); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateSettings: %w", err)
@@ -120,6 +144,16 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing createUserRolesStmt: %w", cerr)
 		}
 	}
+	if q.deleteIncomingAccessRequestStmt != nil {
+		if cerr := q.deleteIncomingAccessRequestStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteIncomingAccessRequestStmt: %w", cerr)
+		}
+	}
+	if q.deleteOutgoingAccessRequestStmt != nil {
+		if cerr := q.deleteOutgoingAccessRequestStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteOutgoingAccessRequestStmt: %w", cerr)
+		}
+	}
 	if q.doesInwayExistByNameStmt != nil {
 		if cerr := q.doesInwayExistByNameStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing doesInwayExistByNameStmt: %w", cerr)
@@ -128,6 +162,16 @@ func (q *Queries) Close() error {
 	if q.getAccessGrantStmt != nil {
 		if cerr := q.getAccessGrantStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getAccessGrantStmt: %w", cerr)
+		}
+	}
+	if q.getAccessGrantIDOfIncomingAccessRequestStmt != nil {
+		if cerr := q.getAccessGrantIDOfIncomingAccessRequestStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getAccessGrantIDOfIncomingAccessRequestStmt: %w", cerr)
+		}
+	}
+	if q.getAccessProofStmt != nil {
+		if cerr := q.getAccessProofStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getAccessProofStmt: %w", cerr)
 		}
 	}
 	if q.getLatestAccessGrantForServiceStmt != nil {
@@ -190,9 +234,29 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing revokeAccessGrantStmt: %w", cerr)
 		}
 	}
+	if q.setAuditLogAsSucceededStmt != nil {
+		if cerr := q.setAuditLogAsSucceededStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing setAuditLogAsSucceededStmt: %w", cerr)
+		}
+	}
+	if q.terminateAccessGrantStmt != nil {
+		if cerr := q.terminateAccessGrantStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing terminateAccessGrantStmt: %w", cerr)
+		}
+	}
+	if q.terminateAccessProofStmt != nil {
+		if cerr := q.terminateAccessProofStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing terminateAccessProofStmt: %w", cerr)
+		}
+	}
 	if q.updateIncomingAccessRequestStmt != nil {
 		if cerr := q.updateIncomingAccessRequestStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateIncomingAccessRequestStmt: %w", cerr)
+		}
+	}
+	if q.updateOutgoingAccessRequestStateStmt != nil {
+		if cerr := q.updateOutgoingAccessRequestStateStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateOutgoingAccessRequestStateStmt: %w", cerr)
 		}
 	}
 	if q.updateSettingsStmt != nil {
@@ -242,57 +306,73 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                                      DBTX
-	tx                                      *sql.Tx
-	createAccessGrantStmt                   *sql.Stmt
-	createAccessProofStmt                   *sql.Stmt
-	createTermsOfServiceStmt                *sql.Stmt
-	createUserStmt                          *sql.Stmt
-	createUserRolesStmt                     *sql.Stmt
-	doesInwayExistByNameStmt                *sql.Stmt
-	getAccessGrantStmt                      *sql.Stmt
-	getLatestAccessGrantForServiceStmt      *sql.Stmt
-	getSettingsStmt                         *sql.Stmt
-	getUserByEmailStmt                      *sql.Stmt
-	listAccessGrantsForServiceStmt          *sql.Stmt
-	listAllLatestOutgoingAccessRequestsStmt *sql.Stmt
-	listInwaysForServiceStmt                *sql.Stmt
-	listPermissionsStmt                     *sql.Stmt
-	listPermissionsForRoleStmt              *sql.Stmt
-	listRolesForUserStmt                    *sql.Stmt
-	listServicesStmt                        *sql.Stmt
-	listTermsOfServiceStmt                  *sql.Stmt
-	revokeAccessGrantStmt                   *sql.Stmt
-	updateIncomingAccessRequestStmt         *sql.Stmt
-	updateSettingsStmt                      *sql.Stmt
-	upsertInwayStmt                         *sql.Stmt
+	db                                          DBTX
+	tx                                          *sql.Tx
+	createAccessGrantStmt                       *sql.Stmt
+	createAccessProofStmt                       *sql.Stmt
+	createTermsOfServiceStmt                    *sql.Stmt
+	createUserStmt                              *sql.Stmt
+	createUserRolesStmt                         *sql.Stmt
+	deleteIncomingAccessRequestStmt             *sql.Stmt
+	deleteOutgoingAccessRequestStmt             *sql.Stmt
+	doesInwayExistByNameStmt                    *sql.Stmt
+	getAccessGrantStmt                          *sql.Stmt
+	getAccessGrantIDOfIncomingAccessRequestStmt *sql.Stmt
+	getAccessProofStmt                          *sql.Stmt
+	getLatestAccessGrantForServiceStmt          *sql.Stmt
+	getSettingsStmt                             *sql.Stmt
+	getUserByEmailStmt                          *sql.Stmt
+	listAccessGrantsForServiceStmt              *sql.Stmt
+	listAllLatestOutgoingAccessRequestsStmt     *sql.Stmt
+	listInwaysForServiceStmt                    *sql.Stmt
+	listPermissionsStmt                         *sql.Stmt
+	listPermissionsForRoleStmt                  *sql.Stmt
+	listRolesForUserStmt                        *sql.Stmt
+	listServicesStmt                            *sql.Stmt
+	listTermsOfServiceStmt                      *sql.Stmt
+	revokeAccessGrantStmt                       *sql.Stmt
+	setAuditLogAsSucceededStmt                  *sql.Stmt
+	terminateAccessGrantStmt                    *sql.Stmt
+	terminateAccessProofStmt                    *sql.Stmt
+	updateIncomingAccessRequestStmt             *sql.Stmt
+	updateOutgoingAccessRequestStateStmt        *sql.Stmt
+	updateSettingsStmt                          *sql.Stmt
+	upsertInwayStmt                             *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                                      tx,
-		tx:                                      tx,
-		createAccessGrantStmt:                   q.createAccessGrantStmt,
-		createAccessProofStmt:                   q.createAccessProofStmt,
-		createTermsOfServiceStmt:                q.createTermsOfServiceStmt,
-		createUserStmt:                          q.createUserStmt,
-		createUserRolesStmt:                     q.createUserRolesStmt,
-		doesInwayExistByNameStmt:                q.doesInwayExistByNameStmt,
-		getAccessGrantStmt:                      q.getAccessGrantStmt,
-		getLatestAccessGrantForServiceStmt:      q.getLatestAccessGrantForServiceStmt,
-		getSettingsStmt:                         q.getSettingsStmt,
-		getUserByEmailStmt:                      q.getUserByEmailStmt,
-		listAccessGrantsForServiceStmt:          q.listAccessGrantsForServiceStmt,
-		listAllLatestOutgoingAccessRequestsStmt: q.listAllLatestOutgoingAccessRequestsStmt,
-		listInwaysForServiceStmt:                q.listInwaysForServiceStmt,
-		listPermissionsStmt:                     q.listPermissionsStmt,
-		listPermissionsForRoleStmt:              q.listPermissionsForRoleStmt,
-		listRolesForUserStmt:                    q.listRolesForUserStmt,
-		listServicesStmt:                        q.listServicesStmt,
-		listTermsOfServiceStmt:                  q.listTermsOfServiceStmt,
-		revokeAccessGrantStmt:                   q.revokeAccessGrantStmt,
-		updateIncomingAccessRequestStmt:         q.updateIncomingAccessRequestStmt,
-		updateSettingsStmt:                      q.updateSettingsStmt,
-		upsertInwayStmt:                         q.upsertInwayStmt,
+		db:                              tx,
+		tx:                              tx,
+		createAccessGrantStmt:           q.createAccessGrantStmt,
+		createAccessProofStmt:           q.createAccessProofStmt,
+		createTermsOfServiceStmt:        q.createTermsOfServiceStmt,
+		createUserStmt:                  q.createUserStmt,
+		createUserRolesStmt:             q.createUserRolesStmt,
+		deleteIncomingAccessRequestStmt: q.deleteIncomingAccessRequestStmt,
+		deleteOutgoingAccessRequestStmt: q.deleteOutgoingAccessRequestStmt,
+		doesInwayExistByNameStmt:        q.doesInwayExistByNameStmt,
+		getAccessGrantStmt:              q.getAccessGrantStmt,
+		getAccessGrantIDOfIncomingAccessRequestStmt: q.getAccessGrantIDOfIncomingAccessRequestStmt,
+		getAccessProofStmt:                          q.getAccessProofStmt,
+		getLatestAccessGrantForServiceStmt:          q.getLatestAccessGrantForServiceStmt,
+		getSettingsStmt:                             q.getSettingsStmt,
+		getUserByEmailStmt:                          q.getUserByEmailStmt,
+		listAccessGrantsForServiceStmt:              q.listAccessGrantsForServiceStmt,
+		listAllLatestOutgoingAccessRequestsStmt:     q.listAllLatestOutgoingAccessRequestsStmt,
+		listInwaysForServiceStmt:                    q.listInwaysForServiceStmt,
+		listPermissionsStmt:                         q.listPermissionsStmt,
+		listPermissionsForRoleStmt:                  q.listPermissionsForRoleStmt,
+		listRolesForUserStmt:                        q.listRolesForUserStmt,
+		listServicesStmt:                            q.listServicesStmt,
+		listTermsOfServiceStmt:                      q.listTermsOfServiceStmt,
+		revokeAccessGrantStmt:                       q.revokeAccessGrantStmt,
+		setAuditLogAsSucceededStmt:                  q.setAuditLogAsSucceededStmt,
+		terminateAccessGrantStmt:                    q.terminateAccessGrantStmt,
+		terminateAccessProofStmt:                    q.terminateAccessProofStmt,
+		updateIncomingAccessRequestStmt:             q.updateIncomingAccessRequestStmt,
+		updateOutgoingAccessRequestStateStmt:        q.updateOutgoingAccessRequestStateStmt,
+		updateSettingsStmt:                          q.updateSettingsStmt,
+		upsertInwayStmt:                             q.upsertInwayStmt,
 	}
 }

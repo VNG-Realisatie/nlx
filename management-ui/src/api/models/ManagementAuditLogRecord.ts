@@ -92,6 +92,12 @@ export interface ManagementAuditLogRecord {
      * @memberof ManagementAuditLogRecord
      */
     data?: ManagementAuditLogRecordMetadata;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ManagementAuditLogRecord
+     */
+    hasSucceeded?: boolean;
 }
 
 /**
@@ -122,6 +128,7 @@ export function ManagementAuditLogRecordFromJSONTyped(json: any, ignoreDiscrimin
         'services': !exists(json, 'services') ? undefined : ((json['services'] as Array<any>).map(ManagementAuditLogRecordServiceFromJSON)),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'data': !exists(json, 'data') ? undefined : ManagementAuditLogRecordMetadataFromJSON(json['data']),
+        'hasSucceeded': !exists(json, 'has_succeeded') ? undefined : json['has_succeeded'],
     };
 }
 
@@ -143,6 +150,7 @@ export function ManagementAuditLogRecordToJSON(value?: ManagementAuditLogRecord 
         'services': value.services === undefined ? undefined : ((value.services as Array<any>).map(ManagementAuditLogRecordServiceToJSON)),
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'data': ManagementAuditLogRecordMetadataToJSON(value.data),
+        'has_succeeded': value.hasSucceeded,
     };
 }
 

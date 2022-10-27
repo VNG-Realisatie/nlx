@@ -11,4 +11,9 @@ fix-newlines:
 
 .PHONY: fix-proto-formatting
 fix-proto-formatting:
-	docker run --rm -v ${PWD}:/src --workdir /src bufbuild/buf:1.8.0 format -w
+	docker run --rm \
+		-v ${PWD}/management-api/api:/src/management-api/api \
+		-v ${PWD}/outway/api:/src/outway/api \
+		-v ${PWD}/txlog-api/api:/src/txlog-api/api \
+		-v ${PWD}/management-api/api:/src/management-api/api \
+ 		--workdir /src bufbuild/buf:1.8.0 format -w

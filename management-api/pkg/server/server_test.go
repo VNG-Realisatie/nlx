@@ -80,6 +80,7 @@ type serviceMocks struct {
 	tx      *mock_txlog.MockClient
 	mc      *mock_management.MockClient
 	oc      *mock_outway.MockClient
+	cl      server.Clock
 }
 
 func newService(t *testing.T) (*server.ManagementService, *common_tls.CertificateBundle, serviceMocks) {
@@ -98,6 +99,7 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		dbTxLog: mock_txlogdb.NewMockTxlogDatabase(ctrl),
 		mc:      mock_management.NewMockClient(ctrl),
 		oc:      mock_outway.NewMockClient(ctrl),
+		cl:      &testClock{},
 	}
 
 	s, orgCert := newServer(t, mocks)
@@ -121,6 +123,7 @@ func newServiceWithoutTXLog(t *testing.T) (*server.ManagementService, *common_tl
 		db:      mock_database.NewMockConfigDatabase(ctrl),
 		mc:      mock_management.NewMockClient(ctrl),
 		oc:      mock_outway.NewMockClient(ctrl),
+		cl:      &testClock{},
 	}
 
 	s, orgCert := newServer(t, mocks)
@@ -160,6 +163,6 @@ func newServer(t *testing.T, mocks serviceMocks) (*server.ManagementService, *co
 			CreateOutwayClientFunc: func(context.Context, string, *common_tls.CertificateBundle) (outway.Client, error) {
 				return mocks.oc, nil
 			},
-			Clock: &testClock{},
+			Clock: mocks.cl,
 		}), orgCert
 }

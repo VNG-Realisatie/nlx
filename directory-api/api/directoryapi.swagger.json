@@ -24,6 +24,7 @@
   "paths": {
     "/api/directory/list-organizations": {
       "get": {
+        "summary": "buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE",
         "operationId": "Directory_ListOrganizations",
         "responses": {
           "200": {
@@ -46,6 +47,7 @@
     },
     "/api/directory/list-services": {
       "get": {
+        "summary": "buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE",
         "operationId": "Directory_ListServices",
         "responses": {
           "200": {
@@ -68,6 +70,7 @@
     },
     "/api/directory/organizations/{organization_serial_number}/inway": {
       "get": {
+        "summary": "buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE",
         "operationId": "Directory_GetOrganizationInway",
         "responses": {
           "200": {
@@ -194,6 +197,7 @@
     },
     "/api/stats": {
       "get": {
+        "summary": "buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE",
         "operationId": "Directory_ListInOutwayStatistics",
         "responses": {
           "200": {

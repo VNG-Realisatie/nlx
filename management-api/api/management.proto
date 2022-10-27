@@ -130,6 +130,16 @@ service ManagementService {
       response_body: '*'
     };
   }
+  rpc WithdrawOutgoingAccessRequest(WithdrawOutgoingAccessRequestRequest) returns (WithdrawOutgoingAccessRequestResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/cancel"
+    };
+  }
+  rpc TerminateAccessProof(TerminateAccessProofRequest) returns (TerminateAccessProofResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/access-proofs/{organization_serial_number}/services/{service_name}/terminate"
+    };
+  }
   rpc SendAccessRequest(SendAccessRequestRequest) returns (SendAccessRequestResponse) {
     option (google.api.http) = {
       post: "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}"
@@ -568,7 +578,24 @@ message AccessGrant {
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp revoked_at = 6;
   uint64 access_request_id = 7;
+  google.protobuf.Timestamp terminated_at = 8;
 }
+
+message WithdrawOutgoingAccessRequestRequest {
+  string organization_serial_number = 1;
+  string service_name = 2;
+  string public_key_fingerprint = 3;
+}
+
+message WithdrawOutgoingAccessRequestResponse {}
+
+message TerminateAccessProofRequest {
+  string organization_serial_number = 1;
+  string service_name = 2;
+  string public_key_fingerprint = 3;
+}
+
+message TerminateAccessProofResponse {}
 
 service DirectoryService {
   rpc ListServices(DirectoryServiceListServicesRequest) returns (DirectoryServiceListServicesResponse) {
@@ -696,6 +723,8 @@ message AuditLogRecord {
     ACTION_TYPE_ORDER_OUTGOING_UPDATE = 17;
     ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE = 18;
     ACTION_TYPE_OUTWAY_DELETE = 19;
+    ACTION_TYPE_OUTGOING_ACCESS_REQUEST_WITHDRAW = 20;
+    ACTION_TYPE_ACCESS_TERMINATE = 21;
   }
 
   message Service {
@@ -712,6 +741,7 @@ message AuditLogRecord {
   repeated Service services = 7;
   google.protobuf.Timestamp created_at = 8;
   AuditLogRecordMetadata data = 9;
+  bool has_succeeded = 10;
 }
 
 message AuditLogRecordMetadata {
@@ -720,6 +750,7 @@ message AuditLogRecordMetadata {
   string reference = 3;
   string inway_name = 4;
   string outway_name = 5;
+  string public_key_fingerprint = 6;
 }
 
 message ListAuditLogsRequest {}
@@ -772,6 +803,7 @@ message AccessProof {
   google.protobuf.Timestamp revoked_at = 5;
   uint64 access_request_id = 6;
   string public_key_fingerprint = 7;
+  google.protobuf.Timestamp terminated_at = 8;
 }
 
 message OutgoingOrder {

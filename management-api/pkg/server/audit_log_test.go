@@ -106,11 +106,12 @@ func TestListAuditLogs(t *testing.T) {
 					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
-							ID:         1,
-							Username:   "admin@example.com",
-							ActionType: auditlog.LoginSuccess,
-							UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
-							CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+							ID:           1,
+							Username:     "admin@example.com",
+							ActionType:   auditlog.LoginSuccess,
+							UserAgent:    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
+							HasSucceeded: true,
+							CreatedAt:    time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 						},
 					}, nil)
 			},
@@ -125,6 +126,7 @@ func TestListAuditLogs(t *testing.T) {
 						Browser:         "Safari",
 						Client:          "NLX Management",
 						Services:        []*api.AuditLogRecord_Service{},
+						HasSucceeded:    true,
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 					},
 				},
@@ -144,11 +146,12 @@ func TestListAuditLogs(t *testing.T) {
 					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
-							ID:         1,
-							Username:   "",
-							ActionType: auditlog.LoginSuccess,
-							UserAgent:  "nlxctl/1.x (Mac OS X)",
-							CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+							ID:           1,
+							Username:     "",
+							ActionType:   auditlog.LoginSuccess,
+							UserAgent:    "nlxctl/1.x (Mac OS X)",
+							HasSucceeded: true,
+							CreatedAt:    time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
 						},
 					}, nil)
 			},
@@ -163,6 +166,7 @@ func TestListAuditLogs(t *testing.T) {
 						Browser:         "",
 						Client:          "nlxctl",
 						Services:        []*api.AuditLogRecord_Service{},
+						HasSucceeded:    true,
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 					},
 				},
@@ -189,14 +193,16 @@ func TestListAuditLogs(t *testing.T) {
 					List(gomock.Any(), numberOfAuditLogs).
 					Return([]*auditlog.Record{
 						{
-							ID:         1,
-							Username:   "admin@example.com",
-							ActionType: auditlog.OrderOutgoingRevoke,
-							UserAgent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
-							CreatedAt:  time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+							ID:           1,
+							Username:     "admin@example.com",
+							ActionType:   auditlog.OrderOutgoingRevoke,
+							UserAgent:    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
+							CreatedAt:    time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC),
+							HasSucceeded: true,
 							Data: &auditlog.RecordData{
-								Delegatee: newStringPointer("00000000000000000001"),
-								Reference: newStringPointer("test-reference"),
+								Delegatee:            newStringPointer("00000000000000000001"),
+								Reference:            newStringPointer("test-reference"),
+								PublicKeyFingerprint: newStringPointer("public-key-fingerprint"),
 							},
 						},
 					}, nil)
@@ -211,6 +217,7 @@ func TestListAuditLogs(t *testing.T) {
 						OperatingSystem: "Mac OS X",
 						Browser:         "Safari",
 						Client:          "NLX Management",
+						HasSucceeded:    true,
 						Services:        []*api.AuditLogRecord_Service{},
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
 						Data: &api.AuditLogRecordMetadata{
@@ -218,7 +225,8 @@ func TestListAuditLogs(t *testing.T) {
 								SerialNumber: "00000000000000000001",
 								Name:         "Organization One",
 							},
-							Reference: "test-reference",
+							Reference:            "test-reference",
+							PublicKeyFingerprint: "public-key-fingerprint",
 						},
 					},
 				},
@@ -246,6 +254,7 @@ func TestListAuditLogs(t *testing.T) {
 							Data: &auditlog.RecordData{
 								InwayName: newStringPointer("my-inway"),
 							},
+							HasSucceeded: true,
 						},
 					}, nil)
 			},
@@ -261,6 +270,7 @@ func TestListAuditLogs(t *testing.T) {
 						Client:          "NLX Management",
 						Services:        []*api.AuditLogRecord_Service{},
 						CreatedAt:       createTimestamp(time.Date(2020, time.July, 9, 14, 45, 5, 0, time.UTC)),
+						HasSucceeded:    true,
 						Data: &api.AuditLogRecordMetadata{
 							InwayName: "my-inway",
 						},

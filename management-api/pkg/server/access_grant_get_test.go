@@ -102,6 +102,7 @@ func TestGetAccessGrant(t *testing.T) {
 					Return(&database.AccessGrant{
 						CreatedAt:               now,
 						RevokedAt:               sql.NullTime{Time: now},
+						TerminatedAt:            sql.NullTime{Time: now},
 						ID:                      1,
 						IncomingAccessRequestID: 1,
 						IncomingAccessRequest: &database.IncomingAccessRequest{
@@ -124,6 +125,7 @@ func TestGetAccessGrant(t *testing.T) {
 					Id:              1,
 					CreatedAt:       ts,
 					RevokedAt:       ts,
+					TerminatedAt:    ts,
 					AccessRequestId: 1,
 					Organization: &external.Organization{
 						SerialNumber: "00000000000000000001",

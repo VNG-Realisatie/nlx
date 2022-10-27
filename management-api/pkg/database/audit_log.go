@@ -14,23 +14,25 @@ import (
 type AuditLogActionType string
 
 const (
-	LoginSuccess                AuditLogActionType = "login_success"
-	LoginFail                   AuditLogActionType = "login_fail"
-	LogoutSuccess               AuditLogActionType = "logout_success"
-	IncomingAccessRequestAccept AuditLogActionType = "incoming_access_request_accept"
-	IncomingAccessRequestReject AuditLogActionType = "incoming_access_request_reject"
-	AccessGrantRevoke           AuditLogActionType = "access_grant_revoke"
-	OutgoingAccessRequestCreate AuditLogActionType = "outgoing_access_request_create"
-	ServiceCreate               AuditLogActionType = "service_create"
-	ServiceUpdate               AuditLogActionType = "service_update"
-	ServiceDelete               AuditLogActionType = "service_delete"
-	OrderCreate                 AuditLogActionType = "order_create"
-	OrderOutgoingUpdate         AuditLogActionType = "order_outgoing_update"
-	OrderOutgoingRevoke         AuditLogActionType = "order_outgoing_revoke"
-	OrganizationSettingsUpdate  AuditLogActionType = "organization_settings_update"
-	InwayDelete                 AuditLogActionType = "inway_delete"
-	OutwayDelete                AuditLogActionType = "outway_delete"
-	AcceptTermsOfService        AuditLogActionType = "accept_terms_of_service"
+	LoginSuccess                  AuditLogActionType = "login_success"
+	LoginFail                     AuditLogActionType = "login_fail"
+	LogoutSuccess                 AuditLogActionType = "logout_success"
+	IncomingAccessRequestAccept   AuditLogActionType = "incoming_access_request_accept"
+	IncomingAccessRequestReject   AuditLogActionType = "incoming_access_request_reject"
+	AccessGrantRevoke             AuditLogActionType = "access_grant_revoke"
+	OutgoingAccessRequestCreate   AuditLogActionType = "outgoing_access_request_create"
+	OutgoingAccessRequestWithdraw AuditLogActionType = "outgoing_access_request_withdraw"
+	AccessGrantTerminate          AuditLogActionType = "access_terminate"
+	ServiceCreate                 AuditLogActionType = "service_create"
+	ServiceUpdate                 AuditLogActionType = "service_update"
+	ServiceDelete                 AuditLogActionType = "service_delete"
+	OrderCreate                   AuditLogActionType = "order_create"
+	OrderOutgoingUpdate           AuditLogActionType = "order_outgoing_update"
+	OrderOutgoingRevoke           AuditLogActionType = "order_outgoing_revoke"
+	OrganizationSettingsUpdate    AuditLogActionType = "organization_settings_update"
+	InwayDelete                   AuditLogActionType = "inway_delete"
+	OutwayDelete                  AuditLogActionType = "outway_delete"
+	AcceptTermsOfService          AuditLogActionType = "accept_terms_of_service"
 )
 
 type AuditLog struct {
@@ -39,9 +41,10 @@ type AuditLog struct {
 	ActionType AuditLogActionType
 	UserAgent  string
 
-	Data      sql.NullString
-	Services  []AuditLogService
-	CreatedAt time.Time
+	Data         sql.NullString
+	Services     []AuditLogService
+	HasSucceeded bool
+	CreatedAt    time.Time
 }
 
 func (a *AuditLog) TableName() string {
@@ -117,4 +120,8 @@ func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context, limit
 	}
 
 	return auditLogs, nil
+}
+
+func (db *PostgresConfigDatabase) SetAuditLogAsSucceeded(ctx context.Context, id int64) error {
+	return db.queries.SetAuditLogAsSucceeded(ctx, id)
 }

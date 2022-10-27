@@ -39,6 +39,25 @@ class OutgoingAccessRequestStore {
     return outgoingAccessRequest
   }
 
+  terminate = flow(function* terminate(outgoingAccessRequest) {
+    yield this._managementApiClient.managementServiceTerminateAccessProof({
+      organizationSerialNumber: outgoingAccessRequest.organization.serialNumber,
+      serviceName: outgoingAccessRequest.serviceName,
+      publicKeyFingerprint: outgoingAccessRequest.publicKeyFingerprint,
+    })
+  }).bind(this)
+
+  withdraw = flow(function* withdraw(outgoingAccessRequest) {
+    yield this._managementApiClient.managementServiceWithdrawOutgoingAccessRequest(
+      {
+        organizationSerialNumber:
+          outgoingAccessRequest.organization.serialNumber,
+        serviceName: outgoingAccessRequest.serviceName,
+        publicKeyFingerprint: outgoingAccessRequest.publicKeyFingerprint,
+      },
+    )
+  }).bind(this)
+
   send = flow(function* create(
     organizationSerialNumber,
     serviceName,

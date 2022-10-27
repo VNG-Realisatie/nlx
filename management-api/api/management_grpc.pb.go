@@ -44,6 +44,8 @@ type ManagementServiceClient interface {
 	ListIncomingAccessRequests(ctx context.Context, in *ListIncomingAccessRequestsRequest, opts ...grpc.CallOption) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(ctx context.Context, in *ApproveIncomingAccessRequestRequest, opts ...grpc.CallOption) (*ApproveIncomingAccessRequestResponse, error)
 	RejectIncomingAccessRequest(ctx context.Context, in *RejectIncomingAccessRequestRequest, opts ...grpc.CallOption) (*RejectIncomingAccessRequestResponse, error)
+	WithdrawOutgoingAccessRequest(ctx context.Context, in *WithdrawOutgoingAccessRequestRequest, opts ...grpc.CallOption) (*WithdrawOutgoingAccessRequestResponse, error)
+	TerminateAccessProof(ctx context.Context, in *TerminateAccessProofRequest, opts ...grpc.CallOption) (*TerminateAccessProofResponse, error)
 	SendAccessRequest(ctx context.Context, in *SendAccessRequestRequest, opts ...grpc.CallOption) (*SendAccessRequestResponse, error)
 	GetSettings(ctx context.Context, in *GetSettingsRequest, opts ...grpc.CallOption) (*GetSettingsResponse, error)
 	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error)
@@ -259,6 +261,24 @@ func (c *managementServiceClient) RejectIncomingAccessRequest(ctx context.Contex
 	return out, nil
 }
 
+func (c *managementServiceClient) WithdrawOutgoingAccessRequest(ctx context.Context, in *WithdrawOutgoingAccessRequestRequest, opts ...grpc.CallOption) (*WithdrawOutgoingAccessRequestResponse, error) {
+	out := new(WithdrawOutgoingAccessRequestResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/WithdrawOutgoingAccessRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *managementServiceClient) TerminateAccessProof(ctx context.Context, in *TerminateAccessProofRequest, opts ...grpc.CallOption) (*TerminateAccessProofResponse, error) {
+	out := new(TerminateAccessProofResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/TerminateAccessProof", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *managementServiceClient) SendAccessRequest(ctx context.Context, in *SendAccessRequestRequest, opts ...grpc.CallOption) (*SendAccessRequestResponse, error) {
 	out := new(SendAccessRequestResponse)
 	err := c.cc.Invoke(ctx, "/nlx.management.ManagementService/SendAccessRequest", in, out, opts...)
@@ -428,6 +448,8 @@ type ManagementServiceServer interface {
 	ListIncomingAccessRequests(context.Context, *ListIncomingAccessRequestsRequest) (*ListIncomingAccessRequestsResponse, error)
 	ApproveIncomingAccessRequest(context.Context, *ApproveIncomingAccessRequestRequest) (*ApproveIncomingAccessRequestResponse, error)
 	RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*RejectIncomingAccessRequestResponse, error)
+	WithdrawOutgoingAccessRequest(context.Context, *WithdrawOutgoingAccessRequestRequest) (*WithdrawOutgoingAccessRequestResponse, error)
+	TerminateAccessProof(context.Context, *TerminateAccessProofRequest) (*TerminateAccessProofResponse, error)
 	SendAccessRequest(context.Context, *SendAccessRequestRequest) (*SendAccessRequestResponse, error)
 	GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error)
 	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
@@ -513,6 +535,12 @@ func (UnimplementedManagementServiceServer) ApproveIncomingAccessRequest(context
 }
 func (UnimplementedManagementServiceServer) RejectIncomingAccessRequest(context.Context, *RejectIncomingAccessRequestRequest) (*RejectIncomingAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RejectIncomingAccessRequest not implemented")
+}
+func (UnimplementedManagementServiceServer) WithdrawOutgoingAccessRequest(context.Context, *WithdrawOutgoingAccessRequestRequest) (*WithdrawOutgoingAccessRequestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithdrawOutgoingAccessRequest not implemented")
+}
+func (UnimplementedManagementServiceServer) TerminateAccessProof(context.Context, *TerminateAccessProofRequest) (*TerminateAccessProofResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TerminateAccessProof not implemented")
 }
 func (UnimplementedManagementServiceServer) SendAccessRequest(context.Context, *SendAccessRequestRequest) (*SendAccessRequestResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendAccessRequest not implemented")
@@ -953,6 +981,42 @@ func _ManagementService_RejectIncomingAccessRequest_Handler(srv interface{}, ctx
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ManagementService_WithdrawOutgoingAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WithdrawOutgoingAccessRequestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).WithdrawOutgoingAccessRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.ManagementService/WithdrawOutgoingAccessRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).WithdrawOutgoingAccessRequest(ctx, req.(*WithdrawOutgoingAccessRequestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ManagementService_TerminateAccessProof_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TerminateAccessProofRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ManagementServiceServer).TerminateAccessProof(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.ManagementService/TerminateAccessProof",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ManagementServiceServer).TerminateAccessProof(ctx, req.(*TerminateAccessProofRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ManagementService_SendAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendAccessRequestRequest)
 	if err := dec(in); err != nil {
@@ -1331,6 +1395,14 @@ var ManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RejectIncomingAccessRequest",
 			Handler:    _ManagementService_RejectIncomingAccessRequest_Handler,
+		},
+		{
+			MethodName: "WithdrawOutgoingAccessRequest",
+			Handler:    _ManagementService_WithdrawOutgoingAccessRequest_Handler,
+		},
+		{
+			MethodName: "TerminateAccessProof",
+			Handler:    _ManagementService_TerminateAccessProof_Handler,
 		},
 		{
 			MethodName: "SendAccessRequest",

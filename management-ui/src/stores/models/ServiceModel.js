@@ -46,7 +46,8 @@ class ServiceModel {
     const allAccessGrants =
       this.servicesStore.rootStore.accessGrantStore.getForService(this)
     return allAccessGrants.filter(
-      (accessGrant) => accessGrant.revokedAt === null,
+      (accessGrant) =>
+        accessGrant.revokedAt === null && accessGrant.terminatedAt === null,
     )
   }
 

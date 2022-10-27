@@ -100,7 +100,8 @@ func TestGetAccessProof(t *testing.T) {
 					GetLatestAccessGrantForService(ctx, certBundle.Certificate().Subject.SerialNumber, "service", "public-key-fingerprint").
 					Return(&database.AccessGrant{
 						CreatedAt:               now,
-						RevokedAt:               sql.NullTime{Time: now},
+						RevokedAt:               sql.NullTime{Time: now, Valid: true},
+						TerminatedAt:            sql.NullTime{Time: now, Valid: true},
 						ID:                      1,
 						IncomingAccessRequestID: 1,
 						IncomingAccessRequest: &database.IncomingAccessRequest{
@@ -122,6 +123,7 @@ func TestGetAccessProof(t *testing.T) {
 				Id:              1,
 				CreatedAt:       ts,
 				RevokedAt:       ts,
+				TerminatedAt:    ts,
 				AccessRequestId: 1,
 				Organization: &external.Organization{
 					SerialNumber: "00000000000000000001",

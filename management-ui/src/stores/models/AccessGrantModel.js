@@ -14,6 +14,7 @@ class AccessGrantModel {
   publicKeyFingerprint = ''
   createdAt = null
   revokedAt = null
+  terminatedAt = null
 
   constructor({ accessGrantStore, accessGrantData }) {
     makeAutoObservable(this)
@@ -52,6 +53,10 @@ class AccessGrantModel {
 
     if (accessGrantData.revokedAt) {
       this.revokedAt = new Date(accessGrantData.revokedAt)
+    }
+
+    if (accessGrantData.terminatedAt) {
+      this.terminatedAt = new Date(accessGrantData.terminatedAt)
     }
   }
 

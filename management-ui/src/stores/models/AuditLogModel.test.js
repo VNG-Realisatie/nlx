@@ -23,7 +23,9 @@ test('creating AuditLog instance', () => {
         },
         reference: '030394AB',
         inwayName: 'my-inway',
+        publicKeyFingerprint: 'WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=',
       },
+      hasSucceeded: true,
     },
   })
 
@@ -37,10 +39,14 @@ test('creating AuditLog instance', () => {
       service: 'vakantieverhuur',
     },
   ])
+  expect(model.hasSucceeded).toEqual(true)
   expect(model.data.delegatee.serialNumber).toEqual('00000000000000000001')
   expect(model.data.delegatee.name).toEqual('Kadaster')
   expect(model.data.reference).toEqual('030394AB')
   expect(model.data.inwayName).toEqual('my-inway')
+  expect(model.data.publicKeyFingerprint).toEqual(
+    'WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=',
+  )
 })
 
 test('organization name is empty', () => {

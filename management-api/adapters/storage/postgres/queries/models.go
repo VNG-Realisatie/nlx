@@ -16,6 +16,7 @@ type NlxManagementAccessGrant struct {
 	AccessRequestIncomingID int32
 	CreatedAt               time.Time
 	RevokedAt               sql.NullTime
+	TerminatedAt            sql.NullTime
 }
 
 type NlxManagementAccessProof struct {
@@ -23,6 +24,7 @@ type NlxManagementAccessProof struct {
 	AccessRequestOutgoingID int32
 	CreatedAt               time.Time
 	RevokedAt               sql.NullTime
+	TerminatedAt            sql.NullTime
 }
 
 type NlxManagementAccessRequestsIncoming struct {
@@ -54,12 +56,13 @@ type NlxManagementAccessRequestsOutgoing struct {
 }
 
 type NlxManagementAuditLog struct {
-	ID         int64
-	UserName   sql.NullString
-	ActionType string
-	UserAgent  string
-	Data       pqtype.NullRawMessage
-	CreatedAt  time.Time
+	ID           int64
+	UserName     sql.NullString
+	ActionType   string
+	UserAgent    string
+	Data         pqtype.NullRawMessage
+	CreatedAt    time.Time
+	HasSucceeded bool
 }
 
 type NlxManagementAuditLogsService struct {

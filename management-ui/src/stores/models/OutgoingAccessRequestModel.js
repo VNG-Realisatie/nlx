@@ -1,13 +1,14 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { makeAutoObservable } from 'mobx'
+import { flow, makeAutoObservable } from 'mobx'
 
 export const ACCESS_REQUEST_STATES = {
   FAILED: 'ACCESS_REQUEST_STATE_FAILED',
   RECEIVED: 'ACCESS_REQUEST_STATE_RECEIVED',
   REJECTED: 'ACCESS_REQUEST_STATE_REJECTED',
   APPROVED: 'ACCESS_REQUEST_STATE_APPROVED',
+  WITHDRAWN: 'ACCESS_REQUEST_STATE_WITHDRAWN',
 }
 
 class OutgoingAccessRequestModel {
@@ -75,6 +76,24 @@ class OutgoingAccessRequestModel {
       this.errorDetails.cause = accessRequestData.errorDetails.cause
     }
   }
+
+  terminate = flow(function* reject() {
+    try {
+      yield this.outgoingAccessRequestStore.terminate(this)
+    } catch (error) {
+      console.error('Failed to terminate access: ', error.message)
+      throw error
+    }
+  }).bind(this)
+
+  withdraw = flow(function* reject() {
+    try {
+      yield this.outgoingAccessRequestStore.withdraw(this)
+    } catch (error) {
+      console.error('Failed to cancel access: ', error.message)
+      throw error
+    }
+  }).bind(this)
 }
 
 export default OutgoingAccessRequestModel

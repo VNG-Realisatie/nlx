@@ -20,9 +20,10 @@ import (
 )
 
 type recordMetadata struct {
-	Delegatee string `json:"delegatee,omitempty"`
-	InwayName string `json:"inwayName,omitempty"`
-	Reference string `json:"reference,omitempty"`
+	Delegatee            string `json:"delegatee,omitempty"`
+	InwayName            string `json:"inwayName,omitempty"`
+	Reference            string `json:"reference,omitempty"`
+	PublicKeyFingerprint string `json:"publicKeyFingerprint,omitempty"`
 }
 
 func marshallMetadata(t *testing.T, metadata *recordMetadata) string {

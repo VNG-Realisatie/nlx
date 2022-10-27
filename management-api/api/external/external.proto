@@ -22,6 +22,9 @@ service AccessRequestService {
 
   // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE // Remove this ignore when 'GetAccessProof' is removed
   rpc GetAccessGrant(GetAccessGrantRequest) returns (GetAccessGrantResponse);
+
+  rpc WithdrawAccessRequest(WithdrawAccessRequestRequest) returns (WithdrawAccessRequestResponse);
+  rpc TerminateAccess(TerminateAccessRequest) returns (TerminateAccessResponse);
 }
 
 service DelegationService {
@@ -52,6 +55,7 @@ message AccessGrant {
   google.protobuf.Timestamp revoked_at = 5;
   uint64 access_request_id = 6;
   string public_key_fingerprint = 7;
+  google.protobuf.Timestamp terminated_at = 8;
 }
 
 enum AccessRequestState {
@@ -61,7 +65,8 @@ enum AccessRequestState {
   ACCESS_REQUEST_STATE_RECEIVED = 3;
   ACCESS_REQUEST_STATE_APPROVED = 4;
   ACCESS_REQUEST_STATE_REJECTED = 5;
-  ACCESS_REQUEST_STATE_REVOKED = 6;
+  reserved 6; // Removed deprecated option 'REVOKED' = 6;
+  ACCESS_REQUEST_STATE_WITHDRAWN = 7;
 }
 
 message GetAccessRequestStateResponse {
@@ -111,4 +116,20 @@ message IncomingOrder {
 
 message ListOrdersResponse {
   repeated IncomingOrder orders = 1;
+}
+
+message WithdrawAccessRequestRequest {
+  string service_name = 1;
+  string public_key_fingerprint = 2;
+}
+
+message WithdrawAccessRequestResponse {}
+
+message TerminateAccessRequest {
+  string service_name = 1;
+  string public_key_fingerprint = 2;
+}
+
+message TerminateAccessResponse {
+  google.protobuf.Timestamp terminated_at = 1;
 }

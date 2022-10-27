@@ -5,6 +5,8 @@ import React from 'react'
 import { MemoryRouter as Router } from 'react-router-dom'
 import { fireEvent, within, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '../../../../test-utils'
+import ServiceModel from '../../../../stores/models/ServiceModel'
+import { RootStore } from '../../../../stores'
 import ServiceDetailView from './index'
 
 jest.mock('./InwaysSection', () => () => <div />)
@@ -21,14 +23,19 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
-const service = {
-  name: 'name',
-  internal: false,
-  inways: [],
-}
-
 describe('ServiceDetails', () => {
   it('should display', () => {
+    const rootStore = new RootStore()
+
+    const service = new ServiceModel({
+      servicesStore: rootStore.servicesStore,
+      serviceData: {
+        name: 'name',
+        internal: false,
+        inways: [],
+      },
+    })
+
     const { queryByText } = renderWithProviders(
       <Router>
         <ServiceDetailView service={service} removeHandler={jest.fn()} />
@@ -41,15 +48,20 @@ describe('ServiceDetails', () => {
   })
 
   it('should show hidden icon', () => {
+    const rootStore = new RootStore()
+
+    const service = new ServiceModel({
+      servicesStore: rootStore.servicesStore,
+      serviceData: {
+        name: 'name',
+        internal: true,
+        inways: [],
+      },
+    })
+
     const { queryByText } = renderWithProviders(
       <Router>
-        <ServiceDetailView
-          service={{
-            ...service,
-            internal: true,
-          }}
-          removeHandler={jest.fn()}
-        />
+        <ServiceDetailView service={service} removeHandler={jest.fn()} />
       </Router>,
     )
 
@@ -59,6 +71,17 @@ describe('ServiceDetails', () => {
   })
 
   it('should call the removeHandler on remove', async () => {
+    const rootStore = new RootStore()
+
+    const service = new ServiceModel({
+      servicesStore: rootStore.servicesStore,
+      serviceData: {
+        name: 'name',
+        internal: false,
+        inways: [],
+      },
+    })
+
     const handleRemove = jest.fn()
     const { getByTitle, getByRole } = renderWithProviders(
       <Router>

@@ -139,6 +139,7 @@ func (s *ManagementService) GetAccessGrant(ctx context.Context, req *external.Ge
 
 	createdAt := timestamppb.New(grant.CreatedAt)
 	revokedAt := timestamppb.New(grant.RevokedAt.Time)
+	terminatedAt := timestamppb.New(grant.TerminatedAt.Time)
 
 	return &external.GetAccessGrantResponse{
 		AccessGrant: &external.AccessGrant{
@@ -148,9 +149,10 @@ func (s *ManagementService) GetAccessGrant(ctx context.Context, req *external.Ge
 				SerialNumber: grant.IncomingAccessRequest.Organization.SerialNumber,
 				Name:         grant.IncomingAccessRequest.Organization.Name,
 			},
-			ServiceName: grant.IncomingAccessRequest.Service.Name,
-			CreatedAt:   createdAt,
-			RevokedAt:   revokedAt,
+			ServiceName:  grant.IncomingAccessRequest.Service.Name,
+			CreatedAt:    createdAt,
+			RevokedAt:    revokedAt,
+			TerminatedAt: terminatedAt,
 		},
 	}, nil
 }
@@ -164,6 +166,12 @@ func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
 		revokedAt = timestamppb.New(accessGrant.RevokedAt.Time)
 	}
 
+	var terminatedAt *timestamppb.Timestamp
+
+	if accessGrant.TerminatedAt.Valid {
+		terminatedAt = timestamppb.New(accessGrant.TerminatedAt.Time)
+	}
+
 	return &api.AccessGrant{
 		Id: uint64(accessGrant.ID),
 		Organization: &external.Organization{
@@ -174,5 +182,6 @@ func convertAccessGrant(accessGrant *database.AccessGrant) *api.AccessGrant {
 		PublicKeyFingerprint: accessGrant.IncomingAccessRequest.PublicKeyFingerprint,
 		CreatedAt:            createdAt,
 		RevokedAt:            revokedAt,
+		TerminatedAt:         terminatedAt,
 	}
 }

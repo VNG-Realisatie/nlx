@@ -126,17 +126,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 							RevokedAt:   nil,
 						},
 					}, nil)
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(
-						gomock.Any(),
-						uint(42),
-						database.OutgoingAccessRequestApproved,
-						uint(0),
-						nil,
-					).
-					Return(nil)
 			},
 			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
 				return &syncer.SyncArgs{
@@ -201,15 +190,69 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						revokedAt.AsTime(),
 					).
 					Return(nil, nil)
+			},
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
+						{
+							ID:    42,
+							State: database.OutgoingAccessRequestApproved,
+							Organization: database.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+							ReferenceID:          1,
+						},
+					},
+				}
+			},
+			want: nil,
+		},
+		"remote_acces_proof_is_terminated": {
+			setup: func(mocks syncMocks) {
+				terminatedAt := timestamppb.New(time.Now())
+
+				mocks.mc.
+					EXPECT().
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+						}).
+					Return(&external.GetAccessGrantResponse{
+						AccessGrant: &external.AccessGrant{
+							AccessRequestId: 1,
+							Organization: &external.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName:  "my-service",
+							TerminatedAt: terminatedAt,
+						},
+					}, nil)
 
 				mocks.db.
 					EXPECT().
-					UpdateOutgoingAccessRequestState(
+					GetAccessProofForOutgoingAccessRequest(gomock.Any(), uint(42)).
+					Return(&database.AccessProof{
+						ID: 2,
+						TerminatedAt: sql.NullTime{
+							Valid: false,
+						},
+					}, nil)
+
+				mocks.db.
+					EXPECT().
+					TerminateAccessProof(
 						gomock.Any(),
-						uint(42),
-						database.OutgoingAccessRequestApproved,
-						uint(0),
-						nil,
+						uint(2),
+						terminatedAt.AsTime(),
 					).
 					Return(nil)
 			},
@@ -266,17 +309,6 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 					EXPECT().
 					CreateAccessProof(gomock.Any(), uint(42)).
 					Return(nil, nil)
-
-				mocks.db.
-					EXPECT().
-					UpdateOutgoingAccessRequestState(
-						gomock.Any(),
-						uint(42),
-						database.OutgoingAccessRequestApproved,
-						uint(0),
-						nil,
-					).
-					Return(nil)
 			},
 			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
 				return &syncer.SyncArgs{

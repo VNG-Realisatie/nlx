@@ -48,7 +48,6 @@ func setupDatabase(t *testing.T) {
 
 	// This is necessary because the default BindVars for txdb isn't correct
 	sqlx.BindDriver(dbDriver, sqlx.DOLLAR)
-
 }
 
 func New(t *testing.T) (*pgadapter.PostgreSQLRepository, func() error) {

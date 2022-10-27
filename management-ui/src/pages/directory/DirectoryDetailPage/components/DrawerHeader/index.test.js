@@ -4,6 +4,7 @@
 import React from 'react'
 import { Drawer } from '@commonground/design-system'
 import { renderWithProviders } from '../../../../../test-utils'
+import { SERVICE_STATE_UP } from '../../../../../components/StateIndicator'
 import DrawerHeader from './index'
 
 const service = {
@@ -12,7 +13,7 @@ const service = {
     name: 'Organization',
     serialNumber: '00000000000000000001',
   },
-  state: 'up',
+  state: SERVICE_STATE_UP,
   apiSpecificationType: 'OpenAPI',
 }
 

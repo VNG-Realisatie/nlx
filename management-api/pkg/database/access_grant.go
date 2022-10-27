@@ -7,13 +7,14 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 var ErrAccessGrantAlreadyRevoked = errors.New("accessGrant is already revoked")
+var ErrAccessGrantAlreadyTerminated = errors.New("accessGrant is already terminated")
+var ErrAccessProofAlreadyTerminated = errors.New("accessProof is already terminated")
 
 type AccessGrant struct {
 	ID                      uint
@@ -21,6 +22,7 @@ type AccessGrant struct {
 	IncomingAccessRequest   *IncomingAccessRequest
 	CreatedAt               time.Time
 	RevokedAt               sql.NullTime
+	TerminatedAt            sql.NullTime
 }
 
 func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error) {
@@ -40,6 +42,44 @@ func (db *PostgresConfigDatabase) CreateAccessGrant(ctx context.Context, accessR
 	result.ID = uint(id)
 
 	return result, nil
+}
+
+func (db *PostgresConfigDatabase) GetAccessGrantIDForIncomingAccessRequest(ctx context.Context, accessRequestID uint) (uint, error) {
+	accessGrantID, err := db.queries.GetAccessGrantIDOfIncomingAccessRequest(ctx, int32(accessRequestID))
+	if err != nil {
+		return 0, err
+	}
+
+	return uint(accessGrantID), nil
+}
+
+// nolint:dupl // is similar to terminate access proof
+func (db *PostgresConfigDatabase) TerminateAccessGrant(ctx context.Context, accessGrantID uint, terminatedAt time.Time) error {
+	accessGrant, err := db.queries.GetAccessGrant(ctx, int32(accessGrantID))
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return ErrNotFound
+		}
+
+		return err
+	}
+
+	if accessGrant.TerminatedAt.Valid {
+		return ErrAccessGrantAlreadyTerminated
+	}
+
+	err = db.queries.TerminateAccessGrant(ctx, &queries.TerminateAccessGrantParams{
+		ID: int32(accessGrantID),
+		TerminatedAt: sql.NullTime{
+			Time:  terminatedAt,
+			Valid: true,
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //nolint:dupl // looks the same as other methods but we want to keep these separate to avoid abstracting too soon
@@ -91,8 +131,9 @@ func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (
 			CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt,
 			UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt,
 		},
-		CreatedAt: accessGrant.CreatedAt,
-		RevokedAt: accessGrant.RevokedAt,
+		CreatedAt:    accessGrant.CreatedAt,
+		TerminatedAt: accessGrant.TerminatedAt,
+		RevokedAt:    accessGrant.RevokedAt,
 	}
 
 	return result, nil
@@ -100,25 +141,7 @@ func (db *PostgresConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (
 
 //nolint:dupl // looks the same as other methods but we want to keep these separate to avoid abstracting too soon
 func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessGrantID uint, revokedAt time.Time) (*AccessGrant, error) {
-	tx, err := db.db.Begin()
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		err = tx.Rollback()
-		if err != nil {
-			if errors.Is(err, sql.ErrTxDone) {
-				return
-			}
-
-			fmt.Printf("cannot rollback database transaction for revoke access grant: %e", err)
-		}
-	}()
-
-	qtx := db.queries.WithTx(tx)
-
-	accessGrant, err := qtx.GetAccessGrant(ctx, int32(accessGrantID))
+	accessGrant, err := db.queries.GetAccessGrant(ctx, int32(accessGrantID))
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
@@ -142,23 +165,8 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 		return nil, err
 	}
 
-	err = qtx.UpdateIncomingAccessRequest(ctx, &queries.UpdateIncomingAccessRequestParams{
-		ID:        accessGrant.AccessRequestIncomingID,
-		State:     string(IncomingAccessRequestRevoked),
-		UpdatedAt: revokedAt,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	accessGrant, err = qtx.GetAccessGrant(ctx, int32(accessGrantID))
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, ErrNotFound
-		}
-
-		return nil, err
-	}
+	accessGrant.RevokedAt.Valid = true
+	accessGrant.RevokedAt.Time = revokedAt
 
 	serviceID := uint(accessGrant.AccessRequestIncomingServiceID)
 
@@ -198,13 +206,9 @@ func (db *PostgresConfigDatabase) RevokeAccessGrant(ctx context.Context, accessG
 			CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt,
 			UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt,
 		},
-		CreatedAt: accessGrant.CreatedAt,
-		RevokedAt: accessGrant.RevokedAt,
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+		CreatedAt:    accessGrant.CreatedAt,
+		TerminatedAt: accessGrant.TerminatedAt,
+		RevokedAt:    accessGrant.RevokedAt,
 	}
 
 	return result, nil
@@ -257,8 +261,9 @@ func (db *PostgresConfigDatabase) ListAccessGrantsForService(ctx context.Context
 				CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt,
 				UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt,
 			},
-			CreatedAt: accessGrant.CreatedAt,
-			RevokedAt: accessGrant.RevokedAt,
+			CreatedAt:    accessGrant.CreatedAt,
+			RevokedAt:    accessGrant.RevokedAt,
+			TerminatedAt: accessGrant.TerminatedAt,
 		}
 
 		result[i] = newModel
@@ -319,8 +324,9 @@ func (db *PostgresConfigDatabase) GetLatestAccessGrantForService(ctx context.Con
 			CreatedAt:            accessGrant.AccessRequestIncomingCreatedAt,
 			UpdatedAt:            accessGrant.AccessRequestIncomingUpdatedAt,
 		},
-		CreatedAt: accessGrant.CreatedAt,
-		RevokedAt: accessGrant.RevokedAt,
+		CreatedAt:    accessGrant.CreatedAt,
+		RevokedAt:    accessGrant.RevokedAt,
+		TerminatedAt: accessGrant.TerminatedAt,
 	}
 
 	return result, nil

@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/DirectoryServiceApi.ts
 apis/ManagementServiceApi.ts
 apis/TXLogServiceApi.ts

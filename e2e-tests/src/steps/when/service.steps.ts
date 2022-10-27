@@ -5,6 +5,7 @@
 
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
+import { getOutwayByName } from "../../utils/outway";
 import { When } from "@cucumber/cucumber";
 import { By } from "selenium-webdriver";
 import assert from "assert";
@@ -65,6 +66,96 @@ When(
 );
 
 When(
+  "{string} withdraws its access request for {string} of {string} for the Outway {string}",
+  async function (
+    this: CustomWorld,
+    orgConsumerName: string,
+    serviceName: string,
+    orgProviderName: string,
+    outwayName: string
+  ) {
+    const uniqueServiceName = `${serviceName}-${this.id}`;
+
+    const { driver } = this;
+
+    const orgConsumer = getOrgByName(orgConsumerName);
+    const orgProvider = getOrgByName(orgProviderName);
+
+    const outway = await getOutwayByName(orgConsumerName, outwayName);
+
+    await driver.get(
+      `${orgConsumer.management.url}/directory/${orgProvider.serialNumber}/${uniqueServiceName}`
+    );
+    await driver
+      .findElement(By.xpath("//*[text()='Outways zonder toegang']"))
+      .click();
+
+    await driver
+      .findElement(
+        By.xpath(
+          `//button[@title='Toegangsverzoek intrekken voor de Outways met het public key fingerprint ${outway.publicKeyFingerprint}']`
+        )
+      )
+      .click();
+
+    const buttonConfirm = await driver.findElement(
+      By.xpath(
+        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Bevestig']"
+      )
+    );
+    await buttonConfirm.click();
+
+    await driver.findElement(
+      By.xpath("//p[text()='Toegangsverzoek ingetrokken']")
+    );
+  }
+);
+
+When(
+  "{string} terminates its access for {string} of {string} with {string}",
+  async function (
+    this: CustomWorld,
+    orgConsumerName: string,
+    serviceName: string,
+    orgProviderName: string,
+    outwayName: string
+  ) {
+    const uniqueServiceName = `${serviceName}-${this.id}`;
+
+    const { driver } = this;
+
+    const orgConsumer = getOrgByName(orgConsumerName);
+    const orgProvider = getOrgByName(orgProviderName);
+
+    const outway = await getOutwayByName(orgConsumerName, outwayName);
+
+    await driver.get(
+      `${orgConsumer.management.url}/directory/${orgProvider.serialNumber}/${uniqueServiceName}`
+    );
+    await driver
+      .findElement(By.xpath("//*[text()='Outways met toegang']"))
+      .click();
+
+    await driver
+      .findElement(
+        By.xpath(
+          `//button[@title='Zeg de toegang op voor de Outways met public key fingerprint ${outway.publicKeyFingerprint}']`
+        )
+      )
+      .click();
+
+    const buttonConfirm = await driver.findElement(
+      By.xpath(
+        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Opzeggen']"
+      )
+    );
+    await buttonConfirm.click();
+
+    await driver.findElement(By.xpath("//p[text()='Toegang opgezegd']"));
+  }
+);
+
+When(
   "{string} revokes access of {string} to {string}",
   async function (
     this: CustomWorld,
@@ -92,9 +183,6 @@ When(
     );
     await buttonRevoke.click();
 
-    const element = await driver.findElement(
-      By.xpath("//p[text()='Toegang ingetrokken']")
-    );
-    assert.notEqual(element, undefined);
+    await driver.findElement(By.xpath("//p[text()='Toegang ingetrokken']"));
   }
 );

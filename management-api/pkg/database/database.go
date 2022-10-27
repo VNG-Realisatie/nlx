@@ -7,7 +7,6 @@ import (
 	"context"
 	"time"
 
-	"go.nlx.io/nlx/common/diagnostics"
 	"go.nlx.io/nlx/management-api/domain"
 )
 
@@ -43,8 +42,9 @@ type ConfigDatabase interface {
 	ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error)
 	ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error)
 	CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error)
-	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error
+	UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state OutgoingAccessRequestState) error
 	DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error
+	DeleteOutgoingAccessRequest(ctx context.Context, id uint) error
 
 	ListIncomingAccessRequests(ctx context.Context, serviceName string) ([]*IncomingAccessRequest, error)
 	GetLatestIncomingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*IncomingAccessRequest, error)
@@ -52,23 +52,28 @@ type ConfigDatabase interface {
 	GetIncomingAccessRequest(ctx context.Context, id uint) (*IncomingAccessRequest, error)
 	CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error)
 	UpdateIncomingAccessRequestState(ctx context.Context, id uint, state IncomingAccessRequestState) error
+	DeleteIncomingAccessRequest(ctx context.Context, id uint) error
 
 	CreateAccessGrant(ctx context.Context, accessRequest *IncomingAccessRequest) (*AccessGrant, error)
 	RevokeAccessGrant(ctx context.Context, id uint, revokedAt time.Time) (*AccessGrant, error)
+	GetAccessGrantIDForIncomingAccessRequest(ctx context.Context, accessRequestID uint) (uint, error)
 	GetAccessGrant(ctx context.Context, id uint) (*AccessGrant, error)
 	ListAccessGrantsForService(ctx context.Context, serviceName string) ([]*AccessGrant, error)
 	GetLatestAccessGrantForService(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*AccessGrant, error)
+	TerminateAccessGrant(ctx context.Context, id uint, terminatedAt time.Time) error
 
 	CreateAccessProof(ctx context.Context, accessRequestOutgoingID uint) (*AccessProof, error)
 	RevokeAccessProof(ctx context.Context, id uint, revokedAt time.Time) (*AccessProof, error)
 	GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error)
 	GetAccessProofs(ctx context.Context, accessProofIDs []uint64) ([]*AccessProof, error)
+	TerminateAccessProof(ctx context.Context, id uint, terminatedAt time.Time) error
 
 	GetSettings(ctx context.Context) (*domain.Settings, error)
 	UpdateSettings(ctx context.Context, settings *domain.Settings) error
 
 	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
 	ListAuditLogRecords(ctx context.Context, limit int) ([]*AuditLog, error)
+	SetAuditLogAsSucceeded(ctx context.Context, id int64) error
 
 	CreateOutgoingOrder(ctx context.Context, order *CreateOutgoingOrder) error
 	UpdateOutgoingOrder(ctx context.Context, order *UpdateOutgoingOrder) error

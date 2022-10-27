@@ -56,6 +56,12 @@ export interface ManagementAuditLogRecordMetadata {
      * @memberof ManagementAuditLogRecordMetadata
      */
     outwayName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ManagementAuditLogRecordMetadata
+     */
+    publicKeyFingerprint?: string;
 }
 
 /**
@@ -82,6 +88,7 @@ export function ManagementAuditLogRecordMetadataFromJSONTyped(json: any, ignoreD
         'reference': !exists(json, 'reference') ? undefined : json['reference'],
         'inwayName': !exists(json, 'inway_name') ? undefined : json['inway_name'],
         'outwayName': !exists(json, 'outway_name') ? undefined : json['outway_name'],
+        'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
     };
 }
 
@@ -99,6 +106,7 @@ export function ManagementAuditLogRecordMetadataToJSON(value?: ManagementAuditLo
         'reference': value.reference,
         'inway_name': value.inwayName,
         'outway_name': value.outwayName,
+        'public_key_fingerprint': value.publicKeyFingerprint,
     };
 }
 

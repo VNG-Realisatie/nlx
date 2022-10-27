@@ -15,6 +15,7 @@ test('should properly construct object', () => {
       serviceName: 'Service',
       createdAt: '2020-10-01',
       revokedAt: null,
+      terminated: null,
       publicKeyFingerprint: 'public-key-fingerprint',
     },
   })
@@ -26,6 +27,7 @@ test('should properly construct object', () => {
   expect(model.publicKeyFingerprint).toBe('public-key-fingerprint')
   expect(model.createdAt).toEqual(new Date('2020-10-01'))
   expect(model.revokedAt).toEqual(null)
+  expect(model.terminatedAt).toEqual(null)
 })
 
 test('organization name is empty', () => {

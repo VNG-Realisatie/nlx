@@ -88,6 +88,55 @@
         "tags" : [ "ManagementService" ]
       }
     },
+    "/api/v1/access-proofs/{organization_serial_number}/services/{service_name}/terminate" : {
+      "delete" : {
+        "operationId" : "ManagementService_TerminateAccessProof",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "organization_serial_number",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "service_name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "public_key_fingerprint",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementTerminateAccessProofResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "ManagementService" ]
+      }
+    },
     "/api/v1/access-requests/incoming/services/{service_name}" : {
       "get" : {
         "operationId" : "ManagementService_ListIncomingAccessRequests",
@@ -270,6 +319,55 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/managementSendAccessRequestResponse"
+                }
+              }
+            },
+            "description" : "A successful response."
+          },
+          "default" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/rpcStatus"
+                }
+              }
+            },
+            "description" : "An unexpected error response."
+          }
+        },
+        "tags" : [ "ManagementService" ]
+      }
+    },
+    "/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/cancel" : {
+      "delete" : {
+        "operationId" : "ManagementService_WithdrawOutgoingAccessRequest",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "organization_serial_number",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "service_name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "public_key_fingerprint",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/managementWithdrawOutgoingAccessRequestResponse"
                 }
               }
             },
@@ -1428,7 +1526,7 @@
     "schemas" : {
       "AuditLogRecordActionType" : {
         "default" : "ACTION_TYPE_UNSPECIFIED",
-        "enum" : [ "ACTION_TYPE_UNSPECIFIED", "ACTION_TYPE_LOGIN_SUCCESS", "ACTION_TYPE_LOGIN_FAIL", "ACTION_TYPE_LOGOUT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT", "ACTION_TYPE_ACCESS_GRANT_REVOKE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_FAIL", "ACTION_TYPE_SERVICE_CREATE", "ACTION_TYPE_SERVICE_UPDATE", "ACTION_TYPE_SERVICE_DELETE", "ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE", "ACTION_TYPE_ORDER_CREATE", "ACTION_TYPE_ORDER_OUTGOING_REVOKE", "ACTION_TYPE_ORDER_INCOMING_REVOKE", "ACTION_TYPE_INWAY_DELETE", "ACTION_TYPE_ORDER_OUTGOING_UPDATE", "ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE", "ACTION_TYPE_OUTWAY_DELETE" ],
+        "enum" : [ "ACTION_TYPE_UNSPECIFIED", "ACTION_TYPE_LOGIN_SUCCESS", "ACTION_TYPE_LOGIN_FAIL", "ACTION_TYPE_LOGOUT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT", "ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT", "ACTION_TYPE_ACCESS_GRANT_REVOKE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_FAIL", "ACTION_TYPE_SERVICE_CREATE", "ACTION_TYPE_SERVICE_UPDATE", "ACTION_TYPE_SERVICE_DELETE", "ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE", "ACTION_TYPE_ORDER_CREATE", "ACTION_TYPE_ORDER_OUTGOING_REVOKE", "ACTION_TYPE_ORDER_INCOMING_REVOKE", "ACTION_TYPE_INWAY_DELETE", "ACTION_TYPE_ORDER_OUTGOING_UPDATE", "ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE", "ACTION_TYPE_OUTWAY_DELETE", "ACTION_TYPE_OUTGOING_ACCESS_REQUEST_WITHDRAW", "ACTION_TYPE_ACCESS_TERMINATE" ],
         "type" : "string"
       },
       "DirectoryNlxServiceAccessState" : {
@@ -1449,7 +1547,7 @@
       },
       "externalAccessRequestState" : {
         "default" : "ACCESS_REQUEST_STATE_UNSPECIFIED",
-        "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_REVOKED" ],
+        "enum" : [ "ACCESS_REQUEST_STATE_UNSPECIFIED", "ACCESS_REQUEST_STATE_FAILED", "ACCESS_REQUEST_STATE_RECEIVED", "ACCESS_REQUEST_STATE_APPROVED", "ACCESS_REQUEST_STATE_REJECTED", "ACCESS_REQUEST_STATE_WITHDRAWN" ],
         "type" : "string"
       },
       "externalIncomingOrder" : {
@@ -1524,6 +1622,10 @@
           },
           "public_key_fingerprint" : {
             "type" : "string"
+          },
+          "terminated_at" : {
+            "format" : "date-time",
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -1564,6 +1666,9 @@
           },
           "data" : {
             "$ref" : "#/components/schemas/managementAuditLogRecordMetadata"
+          },
+          "has_succeeded" : {
+            "type" : "boolean"
           }
         },
         "type" : "object"
@@ -1583,6 +1688,9 @@
             "type" : "string"
           },
           "outway_name" : {
+            "type" : "string"
+          },
+          "public_key_fingerprint" : {
             "type" : "string"
           }
         },
@@ -2511,6 +2619,9 @@
         },
         "type" : "object"
       },
+      "managementTerminateAccessProofResponse" : {
+        "type" : "object"
+      },
       "managementUpdateInwayResponse" : {
         "properties" : {
           "inway" : {
@@ -2612,6 +2723,9 @@
       "managementUpdateSettingsResponse" : {
         "type" : "object"
       },
+      "managementWithdrawOutgoingAccessRequestResponse" : {
+        "type" : "object"
+      },
       "managementexternalOrderService" : {
         "properties" : {
           "organization" : {
@@ -2648,6 +2762,10 @@
           },
           "access_request_id" : {
             "format" : "uint64",
+            "type" : "string"
+          },
+          "terminated_at" : {
+            "format" : "date-time",
             "type" : "string"
           }
         },

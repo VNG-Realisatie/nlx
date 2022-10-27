@@ -21,6 +21,8 @@ import {
   ACTION_INWAY_DELETE,
   ACTION_OUTWAY_DELETE,
   ACTION_ACCEPT_TERMS_OF_SERVICE,
+  ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW,
+  ACTION_ACCESS_TERMINATE,
 } from '../../../../stores/models/AuditLogModel'
 import {
   IconCheck,
@@ -44,6 +46,8 @@ const iconForActionType = (actionType) => {
       return IconCheck
 
     case ACTION_INCOMING_ACCESS_REQUEST_REJECT:
+    case ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW:
+    case ACTION_ACCESS_TERMINATE:
       return IconClose
 
     case ACTION_ACCESS_GRANT_REVOKE:

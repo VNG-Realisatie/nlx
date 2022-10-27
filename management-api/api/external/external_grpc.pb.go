@@ -32,6 +32,8 @@ type AccessRequestServiceClient interface {
 	GetAccessProof(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*AccessGrant, error)
 	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE // Remove this ignore when 'GetAccessProof' is removed
 	GetAccessGrant(ctx context.Context, in *GetAccessGrantRequest, opts ...grpc.CallOption) (*GetAccessGrantResponse, error)
+	WithdrawAccessRequest(ctx context.Context, in *WithdrawAccessRequestRequest, opts ...grpc.CallOption) (*WithdrawAccessRequestResponse, error)
+	TerminateAccess(ctx context.Context, in *TerminateAccessRequest, opts ...grpc.CallOption) (*TerminateAccessResponse, error)
 }
 
 type accessRequestServiceClient struct {
@@ -79,6 +81,24 @@ func (c *accessRequestServiceClient) GetAccessGrant(ctx context.Context, in *Get
 	return out, nil
 }
 
+func (c *accessRequestServiceClient) WithdrawAccessRequest(ctx context.Context, in *WithdrawAccessRequestRequest, opts ...grpc.CallOption) (*WithdrawAccessRequestResponse, error) {
+	out := new(WithdrawAccessRequestResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.external.AccessRequestService/WithdrawAccessRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accessRequestServiceClient) TerminateAccess(ctx context.Context, in *TerminateAccessRequest, opts ...grpc.CallOption) (*TerminateAccessResponse, error) {
+	out := new(TerminateAccessResponse)
+	err := c.cc.Invoke(ctx, "/nlx.management.external.AccessRequestService/TerminateAccess", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccessRequestServiceServer is the server API for AccessRequestService service.
 // All implementations must embed UnimplementedAccessRequestServiceServer
 // for forward compatibility
@@ -92,6 +112,8 @@ type AccessRequestServiceServer interface {
 	GetAccessProof(context.Context, *GetAccessGrantRequest) (*AccessGrant, error)
 	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE // Remove this ignore when 'GetAccessProof' is removed
 	GetAccessGrant(context.Context, *GetAccessGrantRequest) (*GetAccessGrantResponse, error)
+	WithdrawAccessRequest(context.Context, *WithdrawAccessRequestRequest) (*WithdrawAccessRequestResponse, error)
+	TerminateAccess(context.Context, *TerminateAccessRequest) (*TerminateAccessResponse, error)
 	mustEmbedUnimplementedAccessRequestServiceServer()
 }
 
@@ -110,6 +132,12 @@ func (UnimplementedAccessRequestServiceServer) GetAccessProof(context.Context, *
 }
 func (UnimplementedAccessRequestServiceServer) GetAccessGrant(context.Context, *GetAccessGrantRequest) (*GetAccessGrantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessGrant not implemented")
+}
+func (UnimplementedAccessRequestServiceServer) WithdrawAccessRequest(context.Context, *WithdrawAccessRequestRequest) (*WithdrawAccessRequestResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithdrawAccessRequest not implemented")
+}
+func (UnimplementedAccessRequestServiceServer) TerminateAccess(context.Context, *TerminateAccessRequest) (*TerminateAccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TerminateAccess not implemented")
 }
 func (UnimplementedAccessRequestServiceServer) mustEmbedUnimplementedAccessRequestServiceServer() {}
 
@@ -196,6 +224,42 @@ func _AccessRequestService_GetAccessGrant_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccessRequestService_WithdrawAccessRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WithdrawAccessRequestRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccessRequestServiceServer).WithdrawAccessRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.external.AccessRequestService/WithdrawAccessRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccessRequestServiceServer).WithdrawAccessRequest(ctx, req.(*WithdrawAccessRequestRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccessRequestService_TerminateAccess_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TerminateAccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccessRequestServiceServer).TerminateAccess(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nlx.management.external.AccessRequestService/TerminateAccess",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccessRequestServiceServer).TerminateAccess(ctx, req.(*TerminateAccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccessRequestService_ServiceDesc is the grpc.ServiceDesc for AccessRequestService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -218,6 +282,14 @@ var AccessRequestService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAccessGrant",
 			Handler:    _AccessRequestService_GetAccessGrant_Handler,
+		},
+		{
+			MethodName: "WithdrawAccessRequest",
+			Handler:    _AccessRequestService_WithdrawAccessRequest_Handler,
+		},
+		{
+			MethodName: "TerminateAccess",
+			Handler:    _AccessRequestService_TerminateAccess_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

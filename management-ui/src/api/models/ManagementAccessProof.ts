@@ -68,6 +68,12 @@ export interface ManagementAccessProof {
      * @memberof ManagementAccessProof
      */
     publicKeyFingerprint?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof ManagementAccessProof
+     */
+    terminatedAt?: Date;
 }
 
 /**
@@ -96,6 +102,7 @@ export function ManagementAccessProofFromJSONTyped(json: any, ignoreDiscriminato
         'revokedAt': !exists(json, 'revoked_at') ? undefined : (new Date(json['revoked_at'])),
         'accessRequestId': !exists(json, 'access_request_id') ? undefined : json['access_request_id'],
         'publicKeyFingerprint': !exists(json, 'public_key_fingerprint') ? undefined : json['public_key_fingerprint'],
+        'terminatedAt': !exists(json, 'terminated_at') ? undefined : (new Date(json['terminated_at'])),
     };
 }
 
@@ -115,6 +122,7 @@ export function ManagementAccessProofToJSON(value?: ManagementAccessProof | null
         'revoked_at': value.revokedAt === undefined ? undefined : (value.revokedAt.toISOString()),
         'access_request_id': value.accessRequestId,
         'public_key_fingerprint': value.publicKeyFingerprint,
+        'terminated_at': value.terminatedAt === undefined ? undefined : (value.terminatedAt.toISOString()),
     };
 }
 

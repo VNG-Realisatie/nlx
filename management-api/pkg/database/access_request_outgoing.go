@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"go.nlx.io/nlx/common/diagnostics"
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 var ErrActiveAccessRequest = errors.New("there is already an active AccessRequest")
@@ -20,10 +20,11 @@ var ErrActiveAccessRequest = errors.New("there is already an active AccessReques
 type OutgoingAccessRequestState string
 
 const (
-	OutgoingAccessRequestReceived OutgoingAccessRequestState = "received"
-	OutgoingAccessRequestApproved OutgoingAccessRequestState = "approved"
-	OutgoingAccessRequestRejected OutgoingAccessRequestState = "rejected"
-	OutgoingAccessRequestFailed   OutgoingAccessRequestState = "failed"
+	OutgoingAccessRequestReceived  OutgoingAccessRequestState = "received"
+	OutgoingAccessRequestApproved  OutgoingAccessRequestState = "approved"
+	OutgoingAccessRequestRejected  OutgoingAccessRequestState = "rejected"
+	OutgoingAccessRequestFailed    OutgoingAccessRequestState = "failed"
+	OutgoingAccessRequestWithdrawn OutgoingAccessRequestState = "withdrawn"
 )
 
 type Organization struct {
@@ -197,7 +198,7 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequestsPerCertificate(
 	return accessRequests, nil
 }
 
-func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState, referenceID uint, schedulerErr *diagnostics.ErrorDetails) error {
+func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState) error {
 	outgoingAccessRequest := &OutgoingAccessRequest{}
 
 	if err := db.DB.
@@ -210,34 +211,11 @@ func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.C
 		return err
 	}
 
-	if referenceID > 0 {
-		outgoingAccessRequest.ReferenceID = referenceID
-	}
-
-	outgoingAccessRequest.State = state
-
-	if schedulerErr != nil {
-		outgoingAccessRequest.ErrorCode = int(schedulerErr.Code)
-		outgoingAccessRequest.ErrorCause = schedulerErr.Cause
-		outgoingAccessRequest.ErrorStackTrace = schedulerErr.StackTrace
-	} else {
-		outgoingAccessRequest.ErrorCode = 0
-		outgoingAccessRequest.ErrorCause = ""
-		outgoingAccessRequest.ErrorStackTrace = nil
-	}
-
-	return db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Select(
-			"state",
-			"reference_id",
-			"updated_at",
-			"error_code",
-			"error_cause",
-			"error_stack_trace",
-		).
-		Save(outgoingAccessRequest).Error
+	return db.queries.UpdateOutgoingAccessRequestState(ctx, &queries.UpdateOutgoingAccessRequestStateParams{
+		State:     string(state),
+		UpdatedAt: time.Now(),
+		ID:        int32(accessRequestID),
+	})
 }
 
 func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error {
@@ -246,4 +224,8 @@ func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Conte
 		Where("organization_serial_number = ? AND service_name = ?", organizationSerialNumber, serviceName).
 		Delete(&OutgoingAccessRequest{}).
 		Error
+}
+
+func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequest(ctx context.Context, id uint) error {
+	return db.queries.DeleteOutgoingAccessRequest(ctx, int32(id))
 }

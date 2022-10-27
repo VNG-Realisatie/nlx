@@ -252,3 +252,55 @@ export const getAccessToService = async (
     `${serviceConsumerOrgName} has gotten access to service ${serviceName} of ${serviceProviderOrgName}`
   );
 };
+
+export const requestAccessToService = async (
+  world: CustomWorld,
+  serviceConsumerOrgName: string,
+  serviceName: string,
+  serviceProviderOrgName: string,
+  outwayName: string
+) => {
+  debug(
+    `${serviceConsumerOrgName} is requesting access to service ${serviceName} of ${serviceProviderOrgName}`
+  );
+  const serviceProvider = getOrgByName(serviceProviderOrgName);
+  const serviceConsumer = getOrgByName(serviceConsumerOrgName);
+
+  const uniqueServiceName = await createService(
+    world,
+    serviceName,
+    serviceProviderOrgName
+  );
+
+  const outway = await getOutwayByName(serviceConsumerOrgName, outwayName);
+
+  const url = `${outway.selfAddress}/${serviceProvider.serialNumber}/${uniqueServiceName}/get`;
+
+  // wait until the Outway has had the time to update its internal services list
+  await pWaitFor.default(
+    async () => await isServiceKnownInServiceListOfOutway(url),
+    {
+      interval: 1000,
+      timeout: 1000 * 90,
+    }
+  );
+
+  // request access to new service
+  const createAccessRequestResponse =
+    await serviceConsumer.apiClients.management?.managementServiceSendAccessRequest(
+      {
+        organizationSerialNumber: serviceProvider.serialNumber,
+        serviceName: uniqueServiceName,
+        publicKeyPem: outway.publicKeyPem,
+      }
+    );
+
+  assert.equal(
+    createAccessRequestResponse?.outgoingAccessRequest?.serviceName,
+    uniqueServiceName
+  );
+
+  debug(
+    `${serviceConsumerOrgName} has requested access to service ${serviceName} of ${serviceProviderOrgName}`
+  );
+};

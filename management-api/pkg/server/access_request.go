@@ -284,7 +284,17 @@ func (s *ManagementService) RequestAccess(ctx context.Context, req *external.Req
 		}
 	}
 
-	if isIncomingAccessRequestStillActive(existingIncomingAccessRequest) {
+	var accessGrant *database.AccessGrant
+
+	if existingIncomingAccessRequest != nil && existingIncomingAccessRequest.State == database.IncomingAccessRequestApproved {
+		accessGrant, err = s.configDatabase.GetLatestAccessGrantForService(ctx, md.OrganizationSerialNumber, req.ServiceName, request.PublicKeyFingerprint)
+		if err != nil {
+			s.logger.Error("cannot get latest access grant from database ", zap.String("organization-serial-number", md.OrganizationSerialNumber), zap.String("service-name", req.ServiceName), zap.String("public-key-pem", req.PublicKeyPem), zap.Error(err))
+			return nil, status.Error(codes.Internal, "internal")
+		}
+	}
+
+	if isIncomingAccessRequestStillActive(existingIncomingAccessRequest, accessGrant) {
 		return &external.RequestAccessResponse{
 			ReferenceId:        uint64(existingIncomingAccessRequest.ID),
 			AccessRequestState: incomingAccessRequestStateToProto(existingIncomingAccessRequest.State),
@@ -336,8 +346,20 @@ func (s *ManagementService) GetAccessRequestState(ctx context.Context, req *exte
 	}, nil
 }
 
-func isIncomingAccessRequestStillActive(incomingAccessRequest *database.IncomingAccessRequest) bool {
-	return incomingAccessRequest != nil && (incomingAccessRequest.State == database.IncomingAccessRequestApproved || incomingAccessRequest.State == database.IncomingAccessRequestReceived)
+func isIncomingAccessRequestStillActive(incomingAccessRequest *database.IncomingAccessRequest, accessGrant *database.AccessGrant) bool {
+	if incomingAccessRequest == nil {
+		return false
+	}
+
+	if incomingAccessRequest.State == database.IncomingAccessRequestReceived {
+		return true
+	}
+
+	if incomingAccessRequest.State == database.IncomingAccessRequestApproved {
+		return !accessGrant.TerminatedAt.Valid && !accessGrant.RevokedAt.Valid
+	}
+
+	return false
 }
 
 // nolint:dupl // incoming access request looks like outgoing access request

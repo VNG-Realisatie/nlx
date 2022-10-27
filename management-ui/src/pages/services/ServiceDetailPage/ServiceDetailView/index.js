@@ -2,7 +2,7 @@
 // Licensed under the EUPL
 //
 import React from 'react'
-import { array, arrayOf, bool, func, shape, string, number } from 'prop-types'
+import { func, instanceOf } from 'prop-types'
 import { observer } from 'mobx-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
@@ -15,6 +15,7 @@ import {
 import { IconHidden, IconVisible } from '../../../../icons'
 import { showServiceVisibilityAlert } from '../../../../components/ServiceVisibilityAlert'
 import CostsSection from '../../../../components/CostsSection'
+import ServiceModel from '../../../../stores/models/ServiceModel'
 import InwaysSection from './InwaysSection'
 import AccessRequestSectionContainer from './AccessRequestSection'
 import AccessGrantSection from './AccessGrantSection'
@@ -89,19 +90,7 @@ const ServiceDetailView = ({ service, removeHandler }) => {
 }
 
 ServiceDetailView.propTypes = {
-  service: shape({
-    endpointUrl: string,
-    documentationUrl: string,
-    apiSpecificationUrl: string,
-    internal: bool.isRequired,
-    techSupportContact: string,
-    publicSupportContact: string,
-    inways: arrayOf(string),
-    incomingAccessRequests: array,
-    oneTimeCosts: number,
-    monthlyCosts: number,
-    requestCosts: number,
-  }).isRequired,
+  service: instanceOf(ServiceModel).isRequired,
   removeHandler: func.isRequired,
 }
 

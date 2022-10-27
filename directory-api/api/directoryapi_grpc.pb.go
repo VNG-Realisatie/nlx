@@ -23,13 +23,19 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryClient interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error)
 	SetOrganizationContactDetails(ctx context.Context, in *SetOrganizationContactDetailsRequest, opts ...grpc.CallOption) (*SetOrganizationContactDetailsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
 	GetOrganizationManagementAPIProxyAddress(ctx context.Context, in *GetOrganizationManagementAPIProxyAddressRequest, opts ...grpc.CallOption) (*GetOrganizationManagementAPIProxyAddressResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 	RegisterOutway(ctx context.Context, in *RegisterOutwayRequest, opts ...grpc.CallOption) (*RegisterOutwayResponse, error)
 	ListParticipants(ctx context.Context, in *ListParticipantsRequest, opts ...grpc.CallOption) (*ListParticipantsResponse, error)
@@ -157,13 +163,19 @@ func (c *directoryClient) GetVersion(ctx context.Context, in *GetVersionRequest,
 // All implementations must embed UnimplementedDirectoryServer
 // for forward compatibility
 type DirectoryServer interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error)
 	SetOrganizationContactDetails(context.Context, *SetOrganizationContactDetailsRequest) (*SetOrganizationContactDetailsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
 	GetOrganizationManagementAPIProxyAddress(context.Context, *GetOrganizationManagementAPIProxyAddressRequest) (*GetOrganizationManagementAPIProxyAddressResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error)
 	RegisterOutway(context.Context, *RegisterOutwayRequest) (*RegisterOutwayResponse, error)
 	ListParticipants(context.Context, *ListParticipantsRequest) (*ListParticipantsResponse, error)
@@ -505,11 +517,17 @@ var Directory_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryRegistrationClient interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 }
 
@@ -579,11 +597,17 @@ func (c *directoryRegistrationClient) ListInOutwayStatistics(ctx context.Context
 // All implementations must embed UnimplementedDirectoryRegistrationServer
 // for forward compatibility
 type DirectoryRegistrationServer interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error)
 	mustEmbedUnimplementedDirectoryRegistrationServer()
 }
@@ -771,11 +795,17 @@ var DirectoryRegistration_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DirectoryInspectionClient interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	RegisterInway(ctx context.Context, in *RegisterInwayRequest, opts ...grpc.CallOption) (*RegisterInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ClearOrganizationInway(ctx context.Context, in *ClearOrganizationInwayRequest, opts ...grpc.CallOption) (*ClearOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListServices(ctx context.Context, in *ListServicesRequest, opts ...grpc.CallOption) (*ListServicesResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListOrganizations(ctx context.Context, in *ListOrganizationsRequest, opts ...grpc.CallOption) (*ListOrganizationsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	GetOrganizationInway(ctx context.Context, in *GetOrganizationInwayRequest, opts ...grpc.CallOption) (*GetOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListInOutwayStatistics(ctx context.Context, in *ListInOutwayStatisticsRequest, opts ...grpc.CallOption) (*ListInOutwayStatisticsResponse, error)
 }
 
@@ -845,11 +875,17 @@ func (c *directoryInspectionClient) ListInOutwayStatistics(ctx context.Context, 
 // All implementations must embed UnimplementedDirectoryInspectionServer
 // for forward compatibility
 type DirectoryInspectionServer interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	RegisterInway(context.Context, *RegisterInwayRequest) (*RegisterInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ClearOrganizationInway(context.Context, *ClearOrganizationInwayRequest) (*ClearOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListServices(context.Context, *ListServicesRequest) (*ListServicesResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListOrganizations(context.Context, *ListOrganizationsRequest) (*ListOrganizationsResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	GetOrganizationInway(context.Context, *GetOrganizationInwayRequest) (*GetOrganizationInwayResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	ListInOutwayStatistics(context.Context, *ListInOutwayStatisticsRequest) (*ListInOutwayStatisticsResponse, error)
 	mustEmbedUnimplementedDirectoryInspectionServer()
 }

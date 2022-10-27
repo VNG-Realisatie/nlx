@@ -170,3 +170,43 @@ func (mr *MockClientMockRecorder) RequestClaim(arg0, arg1 interface{}, arg2 ...i
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestClaim", reflect.TypeOf((*MockClient)(nil).RequestClaim), varargs...)
 }
+
+// TerminateAccess mocks base method.
+func (m *MockClient) TerminateAccess(arg0 context.Context, arg1 *external.TerminateAccessRequest, arg2 ...grpc.CallOption) (*external.TerminateAccessResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TerminateAccess", varargs...)
+	ret0, _ := ret[0].(*external.TerminateAccessResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TerminateAccess indicates an expected call of TerminateAccess.
+func (mr *MockClientMockRecorder) TerminateAccess(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccess", reflect.TypeOf((*MockClient)(nil).TerminateAccess), varargs...)
+}
+
+// WithdrawAccessRequest mocks base method.
+func (m *MockClient) WithdrawAccessRequest(arg0 context.Context, arg1 *external.WithdrawAccessRequestRequest, arg2 ...grpc.CallOption) (*external.WithdrawAccessRequestResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "WithdrawAccessRequest", varargs...)
+	ret0, _ := ret[0].(*external.WithdrawAccessRequestResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WithdrawAccessRequest indicates an expected call of WithdrawAccessRequest.
+func (mr *MockClientMockRecorder) WithdrawAccessRequest(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawAccessRequest", reflect.TypeOf((*MockClient)(nil).WithdrawAccessRequest), varargs...)
+}

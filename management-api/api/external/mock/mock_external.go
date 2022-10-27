@@ -117,6 +117,46 @@ func (mr *MockAccessRequestServiceClientMockRecorder) RequestAccess(ctx, in inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestAccess", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).RequestAccess), varargs...)
 }
 
+// TerminateAccess mocks base method.
+func (m *MockAccessRequestServiceClient) TerminateAccess(ctx context.Context, in *external.TerminateAccessRequest, opts ...grpc.CallOption) (*external.TerminateAccessResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TerminateAccess", varargs...)
+	ret0, _ := ret[0].(*external.TerminateAccessResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TerminateAccess indicates an expected call of TerminateAccess.
+func (mr *MockAccessRequestServiceClientMockRecorder) TerminateAccess(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccess", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).TerminateAccess), varargs...)
+}
+
+// WithdrawAccessRequest mocks base method.
+func (m *MockAccessRequestServiceClient) WithdrawAccessRequest(ctx context.Context, in *external.WithdrawAccessRequestRequest, opts ...grpc.CallOption) (*external.WithdrawAccessRequestResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "WithdrawAccessRequest", varargs...)
+	ret0, _ := ret[0].(*external.WithdrawAccessRequestResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WithdrawAccessRequest indicates an expected call of WithdrawAccessRequest.
+func (mr *MockAccessRequestServiceClientMockRecorder) WithdrawAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawAccessRequest", reflect.TypeOf((*MockAccessRequestServiceClient)(nil).WithdrawAccessRequest), varargs...)
+}
+
 // MockAccessRequestServiceServer is a mock of AccessRequestServiceServer interface.
 type MockAccessRequestServiceServer struct {
 	ctrl     *gomock.Controller
@@ -198,6 +238,36 @@ func (m *MockAccessRequestServiceServer) RequestAccess(arg0 context.Context, arg
 func (mr *MockAccessRequestServiceServerMockRecorder) RequestAccess(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestAccess", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).RequestAccess), arg0, arg1)
+}
+
+// TerminateAccess mocks base method.
+func (m *MockAccessRequestServiceServer) TerminateAccess(arg0 context.Context, arg1 *external.TerminateAccessRequest) (*external.TerminateAccessResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TerminateAccess", arg0, arg1)
+	ret0, _ := ret[0].(*external.TerminateAccessResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TerminateAccess indicates an expected call of TerminateAccess.
+func (mr *MockAccessRequestServiceServerMockRecorder) TerminateAccess(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccess", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).TerminateAccess), arg0, arg1)
+}
+
+// WithdrawAccessRequest mocks base method.
+func (m *MockAccessRequestServiceServer) WithdrawAccessRequest(arg0 context.Context, arg1 *external.WithdrawAccessRequestRequest) (*external.WithdrawAccessRequestResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithdrawAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*external.WithdrawAccessRequestResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WithdrawAccessRequest indicates an expected call of WithdrawAccessRequest.
+func (mr *MockAccessRequestServiceServerMockRecorder) WithdrawAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawAccessRequest", reflect.TypeOf((*MockAccessRequestServiceServer)(nil).WithdrawAccessRequest), arg0, arg1)
 }
 
 // mustEmbedUnimplementedAccessRequestServiceServer mocks base method.

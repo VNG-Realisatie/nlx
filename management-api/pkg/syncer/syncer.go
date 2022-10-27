@@ -103,8 +103,6 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 			ctx,
 			request.ID,
 			newState,
-			uint(0), // '0', because we don't want to update this value
-			nil,
 		)
 
 	case database.OutgoingAccessRequestApproved:
@@ -117,15 +115,9 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 			return fmt.Errorf("failed to sync access proof for an approved outgoing access request: %e", err)
 		}
 
-		return configDatabase.UpdateOutgoingAccessRequestState(
-			ctx,
-			request.ID,
-			database.OutgoingAccessRequestApproved,
-			uint(0), // '0', because we don't want to update this value
-			nil,
-		)
+		return nil
 
-	case database.OutgoingAccessRequestFailed, database.OutgoingAccessRequestRejected:
+	case database.OutgoingAccessRequestFailed, database.OutgoingAccessRequestRejected, database.OutgoingAccessRequestWithdrawn:
 		return nil
 
 	default:
@@ -143,12 +135,8 @@ func convertAccessRequestState(state external.AccessRequestState) (database.Outg
 		return database.OutgoingAccessRequestReceived, nil
 	case external.AccessRequestState_ACCESS_REQUEST_STATE_FAILED:
 		return database.OutgoingAccessRequestFailed, nil
-		/*
-			If the returned state is revoked the outgoing access request state needs to be set to approved because it means the access proof still needs to be synced.
-			This can happen when an access request is rejected immediately after being approved.
-		*/
-	case external.AccessRequestState_ACCESS_REQUEST_STATE_REVOKED:
-		return database.OutgoingAccessRequestApproved, nil
+	case external.AccessRequestState_ACCESS_REQUEST_STATE_WITHDRAWN:
+		return database.OutgoingAccessRequestWithdrawn, nil
 	default:
 		return "", fmt.Errorf("invalid state for outgoing access request: %s", state)
 	}
@@ -163,17 +151,17 @@ func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase
 		return err
 	}
 
-	remoteProof, err := convertAccessGrantToDatabaseProof(response.AccessGrant)
+	accessGrant, err := convertAccessGrantToDatabaseProof(response.AccessGrant)
 	if err != nil {
 		return fmt.Errorf("parse access proof: %v", err)
 	}
 
 	// skip this AccessRequest as it's not the one related to this AccessProof
-	if remoteProof.OutgoingAccessRequest.ID != outgoingAccessRequest.ReferenceID {
+	if accessGrant.OutgoingAccessRequest.ID != outgoingAccessRequest.ReferenceID {
 		return nil
 	}
 
-	localProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(
+	accessProof, err := configDatabase.GetAccessProofForOutgoingAccessRequest(
 		ctx,
 		outgoingAccessRequest.ID,
 	)
@@ -191,14 +179,25 @@ func syncAccessProof(ctx context.Context, configDatabase database.ConfigDatabase
 		return fmt.Errorf("unable to get local access proof: %v", err)
 	}
 
-	if remoteProof.RevokedAt.Valid &&
-		!localProof.RevokedAt.Valid {
+	if accessGrant.RevokedAt.Valid &&
+		!accessProof.RevokedAt.Valid {
 		if _, err := configDatabase.RevokeAccessProof(
 			ctx,
-			localProof.ID,
-			remoteProof.RevokedAt.Time,
+			accessProof.ID,
+			accessGrant.RevokedAt.Time,
 		); err != nil {
 			return fmt.Errorf("unable to revoke the access proof: %v", err)
+		}
+	}
+
+	if accessGrant.TerminatedAt.Valid &&
+		!accessProof.TerminatedAt.Valid {
+		if errTerminate := configDatabase.TerminateAccessProof(
+			ctx,
+			accessProof.ID,
+			accessGrant.TerminatedAt.Time,
+		); errTerminate != nil {
+			return fmt.Errorf("unable to terminate the access proof: %v", err)
 		}
 	}
 
@@ -220,10 +219,16 @@ func convertAccessGrantToDatabaseProof(accessGrant *external.AccessGrant) (*data
 	}
 
 	revokedAt := accessGrant.RevokedAt.AsTime()
-
 	err := accessGrant.RevokedAt.CheckValid()
 	if err != nil {
 		revokedAt = time.Time{}
+	}
+
+	terminatedAt := accessGrant.TerminatedAt.AsTime()
+	err = accessGrant.TerminatedAt.CheckValid()
+
+	if err != nil {
+		terminatedAt = time.Time{}
 	}
 
 	dbAccessProof := &database.AccessProof{
@@ -232,6 +237,10 @@ func convertAccessGrantToDatabaseProof(accessGrant *external.AccessGrant) (*data
 		RevokedAt: sql.NullTime{
 			Time:  revokedAt,
 			Valid: !revokedAt.IsZero(),
+		},
+		TerminatedAt: sql.NullTime{
+			Time:  terminatedAt,
+			Valid: !terminatedAt.IsZero(),
 		},
 		OutgoingAccessRequest: &database.OutgoingAccessRequest{
 			ID:          uint(accessGrant.AccessRequestId),

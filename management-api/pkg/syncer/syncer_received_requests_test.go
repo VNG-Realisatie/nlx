@@ -154,8 +154,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						gomock.Any(),
 						uint(42),
 						database.OutgoingAccessRequestReceived,
-						uint(0),
-						nil,
 					).
 					Return(errors.New("arbitrary error"))
 			},
@@ -230,8 +228,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						gomock.Any(),
 						uint(42),
 						database.OutgoingAccessRequestApproved,
-						uint(0),
-						nil,
 					).
 					Return(nil)
 			},
@@ -277,8 +273,6 @@ func getReceivedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						gomock.Any(),
 						uint(42),
 						database.OutgoingAccessRequestReceived,
-						uint(0),
-						nil,
 					).
 					Return(nil)
 			},

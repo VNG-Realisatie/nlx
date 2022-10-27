@@ -23,6 +23,8 @@ import AuditLogModel, {
   ACTION_INWAY_DELETE,
   ACTION_ACCEPT_TERMS_OF_SERVICE,
   ACTION_OUTWAY_DELETE,
+  ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW,
+  ACTION_ACCESS_TERMINATE,
 } from '../../../../stores/models/AuditLogModel'
 import AuditLogRecord from './index'
 
@@ -254,9 +256,89 @@ test.concurrent.each([
     'John Doe has removed the Outway my-outway',
   ],
   [
+    createModel({
+      action: ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW,
+      services: [
+        {
+          service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
+        },
+      ],
+      data: {
+        publicKeyFingerprint: 'WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=',
+      },
+      hasSucceeded: true,
+    }),
+    'close.svg',
+    'John Doe has withdrawn the access request with Public Key WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18= for the service Kadaster of Gemeente Stijns',
+  ],
+  [
+    createModel({
+      action: ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW,
+      services: [
+        {
+          service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
+        },
+      ],
+      data: {
+        publicKeyFingerprint: 'WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=',
+      },
+      hasSucceeded: false,
+    }),
+    'close.svg',
+    'John Doe failed to withdraw the access request with Public Key WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18= for the service Kadaster of Gemeente Stijns',
+  ],
+  [
+    createModel({
+      action: ACTION_ACCESS_TERMINATE,
+      services: [
+        {
+          service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
+        },
+      ],
+      data: {
+        publicKeyFingerprint: 'WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=',
+      },
+      hasSucceeded: true,
+    }),
+    'close.svg',
+    'John Doe has terminated access for Outways with Public Key WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18= for the service Kadaster of Gemeente Stijns',
+  ],
+  [
+    createModel({
+      action: ACTION_ACCESS_TERMINATE,
+      services: [
+        {
+          service: 'Kadaster',
+          organization: {
+            serialNumber: '00000000000000000001',
+            name: 'Gemeente Stijns',
+          },
+        },
+      ],
+      data: {
+        publicKeyFingerprint: 'WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=',
+      },
+      hasSucceeded: false,
+    }),
+    'close.svg',
+    'John Doe failed to terminate access for Outways with Public Key WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18= for the service Kadaster of Gemeente Stijns',
+  ],
+  [
     createModel({ action: 'unknown action' }),
     'error-warning.svg',
-    "John Doe has performed unknown action 'unknown action'",
+    'John Doe has performed unknown action unknown action',
   ],
 ])('AuditLogRecord message for %j', (model, expectedIcon, expectedMessage) => {
   renderWithProviders(<AuditLogRecord model={model} />)

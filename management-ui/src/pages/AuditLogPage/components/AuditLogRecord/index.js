@@ -24,6 +24,8 @@ import AuditLogModel, {
   ACTION_INWAY_DELETE,
   ACTION_ACCEPT_TERMS_OF_SERVICE,
   ACTION_OUTWAY_DELETE,
+  ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW,
+  ACTION_ACCESS_TERMINATE,
 } from '../../../../stores/models/AuditLogModel'
 import iconForActionType from './icon-for-action-type'
 import {
@@ -95,10 +97,13 @@ const AuditLogRecord = ({ model, ...props }) => {
 
   const dataOutwayName = model.data.outwayName
 
+  const dataPublicKeyFingerprint = model.data.publicKeyFingerprint
+
   const organizationName = organization.name
 
   const user = model.user
   const action = model.action
+  const hasSucceeded = model.hasSucceeded
 
   return (
     <Template action={action} dateTime={dateTimeString} meta={meta} {...props}>
@@ -195,10 +200,43 @@ const AuditLogRecord = ({ model, ...props }) => {
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has accepted the Terms of Service
         </Trans>
+      ) : action === ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW && hasSucceeded ? (
+        <Trans
+          values={{ user, action, dataPublicKeyFingerprint, organizationName }}
+        >
+          <strong>{{ user }}</strong> has withdrawn the access request with
+          Public Key <strong>{{ dataPublicKeyFingerprint }}</strong> for the
+          service {{ service }} of {{ organizationName }}
+        </Trans>
+      ) : action === ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW &&
+        !hasSucceeded ? (
+        <Trans
+          values={{ user, action, dataPublicKeyFingerprint, organizationName }}
+        >
+          <strong>{{ user }}</strong> failed to withdraw the access request with
+          Public Key <strong>{{ dataPublicKeyFingerprint }}</strong> for the
+          service {{ service }} of {{ organizationName }}
+        </Trans>
+      ) : action === ACTION_ACCESS_TERMINATE && hasSucceeded ? (
+        <Trans
+          values={{ user, action, dataPublicKeyFingerprint, organizationName }}
+        >
+          <strong>{{ user }}</strong> has terminated access for Outways with
+          Public Key <strong>{{ dataPublicKeyFingerprint }}</strong> for the
+          service {{ service }} of {{ organizationName }}
+        </Trans>
+      ) : action === ACTION_ACCESS_TERMINATE && !hasSucceeded ? (
+        <Trans
+          values={{ user, dataPublicKeyFingerprint, service, organizationName }}
+        >
+          <strong>{{ user }}</strong> failed to terminate access for Outways
+          with Public Key <strong>{{ dataPublicKeyFingerprint }}</strong> for
+          the service {{ service }} of {{ organizationName }}
+        </Trans>
       ) : (
         <Trans values={{ user, action }}>
           <strong>{{ user }}</strong> has performed unknown action{' '}
-          <strong>&apos;{{ action }}&apos;</strong>
+          <strong>{{ action }}</strong>
         </Trans>
       )}
     </Template>

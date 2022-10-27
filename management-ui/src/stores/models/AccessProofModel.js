@@ -13,6 +13,7 @@ class AccessProofModel {
   serviceName = ''
   createdAt = null
   revokedAt = null
+  terminatedAt = null
   accessRequestId = null
   publicKeyFingerprint = ''
 
@@ -48,6 +49,10 @@ class AccessProofModel {
 
     if (accessProofData.revokedAt) {
       this.revokedAt = new Date(accessProofData.revokedAt)
+    }
+
+    if (accessProofData.terminatedAt) {
+      this.terminatedAt = new Date(accessProofData.terminatedAt)
     }
 
     if (accessProofData.accessRequestId) {

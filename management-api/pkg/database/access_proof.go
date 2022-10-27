@@ -21,6 +21,7 @@ type AccessProof struct {
 	OutgoingAccessRequest   *OutgoingAccessRequest `gorm:"foreignKey:access_request_outgoing_id"`
 	CreatedAt               time.Time
 	RevokedAt               sql.NullTime
+	TerminatedAt            sql.NullTime
 }
 
 func (AccessProof) TableName() string {
@@ -106,4 +107,33 @@ func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessPro
 	}
 
 	return *accessProofs, nil
+}
+
+// nolint:dupl // is similar to terminate access grant
+func (db *PostgresConfigDatabase) TerminateAccessProof(ctx context.Context, accessProofID uint, terminatedAt time.Time) error {
+	accessProof, err := db.queries.GetAccessProof(ctx, int32(accessProofID))
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return ErrNotFound
+		}
+
+		return err
+	}
+
+	if accessProof.TerminatedAt.Valid {
+		return ErrAccessProofAlreadyTerminated
+	}
+
+	err = db.queries.TerminateAccessProof(ctx, &queries.TerminateAccessProofParams{
+		ID: int32(accessProofID),
+		TerminatedAt: sql.NullTime{
+			Time:  terminatedAt,
+			Valid: true,
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

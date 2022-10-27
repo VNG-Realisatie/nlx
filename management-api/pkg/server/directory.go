@@ -160,6 +160,12 @@ func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 		revokedAt = timestamppb.New(accessProof.RevokedAt.Time)
 	}
 
+	var terminatedAt *timestamppb.Timestamp
+
+	if accessProof.TerminatedAt.Valid {
+		terminatedAt = timestamppb.New(accessProof.TerminatedAt.Time)
+	}
+
 	return &api.AccessProof{
 		Id: uint64(accessProof.ID),
 		Organization: &external.Organization{
@@ -169,6 +175,7 @@ func convertAccessProof(accessProof *database.AccessProof) *api.AccessProof {
 		ServiceName:          accessProof.OutgoingAccessRequest.ServiceName,
 		CreatedAt:            createdAt,
 		RevokedAt:            revokedAt,
+		TerminatedAt:         terminatedAt,
 		PublicKeyFingerprint: accessProof.OutgoingAccessRequest.PublicKeyFingerprint,
 		AccessRequestId:      uint64(accessProof.OutgoingAccessRequest.ID),
 	}

@@ -697,6 +697,26 @@ func (mr *MockManagementServiceClientMockRecorder) SynchronizeOutgoingAccessRequ
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOutgoingAccessRequests", reflect.TypeOf((*MockManagementServiceClient)(nil).SynchronizeOutgoingAccessRequests), varargs...)
 }
 
+// TerminateAccessProof mocks base method.
+func (m *MockManagementServiceClient) TerminateAccessProof(ctx context.Context, in *api.TerminateAccessProofRequest, opts ...grpc.CallOption) (*api.TerminateAccessProofResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TerminateAccessProof", varargs...)
+	ret0, _ := ret[0].(*api.TerminateAccessProofResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TerminateAccessProof indicates an expected call of TerminateAccessProof.
+func (mr *MockManagementServiceClientMockRecorder) TerminateAccessProof(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccessProof", reflect.TypeOf((*MockManagementServiceClient)(nil).TerminateAccessProof), varargs...)
+}
+
 // UpdateInway mocks base method.
 func (m *MockManagementServiceClient) UpdateInway(ctx context.Context, in *api.UpdateInwayRequest, opts ...grpc.CallOption) (*api.UpdateInwayResponse, error) {
 	m.ctrl.T.Helper()
@@ -775,6 +795,26 @@ func (mr *MockManagementServiceClientMockRecorder) UpdateSettings(ctx, in interf
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementServiceClient)(nil).UpdateSettings), varargs...)
+}
+
+// WithdrawOutgoingAccessRequest mocks base method.
+func (m *MockManagementServiceClient) WithdrawOutgoingAccessRequest(ctx context.Context, in *api.WithdrawOutgoingAccessRequestRequest, opts ...grpc.CallOption) (*api.WithdrawOutgoingAccessRequestResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "WithdrawOutgoingAccessRequest", varargs...)
+	ret0, _ := ret[0].(*api.WithdrawOutgoingAccessRequestResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WithdrawOutgoingAccessRequest indicates an expected call of WithdrawOutgoingAccessRequest.
+func (mr *MockManagementServiceClientMockRecorder) WithdrawOutgoingAccessRequest(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawOutgoingAccessRequest", reflect.TypeOf((*MockManagementServiceClient)(nil).WithdrawOutgoingAccessRequest), varargs...)
 }
 
 // MockManagementServiceServer is a mock of ManagementServiceServer interface.
@@ -1295,6 +1335,21 @@ func (mr *MockManagementServiceServerMockRecorder) SynchronizeOutgoingAccessRequ
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOutgoingAccessRequests", reflect.TypeOf((*MockManagementServiceServer)(nil).SynchronizeOutgoingAccessRequests), arg0, arg1)
 }
 
+// TerminateAccessProof mocks base method.
+func (m *MockManagementServiceServer) TerminateAccessProof(arg0 context.Context, arg1 *api.TerminateAccessProofRequest) (*api.TerminateAccessProofResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TerminateAccessProof", arg0, arg1)
+	ret0, _ := ret[0].(*api.TerminateAccessProofResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TerminateAccessProof indicates an expected call of TerminateAccessProof.
+func (mr *MockManagementServiceServerMockRecorder) TerminateAccessProof(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccessProof", reflect.TypeOf((*MockManagementServiceServer)(nil).TerminateAccessProof), arg0, arg1)
+}
+
 // UpdateInway mocks base method.
 func (m *MockManagementServiceServer) UpdateInway(arg0 context.Context, arg1 *api.UpdateInwayRequest) (*api.UpdateInwayResponse, error) {
 	m.ctrl.T.Helper()
@@ -1353,6 +1408,21 @@ func (m *MockManagementServiceServer) UpdateSettings(arg0 context.Context, arg1 
 func (mr *MockManagementServiceServerMockRecorder) UpdateSettings(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSettings", reflect.TypeOf((*MockManagementServiceServer)(nil).UpdateSettings), arg0, arg1)
+}
+
+// WithdrawOutgoingAccessRequest mocks base method.
+func (m *MockManagementServiceServer) WithdrawOutgoingAccessRequest(arg0 context.Context, arg1 *api.WithdrawOutgoingAccessRequestRequest) (*api.WithdrawOutgoingAccessRequestResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithdrawOutgoingAccessRequest", arg0, arg1)
+	ret0, _ := ret[0].(*api.WithdrawOutgoingAccessRequestResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WithdrawOutgoingAccessRequest indicates an expected call of WithdrawOutgoingAccessRequest.
+func (mr *MockManagementServiceServerMockRecorder) WithdrawOutgoingAccessRequest(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawOutgoingAccessRequest", reflect.TypeOf((*MockManagementServiceServer)(nil).WithdrawOutgoingAccessRequest), arg0, arg1)
 }
 
 // mustEmbedUnimplementedManagementServiceServer mocks base method.

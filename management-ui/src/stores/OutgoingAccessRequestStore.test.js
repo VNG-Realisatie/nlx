@@ -99,3 +99,87 @@ test('updating from server', async () => {
     ACCESS_REQUEST_STATES.APPROVED,
   )
 })
+
+test('terminate access', async () => {
+  const managementApiClient = new ManagementServiceApi()
+
+  managementApiClient.managementServiceTerminateAccessProof = jest
+    .fn()
+    .mockResolvedValue()
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  const outgoingAccessRequestStore = rootStore.outgoingAccessRequestStore
+
+  const model = outgoingAccessRequestStore.updateFromServer({
+    id: 42,
+    organization: {
+      serialNumber: '00000000000000000001',
+    },
+    publicKeyFingerprint: 'my-fingerprint',
+    serviceName: 'my-service',
+  })
+
+  expect(outgoingAccessRequestStore.outgoingAccessRequests.get(42)).toBe(model)
+
+  await outgoingAccessRequestStore.terminate({
+    id: 42,
+    organization: {
+      serialNumber: '00000000000000000001',
+    },
+    publicKeyFingerprint: 'my-fingerprint',
+    serviceName: 'my-service',
+  })
+
+  expect(
+    managementApiClient.managementServiceTerminateAccessProof,
+  ).toHaveBeenCalledWith({
+    organizationSerialNumber: '00000000000000000001',
+    serviceName: 'my-service',
+    publicKeyFingerprint: 'my-fingerprint',
+  })
+})
+
+test('withdraw access', async () => {
+  const managementApiClient = new ManagementServiceApi()
+
+  managementApiClient.managementServiceWithdrawOutgoingAccessRequest = jest
+    .fn()
+    .mockResolvedValue()
+
+  const rootStore = new RootStore({
+    managementApiClient,
+  })
+
+  const outgoingAccessRequestStore = rootStore.outgoingAccessRequestStore
+
+  const model = outgoingAccessRequestStore.updateFromServer({
+    id: 42,
+    organization: {
+      serialNumber: '00000000000000000001',
+    },
+    publicKeyFingerprint: 'my-fingerprint',
+    serviceName: 'my-service',
+  })
+
+  expect(outgoingAccessRequestStore.outgoingAccessRequests.get(42)).toBe(model)
+
+  await outgoingAccessRequestStore.withdraw({
+    id: 42,
+    organization: {
+      serialNumber: '00000000000000000001',
+    },
+    publicKeyFingerprint: 'my-fingerprint',
+    serviceName: 'my-service',
+  })
+
+  expect(
+    managementApiClient.managementServiceWithdrawOutgoingAccessRequest,
+  ).toHaveBeenCalledWith({
+    organizationSerialNumber: '00000000000000000001',
+    serviceName: 'my-service',
+    publicKeyFingerprint: 'my-fingerprint',
+  })
+})

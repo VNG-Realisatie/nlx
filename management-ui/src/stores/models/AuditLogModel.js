@@ -15,6 +15,9 @@ export const ACTION_OUTGOING_ACCESS_REQUEST_CREATE =
   'ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE'
 export const ACTION_OUTGOING_ACCESS_REQUEST_FAIL =
   'ACTION_TYPE_OUTGOING_ACCESS_REQUEST_FAIL'
+export const ACTION_OUTGOING_ACCESS_REQUEST_WITHDRAW =
+  'ACTION_TYPE_OUTGOING_ACCESS_REQUEST_WITHDRAW'
+export const ACTION_ACCESS_TERMINATE = 'ACTION_TYPE_ACCESS_TERMINATE'
 export const ACTION_SERVICE_CREATE = 'ACTION_TYPE_SERVICE_CREATE'
 export const ACTION_SERVICE_UPDATE = 'ACTION_TYPE_SERVICE_UPDATE'
 export const ACTION_SERVICE_DELETE = 'ACTION_TYPE_SERVICE_DELETE'
@@ -54,7 +57,9 @@ class AuditLogModel {
     reference: '',
     inwayName: '',
     outwayName: '',
+    publicKeyFingerprint: '',
   }
+  hasSucceeded = null
 
   constructor({ auditLogData }) {
     makeAutoObservable(this)
@@ -98,8 +103,18 @@ class AuditLogModel {
       this.client = auditLogData.client
     }
 
+    if (typeof auditLogData.hasSucceeded != 'undefined') {
+      this.hasSucceeded = auditLogData.hasSucceeded
+    }
+
     if (auditLogData.data) {
-      const { delegatee, reference, inwayName, outwayName } = auditLogData.data
+      const {
+        delegatee,
+        reference,
+        inwayName,
+        outwayName,
+        publicKeyFingerprint,
+      } = auditLogData.data
 
       if (delegatee) {
         this.data.delegatee = new Organization(
@@ -111,6 +126,7 @@ class AuditLogModel {
       this.data.reference = reference
       this.data.inwayName = inwayName
       this.data.outwayName = outwayName
+      this.data.publicKeyFingerprint = publicKeyFingerprint
     }
   }
 }

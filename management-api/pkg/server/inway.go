@@ -258,7 +258,7 @@ func (s *ManagementService) GetInwayConfig(ctx context.Context, req *api.GetInwa
 			authorizations := make([]*api.GetInwayConfigResponse_Service_AuthorizationSettings_Authorization, 0)
 
 			for _, accessGrant := range accessGrants {
-				if !accessGrant.RevokedAt.Valid {
+				if !accessGrant.RevokedAt.Valid && !accessGrant.TerminatedAt.Valid {
 					authorizations = append(authorizations, convertAccessGrantToInwayAuthorizationSetting(accessGrant))
 				}
 			}

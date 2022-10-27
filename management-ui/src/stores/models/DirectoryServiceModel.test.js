@@ -259,6 +259,24 @@ describe('access to this service', () => {
 
     expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(false)
   })
+
+  it('when the access proof has been terminated', () => {
+    accessProof.update({
+      terminatedAt: new Date(),
+    })
+
+    directoryService.update({
+      serviceData: {},
+      accessStates: [
+        {
+          accessRequest: outgoingAccessRequest,
+          accessProof: accessProof,
+        },
+      ],
+    })
+
+    expect(directoryService.hasAccess('public-key-fingerprint')).toEqual(false)
+  })
 })
 
 test('retrieving the first failing access state for this service', () => {

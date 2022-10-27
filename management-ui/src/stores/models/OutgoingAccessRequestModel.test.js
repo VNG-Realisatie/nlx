@@ -1,6 +1,8 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
+import { configure } from 'mobx'
+import { RootStore } from '../index'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
@@ -58,4 +60,56 @@ test('organization name is empty', () => {
 
   expect(model.organization.name).toBe('00000000000000000001')
   expect(model.organization.serialNumber).toBe('00000000000000000001')
+})
+
+test('terminate access', async () => {
+  configure({ safeDescriptors: false })
+
+  const rootStore = new RootStore({})
+
+  const model = new OutgoingAccessRequestModel({
+    outgoingAccessRequestStore: rootStore.outgoingAccessRequestStore,
+    accessRequestData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  jest
+    .spyOn(rootStore.outgoingAccessRequestStore, 'terminate')
+    .mockResolvedValue()
+
+  await model.terminate()
+
+  expect(rootStore.outgoingAccessRequestStore.terminate).toHaveBeenCalledWith(
+    model,
+  )
+})
+
+test('withdraw access', async () => {
+  configure({ safeDescriptors: false })
+
+  const rootStore = new RootStore({})
+
+  const model = new OutgoingAccessRequestModel({
+    outgoingAccessRequestStore: rootStore.outgoingAccessRequestStore,
+    accessRequestData: {
+      organization: {
+        name: '',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  jest
+    .spyOn(rootStore.outgoingAccessRequestStore, 'withdraw')
+    .mockResolvedValue()
+
+  await model.withdraw()
+
+  expect(rootStore.outgoingAccessRequestStore.withdraw).toHaveBeenCalledWith(
+    model,
+  )
 })

@@ -132,6 +132,30 @@ func (q *Queries) CreateUserRoles(ctx context.Context, arg *CreateUserRolesParam
 	return err
 }
 
+const deleteIncomingAccessRequest = `-- name: DeleteIncomingAccessRequest :exec
+delete from
+    nlx_management.access_requests_incoming
+where
+        access_requests_incoming.id = $1
+`
+
+func (q *Queries) DeleteIncomingAccessRequest(ctx context.Context, id int32) error {
+	_, err := q.exec(ctx, q.deleteIncomingAccessRequestStmt, deleteIncomingAccessRequest, id)
+	return err
+}
+
+const deleteOutgoingAccessRequest = `-- name: DeleteOutgoingAccessRequest :exec
+delete from
+    nlx_management.access_requests_outgoing
+where
+    access_requests_outgoing.id = $1
+`
+
+func (q *Queries) DeleteOutgoingAccessRequest(ctx context.Context, id int32) error {
+	_, err := q.exec(ctx, q.deleteOutgoingAccessRequestStmt, deleteOutgoingAccessRequest, id)
+	return err
+}
+
 const doesInwayExistByName = `-- name: DoesInwayExistByName :one
 select
         count(*)>0 as inway_exits
@@ -153,6 +177,7 @@ select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
+    access_grants.terminated_at,
     access_request_incoming_id,
     access_requests_incoming.id as access_request_incoming_id,
     access_requests_incoming.service_id as access_request_incoming_service_id,
@@ -192,6 +217,7 @@ type GetAccessGrantRow struct {
 	ID                                            int32
 	CreatedAt                                     time.Time
 	RevokedAt                                     sql.NullTime
+	TerminatedAt                                  sql.NullTime
 	AccessRequestIncomingID                       int32
 	AccessRequestIncomingID_2                     int32
 	AccessRequestIncomingServiceID                int32
@@ -224,6 +250,7 @@ func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrant
 		&i.ID,
 		&i.CreatedAt,
 		&i.RevokedAt,
+		&i.TerminatedAt,
 		&i.AccessRequestIncomingID,
 		&i.AccessRequestIncomingID_2,
 		&i.AccessRequestIncomingServiceID,
@@ -251,11 +278,53 @@ func (q *Queries) GetAccessGrant(ctx context.Context, id int32) (*GetAccessGrant
 	return &i, err
 }
 
+const getAccessGrantIDOfIncomingAccessRequest = `-- name: GetAccessGrantIDOfIncomingAccessRequest :one
+select
+    access_grants.id
+from
+    nlx_management.access_grants
+where
+    access_grants.access_request_incoming_id = $1
+ORDER BY
+    access_grants.id DESC
+LIMIT 1
+`
+
+func (q *Queries) GetAccessGrantIDOfIncomingAccessRequest(ctx context.Context, accessRequestIncomingID int32) (int32, error) {
+	row := q.queryRow(ctx, q.getAccessGrantIDOfIncomingAccessRequestStmt, getAccessGrantIDOfIncomingAccessRequest, accessRequestIncomingID)
+	var id int32
+	err := row.Scan(&id)
+	return id, err
+}
+
+const getAccessProof = `-- name: GetAccessProof :one
+select
+    id, access_request_outgoing_id, created_at, revoked_at, terminated_at
+FROM
+    nlx_management.access_proofs
+WHERE
+    id = $1
+`
+
+func (q *Queries) GetAccessProof(ctx context.Context, id int32) (*NlxManagementAccessProof, error) {
+	row := q.queryRow(ctx, q.getAccessProofStmt, getAccessProof, id)
+	var i NlxManagementAccessProof
+	err := row.Scan(
+		&i.ID,
+		&i.AccessRequestOutgoingID,
+		&i.CreatedAt,
+		&i.RevokedAt,
+		&i.TerminatedAt,
+	)
+	return &i, err
+}
+
 const getLatestAccessGrantForService = `-- name: GetLatestAccessGrantForService :one
 select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
+    access_grants.terminated_at,
     access_requests_incoming.id as access_request_incoming_id,
     access_requests_incoming.service_id as access_request_incoming_service_id,
     access_requests_incoming.organization_name as access_request_incoming_organization_name,
@@ -304,6 +373,7 @@ type GetLatestAccessGrantForServiceRow struct {
 	ID                                            int32
 	CreatedAt                                     time.Time
 	RevokedAt                                     sql.NullTime
+	TerminatedAt                                  sql.NullTime
 	AccessRequestIncomingID                       int32
 	AccessRequestIncomingServiceID                int32
 	AccessRequestIncomingOrganizationName         string
@@ -335,6 +405,7 @@ func (q *Queries) GetLatestAccessGrantForService(ctx context.Context, arg *GetLa
 		&i.ID,
 		&i.CreatedAt,
 		&i.RevokedAt,
+		&i.TerminatedAt,
 		&i.AccessRequestIncomingID,
 		&i.AccessRequestIncomingServiceID,
 		&i.AccessRequestIncomingOrganizationName,
@@ -423,6 +494,7 @@ select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
+    access_grants.terminated_at,
     access_grants.access_request_incoming_id,
     access_requests_incoming.service_id as access_request_incoming_service_id,
     access_requests_incoming.organization_name as access_request_incoming_organization_name,
@@ -460,6 +532,7 @@ type ListAccessGrantsForServiceRow struct {
 	ID                                            int32
 	CreatedAt                                     time.Time
 	RevokedAt                                     sql.NullTime
+	TerminatedAt                                  sql.NullTime
 	AccessRequestIncomingID                       int32
 	AccessRequestIncomingServiceID                int32
 	AccessRequestIncomingOrganizationName         string
@@ -497,6 +570,7 @@ func (q *Queries) ListAccessGrantsForService(ctx context.Context, name string) (
 			&i.ID,
 			&i.CreatedAt,
 			&i.RevokedAt,
+			&i.TerminatedAt,
 			&i.AccessRequestIncomingID,
 			&i.AccessRequestIncomingServiceID,
 			&i.AccessRequestIncomingOrganizationName,
@@ -855,6 +929,58 @@ func (q *Queries) RevokeAccessGrant(ctx context.Context, arg *RevokeAccessGrantP
 	return err
 }
 
+const setAuditLogAsSucceeded = `-- name: SetAuditLogAsSucceeded :exec
+update
+    nlx_management.audit_logs
+set
+    has_succeeded = true
+where
+    audit_logs.id = $1
+`
+
+func (q *Queries) SetAuditLogAsSucceeded(ctx context.Context, id int64) error {
+	_, err := q.exec(ctx, q.setAuditLogAsSucceededStmt, setAuditLogAsSucceeded, id)
+	return err
+}
+
+const terminateAccessGrant = `-- name: TerminateAccessGrant :exec
+update
+    nlx_management.access_grants
+set
+    terminated_at = $1
+where
+    access_grants.id = $2
+`
+
+type TerminateAccessGrantParams struct {
+	TerminatedAt sql.NullTime
+	ID           int32
+}
+
+func (q *Queries) TerminateAccessGrant(ctx context.Context, arg *TerminateAccessGrantParams) error {
+	_, err := q.exec(ctx, q.terminateAccessGrantStmt, terminateAccessGrant, arg.TerminatedAt, arg.ID)
+	return err
+}
+
+const terminateAccessProof = `-- name: TerminateAccessProof :exec
+update
+    nlx_management.access_proofs
+set
+    terminated_at = $1
+where
+        access_proofs.id = $2
+`
+
+type TerminateAccessProofParams struct {
+	TerminatedAt sql.NullTime
+	ID           int32
+}
+
+func (q *Queries) TerminateAccessProof(ctx context.Context, arg *TerminateAccessProofParams) error {
+	_, err := q.exec(ctx, q.terminateAccessProofStmt, terminateAccessProof, arg.TerminatedAt, arg.ID)
+	return err
+}
+
 const updateIncomingAccessRequest = `-- name: UpdateIncomingAccessRequest :exec
 update
     nlx_management.access_requests_incoming
@@ -873,6 +999,26 @@ type UpdateIncomingAccessRequestParams struct {
 
 func (q *Queries) UpdateIncomingAccessRequest(ctx context.Context, arg *UpdateIncomingAccessRequestParams) error {
 	_, err := q.exec(ctx, q.updateIncomingAccessRequestStmt, updateIncomingAccessRequest, arg.ID, arg.State, arg.UpdatedAt)
+	return err
+}
+
+const updateOutgoingAccessRequestState = `-- name: UpdateOutgoingAccessRequestState :exec
+update
+    nlx_management.access_requests_outgoing
+set
+    state = $1, updated_at = $2
+where
+    access_requests_outgoing.id = $3
+`
+
+type UpdateOutgoingAccessRequestStateParams struct {
+	State     string
+	UpdatedAt time.Time
+	ID        int32
+}
+
+func (q *Queries) UpdateOutgoingAccessRequestState(ctx context.Context, arg *UpdateOutgoingAccessRequestStateParams) error {
+	_, err := q.exec(ctx, q.updateOutgoingAccessRequestStateStmt, updateOutgoingAccessRequestState, arg.State, arg.UpdatedAt, arg.ID)
 	return err
 }
 

@@ -6,10 +6,12 @@ package server_test
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"net"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -585,6 +587,28 @@ func TestGetInwayConfig(t *testing.T) {
 							Organization: database.IncomingAccessRequestOrganization{
 								SerialNumber: "2222",
 								Name:         "org2",
+							},
+							PublicKeyFingerprint: "uvw",
+							PublicKeyPEM:         "xyz",
+						},
+					},
+					{
+						TerminatedAt: sql.NullTime{Time: time.Now(), Valid: true},
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "333",
+								Name:         "org3",
+							},
+							PublicKeyFingerprint: "uvw",
+							PublicKeyPEM:         "xyz",
+						},
+					},
+					{
+						RevokedAt: sql.NullTime{Time: time.Now(), Valid: true},
+						IncomingAccessRequest: &database.IncomingAccessRequest{
+							Organization: database.IncomingAccessRequestOrganization{
+								SerialNumber: "444",
+								Name:         "org4",
 							},
 							PublicKeyFingerprint: "uvw",
 							PublicKeyPEM:         "xyz",

@@ -13,6 +13,7 @@ import OutwayModel from '../../../../../../../../stores/models/OutwayModel'
 import DirectoryServiceModel from '../../../../../../../../stores/models/DirectoryServiceModel'
 import { useConfirmationModal } from '../../../../../../../../components/ConfirmationModal'
 import RequestAccessDetails from '../../components/RequestAccessDetails'
+import CancelRequestAccessDetails from '../../components/WithdrawlRequestAccessDetails'
 
 const Row = ({
   publicKeyFingerprint,
@@ -36,6 +37,19 @@ const Row = ({
       />
     ),
   })
+
+  const [WithdrawRequestAccessConfirmationModal, confirmWithdrawRequestAccess] =
+    useConfirmationModal({
+      title: t('Withdraw access request'),
+      okText: t('Confirm'),
+      children: (
+        <CancelRequestAccessDetails
+          service={service}
+          publicKeyFingerprint={publicKeyFingerprint}
+          outwayNames={outways.map((outway) => outway.name)}
+        />
+      ),
+    })
 
   const onRequestAccess = async () => {
     onShowConfirmRequestAccessModalHandler()
@@ -64,12 +78,48 @@ const Row = ({
     onHideConfirmRequestAccessModalHandler()
   }
 
+  const { accessRequest, accessProof } =
+    service.getAccessStateFor(publicKeyFingerprint)
+
+  const onWithdrawRequestAccess = async () => {
+    onShowConfirmRequestAccessModalHandler()
+
+    if (await confirmWithdrawRequestAccess()) {
+      try {
+        setIsLoading(true)
+        await service.withdrawAccessRequest(accessRequest.publicKeyFingerprint)
+
+        showToast({
+          title: t('Access withdrawn'),
+          variant: 'success',
+        })
+      } catch (err) {
+        let message = err.message
+
+        if (err.response && err.response.status === 403) {
+          message = t(`You don't have the required permission.`)
+        }
+
+        showToast({
+          title: t('Failed to withdraw request access'),
+          body: message,
+          variant: 'error',
+        })
+      }
+
+      setIsLoading(false)
+    }
+
+    onHideConfirmRequestAccessModalHandler()
+  }
+
   const onRetryRequestAccess = () => {
     return onRequestAccess()
   }
 
-  const { accessRequest, accessProof } =
-    service.getAccessStateFor(publicKeyFingerprint)
+  const onWithdrawAccessButtonClick = () => {
+    return onWithdrawRequestAccess()
+  }
 
   return (
     <Table.Tr key={publicKeyFingerprint}>
@@ -86,9 +136,11 @@ const Row = ({
           accessProof={accessProof}
           onRequestAccess={onRequestAccess}
           onRetryRequestAccess={onRetryRequestAccess}
+          onWithdrawAccessButtonClick={onWithdrawAccessButtonClick}
         />
 
         <RequestConfirmationModal />
+        <WithdrawRequestAccessConfirmationModal />
       </Table.Td>
     </Table.Tr>
   )

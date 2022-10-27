@@ -64,6 +64,21 @@ func (mr *MockLoggerMockRecorder) AccessGrantRevoke(ctx, userName, userAgent, or
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessGrantRevoke", reflect.TypeOf((*MockLogger)(nil).AccessGrantRevoke), ctx, userName, userAgent, organizationSerialNumber, organizationName, serviceName)
 }
 
+// AccessTerminate mocks base method.
+func (m *MockLogger) AccessTerminate(ctx context.Context, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AccessTerminate", ctx, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AccessTerminate indicates an expected call of AccessTerminate.
+func (mr *MockLoggerMockRecorder) AccessTerminate(ctx, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessTerminate", reflect.TypeOf((*MockLogger)(nil).AccessTerminate), ctx, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint)
+}
+
 // IncomingAccessRequestAccept mocks base method.
 func (m *MockLogger) IncomingAccessRequestAccept(ctx context.Context, userName, userAgent, organizationSerialNumber, organizationName, service string) error {
 	m.ctrl.T.Helper()
@@ -233,6 +248,21 @@ func (mr *MockLoggerMockRecorder) OutgoingAccessRequestCreate(ctx, userName, use
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutgoingAccessRequestCreate", reflect.TypeOf((*MockLogger)(nil).OutgoingAccessRequestCreate), ctx, userName, userAgent, organizationSerialNumber, service)
 }
 
+// OutgoingAccessRequestWithdraw mocks base method.
+func (m *MockLogger) OutgoingAccessRequestWithdraw(ctx context.Context, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OutgoingAccessRequestWithdraw", ctx, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// OutgoingAccessRequestWithdraw indicates an expected call of OutgoingAccessRequestWithdraw.
+func (mr *MockLoggerMockRecorder) OutgoingAccessRequestWithdraw(ctx, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutgoingAccessRequestWithdraw", reflect.TypeOf((*MockLogger)(nil).OutgoingAccessRequestWithdraw), ctx, userName, userAgent, organizationSerialNumber, service, publicKeyFingerprint)
+}
+
 // OutwayDelete mocks base method.
 func (m *MockLogger) OutwayDelete(ctx context.Context, userName, userAgent, outwayName string) error {
 	m.ctrl.T.Helper()
@@ -287,4 +317,18 @@ func (m *MockLogger) ServiceUpdate(ctx context.Context, userName, userAgent, ser
 func (mr *MockLoggerMockRecorder) ServiceUpdate(ctx, userName, userAgent, serviceName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceUpdate", reflect.TypeOf((*MockLogger)(nil).ServiceUpdate), ctx, userName, userAgent, serviceName)
+}
+
+// SetAsSucceeded mocks base method.
+func (m *MockLogger) SetAsSucceeded(ctx context.Context, id int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetAsSucceeded", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetAsSucceeded indicates an expected call of SetAsSucceeded.
+func (mr *MockLoggerMockRecorder) SetAsSucceeded(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAsSucceeded", reflect.TypeOf((*MockLogger)(nil).SetAsSucceeded), ctx, id)
 }

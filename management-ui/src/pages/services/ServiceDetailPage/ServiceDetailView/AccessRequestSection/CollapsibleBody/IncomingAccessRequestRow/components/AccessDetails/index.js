@@ -54,8 +54,4 @@ AccessDetails.propTypes = {
   }),
 }
 
-AccessDetails.defaultProps = {
-  outwayNames: [],
-}
-
 export default observer(AccessDetails)

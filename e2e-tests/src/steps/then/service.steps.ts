@@ -5,6 +5,7 @@
 
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
+import { getOutwayByName } from "../../utils/outway";
 import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "assert";
 
@@ -45,5 +46,41 @@ Then(
         );
       }
     }
+  }
+);
+
+Then(
+  "{string} no longer has an access request to {string} from {string} for the Outway {string}",
+  async function (
+    this: CustomWorld,
+    orgNameConsumer: string,
+    serviceName: string,
+    orgNameProvider: string,
+    outwayName: string
+  ) {
+    serviceName = `${serviceName}-${this.id}`;
+
+    const orgConsumer = getOrgByName(orgNameConsumer);
+    const orgProvider = getOrgByName(orgNameProvider);
+
+    const outway = await getOutwayByName(orgNameConsumer, outwayName);
+
+    const response =
+      await orgConsumer.apiClients.directory?.directoryServiceGetOrganizationService(
+        {
+          organizationSerialNumber: orgProvider.serialNumber,
+          serviceName: serviceName,
+        }
+      );
+
+    const filteredAccessRequests =
+      response?.directoryService?.accessStates?.filter((accessState) => {
+        return (
+          accessState?.accessRequest?.publicKeyFingerprint ==
+          outway?.publicKeyFingerprint
+        );
+      });
+
+    assert.equal(filteredAccessRequests?.length, 0);
   }
 );

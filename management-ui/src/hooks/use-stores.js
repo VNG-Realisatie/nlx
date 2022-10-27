@@ -63,4 +63,9 @@ export const useAccessProofStore = () => {
   return accessProofStore
 }
 
+export const useOutgoingAccessRequestStore = () => {
+  const { outgoingAccessRequestStore } = useStores()
+  return outgoingAccessRequestStore
+}
+
 export default useStores

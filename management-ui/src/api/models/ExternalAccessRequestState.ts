@@ -23,7 +23,7 @@ export const ExternalAccessRequestState = {
     RECEIVED: 'ACCESS_REQUEST_STATE_RECEIVED',
     APPROVED: 'ACCESS_REQUEST_STATE_APPROVED',
     REJECTED: 'ACCESS_REQUEST_STATE_REJECTED',
-    REVOKED: 'ACCESS_REQUEST_STATE_REVOKED'
+    WITHDRAWN: 'ACCESS_REQUEST_STATE_WITHDRAWN'
 } as const;
 export type ExternalAccessRequestState = typeof ExternalAccessRequestState[keyof typeof ExternalAccessRequestState];
 

@@ -11,7 +11,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 
-	diagnostics "go.nlx.io/nlx/common/diagnostics"
 	domain "go.nlx.io/nlx/management-api/domain"
 	database "go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -186,6 +185,20 @@ func (mr *MockConfigDatabaseMockRecorder) CreateUser(ctx, email, password, roleN
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockConfigDatabase)(nil).CreateUser), ctx, email, password, roleNames)
 }
 
+// DeleteIncomingAccessRequest mocks base method.
+func (m *MockConfigDatabase) DeleteIncomingAccessRequest(ctx context.Context, id uint) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteIncomingAccessRequest", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteIncomingAccessRequest indicates an expected call of DeleteIncomingAccessRequest.
+func (mr *MockConfigDatabaseMockRecorder) DeleteIncomingAccessRequest(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteIncomingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteIncomingAccessRequest), ctx, id)
+}
+
 // DeleteInway mocks base method.
 func (m *MockConfigDatabase) DeleteInway(ctx context.Context, name string) error {
 	m.ctrl.T.Helper()
@@ -198,6 +211,20 @@ func (m *MockConfigDatabase) DeleteInway(ctx context.Context, name string) error
 func (mr *MockConfigDatabaseMockRecorder) DeleteInway(ctx, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInway", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteInway), ctx, name)
+}
+
+// DeleteOutgoingAccessRequest mocks base method.
+func (m *MockConfigDatabase) DeleteOutgoingAccessRequest(ctx context.Context, id uint) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteOutgoingAccessRequest", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteOutgoingAccessRequest indicates an expected call of DeleteOutgoingAccessRequest.
+func (mr *MockConfigDatabaseMockRecorder) DeleteOutgoingAccessRequest(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOutgoingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).DeleteOutgoingAccessRequest), ctx, id)
 }
 
 // DeleteOutgoingAccessRequests mocks base method.
@@ -255,6 +282,21 @@ func (m *MockConfigDatabase) GetAccessGrant(ctx context.Context, id uint) (*data
 func (mr *MockConfigDatabaseMockRecorder) GetAccessGrant(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).GetAccessGrant), ctx, id)
+}
+
+// GetAccessGrantIDForIncomingAccessRequest mocks base method.
+func (m *MockConfigDatabase) GetAccessGrantIDForIncomingAccessRequest(ctx context.Context, accessRequestID uint) (uint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccessGrantIDForIncomingAccessRequest", ctx, accessRequestID)
+	ret0, _ := ret[0].(uint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccessGrantIDForIncomingAccessRequest indicates an expected call of GetAccessGrantIDForIncomingAccessRequest.
+func (mr *MockConfigDatabaseMockRecorder) GetAccessGrantIDForIncomingAccessRequest(ctx, accessRequestID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessGrantIDForIncomingAccessRequest", reflect.TypeOf((*MockConfigDatabase)(nil).GetAccessGrantIDForIncomingAccessRequest), ctx, accessRequestID)
 }
 
 // GetAccessProofForOutgoingAccessRequest mocks base method.
@@ -764,6 +806,20 @@ func (mr *MockConfigDatabaseMockRecorder) RevokeOutgoingOrderByReference(ctx, de
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeOutgoingOrderByReference", reflect.TypeOf((*MockConfigDatabase)(nil).RevokeOutgoingOrderByReference), ctx, delegatee, reference, revokedAt)
 }
 
+// SetAuditLogAsSucceeded mocks base method.
+func (m *MockConfigDatabase) SetAuditLogAsSucceeded(ctx context.Context, id int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetAuditLogAsSucceeded", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetAuditLogAsSucceeded indicates an expected call of SetAuditLogAsSucceeded.
+func (mr *MockConfigDatabaseMockRecorder) SetAuditLogAsSucceeded(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuditLogAsSucceeded", reflect.TypeOf((*MockConfigDatabase)(nil).SetAuditLogAsSucceeded), ctx, id)
+}
+
 // SynchronizeOrders mocks base method.
 func (m *MockConfigDatabase) SynchronizeOrders(ctx context.Context, orders []*database.IncomingOrder) error {
 	m.ctrl.T.Helper()
@@ -776,6 +832,34 @@ func (m *MockConfigDatabase) SynchronizeOrders(ctx context.Context, orders []*da
 func (mr *MockConfigDatabaseMockRecorder) SynchronizeOrders(ctx, orders interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SynchronizeOrders", reflect.TypeOf((*MockConfigDatabase)(nil).SynchronizeOrders), ctx, orders)
+}
+
+// TerminateAccessGrant mocks base method.
+func (m *MockConfigDatabase) TerminateAccessGrant(ctx context.Context, id uint, terminatedAt time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TerminateAccessGrant", ctx, id, terminatedAt)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// TerminateAccessGrant indicates an expected call of TerminateAccessGrant.
+func (mr *MockConfigDatabaseMockRecorder) TerminateAccessGrant(ctx, id, terminatedAt interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccessGrant", reflect.TypeOf((*MockConfigDatabase)(nil).TerminateAccessGrant), ctx, id, terminatedAt)
+}
+
+// TerminateAccessProof mocks base method.
+func (m *MockConfigDatabase) TerminateAccessProof(ctx context.Context, id uint, terminatedAt time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TerminateAccessProof", ctx, id, terminatedAt)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// TerminateAccessProof indicates an expected call of TerminateAccessProof.
+func (mr *MockConfigDatabaseMockRecorder) TerminateAccessProof(ctx, id, terminatedAt interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TerminateAccessProof", reflect.TypeOf((*MockConfigDatabase)(nil).TerminateAccessProof), ctx, id, terminatedAt)
 }
 
 // UpdateIncomingAccessRequestState mocks base method.
@@ -807,17 +891,17 @@ func (mr *MockConfigDatabaseMockRecorder) UpdateInway(ctx, inway interface{}) *g
 }
 
 // UpdateOutgoingAccessRequestState mocks base method.
-func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state database.OutgoingAccessRequestState, referenceID uint, err *diagnostics.ErrorDetails) error {
+func (m *MockConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, id uint, state database.OutgoingAccessRequestState) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, id, state, referenceID, err)
+	ret := m.ctrl.Call(m, "UpdateOutgoingAccessRequestState", ctx, id, state)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateOutgoingAccessRequestState indicates an expected call of UpdateOutgoingAccessRequestState.
-func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, id, state, referenceID, err interface{}) *gomock.Call {
+func (mr *MockConfigDatabaseMockRecorder) UpdateOutgoingAccessRequestState(ctx, id, state interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, id, state, referenceID, err)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOutgoingAccessRequestState", reflect.TypeOf((*MockConfigDatabase)(nil).UpdateOutgoingAccessRequestState), ctx, id, state)
 }
 
 // UpdateOutgoingOrder mocks base method.

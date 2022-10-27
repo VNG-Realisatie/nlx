@@ -55,6 +55,7 @@ select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
+    access_grants.terminated_at,
     access_request_incoming_id,
     access_requests_incoming.id as access_request_incoming_id,
     access_requests_incoming.service_id as access_request_incoming_service_id,
@@ -90,11 +91,24 @@ where
         access_grants.id = $1
 ;
 
+-- name: GetAccessGrantIDOfIncomingAccessRequest :one
+select
+    access_grants.id
+from
+    nlx_management.access_grants
+where
+    access_grants.access_request_incoming_id = $1
+ORDER BY
+    access_grants.id DESC
+LIMIT 1
+;
+
 -- name: ListAccessGrantsForService :many
 select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
+    access_grants.terminated_at,
     access_grants.access_request_incoming_id,
     access_requests_incoming.service_id as access_request_incoming_service_id,
     access_requests_incoming.organization_name as access_request_incoming_organization_name,
@@ -133,6 +147,7 @@ select
     access_grants.id,
     access_grants.created_at,
     access_grants.revoked_at,
+    access_grants.terminated_at,
     access_requests_incoming.id as access_request_incoming_id,
     access_requests_incoming.service_id as access_request_incoming_service_id,
     access_requests_incoming.organization_name as access_request_incoming_organization_name,
@@ -180,6 +195,15 @@ where
     access_grants.id = $1
 ;
 
+-- name: TerminateAccessGrant :exec
+update
+    nlx_management.access_grants
+set
+    terminated_at = $1
+where
+    access_grants.id = $2
+;
+
 -- name: UpdateIncomingAccessRequest :exec
 update
     nlx_management.access_requests_incoming
@@ -201,6 +225,24 @@ insert into
              $2
          )
 returning id
+;
+
+-- name: GetAccessProof :one
+select
+    id, access_request_outgoing_id, created_at, revoked_at, terminated_at
+FROM
+    nlx_management.access_proofs
+WHERE
+    id = $1;
+
+
+-- name: TerminateAccessProof :exec
+update
+    nlx_management.access_proofs
+set
+    terminated_at = $1
+where
+        access_proofs.id = $2
 ;
 
 -- name: UpsertInway :exec
@@ -331,3 +373,31 @@ join
     nlx_management.inways on inways_services.inway_id = inways.id
 where
     inways_services.service_id = $1;
+
+-- name: DeleteOutgoingAccessRequest :exec
+delete from
+    nlx_management.access_requests_outgoing
+where
+    access_requests_outgoing.id = $1;
+
+-- name: DeleteIncomingAccessRequest :exec
+delete from
+    nlx_management.access_requests_incoming
+where
+        access_requests_incoming.id = $1;
+
+-- name: SetAuditLogAsSucceeded :exec
+update
+    nlx_management.audit_logs
+set
+    has_succeeded = true
+where
+    audit_logs.id = $1;
+
+-- name: UpdateOutgoingAccessRequestState :exec
+update
+    nlx_management.access_requests_outgoing
+set
+    state = $1, updated_at = $2
+where
+    access_requests_outgoing.id = $3;

@@ -189,6 +189,12 @@ export interface ManagementServiceSynchronizeOutgoingAccessRequestsRequest {
     serviceName: string;
 }
 
+export interface ManagementServiceTerminateAccessProofRequest {
+    organizationSerialNumber: string;
+    serviceName: string;
+    publicKeyFingerprint?: string;
+}
+
 export interface ManagementServiceUpdateInwayRequest {
     name: string;
     inway: ManagementInway;
@@ -205,6 +211,12 @@ export interface ManagementServiceUpdateServiceOperationRequest {
 
 export interface ManagementServiceUpdateSettingsRequest {
     body: ManagementUpdateSettingsRequest;
+}
+
+export interface ManagementServiceWithdrawOutgoingAccessRequestRequest {
+    organizationSerialNumber: string;
+    serviceName: string;
+    publicKeyFingerprint?: string;
 }
 
 /**
@@ -1086,6 +1098,42 @@ export class ManagementServiceApi extends runtime.BaseAPI {
 
     /**
      */
+    async managementServiceTerminateAccessProofRaw(requestParameters: ManagementServiceTerminateAccessProofRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementServiceTerminateAccessProof.');
+        }
+
+        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceTerminateAccessProof.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.publicKeyFingerprint !== undefined) {
+            queryParameters['public_key_fingerprint'] = requestParameters.publicKeyFingerprint;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/access-proofs/{organization_serial_number}/services/{service_name}/terminate`.replace(`{${"organization_serial_number"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementServiceTerminateAccessProof(requestParameters: ManagementServiceTerminateAccessProofRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceTerminateAccessProofRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async managementServiceUpdateInwayRaw(requestParameters: ManagementServiceUpdateInwayRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ManagementUpdateInwayResponse>> {
         if (requestParameters.name === null || requestParameters.name === undefined) {
             throw new runtime.RequiredError('name','Required parameter requestParameters.name was null or undefined when calling managementServiceUpdateInway.');
@@ -1213,6 +1261,42 @@ export class ManagementServiceApi extends runtime.BaseAPI {
      */
     async managementServiceUpdateSettings(requestParameters: ManagementServiceUpdateSettingsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.managementServiceUpdateSettingsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async managementServiceWithdrawOutgoingAccessRequestRaw(requestParameters: ManagementServiceWithdrawOutgoingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.organizationSerialNumber === null || requestParameters.organizationSerialNumber === undefined) {
+            throw new runtime.RequiredError('organizationSerialNumber','Required parameter requestParameters.organizationSerialNumber was null or undefined when calling managementServiceWithdrawOutgoingAccessRequest.');
+        }
+
+        if (requestParameters.serviceName === null || requestParameters.serviceName === undefined) {
+            throw new runtime.RequiredError('serviceName','Required parameter requestParameters.serviceName was null or undefined when calling managementServiceWithdrawOutgoingAccessRequest.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.publicKeyFingerprint !== undefined) {
+            queryParameters['public_key_fingerprint'] = requestParameters.publicKeyFingerprint;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v1/access-requests/outgoing/{organization_serial_number}/services/{service_name}/cancel`.replace(`{${"organization_serial_number"}}`, encodeURIComponent(String(requestParameters.organizationSerialNumber))).replace(`{${"service_name"}}`, encodeURIComponent(String(requestParameters.serviceName))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async managementServiceWithdrawOutgoingAccessRequest(requestParameters: ManagementServiceWithdrawOutgoingAccessRequestRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.managementServiceWithdrawOutgoingAccessRequestRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

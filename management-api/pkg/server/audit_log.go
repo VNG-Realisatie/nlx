@@ -22,23 +22,25 @@ import (
 )
 
 var actionTypes = map[auditlog.ActionType]api.AuditLogRecord_ActionType{
-	auditlog.LoginSuccess:                api.AuditLogRecord_ACTION_TYPE_LOGIN_SUCCESS,
-	auditlog.LoginFail:                   api.AuditLogRecord_ACTION_TYPE_LOGIN_FAIL,
-	auditlog.LogoutSuccess:               api.AuditLogRecord_ACTION_TYPE_LOGOUT,
-	auditlog.IncomingAccesRequestAccept:  api.AuditLogRecord_ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT,
-	auditlog.IncomingAccesRequestReject:  api.AuditLogRecord_ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT,
-	auditlog.AccessGrantRevoke:           api.AuditLogRecord_ACTION_TYPE_ACCESS_GRANT_REVOKE,
-	auditlog.OutgoingAccessRequestCreate: api.AuditLogRecord_ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE,
-	auditlog.ServiceCreate:               api.AuditLogRecord_ACTION_TYPE_SERVICE_CREATE,
-	auditlog.ServiceUpdate:               api.AuditLogRecord_ACTION_TYPE_SERVICE_UPDATE,
-	auditlog.ServiceDelete:               api.AuditLogRecord_ACTION_TYPE_SERVICE_DELETE,
-	auditlog.OrganizationSettingsUpdate:  api.AuditLogRecord_ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE,
-	auditlog.OrderCreate:                 api.AuditLogRecord_ACTION_TYPE_ORDER_CREATE,
-	auditlog.OrderOutgoingRevoke:         api.AuditLogRecord_ACTION_TYPE_ORDER_OUTGOING_REVOKE,
-	auditlog.InwayDelete:                 api.AuditLogRecord_ACTION_TYPE_INWAY_DELETE,
-	auditlog.OrderOutgoingUpdate:         api.AuditLogRecord_ACTION_TYPE_ORDER_OUTGOING_UPDATE,
-	auditlog.AcceptTermsOfService:        api.AuditLogRecord_ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE,
-	auditlog.OutwayDelete:                api.AuditLogRecord_ACTION_TYPE_OUTWAY_DELETE,
+	auditlog.LoginSuccess:                  api.AuditLogRecord_ACTION_TYPE_LOGIN_SUCCESS,
+	auditlog.LoginFail:                     api.AuditLogRecord_ACTION_TYPE_LOGIN_FAIL,
+	auditlog.LogoutSuccess:                 api.AuditLogRecord_ACTION_TYPE_LOGOUT,
+	auditlog.IncomingAccesRequestAccept:    api.AuditLogRecord_ACTION_TYPE_INCOMING_ACCESS_REQUEST_ACCEPT,
+	auditlog.IncomingAccesRequestReject:    api.AuditLogRecord_ACTION_TYPE_INCOMING_ACCESS_REQUEST_REJECT,
+	auditlog.AccessGrantRevoke:             api.AuditLogRecord_ACTION_TYPE_ACCESS_GRANT_REVOKE,
+	auditlog.OutgoingAccessRequestCreate:   api.AuditLogRecord_ACTION_TYPE_OUTGOING_ACCESS_REQUEST_CREATE,
+	auditlog.OutgoingAccessRequestWithdraw: api.AuditLogRecord_ACTION_TYPE_OUTGOING_ACCESS_REQUEST_WITHDRAW,
+	auditlog.AccessTerminate:               api.AuditLogRecord_ACTION_TYPE_ACCESS_TERMINATE,
+	auditlog.ServiceCreate:                 api.AuditLogRecord_ACTION_TYPE_SERVICE_CREATE,
+	auditlog.ServiceUpdate:                 api.AuditLogRecord_ACTION_TYPE_SERVICE_UPDATE,
+	auditlog.ServiceDelete:                 api.AuditLogRecord_ACTION_TYPE_SERVICE_DELETE,
+	auditlog.OrganizationSettingsUpdate:    api.AuditLogRecord_ACTION_TYPE_ORGANIZATION_SETTINGS_UPDATE,
+	auditlog.OrderCreate:                   api.AuditLogRecord_ACTION_TYPE_ORDER_CREATE,
+	auditlog.OrderOutgoingRevoke:           api.AuditLogRecord_ACTION_TYPE_ORDER_OUTGOING_REVOKE,
+	auditlog.InwayDelete:                   api.AuditLogRecord_ACTION_TYPE_INWAY_DELETE,
+	auditlog.OrderOutgoingUpdate:           api.AuditLogRecord_ACTION_TYPE_ORDER_OUTGOING_UPDATE,
+	auditlog.AcceptTermsOfService:          api.AuditLogRecord_ACTION_TYPE_ACCEPT_TERMS_OF_SERVICE,
+	auditlog.OutwayDelete:                  api.AuditLogRecord_ACTION_TYPE_OUTWAY_DELETE,
 }
 
 const maxAmountOfRecords = 100
@@ -117,6 +119,7 @@ func convertAuditLogModelToResponseAuditLog(records []*auditlog.Record, oinToOrg
 			CreatedAt:       createdAt,
 			Services:        make([]*api.AuditLogRecord_Service, len(record.Services)),
 			Data:            metadata,
+			HasSucceeded:    record.HasSucceeded,
 		}
 
 		for j, service := range record.Services {
@@ -183,6 +186,10 @@ func convertAuditLogMetadataFromDatabaseToModel(data *auditlog.RecordData, oinTo
 
 		if data.OutwayName != nil {
 			metadata.OutwayName = *data.OutwayName
+		}
+
+		if data.PublicKeyFingerprint != nil {
+			metadata.PublicKeyFingerprint = *data.PublicKeyFingerprint
 		}
 	}
 
