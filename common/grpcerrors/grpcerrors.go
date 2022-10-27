@@ -5,6 +5,7 @@ package grpcerrors
 
 import (
 	"log"
+	"sort"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -72,6 +73,10 @@ func NewFromValidationError(domain string, err error) error {
 				Description: err.Error(),
 			})
 		}
+
+		sort.Slice(fieldViolations, func(i, j int) bool {
+			return fieldViolations[i].Field < fieldViolations[j].Field
+		})
 
 		return New(domain, codes.InvalidArgument, errors.ErrorReason_INVALID_REQUEST, "request has invalid fields", &Metadata{
 			BadRequest: &errdetails.BadRequest{
