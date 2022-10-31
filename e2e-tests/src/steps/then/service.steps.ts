@@ -80,7 +80,12 @@ Then(
           outway?.publicKeyFingerprint
         );
       });
+    assert.equal(filteredAccessRequests?.length, 1);
+    const accessRequest = filteredAccessRequests[0];
 
-    assert.equal(filteredAccessRequests?.length, 0);
+    assert.equal(
+      accessRequest.accessRequest?.state,
+      "ACCESS_REQUEST_STATE_WITHDRAWN"
+    );
   }
 );

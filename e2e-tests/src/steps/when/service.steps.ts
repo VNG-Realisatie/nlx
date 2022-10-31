@@ -6,9 +6,12 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
 import { getOutwayByName } from "../../utils/outway";
+import { default as logger } from "../../debug";
 import { When } from "@cucumber/cucumber";
-import { By } from "selenium-webdriver";
+import { By, until } from "selenium-webdriver";
 import assert from "assert";
+
+const debug = logger("e2e-tests:services");
 
 When(
   "{string} create a service named {string} and exposed via the default Inway",
@@ -86,17 +89,34 @@ When(
     await driver.get(
       `${orgConsumer.management.url}/directory/${orgProvider.serialNumber}/${uniqueServiceName}`
     );
-    await driver
-      .findElement(By.xpath("//*[text()='Outways zonder toegang']"))
-      .click();
 
-    await driver
-      .findElement(
-        By.xpath(
-          `//button[@title='Toegangsverzoek intrekken voor de Outways met het public key fingerprint ${outway.publicKeyFingerprint}']`
-        )
+    const xPathOutwaysWithoutAccess = "//*[text()='Outways zonder toegang']";
+
+    await driver.wait(
+      until.elementIsVisible(
+        driver.findElement(By.xpath(xPathOutwaysWithoutAccess))
       )
-      .click();
+    );
+
+    debug("outways without access is visible");
+
+    await driver.findElement(By.xpath(xPathOutwaysWithoutAccess)).click();
+
+    debug("outways without access is clicked");
+
+    const xPathButtonWithdrawAccess = `//button[@title='Toegangsverzoek intrekken voor de Outways met het public key fingerprint ${outway.publicKeyFingerprint}']`;
+
+    await driver.wait(
+      until.elementIsVisible(
+        driver.findElement(By.xpath(xPathButtonWithdrawAccess))
+      )
+    );
+
+    debug("button withdraw visible");
+
+    await driver.findElement(By.xpath(xPathButtonWithdrawAccess)).click();
+
+    debug("button withdraw click");
 
     const buttonConfirm = await driver.findElement(
       By.xpath(
@@ -132,17 +152,26 @@ When(
     await driver.get(
       `${orgConsumer.management.url}/directory/${orgProvider.serialNumber}/${uniqueServiceName}`
     );
-    await driver
-      .findElement(By.xpath("//*[text()='Outways met toegang']"))
-      .click();
 
-    await driver
-      .findElement(
-        By.xpath(
-          `//button[@title='Zeg de toegang op voor de Outways met public key fingerprint ${outway.publicKeyFingerprint}']`
-        )
+    const xPathOutwaysWithAccess = "//*[text()='Outways met toegang']";
+
+    await driver.wait(
+      until.elementIsVisible(
+        driver.findElement(By.xpath(xPathOutwaysWithAccess))
       )
-      .click();
+    );
+
+    await driver.findElement(By.xpath(xPathOutwaysWithAccess)).click();
+
+    const xPathButtonTerminateAccess = `//button[@title='Zeg de toegang op voor de Outways met public key fingerprint ${outway.publicKeyFingerprint}']`;
+
+    await driver.wait(
+      until.elementIsVisible(
+        driver.findElement(By.xpath(xPathButtonTerminateAccess))
+      )
+    );
+
+    await driver.findElement(By.xpath(xPathButtonTerminateAccess)).click();
 
     const buttonConfirm = await driver.findElement(
       By.xpath(
