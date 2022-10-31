@@ -29,12 +29,6 @@
       "allowedVersions": "3.2.0"
     },
     {
-      "groupName": "redoc and peers - wait for full release of v2.0",
-      "paths": ["directory-ui/**"],
-      "packageNames": ["redoc", "mobx", "core-js"],
-      "enabled": false
-    },
-    {
       "groupName": "React v18 - wait until all our dependencies support v18 https://gitlab.com/commonground/nlx/nlx/-/merge_requests/3587",
       "packageNames": ["react", "react-dom"],
       "enabled": false
