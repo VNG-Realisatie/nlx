@@ -43,12 +43,6 @@
       "groupName": "React v18 - these dependencies support v18 but break support for v17",
       "packageNames": ["@testing-library/react"],
       "enabled": false
-    },
-    {
-      "groupName": "E2E tests - BROWSERSTACK_IDLE_TIMEOUT. Issue #1596",
-      "paths": [".gitlab/ci/e2e/nlx_management_selenium.yml"],
-      "matchPackageNames": ["node"],
-      "allowedVersions": "18.5.0-alpine"
     }
   ]
 }
