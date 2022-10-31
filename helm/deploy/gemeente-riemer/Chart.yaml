@@ -2,8 +2,8 @@ apiVersion: v2
 name: gemeente-riemer
 description: Metachart for the Gemeente Riemer demo organization
 type: application
-version: 0.141.0
-appVersion: 0.141.0
+version: 0.142.0
+appVersion: 0.142.0
 
 dependencies:
   - name: dex

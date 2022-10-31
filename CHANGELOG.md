@@ -1,3 +1,18 @@
+# [0.142.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.141.0...v0.142.0) (2022-10-31)
+
+
+### Bug Fixes
+
+* **management:** display only the 100 latest auditlogs ([c6375bf](https://gitlab.com/commonground/nlx/nlx/commit/c6375bffd82d5a71f6ffe9bffc12a364c3ac642c)), closes [nlx#1633](https://gitlab.com/nlx/issues/1633)
+* **management:** ensure syncing access requests on the Directory Overview page properly pauzes ([d24d56c](https://gitlab.com/commonground/nlx/nlx/commit/d24d56c6f44a80327d5b262ab202b03646038dd5)), closes [nlx#1632](https://gitlab.com/nlx/issues/1632)
+* **management:** prevent request access model from flickering ([4581126](https://gitlab.com/commonground/nlx/nlx/commit/4581126613e1ea8b1d83b5b3a36c5585a8a03e17)), closes [nlx#1632](https://gitlab.com/nlx/issues/1632)
+* **management:** show correct destination in transaction log when order is empty ([39bf749](https://gitlab.com/commonground/nlx/nlx/commit/39bf7493b9c509773ce5500158de93a2fcbf659e)), closes [nlx#1645](https://gitlab.com/nlx/issues/1645)
+
+
+### Features
+
+* **management:** show delegator in transaction log page when direction is OUT ([b0bcd4f](https://gitlab.com/commonground/nlx/nlx/commit/b0bcd4ff737eb338cda928401d435bf82203de5e)), closes [nlx#1636](https://gitlab.com/nlx/issues/1636)
+
 # [0.141.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.140.0...v0.141.0) (2022-10-06)
 
 
