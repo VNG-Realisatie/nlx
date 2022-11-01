@@ -9,7 +9,7 @@ To keep track of what versions are in use within the NLX landscape the version o
 
 ### Inways
 
-Every time the inway registers itself, its version is sent using the `NLX-Version` header and recorded in the `inways` table in the directory. 
+Every time the inway registers itself, its version is sent using the `NLX-Version` header and recorded in the `inways` table in the directory.
 
 ### Outways
 
