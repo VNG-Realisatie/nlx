@@ -71,7 +71,9 @@ Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   caps["browserstack.key"] = accessKey;
 
   caps.name = this.testName;
-  caps.build = process.env.E2E_BUILD_NAME || "local";
+
+  caps["bstack:options"] = caps["bstack:options"] || {};
+  caps["bstack:options"].buildName = process.env.E2E_BUILD_NAME || "local";
 
   this.driver = createSession(config, caps);
   await this.driver?.manage().setTimeouts({
