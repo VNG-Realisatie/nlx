@@ -60,3 +60,17 @@ Management-ui linter and tests:
   tags:
     - docker
     - linux
+
+E2E type check:
+  extends: .node-base
+  stage: Tests
+  script:
+    - cd e2e-tests/
+    - install_npm_dependencies
+    - npm run check-types
+  rules:
+    - if: "$CI_COMMIT_BRANCH" # do not run for tags
+  needs: []
+  tags:
+    - docker
+    - linux
