@@ -36,7 +36,8 @@ NLX Management - E2E-tests - Selenium:
     - export E2E_RVRD_DEFAULT_MANAGEMENT_API_PROXY_ADDRESS=$([ -z "$CI_ENV_URL" ] && echo "rvrd-nlx-inway:8443" || echo "rvrd-nlx-inway:8443")
     - export E2E_VERGUNNINGSOFTWARE_BV_MANAGEMENT_URL=$([ -z "$CI_ENV_URL" ] && echo "https://management.acc.vergunningsoftware.nl" || echo "https://nlx-management-vgs-bv-$CI_ENV_URL")
     - export E2E_VERGUNNINGSOFTWARE_BV_OUTWAY_1_ADDRESS=$([ -z "$CI_ENV_URL" ] && echo "https://outway.acc.vergunningsoftware.nl" || echo "https://nlx-outway-vgs-bv-$CI_ENV_URL")
-    - export E2E_BUILD_NAME="${CI_COMMIT_SHORT_SHA}"
+    - export E2E_BUILD_NAME="${CI_JOB_ID}"
+    - export E2E_LOG_URL="${CI_JOB_URL}"
     - cd e2e-tests/
     - install_npm_dependencies
     - wait_for_http "${E2E_GEMEENTE_STIJNS_MANAGEMENT_URL}"

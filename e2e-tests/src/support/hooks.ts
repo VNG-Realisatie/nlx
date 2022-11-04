@@ -50,7 +50,10 @@ Before({ tags: "@unauthenticated" }, async function (this: CustomWorld) {
   await Promise.all(logoutActions);
 });
 
-Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
+Before(async function (
+  this: CustomWorld,
+  { gherkinDocument, pickle }: ITestCaseHookParameter
+) {
   this.id = `${ulid()}-e2e`;
 
   for (const [name] of Object.entries(organizations)) {
@@ -70,15 +73,30 @@ Before(async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
   caps["browserstack.user"] = username;
   caps["browserstack.key"] = accessKey;
 
+  // Set browserstack idle timeout to max allowed setting (300 seconds).
+  // This is the max timeout allowed to not sending commands to browserstack,
+  // we need this because some tests setup things outside of browserstack
+  // and thus not sending commands to browserstack
+  caps["browserstack.idleTimeout"] = "300";
+
   caps.name = this.testName;
 
   caps["bstack:options"] = caps["bstack:options"] || {};
   caps["bstack:options"].buildName = process.env.E2E_BUILD_NAME || "local";
 
   this.driver = createSession(config, caps);
+
+  // set session name
+  await this.driver.executeScript(
+    `browserstack_executor: {"action": "setSessionName", "arguments": {"name": "${gherkinDocument.feature?.name} - ${pickle.name}"}}`
+  );
+
   await this.driver?.manage().setTimeouts({
     implicit: 10000,
   });
+
+  // maximize browser window
+  await this.driver.manage().window().maximize();
 
   this.feature = pickle;
 
@@ -103,8 +121,23 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
     if (result.status === "FAILED") {
       debug(`creating screenshot of failed test`);
       await this.snapshot();
+
+      const reason = process.env.E2E_LOG_URL
+        ? `Test failed, see logs for more info: ${process.env.E2E_LOG_URL}`
+        : "Test failed, see local logs for more info";
+
+      await this.driver.executeScript(
+        `browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "${reason}"}}`
+      );
+    } else {
+      await this.driver.executeScript(
+        `browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed","reason": "Test passed"}}`
+      );
     }
   }
+
+  // quit driver here because we don't need it anymore for the rest of the cleanup
+  await this.driver?.quit();
 
   const requests = [];
   for (const [name, org] of Object.entries(organizations)) {
@@ -126,7 +159,6 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
     debug(`error cleaning created items: ${e}`);
   }
 
-  await this.driver?.quit();
   debug(`done with ${this.testName}`);
 });
 
