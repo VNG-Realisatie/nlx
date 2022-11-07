@@ -13,6 +13,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.nlx.io/nlx/management-api/api/external"
@@ -253,6 +255,49 @@ func getApprovedTestCases(t *testing.T) syncOutgoingAccessRequestTestCases {
 						gomock.Any(),
 						uint(2),
 						terminatedAt.AsTime(),
+					).
+					Return(nil)
+			},
+			createArgs: func(mocks syncMocks) *syncer.SyncArgs {
+				return &syncer.SyncArgs{
+					Ctx:    context.Background(),
+					Logger: zap.NewNop(),
+					DB:     mocks.db,
+					Client: mocks.mc,
+					Requests: []*database.OutgoingAccessRequest{
+						{
+							ID:    42,
+							State: database.OutgoingAccessRequestApproved,
+							Organization: database.Organization{
+								SerialNumber: "00000000000000000001",
+								Name:         "my-organization",
+							},
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+							ReferenceID:          1,
+						},
+					},
+				}
+			},
+			want: nil,
+		},
+		"remote_acces_proof_has_been_removed": {
+			setup: func(mocks syncMocks) {
+				mocks.mc.
+					EXPECT().
+					GetAccessGrant(gomock.Any(),
+						&external.GetAccessGrantRequest{
+							ServiceName:          "my-service",
+							PublicKeyFingerprint: testPublicKeyFingerprint,
+						}).
+					Return(nil, status.Error(codes.NotFound, "access grant not found"))
+
+				mocks.db.
+					EXPECT().
+					DeleteOutgoingAccessRequests(
+						gomock.Any(),
+						"00000000000000000001",
+						"my-service",
 					).
 					Return(nil)
 			},

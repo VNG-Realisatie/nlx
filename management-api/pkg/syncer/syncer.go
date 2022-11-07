@@ -21,6 +21,7 @@ import (
 )
 
 var ErrServiceDoesNotExist = status.Error(codes.NotFound, "service does not exist")
+var ErrAccessGrantNotFound = status.Error(codes.NotFound, "access grant not found")
 
 type SyncArgs struct {
 	Ctx      context.Context
@@ -108,7 +109,7 @@ func synchronizeOutgoingAccessRequest(ctx context.Context, configDatabase databa
 	case database.OutgoingAccessRequestApproved:
 		err := syncAccessProof(ctx, configDatabase, client, request)
 		if err != nil {
-			if errors.Is(err, ErrServiceDoesNotExist) {
+			if errors.Is(err, ErrServiceDoesNotExist) || errors.Is(err, ErrAccessGrantNotFound) {
 				return configDatabase.DeleteOutgoingAccessRequests(ctx, request.Organization.SerialNumber, request.ServiceName)
 			}
 
