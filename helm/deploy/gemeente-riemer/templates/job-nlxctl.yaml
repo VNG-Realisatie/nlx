@@ -38,8 +38,6 @@ spec:
               value: {{ .Values.managementAPI.servicePersonen.name | quote }}
             - name: SERVICE_PERSONEN_JSON
               value: {{ .Values.managementAPI.servicePersonen | toJson | quote }}
-            - name: MANAGEMENT_API_ADDRESS
-              value: {{ .Values.managementAPI.address | quote }}
             - name: CLIENT_ID
               value: {{ required "Client ID is required" .Values.nlxctl.clientID }}
             - name: CLIENT_SECRET
