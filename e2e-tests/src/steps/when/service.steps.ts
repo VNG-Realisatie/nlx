@@ -61,10 +61,9 @@ When(
       )
       .click();
 
-    const confirmationToast = await driver.findElement(
+    await driver.findElement(
       By.xpath("//p[text()='De service is verwijderd']")
     );
-    assert.notEqual(confirmationToast, undefined);
   }
 );
 
@@ -90,40 +89,27 @@ When(
       `${orgConsumer.management.url}/directory/${orgProvider.serialNumber}/${uniqueServiceName}`
     );
 
-    const xPathOutwaysWithoutAccess = "//*[text()='Outways zonder toegang']";
-
-    await driver.wait(
-      until.elementIsVisible(
-        driver.findElement(By.xpath(xPathOutwaysWithoutAccess))
+    await driver
+      .findElement(
+        By.xpath("//button//*[text()[contains(., 'Outways zonder toegang')]]")
       )
-    );
+      .click();
 
-    debug("outways without access is visible");
-
-    await driver.findElement(By.xpath(xPathOutwaysWithoutAccess)).click();
-
-    debug("outways without access is clicked");
-
-    const xPathButtonWithdrawAccess = `//button[@title='Toegangsverzoek intrekken voor de Outways met het public key fingerprint ${outway.publicKeyFingerprint}']`;
-
-    await driver.wait(
-      until.elementIsVisible(
-        driver.findElement(By.xpath(xPathButtonWithdrawAccess))
+    await driver
+      .findElement(
+        By.xpath(
+          `//button[@title='Toegangsverzoek intrekken voor de Outways met het public key fingerprint ${outway.publicKeyFingerprint}']`
+        )
       )
-    );
+      .click();
 
-    debug("button withdraw visible");
-
-    await driver.findElement(By.xpath(xPathButtonWithdrawAccess)).click();
-
-    debug("button withdraw click");
-
-    const buttonConfirm = await driver.findElement(
-      By.xpath(
-        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Bevestig']"
+    await driver
+      .findElement(
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Bevestig']"
+        )
       )
-    );
-    await buttonConfirm.click();
+      .click();
 
     await driver.findElement(
       By.xpath("//p[text()='Toegangsverzoek ingetrokken']")
@@ -153,37 +139,30 @@ When(
       `${orgConsumer.management.url}/directory/${orgProvider.serialNumber}/${uniqueServiceName}`
     );
 
-    const xPathOutwaysWithAccess = "//*[text()='Outways met toegang']";
-
-    await driver.wait(
-      until.elementIsVisible(
-        driver.findElement(By.xpath(xPathOutwaysWithAccess))
+    await driver
+      .findElement(
+        By.xpath("//button//*[text()[contains(., 'Outways met toegang')]]")
       )
-    );
+      .click();
 
-    await driver.findElement(By.xpath(xPathOutwaysWithAccess)).click();
-
-    const xPathButtonTerminateAccess = `//button[@title='Zeg de toegang op voor de Outways met public key fingerprint ${outway.publicKeyFingerprint}']`;
-
-    await driver.wait(
-      until.elementIsVisible(
-        driver.findElement(By.xpath(xPathButtonTerminateAccess))
+    await driver
+      .findElement(
+        By.xpath(
+          `//button[@title='Zeg de toegang op voor de Outways met public key fingerprint ${outway.publicKeyFingerprint}']`
+        )
       )
-    );
-
-    await driver.findElement(By.xpath(xPathButtonTerminateAccess)).click();
-
-    const buttonConfirm = await driver.findElement(
-      By.xpath(
-        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Opzeggen']"
+      .click();
+    await driver
+      .findElement(
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Opzeggen']"
+        )
       )
-    );
-    await buttonConfirm.click();
+      .click();
 
     await driver.findElement(By.xpath("//p[text()='Toegang opgezegd']"));
   }
 );
-
 When(
   "{string} revokes access of {string} to {string}",
   async function (
@@ -205,12 +184,13 @@ When(
 
     await driver.findElement(By.xpath("//button[text()='Intrekken']")).click();
 
-    const buttonRevoke = await driver.findElement(
-      By.xpath(
-        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Intrekken']"
+    await driver
+      .findElement(
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Intrekken']"
+        )
       )
-    );
-    await buttonRevoke.click();
+      .click();
 
     await driver.findElement(By.xpath("//p[text()='Toegang ingetrokken']"));
   }

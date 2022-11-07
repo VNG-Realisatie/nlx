@@ -124,12 +124,13 @@ When(
 
     await driver.findElement(By.xpath("//button[text()='Intrekken']")).click();
 
-    const buttonRevoke = await driver.findElement(
-      By.xpath(
-        "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Intrekken']"
+    await driver
+      .findElement(
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Intrekken']"
+        )
       )
-    );
-    await buttonRevoke.click();
+      .click();
 
     await driver.findElement(By.xpath("//*[text()='Opdracht is ingetrokken']"));
   }

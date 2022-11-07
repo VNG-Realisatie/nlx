@@ -187,6 +187,10 @@ Then(
         }
       });
     } catch (error: any) {
+      if (!error.response) {
+        throw error;
+      }
+
       throw new Error(
         `unexpected status code '${error.response.status}' while getting outways: ${error}`
       );
