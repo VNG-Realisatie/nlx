@@ -1,3 +1,15 @@
+# [0.143.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.142.0...v0.143.0) (2022-11-08)
+
+
+### Bug Fixes
+
+* **management:** delete OutgoingAccessRequest when the remote proof can not be found ([c2e4c9c](https://gitlab.com/commonground/nlx/nlx/commit/c2e4c9c2ff57cfe29656e0660a114cf6e97c172d)), closes [nlx#1653](https://gitlab.com/nlx/issues/1653)
+
+
+### Features
+
+* **management:** add withdraw and terminate access as a consumer ([3adb068](https://gitlab.com/commonground/nlx/nlx/commit/3adb068c3b94aef60ab5c640033caa8d1084be4a)), closes [nlx#1420](https://gitlab.com/nlx/issues/1420)
+
 # [0.142.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.141.0...v0.142.0) (2022-10-31)
 
 
