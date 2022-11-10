@@ -47,7 +47,7 @@ func TestIsFinanceEnabled(t *testing.T) {
 			if tt.disableTxLogDB {
 				service, _, _ = newServiceWithoutTXLog(t)
 			} else {
-				service, _, _ = newService(t)
+				service, _, _ = newService(t, nil)
 			}
 
 			response, err := service.IsFinanceEnabled(context.Background(), nil)
@@ -128,7 +128,7 @@ func TestDownloadFinanceExport(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			tt.setupMock(mocks.db, mocks.dbTxLog)
 
 			_, err := service.DownloadFinanceExport(tt.ctx, nil)

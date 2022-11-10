@@ -5,7 +5,6 @@ package server
 
 import (
 	"context"
-	"strings"
 	"sync"
 
 	"go.uber.org/zap"
@@ -14,7 +13,6 @@ import (
 
 	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
 	common_tls "go.nlx.io/nlx/common/tls"
-	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/directory"
@@ -35,7 +33,7 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 	outgoingAccessRequests, err := s.configDatabase.ListAllLatestOutgoingAccessRequests(ctx)
 	if err != nil {
 		s.logger.Error("error getting latest access request states", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "internal error")
+		return nil, status.Errorf(codes.Internal, string(InternalError))
 	}
 
 	if len(outgoingAccessRequests) < 1 {
@@ -55,22 +53,14 @@ func (s *ManagementService) SynchronizeAllOutgoingAccessRequests(ctx context.Con
 	})
 
 	if len(oinsWithError) > 0 {
-		organizations, err := s.directoryClient.ListOrganizations(ctx, &directoryapi.ListOrganizationsRequest{})
-		if err != nil {
-			s.logger.Error("failed to retrieve organizations from directory", zap.Error(err))
-			return nil, status.Error(codes.Internal, "internal error")
-		}
+		metadata := map[string]string{}
 
-		oinToOrgNameHash := convertOrganizationsToHash(organizations)
-
-		for i, oin := range oinsWithError {
-			oinsWithError[i] = oinToOrgNameHash[oin]
+		for oin, syncError := range oinsWithError {
+			metadata[oin] = string(syncError)
 		}
 
 		return nil, grpcerrors.NewInternal("unreachable organizations", &common_grpcerrors.Metadata{
-			Metadata: map[string]string{
-				"organizations": strings.Join(oinsWithError, ", "),
-			},
+			Metadata: metadata,
 		})
 	}
 
@@ -102,10 +92,11 @@ type syncArgs struct {
 	accessRequestsByOin        map[string][]*database.OutgoingAccessRequest
 }
 
-func synchronizeAccessRequests(args *syncArgs) []string {
+//nolint:funlen // unable to shorten method
+func synchronizeAccessRequests(args *syncArgs) map[string]SyncError {
 	var oinsWithErrorMutex sync.Mutex
 
-	oinsWithError := []string{}
+	oinsWithError := map[string]SyncError{}
 	waitGroup := sync.WaitGroup{}
 
 	for oin, values := range args.accessRequestsByOin {
@@ -121,7 +112,15 @@ func synchronizeAccessRequests(args *syncArgs) []string {
 				args.l.Error("cannot get organization inway proxy address", zap.Error(err))
 
 				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
+				oinsWithError[oin] = InternalError
+				m.Unlock()
+
+				return
+			}
+
+			if organizationInwayProxyAddress == "" {
+				m.Lock()
+				oinsWithError[oin] = ServiceProviderNoOrganizationInwaySpecified
 				m.Unlock()
 
 				return
@@ -132,7 +131,7 @@ func synchronizeAccessRequests(args *syncArgs) []string {
 				args.l.Error("cannot setup management client", zap.Error(err))
 
 				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
+				oinsWithError[oin] = ServiceProviderOrganizationInwayUnreachable
 				m.Unlock()
 
 				return
@@ -146,10 +145,10 @@ func synchronizeAccessRequests(args *syncArgs) []string {
 				Requests: accessRequests,
 			})
 			if err != nil {
-				args.l.Error("cannot setup management client", zap.Error(err))
+				args.l.Error("cannot sync outgoing access requests", zap.Error(err))
 
 				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
+				oinsWithError[oin] = InternalError
 				m.Unlock()
 
 				return
@@ -161,7 +160,7 @@ func synchronizeAccessRequests(args *syncArgs) []string {
 				args.l.Error("failed to close client", zap.Error(err))
 
 				m.Lock()
-				oinsWithError = append(oinsWithError, oin)
+				oinsWithError[oin] = InternalError
 				m.Unlock()
 
 				return

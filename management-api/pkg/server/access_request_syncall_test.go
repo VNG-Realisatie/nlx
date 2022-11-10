@@ -14,7 +14,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	common_grpcerrors "go.nlx.io/nlx/common/grpcerrors"
-	directoryapi "go.nlx.io/nlx/directory-api/api"
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/database"
 	"go.nlx.io/nlx/management-api/pkg/grpcerrors"
@@ -45,7 +44,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 					Return(nil, errors.New("arbitrary error"))
 			},
 			want:    nil,
-			wantErr: status.New(codes.Internal, "internal error").Err(),
+			wantErr: status.New(codes.Internal, "internal_error").Err(),
 		},
 		"failed_to_retrieve_inway_proxy_address": {
 			ctx: testCreateAdminUserContext(),
@@ -61,23 +60,33 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
 					Return("", errors.New("arbitrary error"))
-
-				mocks.dc.
-					EXPECT().
-					ListOrganizations(gomock.Any(), &directoryapi.ListOrganizationsRequest{}).
-					Return(&directoryapi.ListOrganizationsResponse{
-						Organizations: []*directoryapi.Organization{
-							{
-								SerialNumber: "00000000000000000001",
-								Name:         "my-organization",
-							},
-						},
-					}, nil)
 			},
 			want: nil,
 			wantErr: grpcerrors.NewInternal("unreachable organizations", &common_grpcerrors.Metadata{
 				Metadata: map[string]string{
-					"organizations": "my-organization",
+					"00000000000000000001": "internal_error",
+				},
+			}),
+		},
+		"inway_proxy_address_is_not_set": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListAllLatestOutgoingAccessRequests(gomock.Any()).
+					Return([]*database.OutgoingAccessRequest{
+						{ID: 42, Organization: database.Organization{SerialNumber: "00000000000000000001"}},
+					}, nil)
+
+				mocks.dc.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
+					Return("", nil)
+			},
+			want: nil,
+			wantErr: grpcerrors.NewInternal("unreachable organizations", &common_grpcerrors.Metadata{
+				Metadata: map[string]string{
+					"00000000000000000001": "service_provider_no_organization_inway_specified",
 				},
 			}),
 		},
@@ -108,13 +117,13 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 				mocks.dc.
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000002").
-					Return("", nil).
+					Return("arbitrary-address", nil).
 					MaxTimes(1)
 
 				mocks.dc.
 					EXPECT().
 					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000003").
-					Return("", nil).
+					Return("arbitrary-address", nil).
 					MaxTimes(1)
 
 				mocks.mc.EXPECT().
@@ -143,7 +152,7 @@ func Test_SyncAllOutgoingAccessRequests(t *testing.T) {
 		tc := tc
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			tc.setup(mocks)
 			got, err := service.SynchronizeAllOutgoingAccessRequests(tc.ctx, &api.SynchronizeAllOutgoingAccessRequestsRequest{})

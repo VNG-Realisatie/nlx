@@ -92,7 +92,7 @@ func TestRegisterInway(t *testing.T) {
 		tt := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setupMocks != nil {
 				tt.setupMocks(mocks)
@@ -161,7 +161,7 @@ func TestGetInway(t *testing.T) {
 		tt := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			tt.setupMocks(mocks)
 
@@ -269,7 +269,7 @@ func TestUpdateInway(t *testing.T) {
 		tt := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			tt.setupMocks(mocks)
 
@@ -350,7 +350,7 @@ func TestDeleteInway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(mocks)
@@ -433,7 +433,7 @@ func TestListInways(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(mocks)
@@ -700,7 +700,7 @@ func TestGetInwayConfig(t *testing.T) {
 		tt := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			tt.setupMocks(mocks)
 

@@ -170,7 +170,7 @@ func TestListServices(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, bundle, mocks := newService(t)
+			service, bundle, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(bundle, mocks)

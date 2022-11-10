@@ -427,7 +427,7 @@ func Test_SendAccessRequest(t *testing.T) {
 		test := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			test.setupMocks(mocks)
 			got, err := service.SendAccessRequest(test.ctx, test.req)

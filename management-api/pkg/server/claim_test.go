@@ -509,7 +509,7 @@ func TestRequestClaim(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, bundle, mocks := newService(t)
+			service, bundle, mocks := newService(t, nil)
 
 			ctx := tt.setup(t, bundle, mocks)
 

@@ -48,21 +48,67 @@ class DirectoryServicesStore {
     }
   })
 
-  syncOutgoingAccessRequests = flow(function* fetch(
+  syncOutgoingAccessRequests = flow(function* syncOutgoingAccessRequests(
     organizationSerialNumber,
     serviceName,
   ) {
-    return yield this._managementApiClient.managementServiceSynchronizeOutgoingAccessRequests(
-      {
+    try {
+      yield this._managementApiClient.managementServiceSynchronizeOutgoingAccessRequests(
+        {
+          organizationSerialNumber,
+          serviceName,
+        },
+      )
+
+      this._rootStore.outgoingAccessRequestSyncErrorStore.clearForService(
         organizationSerialNumber,
         serviceName,
-      },
-    )
+      )
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+
+      const json = yield error.response.json()
+
+      this._rootStore.outgoingAccessRequestSyncErrorStore.loadFromSyncResponse(
+        organizationSerialNumber,
+        serviceName,
+        json,
+      )
+    }
   })
 
-  syncAllOutgoingAccessRequests = flow(function* fetch() {
-    return yield this._managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests()
-  })
+  getOutgoingAccessRequestSyncErrorForService = (
+    organizationSerialNumber,
+    serviceName,
+  ) => {
+    return this._rootStore.outgoingAccessRequestSyncErrorStore.getForService(
+      organizationSerialNumber,
+      serviceName,
+    )
+  }
+
+  syncAllOutgoingAccessRequests = flow(
+    function* syncAllOutgoingAccessRequests() {
+      try {
+        yield this._managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests()
+
+        this._rootStore.outgoingAccessRequestSyncErrorStore.clearAll()
+      } catch (error) {
+        if (!error.response) {
+          throw error
+        }
+
+        const json = yield error.response.json()
+        this._rootStore.outgoingAccessRequestSyncErrorStore.loadFromSyncAllResponse(
+          json,
+        )
+      }
+
+      yield
+    },
+  )
 
   fetchAll = flow(function* fetchAll() {
     if (this.isFetching) {

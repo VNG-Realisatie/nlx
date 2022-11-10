@@ -132,7 +132,7 @@ func TestWithdrawAccessRequestExternal(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, certBundle, mocks := newService(t)
+			service, certBundle, mocks := newService(t, nil)
 			ctx := tt.setup(t, mocks.db, certBundle)
 
 			actual, err := service.WithdrawAccessRequest(ctx, tt.req)

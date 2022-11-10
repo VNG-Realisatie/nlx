@@ -68,7 +68,7 @@ func TestUpdateService(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			tt.setup(t, mocks)
 
 			want, err := service.UpdateService(tt.ctx, tt.request)

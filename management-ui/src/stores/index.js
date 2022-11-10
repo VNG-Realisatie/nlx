@@ -17,6 +17,7 @@ import AuditLogStore from './AuditLogStore'
 import TransactionLogStore from './TransactionLogStore'
 import OrderStore from './OrderStore'
 import OutwayStore from './OutwayStore'
+import OutgoingAccessRequestSyncErrorStore from './OutgoingAccessRequestSyncErrorStore'
 
 if (process.env.NODE_ENV !== 'test') {
   // `setupTests` has 'never' set. But some tests include this file,
@@ -79,6 +80,8 @@ export class RootStore {
       rootStore: this,
       managementApiClient,
     })
+    this.outgoingAccessRequestSyncErrorStore =
+      new OutgoingAccessRequestSyncErrorStore()
   }
 }
 

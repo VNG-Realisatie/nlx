@@ -388,7 +388,7 @@ func TestCreateOutgoingOrder(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(mocks)

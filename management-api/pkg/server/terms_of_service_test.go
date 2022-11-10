@@ -100,7 +100,7 @@ func TestAcceptTermsOfServiceStatus(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			tt.setup(tt.ctx, mocks)
 
 			got, err := service.AcceptTermsOfService(tt.ctx, &api.AcceptTermsOfServiceRequest{})
@@ -172,7 +172,7 @@ func TestGetTermsOfServiceStatus(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			tt.setup(context.Background(), mocks)
 
 			got, err := service.GetTermsOfServiceStatus(tt.ctx, &api.GetTermsOfServiceStatusRequest{})

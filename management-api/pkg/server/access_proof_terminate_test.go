@@ -269,7 +269,7 @@ func TestTerminateAccessProof(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			ctx := tt.setup(t, mocks)
 
 			actual, err := service.TerminateAccessProof(ctx, tt.req)

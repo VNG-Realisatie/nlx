@@ -163,7 +163,7 @@ func TestListOutgoingOrders(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(mocks)
@@ -353,7 +353,7 @@ func TestListIncomingOrders(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(mocks)
@@ -532,7 +532,7 @@ func TestListOrders(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, certBundle, mocks := newService(t)
+			service, certBundle, mocks := newService(t, nil)
 			ctx := tt.setup(t, mocks, certBundle)
 
 			response, err := service.ListOrders(ctx, &external.ListOrdersRequest{})

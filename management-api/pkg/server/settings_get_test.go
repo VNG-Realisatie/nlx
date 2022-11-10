@@ -84,7 +84,7 @@ func TestManagementService_GetSettings(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			tt.setup(tt.ctx, mocks)
 
 			got, err := service.GetSettings(tt.ctx, &api.GetSettingsRequest{})

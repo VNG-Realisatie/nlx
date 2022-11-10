@@ -364,3 +364,62 @@ test('organization name is empty', () => {
   expect(model.organization.name).toBe('00000000000000000001')
   expect(model.organization.serialNumber).toBe('00000000000000000001')
 })
+
+test('get sync error', () => {
+  configure({ safeDescriptors: false })
+  const rootStore = new RootStore({})
+
+  jest
+    .spyOn(
+      rootStore.directoryServicesStore,
+      'getOutgoingAccessRequestSyncErrorForService',
+    )
+    .mockReturnValue('sync-error-1')
+
+  const model = new DirectoryServiceModel({
+    directoryServicesStore: rootStore.directoryServicesStore,
+    serviceData: {
+      serviceName: 'My Service',
+      organization: {
+        name: 'My Organization',
+        serialNumber: '00000000000000000001',
+      },
+    },
+  })
+
+  let syncError = model.outgoingAccessRequestsSyncError
+
+  expect(syncError).toBeNull()
+  expect(
+    rootStore.directoryServicesStore
+      .getOutgoingAccessRequestSyncErrorForService,
+  ).toHaveBeenCalledTimes(0)
+
+  model.update({
+    serviceData: {},
+    accessStates: [
+      {
+        accessRequest: new OutgoingAccessRequestModel({
+          outgoingAccessRequestStore: {},
+          accessRequestData: {
+            state: ACCESS_REQUEST_STATES.APPROVED,
+            publicKeyFingerprint: 'public-key-fingerprint',
+          },
+        }),
+        accessProof: new AccessProofModel({
+          accessProofData: {
+            id: '42',
+          },
+        }),
+      },
+    ],
+  })
+
+  syncError = model.outgoingAccessRequestsSyncError
+
+  expect(syncError).toEqual('sync-error-1')
+  expect(
+    rootStore.directoryServicesStore
+      .getOutgoingAccessRequestSyncErrorForService,
+  ).toHaveBeenNthCalledWith(1, '00000000000000000001', 'My Service')
+})

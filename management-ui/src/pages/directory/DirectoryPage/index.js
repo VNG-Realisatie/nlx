@@ -1,10 +1,10 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { Route, Routes, useMatch, useParams } from 'react-router-dom'
-import { Alert, ToasterContext } from '@commonground/design-system'
+import { Alert } from '@commonground/design-system'
 import { useTranslation } from 'react-i18next'
 import LoadingMessage from '../../../components/LoadingMessage'
 import PageTemplate from '../../../components/PageTemplate'
@@ -19,7 +19,6 @@ const DirectoryPage = () => {
   const [subjectSerialNumber, setSubjectSerialNumber] = useState('')
   const { name } = useParams()
   const { t } = useTranslation()
-  const { showToast } = useContext(ToasterContext)
   const directoryServiceStore = useDirectoryServiceStore()
   const [isLoaded, setIsLoaded] = useState(false)
   const [isPollRequestRunning, setIsPollRequestRunning] = useState(false)
@@ -47,23 +46,7 @@ const DirectoryPage = () => {
 
       setIsPollRequestRunning(true)
 
-      try {
-        await directoryServiceStore.syncAllOutgoingAccessRequests()
-      } catch (error) {
-        let message = ''
-
-        if (error.response) {
-          const text = await error.response.text()
-          const textAsJson = JSON.parse(text)
-          message = textAsJson.details[0].metadata['organizations']
-        }
-
-        showToast({
-          title: t('Failed to synchronize access with:'),
-          body: message,
-          variant: 'error',
-        })
-      }
+      await directoryServiceStore.syncAllOutgoingAccessRequests()
 
       setIsPollRequestRunning(false)
     }

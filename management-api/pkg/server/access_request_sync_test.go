@@ -19,11 +19,12 @@ import (
 
 func Test_SyncOutgoingAccessRequests(t *testing.T) {
 	type testCase struct {
-		ctx     context.Context
-		setup   func(mocks serviceMocks)
-		req     *api.SynchronizeOutgoingAccessRequestsRequest
-		want    *api.SynchronizeOutgoingAccessRequestsResponse
-		wantErr error
+		ctx                         context.Context
+		createManagementClientError error
+		setup                       func(mocks serviceMocks)
+		req                         *api.SynchronizeOutgoingAccessRequestsRequest
+		want                        *api.SynchronizeOutgoingAccessRequestsResponse
+		wantErr                     error
 	}
 
 	testCases := map[string]testCase{
@@ -51,7 +52,7 @@ func Test_SyncOutgoingAccessRequests(t *testing.T) {
 				ServiceName:              "my-service",
 			},
 			want:    nil,
-			wantErr: status.New(codes.Internal, "internal error").Err(),
+			wantErr: status.New(codes.Internal, "internal_error").Err(),
 		},
 		"failed_to_retrieve_inway_proxy_address": {
 			ctx: testCreateAdminUserContext(),
@@ -77,7 +78,60 @@ func Test_SyncOutgoingAccessRequests(t *testing.T) {
 				ServiceName:              "my-service",
 			},
 			want:    nil,
-			wantErr: status.New(codes.Internal, "internal error").Err(),
+			wantErr: status.New(codes.Internal, "internal_error").Err(),
+		},
+		"no_inway_proxy_address_set_for_receiving_organization": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListLatestOutgoingAccessRequests(
+						gomock.Any(),
+						"00000000000000000001",
+						"my-service",
+					).
+					Return([]*database.OutgoingAccessRequest{
+						{ID: 42},
+					}, nil)
+
+				mocks.dc.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
+					Return("", nil)
+			},
+			req: &api.SynchronizeOutgoingAccessRequestsRequest{
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "my-service",
+			},
+			want:    nil,
+			wantErr: status.New(codes.Internal, "service_provider_no_organization_inway_specified").Err(),
+		},
+		"failed_to_setup_management_client": {
+			ctx:                         testCreateAdminUserContext(),
+			createManagementClientError: errors.New("arbitrary"),
+			setup: func(mocks serviceMocks) {
+				mocks.db.
+					EXPECT().
+					ListLatestOutgoingAccessRequests(
+						gomock.Any(),
+						"00000000000000000001",
+						"my-service",
+					).
+					Return([]*database.OutgoingAccessRequest{
+						{ID: 42},
+					}, nil)
+
+				mocks.dc.
+					EXPECT().
+					GetOrganizationInwayProxyAddress(gomock.Any(), "00000000000000000001").
+					Return("arbitrary-address", nil)
+			},
+			req: &api.SynchronizeOutgoingAccessRequestsRequest{
+				OrganizationSerialNumber: "00000000000000000001",
+				ServiceName:              "my-service",
+			},
+			want:    nil,
+			wantErr: status.New(codes.Internal, "service_provider_organization_inway_unreachable").Err(),
 		},
 		"happy_flow_no_outgoing_access_requests": {
 			ctx: testCreateAdminUserContext(),
@@ -103,7 +157,7 @@ func Test_SyncOutgoingAccessRequests(t *testing.T) {
 		tc := tc
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, tc.createManagementClientError)
 
 			tc.setup(mocks)
 			got, err := service.SynchronizeOutgoingAccessRequests(tc.ctx, tc.req)

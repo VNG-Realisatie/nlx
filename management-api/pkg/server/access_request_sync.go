@@ -15,6 +15,14 @@ import (
 	"go.nlx.io/nlx/management-api/pkg/syncer"
 )
 
+type SyncError string
+
+const (
+	InternalError                               SyncError = "internal_error"
+	ServiceProviderNoOrganizationInwaySpecified SyncError = "service_provider_no_organization_inway_specified"
+	ServiceProviderOrganizationInwayUnreachable SyncError = "service_provider_organization_inway_unreachable"
+)
+
 func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Context, req *api.SynchronizeOutgoingAccessRequestsRequest) (*api.SynchronizeOutgoingAccessRequestsResponse, error) {
 	err := s.authorize(ctx, permissions.SyncOutgoingAccessRequests)
 	if err != nil {
@@ -27,7 +35,7 @@ func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Contex
 	outgoingAccessRequests, err := s.configDatabase.ListLatestOutgoingAccessRequests(ctx, req.OrganizationSerialNumber, req.ServiceName)
 	if err != nil {
 		s.logger.Error("error getting latest access request states", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "internal error")
+		return nil, status.Errorf(codes.Internal, string(InternalError))
 	}
 
 	if len(outgoingAccessRequests) < 1 {
@@ -37,14 +45,18 @@ func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Contex
 	organizationInwayProxyAddress, err := s.directoryClient.GetOrganizationInwayProxyAddress(ctx, req.OrganizationSerialNumber)
 	if err != nil {
 		s.logger.Error("cannot get organization inway proxy address", zap.Error(err))
-		return nil, status.Errorf(codes.Internal, "internal error")
+		return nil, status.Errorf(codes.Internal, string(InternalError))
+	}
+
+	if organizationInwayProxyAddress == "" {
+		return nil, status.Errorf(codes.Internal, string(ServiceProviderNoOrganizationInwaySpecified))
 	}
 
 	client, err := s.createManagementClientFunc(ctx, organizationInwayProxyAddress, s.orgCert)
 	if err != nil {
 		s.logger.Error("cannot setup management client", zap.Error(err))
 
-		return nil, status.Errorf(codes.Internal, "internal error")
+		return nil, status.Errorf(codes.Internal, string(ServiceProviderOrganizationInwayUnreachable))
 	}
 
 	defer client.Close()
@@ -57,7 +69,7 @@ func (s *ManagementService) SynchronizeOutgoingAccessRequests(ctx context.Contex
 		Requests: outgoingAccessRequests,
 	})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "error occurred while syncing at least one Outgoing Access Request")
+		return nil, status.Errorf(codes.Internal, string(InternalError))
 	}
 
 	return &api.SynchronizeOutgoingAccessRequestsResponse{}, nil

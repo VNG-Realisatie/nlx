@@ -160,7 +160,7 @@ func TestApproveIncomingAccessRequest(t *testing.T) {
 		test := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			test.auditLog(*mocks.al)
 
 			test.setup(mocks)
@@ -338,7 +338,7 @@ func TestRejectIncomingAccessRequest(t *testing.T) {
 		test := test
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			test.setup(mocks)
 
 			test.auditLog(*mocks.al)
@@ -524,7 +524,7 @@ func TestExternalRequestAccess(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, orgBundle, mocks := newService(t)
+			service, orgBundle, mocks := newService(t, nil)
 			ctx := tt.setup(t, mocks.db, orgBundle)
 
 			pem, err := orgBundle.PublicKeyPEM()
@@ -636,7 +636,7 @@ func TestExternalGetAccessRequestState(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, certBundle, mocks := newService(t)
+			service, certBundle, mocks := newService(t, nil)
 			ctx := tt.setup(t, mocks.db, certBundle)
 
 			actual, err := service.GetAccessRequestState(ctx, &external.GetAccessRequestStateRequest{
@@ -764,7 +764,7 @@ func TestListIncomingAccessRequests(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, certBundle, mocks := newService(t)
+			service, certBundle, mocks := newService(t, nil)
 			_ = tt.setup(t, mocks.db, certBundle)
 
 			actual, err := service.ListIncomingAccessRequests(tt.ctx, &api.ListIncomingAccessRequestsRequest{

@@ -278,19 +278,42 @@ test('syncing outgoing access requests for a service', async () => {
 
   managementApiClient.managementServiceSynchronizeOutgoingAccessRequests = jest
     .fn()
-    .mockResolvedValue({
-      foo: 'bar',
+    .mockResolvedValueOnce()
+    .mockRejectedValue({
+      response: {
+        async json() {
+          return Promise.resolve({
+            message: 'service_provider_no_organization_inway_specified',
+          })
+        },
+      },
     })
 
   const rootStore = new RootStore({
     managementApiClient,
   })
 
-  const result =
-    await rootStore.directoryServicesStore.syncOutgoingAccessRequests(
-      '00000000000000000001',
-      'Service A',
-    )
+  jest.spyOn(rootStore.outgoingAccessRequestSyncErrorStore, 'clearForService')
+  jest.spyOn(
+    rootStore.outgoingAccessRequestSyncErrorStore,
+    'loadFromSyncResponse',
+  )
+
+  // when no sync error occurs
+  await rootStore.directoryServicesStore.syncOutgoingAccessRequests(
+    '00000000000000000001',
+    'Service A',
+  )
+
+  expect(
+    rootStore.outgoingAccessRequestSyncErrorStore.clearForService,
+  ).toHaveBeenCalledWith('00000000000000000001', 'Service A')
+
+  // when a sync error occurs
+  await rootStore.directoryServicesStore.syncOutgoingAccessRequests(
+    '00000000000000000001',
+    'Service A',
+  )
 
   expect(
     managementApiClient.managementServiceSynchronizeOutgoingAccessRequests,
@@ -298,7 +321,11 @@ test('syncing outgoing access requests for a service', async () => {
     organizationSerialNumber: '00000000000000000001',
     serviceName: 'Service A',
   })
-  expect(result).toEqual({ foo: 'bar' })
+  expect(
+    rootStore.outgoingAccessRequestSyncErrorStore.loadFromSyncResponse,
+  ).toHaveBeenCalledWith('00000000000000000001', 'Service A', {
+    message: 'service_provider_no_organization_inway_specified',
+  })
 })
 
 test('syncing all outgoing access requests', async () => {
@@ -307,19 +334,59 @@ test('syncing all outgoing access requests', async () => {
   const managementApiClient = new ManagementServiceApi()
 
   managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests =
-    jest.fn().mockResolvedValue({
-      foo: 'bar',
-    })
+    jest
+      .fn()
+      .mockResolvedValueOnce()
+      .mockRejectedValue({
+        response: {
+          async json() {
+            return Promise.resolve({
+              details: [
+                {
+                  metadata: {
+                    '00000000000000000001':
+                      'service_provider_no_organization_inway_specified',
+                  },
+                },
+              ],
+            })
+          },
+        },
+      })
 
   const rootStore = new RootStore({
     managementApiClient,
   })
 
-  const result =
-    await rootStore.directoryServicesStore.syncAllOutgoingAccessRequests()
+  jest.spyOn(rootStore.outgoingAccessRequestSyncErrorStore, 'clearAll')
+  jest.spyOn(
+    rootStore.outgoingAccessRequestSyncErrorStore,
+    'loadFromSyncAllResponse',
+  )
+
+  // when no sync error occurs
+  await rootStore.directoryServicesStore.syncAllOutgoingAccessRequests()
+
+  expect(
+    rootStore.outgoingAccessRequestSyncErrorStore.clearAll,
+  ).toHaveBeenCalled()
+
+  // when a sync error occurs
+  await rootStore.directoryServicesStore.syncAllOutgoingAccessRequests()
 
   expect(
     managementApiClient.managementServiceSynchronizeAllOutgoingAccessRequests,
-  ).toHaveBeenCalled()
-  expect(result).toEqual({ foo: 'bar' })
+  ).toHaveBeenCalledWith()
+  expect(
+    rootStore.outgoingAccessRequestSyncErrorStore.loadFromSyncAllResponse,
+  ).toHaveBeenCalledWith({
+    details: [
+      {
+        metadata: {
+          '00000000000000000001':
+            'service_provider_no_organization_inway_specified',
+        },
+      },
+    ],
+  })
 })

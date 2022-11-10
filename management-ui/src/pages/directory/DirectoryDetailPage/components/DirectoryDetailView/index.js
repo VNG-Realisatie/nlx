@@ -11,6 +11,7 @@ import CostsSection from '../../../../../components/CostsSection'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
 import usePollingEffect from '../../../../../hooks/use-polling-effect'
 import ExternalLinkSection from './ExternalLinkSection'
+import SyncErrorSection from './SyncErrorSection'
 import ContactSection from './ContactSection'
 import {
   OutwaysWithoutAccessSection,
@@ -61,13 +62,17 @@ const DirectoryDetailView = ({ service }) => {
     setIsPollingPaused(false)
   }
 
+  const syncError = service.outgoingAccessRequestsSyncError
+
   return (
     <>
       <ExternalLinkSection service={service} />
 
-      <SectionGroup>
-        <ContactSection service={service} />
+      {syncError ? (
+        <SyncErrorSection syncError={service.outgoingAccessRequestsSyncError} />
+      ) : null}
 
+      <SectionGroup>
         <OutwaysWithoutAccessSection
           service={service}
           onShowConfirmRequestAccessModalHandler={
@@ -79,6 +84,8 @@ const DirectoryDetailView = ({ service }) => {
         />
 
         <OutwaysWithAccessSection service={service} />
+
+        <ContactSection service={service} />
 
         <CostsSection
           oneTimeCosts={service.oneTimeCosts}

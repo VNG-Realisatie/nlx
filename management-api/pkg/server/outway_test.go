@@ -141,7 +141,7 @@ func TestRegisterOutway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			ctx := peer.NewContext(context.Background(), tt.args.peer)
 
@@ -212,7 +212,7 @@ func TestListOutways(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 			tt.setup(t, mocks)
 
 			want, err := service.ListOutways(tt.ctx, nil)
@@ -291,7 +291,7 @@ func TestDeleteOutway(t *testing.T) {
 		tt := tt
 
 		t.Run(name, func(t *testing.T) {
-			service, _, mocks := newService(t)
+			service, _, mocks := newService(t, nil)
 
 			if tt.setup != nil {
 				tt.setup(mocks)

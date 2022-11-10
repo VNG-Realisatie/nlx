@@ -79,11 +79,12 @@ type serviceMocks struct {
 	dc      *mock_directory.MockClient
 	tx      *mock_txlog.MockClient
 	mc      *mock_management.MockClient
+	mce     error
 	oc      *mock_outway.MockClient
 	cl      server.Clock
 }
 
-func newService(t *testing.T) (*server.ManagementService, *common_tls.CertificateBundle, serviceMocks) {
+func newService(t *testing.T, createManagementClientError error) (*server.ManagementService, *common_tls.CertificateBundle, serviceMocks) {
 	ctrl := gomock.NewController(t)
 
 	t.Cleanup(func() {
@@ -91,13 +92,20 @@ func newService(t *testing.T) (*server.ManagementService, *common_tls.Certificat
 		ctrl.Finish()
 	})
 
+	mc := mock_management.NewMockClient(ctrl)
+
+	if createManagementClientError != nil {
+		mc = nil
+	}
+
 	mocks := serviceMocks{
 		dc:      mock_directory.NewMockClient(ctrl),
 		tx:      mock_txlog.NewMockClient(ctrl),
 		al:      mock_auditlog.NewMockLogger(ctrl),
 		db:      mock_database.NewMockConfigDatabase(ctrl),
 		dbTxLog: mock_txlogdb.NewMockTxlogDatabase(ctrl),
-		mc:      mock_management.NewMockClient(ctrl),
+		mc:      mc,
+		mce:     createManagementClientError,
 		oc:      mock_outway.NewMockClient(ctrl),
 		cl:      &testClock{},
 	}
@@ -158,7 +166,7 @@ func newServer(t *testing.T, mocks serviceMocks) (*server.ManagementService, *co
 			TxlogDatabase:   txLog,
 			AuditLogger:     mocks.al,
 			CreateManagementClientFunc: func(context.Context, string, *common_tls.CertificateBundle) (management.Client, error) {
-				return mocks.mc, nil
+				return mocks.mc, mocks.mce
 			},
 			CreateOutwayClientFunc: func(context.Context, string, *common_tls.CertificateBundle) (outway.Client, error) {
 				return mocks.oc, nil

@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next'
 import Table from '../../../../../components/Table'
 import StateIndicator from '../../../../../components/StateIndicator'
 import DirectoryServiceModel from '../../../../../stores/models/DirectoryServiceModel'
-import { IconCheck } from '../../../../../icons'
+import { IconCheck, IconWarning } from '../../../../../icons'
+import { StyledIcon } from '../../../../../components/GlobalAlert/index.styles'
 import {
   StyledTd,
   AccessMessageWrapper,
@@ -47,6 +48,14 @@ const DirectoryServiceRow = ({ service, ownService, ...props }) => {
         <AccessMessageWrapper>
           {failingAccessStates.length ? (
             <WarnMessage>{t('Request could not be sent')}</WarnMessage>
+          ) : service.outgoingAccessRequestsSyncError ? (
+            <Message>
+              <StyledIcon
+                as={IconWarning}
+                inline
+                title={t(service.outgoingAccessRequestsSyncError.message)}
+              />
+            </Message>
           ) : hasAccessWithAtLeastOneOutway ? (
             <Message>
               <IconCheck title={t('Approved')} inline />
