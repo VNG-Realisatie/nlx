@@ -31,24 +31,27 @@ Deploy review:
       stop_section namespace
     - |
       for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
-        start_section deploy_${CHART} "Deploying chart '${CHART}'"
-        CHART_DIRECTORY="./helm/deploy/${CHART}"
-        sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/${CHART}/values-review.yaml.tpl > ./helm/deploy/${CHART}/values-review.yaml
+        {
+          start_section deploy_${CHART} "Deploying chart '${CHART}'"
+          CHART_DIRECTORY="./helm/deploy/${CHART}"
+          sed -e "s|{{DOMAIN_SUFFIX}}|${DOMAIN_SUFFIX}|g" ./helm/deploy/${CHART}/values-review.yaml.tpl > ./helm/deploy/${CHART}/values-review.yaml
 
-        if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
-          start_section dependency_${CHART} "Installing Chart dependencies"
-          helm dependency build ./helm/deploy/${CHART}
-          stop_section dependency_${CHART}
-        fi
+          if [ -f ${CHART_DIRECTORY}/Chart.lock ]; then
+            start_section dependency_${CHART} "Installing Chart dependencies"
+            helm dependency build ./helm/deploy/${CHART}
+            stop_section dependency_${CHART}
+          fi
 
-        helm upgrade ${CHART} ${CHART_DIRECTORY} \
-          --install \
-          --namespace ${K8S_NAMESPACE} \
-          --set-string global.imageRegistry=${IMAGE_REGISTRY} \
-          --set-string global.imageTag=${IMAGE_TAG} \
-          --values ${CHART_DIRECTORY}/values-review.yaml
-        stop_section deploy_${CHART}
+          helm upgrade ${CHART} ${CHART_DIRECTORY} \
+            --install \
+            --namespace ${K8S_NAMESPACE} \
+            --set-string global.imageRegistry=${IMAGE_REGISTRY} \
+            --set-string global.imageTag=${IMAGE_TAG} \
+            --values ${CHART_DIRECTORY}/values-review.yaml
+          stop_section deploy_${CHART}
+        } &
       done
+      wait
   environment:
     name: $CI_COMMIT_REF_NAME
     url: https://nlx-${CI_ENVIRONMENT_SLUG}.${REVIEW_BASE_DOMAIN}
