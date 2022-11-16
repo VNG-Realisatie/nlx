@@ -5,6 +5,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { instanceOf } from 'prop-types'
+import { observer } from 'mobx-react'
 import StatusIcon from '../../../../StatusIcon'
 import OutgoingOrderModel from '../../../../../../../stores/models/OutgoingOrderModel'
 import { StyledContainer, StateDetail } from './index.styles'
@@ -12,57 +13,37 @@ import { StyledContainer, StateDetail } from './index.styles'
 const Status = ({ order, ...props }) => {
   const { t } = useTranslation()
 
-  const Content = () => {
-    if (order.revokedAt) {
-      // Revoked order
-      return (
+  return (
+    <StyledContainer {...props}>
+      {order.revokedAt ? (
         <>
           <StatusIcon active={false} />
           <StateDetail>
             <span>{t('Order is revoked')}</span>
           </StateDetail>
         </>
-      )
-    }
-
-    if (order.validFrom > new Date()) {
-      // Order that is not yet active
-      return (
+      ) : order.validFrom > new Date() ? (
         <>
           <StatusIcon active={false} />
           <StateDetail>
             <span>{t('Order is not yet active')}</span>
           </StateDetail>
         </>
-      )
-    }
-
-    if (order.validUntil < new Date()) {
-      // Expired order
-      return (
+      ) : order.validUntil < new Date() ? (
         <>
           <StatusIcon active={false} />
           <StateDetail>
             <span>{t('Order is expired')}</span>
           </StateDetail>
         </>
-      )
-    }
-
-    // Active order
-    return (
-      <>
-        <StatusIcon active />
-        <StateDetail>
-          <span>{t('Order is active')}</span>
-        </StateDetail>
-      </>
-    )
-  }
-
-  return (
-    <StyledContainer {...props}>
-      <Content />
+      ) : (
+        <>
+          <StatusIcon active />
+          <StateDetail>
+            <span>{t('Order is active')}</span>
+          </StateDetail>
+        </>
+      )}
     </StyledContainer>
   )
 }
@@ -71,4 +52,4 @@ Status.propTypes = {
   order: instanceOf(OutgoingOrderModel),
 }
 
-export default Status
+export default observer(Status)
