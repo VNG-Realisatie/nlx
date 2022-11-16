@@ -1,7 +1,7 @@
 // Copyright © VNG Realisatie 2020
 // Licensed under the EUPL
 //
-import { flow, makeAutoObservable, observable } from 'mobx'
+import { flow, makeAutoObservable, observable, runInAction } from 'mobx'
 import OutgoingAccessRequestModel, {
   ACCESS_REQUEST_STATES,
 } from './OutgoingAccessRequestModel'
@@ -149,7 +149,10 @@ class DirectoryServiceModel {
     await accessRequest.terminate()
 
     const accessState = this._accessStates.get(publicKeyFingerPrint)
-    accessState.accessProof.terminatedAt = new Date()
+
+    runInAction(() => {
+      accessState.accessProof.terminatedAt = new Date()
+    })
   }
 
   async withdrawAccessRequest(publicKeyFingerPrint) {
