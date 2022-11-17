@@ -6,12 +6,8 @@
 import { CustomWorld } from "../../support/custom-world";
 import { getOrgByName } from "../../utils/organizations";
 import { getOutwayByName } from "../../utils/outway";
-import { default as logger } from "../../debug";
 import { When } from "@cucumber/cucumber";
-import { By, until } from "selenium-webdriver";
-import assert from "assert";
-
-const debug = logger("e2e-tests:services");
+import { By } from "selenium-webdriver";
 
 When(
   "{string} create a service named {string} and exposed via the default Inway",

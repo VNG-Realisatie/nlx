@@ -4,7 +4,10 @@
  */
 
 import { CustomWorld } from "../../support/custom-world";
-import {getAccessToService, requestAccessToService} from "../../utils/service";
+import {
+  getAccessToService,
+  requestAccessToService,
+} from "../../utils/service";
 import { Given } from "@cucumber/cucumber";
 
 Given(
