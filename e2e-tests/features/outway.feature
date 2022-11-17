@@ -15,7 +15,7 @@ Feature: Outway
         When the Outway "gemeente-stijns-nlx-outway" of "Gemeente Stijns" calls the service "basisregister-fictieve-kentekens" from "RvRD" with valid authorization
         Then "Gemeente Stijns" receives an unauthorized response
 
-    @flaky
+    @execution:serial @flaky
     Scenario: Delete an outway
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" removes the outway "gemeente-stijns-nlx-outway"
