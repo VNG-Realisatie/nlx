@@ -130,6 +130,8 @@ Build acceptance management-ui:
     CONTEXT: .
     DOCKERFILE: management-ui/Dockerfile
   tags:
+    # building this image on a shared runner slows down the pipeline considerably, use the faster commonground runner instead,
+    # this will also save ci/cd shared minutes
     - cg
 
 Build acceptance nlxctl:
