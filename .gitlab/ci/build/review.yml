@@ -41,6 +41,7 @@
     - docker push ${IMG_REF_SLUG}
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+  needs: ["Determine next version"]
   tags:
     - docker
     - linux
