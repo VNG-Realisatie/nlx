@@ -134,6 +134,8 @@ Build production management-ui:
     IMAGE: management-ui
     CONTEXT: .
     DOCKERFILE: management-ui/Dockerfile
+  tags:
+    - cg
 
 Build production nlxctl:
   extends: .build-production-base

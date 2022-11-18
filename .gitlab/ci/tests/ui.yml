@@ -47,7 +47,7 @@ Management-ui linter and tests:
     - npm run lint
     - stop_section lint
     - start_section test "Running tests"
-    - npm test -- --coverage --watchAll=false --runInBand
+    - npm test -- --coverage --watchAll=false
     - stop_section test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
@@ -59,7 +59,7 @@ Management-ui linter and tests:
   needs: []
   tags:
     - docker
-    - linux
+    - cg
 
 E2E type check:
   extends: .node-base
