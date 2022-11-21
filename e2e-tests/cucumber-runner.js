@@ -12,13 +12,15 @@ var config_file =
 var config = require(config_file).config;
 var command = "/usr/bin/env";
 
-process.argv[0] = "node";
-process.argv[1] = "./node_modules/@cucumber/cucumber/bin/cucumber";
-process.argv[2] = "features/**/*.feature";
-process.argv[3] = "--parallel";
-process.argv[4] = `${process.env.E2E_PARALLEL_COUNT || 8}`;
-process.argv[5] = "--tags";
-process.argv[6] = `${process.env.E2E_TESTS_TAGS || ""}`;
+process.argv = [
+  "node",
+  "./node_modules/@cucumber/cucumber/bin/cucumber",
+  "features/**/*.feature",
+  "--parallel",
+  `${process.env.E2E_PARALLEL_COUNT || 8}`,
+  "--tags",
+  `${process.env.E2E_TESTS_TAGS || ""}`,
+];
 
 // Check if os is windows
 if (os.platform() === "win32") {
