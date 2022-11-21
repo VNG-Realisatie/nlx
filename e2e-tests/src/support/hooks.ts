@@ -87,9 +87,11 @@ Before(async function (
   this.driver = createSession(config, caps);
 
   // set session name
-  await this.driver.executeScript(
-    `browserstack_executor: {"action": "setSessionName", "arguments": {"name": "${gherkinDocument.feature?.name} - ${pickle.name}"}}`
-  );
+  if (process.env.CI === "true") {
+    await this.driver.executeScript(
+      `browserstack_executor: {"action": "setSessionName", "arguments": {"name": "${gherkinDocument.feature?.name} - ${pickle.name}"}}`
+    );
+  }
 
   await this.driver?.manage().setTimeouts({
     implicit: 10000,
@@ -126,13 +128,17 @@ After(async function (this: CustomWorld, { result }: ITestCaseHookParameter) {
         ? `Test failed, see logs for more info: ${process.env.E2E_LOG_URL}`
         : "Test failed, see local logs for more info";
 
-      await this.driver.executeScript(
-        `browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "${reason}"}}`
-      );
+      if (process.env.CI === "true") {
+        await this.driver.executeScript(
+          `browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "${reason}"}}`
+        );
+      }
     } else {
-      await this.driver.executeScript(
-        `browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed","reason": "Test passed"}}`
-      );
+      if (process.env.CI === "true") {
+        await this.driver.executeScript(
+          `browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed","reason": "Test passed"}}`
+        );
+      }
     }
   }
 
