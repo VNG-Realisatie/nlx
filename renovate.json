@@ -7,7 +7,6 @@
     "schedule:nonOfficeHours"
   ],
   "automergeType": "branch",
-  "branchPrefix": "review/",
   "automerge": true,
   "dependencyDashboard": false,
   "gitLabIgnoreApprovals": true,
