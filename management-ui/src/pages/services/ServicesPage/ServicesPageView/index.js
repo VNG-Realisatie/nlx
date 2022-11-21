@@ -18,7 +18,7 @@ const ServicesPageView = ({ services, selectedServiceName }) => {
       <thead>
         <Table.TrHead>
           <Table.Th>{t('Name')}</Table.Th>
-          <Table.Th />
+          <Table.Td />
         </Table.TrHead>
       </thead>
       <tbody>

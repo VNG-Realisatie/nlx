@@ -64,7 +64,7 @@ const TrHead = ({ children, ...props }) => {
     return (
       <tr {...props}>
         {children}
-        <TrAsLinkTd as="th" />
+        <TrAsLinkTd as="td" />
       </tr>
     )
   }

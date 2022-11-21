@@ -44,7 +44,7 @@ test('adds a column for the links', () => {
       </Table>
     </Router>,
   )
-  expect(result.container.querySelectorAll('thead tr th')).toHaveLength(2)
+  expect(result.container.querySelectorAll('thead tr th')).toHaveLength(1)
   expect(result.container.querySelectorAll('tbody tr td')).toHaveLength(2)
   expect(
     result.container.querySelector('tbody tr td:last-child svg'),
