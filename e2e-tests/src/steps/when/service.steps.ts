@@ -53,7 +53,9 @@ When(
     // confirmation model
     await driver
       .findElement(
-        By.xpath("//div[@role='dialog']//button[text()='Verwijderen']")
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Verwijderen']"
+        )
       )
       .click();
 
