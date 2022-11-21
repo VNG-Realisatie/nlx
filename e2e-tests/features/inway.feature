@@ -1,7 +1,7 @@
 @inway
 Feature: inway
 
-    @execution:serial @flaky
+    @execution:serial
     Scenario: Delete an inway
         Given "Gemeente Stijns" is up and running
         When "Gemeente Stijns" removes its default inway

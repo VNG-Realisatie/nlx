@@ -7,7 +7,6 @@ NLX Management - E2E-tests - Selenium:
   stage: E2E tests
   variables:
     E2E_PARALLEL_COUNT: 5
-    E2E_FLAKY_RETRIES: 2
     E2E_CONFIG_FILE: "ci"
     E2E_GEMEENTE_STIJNS_MANAGEMENT_BASIC_AUTH: "false"
     E2E_GEMEENTE_STIJNS_MANAGEMENT_USERNAME: "admin@example.com"
