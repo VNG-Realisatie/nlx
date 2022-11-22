@@ -126,8 +126,6 @@ Build review management-ui:
     IMAGE: management-ui
     CONTEXT: .
     DOCKERFILE: management-ui/Dockerfile
-  tags:
-    - cg
 
 Build review nlxctl:
   extends: .build-review-base

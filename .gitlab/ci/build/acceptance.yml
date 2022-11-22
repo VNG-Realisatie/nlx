@@ -129,8 +129,6 @@ Build acceptance management-ui:
     IMAGE: management-ui
     CONTEXT: .
     DOCKERFILE: management-ui/Dockerfile
-  tags:
-    - cg
 
 Build acceptance nlxctl:
   extends: .build-acceptance-base
