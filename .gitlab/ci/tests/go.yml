@@ -61,7 +61,7 @@ Go linter:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
     - docker
-    - cg
+    - linux
 
 Go go.mod tidy test:
   stage: Tests
