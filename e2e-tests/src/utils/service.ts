@@ -197,15 +197,27 @@ export const getAccessToService = async (
     }
   );
 
+  let createAccessRequestResponse;
+
   // request access to new service
-  const createAccessRequestResponse =
-    await serviceConsumer.apiClients.management?.managementServiceSendAccessRequest(
-      {
-        organizationSerialNumber: serviceProvider.serialNumber,
-        serviceName: uniqueServiceName,
-        publicKeyPem: outway.publicKeyPem,
-      }
-    );
+  try {
+    createAccessRequestResponse =
+      await serviceConsumer.apiClients.management?.managementServiceSendAccessRequest(
+        {
+          organizationSerialNumber: serviceProvider.serialNumber,
+          serviceName: uniqueServiceName,
+          publicKeyPem: outway.publicKeyPem,
+        }
+      );
+  } catch (error) {
+    console.log("an error: ", error);
+    console.log("an error json: ", JSON.stringify(error));
+
+    const response = error as Response;
+    const responseAsText = await response.text();
+
+    throw new Error(`failed to list outways: ${responseAsText}`);
+  }
 
   assert.equal(
     createAccessRequestResponse?.outgoingAccessRequest?.serviceName,

@@ -45,6 +45,11 @@ export const getOutways = async (orgName: string): Promise<Outways> => {
 
     return org.outways;
   } catch (error) {
+    console.log("error: ", error);
+    console.log("error type: ", typeof error);
+    // console.log("error json: ", JSON.stringify(error));
+    // console.log("res: ", error.response);
+    // console.log("res: ", await error.response.text());
     const response = error as Response;
     const responseAsText = await response.text();
 
