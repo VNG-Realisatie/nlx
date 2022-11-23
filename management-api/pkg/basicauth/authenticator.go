@@ -52,21 +52,24 @@ func (a *Authenticator) MountRoutes(r chi.Router) {
 
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger := a.logger.With(zap.String("handler", "OnlyAuthenticated"))
+
 		username, password, ok := r.BasicAuth()
 		if !ok {
+			logger.Debug("unable to find username and password in authorization header")
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 			return
 		}
 
 		credentialsMatch, err := a.configDatabase.VerifyUserCredentials(context.Background(), username, password)
 		if err != nil {
-			a.logger.Info("Unable to verify user credentials", zap.String("username", username))
+			logger.Debug("unable to verify user credentials", zap.String("username", username))
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 			return
 		}
 
 		if !credentialsMatch {
-			a.logger.Info("Unable to verify user credentials", zap.Error(err))
+			logger.Debug("unable to verify user credentials", zap.Error(err))
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 			return
 		}
@@ -83,28 +86,32 @@ func (a *Authenticator) root(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
+	logger := a.logger.With(zap.String("handler", "me"))
+
 	username, password, ok := r.BasicAuth()
 	if !ok {
+		logger.Info("unable to find username and password in authorization header")
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
 
 	valid, err := a.configDatabase.VerifyUserCredentials(context.Background(), username, password)
 	if err != nil {
-		a.logger.Error("Unable to verify user credentials", zap.Error(err))
+		logger.Error("unable to verify user credentials", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 
 		return
 	}
 
 	if !valid {
+		logger.Info("invalid user credentials")
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
 
 	user, err := a.configDatabase.GetUser(context.Background(), username)
 	if err != nil {
-		a.logger.Error("Unable to retrieve user from database", zap.Error(err))
+		logger.Error("Unable to retrieve user from database", zap.Error(err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 
 		return

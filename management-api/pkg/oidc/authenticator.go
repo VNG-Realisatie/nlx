@@ -154,14 +154,18 @@ func (a *Authenticator) MountRoutes(r chi.Router) {
 
 func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger := a.logger.With(zap.String("handler", "OnlyAuthenticated"))
+
 		session, err := a.store.Get(r, cookieName)
 		if err != nil {
+			logger.Debug("failed to get session from store", zap.Error(err))
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 			return
 		}
 
 		token, ok := session.Values[tokenName].(string)
 		if !ok {
+			logger.Debug("failed to get token from session", zap.String("token-name", tokenName), zap.Any("session-values", session.Values))
 			http.Error(w, "unauthorized request", http.StatusUnauthorized)
 			return
 		}
@@ -173,10 +177,11 @@ func (a *Authenticator) OnlyAuthenticated(h http.Handler) http.Handler {
 }
 
 func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
+	logger := a.logger.With(zap.String("handler", "authenticate"))
+
 	session, err := a.store.Get(r, cookieName)
 	if err != nil {
-		a.logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
-
+		logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
 
 		return
@@ -186,7 +191,7 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 	if ok {
 		_, err := a.oidcVerifier.Verify(r.Context(), bearerToken)
 		if err == nil {
-			a.logger.Error("cannot verify token", zap.Error(err))
+			logger.Error("cannot verify token", zap.Error(err))
 
 			http.Redirect(w, r, "/", http.StatusFound)
 
@@ -199,7 +204,7 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 
 		err := session.Save(r, w)
 		if err != nil {
-			a.logger.Error("unable to save session", zap.Error(err))
+			logger.Error("unable to save session", zap.Error(err))
 
 			http.Error(w, "unable to save session", http.StatusInternalServerError)
 
@@ -211,9 +216,11 @@ func (a *Authenticator) authenticate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
+	logger := a.logger.With(zap.String("handler", "me"))
+
 	session, err := a.store.Get(r, cookieName)
 	if err != nil {
-		a.logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
+		logger.Error("unable to get nlx management cookie from the store", zap.Error(err))
 
 		http.Error(w, "unauthorized request", http.StatusUnauthorized)
 
@@ -222,13 +229,15 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 
 	bearerToken, ok := session.Values[tokenName].(string)
 	if !ok {
+		logger.Debug("failed to get token from session", zap.String("token-name", tokenName))
+
 		http.Error(w, "unauthorized request, could not get bearer token", http.StatusUnauthorized)
 		return
 	}
 
 	idToken, err := a.oidcVerifier.Verify(r.Context(), bearerToken)
 	if err != nil {
-		a.logger.Error("cannot verify token", zap.Error(err))
+		logger.Error("cannot verify token", zap.Error(err))
 
 		http.Error(w, "unauthorized request, invalid token", http.StatusUnauthorized)
 
@@ -239,7 +248,7 @@ func (a *Authenticator) me(w http.ResponseWriter, r *http.Request) {
 	claims := &Claims{}
 
 	if err = idToken.Claims(claims); err != nil {
-		a.logger.Error("unable to parse id token claims", zap.Error(err))
+		logger.Error("unable to parse id token claims", zap.Error(err))
 
 		http.Error(w, "unauthorized request, could not parse token", http.StatusUnauthorized)
 
