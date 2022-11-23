@@ -27,22 +27,29 @@ export const hasOutwayRunning = async (
 export const getOutways = async (orgName: string): Promise<Outways> => {
   const org = getOrgByName(orgName);
 
-  const outwaysResponse =
-    await org.apiClients.management?.managementServiceListOutways();
+  try {
+    const outwaysResponse =
+      await org.apiClients.management?.managementServiceListOutways();
 
-  const outways = outwaysResponse?.outways;
-  outways?.forEach((outway) => {
-    if (!outway.name) {
-      return;
-    }
+    const outways = outwaysResponse?.outways;
+    outways?.forEach((outway) => {
+      if (!outway.name) {
+        return;
+      }
 
-    org.outways[`${outway.name}`].name = outway.name || "";
-    org.outways[`${outway.name}`].publicKeyPem = outway.publicKeyPem || "";
-    org.outways[`${outway.name}`].publicKeyFingerprint =
-      outway.publicKeyFingerprint || "";
-  });
+      org.outways[`${outway.name}`].name = outway.name || "";
+      org.outways[`${outway.name}`].publicKeyPem = outway.publicKeyPem || "";
+      org.outways[`${outway.name}`].publicKeyFingerprint =
+        outway.publicKeyFingerprint || "";
+    });
 
-  return org.outways;
+    return org.outways;
+  } catch (error) {
+    const response = error as Response;
+    const responseAsText = await response.text();
+
+    throw new Error(`failed to list outways: ${responseAsText}`);
+  }
 };
 
 export const getOutwayByName = async (
