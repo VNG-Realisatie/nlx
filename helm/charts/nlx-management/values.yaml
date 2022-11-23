@@ -22,7 +22,7 @@ fullnameOverride: ""
 
 config:
   logType: live
-  logLevel: info
+  logLevel: debug
   directoryHostname: ""
   directoryInspectionHostname: ""
   directoryRegistrationHostname: ""
