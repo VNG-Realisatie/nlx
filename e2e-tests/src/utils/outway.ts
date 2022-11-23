@@ -5,6 +5,7 @@
 
 import { getOrgByName, Outway, Outways } from "./organizations";
 import { CustomWorld } from "../support/custom-world";
+import { ResponseError } from "../../../management-ui/src/api/runtime";
 import pWaitFor from "p-wait-for";
 
 export const hasOutwayRunning = async (
@@ -45,13 +46,9 @@ export const getOutways = async (orgName: string): Promise<Outways> => {
 
     return org.outways;
   } catch (error) {
-    console.log("error: ", error);
-    console.log("error type: ", typeof error);
-    // console.log("error json: ", JSON.stringify(error));
-    // console.log("res: ", error.response);
-    // console.log("res: ", await error.response.text());
-    const response = error as Response;
-    const responseAsText = await response.text();
+    console.log("error failed to list outways: ", error);
+    const response = error as ResponseError;
+    const responseAsText = await response.response.text();
 
     throw new Error(`failed to list outways: ${responseAsText}`);
   }

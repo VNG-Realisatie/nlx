@@ -12,6 +12,7 @@ import {
 } from "../../../management-ui/src/api/models";
 import { default as logger } from "../debug";
 import { isServiceKnownInServiceListOfOutway } from "../steps/when/outway.steps";
+import { ResponseError } from "../../../management-ui/src/api/runtime";
 import pWaitFor from "p-wait-for";
 import { strict as assert } from "assert";
 const debug = logger("e2e-tests:service");
@@ -62,32 +63,40 @@ const getIncomingAccessRequest = async (
   serviceProvider: Organization,
   publicKeyFingerprint: string
 ): Promise<ManagementIncomingAccessRequest | undefined> => {
-  const responseIncomingAccessRequests =
-    await serviceProvider.apiClients.management?.managementServiceListIncomingAccessRequests(
-      {
-        serviceName: uniqueServiceName,
-      }
-    );
+  try {
+    const responseIncomingAccessRequests =
+      await serviceProvider.apiClients.management?.managementServiceListIncomingAccessRequests(
+        {
+          serviceName: uniqueServiceName,
+        }
+      );
 
-  if (
-    !responseIncomingAccessRequests ||
-    !responseIncomingAccessRequests.accessRequests
-  ) {
-    return;
+    if (
+      !responseIncomingAccessRequests ||
+      !responseIncomingAccessRequests.accessRequests
+    ) {
+      return;
+    }
+
+    const incomingAccessRequest =
+      responseIncomingAccessRequests.accessRequests.find(
+        (accessRequest: ManagementIncomingAccessRequest) => {
+          return (
+            accessRequest.serviceName === uniqueServiceName &&
+            accessRequest.organization?.serialNumber === org.serialNumber &&
+            accessRequest.publicKeyFingerprint === publicKeyFingerprint
+          );
+        }
+      );
+
+    return incomingAccessRequest;
+  } catch (error) {
+    console.log("error failed get incoming ar: ", error);
+    const response = error as ResponseError;
+    const responseAsText = await response.response.text();
+
+    throw new Error(`failed get incoming ar: ${responseAsText}`);
   }
-
-  const incomingAccessRequest =
-    responseIncomingAccessRequests.accessRequests.find(
-      (accessRequest: ManagementIncomingAccessRequest) => {
-        return (
-          accessRequest.serviceName === uniqueServiceName &&
-          accessRequest.organization?.serialNumber === org.serialNumber &&
-          accessRequest.publicKeyFingerprint === publicKeyFingerprint
-        );
-      }
-    );
-
-  return incomingAccessRequest;
 };
 
 const isServicePresentInDirectory = async (
@@ -210,13 +219,11 @@ export const getAccessToService = async (
         }
       );
   } catch (error) {
-    console.log("an error: ", error);
-    console.log("an error json: ", JSON.stringify(error));
+    console.log("error failed to send: ", error);
+    const response = error as ResponseError;
+    const responseAsText = await response.response.text();
 
-    const response = error as Response;
-    const responseAsText = await response.text();
-
-    throw new Error(`failed to list outways: ${responseAsText}`);
+    throw new Error(`failed to send: ${responseAsText}`);
   }
 
   assert.equal(
