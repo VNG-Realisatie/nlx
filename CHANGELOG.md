@@ -1,3 +1,11 @@
+# [0.144.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.143.0...v0.144.0) (2022-11-29)
+
+
+### Features
+
+* **management:** replace toasters with an alert when synchronization of access requests fails ([64820f6](https://gitlab.com/commonground/nlx/nlx/commit/64820f6db49eb4e2ab02c1f626b44728659fda44)), closes [nlx#1635](https://gitlab.com/nlx/issues/1635)
+* **management:** save OIDC sessions in database instead of cookie ([1dae1f5](https://gitlab.com/commonground/nlx/nlx/commit/1dae1f5b5acdb13a2078d7df840685ace4769632)), closes [nlx#1648](https://gitlab.com/nlx/issues/1648)
+
 # [0.143.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.142.0...v0.143.0) (2022-11-08)
 
 
