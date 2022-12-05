@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@commonground/design-system": "21.1.16",
+    "@commonground/design-system": "21.1.17",
     "@fontsource/source-sans-pro": "4.5.11",
     "dayjs": "1.11.6",
     "formik": "2.2.9",
