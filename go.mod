@@ -12,7 +12,7 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-testfixtures/testfixtures/v3 v3.8.1
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	github.com/golang-migrate/migrate/v4 v4.15.3-0.20220513225907-acc11eda6d26
+	github.com/golang-migrate/migrate/v4 v4.15.3-0.20221206080518-c9ff76f294c6
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/securecookie v1.1.1
@@ -74,7 +74,6 @@ require (
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
