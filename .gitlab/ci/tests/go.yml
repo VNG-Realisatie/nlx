@@ -33,6 +33,25 @@ Go tests (unit & integration):
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - apps-overview/**/*
+          - ca-certportal/**/*
+          - ca-cfssl-unsafe/**/*
+          - common/**/*
+          - directory-api/**/*
+          - directory-monitor/**/*
+          - inway/**/*
+          - management-api/**/*
+          - nlxctl/**/*
+          - outway/**/*
+          - testing/**/*
+          - txlog-api/**/*
+          - .golang-ci.yml
+          - go.mod
+          - go.sum
   tags:
     - docker
     - cg
@@ -59,6 +78,25 @@ Go linter:
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - apps-overview/**/*
+          - ca-certportal/**/*
+          - ca-cfssl-unsafe/**/*
+          - common/**/*
+          - directory-api/**/*
+          - directory-monitor/**/*
+          - inway/**/*
+          - management-api/**/*
+          - nlxctl/**/*
+          - outway/**/*
+          - testing/**/*
+          - txlog-api/**/*
+          - .golang-ci.yml
+          - go.mod
+          - go.sum
   tags:
     - docker
     - linux
@@ -74,6 +112,12 @@ Go go.mod tidy test:
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - go.mod
+          - go.sum
   tags:
     - docker
     - linux

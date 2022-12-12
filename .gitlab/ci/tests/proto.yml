@@ -24,6 +24,14 @@ Proto lint:
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - management-api/api/**/*
+          - txlog-api/api/**/*
+          - directory-api/api/**/*
+          - outway/api/**/*
   tags:
     - docker
     - linux
@@ -51,6 +59,14 @@ Proto fmt:
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - management-api/api/**/*
+          - txlog-api/api/**/*
+          - directory-api/api/**/*
+          - outway/api/**/*
   tags:
     - docker
     - linux
@@ -78,6 +94,11 @@ Proto breaking changes:
   needs: []
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - management-api/api/**/*
   tags:
     - docker
     - linux

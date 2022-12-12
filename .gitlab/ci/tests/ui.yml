@@ -20,6 +20,11 @@ Directory-ui linter and tests:
       - directory-ui/coverage
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - directory-ui/**/*
   needs: []
   tags:
     - docker
@@ -56,6 +61,11 @@ Management-ui linter and tests:
       - management-ui/coverage
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - management-ui/**/*
   needs: []
   tags:
     - docker
@@ -70,6 +80,11 @@ E2E type check:
     - npm run check-types
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
+      changes:
+        compare_to: 'master'
+        paths:
+          - .gitlab/**/*
+          - e2e-tests/**/*
   needs: []
   tags:
     - docker
