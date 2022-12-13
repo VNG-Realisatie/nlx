@@ -32,7 +32,7 @@ class OutgoingAccessRequestSyncErrorModel {
   get message() {
     switch (this._error) {
       case SYNC_ERROR_INTERNAL:
-        return 'Internal error while trying to retrieve the current state of your access request. Please consult your system administrator.'
+        return 'Internal error while trying to retrieve the current state of your access requests. Please consult your system administrator.'
 
       case SYNC_ERROR_SERVICE_PROVIDER_NO_ORGANIZATION_INWAY_SPECIFIED:
         return 'The organization has not specified an organization Inway. We are unable to retrieve the current state of your access requests.'

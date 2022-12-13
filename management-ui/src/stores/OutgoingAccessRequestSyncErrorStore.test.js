@@ -51,7 +51,7 @@ test('load from sync all response', () => {
 
   expect(got).toBeInstanceOf(OutgoingAccessRequestSyncErrorModel)
   expect(got.message).toEqual(
-    'Internal error while trying to retrieve the current state of your access request. Please consult your system administrator.',
+    'Internal error while trying to retrieve the current state of your access requests. Please consult your system administrator.',
   )
 
   got = syncErrorStore.getForService('00000000000000000002', 'arbitrary')

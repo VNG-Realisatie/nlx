@@ -20,7 +20,7 @@ test('render the error message', async () => {
   renderWithProviders(<SyncErrorSection syncError={syncError} />)
 
   const errorMessage = screen.getByText(
-    'Internal error while trying to retrieve the current state of your access request. Please consult your system administrator.',
+    'Internal error while trying to retrieve the current state of your access requests. Please consult your system administrator.',
   )
 
   expect(errorMessage).toBeInTheDocument()
