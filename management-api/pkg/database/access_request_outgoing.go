@@ -5,12 +5,12 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
 	"github.com/lib/pq"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
@@ -55,23 +55,50 @@ func (request *OutgoingAccessRequest) IsSendable() bool {
 	return request.State == OutgoingAccessRequestFailed
 }
 
-func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(_ context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error) {
-	outgoingAccessRequests := &[]*OutgoingAccessRequest{}
-
-	if err := db.DB.
-		Raw(`
-			SELECT
-				distinct on (public_key_fingerprint, service_name, organization_serial_number) nlx_management.access_requests_outgoing.*
-			FROM
-				nlx_management.access_requests_outgoing
-			WHERE
-				organization_serial_number = ? AND service_name = ?
-			ORDER BY
-				organization_serial_number, public_key_fingerprint, service_name, created_at DESC;`, organizationSerialNumber, serviceName).Scan(outgoingAccessRequests).Error; err != nil {
+// nolint:dupl // conversion of models can be unified once we finished moving from Gorm to Sqlc
+func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) ([]*OutgoingAccessRequest, error) {
+	accessRequests, err := db.queries.ListLatestOutgoingAccessRequests(ctx, &queries.ListLatestOutgoingAccessRequestsParams{
+		OrganizationSerialNumber: organizationSerialNumber,
+		ServiceName:              serviceName,
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return *outgoingAccessRequests, nil
+	var outgoingAccessRequests = make([]*OutgoingAccessRequest, len(accessRequests))
+
+	for i, accessRequest := range accessRequests {
+		var pem = ""
+
+		if accessRequest.PublicKeyPem.Valid {
+			pem = accessRequest.PublicKeyPem.String
+		}
+
+		var errorCause = ""
+
+		if accessRequest.ErrorCause.Valid {
+			errorCause = accessRequest.ErrorCause.String
+		}
+
+		outgoingAccessRequests[i] = &OutgoingAccessRequest{
+			ID: uint(accessRequest.ID),
+			Organization: Organization{
+				SerialNumber: accessRequest.OrganizationSerialNumber,
+				Name:         accessRequest.OrganizationName,
+			},
+			ServiceName:          accessRequest.ServiceName,
+			ReferenceID:          uint(accessRequest.ReferenceID),
+			State:                OutgoingAccessRequestState(accessRequest.State),
+			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
+			PublicKeyPEM:         pem,
+			ErrorCode:            int(accessRequest.ErrorCode),
+			ErrorCause:           errorCause,
+			CreatedAt:            accessRequest.CreatedAt,
+			UpdatedAt:            accessRequest.UpdatedAt,
+		}
+	}
+
+	return outgoingAccessRequests, nil
 }
 
 func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*OutgoingAccessRequest, error) {
@@ -117,22 +144,12 @@ func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx contex
 }
 
 func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Context, accessRequest *OutgoingAccessRequest) (*OutgoingAccessRequest, error) {
-	var count int64
-
-	if err := db.DB.
-		WithContext(ctx).
-		Model(OutgoingAccessRequest{}).
-		Where(
-			"organization_serial_number = ? AND service_name = ? AND public_key_fingerprint = ? AND state IN ?",
-			accessRequest.Organization.SerialNumber,
-			accessRequest.ServiceName,
-			accessRequest.PublicKeyFingerprint,
-			[]string{
-				string(OutgoingAccessRequestReceived),
-			},
-		).
-		Count(&count).
-		Error; err != nil {
+	count, err := db.queries.CountReceivedOutgoingAccessRequestsForOutway(ctx, &queries.CountReceivedOutgoingAccessRequestsForOutwayParams{
+		OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
+		ServiceName:              accessRequest.ServiceName,
+		PublicKeyFingerprint:     accessRequest.PublicKeyFingerprint,
+	})
+	if err != nil {
 		return nil, err
 	}
 
@@ -140,48 +157,110 @@ func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Contex
 		return nil, ErrActiveAccessRequest
 	}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Create(accessRequest).Error; err != nil {
+	var pem = sql.NullString{}
+
+	if accessRequest.PublicKeyPEM != "" {
+		pem.String = accessRequest.PublicKeyPEM
+		pem.Valid = true
+	}
+
+	id, err := db.queries.CreateOutgoingAccessRequest(ctx, &queries.CreateOutgoingAccessRequestParams{
+		State:                    string(accessRequest.State),
+		OrganizationName:         accessRequest.Organization.Name,
+		OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
+		PublicKeyFingerprint:     accessRequest.PublicKeyFingerprint,
+		PublicKeyPem:             pem,
+		ServiceName:              accessRequest.ServiceName,
+		CreatedAt:                accessRequest.CreatedAt,
+		UpdatedAt:                accessRequest.UpdatedAt,
+	})
+	if err != nil {
 		return nil, err
 	}
+
+	accessRequest.ID = uint(id)
 
 	return accessRequest, nil
 }
 
 func (db *PostgresConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, id uint) (*OutgoingAccessRequest, error) {
-	accessRequest := &OutgoingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		First(accessRequest, id).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
-		}
-
-		return nil, err
+	outgoingAccessRequest, err := db.queries.GetOutgoingAccessRequest(ctx, int32(id))
+	if err != nil {
+		return nil, ErrNotFound
 	}
 
-	return accessRequest, nil
+	var pem = ""
+
+	if outgoingAccessRequest.PublicKeyPem.Valid {
+		pem = outgoingAccessRequest.PublicKeyPem.String
+	}
+
+	var errorCause = ""
+
+	if outgoingAccessRequest.ErrorCause.Valid {
+		errorCause = outgoingAccessRequest.ErrorCause.String
+	}
+
+	result := &OutgoingAccessRequest{
+		ID: uint(outgoingAccessRequest.ID),
+		Organization: Organization{
+			SerialNumber: outgoingAccessRequest.OrganizationSerialNumber,
+			Name:         outgoingAccessRequest.OrganizationName,
+		},
+		ServiceName:          outgoingAccessRequest.ServiceName,
+		ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
+		State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
+		PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
+		PublicKeyPEM:         pem,
+		ErrorCode:            int(outgoingAccessRequest.ErrorCode),
+		ErrorCause:           errorCause,
+		CreatedAt:            outgoingAccessRequest.CreatedAt,
+		UpdatedAt:            outgoingAccessRequest.UpdatedAt,
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*OutgoingAccessRequest, error) {
-	accessRequest := &OutgoingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Where("organization_serial_number = ? AND service_name = ? AND public_key_fingerprint = ?", organizationSerialNumber, serviceName, publicKeyFingerprint).
-		Order("created_at DESC").
-		First(accessRequest).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrNotFound
-		}
-
-		return nil, err
+	outgoingAccessRequest, err := db.queries.GetLatestOutgoingAccessRequest(ctx, &queries.GetLatestOutgoingAccessRequestParams{
+		OrganizationSerialNumber: organizationSerialNumber,
+		ServiceName:              serviceName,
+		PublicKeyFingerprint:     publicKeyFingerprint,
+	})
+	if err != nil {
+		return nil, ErrNotFound
 	}
 
-	return accessRequest, nil
+	var pem = ""
+
+	if outgoingAccessRequest.PublicKeyPem.Valid {
+		pem = outgoingAccessRequest.PublicKeyPem.String
+	}
+
+	var errorCause = ""
+
+	if outgoingAccessRequest.ErrorCause.Valid {
+		errorCause = outgoingAccessRequest.ErrorCause.String
+	}
+
+	result := &OutgoingAccessRequest{
+		ID: uint(outgoingAccessRequest.ID),
+		Organization: Organization{
+			SerialNumber: outgoingAccessRequest.OrganizationSerialNumber,
+			Name:         outgoingAccessRequest.OrganizationName,
+		},
+		ServiceName:          outgoingAccessRequest.ServiceName,
+		ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
+		State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
+		PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
+		PublicKeyPEM:         pem,
+		ErrorCode:            int(outgoingAccessRequest.ErrorCode),
+		ErrorCause:           errorCause,
+		CreatedAt:            outgoingAccessRequest.CreatedAt,
+		UpdatedAt:            outgoingAccessRequest.UpdatedAt,
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequestsPerCertificate(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) ([]*OutgoingAccessRequest, error) {

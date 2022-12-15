@@ -23,12 +23,6 @@ func TestGetLatestIncomingAccessRequest(t *testing.T) {
 
 	fixtureTime := getFixtureTime(t)
 
-	fixtureCertBundle, err := newFixtureCertificateBundle()
-	require.NoError(t, err)
-
-	fixturePEM, err := fixtureCertBundle.PublicKeyPEM()
-	require.NoError(t, err)
-
 	type args struct {
 		organizationSerialNumber string
 		serviceName              string
@@ -70,33 +64,9 @@ func TestGetLatestIncomingAccessRequest(t *testing.T) {
 			},
 			want: &database.IncomingAccessRequest{
 				ID:        1,
-				ServiceID: 1,
-				Service: &database.Service{
-					ID:                     1,
-					Name:                   "fixture-service-name",
-					EndpointURL:            "http://fixture-api:8000",
-					DocumentationURL:       "https://fixture-documentation-url.com",
-					APISpecificationURL:    "http://fixture-api:8000/schema?format=openapi-json",
-					Internal:               false,
-					TechSupportContact:     "fixture@tech-support-contact.com",
-					PublicSupportContact:   "fixture@public-support-contact.com",
-					Inways:                 nil,
-					IncomingAccessRequests: nil,
-					OneTimeCosts:           1,
-					MonthlyCosts:           2,
-					RequestCosts:           3,
-					CreatedAt:              fixtureTime,
-					UpdatedAt:              fixtureTime,
-				},
-				Organization: database.IncomingAccessRequestOrganization{
-					Name:         "fixture-organization-name",
-					SerialNumber: "00000000000000000001",
-				},
-				State:                database.IncomingAccessRequestReceived,
-				CreatedAt:            fixtureTime,
-				UpdatedAt:            fixtureTime,
-				PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
-				PublicKeyPEM:         fixturePEM,
+				State:     database.IncomingAccessRequestReceived,
+				CreatedAt: fixtureTime,
+				UpdatedAt: fixtureTime,
 			},
 			wantErr: nil,
 		},

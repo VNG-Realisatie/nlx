@@ -5,11 +5,10 @@ package database
 
 import (
 	"context"
-	"errors"
+	"database/sql"
 	"time"
 
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 type IncomingAccessRequestState string
@@ -44,106 +43,141 @@ func (i *IncomingAccessRequest) TableName() string {
 }
 
 func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context, serviceName string) ([]*IncomingAccessRequest, error) {
-	accessRequests := []*IncomingAccessRequest{}
+	result := []*IncomingAccessRequest{}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Service").
-		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND s.name = ?", serviceName).
-		Find(&accessRequests).Error; err != nil {
+	incomingAccessRequests, err := db.queries.ListIncomingAccessRequests(ctx, serviceName)
+	if err != nil {
 		return nil, err
 	}
 
-	return accessRequests, nil
+	for _, accessRequest := range incomingAccessRequests {
+		result = append(result, &IncomingAccessRequest{
+			ID: uint(accessRequest.ID),
+			Organization: IncomingAccessRequestOrganization{
+				Name:         accessRequest.OrganizationName,
+				SerialNumber: accessRequest.OrganizationSerialNumber,
+			},
+			State: IncomingAccessRequestState(accessRequest.State),
+			Service: &Service{
+				Name: serviceName,
+			},
+			CreatedAt: accessRequest.CreatedAt,
+			UpdatedAt: accessRequest.UpdatedAt,
+		})
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetLatestIncomingAccessRequest(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) (*IncomingAccessRequest, error) {
-	accessRequest := &IncomingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Service").
-		Joins("JOIN nlx_management.services s ON s.id = access_requests_incoming.service_id AND access_requests_incoming.organization_serial_number = ? AND access_requests_incoming.public_key_fingerprint = ? AND s.name = ?", organizationSerialNumber, publicKeyFingerprint, serviceName).
-		Order("created_at DESC").
-		First(&accessRequest).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	incomingAccessRequests, err := db.queries.GetLatestIncomingAccessRequest(ctx, &queries.GetLatestIncomingAccessRequestParams{
+		OrganizationSerialNumber: organizationSerialNumber,
+		PublicKeyFingerprint:     publicKeyFingerprint,
+		Name:                     serviceName,
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return accessRequest, nil
+	result := &IncomingAccessRequest{
+		ID:        uint(incomingAccessRequests.ID),
+		State:     IncomingAccessRequestState(incomingAccessRequests.State),
+		CreatedAt: incomingAccessRequests.CreatedAt,
+		UpdatedAt: incomingAccessRequests.UpdatedAt,
+	}
+
+	return result, nil
 }
 
 func (db *PostgresConfigDatabase) GetIncomingAccessRequestCountByService(ctx context.Context) (map[string]int, error) {
-	result := []map[string]interface{}{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Model(&Service{}).
-		Select("services.name, COUNT(a.id)").
-		Joins("LEFT JOIN nlx_management.access_requests_incoming a ON a.service_id = services.id AND a.state = 'received'").
-		Group("services.id").
-		Find(&result).Error; err != nil {
+	counts, err := db.queries.GetIncomingAccessRequestsByServiceCount(ctx)
+	if err != nil {
 		return nil, err
 	}
 
 	countPerService := make(map[string]int)
 
-	for _, value := range result {
-		countPerService[value["name"].(string)] = int(value["count"].(int64))
+	for _, value := range counts {
+		countPerService[value.Name] = int(value.Count)
 	}
 
 	return countPerService, nil
 }
 
 func (db *PostgresConfigDatabase) GetIncomingAccessRequest(ctx context.Context, id uint) (*IncomingAccessRequest, error) {
-	accessRequest := &IncomingAccessRequest{}
-	if err := db.DB.
-		WithContext(ctx).
-		First(accessRequest, id).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	accessRequest, err := db.queries.GetIncomingAccessRequest(ctx, int32(id))
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return accessRequest, nil
+	return &IncomingAccessRequest{
+		ID:        uint(accessRequest.ID),
+		ServiceID: uint(accessRequest.ServiceID),
+		Organization: IncomingAccessRequestOrganization{
+			Name:         accessRequest.OrganizationName,
+			SerialNumber: accessRequest.OrganizationSerialNumber,
+		},
+		State:                IncomingAccessRequestState(accessRequest.State),
+		AccessGrants:         nil,
+		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
+		PublicKeyPEM:         accessRequest.PublicKeyPem.String,
+		Service:              nil,
+		CreatedAt:            accessRequest.CreatedAt,
+		UpdatedAt:            accessRequest.UpdatedAt,
+	}, nil
 }
 
 func (db *PostgresConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Create(accessRequest).Error; err != nil {
+	pem := sql.NullString{Valid: false}
+
+	if accessRequest.PublicKeyPEM != "" {
+		pem.Valid = true
+		pem.String = accessRequest.PublicKeyPEM
+	}
+
+	id, err := db.queries.CreateIncomingAccessRequest(ctx, &queries.CreateIncomingAccessRequestParams{
+		State:                    string(accessRequest.State),
+		OrganizationName:         accessRequest.Organization.Name,
+		OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
+		PublicKeyFingerprint:     accessRequest.PublicKeyFingerprint,
+		PublicKeyPem:             pem,
+		ServiceID:                int32(accessRequest.ServiceID),
+		CreatedAt:                accessRequest.CreatedAt,
+		UpdatedAt:                accessRequest.UpdatedAt,
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	return accessRequest, nil
+	return &IncomingAccessRequest{
+		ID:    uint(id),
+		State: accessRequest.State,
+	}, nil
 }
 
 func (db *PostgresConfigDatabase) UpdateIncomingAccessRequestState(ctx context.Context, accessRequestID uint, state IncomingAccessRequestState) error {
-	incomingAccessRequest := &IncomingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		First(incomingAccessRequest, accessRequestID).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return ErrNotFound
-		}
-
+	rowsAffected, err := db.queries.UpdateIncomingAccessRequestState(ctx, &queries.UpdateIncomingAccessRequestStateParams{
+		ID:        int32(accessRequestID),
+		State:     string(state),
+		UpdatedAt: time.Now(),
+	})
+	if err != nil {
 		return err
 	}
 
-	incomingAccessRequest.State = state
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
 
-	return db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Select("state", "updated_at").
-		Save(incomingAccessRequest).Error
+	return nil
 }
 
 func (db *PostgresConfigDatabase) DeleteIncomingAccessRequest(ctx context.Context, id uint) error {

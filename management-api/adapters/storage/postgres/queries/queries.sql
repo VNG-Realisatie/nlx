@@ -235,7 +235,6 @@ FROM
 WHERE
     id = $1;
 
-
 -- name: TerminateAccessProof :exec
 update
     nlx_management.access_proofs
@@ -401,3 +400,243 @@ set
     state = $1, updated_at = $2
 where
     access_requests_outgoing.id = $3;
+
+-- name: ListLatestOutgoingAccessRequests :many
+SELECT
+    distinct on (
+        public_key_fingerprint,
+        service_name,
+        organization_serial_number
+    )
+    access_requests_outgoing.id,
+    access_requests_outgoing.organization_name,
+    access_requests_outgoing.organization_serial_number,
+    access_requests_outgoing.service_name,
+    access_requests_outgoing.state,
+    access_requests_outgoing.reference_id,
+    access_requests_outgoing.error_code,
+    access_requests_outgoing.error_cause,
+    access_requests_outgoing.public_key_fingerprint,
+    access_requests_outgoing.public_key_pem,
+    access_requests_outgoing.created_at,
+    access_requests_outgoing.updated_at
+from
+    nlx_management.access_requests_outgoing
+where
+    organization_serial_number = $1 and
+    service_name = $2
+order by
+    organization_serial_number,
+    public_key_fingerprint,
+    service_name,
+    created_at
+desc;
+
+-- name: GetOutgoingAccessRequest :one
+select
+    access_requests_outgoing.id,
+    access_requests_outgoing.organization_name,
+    access_requests_outgoing.organization_serial_number,
+    access_requests_outgoing.service_name,
+    access_requests_outgoing.state,
+    access_requests_outgoing.reference_id,
+    access_requests_outgoing.error_code,
+    access_requests_outgoing.error_cause,
+    access_requests_outgoing.public_key_fingerprint,
+    access_requests_outgoing.public_key_pem,
+    access_requests_outgoing.created_at,
+    access_requests_outgoing.updated_at
+from
+    nlx_management.access_requests_outgoing
+where
+    id = $1;
+
+-- name: GetAccessProofByOutgoingAccessRequest :one
+select
+    id,
+    created_at,
+    revoked_at,
+    terminated_at
+from
+    nlx_management.access_proofs
+where
+    access_request_outgoing_id = $1
+limit 1;
+
+-- name: RevokeAccessProof :exec
+update
+    nlx_management.access_proofs
+set
+    revoked_at = $1
+where
+    id = $2
+;
+
+-- name: ListIncomingAccessRequests :many
+select
+    access_requests_incoming.id,
+    access_requests_incoming.organization_name,
+    access_requests_incoming.organization_serial_number,
+    access_requests_incoming.state,
+    access_requests_incoming.created_at,
+    access_requests_incoming.updated_at
+from
+    nlx_management.access_requests_incoming
+left join
+    nlx_management.services on
+        access_requests_incoming.service_id = services.id
+where
+    services.name = $1
+;
+
+-- name: GetLatestIncomingAccessRequest :one
+select
+    access_requests_incoming.id,
+    access_requests_incoming.state,
+    access_requests_incoming.created_at,
+    access_requests_incoming.updated_at
+from
+    nlx_management.access_requests_incoming
+        left join
+    nlx_management.services on
+            access_requests_incoming.service_id = services.id
+where
+    access_requests_incoming.organization_serial_number = $1
+and
+    access_requests_incoming.public_key_fingerprint = $2
+and
+    services.name = $3
+order by
+    access_requests_incoming.created_at desc
+;
+
+-- name: GetIncomingAccessRequestsByServiceCount :many
+select
+    count(access_requests_incoming.id),
+    services.name
+from
+    nlx_management.access_requests_incoming
+right join
+    nlx_management.services on
+        access_requests_incoming.service_id = services.id and
+        access_requests_incoming.state = 'received'
+group by
+    services.id
+;
+
+-- name: GetIncomingAccessRequest :one
+select
+    access_requests_incoming.id,
+    access_requests_incoming.state,
+    access_requests_incoming.organization_name,
+    access_requests_incoming.organization_serial_number,
+    access_requests_incoming.public_key_fingerprint,
+    access_requests_incoming.public_key_pem,
+    access_requests_incoming.created_at,
+    access_requests_incoming.updated_at,
+    services.id as service_id
+from
+    nlx_management.access_requests_incoming
+        join
+            nlx_management.services on
+                access_requests_incoming.service_id = services.id
+where
+    access_requests_incoming.id = $1
+;
+
+-- name: CreateIncomingAccessRequest :one
+insert into
+    nlx_management.access_requests_incoming
+(
+    state,
+    organization_name,
+    organization_serial_number,
+    public_key_fingerprint,
+    public_key_pem,
+    service_id,
+    created_at,
+    updated_at
+) values (
+     $1,
+     $2,
+     $3,
+     $4,
+     $5,
+     $6,
+     $7,
+     $8
+ )
+returning id
+;
+
+-- name: UpdateIncomingAccessRequestState :execrows
+update
+    nlx_management.access_requests_incoming
+set
+    state = $1,
+    updated_at = $2
+where
+    id = $3
+;
+
+-- name: CountReceivedOutgoingAccessRequestsForOutway :one
+select
+    count(*) as count
+from
+    nlx_management.access_requests_outgoing
+where
+        access_requests_outgoing.organization_serial_number = $1 and
+        access_requests_outgoing.service_name = $2 and
+        access_requests_outgoing.public_key_fingerprint = $3 and
+        access_requests_outgoing.state = 'received'
+;
+
+-- name: CreateOutgoingAccessRequest :one
+insert into
+    nlx_management.access_requests_outgoing
+(
+    state,
+    organization_name,
+    organization_serial_number,
+    public_key_fingerprint,
+    public_key_pem,
+    service_name,
+    created_at,
+    updated_at
+) values (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    $7,
+    $8
+)
+returning id
+;
+
+-- name: GetLatestOutgoingAccessRequest :one
+select
+    access_requests_outgoing.id,
+    access_requests_outgoing.organization_name,
+    access_requests_outgoing.organization_serial_number,
+    access_requests_outgoing.service_name,
+    access_requests_outgoing.state,
+    access_requests_outgoing.reference_id,
+    access_requests_outgoing.error_code,
+    access_requests_outgoing.error_cause,
+    access_requests_outgoing.public_key_fingerprint,
+    access_requests_outgoing.public_key_pem,
+    access_requests_outgoing.created_at,
+    access_requests_outgoing.updated_at
+from
+    nlx_management.access_requests_outgoing
+where
+    access_requests_outgoing.organization_serial_number = $1 and
+    access_requests_outgoing.service_name = $2 and
+    access_requests_outgoing.public_key_fingerprint = $3
+order by
+    access_requests_outgoing.created_at desc
+limit 1
+;

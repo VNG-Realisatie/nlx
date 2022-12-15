@@ -6,11 +6,7 @@ package database
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"time"
-
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
@@ -47,66 +43,166 @@ func (db *PostgresConfigDatabase) CreateAccessProof(ctx context.Context, accessR
 	return result, nil
 }
 
+// nolint:dupl // migration from Gorm to Sqlc
 func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx context.Context, accessRequestID uint) (*AccessProof, error) {
-	accessProof := &AccessProof{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("OutgoingAccessRequest").
-		Where("access_request_outgoing_id = ?", accessRequestID).
-		First(accessProof).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	outgoingAccessRequest, err := db.queries.GetOutgoingAccessRequest(ctx, int32(accessRequestID))
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return accessProof, nil
+	accessProof, err := db.queries.GetAccessProofByOutgoingAccessRequest(ctx, outgoingAccessRequest.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	var pem = ""
+
+	if outgoingAccessRequest.PublicKeyPem.Valid {
+		pem = outgoingAccessRequest.PublicKeyPem.String
+	}
+
+	var errorCause = ""
+
+	if outgoingAccessRequest.ErrorCause.Valid {
+		errorCause = outgoingAccessRequest.ErrorCause.String
+	}
+
+	result := &AccessProof{
+		ID:                      uint(accessProof.ID),
+		AccessRequestOutgoingID: uint(outgoingAccessRequest.ID),
+		OutgoingAccessRequest: &OutgoingAccessRequest{
+			ID: uint(outgoingAccessRequest.ID),
+			Organization: Organization{
+				SerialNumber: outgoingAccessRequest.OrganizationSerialNumber,
+				Name:         outgoingAccessRequest.OrganizationName,
+			},
+			ServiceName:          outgoingAccessRequest.ServiceName,
+			ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
+			State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
+			PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
+			PublicKeyPEM:         pem,
+			ErrorCode:            int(outgoingAccessRequest.ErrorCode),
+			ErrorCause:           errorCause,
+			CreatedAt:            outgoingAccessRequest.CreatedAt,
+			UpdatedAt:            outgoingAccessRequest.UpdatedAt,
+		},
+		CreatedAt:    accessProof.CreatedAt,
+		RevokedAt:    accessProof.RevokedAt,
+		TerminatedAt: accessProof.TerminatedAt,
+	}
+
+	return result, nil
 }
 
-//nolint:dupl // looks the same as RevokeAccessGrant but is different. RevokeAccessGrant is for access grants RevokeAccessProof is for access proofs.
 func (db *PostgresConfigDatabase) RevokeAccessProof(ctx context.Context, accessProofID uint, revokedAt time.Time) (*AccessProof, error) {
-	accessProof := &AccessProof{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		First(accessProof, accessProofID).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	err := db.queries.RevokeAccessProof(ctx, &queries.RevokeAccessProofParams{
+		ID: int32(accessProofID),
+		RevokedAt: sql.NullTime{
+			Valid: true,
+			Time:  revokedAt,
+		},
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	accessProof.RevokedAt = sql.NullTime{
-		Time:  revokedAt,
-		Valid: true,
-	}
+	accessProof, err := db.queries.GetAccessProof(ctx, int32(accessProofID))
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrNotFound
+		}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Select("revoked_at").
-		Save(accessProof).Error; err != nil {
 		return nil, err
 	}
 
-	return accessProof, nil
+	result := &AccessProof{
+		ID:                      uint(accessProof.ID),
+		AccessRequestOutgoingID: uint(accessProof.AccessRequestOutgoingID),
+		CreatedAt:               accessProof.CreatedAt,
+		RevokedAt: sql.NullTime{
+			Valid: true,
+			Time:  revokedAt,
+		},
+	}
+
+	return result, nil
 }
 
+// nolint:dupl // migration from Gorm to Sqlc
 func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessProofIDs []uint64) ([]*AccessProof, error) {
-	accessProofs := &[]*AccessProof{}
+	result := []*AccessProof{}
 
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("OutgoingAccessRequest").
-		Where("id IN ?", accessProofIDs).
-		Find(accessProofs).Error; err != nil {
-		return nil, err
+	for _, id := range accessProofIDs {
+		accessProof, err := db.queries.GetAccessProof(ctx, int32(id))
+		if err != nil {
+			if err == sql.ErrNoRows {
+				continue
+			}
+
+			return nil, err
+		}
+
+		outgoingAccessRequest, err := db.queries.GetOutgoingAccessRequest(ctx, accessProof.AccessRequestOutgoingID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, ErrNotFound
+			}
+
+			return nil, err
+		}
+
+		var pem = ""
+
+		if outgoingAccessRequest.PublicKeyPem.Valid {
+			pem = outgoingAccessRequest.PublicKeyPem.String
+		}
+
+		var errorCause = ""
+
+		if outgoingAccessRequest.ErrorCause.Valid {
+			errorCause = outgoingAccessRequest.ErrorCause.String
+		}
+
+		model := &AccessProof{
+			ID:                      uint(accessProof.ID),
+			AccessRequestOutgoingID: uint(outgoingAccessRequest.ID),
+			OutgoingAccessRequest: &OutgoingAccessRequest{
+				ID: uint(outgoingAccessRequest.ID),
+				Organization: Organization{
+					SerialNumber: outgoingAccessRequest.OrganizationSerialNumber,
+					Name:         outgoingAccessRequest.OrganizationName,
+				},
+				ServiceName:          outgoingAccessRequest.ServiceName,
+				ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
+				State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
+				PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
+				PublicKeyPEM:         pem,
+				ErrorCode:            int(outgoingAccessRequest.ErrorCode),
+				ErrorCause:           errorCause,
+				CreatedAt:            outgoingAccessRequest.CreatedAt,
+				UpdatedAt:            outgoingAccessRequest.UpdatedAt,
+			},
+			CreatedAt:    accessProof.CreatedAt,
+			RevokedAt:    accessProof.RevokedAt,
+			TerminatedAt: accessProof.TerminatedAt,
+		}
+
+		result = append(result, model)
 	}
 
-	return *accessProofs, nil
+	return result, nil
 }
 
 // nolint:dupl // is similar to terminate access grant
