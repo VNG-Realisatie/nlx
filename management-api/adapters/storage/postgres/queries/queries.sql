@@ -397,7 +397,8 @@ where
 update
     nlx_management.access_requests_outgoing
 set
-    state = $1, updated_at = $2
+    state = $1,
+    updated_at = $2
 where
     access_requests_outgoing.id = $3;
 
@@ -575,10 +576,10 @@ select
 from
     nlx_management.access_requests_outgoing
 where
-        access_requests_outgoing.organization_serial_number = $1 and
-        access_requests_outgoing.service_name = $2 and
-        access_requests_outgoing.public_key_fingerprint = $3 and
-        access_requests_outgoing.state = 'received'
+    access_requests_outgoing.organization_serial_number = $1 and
+    access_requests_outgoing.service_name = $2 and
+    access_requests_outgoing.public_key_fingerprint = $3 and
+    access_requests_outgoing.state = 'received'
 ;
 
 -- name: CreateOutgoingAccessRequest :one
