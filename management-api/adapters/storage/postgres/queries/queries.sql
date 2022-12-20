@@ -204,7 +204,7 @@ where
     access_grants.id = $2
 ;
 
--- name: UpdateIncomingAccessRequest :exec
+-- name: UpdateIncomingAccessRequest :execrows
 update
     nlx_management.access_requests_incoming
 set
@@ -567,16 +567,6 @@ insert into
      $8
  )
 returning id
-;
-
--- name: UpdateIncomingAccessRequestState :execrows
-update
-    nlx_management.access_requests_incoming
-set
-    state = $1,
-    updated_at = $2
-where
-    id = $3
 ;
 
 -- name: CountReceivedOutgoingAccessRequestsForOutway :one

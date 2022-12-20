@@ -1563,7 +1563,7 @@ func (q *Queries) TerminateAccessProof(ctx context.Context, arg *TerminateAccess
 	return err
 }
 
-const updateIncomingAccessRequest = `-- name: UpdateIncomingAccessRequest :exec
+const updateIncomingAccessRequest = `-- name: UpdateIncomingAccessRequest :execrows
 update
     nlx_management.access_requests_incoming
 set
@@ -1579,29 +1579,8 @@ type UpdateIncomingAccessRequestParams struct {
 	UpdatedAt time.Time
 }
 
-func (q *Queries) UpdateIncomingAccessRequest(ctx context.Context, arg *UpdateIncomingAccessRequestParams) error {
-	_, err := q.exec(ctx, q.updateIncomingAccessRequestStmt, updateIncomingAccessRequest, arg.ID, arg.State, arg.UpdatedAt)
-	return err
-}
-
-const updateIncomingAccessRequestState = `-- name: UpdateIncomingAccessRequestState :execrows
-update
-    nlx_management.access_requests_incoming
-set
-    state = $1,
-    updated_at = $2
-where
-    id = $3
-`
-
-type UpdateIncomingAccessRequestStateParams struct {
-	State     string
-	UpdatedAt time.Time
-	ID        int32
-}
-
-func (q *Queries) UpdateIncomingAccessRequestState(ctx context.Context, arg *UpdateIncomingAccessRequestStateParams) (int64, error) {
-	result, err := q.exec(ctx, q.updateIncomingAccessRequestStateStmt, updateIncomingAccessRequestState, arg.State, arg.UpdatedAt, arg.ID)
+func (q *Queries) UpdateIncomingAccessRequest(ctx context.Context, arg *UpdateIncomingAccessRequestParams) (int64, error) {
+	result, err := q.exec(ctx, q.updateIncomingAccessRequestStmt, updateIncomingAccessRequest, arg.ID, arg.State, arg.UpdatedAt)
 	if err != nil {
 		return 0, err
 	}

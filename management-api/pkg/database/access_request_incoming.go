@@ -164,7 +164,7 @@ func (db *PostgresConfigDatabase) CreateIncomingAccessRequest(ctx context.Contex
 }
 
 func (db *PostgresConfigDatabase) UpdateIncomingAccessRequestState(ctx context.Context, accessRequestID uint, state IncomingAccessRequestState) error {
-	rowsAffected, err := db.queries.UpdateIncomingAccessRequestState(ctx, &queries.UpdateIncomingAccessRequestStateParams{
+	rowsAffected, err := db.queries.UpdateIncomingAccessRequest(ctx, &queries.UpdateIncomingAccessRequestParams{
 		ID:        int32(accessRequestID),
 		State:     string(state),
 		UpdatedAt: time.Now(),

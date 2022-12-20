@@ -141,9 +141,6 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.updateIncomingAccessRequestStmt, err = db.PrepareContext(ctx, updateIncomingAccessRequest); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateIncomingAccessRequest: %w", err)
 	}
-	if q.updateIncomingAccessRequestStateStmt, err = db.PrepareContext(ctx, updateIncomingAccessRequestState); err != nil {
-		return nil, fmt.Errorf("error preparing query UpdateIncomingAccessRequestState: %w", err)
-	}
 	if q.updateOutgoingAccessRequestStateStmt, err = db.PrepareContext(ctx, updateOutgoingAccessRequestState); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateOutgoingAccessRequestState: %w", err)
 	}
@@ -353,11 +350,6 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing updateIncomingAccessRequestStmt: %w", cerr)
 		}
 	}
-	if q.updateIncomingAccessRequestStateStmt != nil {
-		if cerr := q.updateIncomingAccessRequestStateStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing updateIncomingAccessRequestStateStmt: %w", cerr)
-		}
-	}
 	if q.updateOutgoingAccessRequestStateStmt != nil {
 		if cerr := q.updateOutgoingAccessRequestStateStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateOutgoingAccessRequestStateStmt: %w", cerr)
@@ -451,7 +443,6 @@ type Queries struct {
 	terminateAccessGrantStmt                         *sql.Stmt
 	terminateAccessProofStmt                         *sql.Stmt
 	updateIncomingAccessRequestStmt                  *sql.Stmt
-	updateIncomingAccessRequestStateStmt             *sql.Stmt
 	updateOutgoingAccessRequestStateStmt             *sql.Stmt
 	updateSettingsStmt                               *sql.Stmt
 	upsertInwayStmt                                  *sql.Stmt
@@ -500,7 +491,6 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		terminateAccessGrantStmt:                         q.terminateAccessGrantStmt,
 		terminateAccessProofStmt:                         q.terminateAccessProofStmt,
 		updateIncomingAccessRequestStmt:                  q.updateIncomingAccessRequestStmt,
-		updateIncomingAccessRequestStateStmt:             q.updateIncomingAccessRequestStateStmt,
 		updateOutgoingAccessRequestStateStmt:             q.updateOutgoingAccessRequestStateStmt,
 		updateSettingsStmt:                               q.updateSettingsStmt,
 		upsertInwayStmt:                                  q.upsertInwayStmt,
