@@ -263,20 +263,6 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 	return result, nil
 }
 
-func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequestsPerCertificate(ctx context.Context, organizationSerialNumber, serviceName, publicKeyFingerprint string) ([]*OutgoingAccessRequest, error) {
-	accessRequests := []*OutgoingAccessRequest{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Find(accessRequests).
-		Where("organization_serial_number = ? AND service_name = ? AND public_key_fingerprint", organizationSerialNumber, serviceName, publicKeyFingerprint).
-		Order("created_at DESC").Error; err != nil {
-		return nil, err
-	}
-
-	return accessRequests, nil
-}
-
 func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState) error {
 	outgoingAccessRequest := &OutgoingAccessRequest{}
 
