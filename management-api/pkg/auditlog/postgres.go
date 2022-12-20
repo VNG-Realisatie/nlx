@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"go.uber.org/zap"
+	"time"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
@@ -99,6 +100,7 @@ func (a *PostgresLogger) LoginSuccess(ctx context.Context, userName, userAgent s
 		UserName:     userName,
 		ActionType:   database.LoginSuccess,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -110,6 +112,7 @@ func (a *PostgresLogger) LoginFail(ctx context.Context, userAgent string) error 
 	record := &database.AuditLog{
 		UserAgent:  userAgent,
 		ActionType: database.LoginFail,
+		CreatedAt:  time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -123,6 +126,7 @@ func (a *PostgresLogger) LogoutSuccess(ctx context.Context, userName, userAgent 
 		UserName:     userName,
 		ActionType:   database.LogoutSuccess,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -140,11 +144,13 @@ func (a *PostgresLogger) IncomingAccessRequestAccept(ctx context.Context, userNa
 					SerialNumber: organizationSerialNumber,
 					Name:         organizationName,
 				},
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.IncomingAccessRequestAccept,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -162,11 +168,13 @@ func (a *PostgresLogger) IncomingAccessRequestReject(ctx context.Context, userNa
 					SerialNumber: organizationSerialNumber,
 					Name:         organizationName,
 				},
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.IncomingAccessRequestReject,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -184,11 +192,13 @@ func (a *PostgresLogger) AccessGrantRevoke(ctx context.Context, userName, userAg
 					SerialNumber: organizationSerialNumber,
 					Name:         organizationName,
 				},
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.AccessGrantRevoke,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -205,11 +215,13 @@ func (a *PostgresLogger) OutgoingAccessRequestCreate(ctx context.Context, userNa
 				Organization: database.AuditLogServiceOrganization{
 					SerialNumber: organizationSerialNumber,
 				},
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.OutgoingAccessRequestCreate,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -255,16 +267,16 @@ func (a *PostgresLogger) outgoingAccessRequestAuditLog(ctx context.Context, acti
 				Organization: database.AuditLogServiceOrganization{
 					SerialNumber: organizationSerialNumber,
 				},
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		Data:       sql.NullString{String: string(data), Valid: true},
 		ActionType: actionType,
+		CreatedAt:  time.Now(),
 	}
 
-	record, err = a.database.CreateAuditLogRecord(ctx, record)
-
-	return record.ID, err
+	return a.database.CreateAuditLogRecord(ctx, record)
 }
 
 func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent, service string) error {
@@ -273,11 +285,13 @@ func (a *PostgresLogger) ServiceCreate(ctx context.Context, userName, userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.ServiceCreate,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -291,11 +305,13 @@ func (a *PostgresLogger) ServiceUpdate(ctx context.Context, userName, userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.ServiceUpdate,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -309,11 +325,13 @@ func (a *PostgresLogger) ServiceDelete(ctx context.Context, userName, userAgent,
 		UserName:  userName,
 		Services: []database.AuditLogService{
 			{
-				Service: service,
+				Service:   service,
+				CreatedAt: time.Now(),
 			},
 		},
 		ActionType:   database.ServiceDelete,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -338,6 +356,7 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 		Data:         sql.NullString{String: string(data), Valid: true},
 		ActionType:   database.OrderCreate,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	for i, service := range services {
@@ -346,7 +365,8 @@ func (a *PostgresLogger) OrderCreate(ctx context.Context, userName, userAgent, d
 				SerialNumber: service.Organization.SerialNumber,
 				Name:         service.Organization.Name,
 			},
-			Service: service.Service,
+			Service:   service.Service,
+			CreatedAt: time.Now(),
 		}
 	}
 
@@ -373,6 +393,7 @@ func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, user
 		Data:         sql.NullString{String: string(data), Valid: true},
 		ActionType:   database.OrderOutgoingUpdate,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	for i, service := range services {
@@ -381,7 +402,8 @@ func (a *PostgresLogger) OrderOutgoingUpdate(ctx context.Context, userName, user
 				SerialNumber: service.Organization.SerialNumber,
 				Name:         service.Organization.Name,
 			},
-			Service: service.Service,
+			Service:   service.Service,
+			CreatedAt: time.Now(),
 		}
 	}
 
@@ -410,6 +432,7 @@ func (a *PostgresLogger) OrderOutgoingRevoke(ctx context.Context, userName, user
 			String: string(data),
 		},
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err = a.database.CreateAuditLogRecord(ctx, record)
@@ -423,6 +446,7 @@ func (a *PostgresLogger) OrganizationSettingsUpdate(ctx context.Context, userNam
 		UserName:     userName,
 		ActionType:   database.OrganizationSettingsUpdate,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err := a.database.CreateAuditLogRecord(ctx, record)
@@ -449,6 +473,7 @@ func (a *PostgresLogger) InwayDelete(ctx context.Context, userName, userAgent, i
 			String: string(data),
 		},
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err = a.database.CreateAuditLogRecord(ctx, record)
@@ -475,6 +500,7 @@ func (a *PostgresLogger) OutwayDelete(ctx context.Context, userName, userAgent, 
 			String: string(data),
 		},
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	}
 
 	_, err = a.database.CreateAuditLogRecord(ctx, record)
@@ -488,6 +514,7 @@ func (a *PostgresLogger) AcceptTermsOfService(ctx context.Context, userName, use
 		UserName:     userName,
 		ActionType:   database.AcceptTermsOfService,
 		HasSucceeded: true,
+		CreatedAt:    time.Now(),
 	})
 
 	return err

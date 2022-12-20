@@ -10,8 +10,6 @@ import (
 	"time"
 
 	"github.com/lib/pq"
-	"gorm.io/gorm"
-
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
@@ -264,31 +262,27 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 }
 
 func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState) error {
-	outgoingAccessRequest := &OutgoingAccessRequest{}
-
-	if err := db.DB.
-		First(outgoingAccessRequest, accessRequestID).
-		Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return ErrNotFound
-		}
-
-		return err
-	}
-
-	return db.queries.UpdateOutgoingAccessRequestState(ctx, &queries.UpdateOutgoingAccessRequestStateParams{
+	rows, err := db.queries.UpdateOutgoingAccessRequestState(ctx, &queries.UpdateOutgoingAccessRequestStateParams{
 		State:     string(state),
 		UpdatedAt: time.Now(),
 		ID:        int32(accessRequestID),
 	})
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return ErrNotFound
+	}
+
+	return nil
 }
 
 func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequests(ctx context.Context, organizationSerialNumber, serviceName string) error {
-	return db.DB.
-		WithContext(ctx).
-		Where("organization_serial_number = ? AND service_name = ?", organizationSerialNumber, serviceName).
-		Delete(&OutgoingAccessRequest{}).
-		Error
+	return db.queries.DeleteOutgoingAccessRequests(ctx, &queries.DeleteOutgoingAccessRequestsParams{
+		OrganizationSerialNumber: organizationSerialNumber,
+		ServiceName:              serviceName,
+	})
 }
 
 func (db *PostgresConfigDatabase) DeleteOutgoingAccessRequest(ctx context.Context, id uint) error {

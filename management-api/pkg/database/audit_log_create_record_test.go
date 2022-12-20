@@ -95,16 +95,16 @@ func TestCreateAuditLogRecord(t *testing.T) {
 				},
 				Services: []database.AuditLogService{
 					{
-						AuditLogID: 1,
+						AuditLogID: fixturesStartID,
 						Service:    "fixture-service-name",
 						Organization: database.AuditLogServiceOrganization{
 							SerialNumber: "00000000000000000001",
 							Name:         "fixture-organization-name",
 						},
-						CreatedAt: now,
+						CreatedAt: now.UTC(),
 					},
 				},
-				CreatedAt: now,
+				CreatedAt: now.UTC(),
 			},
 			wantErr: nil,
 		},
@@ -119,11 +119,14 @@ func TestCreateAuditLogRecord(t *testing.T) {
 			configDb, close := newConfigDatabase(t, t.Name(), tt.loadFixtures)
 			defer close()
 
-			got, err := configDb.CreateAuditLogRecord(context.Background(), tt.args.auditLog)
+			_, err := configDb.CreateAuditLogRecord(context.Background(), tt.args.auditLog)
 			require.ErrorIs(t, err, tt.wantErr)
 
+			lastAuditLog, err := configDb.ListAuditLogRecords(context.Background(), 1)
+			require.NoError(t, err)
+
 			if tt.wantErr == nil {
-				require.EqualValues(t, tt.want, got)
+				require.EqualValues(t, tt.want, lastAuditLog[0])
 			}
 		})
 	}

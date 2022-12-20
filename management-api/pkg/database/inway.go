@@ -5,11 +5,11 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
+	"fmt"
+	"log"
 	"time"
-
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
@@ -43,11 +43,15 @@ func (db *PostgresConfigDatabase) RegisterInway(ctx context.Context, inway *Inwa
 }
 
 func (db *PostgresConfigDatabase) UpdateInway(ctx context.Context, inway *Inway) error {
-	if err := db.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Save(inway).
-		Error; err != nil {
+	err := db.queries.UpdateInway(ctx, &queries.UpdateInwayParams{
+		ID:          int32(inway.ID),
+		Name:        inway.Name,
+		Version:     inway.Version,
+		Hostname:    inway.Hostname,
+		SelfAddress: inway.SelfAddress,
+		UpdatedAt:   time.Now(),
+	})
+	if err != nil {
 		return err
 	}
 
@@ -55,8 +59,23 @@ func (db *PostgresConfigDatabase) UpdateInway(ctx context.Context, inway *Inway)
 }
 
 func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) error {
-	tx := db.DB.Begin()
-	defer tx.Rollback()
+	tx, err := db.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
+
+			log.Println(fmt.Printf("cannot rollback database transaction for deleting an inway: %e", err))
+		}
+	}()
+
+	qtx := db.queries.WithTx(tx)
 
 	inway, err := db.GetInway(ctx, name)
 	if err != nil {
@@ -70,7 +89,7 @@ func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) 
 	}
 
 	if settings != nil && settings.OrganizationInwayName() != "" && settings.OrganizationInwayName() == name {
-		err = db.queries.UpdateSettings(ctx, &queries.UpdateSettingsParams{
+		err = qtx.UpdateSettings(ctx, &queries.UpdateSettingsParams{
 			OrganizationEmailAddress: settings.OrganizationEmailAddress(),
 			InwayName:                "",
 		})
@@ -79,55 +98,117 @@ func (db *PostgresConfigDatabase) DeleteInway(ctx context.Context, name string) 
 		}
 	}
 
-	// Remove inway service records
-	err = tx.
-		WithContext(ctx).
-		Exec(
-			"DELETE FROM nlx_management.inways_services WHERE inway_id = ?", inway.ID).
-		Error
+	err = qtx.RemoveInwayServicesForInway(ctx, int32(inway.ID))
 	if err != nil {
 		return err
 	}
 
-	// Remove the inway from the database
-	err = tx.
-		WithContext(ctx).
-		Where(&Inway{Name: name}).
-		Delete(&Inway{}).Error
+	err = qtx.RemoveInway(ctx, int32(inway.ID))
 	if err != nil {
 		return err
 	}
 
-	return tx.Commit().Error
+	return tx.Commit()
 }
 
 func (db *PostgresConfigDatabase) ListInways(ctx context.Context) ([]*Inway, error) {
-	inways := []*Inway{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Services").
-		Find(&inways).Error; err != nil {
+	inwayRows, err := db.queries.ListInways(ctx)
+	if err != nil {
 		return nil, err
+	}
+
+	inways := make([]*Inway, len(inwayRows))
+
+	for i, inwayRow := range inwayRows {
+		serviceRows, servicesErr := db.queries.ListServicesForInway(ctx, inwayRow.ID)
+		if servicesErr != nil {
+			return nil, servicesErr
+		}
+
+		services := make([]*Service, len(serviceRows))
+
+		for j, serviceRow := range serviceRows {
+			services[j] = &Service{
+				ID:                     uint(serviceRow.ID),
+				Name:                   serviceRow.Name,
+				EndpointURL:            serviceRow.EndpointUrl,
+				DocumentationURL:       serviceRow.DocumentationUrl,
+				APISpecificationURL:    serviceRow.ApiSpecificationUrl,
+				Internal:               serviceRow.Internal,
+				TechSupportContact:     serviceRow.TechSupportContact,
+				PublicSupportContact:   serviceRow.PublicSupportContact,
+				Inways:                 nil,
+				IncomingAccessRequests: nil,
+				OneTimeCosts:           int(serviceRow.OneTimeCosts),
+				MonthlyCosts:           int(serviceRow.MonthlyCosts),
+				RequestCosts:           int(serviceRow.RequestCosts),
+				CreatedAt:              serviceRow.CreatedAt,
+				UpdatedAt:              serviceRow.UpdatedAt,
+			}
+		}
+
+		inways[i] = &Inway{
+			ID:          uint(inwayRow.ID),
+			Name:        inwayRow.Name,
+			Version:     inwayRow.Version,
+			Hostname:    inwayRow.Hostname,
+			IPAddress:   inwayRow.IpAddress,
+			SelfAddress: inwayRow.SelfAddress,
+			Services:    services,
+			CreatedAt:   inwayRow.CreatedAt,
+			UpdatedAt:   inwayRow.UpdatedAt,
+		}
 	}
 
 	return inways, nil
 }
 
 func (db *PostgresConfigDatabase) GetInway(ctx context.Context, name string) (*Inway, error) {
-	inway := &Inway{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Services").
-		Where("name = ?", name).
-		First(inway).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+	inwayRow, err := db.queries.GetInwayByName(ctx, name)
+	if err != nil {
+		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
 		}
 
 		return nil, err
 	}
 
-	return inway, nil
+	serviceRows, servicesErr := db.queries.ListServicesForInway(ctx, inwayRow.ID)
+	if servicesErr != nil {
+		return nil, servicesErr
+	}
+
+	services := make([]*Service, len(serviceRows))
+
+	for j, serviceRow := range serviceRows {
+		services[j] = &Service{
+			ID:                     uint(serviceRow.ID),
+			Name:                   serviceRow.Name,
+			EndpointURL:            serviceRow.EndpointUrl,
+			DocumentationURL:       serviceRow.DocumentationUrl,
+			APISpecificationURL:    serviceRow.ApiSpecificationUrl,
+			Internal:               serviceRow.Internal,
+			TechSupportContact:     serviceRow.TechSupportContact,
+			PublicSupportContact:   serviceRow.PublicSupportContact,
+			Inways:                 nil,
+			IncomingAccessRequests: nil,
+			OneTimeCosts:           int(serviceRow.OneTimeCosts),
+			MonthlyCosts:           int(serviceRow.MonthlyCosts),
+			RequestCosts:           int(serviceRow.RequestCosts),
+			CreatedAt:              serviceRow.CreatedAt,
+			UpdatedAt:              serviceRow.UpdatedAt,
+		}
+	}
+
+	return &Inway{
+		ID:          uint(inwayRow.ID),
+		Name:        inwayRow.Name,
+		Version:     inwayRow.Version,
+		Hostname:    inwayRow.Hostname,
+		IPAddress:   inwayRow.IpAddress,
+		SelfAddress: inwayRow.SelfAddress,
+		Services:    services,
+		CreatedAt:   inwayRow.CreatedAt,
+		UpdatedAt:   inwayRow.UpdatedAt,
+	}, nil
 }

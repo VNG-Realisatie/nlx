@@ -6,9 +6,15 @@ package database
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
 	"time"
 
-	"gorm.io/gorm/clause"
+	"github.com/tabbed/pqtype"
+
+	"go.nlx.io/nlx/management-api/adapters/storage/postgres/queries"
 )
 
 type AuditLogActionType string
@@ -67,56 +73,154 @@ func (a *AuditLogService) TableName() string {
 	return "nlx_management.audit_logs_services"
 }
 
-func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLog *AuditLog) (*AuditLog, error) {
-	tx := db.DB.Begin()
-	defer tx.Rollback()
-
-	dbWithTx := &PostgresConfigDatabase{DB: tx}
-
-	if err := dbWithTx.DB.
-		WithContext(ctx).
-		Omit(clause.Associations).
-		Create(auditLog).Error; err != nil {
-		return nil, err
+func (db *PostgresConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLog *AuditLog) (uint64, error) {
+	tx, err := db.db.Begin()
+	if err != nil {
+		return 0, err
 	}
 
-	if len(auditLog.Services) > 0 {
-		auditLogServices := []AuditLogService{}
+	defer func() {
+		err = tx.Rollback()
+		if err != nil {
+			if errors.Is(err, sql.ErrTxDone) {
+				return
+			}
 
-		for _, service := range auditLog.Services {
-			auditLogServices = append(auditLogServices, AuditLogService{
-				AuditLogID:   auditLog.ID,
-				Organization: service.Organization,
-				Service:      service.Service,
-			})
+			log.Println(fmt.Printf("cannot rollback database transaction for creating an audit log: %e", err))
 		}
+	}()
 
-		if err := dbWithTx.DB.
-			WithContext(ctx).
-			Model(AuditLogService{}).
-			Create(auditLogServices).Error; err != nil {
-			return nil, err
+	qtx := db.queries.WithTx(tx)
+
+	userName := sql.NullString{}
+
+	if auditLog.UserName != "" {
+		userName.String = auditLog.UserName
+		userName.Valid = true
+	}
+
+	data := pqtype.NullRawMessage{}
+
+	if auditLog.Data.Valid {
+		data.RawMessage = json.RawMessage(auditLog.Data.String)
+		data.Valid = true
+	}
+
+	id, err := qtx.CreateAuditLog(ctx, &queries.CreateAuditLogParams{
+		UserName:     userName,
+		ActionType:   string(auditLog.ActionType),
+		UserAgent:    auditLog.UserAgent,
+		Data:         data,
+		CreatedAt:    auditLog.CreatedAt,
+		HasSucceeded: auditLog.HasSucceeded,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	for _, service := range auditLog.Services {
+		errService := qtx.CreateAuditLogService(ctx, &queries.CreateAuditLogServiceParams{
+			AuditLogID: sql.NullInt64{
+				Valid: true,
+				Int64: id,
+			},
+			OrganizationName: sql.NullString{
+				Valid:  true,
+				String: service.Organization.Name,
+			},
+			OrganizationSerialNumber: service.Organization.SerialNumber,
+			CreatedAt:                service.CreatedAt,
+			Service: sql.NullString{
+				Valid:  true,
+				String: service.Service,
+			},
+		})
+		if errService != nil {
+			return 0, errService
 		}
 	}
 
-	result := tx.Commit()
-	if result.Error != nil {
-		return nil, result.Error
+	err = tx.Commit()
+	if err != nil {
+		return 0, err
 	}
 
-	return auditLog, nil
+	return uint64(id), nil
 }
 
 func (db *PostgresConfigDatabase) ListAuditLogRecords(ctx context.Context, limit int) ([]*AuditLog, error) {
-	auditLogs := []*AuditLog{}
-
-	if err := db.DB.
-		WithContext(ctx).
-		Preload("Services").
-		Order("created_at desc").
-		Limit(limit).
-		Find(&auditLogs).Error; err != nil {
+	rows, err := db.queries.ListAuditLogs(ctx, int32(limit))
+	if err != nil {
 		return nil, err
+	}
+
+	auditLogs := make([]*AuditLog, len(rows))
+
+	for i, row := range rows {
+		serviceRows, servicesErr := db.queries.ListAuditLogServices(ctx, sql.NullInt64{
+			Valid: true,
+			Int64: row.ID,
+		})
+		if servicesErr != nil {
+			return nil, servicesErr
+		}
+
+		services := make([]AuditLogService, len(serviceRows))
+
+		for j, service := range serviceRows {
+			var serviceName string
+
+			if service.Service.Valid {
+				serviceName = service.Service.String
+			}
+
+			var organizationName string
+
+			if service.OrganizationName.Valid {
+				organizationName = service.OrganizationName.String
+			}
+
+			services[j] = AuditLogService{
+				AuditLogID: uint64(row.ID),
+				Service:    serviceName,
+				Organization: AuditLogServiceOrganization{
+					Name:         organizationName,
+					SerialNumber: service.OrganizationSerialNumber,
+				},
+				CreatedAt: service.CreatedAt,
+			}
+		}
+
+		data := sql.NullString{}
+
+		if row.Data.Valid {
+			marshaled, marshallErr := row.Data.RawMessage.MarshalJSON()
+			if marshallErr != nil {
+				return nil, marshallErr
+			}
+
+			data = sql.NullString{
+				String: string(marshaled),
+				Valid:  true,
+			}
+		}
+
+		var userName string
+
+		if row.UserName.Valid {
+			userName = row.UserName.String
+		}
+
+		auditLogs[i] = &AuditLog{
+			ID:           uint64(row.ID),
+			UserName:     userName,
+			ActionType:   AuditLogActionType(row.ActionType),
+			UserAgent:    row.UserAgent,
+			Data:         data,
+			Services:     services,
+			HasSucceeded: row.HasSucceeded,
+			CreatedAt:    row.CreatedAt,
+		}
 	}
 
 	return auditLogs, nil

@@ -71,7 +71,7 @@ type ConfigDatabase interface {
 	GetSettings(ctx context.Context) (*domain.Settings, error)
 	UpdateSettings(ctx context.Context, settings *domain.Settings) error
 
-	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (*AuditLog, error)
+	CreateAuditLogRecord(ctx context.Context, auditLogRecord *AuditLog) (uint64, error)
 	ListAuditLogRecords(ctx context.Context, limit int) ([]*AuditLog, error)
 	SetAuditLogAsSucceeded(ctx context.Context, id int64) error
 

@@ -33,7 +33,7 @@ set
             from
                 nlx_management.inways
             where
-                    inways.name = sqlc.arg(inway_name)::text
+                inways.name = sqlc.arg(inway_name)::text
         )
 ;
 
@@ -393,7 +393,7 @@ set
 where
     audit_logs.id = $1;
 
--- name: UpdateOutgoingAccessRequestState :exec
+-- name: UpdateOutgoingAccessRequestState :execrows
 update
     nlx_management.access_requests_outgoing
 set
@@ -630,4 +630,162 @@ where
 order by
     access_requests_outgoing.created_at desc
 limit 1
+;
+
+-- name: DeleteOutgoingAccessRequests :exec
+delete from
+    nlx_management.access_requests_outgoing
+where
+    access_requests_outgoing.organization_serial_number = $1 and
+    access_requests_outgoing.service_name = $2
+;
+
+-- name: CreateAuditLog :one
+insert into
+    nlx_management.audit_logs
+(
+    user_name,
+    action_type,
+    user_agent,
+    data,
+    created_at,
+    has_succeeded
+) values (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6
+ )
+returning id
+;
+
+-- name: CreateAuditLogService :exec
+insert into
+    nlx_management.audit_logs_services
+(
+    audit_log_id,
+    organization_name,
+    organization_serial_number,
+    created_at,
+    service
+) values (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5
+)
+;
+
+-- name: ListAuditLogs :many
+select
+    audit_logs.id,
+    audit_logs.user_name,
+    audit_logs.action_type,
+    audit_logs.user_agent,
+    audit_logs.data,
+    audit_logs.created_at,
+    audit_logs.has_succeeded
+from
+    nlx_management.audit_logs
+order by
+    audit_logs.created_at desc
+limit $1
+;
+
+-- name: ListAuditLogServices :many
+select
+    audit_logs_services.organization_name,
+    audit_logs_services.organization_serial_number,
+    audit_logs_services.service,
+    audit_logs_services.created_at
+from
+    nlx_management.audit_logs_services
+where
+    audit_logs_services.audit_log_id = $1
+;
+
+-- name: UpdateInway :exec
+update
+    nlx_management.inways
+set
+    name = $1,
+    version = $2,
+    hostname = $3,
+    self_address = $4,
+    created_at = $5,
+    updated_at = $6
+where
+    inways.id = $7
+;
+
+-- name: RemoveInwayServicesForInway :exec
+delete from
+    nlx_management.inways_services
+where
+    inway_id = $1
+;
+
+-- name: RemoveInway :exec
+delete from
+    nlx_management.inways
+where
+        id = $1
+;
+
+-- name: ListInways :many
+select
+    inways.id,
+    inways.name,
+    inways.self_address,
+    inways.version,
+    inways.hostname,
+    inways.ip_address,
+    inways.created_at,
+    inways.updated_at
+from
+    nlx_management.inways
+;
+
+-- name: ListServicesForInway :many
+select
+    id,
+    name,
+    endpoint_url,
+    documentation_url,
+    api_specification_url,
+    internal,
+    tech_support_contact,
+    public_support_contact,
+    created_at,
+    updated_at,
+    one_time_costs,
+    monthly_costs,
+    request_costs,
+    inways_services.inway_id
+from
+    nlx_management.services
+join
+    nlx_management.inways_services
+        on inways_services.service_id = services.id
+where
+    inways_services.inway_id = $1
+;
+
+-- name: GetInwayByName :one
+select
+    inways.id,
+    inways.name,
+    inways.self_address,
+    inways.version,
+    inways.hostname,
+    inways.ip_address,
+    inways.created_at,
+    inways.updated_at
+from
+    nlx_management.inways
+where
+    inways.name = $1
 ;

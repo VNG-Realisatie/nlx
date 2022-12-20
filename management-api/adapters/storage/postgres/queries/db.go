@@ -33,6 +33,12 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.createAccessProofStmt, err = db.PrepareContext(ctx, createAccessProof); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateAccessProof: %w", err)
 	}
+	if q.createAuditLogStmt, err = db.PrepareContext(ctx, createAuditLog); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateAuditLog: %w", err)
+	}
+	if q.createAuditLogServiceStmt, err = db.PrepareContext(ctx, createAuditLogService); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateAuditLogService: %w", err)
+	}
 	if q.createIncomingAccessRequestStmt, err = db.PrepareContext(ctx, createIncomingAccessRequest); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateIncomingAccessRequest: %w", err)
 	}
@@ -54,6 +60,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.deleteOutgoingAccessRequestStmt, err = db.PrepareContext(ctx, deleteOutgoingAccessRequest); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteOutgoingAccessRequest: %w", err)
 	}
+	if q.deleteOutgoingAccessRequestsStmt, err = db.PrepareContext(ctx, deleteOutgoingAccessRequests); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteOutgoingAccessRequests: %w", err)
+	}
 	if q.doesInwayExistByNameStmt, err = db.PrepareContext(ctx, doesInwayExistByName); err != nil {
 		return nil, fmt.Errorf("error preparing query DoesInwayExistByName: %w", err)
 	}
@@ -74,6 +83,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.getIncomingAccessRequestsByServiceCountStmt, err = db.PrepareContext(ctx, getIncomingAccessRequestsByServiceCount); err != nil {
 		return nil, fmt.Errorf("error preparing query GetIncomingAccessRequestsByServiceCount: %w", err)
+	}
+	if q.getInwayByNameStmt, err = db.PrepareContext(ctx, getInwayByName); err != nil {
+		return nil, fmt.Errorf("error preparing query GetInwayByName: %w", err)
 	}
 	if q.getLatestAccessGrantForServiceStmt, err = db.PrepareContext(ctx, getLatestAccessGrantForService); err != nil {
 		return nil, fmt.Errorf("error preparing query GetLatestAccessGrantForService: %w", err)
@@ -99,8 +111,17 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listAllLatestOutgoingAccessRequestsStmt, err = db.PrepareContext(ctx, listAllLatestOutgoingAccessRequests); err != nil {
 		return nil, fmt.Errorf("error preparing query ListAllLatestOutgoingAccessRequests: %w", err)
 	}
+	if q.listAuditLogServicesStmt, err = db.PrepareContext(ctx, listAuditLogServices); err != nil {
+		return nil, fmt.Errorf("error preparing query ListAuditLogServices: %w", err)
+	}
+	if q.listAuditLogsStmt, err = db.PrepareContext(ctx, listAuditLogs); err != nil {
+		return nil, fmt.Errorf("error preparing query ListAuditLogs: %w", err)
+	}
 	if q.listIncomingAccessRequestsStmt, err = db.PrepareContext(ctx, listIncomingAccessRequests); err != nil {
 		return nil, fmt.Errorf("error preparing query ListIncomingAccessRequests: %w", err)
+	}
+	if q.listInwaysStmt, err = db.PrepareContext(ctx, listInways); err != nil {
+		return nil, fmt.Errorf("error preparing query ListInways: %w", err)
 	}
 	if q.listInwaysForServiceStmt, err = db.PrepareContext(ctx, listInwaysForService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListInwaysForService: %w", err)
@@ -120,8 +141,17 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listServicesStmt, err = db.PrepareContext(ctx, listServices); err != nil {
 		return nil, fmt.Errorf("error preparing query ListServices: %w", err)
 	}
+	if q.listServicesForInwayStmt, err = db.PrepareContext(ctx, listServicesForInway); err != nil {
+		return nil, fmt.Errorf("error preparing query ListServicesForInway: %w", err)
+	}
 	if q.listTermsOfServiceStmt, err = db.PrepareContext(ctx, listTermsOfService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListTermsOfService: %w", err)
+	}
+	if q.removeInwayStmt, err = db.PrepareContext(ctx, removeInway); err != nil {
+		return nil, fmt.Errorf("error preparing query RemoveInway: %w", err)
+	}
+	if q.removeInwayServicesForInwayStmt, err = db.PrepareContext(ctx, removeInwayServicesForInway); err != nil {
+		return nil, fmt.Errorf("error preparing query RemoveInwayServicesForInway: %w", err)
 	}
 	if q.revokeAccessGrantStmt, err = db.PrepareContext(ctx, revokeAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query RevokeAccessGrant: %w", err)
@@ -140,6 +170,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	}
 	if q.updateIncomingAccessRequestStmt, err = db.PrepareContext(ctx, updateIncomingAccessRequest); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateIncomingAccessRequest: %w", err)
+	}
+	if q.updateInwayStmt, err = db.PrepareContext(ctx, updateInway); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateInway: %w", err)
 	}
 	if q.updateOutgoingAccessRequestStateStmt, err = db.PrepareContext(ctx, updateOutgoingAccessRequestState); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateOutgoingAccessRequestState: %w", err)
@@ -168,6 +201,16 @@ func (q *Queries) Close() error {
 	if q.createAccessProofStmt != nil {
 		if cerr := q.createAccessProofStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createAccessProofStmt: %w", cerr)
+		}
+	}
+	if q.createAuditLogStmt != nil {
+		if cerr := q.createAuditLogStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createAuditLogStmt: %w", cerr)
+		}
+	}
+	if q.createAuditLogServiceStmt != nil {
+		if cerr := q.createAuditLogServiceStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createAuditLogServiceStmt: %w", cerr)
 		}
 	}
 	if q.createIncomingAccessRequestStmt != nil {
@@ -205,6 +248,11 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing deleteOutgoingAccessRequestStmt: %w", cerr)
 		}
 	}
+	if q.deleteOutgoingAccessRequestsStmt != nil {
+		if cerr := q.deleteOutgoingAccessRequestsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteOutgoingAccessRequestsStmt: %w", cerr)
+		}
+	}
 	if q.doesInwayExistByNameStmt != nil {
 		if cerr := q.doesInwayExistByNameStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing doesInwayExistByNameStmt: %w", cerr)
@@ -238,6 +286,11 @@ func (q *Queries) Close() error {
 	if q.getIncomingAccessRequestsByServiceCountStmt != nil {
 		if cerr := q.getIncomingAccessRequestsByServiceCountStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getIncomingAccessRequestsByServiceCountStmt: %w", cerr)
+		}
+	}
+	if q.getInwayByNameStmt != nil {
+		if cerr := q.getInwayByNameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getInwayByNameStmt: %w", cerr)
 		}
 	}
 	if q.getLatestAccessGrantForServiceStmt != nil {
@@ -280,9 +333,24 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listAllLatestOutgoingAccessRequestsStmt: %w", cerr)
 		}
 	}
+	if q.listAuditLogServicesStmt != nil {
+		if cerr := q.listAuditLogServicesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listAuditLogServicesStmt: %w", cerr)
+		}
+	}
+	if q.listAuditLogsStmt != nil {
+		if cerr := q.listAuditLogsStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listAuditLogsStmt: %w", cerr)
+		}
+	}
 	if q.listIncomingAccessRequestsStmt != nil {
 		if cerr := q.listIncomingAccessRequestsStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listIncomingAccessRequestsStmt: %w", cerr)
+		}
+	}
+	if q.listInwaysStmt != nil {
+		if cerr := q.listInwaysStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listInwaysStmt: %w", cerr)
 		}
 	}
 	if q.listInwaysForServiceStmt != nil {
@@ -315,9 +383,24 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listServicesStmt: %w", cerr)
 		}
 	}
+	if q.listServicesForInwayStmt != nil {
+		if cerr := q.listServicesForInwayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing listServicesForInwayStmt: %w", cerr)
+		}
+	}
 	if q.listTermsOfServiceStmt != nil {
 		if cerr := q.listTermsOfServiceStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing listTermsOfServiceStmt: %w", cerr)
+		}
+	}
+	if q.removeInwayStmt != nil {
+		if cerr := q.removeInwayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing removeInwayStmt: %w", cerr)
+		}
+	}
+	if q.removeInwayServicesForInwayStmt != nil {
+		if cerr := q.removeInwayServicesForInwayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing removeInwayServicesForInwayStmt: %w", cerr)
 		}
 	}
 	if q.revokeAccessGrantStmt != nil {
@@ -348,6 +431,11 @@ func (q *Queries) Close() error {
 	if q.updateIncomingAccessRequestStmt != nil {
 		if cerr := q.updateIncomingAccessRequestStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing updateIncomingAccessRequestStmt: %w", cerr)
+		}
+	}
+	if q.updateInwayStmt != nil {
+		if cerr := q.updateInwayStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateInwayStmt: %w", cerr)
 		}
 	}
 	if q.updateOutgoingAccessRequestStateStmt != nil {
@@ -407,6 +495,8 @@ type Queries struct {
 	countReceivedOutgoingAccessRequestsForOutwayStmt *sql.Stmt
 	createAccessGrantStmt                            *sql.Stmt
 	createAccessProofStmt                            *sql.Stmt
+	createAuditLogStmt                               *sql.Stmt
+	createAuditLogServiceStmt                        *sql.Stmt
 	createIncomingAccessRequestStmt                  *sql.Stmt
 	createOutgoingAccessRequestStmt                  *sql.Stmt
 	createTermsOfServiceStmt                         *sql.Stmt
@@ -414,6 +504,7 @@ type Queries struct {
 	createUserRolesStmt                              *sql.Stmt
 	deleteIncomingAccessRequestStmt                  *sql.Stmt
 	deleteOutgoingAccessRequestStmt                  *sql.Stmt
+	deleteOutgoingAccessRequestsStmt                 *sql.Stmt
 	doesInwayExistByNameStmt                         *sql.Stmt
 	getAccessGrantStmt                               *sql.Stmt
 	getAccessGrantIDOfIncomingAccessRequestStmt      *sql.Stmt
@@ -421,6 +512,7 @@ type Queries struct {
 	getAccessProofByOutgoingAccessRequestStmt        *sql.Stmt
 	getIncomingAccessRequestStmt                     *sql.Stmt
 	getIncomingAccessRequestsByServiceCountStmt      *sql.Stmt
+	getInwayByNameStmt                               *sql.Stmt
 	getLatestAccessGrantForServiceStmt               *sql.Stmt
 	getLatestIncomingAccessRequestStmt               *sql.Stmt
 	getLatestOutgoingAccessRequestStmt               *sql.Stmt
@@ -429,20 +521,27 @@ type Queries struct {
 	getUserByEmailStmt                               *sql.Stmt
 	listAccessGrantsForServiceStmt                   *sql.Stmt
 	listAllLatestOutgoingAccessRequestsStmt          *sql.Stmt
+	listAuditLogServicesStmt                         *sql.Stmt
+	listAuditLogsStmt                                *sql.Stmt
 	listIncomingAccessRequestsStmt                   *sql.Stmt
+	listInwaysStmt                                   *sql.Stmt
 	listInwaysForServiceStmt                         *sql.Stmt
 	listLatestOutgoingAccessRequestsStmt             *sql.Stmt
 	listPermissionsStmt                              *sql.Stmt
 	listPermissionsForRoleStmt                       *sql.Stmt
 	listRolesForUserStmt                             *sql.Stmt
 	listServicesStmt                                 *sql.Stmt
+	listServicesForInwayStmt                         *sql.Stmt
 	listTermsOfServiceStmt                           *sql.Stmt
+	removeInwayStmt                                  *sql.Stmt
+	removeInwayServicesForInwayStmt                  *sql.Stmt
 	revokeAccessGrantStmt                            *sql.Stmt
 	revokeAccessProofStmt                            *sql.Stmt
 	setAuditLogAsSucceededStmt                       *sql.Stmt
 	terminateAccessGrantStmt                         *sql.Stmt
 	terminateAccessProofStmt                         *sql.Stmt
 	updateIncomingAccessRequestStmt                  *sql.Stmt
+	updateInwayStmt                                  *sql.Stmt
 	updateOutgoingAccessRequestStateStmt             *sql.Stmt
 	updateSettingsStmt                               *sql.Stmt
 	upsertInwayStmt                                  *sql.Stmt
@@ -455,6 +554,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		countReceivedOutgoingAccessRequestsForOutwayStmt: q.countReceivedOutgoingAccessRequestsForOutwayStmt,
 		createAccessGrantStmt:                            q.createAccessGrantStmt,
 		createAccessProofStmt:                            q.createAccessProofStmt,
+		createAuditLogStmt:                               q.createAuditLogStmt,
+		createAuditLogServiceStmt:                        q.createAuditLogServiceStmt,
 		createIncomingAccessRequestStmt:                  q.createIncomingAccessRequestStmt,
 		createOutgoingAccessRequestStmt:                  q.createOutgoingAccessRequestStmt,
 		createTermsOfServiceStmt:                         q.createTermsOfServiceStmt,
@@ -462,6 +563,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		createUserRolesStmt:                              q.createUserRolesStmt,
 		deleteIncomingAccessRequestStmt:                  q.deleteIncomingAccessRequestStmt,
 		deleteOutgoingAccessRequestStmt:                  q.deleteOutgoingAccessRequestStmt,
+		deleteOutgoingAccessRequestsStmt:                 q.deleteOutgoingAccessRequestsStmt,
 		doesInwayExistByNameStmt:                         q.doesInwayExistByNameStmt,
 		getAccessGrantStmt:                               q.getAccessGrantStmt,
 		getAccessGrantIDOfIncomingAccessRequestStmt:      q.getAccessGrantIDOfIncomingAccessRequestStmt,
@@ -469,6 +571,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getAccessProofByOutgoingAccessRequestStmt:        q.getAccessProofByOutgoingAccessRequestStmt,
 		getIncomingAccessRequestStmt:                     q.getIncomingAccessRequestStmt,
 		getIncomingAccessRequestsByServiceCountStmt:      q.getIncomingAccessRequestsByServiceCountStmt,
+		getInwayByNameStmt:                               q.getInwayByNameStmt,
 		getLatestAccessGrantForServiceStmt:               q.getLatestAccessGrantForServiceStmt,
 		getLatestIncomingAccessRequestStmt:               q.getLatestIncomingAccessRequestStmt,
 		getLatestOutgoingAccessRequestStmt:               q.getLatestOutgoingAccessRequestStmt,
@@ -477,20 +580,27 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getUserByEmailStmt:                               q.getUserByEmailStmt,
 		listAccessGrantsForServiceStmt:                   q.listAccessGrantsForServiceStmt,
 		listAllLatestOutgoingAccessRequestsStmt:          q.listAllLatestOutgoingAccessRequestsStmt,
+		listAuditLogServicesStmt:                         q.listAuditLogServicesStmt,
+		listAuditLogsStmt:                                q.listAuditLogsStmt,
 		listIncomingAccessRequestsStmt:                   q.listIncomingAccessRequestsStmt,
+		listInwaysStmt:                                   q.listInwaysStmt,
 		listInwaysForServiceStmt:                         q.listInwaysForServiceStmt,
 		listLatestOutgoingAccessRequestsStmt:             q.listLatestOutgoingAccessRequestsStmt,
 		listPermissionsStmt:                              q.listPermissionsStmt,
 		listPermissionsForRoleStmt:                       q.listPermissionsForRoleStmt,
 		listRolesForUserStmt:                             q.listRolesForUserStmt,
 		listServicesStmt:                                 q.listServicesStmt,
+		listServicesForInwayStmt:                         q.listServicesForInwayStmt,
 		listTermsOfServiceStmt:                           q.listTermsOfServiceStmt,
+		removeInwayStmt:                                  q.removeInwayStmt,
+		removeInwayServicesForInwayStmt:                  q.removeInwayServicesForInwayStmt,
 		revokeAccessGrantStmt:                            q.revokeAccessGrantStmt,
 		revokeAccessProofStmt:                            q.revokeAccessProofStmt,
 		setAuditLogAsSucceededStmt:                       q.setAuditLogAsSucceededStmt,
 		terminateAccessGrantStmt:                         q.terminateAccessGrantStmt,
 		terminateAccessProofStmt:                         q.terminateAccessProofStmt,
 		updateIncomingAccessRequestStmt:                  q.updateIncomingAccessRequestStmt,
+		updateInwayStmt:                                  q.updateInwayStmt,
 		updateOutgoingAccessRequestStateStmt:             q.updateOutgoingAccessRequestStateStmt,
 		updateSettingsStmt:                               q.updateSettingsStmt,
 		upsertInwayStmt:                                  q.upsertInwayStmt,

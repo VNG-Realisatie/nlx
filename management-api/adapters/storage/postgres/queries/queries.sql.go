@@ -9,6 +9,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/tabbed/pqtype"
 )
 
 const countReceivedOutgoingAccessRequestsForOutway = `-- name: CountReceivedOutgoingAccessRequestsForOutway :one
@@ -84,6 +86,87 @@ func (q *Queries) CreateAccessProof(ctx context.Context, arg *CreateAccessProofP
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const createAuditLog = `-- name: CreateAuditLog :one
+insert into
+    nlx_management.audit_logs
+(
+    user_name,
+    action_type,
+    user_agent,
+    data,
+    created_at,
+    has_succeeded
+) values (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6
+ )
+returning id
+`
+
+type CreateAuditLogParams struct {
+	UserName     sql.NullString
+	ActionType   string
+	UserAgent    string
+	Data         pqtype.NullRawMessage
+	CreatedAt    time.Time
+	HasSucceeded bool
+}
+
+func (q *Queries) CreateAuditLog(ctx context.Context, arg *CreateAuditLogParams) (int64, error) {
+	row := q.queryRow(ctx, q.createAuditLogStmt, createAuditLog,
+		arg.UserName,
+		arg.ActionType,
+		arg.UserAgent,
+		arg.Data,
+		arg.CreatedAt,
+		arg.HasSucceeded,
+	)
+	var id int64
+	err := row.Scan(&id)
+	return id, err
+}
+
+const createAuditLogService = `-- name: CreateAuditLogService :exec
+insert into
+    nlx_management.audit_logs_services
+(
+    audit_log_id,
+    organization_name,
+    organization_serial_number,
+    created_at,
+    service
+) values (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5
+)
+`
+
+type CreateAuditLogServiceParams struct {
+	AuditLogID               sql.NullInt64
+	OrganizationName         sql.NullString
+	OrganizationSerialNumber string
+	CreatedAt                time.Time
+	Service                  sql.NullString
+}
+
+func (q *Queries) CreateAuditLogService(ctx context.Context, arg *CreateAuditLogServiceParams) error {
+	_, err := q.exec(ctx, q.createAuditLogServiceStmt, createAuditLogService,
+		arg.AuditLogID,
+		arg.OrganizationName,
+		arg.OrganizationSerialNumber,
+		arg.CreatedAt,
+		arg.Service,
+	)
+	return err
 }
 
 const createIncomingAccessRequest = `-- name: CreateIncomingAccessRequest :one
@@ -282,6 +365,24 @@ where
 
 func (q *Queries) DeleteOutgoingAccessRequest(ctx context.Context, id int32) error {
 	_, err := q.exec(ctx, q.deleteOutgoingAccessRequestStmt, deleteOutgoingAccessRequest, id)
+	return err
+}
+
+const deleteOutgoingAccessRequests = `-- name: DeleteOutgoingAccessRequests :exec
+delete from
+    nlx_management.access_requests_outgoing
+where
+    access_requests_outgoing.organization_serial_number = $1 and
+    access_requests_outgoing.service_name = $2
+`
+
+type DeleteOutgoingAccessRequestsParams struct {
+	OrganizationSerialNumber string
+	ServiceName              string
+}
+
+func (q *Queries) DeleteOutgoingAccessRequests(ctx context.Context, arg *DeleteOutgoingAccessRequestsParams) error {
+	_, err := q.exec(ctx, q.deleteOutgoingAccessRequestsStmt, deleteOutgoingAccessRequests, arg.OrganizationSerialNumber, arg.ServiceName)
 	return err
 }
 
@@ -569,6 +670,38 @@ func (q *Queries) GetIncomingAccessRequestsByServiceCount(ctx context.Context) (
 		return nil, err
 	}
 	return items, nil
+}
+
+const getInwayByName = `-- name: GetInwayByName :one
+select
+    inways.id,
+    inways.name,
+    inways.self_address,
+    inways.version,
+    inways.hostname,
+    inways.ip_address,
+    inways.created_at,
+    inways.updated_at
+from
+    nlx_management.inways
+where
+    inways.name = $1
+`
+
+func (q *Queries) GetInwayByName(ctx context.Context, name string) (*NlxManagementInway, error) {
+	row := q.queryRow(ctx, q.getInwayByNameStmt, getInwayByName, name)
+	var i NlxManagementInway
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.SelfAddress,
+		&i.Version,
+		&i.Hostname,
+		&i.IpAddress,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return &i, err
 }
 
 const getLatestAccessGrantForService = `-- name: GetLatestAccessGrantForService :one
@@ -1105,6 +1238,100 @@ func (q *Queries) ListAllLatestOutgoingAccessRequests(ctx context.Context) ([]*L
 	return items, nil
 }
 
+const listAuditLogServices = `-- name: ListAuditLogServices :many
+select
+    audit_logs_services.organization_name,
+    audit_logs_services.organization_serial_number,
+    audit_logs_services.service,
+    audit_logs_services.created_at
+from
+    nlx_management.audit_logs_services
+where
+    audit_logs_services.audit_log_id = $1
+`
+
+type ListAuditLogServicesRow struct {
+	OrganizationName         sql.NullString
+	OrganizationSerialNumber string
+	Service                  sql.NullString
+	CreatedAt                time.Time
+}
+
+func (q *Queries) ListAuditLogServices(ctx context.Context, auditLogID sql.NullInt64) ([]*ListAuditLogServicesRow, error) {
+	rows, err := q.query(ctx, q.listAuditLogServicesStmt, listAuditLogServices, auditLogID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*ListAuditLogServicesRow{}
+	for rows.Next() {
+		var i ListAuditLogServicesRow
+		if err := rows.Scan(
+			&i.OrganizationName,
+			&i.OrganizationSerialNumber,
+			&i.Service,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listAuditLogs = `-- name: ListAuditLogs :many
+select
+    audit_logs.id,
+    audit_logs.user_name,
+    audit_logs.action_type,
+    audit_logs.user_agent,
+    audit_logs.data,
+    audit_logs.created_at,
+    audit_logs.has_succeeded
+from
+    nlx_management.audit_logs
+order by
+    audit_logs.created_at desc
+limit $1
+`
+
+func (q *Queries) ListAuditLogs(ctx context.Context, limit int32) ([]*NlxManagementAuditLog, error) {
+	rows, err := q.query(ctx, q.listAuditLogsStmt, listAuditLogs, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*NlxManagementAuditLog{}
+	for rows.Next() {
+		var i NlxManagementAuditLog
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserName,
+			&i.ActionType,
+			&i.UserAgent,
+			&i.Data,
+			&i.CreatedAt,
+			&i.HasSucceeded,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listIncomingAccessRequests = `-- name: ListIncomingAccessRequests :many
 select
     access_requests_incoming.id,
@@ -1145,6 +1372,52 @@ func (q *Queries) ListIncomingAccessRequests(ctx context.Context, name string) (
 			&i.OrganizationName,
 			&i.OrganizationSerialNumber,
 			&i.State,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listInways = `-- name: ListInways :many
+select
+    inways.id,
+    inways.name,
+    inways.self_address,
+    inways.version,
+    inways.hostname,
+    inways.ip_address,
+    inways.created_at,
+    inways.updated_at
+from
+    nlx_management.inways
+`
+
+func (q *Queries) ListInways(ctx context.Context) ([]*NlxManagementInway, error) {
+	rows, err := q.query(ctx, q.listInwaysStmt, listInways)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*NlxManagementInway{}
+	for rows.Next() {
+		var i NlxManagementInway
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.SelfAddress,
+			&i.Version,
+			&i.Hostname,
+			&i.IpAddress,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -1443,6 +1716,86 @@ func (q *Queries) ListServices(ctx context.Context) ([]*NlxManagementService, er
 	return items, nil
 }
 
+const listServicesForInway = `-- name: ListServicesForInway :many
+select
+    id,
+    name,
+    endpoint_url,
+    documentation_url,
+    api_specification_url,
+    internal,
+    tech_support_contact,
+    public_support_contact,
+    created_at,
+    updated_at,
+    one_time_costs,
+    monthly_costs,
+    request_costs,
+    inways_services.inway_id
+from
+    nlx_management.services
+join
+    nlx_management.inways_services
+        on inways_services.service_id = services.id
+where
+    inways_services.inway_id = $1
+`
+
+type ListServicesForInwayRow struct {
+	ID                   int32
+	Name                 string
+	EndpointUrl          string
+	DocumentationUrl     string
+	ApiSpecificationUrl  string
+	Internal             bool
+	TechSupportContact   string
+	PublicSupportContact string
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
+	OneTimeCosts         int32
+	MonthlyCosts         int32
+	RequestCosts         int32
+	InwayID              int32
+}
+
+func (q *Queries) ListServicesForInway(ctx context.Context, inwayID int32) ([]*ListServicesForInwayRow, error) {
+	rows, err := q.query(ctx, q.listServicesForInwayStmt, listServicesForInway, inwayID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*ListServicesForInwayRow{}
+	for rows.Next() {
+		var i ListServicesForInwayRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.EndpointUrl,
+			&i.DocumentationUrl,
+			&i.ApiSpecificationUrl,
+			&i.Internal,
+			&i.TechSupportContact,
+			&i.PublicSupportContact,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.OneTimeCosts,
+			&i.MonthlyCosts,
+			&i.RequestCosts,
+			&i.InwayID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTermsOfService = `-- name: ListTermsOfService :many
 select
     id, username, created_at
@@ -1471,6 +1824,30 @@ func (q *Queries) ListTermsOfService(ctx context.Context) ([]*NlxManagementTerms
 		return nil, err
 	}
 	return items, nil
+}
+
+const removeInway = `-- name: RemoveInway :exec
+delete from
+    nlx_management.inways
+where
+        id = $1
+`
+
+func (q *Queries) RemoveInway(ctx context.Context, id int32) error {
+	_, err := q.exec(ctx, q.removeInwayStmt, removeInway, id)
+	return err
+}
+
+const removeInwayServicesForInway = `-- name: RemoveInwayServicesForInway :exec
+delete from
+    nlx_management.inways_services
+where
+    inway_id = $1
+`
+
+func (q *Queries) RemoveInwayServicesForInway(ctx context.Context, inwayID int32) error {
+	_, err := q.exec(ctx, q.removeInwayServicesForInwayStmt, removeInwayServicesForInway, inwayID)
+	return err
 }
 
 const revokeAccessGrant = `-- name: RevokeAccessGrant :exec
@@ -1587,7 +1964,44 @@ func (q *Queries) UpdateIncomingAccessRequest(ctx context.Context, arg *UpdateIn
 	return result.RowsAffected()
 }
 
-const updateOutgoingAccessRequestState = `-- name: UpdateOutgoingAccessRequestState :exec
+const updateInway = `-- name: UpdateInway :exec
+update
+    nlx_management.inways
+set
+    name = $1,
+    version = $2,
+    hostname = $3,
+    self_address = $4,
+    created_at = $5,
+    updated_at = $6
+where
+    inways.id = $7
+`
+
+type UpdateInwayParams struct {
+	Name        string
+	Version     string
+	Hostname    string
+	SelfAddress string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	ID          int32
+}
+
+func (q *Queries) UpdateInway(ctx context.Context, arg *UpdateInwayParams) error {
+	_, err := q.exec(ctx, q.updateInwayStmt, updateInway,
+		arg.Name,
+		arg.Version,
+		arg.Hostname,
+		arg.SelfAddress,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+		arg.ID,
+	)
+	return err
+}
+
+const updateOutgoingAccessRequestState = `-- name: UpdateOutgoingAccessRequestState :execrows
 update
     nlx_management.access_requests_outgoing
 set
@@ -1603,9 +2017,12 @@ type UpdateOutgoingAccessRequestStateParams struct {
 	ID        int32
 }
 
-func (q *Queries) UpdateOutgoingAccessRequestState(ctx context.Context, arg *UpdateOutgoingAccessRequestStateParams) error {
-	_, err := q.exec(ctx, q.updateOutgoingAccessRequestStateStmt, updateOutgoingAccessRequestState, arg.State, arg.UpdatedAt, arg.ID)
-	return err
+func (q *Queries) UpdateOutgoingAccessRequestState(ctx context.Context, arg *UpdateOutgoingAccessRequestStateParams) (int64, error) {
+	result, err := q.exec(ctx, q.updateOutgoingAccessRequestStateStmt, updateOutgoingAccessRequestState, arg.State, arg.UpdatedAt, arg.ID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
 }
 
 const updateSettings = `-- name: UpdateSettings :exec
@@ -1619,7 +2036,7 @@ set
             from
                 nlx_management.inways
             where
-                    inways.name = $2::text
+                inways.name = $2::text
         )
 `
 

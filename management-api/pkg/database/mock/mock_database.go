@@ -84,10 +84,10 @@ func (mr *MockConfigDatabaseMockRecorder) CreateAccessProof(ctx, accessRequestOu
 }
 
 // CreateAuditLogRecord mocks base method.
-func (m *MockConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLogRecord *database.AuditLog) (*database.AuditLog, error) {
+func (m *MockConfigDatabase) CreateAuditLogRecord(ctx context.Context, auditLogRecord *database.AuditLog) (uint64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAuditLogRecord", ctx, auditLogRecord)
-	ret0, _ := ret[0].(*database.AuditLog)
+	ret0, _ := ret[0].(uint64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
