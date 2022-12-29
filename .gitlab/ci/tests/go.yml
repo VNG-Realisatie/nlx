@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 services:
-  - postgres:12.8-alpine
+  - postgres:15.1-alpine
 
 variables:
   POSTGRES_DB: nlx
