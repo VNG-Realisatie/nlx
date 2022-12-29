@@ -8,8 +8,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"go.uber.org/zap"
 	"time"
+
+	"go.uber.org/zap"
 
 	"go.nlx.io/nlx/management-api/pkg/database"
 )
