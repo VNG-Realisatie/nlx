@@ -58,9 +58,34 @@ managementAPI:
     documentation_url: https://docs.nlx.io
     inways:
       - gemeente-stijns-nlx-inway
+  ingress:
+    enabled: true
+    host: management-api.demo.gemeentestijns.nl
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      secretName: gemeentestijns-nlx-management-api-ingress-tls
 
 nlxctl:
   authorizationServerUrl: https://dex.demo.gemeentestijns.nl
+
+outway:
+  ingress:
+    enabled: true
+    host: outway.demo.gemeentestijns.nl
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      secretName: gemeentestijns-nlx-outway-ingress-tls
+
+outway-2:
+  ingress:
+    enabled: true
+    host: outway-2.demo.gemeentestijns.nl
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      secretName: gemeentestijns-nlx-outway-2-ingress-tls
 
 ################
 ## Sub-charts ##

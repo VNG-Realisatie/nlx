@@ -284,6 +284,8 @@ managementAPI:
     documentation_url: https://docs.nlx.io
     inways:
       - gemeente-stijns-nlx-inway
+  ingress:
+    enabled: false
 
 outway:
   ingress:
