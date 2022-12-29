@@ -1,3 +1,10 @@
+## [0.144.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.144.0...v0.144.1) (2022-12-29)
+
+
+### Bug Fixes
+
+* **management:** use correct translation for sync error ([13ef255](https://gitlab.com/commonground/nlx/nlx/commit/13ef25554d424913111f1c35a3bfcf1e657adf84)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 # [0.144.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.143.0...v0.144.0) (2022-11-29)
 
 
