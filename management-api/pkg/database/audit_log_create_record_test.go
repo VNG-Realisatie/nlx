@@ -52,7 +52,7 @@ func TestCreateAuditLogRecord(t *testing.T) {
 		wantErr      error
 	}{
 		"happy_flow": {
-			loadFixtures: true,
+			loadFixtures: false,
 			args: args{
 				auditLog: &database.AuditLog{
 					UserName:   "test-username",
@@ -81,7 +81,7 @@ func TestCreateAuditLogRecord(t *testing.T) {
 				},
 			},
 			want: &database.AuditLog{
-				ID:         fixturesStartID,
+				ID:         1,
 				UserName:   "test-username",
 				ActionType: database.IncomingAccessRequestAccept,
 				UserAgent:  "test-user-agent",
@@ -95,7 +95,7 @@ func TestCreateAuditLogRecord(t *testing.T) {
 				},
 				Services: []database.AuditLogService{
 					{
-						AuditLogID: fixturesStartID,
+						AuditLogID: 1,
 						Service:    "fixture-service-name",
 						Organization: database.AuditLogServiceOrganization{
 							SerialNumber: "00000000000000000001",
