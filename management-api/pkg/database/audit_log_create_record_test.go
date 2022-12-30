@@ -101,10 +101,10 @@ func TestCreateAuditLogRecord(t *testing.T) {
 							SerialNumber: "00000000000000000001",
 							Name:         "fixture-organization-name",
 						},
-						CreatedAt: now.UTC(),
+						CreatedAt: stripNanosecondsFromTime(t, now).UTC(),
 					},
 				},
-				CreatedAt: now.UTC(),
+				CreatedAt: stripNanosecondsFromTime(t, now).UTC(),
 			},
 			wantErr: nil,
 		},
@@ -130,4 +130,13 @@ func TestCreateAuditLogRecord(t *testing.T) {
 			}
 		})
 	}
+}
+
+func stripNanosecondsFromTime(t *testing.T, input time.Time) time.Time {
+	layout := "2006-01-02T15:04:05.000000Z07:00"
+
+	newTime, err := time.Parse(layout, input.Format(layout))
+	require.NoError(t, err)
+
+	return newTime
 }
