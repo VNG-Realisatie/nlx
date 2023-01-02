@@ -115,9 +115,6 @@ nlx-inway:
     managementAPIProxyAddress: inway.demo.gemeenteriemer.nl:8443
     directoryHostname: directory-api.demo.nlx.io
   service:
-    annotations:
-      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
-    loadBalancerIP: 51.136.73.69
     type: LoadBalancer
 
 manage-citizens-ui:
