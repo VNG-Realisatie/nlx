@@ -1,3 +1,10 @@
+# [0.145.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.144.1...v0.145.0) (2023-01-02)
+
+
+### Features
+
+* remove LoadBalancer IPs for Inways ([096897c](https://gitlab.com/commonground/nlx/nlx/commit/096897cbbae69d80722377cabcf7f680776d2e87)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.144.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.144.0...v0.144.1) (2022-12-29)
 
 
