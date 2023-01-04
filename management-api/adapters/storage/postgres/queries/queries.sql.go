@@ -1342,6 +1342,8 @@ select
     access_requests_incoming.organization_name,
     access_requests_incoming.organization_serial_number,
     access_requests_incoming.state,
+    access_requests_incoming.public_key_fingerprint,
+    access_requests_incoming.public_key_pem,
     access_requests_incoming.created_at,
     access_requests_incoming.updated_at
 from
@@ -1358,6 +1360,8 @@ type ListIncomingAccessRequestsRow struct {
 	OrganizationName         string
 	OrganizationSerialNumber string
 	State                    string
+	PublicKeyFingerprint     string
+	PublicKeyPem             sql.NullString
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }
@@ -1376,6 +1380,8 @@ func (q *Queries) ListIncomingAccessRequests(ctx context.Context, name string) (
 			&i.OrganizationName,
 			&i.OrganizationSerialNumber,
 			&i.State,
+			&i.PublicKeyFingerprint,
+			&i.PublicKeyPem,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {

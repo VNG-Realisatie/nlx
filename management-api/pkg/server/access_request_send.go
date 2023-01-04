@@ -6,6 +6,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -78,6 +79,8 @@ func (s *ManagementService) SendAccessRequest(ctx context.Context, req *api.Send
 		referenceID:              referenceID,
 		state:                    state,
 		errorCause:               errorCause,
+		createdAt:                s.clock.Now(),
+		updatedAt:                s.clock.Now(),
 	})
 	if err != nil {
 		s.logger.Error("failed to create outgoing access request", zap.Error(err))
@@ -135,6 +138,8 @@ type createOutgoingAccessRequestArgs struct {
 	referenceID              uint
 	errorCause               string
 	state                    database.OutgoingAccessRequestState
+	createdAt                time.Time
+	updatedAt                time.Time
 }
 
 func createOutgoingAccessRequest(args *createOutgoingAccessRequestArgs) (*database.OutgoingAccessRequest, error) {
@@ -148,6 +153,8 @@ func createOutgoingAccessRequest(args *createOutgoingAccessRequestArgs) (*databa
 		PublicKeyFingerprint: args.publicKeyFingerprint,
 		State:                args.state,
 		ErrorCause:           args.errorCause,
+		CreatedAt:            args.createdAt,
+		UpdatedAt:            args.updatedAt,
 	}
 
 	request, err := args.cd.CreateOutgoingAccessRequest(args.ctx, ar)

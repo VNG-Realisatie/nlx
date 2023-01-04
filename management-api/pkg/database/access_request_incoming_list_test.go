@@ -23,6 +23,12 @@ func TestListIncomingAccessRequests(t *testing.T) {
 
 	fixtureTime := getFixtureTime(t)
 
+	fixtureCertBundle, err := newFixtureCertificateBundle()
+	require.NoError(t, err)
+
+	fixturePEM, err := fixtureCertBundle.PublicKeyPEM()
+	require.NoError(t, err)
+
 	tests := map[string]struct {
 		loadFixtures   bool
 		argServiceName string
@@ -42,9 +48,11 @@ func TestListIncomingAccessRequests(t *testing.T) {
 						Name:         "fixture-organization-name",
 						SerialNumber: "00000000000000000001",
 					},
-					State:     database.IncomingAccessRequestReceived,
-					CreatedAt: fixtureTime,
-					UpdatedAt: fixtureTime,
+					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+					PublicKeyPEM:         fixturePEM,
+					State:                database.IncomingAccessRequestReceived,
+					CreatedAt:            fixtureTime,
+					UpdatedAt:            fixtureTime,
 				},
 				{
 					ID: 2,
@@ -55,9 +63,11 @@ func TestListIncomingAccessRequests(t *testing.T) {
 						Name:         "fixture-organization-name-two",
 						SerialNumber: "00000000000000000002",
 					},
-					State:     database.IncomingAccessRequestReceived,
-					CreatedAt: fixtureTime,
-					UpdatedAt: fixtureTime,
+					PublicKeyFingerprint: fixtureCertBundle.PublicKeyFingerprint(),
+					PublicKeyPEM:         fixturePEM,
+					State:                database.IncomingAccessRequestReceived,
+					CreatedAt:            fixtureTime,
+					UpdatedAt:            fixtureTime,
 				},
 			},
 			wantErr: nil,

@@ -51,6 +51,12 @@ func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context
 	}
 
 	for _, accessRequest := range incomingAccessRequests {
+		publicKeyPem := ""
+
+		if accessRequest.PublicKeyPem.Valid {
+			publicKeyPem = accessRequest.PublicKeyPem.String
+		}
+
 		result = append(result, &IncomingAccessRequest{
 			ID: uint(accessRequest.ID),
 			Organization: IncomingAccessRequestOrganization{
@@ -61,8 +67,10 @@ func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context
 			Service: &Service{
 				Name: serviceName,
 			},
-			CreatedAt: accessRequest.CreatedAt,
-			UpdatedAt: accessRequest.UpdatedAt,
+			PublicKeyPEM:         publicKeyPem,
+			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
+			CreatedAt:            accessRequest.CreatedAt,
+			UpdatedAt:            accessRequest.UpdatedAt,
 		})
 	}
 

@@ -8,7 +8,6 @@ import (
 	"errors"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -25,8 +24,6 @@ import (
 
 //nolint:funlen,dupl // this is a test
 func Test_SendAccessRequest(t *testing.T) {
-	now := time.Now()
-
 	pkiDir := filepath.Join("..", "..", "..", "testing", "pki")
 
 	certBundle, err := common_testing.GetCertificateBundle(pkiDir, common_testing.OrgNLXTest)
@@ -83,6 +80,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						PublicKeyFingerprint: testPublicKeyFingerprint,
 						State:                database.OutgoingAccessRequestFailed,
 						ErrorCause:           "The organization is not available.",
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 					}).
 					Return(&database.OutgoingAccessRequest{
 						ID: 42,
@@ -92,8 +91,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						},
 						ServiceName:          "my-service",
 						State:                database.OutgoingAccessRequestFailed,
-						CreatedAt:            now,
-						UpdatedAt:            now,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 						ErrorCause:           "The organization is not available.",
 						PublicKeyPEM:         testPublicKeyPEM,
 						PublicKeyFingerprint: testPublicKeyFingerprint,
@@ -124,8 +123,8 @@ func Test_SendAccessRequest(t *testing.T) {
 					},
 					ServiceName:          "my-service",
 					State:                external.AccessRequestState_ACCESS_REQUEST_STATE_FAILED,
-					CreatedAt:            timestamppb.New(now),
-					UpdatedAt:            timestamppb.New(now),
+					CreatedAt:            timestamppb.New(fixtureTime),
+					UpdatedAt:            timestamppb.New(fixtureTime),
 					PublicKeyFingerprint: testPublicKeyFingerprint,
 					ErrorDetails: &api.ErrorDetails{
 						Code:        api.ErrorCode_ERROR_CODE_INTERNAL,
@@ -164,6 +163,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						PublicKeyFingerprint: testPublicKeyFingerprint,
 						State:                database.OutgoingAccessRequestFailed,
 						ErrorCause:           "The organization is not available.",
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 					}).
 					Return(&database.OutgoingAccessRequest{
 						ID: 42,
@@ -173,8 +174,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						},
 						ServiceName:          "my-service",
 						State:                database.OutgoingAccessRequestFailed,
-						CreatedAt:            now,
-						UpdatedAt:            now,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 						ErrorCause:           "The organization is not available.",
 						PublicKeyPEM:         testPublicKeyPEM,
 						PublicKeyFingerprint: testPublicKeyFingerprint,
@@ -205,8 +206,8 @@ func Test_SendAccessRequest(t *testing.T) {
 					},
 					ServiceName:          "my-service",
 					State:                external.AccessRequestState_ACCESS_REQUEST_STATE_FAILED,
-					CreatedAt:            timestamppb.New(now),
-					UpdatedAt:            timestamppb.New(now),
+					CreatedAt:            timestamppb.New(fixtureTime),
+					UpdatedAt:            timestamppb.New(fixtureTime),
 					PublicKeyFingerprint: testPublicKeyFingerprint,
 					ErrorDetails: &api.ErrorDetails{
 						Code:        api.ErrorCode_ERROR_CODE_INTERNAL,
@@ -236,16 +237,20 @@ func Test_SendAccessRequest(t *testing.T) {
 					}, nil)
 
 				mocks.db.
-					EXPECT().CreateOutgoingAccessRequest(gomock.Any(), &database.OutgoingAccessRequest{
-					Organization: database.Organization{
-						SerialNumber: "00000000000000000001",
-					},
-					ReferenceID:          1,
-					ServiceName:          "my-service",
-					PublicKeyPEM:         testPublicKeyPEM,
-					PublicKeyFingerprint: testPublicKeyFingerprint,
-					State:                database.OutgoingAccessRequestReceived,
-				}).Return(nil, database.ErrActiveAccessRequest)
+					EXPECT().
+					CreateOutgoingAccessRequest(gomock.Any(), &database.OutgoingAccessRequest{
+						Organization: database.Organization{
+							SerialNumber: "00000000000000000001",
+						},
+						ReferenceID:          1,
+						ServiceName:          "my-service",
+						PublicKeyPEM:         testPublicKeyPEM,
+						PublicKeyFingerprint: testPublicKeyFingerprint,
+						State:                database.OutgoingAccessRequestReceived,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
+					}).
+					Return(nil, database.ErrActiveAccessRequest)
 			},
 			req: &api.SendAccessRequestRequest{
 				OrganizationSerialNumber: "00000000000000000001",
@@ -284,6 +289,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						PublicKeyPEM:         testPublicKeyPEM,
 						PublicKeyFingerprint: testPublicKeyFingerprint,
 						State:                database.OutgoingAccessRequestReceived,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 					}).
 					Return(nil, errors.New("arbitrary error"))
 			},
@@ -324,6 +331,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						PublicKeyPEM:         testPublicKeyPEM,
 						PublicKeyFingerprint: testPublicKeyFingerprint,
 						State:                database.OutgoingAccessRequestReceived,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 					}).
 					Return(&database.OutgoingAccessRequest{}, nil)
 
@@ -375,6 +384,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						PublicKeyPEM:         testPublicKeyPEM,
 						PublicKeyFingerprint: testPublicKeyFingerprint,
 						State:                database.OutgoingAccessRequestReceived,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 					}).
 					Return(&database.OutgoingAccessRequest{
 						ID: 42,
@@ -384,8 +395,8 @@ func Test_SendAccessRequest(t *testing.T) {
 						},
 						ServiceName:          "my-service",
 						State:                database.OutgoingAccessRequestReceived,
-						CreatedAt:            now,
-						UpdatedAt:            now,
+						CreatedAt:            fixtureTime,
+						UpdatedAt:            fixtureTime,
 						PublicKeyFingerprint: testPublicKeyFingerprint,
 					}, nil)
 
@@ -414,8 +425,8 @@ func Test_SendAccessRequest(t *testing.T) {
 					},
 					ServiceName:          "my-service",
 					State:                external.AccessRequestState_ACCESS_REQUEST_STATE_RECEIVED,
-					CreatedAt:            timestamppb.New(now),
-					UpdatedAt:            timestamppb.New(now),
+					CreatedAt:            timestamppb.New(fixtureTime),
+					UpdatedAt:            timestamppb.New(fixtureTime),
 					PublicKeyFingerprint: testPublicKeyFingerprint,
 				},
 			},

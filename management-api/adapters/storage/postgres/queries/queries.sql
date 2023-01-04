@@ -479,6 +479,8 @@ select
     access_requests_incoming.organization_name,
     access_requests_incoming.organization_serial_number,
     access_requests_incoming.state,
+    access_requests_incoming.public_key_fingerprint,
+    access_requests_incoming.public_key_pem,
     access_requests_incoming.created_at,
     access_requests_incoming.updated_at
 from
