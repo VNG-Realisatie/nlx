@@ -231,6 +231,7 @@ insert into
     public_key_fingerprint,
     public_key_pem,
     service_name,
+    reference_id,
     created_at,
     updated_at
 ) values (
@@ -241,7 +242,8 @@ insert into
     $5,
     $6,
     $7,
-    $8
+    $8,
+    $9
 )
 returning id
 `
@@ -253,6 +255,7 @@ type CreateOutgoingAccessRequestParams struct {
 	PublicKeyFingerprint     string
 	PublicKeyPem             sql.NullString
 	ServiceName              string
+	ReferenceID              int32
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }
@@ -265,6 +268,7 @@ func (q *Queries) CreateOutgoingAccessRequest(ctx context.Context, arg *CreateOu
 		arg.PublicKeyFingerprint,
 		arg.PublicKeyPem,
 		arg.ServiceName,
+		arg.ReferenceID,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)

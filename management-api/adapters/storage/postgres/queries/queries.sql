@@ -592,6 +592,7 @@ insert into
     public_key_fingerprint,
     public_key_pem,
     service_name,
+    reference_id,
     created_at,
     updated_at
 ) values (
@@ -602,7 +603,8 @@ insert into
     $5,
     $6,
     $7,
-    $8
+    $8,
+    $9
 )
 returning id
 ;

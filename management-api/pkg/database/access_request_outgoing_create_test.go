@@ -71,6 +71,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 					State:                database.OutgoingAccessRequestReceived,
 					CreatedAt:            fixtureTime,
 					UpdatedAt:            fixtureTime,
+					ReferenceID:          42,
 				},
 			},
 			want: &database.OutgoingAccessRequest{
@@ -85,6 +86,7 @@ func TestCreateOutgoingAccessRequest(t *testing.T) {
 				State:                database.OutgoingAccessRequestReceived,
 				CreatedAt:            fixtureTime,
 				UpdatedAt:            fixtureTime,
+				ReferenceID:          42,
 			},
 			wantErr: nil,
 		},

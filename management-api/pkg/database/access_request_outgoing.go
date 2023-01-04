@@ -169,6 +169,7 @@ func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Contex
 		PublicKeyFingerprint:     accessRequest.PublicKeyFingerprint,
 		PublicKeyPem:             pem,
 		ServiceName:              accessRequest.ServiceName,
+		ReferenceID:              int32(accessRequest.ReferenceID),
 		CreatedAt:                accessRequest.CreatedAt,
 		UpdatedAt:                accessRequest.UpdatedAt,
 	})
