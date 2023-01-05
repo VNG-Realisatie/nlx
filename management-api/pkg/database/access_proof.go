@@ -97,13 +97,7 @@ func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx con
 }
 
 func (db *PostgresConfigDatabase) RevokeAccessProof(ctx context.Context, accessProofID uint, revokedAt time.Time) (*AccessProof, error) {
-	err := db.queries.RevokeAccessProof(ctx, &queries.RevokeAccessProofParams{
-		ID: int32(accessProofID),
-		RevokedAt: sql.NullTime{
-			Valid: true,
-			Time:  revokedAt,
-		},
-	})
+	accessProof, err := db.queries.GetAccessProof(ctx, int32(accessProofID))
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, ErrNotFound
@@ -112,12 +106,14 @@ func (db *PostgresConfigDatabase) RevokeAccessProof(ctx context.Context, accessP
 		return nil, err
 	}
 
-	accessProof, err := db.queries.GetAccessProof(ctx, int32(accessProofID))
+	err = db.queries.RevokeAccessProof(ctx, &queries.RevokeAccessProofParams{
+		ID: int32(accessProofID),
+		RevokedAt: sql.NullTime{
+			Valid: true,
+			Time:  revokedAt,
+		},
+	})
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, ErrNotFound
-		}
-
 		return nil, err
 	}
 
