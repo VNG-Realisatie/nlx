@@ -63,12 +63,6 @@ func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx con
 		return nil, err
 	}
 
-	var pem = ""
-
-	if outgoingAccessRequest.PublicKeyPem.Valid {
-		pem = outgoingAccessRequest.PublicKeyPem.String
-	}
-
 	var errorCause = ""
 
 	if outgoingAccessRequest.ErrorCause.Valid {
@@ -88,7 +82,7 @@ func (db *PostgresConfigDatabase) GetAccessProofForOutgoingAccessRequest(ctx con
 			ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
 			State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
 			PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
-			PublicKeyPEM:         pem,
+			PublicKeyPEM:         outgoingAccessRequest.PublicKeyPem,
 			ErrorCode:            int(outgoingAccessRequest.ErrorCode),
 			ErrorCause:           errorCause,
 			CreatedAt:            outgoingAccessRequest.CreatedAt,
@@ -163,12 +157,6 @@ func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessPro
 			return nil, err
 		}
 
-		var pem = ""
-
-		if outgoingAccessRequest.PublicKeyPem.Valid {
-			pem = outgoingAccessRequest.PublicKeyPem.String
-		}
-
 		var errorCause = ""
 
 		if outgoingAccessRequest.ErrorCause.Valid {
@@ -188,7 +176,7 @@ func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessPro
 				ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
 				State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
 				PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
-				PublicKeyPEM:         pem,
+				PublicKeyPEM:         outgoingAccessRequest.PublicKeyPem,
 				ErrorCode:            int(outgoingAccessRequest.ErrorCode),
 				ErrorCause:           errorCause,
 				CreatedAt:            outgoingAccessRequest.CreatedAt,

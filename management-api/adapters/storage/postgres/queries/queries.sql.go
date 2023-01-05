@@ -199,7 +199,7 @@ type CreateIncomingAccessRequestParams struct {
 	OrganizationName         string
 	OrganizationSerialNumber string
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	ServiceID                int32
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
@@ -253,7 +253,7 @@ type CreateOutgoingAccessRequestParams struct {
 	OrganizationName         string
 	OrganizationSerialNumber string
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	ServiceName              string
 	ReferenceID              int32
 	CreatedAt                time.Time
@@ -461,7 +461,7 @@ type GetAccessGrantRow struct {
 	AccessRequestIncomingCreatedAt                time.Time
 	AccessRequestIncomingUpdatedAt                time.Time
 	AccessRequestIncomingPublicKeyFingerprint     string
-	AccessRequestIncomingPublicKeyPem             sql.NullString
+	AccessRequestIncomingPublicKeyPem             string
 	ServiceID                                     int32
 	ServiceName                                   string
 	ServiceEndpointUrl                            string
@@ -611,7 +611,7 @@ type GetIncomingAccessRequestRow struct {
 	OrganizationName         string
 	OrganizationSerialNumber string
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 	ServiceID                int32
@@ -771,7 +771,7 @@ type GetLatestAccessGrantForServiceRow struct {
 	AccessRequestIncomingCreatedAt                time.Time
 	AccessRequestIncomingUpdatedAt                time.Time
 	AccessRequestIncomingPublicKeyFingerprint     string
-	AccessRequestIncomingPublicKeyPem             sql.NullString
+	AccessRequestIncomingPublicKeyPem             string
 	ServiceID                                     int32
 	ServiceName                                   string
 	ServiceEndpointUrl                            string
@@ -908,7 +908,7 @@ type GetLatestOutgoingAccessRequestRow struct {
 	ErrorCode                int32
 	ErrorCause               sql.NullString
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }
@@ -963,7 +963,7 @@ type GetOutgoingAccessRequestRow struct {
 	ErrorCode                int32
 	ErrorCause               sql.NullString
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }
@@ -1097,7 +1097,7 @@ type ListAccessGrantsForServiceRow struct {
 	AccessRequestIncomingCreatedAt                time.Time
 	AccessRequestIncomingUpdatedAt                time.Time
 	AccessRequestIncomingPublicKeyFingerprint     string
-	AccessRequestIncomingPublicKeyPem             sql.NullString
+	AccessRequestIncomingPublicKeyPem             string
 	ServiceID                                     int32
 	ServiceName                                   string
 	ServiceEndpointUrl                            string
@@ -1201,7 +1201,7 @@ type ListAllLatestOutgoingAccessRequestsRow struct {
 	ErrorCode                int32
 	ErrorCause               sql.NullString
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }
@@ -1361,7 +1361,7 @@ type ListIncomingAccessRequestsRow struct {
 	OrganizationSerialNumber string
 	State                    string
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }
@@ -1541,7 +1541,7 @@ type ListLatestOutgoingAccessRequestsRow struct {
 	ErrorCode                int32
 	ErrorCause               sql.NullString
 	PublicKeyFingerprint     string
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
 }

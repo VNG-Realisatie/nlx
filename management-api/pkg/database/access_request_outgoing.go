@@ -5,7 +5,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"time"
 
@@ -66,12 +65,6 @@ func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.C
 	var outgoingAccessRequests = make([]*OutgoingAccessRequest, len(accessRequests))
 
 	for i, accessRequest := range accessRequests {
-		var pem = ""
-
-		if accessRequest.PublicKeyPem.Valid {
-			pem = accessRequest.PublicKeyPem.String
-		}
-
 		var errorCause = ""
 
 		if accessRequest.ErrorCause.Valid {
@@ -88,7 +81,7 @@ func (db *PostgresConfigDatabase) ListLatestOutgoingAccessRequests(ctx context.C
 			ReferenceID:          uint(accessRequest.ReferenceID),
 			State:                OutgoingAccessRequestState(accessRequest.State),
 			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
-			PublicKeyPEM:         pem,
+			PublicKeyPEM:         accessRequest.PublicKeyPem,
 			ErrorCode:            int(accessRequest.ErrorCode),
 			ErrorCause:           errorCause,
 			CreatedAt:            accessRequest.CreatedAt,
@@ -108,12 +101,6 @@ func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx contex
 	var outgoingAccessRequests = make([]*OutgoingAccessRequest, len(accessRequests))
 
 	for i, accessRequest := range accessRequests {
-		var pem = ""
-
-		if accessRequest.PublicKeyPem.Valid {
-			pem = accessRequest.PublicKeyPem.String
-		}
-
 		var errorCause = ""
 
 		if accessRequest.ErrorCause.Valid {
@@ -130,7 +117,7 @@ func (db *PostgresConfigDatabase) ListAllLatestOutgoingAccessRequests(ctx contex
 			ReferenceID:          uint(accessRequest.ReferenceID),
 			State:                OutgoingAccessRequestState(accessRequest.State),
 			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
-			PublicKeyPEM:         pem,
+			PublicKeyPEM:         accessRequest.PublicKeyPem,
 			ErrorCode:            int(accessRequest.ErrorCode),
 			ErrorCause:           errorCause,
 			CreatedAt:            accessRequest.CreatedAt,
@@ -155,19 +142,12 @@ func (db *PostgresConfigDatabase) CreateOutgoingAccessRequest(ctx context.Contex
 		return nil, ErrActiveAccessRequest
 	}
 
-	var pem = sql.NullString{}
-
-	if accessRequest.PublicKeyPEM != "" {
-		pem.String = accessRequest.PublicKeyPEM
-		pem.Valid = true
-	}
-
 	id, err := db.queries.CreateOutgoingAccessRequest(ctx, &queries.CreateOutgoingAccessRequestParams{
 		State:                    string(accessRequest.State),
 		OrganizationName:         accessRequest.Organization.Name,
 		OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
 		PublicKeyFingerprint:     accessRequest.PublicKeyFingerprint,
-		PublicKeyPem:             pem,
+		PublicKeyPem:             accessRequest.PublicKeyPEM,
 		ServiceName:              accessRequest.ServiceName,
 		ReferenceID:              int32(accessRequest.ReferenceID),
 		CreatedAt:                accessRequest.CreatedAt,
@@ -188,12 +168,6 @@ func (db *PostgresConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, 
 		return nil, ErrNotFound
 	}
 
-	var pem = ""
-
-	if outgoingAccessRequest.PublicKeyPem.Valid {
-		pem = outgoingAccessRequest.PublicKeyPem.String
-	}
-
 	var errorCause = ""
 
 	if outgoingAccessRequest.ErrorCause.Valid {
@@ -210,7 +184,7 @@ func (db *PostgresConfigDatabase) GetOutgoingAccessRequest(ctx context.Context, 
 		ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
 		State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
 		PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
-		PublicKeyPEM:         pem,
+		PublicKeyPEM:         outgoingAccessRequest.PublicKeyPem,
 		ErrorCode:            int(outgoingAccessRequest.ErrorCode),
 		ErrorCause:           errorCause,
 		CreatedAt:            outgoingAccessRequest.CreatedAt,
@@ -230,12 +204,6 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 		return nil, ErrNotFound
 	}
 
-	var pem = ""
-
-	if outgoingAccessRequest.PublicKeyPem.Valid {
-		pem = outgoingAccessRequest.PublicKeyPem.String
-	}
-
 	var errorCause = ""
 
 	if outgoingAccessRequest.ErrorCause.Valid {
@@ -252,7 +220,7 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 		ReferenceID:          uint(outgoingAccessRequest.ReferenceID),
 		State:                OutgoingAccessRequestState(outgoingAccessRequest.State),
 		PublicKeyFingerprint: outgoingAccessRequest.PublicKeyFingerprint,
-		PublicKeyPEM:         pem,
+		PublicKeyPEM:         outgoingAccessRequest.PublicKeyPem,
 		ErrorCode:            int(outgoingAccessRequest.ErrorCode),
 		ErrorCause:           errorCause,
 		CreatedAt:            outgoingAccessRequest.CreatedAt,

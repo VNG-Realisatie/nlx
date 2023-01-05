@@ -35,7 +35,7 @@ type NlxManagementAccessRequestsIncoming struct {
 	State                    string
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	OrganizationSerialNumber string
 }
 
@@ -51,7 +51,7 @@ type NlxManagementAccessRequestsOutgoing struct {
 	ErrorStackTrace          []byte
 	CreatedAt                time.Time
 	UpdatedAt                time.Time
-	PublicKeyPem             sql.NullString
+	PublicKeyPem             string
 	OrganizationSerialNumber string
 }
 

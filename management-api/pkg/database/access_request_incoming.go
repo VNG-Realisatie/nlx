@@ -51,12 +51,6 @@ func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context
 	}
 
 	for _, accessRequest := range incomingAccessRequests {
-		publicKeyPem := ""
-
-		if accessRequest.PublicKeyPem.Valid {
-			publicKeyPem = accessRequest.PublicKeyPem.String
-		}
-
 		result = append(result, &IncomingAccessRequest{
 			ID: uint(accessRequest.ID),
 			Organization: IncomingAccessRequestOrganization{
@@ -67,7 +61,7 @@ func (db *PostgresConfigDatabase) ListIncomingAccessRequests(ctx context.Context
 			Service: &Service{
 				Name: serviceName,
 			},
-			PublicKeyPEM:         publicKeyPem,
+			PublicKeyPEM:         accessRequest.PublicKeyPem,
 			PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
 			CreatedAt:            accessRequest.CreatedAt,
 			UpdatedAt:            accessRequest.UpdatedAt,
@@ -136,7 +130,7 @@ func (db *PostgresConfigDatabase) GetIncomingAccessRequest(ctx context.Context, 
 		State:                IncomingAccessRequestState(accessRequest.State),
 		AccessGrants:         nil,
 		PublicKeyFingerprint: accessRequest.PublicKeyFingerprint,
-		PublicKeyPEM:         accessRequest.PublicKeyPem.String,
+		PublicKeyPEM:         accessRequest.PublicKeyPem,
 		Service:              nil,
 		CreatedAt:            accessRequest.CreatedAt,
 		UpdatedAt:            accessRequest.UpdatedAt,
@@ -144,19 +138,12 @@ func (db *PostgresConfigDatabase) GetIncomingAccessRequest(ctx context.Context, 
 }
 
 func (db *PostgresConfigDatabase) CreateIncomingAccessRequest(ctx context.Context, accessRequest *IncomingAccessRequest) (*IncomingAccessRequest, error) {
-	pem := sql.NullString{Valid: false}
-
-	if accessRequest.PublicKeyPEM != "" {
-		pem.Valid = true
-		pem.String = accessRequest.PublicKeyPEM
-	}
-
 	id, err := db.queries.CreateIncomingAccessRequest(ctx, &queries.CreateIncomingAccessRequestParams{
 		State:                    string(accessRequest.State),
 		OrganizationName:         accessRequest.Organization.Name,
 		OrganizationSerialNumber: accessRequest.Organization.SerialNumber,
 		PublicKeyFingerprint:     accessRequest.PublicKeyFingerprint,
-		PublicKeyPem:             pem,
+		PublicKeyPem:             accessRequest.PublicKeyPEM,
 		ServiceID:                int32(accessRequest.ServiceID),
 		CreatedAt:                accessRequest.CreatedAt,
 		UpdatedAt:                accessRequest.UpdatedAt,
