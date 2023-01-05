@@ -138,7 +138,7 @@ func (db *PostgresConfigDatabase) GetAccessProofs(ctx context.Context, accessPro
 		accessProof, err := db.queries.GetAccessProof(ctx, int32(id))
 		if err != nil {
 			if err == sql.ErrNoRows {
-				continue
+				return nil, ErrNotFound
 			}
 
 			return nil, err

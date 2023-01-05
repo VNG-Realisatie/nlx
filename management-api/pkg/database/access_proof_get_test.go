@@ -35,13 +35,15 @@ func TestGetAccessProofs(t *testing.T) {
 		loadFixtures bool
 		args         args
 		want         []*database.AccessProof
+		wantErr      error
 	}{
 		"when_access_request_not_found": {
 			loadFixtures: false,
 			args: args{
 				accessProofIDs: []uint64{9999},
 			},
-			want: []*database.AccessProof{},
+			want:    nil,
+			wantErr: database.ErrNotFound,
 		},
 		"happy_flow": {
 			loadFixtures: true,
@@ -88,6 +90,7 @@ func TestGetAccessProofs(t *testing.T) {
 					Time:  fixtureTime,
 				},
 			}},
+			wantErr: nil,
 		},
 	}
 
@@ -101,8 +104,8 @@ func TestGetAccessProofs(t *testing.T) {
 			defer close()
 
 			got, err := configDb.GetAccessProofs(context.Background(), tt.args.accessProofIDs)
-			require.NoError(t, err)
 
+			require.Equal(t, tt.wantErr, err)
 			require.EqualValues(t, tt.want, got)
 
 		})
