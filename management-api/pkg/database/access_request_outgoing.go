@@ -5,6 +5,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
@@ -231,17 +232,22 @@ func (db *PostgresConfigDatabase) GetLatestOutgoingAccessRequest(ctx context.Con
 }
 
 func (db *PostgresConfigDatabase) UpdateOutgoingAccessRequestState(ctx context.Context, accessRequestID uint, state OutgoingAccessRequestState) error {
-	rows, err := db.queries.UpdateOutgoingAccessRequestState(ctx, &queries.UpdateOutgoingAccessRequestStateParams{
+	_, err := db.queries.GetOutgoingAccessRequest(ctx, int32(accessRequestID))
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return ErrNotFound
+		} else {
+			return err
+		}
+	}
+
+	_, err = db.queries.UpdateOutgoingAccessRequestState(ctx, &queries.UpdateOutgoingAccessRequestStateParams{
 		State:     string(state),
 		UpdatedAt: time.Now(),
 		ID:        int32(accessRequestID),
 	})
 	if err != nil {
 		return err
-	}
-
-	if rows == 0 {
-		return ErrNotFound
 	}
 
 	return nil
