@@ -122,11 +122,12 @@ func TestCreateAuditLogRecord(t *testing.T) {
 			_, err := configDb.CreateAuditLogRecord(context.Background(), tt.args.auditLog)
 			require.ErrorIs(t, err, tt.wantErr)
 
-			lastAuditLog, err := configDb.ListAuditLogRecords(context.Background(), 1)
+			auditLogRecords, err := configDb.ListAuditLogRecords(context.Background(), 1)
 			require.NoError(t, err)
+			require.NotEmpty(t, auditLogRecords)
 
 			if tt.wantErr == nil {
-				require.EqualValues(t, tt.want, lastAuditLog[0])
+				require.EqualValues(t, tt.want, auditLogRecords[0])
 			}
 		})
 	}
