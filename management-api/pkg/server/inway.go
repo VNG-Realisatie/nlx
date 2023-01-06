@@ -182,7 +182,15 @@ func (s *ManagementService) DeleteInway(ctx context.Context, req *api.DeleteInwa
 
 	err = s.configDatabase.DeleteInway(ctx, req.Name)
 	if err != nil {
-		logger.Error("error deleting inway in DB", zap.Error(err))
+		if err == database.ErrInwayIsOrganizationInway {
+			return &api.DeleteInwayResponse{}, status.Error(codes.FailedPrecondition, "inway is used as organization inway")
+		}
+
+		if err == database.ErrInwayUsedByService {
+			return &api.DeleteInwayResponse{}, status.Error(codes.FailedPrecondition, "inway is attached to at least one service")
+		}
+
+		logger.Error("error deleting inway in database", zap.Error(err))
 		return &api.DeleteInwayResponse{}, status.Error(codes.Internal, "database error")
 	}
 

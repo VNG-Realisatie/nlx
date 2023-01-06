@@ -1836,27 +1836,15 @@ func (q *Queries) ListTermsOfService(ctx context.Context) ([]*NlxManagementTerms
 	return items, nil
 }
 
-const removeInway = `-- name: RemoveInway :exec
+const removeInwayByName = `-- name: RemoveInwayByName :exec
 delete from
     nlx_management.inways
 where
-        id = $1
+    name = $1
 `
 
-func (q *Queries) RemoveInway(ctx context.Context, id int32) error {
-	_, err := q.exec(ctx, q.removeInwayStmt, removeInway, id)
-	return err
-}
-
-const removeInwayServicesForInway = `-- name: RemoveInwayServicesForInway :exec
-delete from
-    nlx_management.inways_services
-where
-    inway_id = $1
-`
-
-func (q *Queries) RemoveInwayServicesForInway(ctx context.Context, inwayID int32) error {
-	_, err := q.exec(ctx, q.removeInwayServicesForInwayStmt, removeInwayServicesForInway, inwayID)
+func (q *Queries) RemoveInwayByName(ctx context.Context, name string) error {
+	_, err := q.exec(ctx, q.removeInwayByNameStmt, removeInwayByName, name)
 	return err
 }
 

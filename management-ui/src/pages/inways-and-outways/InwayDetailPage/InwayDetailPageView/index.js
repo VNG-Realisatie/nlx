@@ -31,7 +31,7 @@ const InwayDetailPageView = ({ inway, removeHandler }) => {
     children: (
       <p>
         {t(
-          'Are you sure you want to remove the Inway? If this Inway is used to access services, deleting the Inway might cause these services to be unavailable on the NLX network.',
+          'Are you sure you want to remove the Inway? Please make sure no services are being exposed using this Inway and the Inways is not being used as your organization Inway.',
         )}
       </p>
     ),

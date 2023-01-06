@@ -147,11 +147,8 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.listTermsOfServiceStmt, err = db.PrepareContext(ctx, listTermsOfService); err != nil {
 		return nil, fmt.Errorf("error preparing query ListTermsOfService: %w", err)
 	}
-	if q.removeInwayStmt, err = db.PrepareContext(ctx, removeInway); err != nil {
-		return nil, fmt.Errorf("error preparing query RemoveInway: %w", err)
-	}
-	if q.removeInwayServicesForInwayStmt, err = db.PrepareContext(ctx, removeInwayServicesForInway); err != nil {
-		return nil, fmt.Errorf("error preparing query RemoveInwayServicesForInway: %w", err)
+	if q.removeInwayByNameStmt, err = db.PrepareContext(ctx, removeInwayByName); err != nil {
+		return nil, fmt.Errorf("error preparing query RemoveInwayByName: %w", err)
 	}
 	if q.revokeAccessGrantStmt, err = db.PrepareContext(ctx, revokeAccessGrant); err != nil {
 		return nil, fmt.Errorf("error preparing query RevokeAccessGrant: %w", err)
@@ -393,14 +390,9 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing listTermsOfServiceStmt: %w", cerr)
 		}
 	}
-	if q.removeInwayStmt != nil {
-		if cerr := q.removeInwayStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing removeInwayStmt: %w", cerr)
-		}
-	}
-	if q.removeInwayServicesForInwayStmt != nil {
-		if cerr := q.removeInwayServicesForInwayStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing removeInwayServicesForInwayStmt: %w", cerr)
+	if q.removeInwayByNameStmt != nil {
+		if cerr := q.removeInwayByNameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing removeInwayByNameStmt: %w", cerr)
 		}
 	}
 	if q.revokeAccessGrantStmt != nil {
@@ -533,8 +525,7 @@ type Queries struct {
 	listServicesStmt                                 *sql.Stmt
 	listServicesForInwayStmt                         *sql.Stmt
 	listTermsOfServiceStmt                           *sql.Stmt
-	removeInwayStmt                                  *sql.Stmt
-	removeInwayServicesForInwayStmt                  *sql.Stmt
+	removeInwayByNameStmt                            *sql.Stmt
 	revokeAccessGrantStmt                            *sql.Stmt
 	revokeAccessProofStmt                            *sql.Stmt
 	setAuditLogAsSucceededStmt                       *sql.Stmt
@@ -592,8 +583,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		listServicesStmt:                                 q.listServicesStmt,
 		listServicesForInwayStmt:                         q.listServicesForInwayStmt,
 		listTermsOfServiceStmt:                           q.listTermsOfServiceStmt,
-		removeInwayStmt:                                  q.removeInwayStmt,
-		removeInwayServicesForInwayStmt:                  q.removeInwayServicesForInwayStmt,
+		removeInwayByNameStmt:                            q.removeInwayByNameStmt,
 		revokeAccessGrantStmt:                            q.revokeAccessGrantStmt,
 		revokeAccessProofStmt:                            q.revokeAccessProofStmt,
 		setAuditLogAsSucceededStmt:                       q.setAuditLogAsSucceededStmt,

@@ -44,8 +44,21 @@ const InwayDetailPage = () => {
         message = t(`You don't have the required permission.`)
       }
 
+      if (error.response && error.response.status === 400) {
+        const responseJson = await error.response.json()
+        if (responseJson.message === 'inway is used as organization inway') {
+          message = t('Inway is used as organization Inway')
+        }
+
+        if (
+          responseJson.message === 'inway is attached to at least one service'
+        ) {
+          message = t('Inway is attached to at lease one service')
+        }
+      }
+
       showToast({
-        title: t('Failed to remove the inway'),
+        title: t('Failed to remove the Inway'),
         body: message,
         variant: 'error',
       })

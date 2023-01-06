@@ -302,6 +302,40 @@ func TestDeleteInway(t *testing.T) {
 			},
 			wantErr: status.Error(codes.PermissionDenied, "user needs the permission \"permissions.inway.delete\" to execute this request"),
 		},
+		"used_as_organization_inway": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					InwayDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-inway")
+
+				mocks.db.
+					EXPECT().
+					DeleteInway(gomock.Any(), "my-inway").
+					Return(database.ErrInwayIsOrganizationInway)
+			},
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+			wantErr: status.Error(codes.FailedPrecondition, "inway is used as organization inway"),
+		},
+		"used_by_service": {
+			ctx: testCreateAdminUserContext(),
+			setup: func(mocks serviceMocks) {
+				mocks.al.
+					EXPECT().
+					InwayDelete(gomock.Any(), "admin@example.com", "nlxctl", "my-inway")
+
+				mocks.db.
+					EXPECT().
+					DeleteInway(gomock.Any(), "my-inway").
+					Return(database.ErrInwayUsedByService)
+			},
+			request: &api.DeleteInwayRequest{
+				Name: "my-inway",
+			},
+			wantErr: status.Error(codes.FailedPrecondition, "inway is attached to at least one service"),
+		},
 		"failed_to_create_audit_log": {
 			ctx: testCreateAdminUserContext(),
 			setup: func(mocks serviceMocks) {

@@ -129,7 +129,7 @@ test('remove an Inway', async () => {
   fireEvent.click(okButton)
 
   expect(await screen.findByRole('alert')).toHaveTextContent(
-    "Failed to remove the inwayYou don't have the required permission.",
+    "Failed to remove the InwayYou don't have the required permission.",
   )
 
   await waitFor(() =>

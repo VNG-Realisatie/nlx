@@ -725,18 +725,11 @@ where
     inways.id = $7
 ;
 
--- name: RemoveInwayServicesForInway :exec
-delete from
-    nlx_management.inways_services
-where
-    inway_id = $1
-;
-
--- name: RemoveInway :exec
+-- name: RemoveInwayByName :exec
 delete from
     nlx_management.inways
 where
-        id = $1
+    name = $1
 ;
 
 -- name: ListInways :many
