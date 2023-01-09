@@ -126,6 +126,11 @@ func TestCreateAuditLogRecord(t *testing.T) {
 			require.NoError(t, err)
 			require.NotEmpty(t, auditLogRecords)
 
+			// explicitly added check for created at, since this failed a couple of
+			// times in the past. Want to keep this for some time as it
+			// provides extra information while debugging
+			require.Equal(t, tt.want.CreatedAt, auditLogRecords[0].CreatedAt)
+
 			if tt.wantErr == nil {
 				require.EqualValues(t, tt.want, auditLogRecords[0])
 			}
