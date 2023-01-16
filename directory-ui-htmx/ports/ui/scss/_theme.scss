@@ -1,0 +1,193 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+// spacings
+$baseFontSize: 16px;
+
+$spacing01: 0.125rem;
+$spacing02: 0.25rem;
+$spacing03: 0.5rem;
+$spacing04: 0.75rem;
+$spacing05: 1rem;
+$spacing06: 1.5rem;
+$spacing07: 2rem;
+$spacing08: 2.5rem;
+$spacing09: 3rem;
+$spacing10: 4rem;
+$spacing11: 5rem;
+$spacing12: 6rem;
+
+$lineHeightTextSmall: 100%;
+$lineHeightText: 150%;
+$lineHeightHeading: 125%;
+
+$fontWeightRegular: 500;
+$fontWeightSemiBold: 600;
+$fontWeightBold: 700;
+
+$fontSizeSmall: 0.875rem;
+$fontSizeMedium: 1rem;
+$fontSizeLarge: 1.125rem;
+$fontSizeXLarge: 1.5rem;
+$fontSizeXXLarge: 2rem;
+
+$iconSizeSmall: 1rem;
+$iconSizeDefault: 1.25rem;
+$iconSizeLarge: 1.5rem;
+$iconSizeXLarge: 2rem;
+
+// pallette gray
+$colorPaletteGray50: #FAFAFA;
+$colorPaletteGray100: #F5F5F5;
+$colorPaletteGray300: #E0E0E0;
+$colorPaletteGray200: #EEEEEE;
+$colorPaletteGray400: #BDBDBD;
+$colorPaletteGray500: #9E9E9E;
+$colorPaletteGray600: #757575;
+$colorPaletteGray700: #616161;
+$colorPaletteGray800: #424242;
+$colorPaletteGray900: #212121;
+
+// Brand
+$colorBrand1: #FFBC2C;
+$colorBrand2: #E0E4EA;
+$colorBrand3: #262D30;
+$colorBrand4: #474E57;
+
+// Sub-colors
+$colorInfo: #0B71A1;
+$colorInfoLight: #D3F3FD;
+$colorWarning: #FFBC2C;
+$colorWarningLight: #FCF8DA;
+$colorError: #F02B41;
+$colorErrorLight: #FFDDE2;
+$colorSuccess: #39870C;
+$colorSuccessLight: #DCE8D1;
+
+// Generics
+$colorBackground: #FFFFFF;
+$colorBackgroundAlt: $colorPaletteGray100;
+$colorFocus: #0B71A1;
+
+// Text
+$colorText: $colorPaletteGray900;
+$colorTextInverse: $colorPaletteGray50;
+
+$colorTextLabel: $colorPaletteGray600;
+$colorTextDisabled: rgba(0, 0, 0, 0.3);
+
+$colorTextLink: #0B71A1;
+$colorTextLinkHover: #005282;
+$colorTextLinkDisabled: rgba(0, 0, 0, 0.2);
+
+// Alert
+$colorAlertInfo: $colorInfo;
+$colorAlertInfoBackground: $colorInfoLight;
+$colorAlertWarning: $colorWarning;
+$colorAlertWarningBackground: $colorWarningLight;
+$colorAlertError: $colorError;
+$colorAlertErrorBackground: $colorErrorLight;
+$colorAlertSuccess: $colorSuccess;
+$colorAlertSuccessBackground: $colorSuccessLight;
+
+// Divider
+$colorDividerPrimary: rgba(0, 0, 0, 0.2);
+$colorDividerSecondary: rgba(0, 0, 0, 0.1);
+
+// Buttons
+$colorBackgroundButtonPrimary: $colorBrand1;
+$colorBackgroundButtonPrimaryHover: #E5A827;
+$colorBackgroundButtonPrimaryDisabled: rgba(0, 0, 0, 0.1);
+$colorTextButtonPrimary: $colorText;
+$colorTextButtonPrimaryDisabled: $colorTextDisabled;
+
+$colorBackgroundButtonSecondary: $colorBrand2;
+$colorBackgroundButtonSecondaryHover: #CCCFD5;
+$colorBackgroundButtonSecondaryDisabled: rgba(0, 0, 0, 0.1);
+$colorBackgroundButtonSecondarySelected: #0B71A1;
+$colorBackgroundButtonSecondarySelectedHover: #0B71A1;
+$colorTextButtonSecondary: $colorText;
+$colorTextButtonSecondaryDisabled: $colorTextDisabled;
+$colorTextButtonSecondarySelected: $colorTextInverse;
+
+$colorBackgroundButtonDanger: $colorAlertError;
+$colorBackgroundButtonDangerHover: #D7263A;
+$colorBackgroundButtonDangerDisabled: rgba(0, 0, 0, 0.1);
+$colorTextButtonDanger: $colorTextInverse;
+$colorTextButtonDangerDisabled: rgba(0, 0, 0, 0.3);
+
+$colorTextButtonLink: $colorTextLink;
+$colorTextButtonLinkHover: $colorTextLinkHover;
+$colorTextButtonLinkDisabled: $colorTextLinkDisabled;
+
+// Input
+$colorBackgroundInput: #ffffff;
+$colorBackgroundInputDisabled: rgba(0, 0, 0, 0.05);
+$colorBorderInput: $colorPaletteGray500;
+$colorBorderInputDisabled: transparent;
+$colorBorderInputError: $colorError;
+$colorBorderInputFocus: $colorFocus;
+$colorTextInputLabel: $colorPaletteGray800;
+$colorTextInputLabelDisabled: rgba(0, 0, 0, 0.2);
+$colorTextInputPlaceholder: $colorPaletteGray600;
+$colorTextInputDisabled: $colorTextDisabled;
+$colorTextInputError: $colorError;
+$colorIconInput: $colorPaletteGray500;
+
+// Checkbox & Radio
+$colorBackgroundChoiceSelected: #0B71A1;
+$colorBackgroundChoiceDisabled: rgba(0, 0, 0, 0.1);
+$colorBorderChoice: $colorPaletteGray500;
+$colorBorderChoiceFocus: $colorFocus;
+
+// Dropdown, Select, Popover
+$colorBackgroundDropdown: $colorBackgroundInput;
+$colorBackgroundDropdownHover: $colorPaletteGray200;
+$colorBackgroundDropdownActive: $colorPaletteGray400;
+$colorTextDropdownActive: $colorPaletteGray900;
+$colorBackgroundDropdownSelected: $colorPaletteGray300;
+$colorBorderDropdownFocus: $colorFocus;
+
+// Switch
+$colorBackgroundSwitch: $colorPaletteGray400;
+$colorBackgroundSwitchChecked: #0B71A1;
+$colorBackgroundSwitchDisabled: $colorPaletteGray200;
+$colorBackgroundSwitchIndicatorDisabled: $colorPaletteGray400;
+
+// Drawer
+$colorBackgroundDrawer: $colorBackground;
+
+// Select
+$colorBackgroundSelect: $colorBackgroundInput;
+$colorBackgroundSelectOptionHover: rgba(0, 0, 0, 0.05);
+$colorBackgroundSelectOptionSelect: rgba(0, 0, 0, 0.2);
+$colorBackgroundSelectSeparator: hsl(0, 0%, 80%);
+$colorBackgroundSelectDisabled: rgba(0, 0, 0, 0.05);
+$colorBorderSelect: $colorPaletteGray500;
+$colorBorderSelectDisabled: transparent;
+$colorBorderSelectError: $colorError;
+$colorBorderSelectFocus: $colorFocus;
+$colorTextSelectLabel: $colorPaletteGray800;
+$colorTextSelectLabelDisabled: rgba(0, 0, 0, 0.2);
+$colorTextSelectPlaceholder: $colorPaletteGray600;
+$colorTextSelectDisabled: $colorTextDisabled;
+$colorTextSelectError: $colorError;
+
+// Breakpoints
+$xs: 0px; // mobile
+$sm: 576px; // mobile landscape
+$md: 768px; // tablets
+$lg: 992px; // Wide
+
+// TOKENS BELOW ARE ADDED BY THE DIRECTORY UI
+$containerWidth: 992px;
+
+// Table
+$colorBorderTable: $colorPaletteGray200;
+$colorBackgroundTableHover: $colorPaletteGray200;
+$colorBackgroundTableSelected: $colorPaletteGray300;
+
+// Navigation
+$mobileNavigationHeight: 4.5rem;

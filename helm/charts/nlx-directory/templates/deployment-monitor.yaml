@@ -56,7 +56,7 @@ spec:
             - name: POSTGRES_DSN
               value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ .Values.postgresql.hostname }}/{{ .Values.postgresql.database }}
             - name: TLS_NLX_ROOT_CERT
-              value: /config/root.pem
+              value: /config/root-organization.pem
             - name: TLS_MONITOR_CERT
               value: /certificate/tls.crt
             - name: TLS_MONITOR_KEY

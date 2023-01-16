@@ -9,7 +9,7 @@ image:
   registry: docker.io
   apiRepository: nlxio/directory-api
   monitorRepository: nlxio/directory-monitor
-  uiRepository: nlxio/directory-ui
+  uiRepository: nlxio/directory-ui-htmx
   tag: ""
   pullPolicy: Always
   pullSecrets: []
@@ -50,7 +50,9 @@ tls:
 
 ui:
   enabled: true
+  environment: "demo"
   port: 80
+  directoryAPIAddress: ""
   ingress:
     enabled: false
     class: ""

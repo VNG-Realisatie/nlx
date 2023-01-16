@@ -1,0 +1,39 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.footer {
+    padding: theme.$spacing07 0;
+    background-color: #154967;
+
+    @media (max-width: theme.$sm) {
+        margin-bottom: theme.$mobileNavigationHeight;
+    }
+
+    &__container {
+        width: 100%;
+        max-width: theme.$containerWidth;
+        padding: 0 theme.$spacing05;
+        margin: 0 auto;
+    }
+
+    &__content {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        text-align: left;
+
+        & > a:not(:last-child) {
+            align-items: center;
+            display: flex;
+            color: theme.$colorPaletteGray200;
+        }
+    }
+
+    &__logo {
+        width: 100px;
+    }
+}

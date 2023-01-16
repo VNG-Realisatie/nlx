@@ -109,6 +109,13 @@ Build acceptance directory-ui:
     CONTEXT: directory-ui
     DOCKERFILE: directory-ui/Dockerfile
 
+Build acceptance directory-ui-htmx:
+  extends: .build-acceptance-base
+  variables:
+    IMAGE: directory-ui-htmx
+    CONTEXT: .
+    DOCKERFILE: directory-ui-htmx/Dockerfile
+
 Build acceptance inway:
   extends: .build-acceptance-base
   variables:

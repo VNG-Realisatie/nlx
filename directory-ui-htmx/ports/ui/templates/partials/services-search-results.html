@@ -1,0 +1,94 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+<div class="services-search-results" role="grid" hx-boost="true">
+    {{ if eq (len .SearchResults) 0 }}
+        <p class="services-search-results__no-results">
+            Geen services gevonden
+        </p>
+    {{ else }}
+        <p class="services-search-results__summary">
+            {{ len .SearchResults }} beschikbare services
+        </p>
+
+        <table class="services-search-results__results-desktop">
+            <thead>
+            <tr>
+                <th>Organisatie</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>API Type</th>
+                <th class="link"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{ range .SearchResults }}
+            <tr hx-get="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                hx-push-url="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                hx-select="#drawer"
+                hx-target="#drawer"
+                hx-swap="outerHTML swap:0s"
+            >
+                <td>{{ .OrganizationName }}</td>
+                <td>{{ .ServiceName }}</td>
+                <td>
+                    <span class="services-search-results__state-indicator">
+                        {{ if .IsOnline }}
+                            {{ svg "state-up" "" }}
+                        {{ else }}
+                            {{ svg "state-down" "" }}
+                        {{ end }}
+                    </span>
+                </td>
+                <td>{{ .APISpecificationType }}</td>
+                <td class="link">
+                    <a href="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                       hx-get="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                       hx-push-url="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                       hx-target="#drawer"
+                       hx-swap="outerHTML settle"
+                       hx-select="#drawer"
+                    >
+                        {{ svg "icon-chevron-right" "" }}
+                    </a>
+                </td>
+            </tr>
+            {{ end }}
+
+            </tbody>
+        </table>
+
+        <div class="services-search-results__results-mobile">
+            {{ range .SearchResults }}
+            <div class="result"
+                 hx-get="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                 hx-push-url="/{{ .OrganizationSerialNumber }}/{{ .ServiceName }}/"
+                 hx-select="#drawer"
+                 hx-target="#drawer"
+                 hx-swap="outerHTML swap:0s"
+            >
+                <span class="services-search-results__state-indicator">
+                    {{ if .IsOnline }}
+                        {{ svg "state-up" "" }}
+                    {{ else }}
+                        {{ svg "state-down" "" }}
+                    {{ end }}
+                </span>
+
+                <div class="content">
+                    <p>{{ .OrganizationName }}</p>
+                    <p>{{ .ServiceName }}</p>
+                    <p>{{ .APISpecificationType }}</p>
+                </div>
+
+                <div class="link">
+                    <a href="#">{{ svg "icon-chevron-right" "" }}</a>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    {{ end }}
+</div>

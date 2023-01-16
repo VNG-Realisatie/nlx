@@ -1,0 +1,22 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.header {
+    background: theme.$colorBackground;
+
+    &__container {
+        width: 100%;
+        max-width: theme.$containerWidth;
+        padding: 0 theme.$spacing05;
+        margin: 0 auto;
+    }
+
+    &__logo {
+        height: 27px;
+        margin: theme.$spacing07 0;
+    }
+}

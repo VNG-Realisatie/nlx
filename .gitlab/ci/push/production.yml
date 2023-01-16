@@ -70,6 +70,11 @@ Push production directory-ui:
   variables:
     IMAGE: directory-ui
 
+Push production directory-ui-htmx:
+  extends: .push-production-base
+  variables:
+    IMAGE: directory-ui-htmx
+
 Push production inway:
   extends: .push-production-base
   variables:

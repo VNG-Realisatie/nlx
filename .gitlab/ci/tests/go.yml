@@ -42,6 +42,7 @@ Go tests (unit & integration):
           - ca-cfssl-unsafe/**/*
           - common/**/*
           - directory-api/**/*
+          - directory-ui-htmx/**/*
           - directory-monitor/**/*
           - inway/**/*
           - management-api/**/*
@@ -87,6 +88,7 @@ Go linter:
           - ca-cfssl-unsafe/**/*
           - common/**/*
           - directory-api/**/*
+          - directory-ui-htmx/**/*
           - directory-monitor/**/*
           - inway/**/*
           - management-api/**/*

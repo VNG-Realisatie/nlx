@@ -1,0 +1,76 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+{{ define "drawer"}}
+
+<div id="drawer" class="drawer">
+    <header class="drawer__header" id="drawer-content">
+        <h1 class="drawer__title">{{ .ServiceDetailDrawer.ServiceName }}</h1>
+
+        <button class="drawer__close" type="button" role="button"
+                hx-get="/"
+                hx-trigger="click, keyup[key=='Escape'] from:body"
+                hx-push-url="true"
+                hx-select="#drawer"
+                hx-target="#drawer"
+                hx-swap="outerHTML swap:150ms settle:0"
+        >
+            {{ svg "icon-close" "" }}
+        </button>
+    </header>
+
+    <p class="service-detail__subtitle" slot="subtitle">
+        {{ .ServiceDetailDrawer.OrganizationName }}
+    </p>
+
+    <div class="service-detail__summary">
+        <span class="service-detail__state-indicator">
+            {{ if .ServiceDetailDrawer.IsOnline }}
+                {{ svg "state-up" "" }}
+                <span class="service-detail__state-indicator-label">Beschikbaar</span>
+            {{ else }}
+                {{ svg "state-down" "" }}
+                <span class="service-detail__state-indicator-label">Onbeschikbaar</span>
+            {{ end }}
+        </span>
+        <span>{{ .ServiceDetailDrawer.APISpecificationType }}</span>
+        <span>Serienummer {{ .ServiceDetailDrawer.OrganizationSerialNumber }}</span>
+    </div>
+
+    <div class="drawer__content">
+        <section class="service-detail__external-links">
+            <a href="{{ .ServiceDetailDrawer.DocumentationURL }}" class="button--secondary service-detail__external_link" target="_blank" {{ if eq .ServiceDetailDrawer.DocumentationURL "" }}disabled{{end}}>
+                Documentatie
+                {{ svg "icon-external-link" "button--secondary__icon-after" }}
+            </a>
+            <a href="{{ .ServiceDetailDrawer.SpecificationURL }}" class="button--secondary service-detail__external_link" target="_blank" {{ if eq .ServiceDetailDrawer.SpecificationURL "" }}disabled{{end}}>
+                Specificatie
+                {{ svg "icon-external-link" "button--secondary__icon-after" }}
+            </a>
+        </section>
+
+        <div class="service-detail__section-group">
+            <section class="service-detail__section-contact">
+                <div class="heading">
+                    {{ svg "icon-support" "" }}
+
+                    Support
+                </div>
+
+                <div class="body">
+                    {{ if (eq .ServiceDetailDrawer.PublicSupportContact "") }}
+                    <small>Geen contactgegevens beschikbaar</small>
+                    {{ else }}
+                    <small>Publieke support</small>
+                    <br />
+                    <a href="mailto:{{ .ServiceDetailDrawer.PublicSupportContact }}">{{ .ServiceDetailDrawer.PublicSupportContact }}</a>
+                    {{ end }}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{{ end }}

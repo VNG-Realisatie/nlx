@@ -104,6 +104,13 @@ Build production directory-ui:
     CONTEXT: directory-ui
     DOCKERFILE: directory-ui/Dockerfile
 
+Build production directory-ui-htmx:
+  extends: .build-production-base
+  variables:
+    IMAGE: directory-ui-htmx
+    CONTEXT: .
+    DOCKERFILE: directory-ui-htmx/Dockerfile
+
 Build production inway:
   extends: .build-production-base
   variables:

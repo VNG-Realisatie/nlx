@@ -1,0 +1,55 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+<div class="participants-search-results" role="grid" hx-boost="true">
+    {{ if eq (len .SearchResults) 0 }}
+        <p class="participants-search-results__no-results">
+            Geen deelnemers gevonden
+        </p>
+    {{ else }}
+        <p class="participants-search-results__summary">
+            {{ len .SearchResults }} deelnemers
+        </p>
+
+        <table class="participants-search-results__results-desktop">
+            <thead>
+            <tr>
+                <th>Organisatie</th>
+                <th>Deelnemer sinds</th>
+                <th>Services</th>
+                <th>Inways</th>
+                <th>Outways</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{ range .SearchResults }}
+            <tr>
+                <td>{{ .OrganizationName }}</td>
+                <td>{{ .ParticipantSince }}</td>
+                <td>{{ .ServicesCount }}</td>
+                <td>{{ .InwaysCount }}</td>
+                <td>{{ .OutwaysCount }}</td>
+            </tr>
+            {{ end }}
+
+            </tbody>
+        </table>
+
+        <div class="participants-search-results__results-mobile">
+            {{ range .SearchResults }}
+            <div class="result">
+                <div class="content">
+                    <p>{{ .OrganizationName }}</p>
+                    <p>Sinds {{ .ParticipantSince }}</p>
+                    <p>Services {{ .ServicesCount }}</p>
+                    <p>Inways {{ .InwaysCount }}</p>
+                    <p>Outways {{ .OutwaysCount }}</p>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    {{ end }}
+</div>

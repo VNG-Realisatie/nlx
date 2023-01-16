@@ -1,0 +1,46 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+{{ define "content"}}
+
+<section class="introduction">
+    <div class="introduction__container">
+        <div class="introduction__intro">
+            <div class="introduction__content">
+                <h1>{{ .Introduction.Title }}</h1>
+                <p>{{ .Introduction.Description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section__container">
+        <form method="post"
+              class="filters"
+              autocomplete="off"
+              hx-post="/search-participants"
+              hx-trigger="keyup throttle:250ms,search,change"
+              hx-target=".participants-search-results"
+        >
+            <div class="filters__select">
+                <select name="environment">
+                    <option value="demo" {{ if (eq .Environment "demo") }}selected{{ end }}>Demo</option>
+                    <option value="preprod" {{ if (eq .Environment "preprod") }}selected{{ end }}>Pre-productie</option>
+                    <option value="prod" {{ if (eq .Environment "prod") }}selected{{ end }}>Productie</option>
+                </select>
+            </div>
+
+            <div class="filters__input">
+                {{ svg "icon-search" "" }}
+                <input type="search" placeholder="Zoeken…" name="search" />
+            </div>
+        </form>
+
+        {{ template "participants-search-results.html" . }}
+    </div>
+</section>
+
+{{ end }}

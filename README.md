@@ -42,6 +42,7 @@ Make sure you have installed the following tools:
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Golang](https://golang.org/doc/install)
 - [NodeJS LTS](https://nodejs.org/en/download/)
+- [Sass](https://sass-lang.com/install)
 - [modd](https://github.com/cortesi/modd)
 
 Install the npm dependencies by running:

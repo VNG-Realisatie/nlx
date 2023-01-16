@@ -1,0 +1,280 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+$_navWrapperHeight: 48px;
+
+.domain-navigation {
+    box-sizing: content-box;
+    display: flex;
+    font-family: 'Source Sans Pro', sans-serif;
+    height: $_navWrapperHeight;
+    justify-content: center;
+    line-height: theme.$lineHeightTextSmall;
+    position: relative;
+
+    @media (min-width: theme.$lg) {
+        border-bottom: solid 1px;
+        border-bottom-color: theme.$colorDividerSecondary;
+    }
+
+    & > * {
+        align-items: center;
+        display: flex;
+        font-size: 14px;
+        height: 100%;
+        padding: 0 theme.$spacing05 0;
+        position: relative;
+
+        &:first-child {
+            color: theme.$colorTextLabel;
+        }
+
+        @media (min-width: theme.$lg) {
+            padding: 0 theme.$spacing06;
+        }
+    }
+
+
+    &__intro {
+        margin: 0;
+
+        @media (min-width: theme.$lg) {
+            & > br {
+                display: none;
+            }
+        }
+    }
+
+    &__dropdown {
+        color: theme.$colorText;
+        cursor: pointer;
+        font-size: 14px;
+        user-select: none;
+        vertical-align: middle;
+        white-space: nowrap;
+
+        &:before {
+            content: '';
+            height: 24px;
+            left: 0;
+            position: absolute;
+            width: 100%;
+            border-left: solid 1px;
+            border-left-color: theme.$colorDividerPrimary;
+        }
+
+        & > svg {
+            margin-left: theme.$spacing02;
+            fill: theme.$colorText;
+            transition: 150ms ease-in-out;
+        }
+
+        @media (min-width: theme.$lg) {
+          display: none;
+        }
+    }
+
+    &__domain-list-desktop {
+        display: none;
+
+        @media (min-width: theme.$lg) {
+            display: flex;
+
+            &:before {
+                content: '';
+                height: 24px;
+                left: 0;
+                position: absolute;
+                width: 100%;
+                border-left: solid 1px;
+                border-left-color: theme.$colorDividerPrimary;
+            }
+        }
+
+        a {
+            align-items: center;
+            color: inherit;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            position: relative;
+            text-decoration: inherit;
+            white-space: nowrap;
+
+            span:first-child {
+                position: absolute;
+            }
+
+            span:last-child {
+                font-weight: 700;
+                opacity: 0;
+            }
+
+            &:hover {
+                color: inherit;
+
+                span:first-child {
+                    font-weight: 700;
+                    opacity: 1;
+                }
+            }
+
+            & + a {
+                margin-left: theme.$spacing07;
+            }
+
+            &.active {
+                font-weight: 700;
+
+                &:before {
+                    border-bottom: solid 1px;
+                    border-bottom-color: theme.$colorText;
+                    bottom: -1px;
+                    content: '';
+                    height: 100%;
+                    position: absolute;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    &__gitlab-link {
+        color: theme.$colorText;
+        position: relative;
+
+        svg {
+            vertical-align: text-bottom;
+            width: theme.$iconSizeDefault;
+            margin-right: 0;
+            height: 16px;
+            fill: theme.$colorText;
+        }
+
+        &:before {
+            content: '';
+            height: 24px;
+            left: 0;
+            position: absolute;
+            width: 100%;
+            border-left: solid 1px;
+            border-left-color: theme.$colorDividerPrimary;
+        }
+
+        &:hover {
+            color: inherit;
+        }
+
+        span {
+            display: none;
+        }
+
+        @media (min-width: theme.$lg) {
+            text-decoration: none;
+
+            & > div {
+                display: flex;
+                justify-content: center;
+            }
+
+            span {
+                display: block;
+                margin-left: theme.$spacing03;
+            }
+
+            span:first-child {
+                position: absolute;
+            }
+
+            span:last-child {
+                font-weight: 700;
+                opacity: 0;
+            }
+
+            &:hover {
+                span:first-child {
+                    font-weight: 700;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &__dropdown-list {
+        background: theme.$colorBackgroundDropdown;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+        flex-direction: column;
+        height: fit-content;
+        margin: 0;
+        margin-top: theme.$spacing02;
+        top: $_navWrapperHeight;
+        bottom: 0;
+        padding: 0;
+        position: absolute;
+        width: calc(100vw - #{theme.$spacing05});
+        z-index: 15;
+        display: none;
+
+        &--is-open {
+            display: flex;
+        }
+
+        @media (min-width: theme.$lg) {
+            display: none;
+
+            &--is-open {
+                display: none;
+            }
+        }
+    }
+
+    &__dropdown-list-item {
+        background: theme.$colorBackgroundDropdownSelected;
+        list-style: none;
+        width: 100%;
+
+        &:hover {
+            background: theme.$colorBackgroundDropdownHover;
+        }
+
+        & > * {
+            color: inherit;
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+            padding: theme.$spacing04 theme.$spacing05;
+            text-decoration: inherit;
+
+            &:hover {
+                color: inherit;
+            }
+        }
+
+        svg {
+            vertical-align: text-bottom;
+            width: theme.$iconSizeDefault;
+            height: theme.$iconSizeDefault;
+            margin-right: 0;
+            flex-shrink: 0;
+            height: 16px;
+            margin: auto 0 auto theme.$spacing03;
+            fill: theme.$colorTextLabel;
+        }
+
+        &:hover {
+            svg {
+                fill: theme.$colorTextDropdownActive;
+            }
+
+            p {
+                & > span {
+                    color: theme.$colorTextDropdownActive;
+                }
+            }
+        }
+    }
+}

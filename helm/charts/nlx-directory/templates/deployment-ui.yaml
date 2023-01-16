@@ -1,4 +1,5 @@
 {{- if .Values.ui.enabled -}}
+{{- $fullName := include "nlx-directory.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,7 +27,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: nginx
+        - name: nlx-directory-ui
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "nlx-directory.uiImage" . }}
@@ -45,6 +46,38 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: LISTEN_ADDRESS
+              value: 0.0.0.0:8080
+            - name: DIRECTORY_ADDRESS
+              value: {{ .Values.ui.directoryAPIAddress }}
+            - name: ENVIRONMENT
+              value: {{ .Values.ui.environment }}
+            - name: TLS_NLX_ROOT_CERT
+              value: /config/root-organization.pem
+            - name: TLS_ORG_CERT
+              value: /certificate-organization/tls.crt
+            - name: TLS_ORG_KEY
+              value: /certificate-organization/tls.key
+            - name: LOG_TYPE
+              value: {{ .Values.config.logType }}
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel }}
+          volumeMounts:
+            - name: certificate-organization
+              mountPath: /certificate-organization
+              readOnly: true
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: certificate-organization
+          secret:
+            secretName: {{ default (printf "%s-organization-tls" (include  "nlx-directory.fullname" .)) .Values.tls.organization.existingSecret }}
+            defaultMode: 0640
+        - name: config
+          configMap:
+            name: {{ template "nlx-directory.fullname" . }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

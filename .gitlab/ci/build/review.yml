@@ -57,6 +57,7 @@ Build review apps-overview:
     paths:
       - ci_build_image_registry.txt
       - ci_build_image_tag.txt
+
 Build review auth-opa:
   extends: .build-review-base
   variables:
@@ -105,6 +106,13 @@ Build review directory-ui:
     IMAGE: directory-ui
     CONTEXT: directory-ui
     DOCKERFILE: directory-ui/Dockerfile
+
+Build review directory-ui-htmx:
+  extends: .build-review-base
+  variables:
+    IMAGE: directory-ui-htmx
+    CONTEXT: .
+    DOCKERFILE: directory-ui-htmx/Dockerfile
 
 Build review inway:
   extends: .build-review-base

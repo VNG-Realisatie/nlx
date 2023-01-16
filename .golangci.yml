@@ -15,6 +15,8 @@ linters-settings:
     lines: 100
   misspell:
     locale: US
+    ignore-words:
+      - productie
   gocritic:
     enabled-tags:
       - diagnostic

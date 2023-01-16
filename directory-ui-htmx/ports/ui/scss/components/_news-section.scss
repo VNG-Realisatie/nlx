@@ -1,0 +1,119 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.news-section {
+    position: relative;
+    padding: 7rem 0 theme.$spacing09 0;
+    background-color: #f1f1f1;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-image: url('../images/news-bg-small.svg');
+    margin-top: theme.$spacing09;
+    z-index: 0;
+
+    @media (min-width: theme.$md) {
+        padding: theme.$spacing10 0;
+    }
+
+    @media (min-width: theme.$md) {
+        padding: theme.$spacing10 0 theme.$spacing11 0;
+        background-image: url('../images/news-bg-large.svg');
+    }
+
+    &__container {
+        width: 100%;
+        max-width: theme.$containerWidth;
+        padding: 0 theme.$spacing05;
+        margin: 0 auto;
+    }
+
+    &__row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 (-(theme.$spacing05));
+    }
+
+    &__col {
+        flex: 0 1 auto;
+        padding: 0 theme.$spacing05;
+
+        @media (max-width: theme.$xs) {
+            &:not(:last-child) {
+                margin-bottom: theme.$spacing05;
+            }
+        }
+
+        @media (min-width: theme.$md) {
+            width: 66.6%;
+        }
+    }
+
+    &__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: none;
+        border: none;
+        vertical-align: middle;
+        padding: theme.$spacing05 0;
+        color: theme.$colorTextButtonLink;
+        text-decoration: none;
+        font-weight: theme.$fontWeightSemiBold;
+
+        &:hover,
+        &:focus {
+            border: none;
+        }
+
+        &:after {
+            display: none;
+        }
+
+
+        &:hover {
+            color: theme.$colorTextButtonLinkHover;
+        }
+    }
+
+    &__link-icon {
+        vertical-align: text-bottom;
+        width: theme.$iconSizeSmall;
+        height: theme.$iconSizeSmall;
+        fill: theme.$colorPaletteGray700;
+        margin-left: theme.$spacing03;
+        margin-right: theme.$spacing03;
+    }
+
+    &__picture-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        @media (min-width: theme.$md) {
+            width: 33.33%;
+
+        }
+    }
+
+    &__picture {
+        max-width: 190px;
+
+        @media (max-width: theme.$md) {
+            position: absolute;
+            top: -(theme.$spacing09);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @media (min-width: theme.$md) {
+            width: 100%;
+            max-width: 250px;
+            margin: theme.$spacing05 0 -1rem;
+        }
+    }
+}

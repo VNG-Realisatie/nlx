@@ -1,0 +1,133 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.participants-search-results {
+    &__no-results {
+        color: theme.$colorTextLabel;
+        font-size: theme.$fontSizeSmall;
+        margin-bottom: 0;
+        text-align: center;
+        height: 10rem;
+        line-height: 10rem;
+    }
+
+    &__summary {
+        margin: theme.$spacing06 0 theme.$spacing05;
+        font-size: theme.$fontSizeSmall;
+        color: theme.$colorPaletteGray600;
+        line-height: theme.$lineHeightText;
+        text-transform: uppercase;
+    }
+
+    &__results-desktop {
+        border-collapse: collapse;
+        width: 100%;
+        display: none;
+
+        @media (min-width: theme.$md) {
+            display: table;
+        }
+
+        thead {
+            display: none;
+
+            @media (min-width: theme.$md) {
+                display: revert;
+            }
+        }
+
+        th {
+            text-transform: uppercase;
+            text-align: left;
+            padding: theme.$spacing04 theme.$spacing03;
+            font-size: theme.$fontSizeSmall;
+        }
+
+        tbody tr {
+            background-color: theme.$colorBackground;
+            border-bottom: 1px solid theme.$colorBorderTable;
+
+            &:first-child {
+                border-top: 1px solid theme.$colorBorderTable;
+            }
+
+            &:hover {
+                background-color: theme.$colorBackgroundTableHover;
+            }
+        }
+
+        td {
+            display: none;
+
+            @media (min-width: theme.$md) {
+                display: table-cell;
+                padding: theme.$spacing04 theme.$spacing03;
+            }
+        }
+
+        .link {
+            padding: theme.$spacing04 theme.$spacing03;
+            width: 1px;
+
+            a {
+                display: block;
+                border: none;
+                line-height: 100%;
+                color: theme.$colorPaletteGray500;
+
+                svg {
+                    vertical-align: text-bottom;
+                    width: theme.$iconSizeDefault;
+                    height: theme.$iconSizeDefault;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    &__results-mobile {
+        display: flex;
+        flex-direction: column;
+
+        @media (min-width: theme.$md) {
+            display: none;
+        }
+
+        .result {
+            padding: theme.$spacing04 theme.$spacing03 theme.$spacing04 0;
+            border-bottom: 1px solid theme.$colorBorderTable;
+            flex: 1;
+            display: flex;
+
+            &:first-child {
+                border-top: 1px solid theme.$colorBorderTable;
+            }
+
+            &:hover {
+                background-color: theme.$colorBackgroundTableHover;
+            }
+        }
+
+        .content {
+            flex: 1;
+
+            p {
+                margin: 0;
+                display: block;
+            }
+
+            p:first-of-type {
+                font-weight: bold;
+            }
+
+            p:nth-child(3) {
+                margin-top: theme.$spacing02;
+                color: theme.$colorPaletteGray600;
+            }
+        }
+    }
+}

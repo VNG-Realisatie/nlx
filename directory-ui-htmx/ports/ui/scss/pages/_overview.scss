@@ -1,0 +1,188 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+
+    & > * + * {
+        margin-top: theme.$spacing06;
+    }
+
+    @media (max-width: theme.$sm) {
+        & > * {
+            width: 100%;
+        }
+    }
+
+    @media (min-width: theme.$md) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        & > * + * {
+            margin: 0 0 0 theme.$spacing05;
+        }
+    }
+
+    &__select {
+        margin-top: 0.125rem;
+        position: relative;
+
+        &:after {
+            content: "";
+            background: url(/images/icon-chevron-down.svg) no-repeat center;
+            border-left: 1px solid theme.$colorPaletteGray300;
+            width: 2.5rem;
+            height: 1.5rem;
+            position: absolute;
+            pointer-events: none;
+            top: calc(50% - .75rem);
+            bottom: 0;
+            right: theme.$spacing02;
+        }
+
+        select::-ms-expand {
+            display: none;
+        }
+
+        select {
+            appearance: none;
+            padding: theme.$spacing04;
+            border: 1px solid theme.$colorBorderSelect;
+            outline: none;
+            font-size: theme.$fontSizeMedium;
+            font-family: 'Source Sans Pro', sans-serif;
+            line-height: theme.$lineHeightText;
+            width: 100%;
+            align-items: center;
+            cursor: default;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            min-height: 38px;
+            outline: 0 !important;
+            position: relative;
+            transition: all 100ms ease 0s;
+            box-sizing: border-box;
+            border-radius: 0;
+            background-color: theme.$colorBackgroundSelect;
+            color: theme.$colorText;
+            margin: 0;
+        }
+
+        @media (min-width: theme.$md) {
+            width: 20rem;
+        }
+    }
+
+    &__input {
+        position: relative;
+
+        label {
+            display: block;
+            margin-bottom: theme.$spacing01;
+            margin-top: theme.$spacing06;
+            word-break: keep-all;
+            color: theme.$colorTextInputLabel;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        svg {
+            vertical-align: text-bottom;
+            width: theme.$iconSizeDefault;
+            position: absolute;
+            fill: theme.$colorIconInput;
+            margin: auto 0 auto theme.$spacing04;
+            cursor: text;
+            height: 100%;
+        }
+
+        input {
+            display: block;
+            padding: theme.$spacing04 theme.$spacing04 theme.$spacing04 theme.$spacing08;
+            border: 1px solid theme.$colorBorderInput;
+            margin-top: theme.$spacing01;
+            outline: none;
+            font-size: theme.$fontSizeMedium;
+            font-family: 'Source Sans Pro', sans-serif;
+            line-height: theme.$lineHeightText;
+            color: theme.$colorTextInputLabel;
+            background-color: theme.$colorBackgroundInput;
+            width: 100%;
+
+            ::placeholder,
+            ::-webkit-input-placeholder,
+            :-ms-input-placeholder {
+                color: theme.$colorTextInputPlaceholder;
+            }
+
+            ::-webkit-calendar-picker-indicator {
+                cursor: pointer;
+                filter: invert(0.25);
+            }
+
+            &:focus {
+                padding: calc(#{theme.$spacing04} - 1px);
+                padding-left: calc(#{theme.$spacing08} - 1px);
+                border: 2px solid theme.$colorBorderInputFocus;
+            }
+        }
+    }
+}
+
+.section {
+    position: relative;
+    padding: theme.$spacing09 0;
+    background: theme.$colorBackground;
+
+    @media (min-width: theme.$md) {
+        padding: theme.$spacing10 0;
+    }
+
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-left: 32px solid transparent;
+        border-right: 32px solid transparent;
+        border-top: 28px solid #dfe5ea;
+        margin-left: -32px;
+        content: '';
+
+        @media (min-width: theme.$md) {
+            border-top-color: #dadfe7;
+        }
+    }
+
+    &::after {
+        display: inline-block;
+        position: absolute;
+        top: 3px;
+        left: 50%;
+        height: 10px;
+        width: 10px;
+        border-color: theme.$colorPaletteGray500;
+        border-style: solid;
+        border-width: 2px 2px 0 0;
+        margin-left: -5px;
+        vertical-align: top;
+        transform: rotate(135deg);
+        content: '';
+    }
+
+    &__container {
+        width: 100%;
+        max-width: theme.$containerWidth;
+        padding: 0 theme.$spacing05;
+        margin: 0 auto;
+    }
+}

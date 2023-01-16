@@ -6,7 +6,7 @@ Lint copyright notice:
   stage: Tests
   script:
     - go install github.com/google/addlicense@latest
-    - addlicense -check -ignore "**/node_modules/**" -ignore "management-ui/src/api/**/*" -ignore "directory-api/api/directoryapi.swagger.json.go" -ignore "helm/**/*.yaml" -f license-header.tmpl .
+    - addlicense -check -ignore "directory-ui-htmx/ports/ui/static/js/htmx-1.8.6.min.js" -ignore "**/node_modules/**" -ignore "management-ui/src/api/**/*" -ignore "directory-api/api/directoryapi.swagger.json.go" -ignore "helm/**/*.yaml" -f license-header.tmpl .
   needs: []
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"

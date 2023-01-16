@@ -168,6 +168,8 @@ nlx-directory:
     organization:
       existingSecret: shared-directory-api-tls
   ui:
+    environment: "demo"
+    directoryAPIAddress: shared-nlx-directory-api:443
     ingress:
       enabled: true
       hosts:

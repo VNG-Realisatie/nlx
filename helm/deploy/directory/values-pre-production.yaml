@@ -3,6 +3,8 @@
 ################
 nlx-directory:
   ui:
+    environment: "preprod"
+    directoryAPIAddress: directory-api.preprod.nlx.io:443
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -15,5 +17,5 @@ nlx-directory:
 
   service:
     annotations:
-      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static 
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
     loadBalancerIP: 20.86.244.123

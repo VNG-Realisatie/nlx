@@ -10,6 +10,7 @@ postgresql:
 ################
 nlx-directory:
   ui:
+    environment: "demo"
     ingress:
       hosts:
         - "directory-{{DOMAIN_SUFFIX}}"

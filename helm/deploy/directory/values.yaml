@@ -70,6 +70,8 @@ nlx-directory:
         -----END CERTIFICATE-----
       existingSecret: nlx-directory-api-tls
   ui:
+    environment: "demo"
+    directoryAPIAddress: nlx-directory-api:443
     ingress:
       enabled: true
   service:

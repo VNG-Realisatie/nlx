@@ -1,0 +1,77 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+$_drawerWidth: 34.5rem;
+
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: theme.$spacing05;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: theme.$colorBackgroundDrawer;
+    box-shadow: 0 0 theme.$spacing06 0 rgba(0, 0, 0, 0.5);
+    width: $_drawerWidth;
+    z-index: 1;
+    transform: translateX(0);
+    transition: transform 200ms ease-out;
+
+    @media (min-width: theme.$sm) {
+        padding: theme.$spacing08;
+    }
+
+    &.htmx-swapping:not(.htmx-added) {
+        transform: translateX($_drawerWidth);
+        transition: transform 150ms ease-in;
+    }
+
+    &--hidden {
+        visibility: hidden;
+        transform: translateX($_drawerWidth);
+    }
+
+    &__header {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    &__title {
+        flex: 1;
+        margin-bottom: 0;
+        word-break: break-word;
+    }
+
+    &__close {
+        flex: 0 0 2rem;
+        border: 0 none;
+        cursor: pointer;
+        display: block;
+        text-transform: uppercase;
+        text-decoration: none;
+        text-align: center;
+        margin-top: 0.25rem;
+        color: theme.$colorTextLabel;
+        background: none;
+        padding: 0;
+
+        svg {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        &:focus {
+            outline: 2px solid theme.$colorFocus;
+        }
+    }
+
+    &__content {
+        margin-top: 2.5rem;
+    }
+}

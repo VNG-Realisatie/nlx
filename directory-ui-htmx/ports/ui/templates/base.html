@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="/styling/main.css" />
+
+    <title>NLX Directory</title>
+</head>
+<body>
+
+    <div id="root">
+        {{template "domain-navigation.html" . }}
+
+        <header class="header">
+            <div class="header__container">
+                {{ svg "nlx-logo" "header__logo" }}
+            </div>
+        </header>
+
+        <div class="primary-navigation">
+            <nav class="primary-navigation-mobile">
+                <a href="/" class="primary-navigation-mobile__link {{ if eq .Location "/" }}active{{end}}">
+                    <span class="primary-navigation-mobile__label">Home</span>
+                    {{ svg "icon-home" "primary-navigation-mobile__icon" }}
+                </a>
+
+                <a href="/participants" class="primary-navigation-mobile__link {{ if eq .Location "/participants" }}active{{end}}">
+                    <span class="primary-navigation-mobile__label">Deelnemers</span>
+                    {{ svg "icon-participants" "primary-navigation-mobile__icon" }}
+                </a>
+
+                <a href="https://docs.nlx.io" class="primary-navigation-mobile__link">
+                    <span class="primary-navigation-mobile__label">Docs</span>
+                    {{ svg "icon-external-link" "primary-navigation-mobile__icon" }}
+                </a>
+
+                <a href="https://www.nlx.io" class="primary-navigation-mobile__link">
+                    <span class="primary-navigation-mobile__label">NLX.io</span>
+                    {{ svg "icon-external-link" "primary-navigation-mobile__icon" }}
+                </a>
+            </nav>
+
+            <div class="primary-navigation-desktop">
+                <div class="primary-navigation-desktop__container">
+                    <nav>
+                        <ul class="primary-navigation-desktop__list">
+                            <li class="primary-navigation-desktop__list-item">
+                                <a href="/" class="{{ if eq .Location "/" }}active{{end}}">Home</a>
+                            </li>
+
+                            <li class="primary-navigation-desktop__list-item">
+                                <a href="/participants" class="{{ if eq .Location "/participants" }}active{{end}}">Deelnemers</a>
+                            </li>
+
+                            <li class="primary-navigation-desktop__list-item">
+                                <a href="https://docs.nlx.io">
+                                    Docs
+                                    {{ svg "icon-external-link" "primary-navigation-desktop__icon" }}
+                                </a>
+                            </li>
+
+                            <li class="primary-navigation-desktop__list-item">
+                                <a href="https://nlx.io">
+                                    NLX.io
+                                    {{ svg "icon-external-link" "primary-navigation-desktop__icon" }}
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        {{ block "content" . }}
+            Add content
+        {{ end }}
+
+        <section class="news-section">
+            <div class="news-section__container">
+                <div class="news-section__row">
+                    <div class="news-section__col">
+                        <h2>Nieuws en ontwikkelingen</h2>
+                        <p>
+                            Op de hoogte blijven van nieuws en ontwikkelingen rondom NLX?
+                            Regelmatig worden er (online) technische kennissessies
+                            georganiseerd. Iedere twee weken is de sprint review waarin de
+                            voortgang van het scrum team besproken wordt.
+                        </p>
+
+                        <div>
+                            <a class="news-section__link"
+                               href="https://commonground.nl/groups/view/7edd07a0-1f96-4bba-967f-ac72347f63ef/team-core-components/events">
+                                NLX event agenda
+                                {{ svg "icon-external-link" "news-section__link-icon" }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="news-section__picture-container">
+                        {{ svg "news" "news-section__picture" }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer__container">
+                <div class="footer__content">
+                    {{ svg "vng-logo" "footer__logo" }}
+                </div>
+            </div>
+        </footer>
+
+        {{block "drawer" .}}
+        <div id="drawer" class="drawer drawer--hidden"></div>
+        {{end}}
+    </div>
+
+    <script src="/js/htmx-1.8.6.min.js"></script>
+</body>
+</html>

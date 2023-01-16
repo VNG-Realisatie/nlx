@@ -1,0 +1,78 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.service-detail {
+    &__subtitle {
+        margin-bottom: theme.$spacing04;
+        font-size: theme.$fontSizeLarge;
+    }
+
+    &__summary {
+        display: flex;
+
+        & > * {
+            font-size: theme.$fontSizeSmall;
+            margin-right: theme.$spacing06;
+            color: theme.$colorTextLabel;
+        }
+    }
+
+    &__state-indicator {
+        display: flex;
+        align-items: center;
+    }
+
+    &__state-indicator-label {
+        margin-left: theme.$spacing02;
+    }
+
+    &__external-links {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: theme.$spacing05;
+
+        > * {
+            flex: 1 1 50%;
+
+            &:first-child {
+                margin-right: theme.$spacing05;
+            }
+        }
+    }
+
+    &__section-group {
+        border-bottom: 1px solid theme.$colorPaletteGray700;
+
+        & > * {
+            border-top: 1px solid theme.$colorPaletteGray700;
+            padding: theme.$spacing05 0;
+        }
+    }
+
+    &__section-contact {
+        .heading {
+            line-height: theme.$lineHeightHeading;
+            font-weight: theme.$fontWeightBold;
+            font-size: theme.$fontSizeLarge;
+            margin: 0;
+            align-items: center;
+
+            svg {
+                vertical-align: text-bottom;
+                width: theme.$iconSizeDefault;
+                height: theme.$iconSizeDefault;
+                margin-right: theme.$spacing03;
+                fill: theme.$colorTextLabel;
+            }
+        }
+
+        .body {
+            margin-top: theme.$spacing05;
+            margin-left: calc(1.25rem + #{theme.$spacing03});
+        }
+    }
+}

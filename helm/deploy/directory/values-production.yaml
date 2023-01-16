@@ -13,6 +13,8 @@ nlx-directory:
   config:
     termsOfServiceURL: https://gitlab.com/commonground/nlx/terms-of-service/-/raw/main/v1.0.pdf
   ui:
+    environment: "prod"
+    directoryAPIAddress: directory-api.prod.nlx.io:443
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod

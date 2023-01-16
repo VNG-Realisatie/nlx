@@ -150,6 +150,7 @@ nlx-directory:
     monitor:
      offlineServiceTTL: 86400  # 24 hours
   ui:
+    environment: "demo"
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod

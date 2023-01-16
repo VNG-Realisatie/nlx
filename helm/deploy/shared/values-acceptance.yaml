@@ -136,6 +136,7 @@ postgresql:
 ## Sub-charts ##
 ################
 nlx-directory:
+  environment: "demo"
   ui:
     ingress:
       annotations:
