@@ -4,15 +4,15 @@
   "description": "NLX is an open source inter-organizational system facilitating federated authentication, secure connecting and protocolling in a large-scale, dynamic API landscape.",
   "private": true,
   "devDependencies": {
-    "@commitlint/cli": "17.3.0",
-    "@commitlint/config-conventional": "17.3.0",
+    "@commitlint/cli": "17.4.2",
+    "@commitlint/config-conventional": "17.4.2",
     "@semantic-release/changelog": "6.0.2",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "9.5.1",
-    "glob": "8.0.3",
+    "glob": "8.1.0",
     "replace-in-file": "6.3.5",
-    "semantic-release": "19.0.5"
+    "semantic-release": "20.0.3"
   },
   "repository": {
     "type": "git",
