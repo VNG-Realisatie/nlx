@@ -9,7 +9,7 @@
         "check-types": "tsc --pretty --skipLibCheck --noEmit"
     },
     "devDependencies": {
-        "@axe-core/webdriverjs": "4.5.2",
+        "@axe-core/webdriverjs": "4.6.0",
         "@cucumber/cucumber": "8.10.0",
         "@cucumber/html-formatter": "20.2.1",
         "@swc/core": "1.3.28",
