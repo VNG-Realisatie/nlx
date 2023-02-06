@@ -21,7 +21,7 @@
         "dayjs": "1.11.7",
         "debug": "4.3.4",
         "eslint": "8.33.0",
-        "eslint-config-prettier": "8.5.0",
+        "eslint-config-prettier": "8.6.0",
         "eslint-plugin-import": "2.26.0",
         "eslint-plugin-prettier": "4.2.1",
         "p-wait-for": "3.2.0",
