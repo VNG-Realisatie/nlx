@@ -68,7 +68,7 @@ nlx-directory:
         CvVVrqBVqLHjva4erqYol6K/jbSfUtRCy8IlFU7LYu1KLehZKYvj3vekj3Cn08Aq
         ljr/Q8Pw+OfUZTzKg4PVDQVfFqKtyosv
         -----END CERTIFICATE-----
-    existingSecret: nlx-directory-api-tls
+      existingSecret: nlx-directory-api-tls
   ui:
     ingress:
       enabled: true

@@ -82,7 +82,7 @@ spec:
       volumes:
         - name: certificate
           secret:
-            secretName: {{ default (printf "%s-tls" (include "nlx-directory.fullname" .)) .Values.tls.existingSecret }}
+            secretName: {{ default (printf "%s-tls" (include "nlx-directory.fullname" .)) .Values.tls.organization.existingSecret }}
             defaultMode: 0640
         - name: config
           configMap:

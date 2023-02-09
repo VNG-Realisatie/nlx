@@ -165,7 +165,8 @@ nlx-directory:
       usernameKey: username
       passwordKey: password
   tls:
-    existingSecret: shared-directory-api-tls
+    organization:
+      existingSecret: shared-directory-api-tls
   ui:
     ingress:
       enabled: true
