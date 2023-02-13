@@ -1,3 +1,15 @@
+# [0.146.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.145.0...v0.146.0) (2023-02-13)
+
+
+### Bug Fixes
+
+* **helm:** directory chart uses correct existingSecret value ([a6c5039](https://gitlab.com/commonground/nlx/nlx/commit/a6c5039fc2f24650d5b8a02b86e5f8c84edbd96e)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
+
+### Features
+
+* **management:** display feedback when removing an Inway fails ([129afbd](https://gitlab.com/commonground/nlx/nlx/commit/129afbdf8c96c96afa020303633e789db4dd0a9f)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 # [0.145.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.144.1...v0.145.0) (2023-01-02)
 
 
