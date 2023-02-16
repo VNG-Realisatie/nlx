@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 Lint copyright notice:
-  image: golang:1.19.1-alpine
+  image: golang:1.20.1-alpine
   stage: Tests
   script:
     - go install github.com/google/addlicense@latest

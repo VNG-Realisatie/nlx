@@ -12,7 +12,7 @@ variables:
 
 Go tests (unit & integration):
   stage: Tests
-  image: golang:1.19.4
+  image: golang:1.20.1
   variables:
     POSTGRES_DSN: "postgres://postgres@postgres:5432/nlx?sslmode=disable"
   before_script:
@@ -103,7 +103,7 @@ Go linter:
 
 Go go.mod tidy test:
   stage: Tests
-  image: golang:1.19.4
+  image: golang:1.20.1
   script:
     - cp go.mod go.mod.orig
     - /usr/local/go/bin/go mod download
