@@ -12,7 +12,7 @@
     "@semantic-release/gitlab": "9.5.1",
     "glob": "8.1.0",
     "replace-in-file": "6.3.5",
-    "semantic-release": "20.0.3"
+    "semantic-release": "20.1.0"
   },
   "repository": {
     "type": "git",
