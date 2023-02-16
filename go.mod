@@ -19,7 +19,7 @@ require (
 	github.com/gorilla/sessions v1.2.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
-	github.com/jackc/pgtype v1.13.0
+	github.com/jackc/pgtype v1.14.0
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/jpillora/backoff v1.0.0
@@ -30,14 +30,14 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/tabbed/pqtype v0.1.1
 	go.uber.org/zap v1.24.0
-	golang.org/x/crypto v0.5.0
-	golang.org/x/exp v0.0.0-20230131160201-f062dba9d201
-	golang.org/x/net v0.5.0
-	golang.org/x/oauth2 v0.4.0
+	golang.org/x/crypto v0.6.0
+	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb
+	golang.org/x/net v0.7.0
+	golang.org/x/oauth2 v0.5.0
 	golang.org/x/sync v0.1.0
-	golang.org/x/text v0.6.0
-	google.golang.org/genproto v0.0.0-20230127162408-596548ed4efa
-	google.golang.org/grpc v1.52.0
+	golang.org/x/text v0.7.0
+	google.golang.org/genproto v0.0.0-20230209215440-0dfe4f8abfcc
+	google.golang.org/grpc v1.53.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.4.7
@@ -64,7 +64,7 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v4 v4.17.2 // indirect
-	github.com/jackc/pgx/v5 v5.2.0 // indirect
+	github.com/jackc/pgx/v5 v5.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/kisielk/sqlstruct v0.0.0-20210630145711-dae28ed37023 // indirect
@@ -79,12 +79,12 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/weppos/publicsuffix-go v0.20.0 // indirect
-	github.com/zmap/zcrypto v0.0.0-20230113044912-682e75113af0 // indirect
+	github.com/zmap/zcrypto v0.0.0-20230205235340-d51ce4775101 // indirect
 	github.com/zmap/zlint/v3 v3.4.1 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
-	k8s.io/klog/v2 v2.80.1 // indirect
+	k8s.io/klog/v2 v2.90.0 // indirect
 )
