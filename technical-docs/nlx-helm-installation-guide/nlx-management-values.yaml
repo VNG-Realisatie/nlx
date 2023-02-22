@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 image:
-  tag: "v0.146.0"
+  tag: "v0.146.1"
 config:
   directoryHostname: directory-api.demo.nlx.io
   enableBasicAuth: true
