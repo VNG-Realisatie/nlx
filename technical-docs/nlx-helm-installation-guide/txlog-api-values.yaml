@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 image:
-  tag: "v0.146.2"
+  tag: "v0.146.3"
 
 txlogdb:
   hostname: postgres
