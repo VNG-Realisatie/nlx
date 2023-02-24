@@ -48,6 +48,7 @@ ca:
       commonName: inway.demo.gemeentestijns.nl
       dnsNames:
         - inway.demo.gemeentestijns.nl
+
 managementAPI:
   serviceParkeerrechten:
     name: parkeerrechten
