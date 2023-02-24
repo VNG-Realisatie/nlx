@@ -48,8 +48,7 @@ Reset demo applications:
           --values ${CHART_DIRECTORY}/values-${CI_ENVIRONMENT_NAME}.yaml
         stop_section deploy_${CHART}
       done
-  dependencies:
-    - Deploy demo
+  needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
