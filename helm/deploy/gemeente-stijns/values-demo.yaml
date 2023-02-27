@@ -147,6 +147,10 @@ nlx-inway:
     directoryHostname: directory-api.demo.nlx.io
   service:
     type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
+    loadBalancerIP: 20.86.243.126
+
 
 parkeerrechten-api:
   enabled: true

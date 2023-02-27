@@ -110,5 +110,5 @@ nlx-inway:
   service:
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-resource-group: rg-common-prod-westeurope-001-static
-    loadBalancerIP: 51.138.9.186
+    loadBalancerIP: 20.86.244.209
     type: LoadBalancer
