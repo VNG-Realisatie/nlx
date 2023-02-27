@@ -2,8 +2,8 @@ apiVersion: v2
 name: directory
 description: A meta chart for NLX directory
 type: application
-version: 0.146.3
-appVersion: 0.146.3
+version: 0.146.4
+appVersion: 0.146.4
 
 dependencies:
   - name: nlx-directory
