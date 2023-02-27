@@ -51,4 +51,15 @@ For the following files:
 helm/deploy/shared/values-demo.yaml
 ```
 
-TODO: describe which secrets to remove
+After deploying, remove the following existing secrets from the `nlx-demo` namespace:
+
+```
+gemeente-riemer-organization-tls
+gemeente-stijns-organization-outway-2-tls
+gemeente-stijns-organization-tls
+rvrd-organization-tls
+vergunningsoftware-bv-organization-tls
+shared-ca-issuer
+```
+
+These will then be recreated with the new certificates.
