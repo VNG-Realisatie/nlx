@@ -1,0 +1,18 @@
+{
+  "key": {
+    "algo": "rsa",
+    "size": 4096
+  },
+  "names": [
+    {
+      "O": "Common Ground",
+      "C": "NL",
+      "ST":"Noord-Holland",
+      "L":"Amsterdam",
+      "OU": "NLX"
+    }
+  ],
+  "ca": {
+    "expiry": "43830h"
+  }
+}
