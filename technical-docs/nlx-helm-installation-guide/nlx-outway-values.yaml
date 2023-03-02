@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 image:
-  tag: "v0.146.6"
+  tag: "v0.146.7"
 
 config:
   directoryHostname: directory-api.demo.nlx.io
