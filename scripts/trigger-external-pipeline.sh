@@ -9,14 +9,11 @@ VERSION_VAR_NAME="${3}"
 TOKEN="${4}"
 
 URL="https://gitlab.com/api/v4/projects/${PROJECT_ID}/trigger/pipeline"
-OUTPUT_FILE=$(mktemp -t curl.XXXXX)
 
 echo "Version: ${VERSION}"
 echo "Sending request to ${URL}"
 
 STATUS=$(curl \
-  --silent \
-  --output "${OUTPUT_FILE}" \
   --write-out "%{http_code}" \
   --request POST \
   --form "ref=master" \
@@ -28,11 +25,8 @@ EXIT="${?}"
 
 if [[ ${STATUS} -ne 201 ]]; then
   EXIT="1"
-  echo "Trigger failed. Request output:"
-  cat "${OUTPUT_FILE}"
+  echo "Trigger failed. See request output."
   echo
 fi
-
-rm -r "${OUTPUT_FILE}"
 
 exit ${EXIT}

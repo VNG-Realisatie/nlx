@@ -36,15 +36,17 @@
 
 Trigger charts build:
   stage: Build
+  image: alpine:3.17.3
   variables:
     PROJECT_ID: 19568485 # commonground/charts
   script:
+    - apk --no-cache add curl
     - scripts/trigger-external-pipeline.sh "${PROJECT_ID}" "${CI_COMMIT_TAG:1}" "NLX_VERSION" "${CI_CHARTS_JOB_TOKEN}"
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg
-    - shell
+    - docker
 
 Build production apps-overview:
   extends: .build-production-base
