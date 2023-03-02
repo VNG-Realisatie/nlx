@@ -45,6 +45,7 @@
       when: never
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
+    - cg
     - docker
 
 Build acceptance apps-overview:

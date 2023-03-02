@@ -16,4 +16,5 @@ Determine next version:
     paths:
       - ci_semantic_release_next_version.txt
   tags:
+    - cg
     - docker

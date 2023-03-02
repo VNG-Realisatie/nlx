@@ -11,4 +11,5 @@ Lint newlines:
   rules:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
+    - cg
     - docker

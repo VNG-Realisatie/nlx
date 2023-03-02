@@ -33,6 +33,7 @@ Proto lint:
           - directory-api/api/**/*
           - outway/api/**/*
   tags:
+    - cg
     - docker
 
 Proto fmt:
@@ -67,6 +68,7 @@ Proto fmt:
           - directory-api/api/**/*
           - outway/api/**/*
   tags:
+    - cg
     - docker
 
 Proto breaking changes:
@@ -98,4 +100,5 @@ Proto breaking changes:
           - .gitlab/**/*
           - management-api/api/**/*
   tags:
+    - cg
     - docker

@@ -27,6 +27,7 @@ Directory-ui linter and tests:
           - directory-ui/**/*
   needs: []
   tags:
+    - cg
     - docker
 
 Management-ui linter and tests:
@@ -67,6 +68,7 @@ Management-ui linter and tests:
           - management-ui/**/*
   needs: []
   tags:
+    - cg
     - docker
 
 E2E type check:
@@ -85,4 +87,5 @@ E2E type check:
           - e2e-tests/**/*
   needs: []
   tags:
+    - cg
     - docker

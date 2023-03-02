@@ -24,4 +24,5 @@ Run semantic release:
       # The combination `when: manual` and `allow_failure: true` allow this step to be manual without blocking
       # the pipeline. See https://docs.gitlab.com/ee/ci/yaml/README.html#rulesallow_failure
   tags:
+    - cg
     - docker

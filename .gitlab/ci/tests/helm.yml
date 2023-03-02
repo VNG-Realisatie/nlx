@@ -22,4 +22,5 @@ Helm lint:
           - helm/**/*
   needs: []
   tags:
+    - cg
     - docker
