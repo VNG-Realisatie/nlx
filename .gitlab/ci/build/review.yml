@@ -44,7 +44,6 @@
   needs: ["Determine next version"]
   tags:
     - docker
-    - linux
 
 Build review apps-overview:
   extends: .build-review-base

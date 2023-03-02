@@ -34,7 +34,6 @@ Proto lint:
           - outway/api/**/*
   tags:
     - docker
-    - linux
 
 Proto fmt:
   stage: Tests
@@ -69,7 +68,6 @@ Proto fmt:
           - outway/api/**/*
   tags:
     - docker
-    - linux
 
 Proto breaking changes:
   stage: Tests
@@ -101,4 +99,3 @@ Proto breaking changes:
           - management-api/api/**/*
   tags:
     - docker
-    - linux

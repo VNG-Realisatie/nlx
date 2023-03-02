@@ -15,4 +15,3 @@ Lint commit messages:
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
     - docker
-    - linux

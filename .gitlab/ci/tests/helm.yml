@@ -23,4 +23,3 @@ Helm lint:
   needs: []
   tags:
     - docker
-    - linux

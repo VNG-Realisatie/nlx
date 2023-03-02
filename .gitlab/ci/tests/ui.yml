@@ -28,7 +28,6 @@ Directory-ui linter and tests:
   needs: []
   tags:
     - docker
-    - linux
 
 Management-ui linter and tests:
   extends: .node-base
@@ -69,7 +68,6 @@ Management-ui linter and tests:
   needs: []
   tags:
     - docker
-    - linux
 
 E2E type check:
   extends: .node-base
@@ -88,4 +86,3 @@ E2E type check:
   needs: []
   tags:
     - docker
-    - linux

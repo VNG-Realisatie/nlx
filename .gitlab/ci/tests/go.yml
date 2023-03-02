@@ -99,7 +99,6 @@ Go linter:
           - go.sum
   tags:
     - docker
-    - linux
 
 Go go.mod tidy test:
   stage: Tests
@@ -120,4 +119,3 @@ Go go.mod tidy test:
           - go.sum
   tags:
     - docker
-    - linux

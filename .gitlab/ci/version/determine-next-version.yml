@@ -17,4 +17,3 @@ Determine next version:
       - ci_semantic_release_next_version.txt
   tags:
     - docker
-    - linux

@@ -46,7 +46,6 @@
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - docker
-    - linux
 
 Build acceptance apps-overview:
   extends: .build-acceptance-base

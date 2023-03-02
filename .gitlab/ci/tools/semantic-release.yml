@@ -25,4 +25,3 @@ Run semantic release:
       # the pipeline. See https://docs.gitlab.com/ee/ci/yaml/README.html#rulesallow_failure
   tags:
     - docker
-    - linux
