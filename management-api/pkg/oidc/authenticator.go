@@ -295,6 +295,9 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 		// MaxAge needs seconds from now
 		session.Options.MaxAge = int(time.Until(time.Unix(claims.ExpiresAt, 0)).Seconds())
 
+		// Only send cookie over https connection
+		session.Options.Secure = true
+
 		if err = session.Save(r, w); err != nil {
 			return fmt.Errorf("failed to save session: %w", err)
 		}
