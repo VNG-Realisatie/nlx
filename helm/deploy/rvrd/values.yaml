@@ -333,6 +333,8 @@ nlx-management:
       passwordKey: password
 dex:
   config:
+    expiry:
+      idTokens: 8h
     storage:
       type: sqlite3
       config:
