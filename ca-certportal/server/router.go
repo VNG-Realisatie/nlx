@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/cloudflare/cfssl/info"
 	"github.com/go-chi/chi/v5"
@@ -24,6 +25,8 @@ type CertPortal struct {
 	listenAddress string
 	httpServer    *http.Server
 }
+
+const readHeaderTimeout = time.Second * 60
 
 func setSecurityHeadersHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -65,8 +68,9 @@ func NewCertPortal(l *zap.Logger, createSigner certportal.CreateSignerFunc, seri
 	i.router = r
 
 	i.httpServer = &http.Server{
-		Addr:    listenAddress,
-		Handler: r,
+		Addr:              listenAddress,
+		Handler:           r,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	return i

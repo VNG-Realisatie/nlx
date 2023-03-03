@@ -7,6 +7,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -19,6 +20,8 @@ import (
 	"go.nlx.io/nlx/management-api/api"
 	"go.nlx.io/nlx/management-api/pkg/scheduler"
 )
+
+const readHeaderTimeout = time.Second * 60
 
 func (a *API) ListenAndServe(address, configAddress string) error {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -80,8 +83,9 @@ func (a *API) ListenAndServe(address, configAddress string) error {
 	a.authenticator.MountRoutes(r)
 
 	a.httpServer = &http.Server{
-		Addr:    address,
-		Handler: r,
+		Addr:              address,
+		Handler:           r,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	g.Go(func() error {

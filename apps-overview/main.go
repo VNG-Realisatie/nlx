@@ -9,12 +9,15 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 )
 
 type data struct {
 	ReviewSlugWithDomain string
 	EnvironmentSubdomain string
 }
+
+const readHeaderTimeout = time.Second * 60
 
 func serveHTML(w http.ResponseWriter, r *http.Request) {
 	environmentSubdomain := os.Getenv("ENVIRONMENT_SUBDOMAIN")
@@ -42,7 +45,12 @@ func main() {
 	http.HandleFunc("/", serveHTML)
 	log.Println("starting reviewPage")
 
-	err := http.ListenAndServe(":8080", nil)
+	s := &http.Server{
+		Addr:              ":8080",
+		ReadHeaderTimeout: readHeaderTimeout,
+	}
+
+	err := s.ListenAndServe()
 	if err != http.ErrServerClosed {
 		log.Fatal(err)
 	}

@@ -19,6 +19,8 @@ type Service struct {
 	server  *http.Server
 }
 
+const readHeaderTimeout = time.Second * 60
+
 // NewMonitoringService creates a new monitoring service
 func NewMonitoringService(address string, logger *zap.Logger) (*Service, error) {
 	if address == "" {
@@ -38,8 +40,9 @@ func NewMonitoringService(address string, logger *zap.Logger) (*Service, error) 
 	serveMux.HandleFunc("/health/live", m.handleLivenessRequest)
 	serveMux.HandleFunc("/health/ready", m.handleReadinessRequest)
 	m.server = &http.Server{
-		Addr:    address,
-		Handler: serveMux,
+		Addr:              address,
+		Handler:           serveMux,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	return m, nil

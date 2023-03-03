@@ -9,6 +9,7 @@ import (
 	"runtime/debug"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/cloudflare/cfssl/log"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -45,6 +46,8 @@ type NewServerArgs struct {
 	DirectoryInspectionService   directoryapi.DirectoryInspectionServer
 	HTTPServer                   *directory_http.Server
 }
+
+const readHeaderTimeout = time.Second * 60
 
 // newGRPCSplitterHandlerFunc returns an http.Handler that delegates gRPC connections to grpcServer
 // and all other connections to otherHandler.
@@ -119,14 +122,16 @@ func NewServer(
 	tlsConfig.NextProtos = []string{"h2"}
 
 	server.httpsServer = &http.Server{
-		Addr:      args.Address,
-		TLSConfig: tlsConfig,
-		Handler:   newGRPCSplitterHandlerFunc(grpcServer, args.HTTPServer),
+		Addr:              args.Address,
+		TLSConfig:         tlsConfig,
+		Handler:           newGRPCSplitterHandlerFunc(grpcServer, args.HTTPServer),
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	// Start plain HTTP server, during the PoC this is proxied by k8s ingress which adds TLS using letsencrypt.
 	server.httpServer = &http.Server{
-		Addr: args.AddressPlain,
+		Addr:              args.AddressPlain,
+		ReadHeaderTimeout: readHeaderTimeout,
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			logger.Info("Incoming request", zap.Int("proto", r.ProtoMajor), zap.String("path", r.URL.Path))
 			args.HTTPServer.ServeHTTP(w, r)

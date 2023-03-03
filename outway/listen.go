@@ -28,12 +28,14 @@ const (
 	IdleConnTimeout       = 20 * time.Second
 	TLSHandshakeTimeout   = 10 * time.Second
 	ExpectContinueTimeout = 1 * time.Second
+	readHeaderTimeout     = time.Second * 60
 )
 
 func (o *Outway) RunServer(listenAddress, listenAddressGRPC string, serverCertificate *tls.Certificate) error {
 	o.httpServer = &http.Server{
-		Addr:    listenAddress,
-		Handler: o,
+		Addr:              listenAddress,
+		Handler:           o,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	errorChannel := make(chan error)

@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -25,6 +26,8 @@ var options struct {
 
 	logoptions.LogOptions
 }
+
+const readHeaderTimeout = time.Second * 60
 
 func main() {
 	args, err := flags.Parse(&options)
@@ -61,7 +64,13 @@ func main() {
 	r.Handle("/oidc/*", proxy)
 	r.Handle("/basic-auth/*", proxy)
 
-	log.Fatal(http.ListenAndServe(options.ListenAddress, r))
+	s := &http.Server{
+		Addr:              options.ListenAddress,
+		Handler:           r,
+		ReadHeaderTimeout: readHeaderTimeout,
+	}
+
+	log.Fatal(s.ListenAndServe())
 }
 
 // spaHandler implements the http.Handler interface.

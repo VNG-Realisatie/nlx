@@ -7,10 +7,13 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
+
+const readHeaderTimeout = time.Second * 60
 
 func (i *Inway) Run(ctx context.Context, address string) error {
 	serveMux := http.NewServeMux()
@@ -22,9 +25,10 @@ func (i *Inway) Run(ctx context.Context, address string) error {
 	config := i.orgCertBundle.TLSConfig(i.orgCertBundle.WithTLSClientAuth())
 
 	i.serverTLS = &http.Server{
-		Addr:      address,
-		Handler:   serveMux,
-		TLSConfig: config,
+		Addr:              address,
+		Handler:           serveMux,
+		TLSConfig:         config,
+		ReadHeaderTimeout: readHeaderTimeout,
 	}
 
 	errorChannel := make(chan error)
