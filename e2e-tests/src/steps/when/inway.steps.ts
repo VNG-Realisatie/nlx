@@ -40,7 +40,14 @@ When(
     await driver.findElement(By.className("ReactSelect__control")).click();
 
     await driver.findElement(By.xpath("//button[@type='submit']")).click();
-    await driver.findElement(By.xpath("//button[text()='Opslaan']")).click();
+
+    await driver
+      .findElement(
+        By.xpath(
+          "//div[contains(@class, 'modal-content-enter-done')]//div[@role='dialog']//button[text()='Opslaan']"
+        )
+      )
+      .click();
 
     await driver.findElement(
       By.xpath("//p[text()='De instellingen zijn bijgewerkt']")
