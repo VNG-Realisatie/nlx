@@ -9,6 +9,8 @@ Lint copyright notice:
     - addlicense -check -ignore "**/node_modules/**" -ignore "management-ui/src/api/**/*" -ignore "directory-api/api/directoryapi.swagger.json.go" -ignore "helm/**/*.yaml" -f license-header.tmpl .
   needs: []
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
     - cg

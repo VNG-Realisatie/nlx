@@ -12,6 +12,8 @@ Lint commit messages:
     - stop_section lint
   needs: []
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
     - if: "$CI_COMMIT_BRANCH" # do not run for tags
   tags:
     - cg
