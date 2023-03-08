@@ -16,6 +16,7 @@ Determine next version:
     paths:
       - ci_semantic_release_next_version.txt
   rules:
+    - if: '$CI_PROJECT_PATH == "commonground/nlx/nlx"'
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
   tags:
