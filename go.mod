@@ -12,7 +12,7 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-testfixtures/testfixtures/v3 v3.8.1
 	github.com/golang-jwt/jwt/v4 v4.4.3
-	github.com/golang-migrate/migrate/v4 v4.15.3-0.20230309061255-7cacfc20803a
+	github.com/golang-migrate/migrate/v4 v4.15.3-0.20230315220536-8ec04221b49d
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/securecookie v1.1.1
@@ -63,7 +63,6 @@ require (
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v4 v4.17.2 // indirect
 	github.com/jackc/pgx/v5 v5.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
