@@ -30,7 +30,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-management-api ./
 
-FROM alpine:3.17.2
+FROM alpine:3.17.3
 COPY --from=build /go/src/go.nlx.io/nlx/management-api/dist/bin/nlx-management-api /usr/local/bin/nlx-management-api
 
 # Add non-privileged user

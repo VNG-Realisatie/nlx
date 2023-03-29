@@ -16,7 +16,7 @@ WORKDIR /go/src/go.nlx.io/nlx/apps-overview
 RUN go build \
     -o dist/bin/apps-overview
 
-FROM alpine:3.17.2
+FROM alpine:3.17.3
 
 COPY --from=build /go/src/go.nlx.io/nlx/apps-overview/dist/bin/apps-overview /usr/local/bin/apps-overview
 COPY --from=build /go/src/go.nlx.io/nlx/apps-overview/templates /templates
