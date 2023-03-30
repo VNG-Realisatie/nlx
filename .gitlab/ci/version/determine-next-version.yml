@@ -16,9 +16,10 @@ Determine next version:
     paths:
       - ci_semantic_release_next_version.txt
   rules:
-    - if: '$CI_PROJECT_PATH == "commonground/nlx/nlx"'
-    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
+    - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
     - cg
     - docker
