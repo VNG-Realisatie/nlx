@@ -64,16 +64,17 @@ type Verifier interface {
 type GetClaimsFromTokenFunc func(idToken *oidc.IDToken) (*IDTokenClaims, error)
 
 type Authenticator struct {
-	store        Store
-	oidcProvider Provider
-	auditLogger  auditlog.Logger
-	logger       *zap.Logger
-	oauth2Config OAuth2Config
-	oidcConfig   *oidc.Config
-	oidcVerifier Verifier
-	getClaims    GetClaimsFromTokenFunc
-	db           database.ConfigDatabase
-	close        func()
+	store               Store
+	oidcProvider        Provider
+	auditLogger         auditlog.Logger
+	logger              *zap.Logger
+	oauth2Config        OAuth2Config
+	oidcConfig          *oidc.Config
+	oidcVerifier        Verifier
+	getClaims           GetClaimsFromTokenFunc
+	db                  database.ConfigDatabase
+	close               func()
+	sessionCookieSecure bool
 }
 
 type IDTokenClaims struct {
@@ -122,16 +123,17 @@ func NewAuthenticator(httpsessionsDB *sql.DB, db database.ConfigDatabase, auditL
 	}
 
 	return &Authenticator{
-		db:           db,
-		auditLogger:  auditLogger,
-		logger:       logger,
-		store:        store,
-		oauth2Config: oauth2Config,
-		oidcConfig:   oidcConfig,
-		oidcProvider: provider,
-		oidcVerifier: verifier,
-		getClaims:    getClaims,
-		close:        closeFn,
+		db:                  db,
+		auditLogger:         auditLogger,
+		logger:              logger,
+		store:               store,
+		oauth2Config:        oauth2Config,
+		oidcConfig:          oidcConfig,
+		oidcProvider:        provider,
+		oidcVerifier:        verifier,
+		getClaims:           getClaims,
+		close:               closeFn,
+		sessionCookieSecure: options.SessionCookieSecure,
 	}, nil
 }
 
@@ -296,7 +298,7 @@ func (a *Authenticator) callback(w http.ResponseWriter, r *http.Request) {
 		session.Options.MaxAge = int(time.Until(time.Unix(claims.ExpiresAt, 0)).Seconds())
 
 		// Only send cookie over https connection
-		session.Options.Secure = true
+		session.Options.Secure = a.sessionCookieSecure
 
 		if err = session.Save(r, w); err != nil {
 			return fmt.Errorf("failed to save session: %w", err)
