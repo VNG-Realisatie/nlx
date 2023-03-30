@@ -1,7 +1,7 @@
 dependencies:
 - name: dex
   repository: https://charts.dexidp.io
-  version: 0.14.0
+  version: 0.12.1
 - name: parkeerrechten-api
   repository: https://charts.commonground.nl
   version: 0.1.0
@@ -41,5 +41,5 @@ dependencies:
 - name: websockets-chat-ui
   repository: file://../../charts/websockets-chat-ui
   version: 0.146.8
-digest: sha256:f9ab49973ad12bc7125d776e62b363b4655851cb3faed72cbcddbd7b112eeb29
-generated: "2023-03-23T03:15:53.909922416Z"
+digest: sha256:5279da44e93c2f59e84ff57ebe8e263726c7dcf66ff0e2b0899037a626bec1da
+generated: "2023-03-02T14:56:40.822859266Z"

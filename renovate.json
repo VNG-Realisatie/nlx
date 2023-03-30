@@ -36,6 +36,18 @@
       "groupName": "React v18 - these dependencies support v18 but break support for v17",
       "packageNames": ["@testing-library/react"],
       "enabled": false
+    },
+    {
+      "groupName": "Dex - v2.36.0 introduces regression. See https://github.com/dexidp/dex/issues/2875",
+      "managers": ["docker"],
+      "packageNames": ["dexidp/dex"],
+      "allowedVersions": "2.35.3"
+    },
+    {
+      "groupName": "Dex - v1.14.0 introduces regression. See https://github.com/dexidp/dex/issues/2875",
+      "managers": ["helm"],
+      "packageNames": ["dex"],
+      "allowedVersions": "0.12.1"
     }
   ]
 }
