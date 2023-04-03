@@ -17,10 +17,10 @@ done
 while read -r file; do
     # Look for too many newlines at end of file
     if [ "$(sed -n '$p' "$file")" = "" ]; then
-        if [[ "$f_flag" = true ]]; then 
+        if [[ "$f_flag" = true ]]; then
             printf '%s\n' "`cat "$file"`" > "$file"
-            echo "fixed too many newlines at end of file $file"; 
-        else 
+            echo "fixed too many newlines at end of file $file";
+        else
             echo "$file: too many newlines at end of file" >&2;
             rc=1;
         fi
@@ -28,14 +28,14 @@ while read -r file; do
 
     # Look for no newlines at end of file
     if [ "$(tail -c 1 "$file")" != "" ]; then
-        if [[ "$f_flag" = true ]]; then 
+        if [[ "$f_flag" = true ]]; then
             echo >> "$file";
-            echo "fixed no newline at end of file $file"; 
-        else 
+            echo "fixed no newline at end of file $file";
+        else
             echo "$file: no newline at end of file" >&2
             rc=1
-        fi   
+        fi
     fi
-done < <(git ls-files | grep -v -E ".*\.(jpg|png|svg|drawio|ico|woff|jpg|jpg|gitkeep)$|management-ui/src/api/.*$|management-api/api/.*\.swagger\.json")
+done < <(git ls-files | grep -v -E ".*\.(jpg|png|svg|drawio|ico|woff|woff2|jpg|jpg|gitkeep)$|management-ui/src/api/.*$|management-api/api/.*\.swagger\.json")
 
 exit $rc
