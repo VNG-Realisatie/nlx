@@ -39,7 +39,7 @@
     },
     {
       "groupName": "Dex - v2.36.0 introduces regression. See https://github.com/dexidp/dex/issues/2875",
-      "managers": ["docker"],
+      "managers": ["docker-compose"],
       "packageNames": ["dexidp/dex"],
       "allowedVersions": "2.35.3"
     },
