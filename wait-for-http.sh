@@ -2,7 +2,6 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-
 set -e
 
 (( c=1 ))

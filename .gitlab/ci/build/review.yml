@@ -100,13 +100,6 @@ Build review directory-monitor:
     CONTEXT: .
     DOCKERFILE: directory-monitor/Dockerfile
 
-Build review directory-ui:
-  extends: .build-review-base
-  variables:
-    IMAGE: directory-ui
-    CONTEXT: directory-ui
-    DOCKERFILE: directory-ui/Dockerfile
-
 Build review directory-ui-htmx:
   extends: .build-review-base
   variables:

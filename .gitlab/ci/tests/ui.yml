@@ -1,35 +1,6 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-Directory-ui linter and tests:
-  extends: .node-base
-  stage: Tests
-  script:
-    - cd directory-ui/
-    - install_npm_dependencies
-    - start_section lint "Running linter"
-    - npm run lint
-    - stop_section lint
-    - start_section test "Running tests"
-    - npm test -- --coverage
-    - stop_section test
-  coverage: /All\sfiles.*?\s+(\d+.\d+)/
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - directory-ui/coverage
-  rules:
-    - if: "$CI_COMMIT_BRANCH" # do not run for tags
-      changes:
-        compare_to: 'master'
-        paths:
-          - .gitlab/**/*
-          - directory-ui/**/*
-  needs: []
-  tags:
-    - cg
-    - docker
-
 Management-ui linter and tests:
   extends: .node-base
   stage: Tests

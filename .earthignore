@@ -11,5 +11,4 @@ helm
 # These have their own docker context
 apps-overview/
 ca-cfssl-unsafe/
-directory-ui/
 docs/

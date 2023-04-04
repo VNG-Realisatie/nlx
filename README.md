@@ -48,7 +48,6 @@ Make sure you have installed the following tools:
 Install the npm dependencies by running:
 
 ```bash
-(cd directory-ui && npm install)
 (cd management-ui && npm install)
 (cd docs/website && npm install)
 ```

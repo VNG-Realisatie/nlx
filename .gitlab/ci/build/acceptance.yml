@@ -102,13 +102,6 @@ Build acceptance directory-monitor:
     CONTEXT: .
     DOCKERFILE: directory-monitor/Dockerfile
 
-Build acceptance directory-ui:
-  extends: .build-acceptance-base
-  variables:
-    IMAGE: directory-ui
-    CONTEXT: directory-ui
-    DOCKERFILE: directory-ui/Dockerfile
-
 Build acceptance directory-ui-htmx:
   extends: .build-acceptance-base
   variables:
