@@ -9,7 +9,7 @@ image:
   registry: docker.io
   apiRepository: nlxio/directory-api
   monitorRepository: nlxio/directory-monitor
-  uiRepository: nlxio/directory-ui-htmx
+  uiRepository: nlxio/directory-ui
   tag: ""
   pullPolicy: Always
   pullSecrets: []

@@ -4,7 +4,7 @@
 package app
 
 import (
-	"go.nlx.io/nlx/directory-ui-htmx/app/query"
+	"go.nlx.io/nlx/directory-ui/app/query"
 )
 
 type Application struct {

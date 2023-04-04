@@ -6,7 +6,7 @@ package query
 import (
 	"context"
 
-	"go.nlx.io/nlx/directory-ui-htmx/domain"
+	"go.nlx.io/nlx/directory-ui/domain"
 )
 
 type ListParticipantsHandler struct {

@@ -65,10 +65,10 @@ Push production directory-monitor:
   variables:
     IMAGE: directory-monitor
 
-Push production directory-ui-htmx:
+Push production directory-ui:
   extends: .push-production-base
   variables:
-    IMAGE: directory-ui-htmx
+    IMAGE: directory-ui
 
 Push production inway:
   extends: .push-production-base

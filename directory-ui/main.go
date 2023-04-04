@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go.nlx.io/nlx/directory-ui-htmx/cmd"
+	"go.nlx.io/nlx/directory-ui/cmd"
 )
 
 func setupCmdFlagForEnvironment(key, value string, command *cobra.Command) {

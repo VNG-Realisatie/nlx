@@ -97,12 +97,12 @@ Build production directory-monitor:
     CONTEXT: .
     DOCKERFILE: directory-monitor/Dockerfile
 
-Build production directory-ui-htmx:
+Build production directory-ui:
   extends: .build-production-base
   variables:
-    IMAGE: directory-ui-htmx
+    IMAGE: directory-ui
     CONTEXT: .
-    DOCKERFILE: directory-ui-htmx/Dockerfile
+    DOCKERFILE: directory-ui/Dockerfile
 
 Build production inway:
   extends: .build-production-base

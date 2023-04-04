@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	directoryapi "go.nlx.io/nlx/directory-api/api"
-	"go.nlx.io/nlx/directory-ui-htmx/domain"
+	"go.nlx.io/nlx/directory-ui/domain"
 )
 
 func (l *Directory) ListServices(ctx context.Context, filters domain.ListServicesFilters) ([]*domain.Service, error) {

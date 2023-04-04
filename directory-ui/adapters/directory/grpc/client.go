@@ -16,7 +16,7 @@ import (
 	directoryapi "go.nlx.io/nlx/directory-api/api"
 )
 
-const component = "nlx-directory-ui-htmx"
+const component = "nlx-directory-ui"
 
 var (
 	userAgent = component + "/" + version.BuildVersion

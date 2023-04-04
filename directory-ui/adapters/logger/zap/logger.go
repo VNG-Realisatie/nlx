@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"go.nlx.io/nlx/directory-ui-htmx/adapters/logger"
+	"go.nlx.io/nlx/directory-ui/adapters/logger"
 )
 
 type Logger struct {

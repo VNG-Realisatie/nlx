@@ -15,8 +15,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/exp/slices"
 
-	"go.nlx.io/nlx/directory-ui-htmx/adapters/logger"
-	"go.nlx.io/nlx/directory-ui-htmx/app"
+	"go.nlx.io/nlx/directory-ui/adapters/logger"
+	"go.nlx.io/nlx/directory-ui/app"
 )
 
 //go:embed templates/**

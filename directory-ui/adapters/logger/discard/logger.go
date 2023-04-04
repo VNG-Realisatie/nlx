@@ -3,7 +3,7 @@
 
 package discardlogger
 
-import "go.nlx.io/nlx/directory-ui-htmx/adapters/logger"
+import "go.nlx.io/nlx/directory-ui/adapters/logger"
 
 type Logger struct{}
 

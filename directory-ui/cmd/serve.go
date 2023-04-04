@@ -18,10 +18,10 @@ import (
 	"go.nlx.io/nlx/common/process"
 	common_tls "go.nlx.io/nlx/common/tls"
 	"go.nlx.io/nlx/common/version"
-	grpcdirectory "go.nlx.io/nlx/directory-ui-htmx/adapters/directory/grpc"
-	zaplogger "go.nlx.io/nlx/directory-ui-htmx/adapters/logger/zap"
-	uiport "go.nlx.io/nlx/directory-ui-htmx/ports/ui"
-	"go.nlx.io/nlx/directory-ui-htmx/service"
+	grpcdirectory "go.nlx.io/nlx/directory-ui/adapters/directory/grpc"
+	zaplogger "go.nlx.io/nlx/directory-ui/adapters/logger/zap"
+	uiport "go.nlx.io/nlx/directory-ui/ports/ui"
+	"go.nlx.io/nlx/directory-ui/service"
 )
 
 var serveOpts struct {

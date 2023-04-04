@@ -4,7 +4,7 @@
 package grpcdirectory
 
 import (
-	"go.nlx.io/nlx/directory-ui-htmx/domain"
+	"go.nlx.io/nlx/directory-ui/domain"
 )
 
 type Directory struct {

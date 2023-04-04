@@ -7,9 +7,9 @@ import (
 	"context"
 	"errors"
 
-	"go.nlx.io/nlx/directory-ui-htmx/app"
-	"go.nlx.io/nlx/directory-ui-htmx/app/query"
-	"go.nlx.io/nlx/directory-ui-htmx/domain"
+	"go.nlx.io/nlx/directory-ui/app"
+	"go.nlx.io/nlx/directory-ui/app/query"
+	"go.nlx.io/nlx/directory-ui/domain"
 )
 
 type NewApplicationArgs struct {
