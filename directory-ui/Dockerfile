@@ -14,7 +14,7 @@ RUN git clone https://github.com/sass/dart-sass.git . && \
     /directory-ui/ports/ui/static/styling/main.css
 
 # Use go 1.x based on alpine image.
-FROM golang:1.20.2-alpine AS go-build
+FROM golang:1.20.3-alpine AS go-build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
