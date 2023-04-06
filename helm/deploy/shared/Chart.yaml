@@ -2,8 +2,8 @@ apiVersion: v2
 name: shared
 description: Metachart for shared NLX components
 type: application
-version: 0.147.0
-appVersion: 0.147.0
+version: 0.147.1
+appVersion: 0.147.1
 
 dependencies:
   - name: apps-overview
