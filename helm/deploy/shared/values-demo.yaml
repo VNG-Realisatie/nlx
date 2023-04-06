@@ -151,6 +151,7 @@ nlx-directory:
      offlineServiceTTL: 86400  # 24 hours
   ui:
     environment: "demo"
+    directoryAPIAddress: directory-api.demo.nlx.io:443
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
