@@ -1,3 +1,18 @@
+# [0.147.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.146.8...v0.147.0) (2023-04-06)
+
+
+### Bug Fixes
+
+* add ReadHeaderTimeout for all http servers to prevent possible slowloris attacks ([09f407c](https://gitlab.com/commonground/nlx/nlx/commit/09f407ceafe14f721494b923e42c8b44f70b5016)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **management:** let oidc sessions expire after 8 hours ([ae42a19](https://gitlab.com/commonground/nlx/nlx/commit/ae42a1941ca91282478da57e936432a3d30fd2cc)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **management:** only send oidc cookie over https connections ([f75ae7d](https://gitlab.com/commonground/nlx/nlx/commit/f75ae7d5186f93f20e69af1a9cbee891151122ff)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+* **management:** take SessionCookieSecure setting into account when storing cookies ([3f3c43b](https://gitlab.com/commonground/nlx/nlx/commit/3f3c43b2c6361e3bbb6d8d2d53edf1eea09cd816)), closes [nlx#1699](https://gitlab.com/nlx/issues/1699)
+
+
+### Features
+
+* **directory:** rework UI to use Server Side Rendering ([14eaeaa](https://gitlab.com/commonground/nlx/nlx/commit/14eaeaa3610ef2efe926fca2045ac8a041e0fe95)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.146.8](https://gitlab.com/commonground/nlx/nlx/compare/v0.146.7...v0.146.8) (2023-03-02)
 
 ## [0.146.7](https://gitlab.com/commonground/nlx/nlx/compare/v0.146.6...v0.146.7) (2023-03-02)
