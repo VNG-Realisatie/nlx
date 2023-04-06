@@ -138,6 +138,7 @@ postgresql:
 nlx-directory:
   environment: "demo"
   ui:
+    directoryAPIAddress: shared-nlx-directory:443
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
