@@ -45,7 +45,7 @@
     },
     {
       "groupName": "Dex - v1.14.0 introduces regression. See https://github.com/dexidp/dex/issues/2875",
-      "managers": ["helmfile"],
+      "managers": ["helmv3"],
       "packageNames": ["dex"],
       "allowedVersions": "0.12.1"
     }
