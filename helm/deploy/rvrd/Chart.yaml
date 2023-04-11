@@ -7,7 +7,7 @@ appVersion: 0.147.1
 
 dependencies:
   - name: dex
-    version: 0.14.1
+    version: 0.12.1
     repository: https://charts.dexidp.io
   - name: basisregister-fictieve-kentekens
     version: 0.1.0
