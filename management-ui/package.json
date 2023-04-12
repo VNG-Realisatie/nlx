@@ -64,6 +64,6 @@
     "react-select-event": "5.5.1",
     "react-transition-group": "4.4.5",
     "styled-components": "5.3.9",
-    "yup": "1.0.2"
+    "yup": "1.1.0"
   }
 }
