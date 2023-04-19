@@ -92,6 +92,7 @@ Go linter:
           - directory-monitor/**/*
           - inway/**/*
           - management-api/**/*
+          - management-ui-fsc/**/*
           - nlxctl/**/*
           - outway/**/*
           - testing/**/*

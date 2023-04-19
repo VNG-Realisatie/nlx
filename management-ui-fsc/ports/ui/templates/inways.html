@@ -1,0 +1,55 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+{{ define "content"}}
+
+<div class="in-and-outways-page">
+    <div class="in-and-outways-page__actions-bar">
+        <a href="/inways-and-outways/inways" class="in-and-outways-page__actions-bar__button button--secondary active">
+            {{ svg "icon-inway" "icon--inline in-and-outways-page__icon-inway" }}
+            {{ i18n "Inways" }} ({{ .AmountOfInways }})
+        </a>
+
+        <a href="#" class="in-and-outways-page__actions-bar__button button--secondary">
+            {{ svg "icon-outway" "icon--inline in-and-outways-page__icon-outway" }}
+            {{ i18n "Outways" }} ({{ .AmountOfOutways }})
+        </a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>{{ i18n "Type" }}</th>
+                <th>{{ i18n "Name" }}</th>
+                <th>{{ i18n "Hostname" }}</th>
+                <th>{{ i18n "Self address" }}</th>
+                <th>{{ i18n "Services" }}</th>
+                <th>{{ i18n "Version" }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{ range .Inways }}
+        <tr hx-get="#" hx-trigger="click" class="tr--link">
+            <td>
+                {{ svg "icon-inway" "icon" }}
+            </td>
+            <td>{{ .Name }}</td>
+            <td>{{ .Hostname }}</td>
+            <td>{{ .SelfAddress }}</td>
+            <td>{{ .Services }}</td>
+            <td>{{ .Version }}</td>
+            <td class="td--link">
+                <a href="#">
+                    {{ svg "icon-chevron-right" "icon" }}
+                </a>
+            </td>
+        </tr>
+        {{ end }}
+        </tbody>
+    </table>
+</div>
+
+{{ end }}

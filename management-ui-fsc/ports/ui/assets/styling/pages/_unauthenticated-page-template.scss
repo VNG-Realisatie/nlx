@@ -1,0 +1,33 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.unauthenticated-page-template {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    &__sidebar {
+        background: theme.$colorBackgroundAlt url('/img/nlx-pattern.svg');
+        flex: 0 0 532px;
+        text-align: center;
+        font-size: 14pt;
+        padding-top: 10rem;
+        height: 100%;
+    }
+
+    &__sidebar-logo {
+        display: block;
+        margin: 0 auto;
+        width: 100px;
+    }
+
+    &__content {
+        max-width: 70rem;
+        padding: 0 10rem;
+        margin: auto 0;
+    }
+}

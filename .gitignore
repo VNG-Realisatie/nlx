@@ -10,3 +10,5 @@ tmp-coverage-reports
 gl-container-scanning-report.json
 .eslintcache
 jq
+dist
+.parcel-cache

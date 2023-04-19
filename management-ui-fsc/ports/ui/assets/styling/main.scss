@@ -1,0 +1,12 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@forward "global-styles";
+@forward "components";
+@forward "app";
+@forward "pages";
+
+@import "../node_modules/normalize.css/normalize.css";
+@import "../node_modules/@fontsource/source-sans-pro/latin.css";

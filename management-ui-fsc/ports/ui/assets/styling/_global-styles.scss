@@ -1,0 +1,93 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "theme";
+
+html {
+    background-color: theme.$colorBackground;
+    color: theme.$colorText;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: theme.$baseFontSize;
+    font-weight: theme.$fontWeightRegular;
+    line-height: theme.$lineHeightText;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+h1 {
+    line-height: theme.$lineHeightHeading;
+    font-weight: theme.$fontWeightBold;
+    font-size: theme.$fontSizeXXLarge;
+    margin: 0 0 theme.$spacing05 0;
+}
+
+h2 {
+    line-height: theme.$lineHeightHeading;
+    font-weight: theme.$fontWeightBold;
+    font-size: theme.$fontSizeXLarge;
+    margin: theme.$spacing09 0  theme.$spacing04 0;
+}
+
+h3 {
+    line-height: theme.$lineHeightHeading;
+    font-weight: theme.$fontWeightBold;
+    font-size: theme.$fontSizeLarge;
+    margin: theme.$spacing07 0 theme.$spacing04 0;
+}
+
+p {
+    font-size: theme.$fontSizeMedium;
+    margin: 0 0 theme.$spacing05 0;
+}
+
+small {
+    font-size: theme.$fontSizeSmall;
+    color: theme.$colorTextLabel;
+}
+
+a {
+    text-decoration-skip-ink: auto;
+    color: theme.$colorTextLink;
+
+    &:hover,
+    &:active {
+        color: theme.$colorTextLinkHover;
+    }
+}
+
+a[disabled] {
+    pointer-events: none;
+}
+
+// Management UI specific
+html,
+body,
+#root {
+    height: 100vh;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}
+
+[tabindex],
+a,
+button {
+    :focus {
+        outline: 2px solid theme.$colorFocus;
+    }
+}

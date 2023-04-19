@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+<html lang="{{ .I18n.Locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset "styling/main.scss" }}" />
+
+    <title>FSC Management</title>
+</head>
+<body>
+
+    <div id="root">
+        <div class="app">
+            <div class="unauthenticated-page-template">
+                <aside class="unauthenticated-page-template__sidebar">
+                    {{ svg "nlx-logo" "unauthenticated-page-template__sidebar-logo" }}
+                </aside>
+
+                <main class="unauthenticated-page-template__content">
+                    {{ block "content" . }}
+                    Default content
+                    {{ end }}
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{{ asset "js/index.js" }}"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+{{ define "content"}}
+
+<h1>{{ i18n "Welcome" }}</h1>
+
+{{ if not .IsUserAuthenticated }}
+
+<p>{{ i18n "Log in to continue" }}</p>
+
+<div class="alert--error">
+    <p class="alert__content">
+        {{ i18n "Invalid credentials." }}
+    </p>
+</div>
+
+<form action="#" method="post" class="login-page__form" novalidate>
+    <fieldset>
+        <label>
+            {{ i18n "Email address" }}
+            <input class="input--medium" type="email" name="email" autoComplete="email" autoFocus />
+        </label>
+        <p class="invalid-feedback">
+            {{ svg "icon-error" "icon--inline" }}
+            {{ i18n "This field is required" }}
+        </p>
+
+        <label>
+            {{ i18n "Password" }}
+            <input class="input--medium" type="password" name="password" autoComplete="current-password" />
+        </label>
+    </fieldset>
+
+    <button type="submit">{{ i18n "Log in" }}</button>
+</form>
+
+
+{{ else }}
+<a href="#" class="button--primary">{{ i18n "Log out" }}</a>
+{{ end }}
+
+{{ end }}

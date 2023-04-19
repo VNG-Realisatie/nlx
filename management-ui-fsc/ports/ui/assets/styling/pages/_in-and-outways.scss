@@ -1,0 +1,24 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.in-and-outways-page {
+    &__actions-bar {
+        display: flex;
+        margin-bottom: 2rem;
+
+        &__button {
+            &.active {
+                background-color: theme.$colorBackgroundButtonSecondarySelected;
+                color: theme.$colorTextButtonSecondarySelected;
+            }
+        }
+    }
+
+    &__icon-outway {
+        fill: theme.$colorFocus;
+    }
+}

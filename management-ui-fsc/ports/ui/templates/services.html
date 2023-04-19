@@ -1,0 +1,42 @@
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+{{ define "content"}}
+
+<div class="services-page">
+    <div class="services-page__actions-bar">
+        <div class="services-page__actions-bar__service-count">
+            <span class="services-page__actions-bar__service-count__amount">{{ .AmountOfServices}}</span>
+            <small>{{ i18n "Services" }}</small>
+        </div>
+
+        <a href="#" class="button--primary">
+            {{ svg "icon-plus" "icon--inline" }} {{ i18n "Add service" }}
+        </a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>{{ i18n "Name" }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {{ range .Services }}
+        <tr hx-get="#" hx-trigger="click" class="tr--link">
+            <td>{{ .Name }}</td>
+            <td class="td--link">
+                <a href="#">
+                    {{ svg "icon-chevron-right" "icon" }}
+                </a>
+            </td>
+        </tr>
+        {{ end }}
+        </tbody>
+    </table>
+</div>
+
+{{ end }}

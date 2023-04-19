@@ -1,0 +1,24 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.services-page {
+    &__actions-bar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        &__service-count {
+            margin-bottom: theme.$spacing07;
+
+            &__amount {
+                font-weight: theme.$fontWeightBold;
+                font-size: theme.$fontSizeXXLarge;
+                display: block;
+            }
+        }
+    }
+}

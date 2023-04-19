@@ -1,0 +1,111 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+$_inner-border-width: 2px;
+
+%button {
+    font-family: 'Source Sans Pro', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: calc(#{theme.$spacing04} - #{$_inner-border-width}) calc(#{theme.$spacing05} - #{$_inner-border-width});
+    /* Minimum sizing for icon-only buttons */
+    min-width: theme.$spacing09;
+    min-height: theme.$spacing09;
+    border: $_inner-border-width solid transparent;
+    vertical-align: middle;
+    font-size: theme.$fontSizeMedium;
+    font-weight: theme.$fontWeightSemiBold;
+    line-height: theme.$lineHeightText;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+
+    &:after {
+        background-color: adjust-color(theme.$colorPaletteGray900, $alpha: -0.75);
+        content: '';
+        position: absolute;
+        height: 3px;
+        bottom: (-$_inner-border-width);
+        left: (-$_inner-border-width);
+        right: (-$_inner-border-width);
+    }
+
+    &:focus {
+        border: $_inner-border-width solid theme.$colorBackground;
+        outline: $_inner-border-width solid theme.$colorFocus;
+
+        &:after {
+            display: none;
+        }
+    }
+
+    &__icon-after {
+        margin-left: theme.$spacing03;
+        fill: theme.$colorPaletteGray400;
+    }
+}
+
+.button--primary {
+    @extend %button;
+
+    color: theme.$colorTextButtonPrimary;
+    background-color: theme.$colorBackgroundButtonPrimary;
+
+    &:hover,
+    &:focus {
+        color: theme.$colorTextButtonPrimary;
+        background: theme.$colorBackgroundButtonPrimaryHover;
+    }
+
+    &[disabled] {
+        cursor: not-allowed;
+        color: theme.$colorTextButtonPrimaryDisabled;
+        background-color: theme.$colorBackgroundButtonPrimaryDisabled;
+
+        &:hover,
+        &:focus {
+            color: theme.$colorTextButtonPrimaryDisabled;
+            background-color: theme.$colorBackgroundButtonPrimaryDisabled;
+        }
+
+        .button__icon-after {
+            fill: theme.$colorTextButtonPrimaryDisabled;
+        }
+    }
+}
+
+.button--secondary {
+    @extend %button;
+
+    color: theme.$colorTextButtonSecondary;
+    background-color: theme.$colorBackgroundButtonSecondary;
+
+    &:hover,
+    &:focus {
+        color: theme.$colorTextButtonSecondary;
+        background: theme.$colorBackgroundButtonSecondaryHover;
+    }
+
+    &[disabled] {
+        cursor: not-allowed;
+        color: theme.$colorTextButtonSecondaryDisabled;
+        background-color: theme.$colorBackgroundButtonSecondaryDisabled;
+
+        &:hover,
+        &:focus {
+            color: theme.$colorTextButtonSecondaryDisabled;
+            background-color: theme.$colorBackgroundButtonSecondaryDisabled;
+        }
+
+        .button__icon-after {
+            fill: theme.$colorTextButtonSecondaryDisabled;
+        }
+    }
+}

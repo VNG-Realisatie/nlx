@@ -121,6 +121,13 @@ Build review management-api:
     CONTEXT: .
     DOCKERFILE: management-api/Dockerfile
 
+Build review management-ui-fsc:
+  extends: .build-review-base
+  variables:
+    IMAGE: management-ui-fsc
+    CONTEXT: .
+    DOCKERFILE: management-ui-fsc/Dockerfile
+
 Build review management-ui:
   extends: .build-review-base
   variables:

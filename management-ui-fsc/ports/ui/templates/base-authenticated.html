@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+ Copyright © VNG Realisatie 2023
+ Licensed under the EUPL
+-->
+
+<html lang="{{ .I18n.Locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset "styling/main.scss" }}" />
+
+    <title>FSC Management</title>
+</head>
+<body>
+
+    <div id="root">
+        <div class="app">
+            <div class="authenticated-page-template">
+                <a href="#" class="authenticated-page-template__skip-to-content">{{ i18n "Go to content" }}</a>
+
+                <nav class="authenticated-page-template__primary-navigation" aria-labelledby="nlx-home">
+                    <section>
+                        <a href="/inways-and-outways" class="authenticated-page-template__primary-navigation__home-link">
+                            {{ svg "nlx-management-logo" "" }}
+                        </a>
+
+                        <a href="/inways-and-outways" class="authenticated-page-template__primary-navigation__menu-item {{ if eq .PrimaryNavigationActivePath "/inways-and-outways" }}active{{end}}" aria-label='{{ i18n "Inways and Outways page" }}'>
+                            {{ svg "icon-inways-and-outways" "icon icon--xlarge" }}
+                            {{ i18n "Inways and Outways" }}
+                        </a>
+
+                        <a href="{{ .PathServicesPage }}" class="authenticated-page-template__primary-navigation__menu-item {{ if eq .PrimaryNavigationActivePath "/services" }}active{{end}}" aria-label='{{ i18n "Services page" }}'>
+                            {{ svg "icon-services" "icon icon--xlarge" }}
+                            {{ i18n "Services" }}
+                        </a>
+                    </section>
+
+                    <section>
+                        <a href="#" class="authenticated-page-template__primary-navigation__menu-item {{ if eq .PrimaryNavigationActivePath "/settings" }}active{{end}}" aria-label='{{ i18n "Settings page" }}'>
+                            {{ svg "icon-settings" "icon icon--xlarge" }}
+                            {{ i18n "Settings" }}
+                        </a>
+                    </section>
+                </nav>
+
+                <div class="authenticated-page-template__main-wrapper">
+                    <main class="authenticated-page-template__main">
+
+                        <div class="authenticated-page-template__header">
+                            <h1 class="authenticated-page-template__header__title">{{ .BaseAuthenticatedPage.Title }}</h1>
+
+                            <div class="authenticated-page-template__header__items">
+                                <span class="authenticated-page-template__header__organization-info">
+                                    {{ .BaseAuthenticatedPage.OrganizationName }} <br>
+                                    <small>OIN {{ .BaseAuthenticatedPage.OrganizationSerialNumber }}</small>
+                                </span>
+
+                                <div class="authenticated-page-template__header__user-navigation">
+                                    <button type="button" class="authenticated-page-template__header__user-navigation__button">
+                                        <figure class="authenticated-page-template__header__user-navigation__avatar">
+                                            <img src="/img/icon-avatar.svg" alt='{{ i18n "Avatar" }}'>
+                                        </figure>
+
+                                        <span class="authenticated-page-template__header__user-navigation__username">
+                                            {{ .BaseAuthenticatedPage.Username }}
+                                        </span>
+
+                                        {{ svg "icon-chevron-down" "authenticated-page-template__header__user-navigation__toggle-icon" }}
+                                    </button>
+
+                                    <ul class="authenticated-page-template__header__user-navigation__menu">
+                                        <li>
+                                            <button type="button">
+                                                {{ i18n "Log out" }}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="authenticated-page-template__description">
+                            {{ if eq .BaseAuthenticatedPage.Description ""}}&nbsp;{{else}}{{ .BaseAuthenticatedPage.Description }}{{end}}
+                        </p>
+
+                        {{ block "content" . }}
+                        Default content
+                        {{ end }}
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset "js/index.js" }}"></script>
+</body>
+</html>

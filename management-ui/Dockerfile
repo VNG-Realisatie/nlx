@@ -1,7 +1,7 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-FROM node:20.1.0-alpine AS node-build
+FROM node:19.9.0-alpine AS node-build
 
 RUN apk add --update git jq python3 make g++
 
@@ -22,7 +22,7 @@ COPY management-ui /go/src/go.nlx.io/nlx/management-ui
 RUN npm run build
 
 # Use go 1.x based on alpine image.
-FROM golang:1.20.4-alpine AS go-build
+FROM golang:1.20.3-alpine AS go-build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev

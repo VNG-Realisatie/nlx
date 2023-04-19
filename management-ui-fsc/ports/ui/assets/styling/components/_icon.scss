@@ -1,0 +1,36 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+
+.icon {
+    vertical-align: text-bottom;
+    width: theme.$iconSizeDefault;
+    height: theme.$iconSizeDefault;
+    margin-right: 0;
+}
+
+.icon--inline {
+    @extend .icon;
+    margin-right: theme.$spacing03;
+}
+
+.icon--small {
+    @extend .icon;
+    width: theme.$iconSizeSmall;
+    height: theme.$iconSizeSmall;
+}
+
+.icon--large {
+    @extend .icon;
+    width: theme.$iconSizeLarge;
+    height: theme.$iconSizeLarge;
+}
+
+.icon--xlarge {
+    @extend .icon;
+    width: theme.$iconSizeXLarge;
+    height: theme.$iconSizeXLarge;
+}

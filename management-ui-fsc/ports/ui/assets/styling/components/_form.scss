@@ -1,0 +1,83 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+@use "../theme";
+@use "./button";
+
+label {
+    display: block;
+    width: max-content;
+    margin-bottom: theme.$spacing01;
+    margin-top: theme.$spacing06;
+    word-break: keep-all;
+    color: theme.$colorTextInputLabel;
+    cursor: pointer;
+}
+
+fieldset {
+    padding: 0 0 3rem 0;
+    border: 0 none;
+}
+
+legend {
+    margin: 0;
+    font-weight: theme.$fontWeightBold;
+    font-size: theme.$fontSizeLarge;
+    line-height: theme.$lineHeightHeading;
+}
+
+input,
+.input {
+    display: block;
+    padding: theme.$spacing04;
+    border: 1px solid theme.$colorBorderInput;
+    margin-top: theme.$spacing01;
+    outline: none;
+    font-size: theme.$fontSizeMedium;
+    font-family: 'Source Sans Pro', sans-serif;
+    line-height: theme.$lineHeightText;
+    color: theme.$colorTextInputLabel;
+    background-color: theme.$colorBackgroundInput;
+    width: 100%;
+
+    ::placeholder,
+    ::-webkit-input-placeholder,
+    :-ms-input-placeholder {
+        color: theme.$colorTextInputPlaceholder;
+    }
+
+    &:focus,
+    &--invalid {
+        padding: calc(#{theme.$spacing04} - 1px);
+        border: 2px solid theme.$colorBorderInputFocus;
+    }
+
+    &--invalid {
+        border-color: theme.$colorBorderInputError;
+    }
+
+    [disabled] {
+        background-color: theme.$colorBackgroundInputDisabled;
+        border-color: theme.$colorBorderInputDisabled;
+        cursor: not-allowed;
+        color: theme.$colorTextInputDisabled;
+    }
+
+    &--xs { width: 5rem }
+    &--small { width: 10rem }
+    &--medium { width: 20rem }
+    &--large { width: 30rem }
+    &--xl { width: 46rem }
+}
+
+.invalid-feedback {
+    font-weight: theme.$fontWeightBold;
+    color: theme.$colorError;
+    margin: theme.$spacing03 0 theme.$spacing06 0;
+}
+
+button[type="submit"] {
+    @extend button, .button--primary;
+}

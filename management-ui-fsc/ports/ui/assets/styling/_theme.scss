@@ -1,0 +1,184 @@
+/**
+ * Copyright © VNG Realisatie 2023
+ * Licensed under the EUPL
+ */
+
+// spacings
+$baseFontSize: 16px;
+
+$spacing01: 0.125rem;
+$spacing02: 0.25rem;
+$spacing03: 0.5rem;
+$spacing04: 0.75rem;
+$spacing05: 1rem;
+$spacing06: 1.5rem;
+$spacing07: 2rem;
+$spacing08: 2.5rem;
+$spacing09: 3rem;
+$spacing10: 4rem;
+$spacing11: 5rem;
+$spacing12: 6rem;
+
+$lineHeightTextSmall: 100%;
+$lineHeightText: 150%;
+$lineHeightHeading: 125%;
+
+$fontWeightRegular: 500;
+$fontWeightSemiBold: 600;
+$fontWeightBold: 700;
+
+$fontSizeSmall: 0.875rem;
+$fontSizeMedium: 1rem;
+$fontSizeLarge: 1.125rem;
+$fontSizeXLarge: 1.5rem;
+$fontSizeXXLarge: 2rem;
+
+$iconSizeSmall: 1rem;
+$iconSizeDefault: 1.25rem;
+$iconSizeLarge: 1.5rem;
+$iconSizeXLarge: 2rem;
+
+// pallette gray
+$colorPaletteGray50: #FAFAFA;
+$colorPaletteGray100: #F5F5F5;
+$colorPaletteGray300: #E0E0E0;
+$colorPaletteGray200: #EEEEEE;
+$colorPaletteGray400: #BDBDBD;
+$colorPaletteGray500: #9E9E9E;
+$colorPaletteGray600: #757575;
+$colorPaletteGray700: #616161;
+$colorPaletteGray800: #424242;
+$colorPaletteGray900: #212121;
+
+// Brand
+$colorBrand1: #FFBC2C;
+$colorBrand2: #33373E;
+$colorBrand3: #474E57;
+$colorBrand4: #36C6FF;
+
+// Sub-colors
+$colorInfo: #36C6FF;
+$colorInfoLight: #6CA9C6;
+$colorWarning: #FFBC2C;
+$colorWarningLight: #FFD680;
+$colorError: #ff646e;
+$colorErrorLight: #F67F8D;
+$colorSuccess: #75A25B;
+$colorSuccessLight: #88B76D;
+
+// Generics
+$colorBackground: $colorPaletteGray900;
+$colorBackgroundAlt: #313131;
+$colorFocus: #1EA1D5;
+
+// Text
+$colorText: $colorPaletteGray300;
+$colorTextInverse: $colorPaletteGray900;
+
+$colorTextLabel: $colorPaletteGray500;
+$colorTextDisabled: rgba(255, 255, 255, 0.3);
+
+$colorTextLink: $colorBrand4;
+$colorTextLinkHover: #82CFE8;
+$colorTextLinkDisabled: rgba(255, 255, 255, 0.2);
+
+// Alert
+$colorAlertInfo: $colorInfo;
+$colorAlertInfoBackground: #434950;
+$colorAlertWarning: $colorWarning;
+$colorAlertWarningBackground: #4D4941;
+$colorAlertError: $colorError;
+$colorAlertErrorBackground: #4F4344;
+$colorAlertSuccess: $colorSuccess;
+$colorAlertSuccessBackground: #454B42;
+
+// Divider
+$colorDividerPrimary: rgba(255, 255, 255, 0.2);
+$colorDividerSecondary: rgba(255, 255, 255, 0.1);
+
+// Buttons
+$colorBackgroundButtonPrimary: $colorBrand1;
+$colorBackgroundButtonPrimaryHover: #FFD06B;
+$colorBackgroundButtonPrimaryDisabled: rgba(255, 255, 255, 0.1);
+$colorTextButtonPrimary: $colorTextInverse;
+$colorTextButtonPrimaryDisabled: $colorTextDisabled;
+
+$colorBackgroundButtonSecondary: rgba(255, 255, 255, 0.3);
+$colorBackgroundButtonSecondaryHover: rgba(255, 255, 255, 0.4);
+$colorBackgroundButtonSecondaryDisabled: rgba(255, 255, 255, 0.1);
+$colorBackgroundButtonSecondarySelected: rgba(255, 255, 255, 0.7);
+$colorBackgroundButtonSecondarySelectedHover: rgba(255, 255, 255, 0.8);
+$colorTextButtonSecondary: $colorPaletteGray100;
+$colorTextButtonSecondaryDisabled: $colorTextDisabled;
+$colorTextButtonSecondarySelected: $colorTextInverse;
+
+$colorBackgroundButtonDanger: $colorAlertError;
+$colorBackgroundButtonDangerHover: #F46B7A;
+$colorBackgroundButtonDangerDisabled: rgba(255, 255, 255, 0.1);
+$colorTextButtonDanger: $colorTextInverse;
+$colorTextButtonDangerDisabled: rgba(255, 255, 255, 0.3);
+
+$colorTextButtonLink: $colorTextLink;
+$colorTextButtonLinkHover: $colorTextLinkHover;
+$colorTextButtonLinkDisabled: $colorTextLinkDisabled;
+
+// Input
+$colorBackgroundInput: rgba(255, 255, 255, 0.1);
+$colorBackgroundInputDisabled: rgba(255, 255, 255, 0.05);
+$colorBorderInput: transparent;
+$colorBorderInputDisabled: transparent;
+$colorBorderInputError: $colorError;
+$colorBorderInputFocus: $colorFocus;
+$colorTextInputLabel: $colorPaletteGray400;
+$colorTextInputLabelDisabled: rgba(255, 255, 255, 0.3);
+$colorTextInputPlaceholder: rgba(255, 255, 255, 0.6);
+$colorTextInputDisabled: $colorTextDisabled;
+$colorTextInputError: $colorError;
+$colorIconInput: $colorPaletteGray500;
+
+// Checkbox & Radio
+$colorBackgroundChoiceSelected: $colorPaletteGray300;
+$colorBackgroundChoiceDisabled: rgba(255, 255, 255, 0.1);
+$colorBorderChoice: $colorPaletteGray500;
+$colorBorderChoiceFocus: $colorFocus;
+
+// Dropdown, Select, Popover
+$colorBackgroundDropdown: $colorPaletteGray900;
+$colorBackgroundDropdownHover: #515151;
+$colorBackgroundDropdownActive: $colorPaletteGray600;
+$colorTextDropdownActive: $colorPaletteGray300;
+$colorBackgroundDropdownSelected: $colorPaletteGray700;
+$colorBorderDropdownFocus: $colorFocus;
+
+// Switch
+$colorBackgroundSwitch: $colorPaletteGray600;
+$colorBackgroundSwitchChecked: $colorBrand4;
+$colorBackgroundSwitchDisabled: rgba(255, 255, 255, 0.1);
+$colorBackgroundSwitchIndicatorDisabled: rgba(255, 255, 255, 0.2);
+
+// Drawer
+$colorBackgroundDrawer: $colorBackgroundAlt;
+
+// Select
+$colorBackgroundSelect: #383838;
+$colorBackgroundSelectOptionHover: rgba(255, 255, 255, 0.1);
+$colorBackgroundSelectOptionSelect: rgba(255, 255, 255, 0.2);
+$colorBackgroundSelectSeparator: rgba(255, 255, 255, 0.1);
+$colorBackgroundSelectDisabled: rgba(255, 255, 255, 0.2);
+$colorBorderSelect: transparent;
+$colorBorderSelectDisabled: transparent;
+$colorBorderSelectError: $colorError;
+$colorBorderSelectFocus: $colorFocus;
+$colorTextSelectLabel: $colorPaletteGray400;
+$colorTextSelectLabelDisabled: rgba(255, 255, 255, 0.3);
+$colorTextSelectPlaceholder: rgba(255, 255, 255, 0.6);
+$colorTextSelectDisabled: $colorTextDisabled;
+$colorTextSelectError: $colorError;
+
+// TOKENS BELOW ARE ADDED FOR THE MANAGEMENT UI
+
+// Table
+$colorBorderTable: $colorPaletteGray800;
+$colorBackgroundTableHover: rgba(255, 255, 255, 0.1);
+$colorBackgroundTableSelected: rgba(255, 255, 255, 0.2);
+$colorBackgroundTableFocus: $colorFocus;
