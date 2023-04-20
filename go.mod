@@ -31,7 +31,7 @@ require (
 	github.com/tabbed/pqtype v0.1.1
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.8.0
-	golang.org/x/exp v0.0.0-20230419192730-864b3d6c5c2c
+	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
 	golang.org/x/net v0.9.0
 	golang.org/x/oauth2 v0.7.0
 	golang.org/x/sync v0.1.0
