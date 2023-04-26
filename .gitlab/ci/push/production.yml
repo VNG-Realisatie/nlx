@@ -3,9 +3,9 @@
 
 .push-production-base:
   stage: Push
-  image: docker:23.0.4-git
+  image: docker:23.0.5-git
   services:
-    - docker:23.0.4-dind
+    - docker:23.0.5-dind
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
