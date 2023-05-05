@@ -1,7 +1,7 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-FROM node:20.0.0-alpine AS build
+FROM node:20.1.0-alpine AS build
 
 ENV CI=true
 
