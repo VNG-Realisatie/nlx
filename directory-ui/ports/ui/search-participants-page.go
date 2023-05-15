@@ -8,11 +8,13 @@ import (
 )
 
 type searchParticipantsPage struct {
+	*BasePage
+
 	SearchResults ParticipantsSearchResults
 }
 
 func (p *searchParticipantsPage) render(w http.ResponseWriter) error {
-	baseTemplate := templateWithSVGHelper()
+	baseTemplate := p.TemplateWithHelpers()
 
 	t, err := baseTemplate.ParseFS(
 		tplFolder,

@@ -13,6 +13,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
 	"go.nlx.io/nlx/directory-ui/adapters/logger"
@@ -28,6 +29,7 @@ type Server struct {
 	app         *app.Application
 	logger      logger.Logger
 	httpServer  *http.Server
+	basePage    *BasePage
 }
 
 var validEnvironments = []string{"demo", "preprod", "prod"}
@@ -51,11 +53,17 @@ func New(environment, staticPath string, lgr logger.Logger, a *app.Application) 
 		return nil, fmt.Errorf("app cannot be nil")
 	}
 
+	basePage, err := NewBasePage(staticPath)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create base page")
+	}
+
 	server := &Server{
 		staticPath:  staticPath,
 		environment: environment,
 		logger:      lgr,
 		app:         a,
+		basePage:    basePage,
 	}
 
 	return server, nil

@@ -6,11 +6,13 @@ package uiport
 import "net/http"
 
 type searchData struct {
+	*BasePage
+
 	SearchResults ServicesSearchResults
 }
 
 func (p *searchData) render(w http.ResponseWriter) error {
-	baseTemplate := templateWithSVGHelper()
+	baseTemplate := p.TemplateWithHelpers()
 
 	t, err := baseTemplate.
 		ParseFS(

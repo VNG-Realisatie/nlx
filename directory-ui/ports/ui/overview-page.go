@@ -8,6 +8,8 @@ import (
 )
 
 type overviewPage struct {
+	*BasePage
+
 	Location      string
 	Introduction  overviewPageIntroduction
 	Environment   string
@@ -20,7 +22,7 @@ type overviewPageIntroduction struct {
 }
 
 func (p *overviewPage) render(w http.ResponseWriter) error {
-	baseTemplate := templateWithSVGHelper()
+	baseTemplate := p.TemplateWithHelpers()
 
 	t, err := baseTemplate.
 		ParseFS(

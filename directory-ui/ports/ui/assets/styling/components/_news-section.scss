@@ -11,7 +11,7 @@
     background-color: #f1f1f1;
     background-position: center bottom;
     background-repeat: no-repeat;
-    background-image: url('../images/news-bg-small.svg');
+    background-image: url('/img/news-bg-small.svg');
     margin-top: theme.$spacing09;
     z-index: 0;
 
@@ -21,7 +21,7 @@
 
     @media (min-width: theme.$md) {
         padding: theme.$spacing10 0 theme.$spacing11 0;
-        background-image: url('../images/news-bg-large.svg');
+        background-image: url('/img/news-bg-large.svg');
     }
 
     &__container {

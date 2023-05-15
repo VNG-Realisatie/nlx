@@ -25,6 +25,7 @@ func (s *Server) searchServicesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := searchData{
+		BasePage:      s.basePage,
 		SearchResults: make([]*ServicesSearchResult, len(services)),
 	}
 

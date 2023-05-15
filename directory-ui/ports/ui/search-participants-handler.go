@@ -25,6 +25,7 @@ func (s *Server) searchParticipantsHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	page := searchParticipantsPage{
+		BasePage:      s.basePage,
 		SearchResults: make([]*ParticipantsSearchResult, len(participants)),
 	}
 

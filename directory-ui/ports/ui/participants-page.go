@@ -8,6 +8,8 @@ import (
 )
 
 type participantsPage struct {
+	*BasePage
+
 	Location      string
 	Environment   string
 	Introduction  participantsPageIntroduction
@@ -20,7 +22,7 @@ type participantsPageIntroduction struct {
 }
 
 func (p *participantsPage) render(w http.ResponseWriter) error {
-	baseTemplate := templateWithSVGHelper()
+	baseTemplate := p.TemplateWithHelpers()
 
 	t, err := baseTemplate.
 		ParseFS(

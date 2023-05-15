@@ -30,6 +30,7 @@ func (s *Server) participantsHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	page := participantsPage{
+		BasePage:    s.basePage,
 		Location:    "/participants",
 		Environment: s.environment,
 		Introduction: participantsPageIntroduction{

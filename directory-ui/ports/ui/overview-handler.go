@@ -30,6 +30,7 @@ func (s *Server) overviewHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	page := overviewPage{
+		BasePage:    s.basePage,
 		Location:    "/",
 		Environment: s.environment,
 		Introduction: overviewPageIntroduction{

@@ -6,6 +6,8 @@ package uiport
 import "net/http"
 
 type serviceDetailPage struct {
+	*BasePage
+
 	Location            string
 	Environment         string
 	Introduction        serviceDetailPageIntroduction
@@ -30,7 +32,7 @@ type ServiceDetailDrawer struct {
 }
 
 func (p *serviceDetailPage) render(w http.ResponseWriter) error {
-	baseTemplate := templateWithSVGHelper()
+	baseTemplate := p.TemplateWithHelpers()
 
 	t, err := baseTemplate.
 		ParseFS(

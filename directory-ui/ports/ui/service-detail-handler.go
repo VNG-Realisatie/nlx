@@ -34,6 +34,7 @@ func (s *Server) serviceDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	page := serviceDetailPage{
+		BasePage:    s.basePage,
 		Location:    "/",
 		Environment: s.environment,
 		Introduction: serviceDetailPageIntroduction{

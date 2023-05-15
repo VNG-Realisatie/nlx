@@ -8,11 +8,11 @@
 .introduction {
     position: relative;
     padding: theme.$spacing09 0;
-    background: url(../images/intro-bg-small.svg) center bottom no-repeat rgb(223, 229, 234);
+    background: url(/img/intro-bg-small.svg) center bottom no-repeat rgb(223, 229, 234);
 
     @media (min-width: theme.$md) {
         padding: theme.$spacing10 0;
-        background: url(../images/intro-bg-large.svg) center bottom no-repeat, linear-gradient(to right, rgb(230, 233, 237), rgb(205, 214, 227));
+        background: url(/img/intro-bg-large.svg) center bottom no-repeat, linear-gradient(to right, rgb(230, 233, 237), rgb(205, 214, 227));
     }
 
     &__container {
@@ -42,7 +42,6 @@
             position: relative;
             top: 2px;
             margin-left: theme.$spacing01;
-            content: url('../images/external-link.svg');
         }
     }
 }

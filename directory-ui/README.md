@@ -3,14 +3,17 @@ Directory UI
 
 > Using Server Side Rendering
 
+```shell
+(cd ./ports/ui/assets; npm start)
+```
+
 # Optimizations
 
-1. Consider adding package.json with Sass, Htmx & Source Sans font
-2. Move filter logic into the Directory API endpoints
-3. Move environment selection / redirection logic into its own handler
-4. Consider compiling Scss files to CSS using Go, see https://github.com/bep/godartsass
-5. Add headers for caching & CSP to static files handler
-6. Introduce SVGO for SVGs
+1. Move filter logic into the Directory API endpoints
+2. Move environment selection / redirection logic into its own handler
+3. Consider compiling Scss files to CSS using Go, see https://github.com/bep/godartsass
+4. Add headers for caching & CSP to static files handler
+5. Introduce SVGO for SVGs
 
 # Reference
 

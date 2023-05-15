@@ -1,17 +1,25 @@
 # Copyright © VNG Realisatie 2023
 # Licensed under the EUPL
 
-## Dart stage
-FROM dart:stable AS static
+FROM node:20.1.0-alpine AS node-build
 
-COPY directory-ui /directory-ui
+RUN apk add --update git python3 make g++
 
-WORKDIR /dart-sass
-RUN git clone https://github.com/sass/dart-sass.git . && \
-  dart pub get && \
-  dart ./bin/sass.dart --style=compressed \
-    /directory-ui/ports/ui/scss/main.scss \
-    /directory-ui/ports/ui/static/styling/main.css
+ENV CI=true
+
+# Only copy package.json and package-lock.json so we can use Docker's caching mechanism.
+COPY directory-ui/ports/ui/assets/package.json \
+    directory-ui/ports/ui/assets/package-lock.json \
+    /go/src/go.nlx.io/nlx/directory-ui/
+
+WORKDIR /go/src/go.nlx.io/nlx/directory-ui
+
+RUN npm ci --no-progress --color=false --quiet
+
+# Now copy the whole workdir for the build step.
+COPY directory-ui/ports/ui/assets /go/src/go.nlx.io/nlx/directory-ui
+
+RUN npm run build
 
 # Use go 1.x based on alpine image.
 FROM golang:1.20.5-alpine AS go-build
@@ -27,7 +35,7 @@ WORKDIR /go/src/go.nlx.io/nlx
 RUN go mod download
 
 # Only add code that we use for building directory
-COPY directory-ui  /go/src/go.nlx.io/nlx/directory-ui
+COPY directory-ui       /go/src/go.nlx.io/nlx/directory-ui
 COPY common             /go/src/go.nlx.io/nlx/common
 COPY directory-api      /go/src/go.nlx.io/nlx/directory-api
 
@@ -43,7 +51,7 @@ RUN go build \
 FROM alpine:3.18.0
 
 COPY --from=go-build /go/src/go.nlx.io/nlx/directory-ui/dist/bin/nlx-directory-ui /usr/local/bin/nlx-directory-ui
-COPY --from=static /directory-ui/ports/ui/static /app/public/
+COPY --from=node-build /go/src/go.nlx.io/nlx/directory-ui/dist /app/public/
 
 WORKDIR /app
 
