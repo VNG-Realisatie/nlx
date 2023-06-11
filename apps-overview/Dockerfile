@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 # Use go 1.x based on alpine image.
-FROM golang:1.20.4-alpine AS build
+FROM golang:1.20.5-alpine AS build
 
 WORKDIR /go/src/go.nlx.io/nlx
 
