@@ -3,7 +3,7 @@
 
 NLX Management - E2E-tests - Selenium:
   extends: .node-base
-  image: node:20.2.0-alpine
+  image: node:20.3.0-alpine
   stage: E2E tests
   variables:
     E2E_PARALLEL_COUNT: 5
