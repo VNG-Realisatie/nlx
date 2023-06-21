@@ -19,7 +19,7 @@ COPY . /go/src/go.nlx.io/nlx/docs
 RUN npm run build
 
 # Create version.json
-FROM alpine:3.18.0 AS version
+FROM alpine:3.18.2 AS version
 
 RUN apk add --update jq
 

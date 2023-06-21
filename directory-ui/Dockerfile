@@ -48,7 +48,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-directory-ui ./
 
-FROM alpine:3.18.0
+FROM alpine:3.18.2
 
 COPY --from=go-build /go/src/go.nlx.io/nlx/directory-ui/dist/bin/nlx-directory-ui /usr/local/bin/nlx-directory-ui
 COPY --from=node-build /go/src/go.nlx.io/nlx/directory-ui/dist /app/public/
