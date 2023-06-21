@@ -1,3 +1,15 @@
+# [0.148.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.147.1...v0.148.0) (2023-06-21)
+
+
+### Features
+
+* **management:** introduce first step of new Management UI for FSC ([3a7c90b](https://gitlab.com/commonground/nlx/nlx/commit/3a7c90b26c276aec21b42aaf799eaa32d6b7939e)), closes [nlx#1712](https://gitlab.com/nlx/issues/1712)
+
+
+### Reverts
+
+* update helm release dex to v0.14.1 ([f69445a](https://gitlab.com/commonground/nlx/nlx/commit/f69445a2f6f42f697cdbd11644337145b085a846)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.147.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.147.0...v0.147.1) (2023-04-06)
 
 # [0.147.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.146.8...v0.147.0) (2023-04-06)
