@@ -1,7 +1,7 @@
 # Copyright © VNG Realisatie 2023
 # Licensed under the EUPL
 
-FROM node:20.3.0-alpine AS node-build
+FROM node:20.3.1-alpine AS node-build
 
 RUN apk add --update git python3 make g++
 
