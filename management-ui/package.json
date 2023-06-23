@@ -59,7 +59,7 @@
     "react-app-polyfill": "3.0.0",
     "react-dom": "17.0.2",
     "react-i18next": "13.0.1",
-    "react-router-dom": "6.13.0",
+    "react-router-dom": "6.14.0",
     "react-scripts": "5.0.1",
     "react-select-event": "5.5.1",
     "react-transition-group": "4.4.5",
