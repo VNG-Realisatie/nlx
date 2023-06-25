@@ -10,10 +10,10 @@
   },
   "devDependencies": {
     "@fontsource/source-sans-pro": "5.0.3",
-    "@parcel/transformer-sass": "2.9.2",
+    "@parcel/transformer-sass": "2.9.3",
     "htmx.org": "1.9.2",
     "normalize.css": "8.0.1",
-    "parcel": "2.9.2"
+    "parcel": "2.9.3"
   },
   "dependencies": {
     "parcel-reporter-bundle-manifest": "1.0.0"
