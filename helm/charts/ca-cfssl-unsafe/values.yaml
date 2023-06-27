@@ -4,8 +4,8 @@ global:
 
 image:
   registry: docker.io
-  repository: nlxio/ca-cfssl-unsafe
-  tag: ""
+  repository: cfssl/cfssl
+  tag: v1.6.4
   pullPolicy: Always
   pullSecrets: []
 
@@ -14,6 +14,15 @@ replicaCount: 1
 # Unsafe CA specific settings
 config:
   existingSecret: ""
+  caConfig:
+    signing:
+      default:
+        usages:
+         - "signing"
+         - "key encipherment"
+         - "server auth"
+         - "client auth"
+        expiry: "26280h"
 
 nameOverride: ""
 fullnameOverride: ""

@@ -54,9 +54,10 @@ The following table lists the configurable parameters of the ca-cfssl-unsafe Cha
 
 ### CA cfssl unsafe parameters
 
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `config.existingSecret` | Secret containing the root certificate and key of the CA | `""` | yes |
+| Parameter               | Description                                              | Default | Required (yes/no) |
+|-------------------------|----------------------------------------------------------|---------|-------------------|
+| `config.existingSecret` | Secret containing the root certificate and key of the CA | `""`    | yes               |
+| `config.caConfig`       | CA Config file                                           | `""`    | yes               |
 
 ### Exposure parameters
 

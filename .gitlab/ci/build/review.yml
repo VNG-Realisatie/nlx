@@ -72,13 +72,6 @@ Build review ca-certportal:
     CONTEXT: .
     DOCKERFILE: ca-certportal/Dockerfile
 
-Build review ca-cfssl-unsafe:
-  extends: .build-review-base
-  variables:
-    IMAGE: ca-cfssl-unsafe
-    CONTEXT: ca-cfssl-unsafe
-    DOCKERFILE: ca-cfssl-unsafe/Dockerfile
-
 Build review docs:
   extends: .build-review-base
   variables:

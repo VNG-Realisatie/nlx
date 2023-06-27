@@ -69,13 +69,6 @@ Build production ca-certportal:
     CONTEXT: .
     DOCKERFILE: ca-certportal/Dockerfile
 
-Build production ca-cfssl-unsafe:
-  extends: .build-production-base
-  variables:
-    IMAGE: ca-cfssl-unsafe
-    CONTEXT: ca-cfssl-unsafe
-    DOCKERFILE: ca-cfssl-unsafe/Dockerfile
-
 Build production docs:
   extends: .build-production-base
   variables:

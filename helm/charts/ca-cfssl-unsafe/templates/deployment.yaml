@@ -27,8 +27,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ template "ca-cfssl-unsafe.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["cfssl"]
-          args: ["serve", "--address=0.0.0.0", "--ca=/certificate/tls.crt", "--ca-key=/certificate/tls.key"]
+          args: ["serve", "--address=0.0.0.0", "--ca=/certificate/tls.crt", "--ca-key=/certificate/tls.key", "--config=/ca-config/ca-config.json"]
           ports:
             - name: http
               containerPort: 8888
@@ -47,10 +46,16 @@ spec:
             - name: certificate
               mountPath: /certificate
               readOnly: true
+            - name: ca-config
+              mountPath: /ca-config
+              readOnly: true
       volumes:
         - name: certificate
           secret:
             secretName: {{ required "Existing secret is required" .Values.config.existingSecret }}
+        - name: ca-config
+          configMap:
+            name: {{ include "ca-cfssl-unsafe.fullname" . }}-ca-config
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -74,13 +74,6 @@ Build acceptance ca-certportal:
     CONTEXT: .
     DOCKERFILE: ca-certportal/Dockerfile
 
-Build acceptance ca-cfssl-unsafe:
-  extends: .build-acceptance-base
-  variables:
-    IMAGE: ca-cfssl-unsafe
-    CONTEXT: ca-cfssl-unsafe
-    DOCKERFILE: ca-cfssl-unsafe/Dockerfile
-
 Build acceptance docs:
   extends: .build-acceptance-base
   variables:

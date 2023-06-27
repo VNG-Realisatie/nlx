@@ -51,7 +51,6 @@ The available scopes are:
 
 - apps-overview
 - ca-certportal
-- ca-cfssl-unsafe
 - common
 - directory
 - docs
