@@ -18,13 +18,6 @@ This chart is created for internal use only.
 
 The following table lists the configurable parameters of the ca-cfssl-unsafe Chart and its default values.
 
-### Global parameters
-
-| Parameter | Description | Default | Required (yes/no) |
-| --------- | ----------- | ------- | -------- |
-| `global.imageRegistry` | Global Docker Image registry | `nil` | no |
-| `global.imageTag` | Global Docker Image tag | `true` | no |
-
 ### Common parameters
 
 | Parameter | Description | Default | Required (yes/no) |

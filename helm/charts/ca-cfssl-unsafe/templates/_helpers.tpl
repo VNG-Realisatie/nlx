@@ -66,9 +66,9 @@ Create the name of the service account to use
 Return the image name for the CFSSL
 */}}
 {{- define "ca-cfssl-unsafe.image" -}}
-{{- $registryName := default .Values.image.registry .Values.global.imageRegistry -}}
+{{- $registryName := .Values.image.registry -}}
 {{- $repositoryName := .Values.image.repository -}}
-{{- $tag := default (printf "v%s" .Chart.AppVersion) (default .Values.image.tag .Values.global.imageTag) -}}
+{{- $tag := .Values.image.tag -}}
 
 {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}

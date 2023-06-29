@@ -1,7 +1,3 @@
-global:
-  imageRegistry: ""
-  imageTag: ""
-
 image:
   registry: docker.io
   repository: cfssl/cfssl
