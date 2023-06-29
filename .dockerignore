@@ -10,7 +10,6 @@ helm
 
 # These have their own docker context
 apps-overview/
-ca-cfssl-unsafe/
 docs/
 
 # Used as cache folder in pipeline

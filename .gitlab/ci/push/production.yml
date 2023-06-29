@@ -45,10 +45,6 @@ Push production ca-certportal:
   variables:
     IMAGE: ca-certportal
 
-Push production ca-cfssl-unsafe:
-  extends: .push-production-base
-  variables:
-    IMAGE: ca-cfssl-unsafe
 
 Push production docs:
   extends: .push-production-base
