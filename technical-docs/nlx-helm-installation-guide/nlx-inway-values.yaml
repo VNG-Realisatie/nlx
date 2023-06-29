@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 image:
-  tag: "v0.148.0"
+  tag: "v0.149.0"
 
 # Inway specific settings
 config:

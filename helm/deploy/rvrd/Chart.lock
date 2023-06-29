@@ -7,12 +7,12 @@ dependencies:
   version: 0.1.0
 - name: nlx-inway
   repository: file://../../charts/nlx-inway
-  version: 0.148.0
+  version: 0.149.0
 - name: nlx-management
   repository: file://../../charts/nlx-management
-  version: 0.148.0
+  version: 0.149.0
 - name: nlx-txlog-api
   repository: file://../../charts/nlx-txlog-api
-  version: 0.148.0
-digest: sha256:168c43c0bd18f61724355f9474739c1e4b40c6fcffcf2dcf9edc9249199c2f57
-generated: "2023-06-21T12:28:16.61361574Z"
+  version: 0.149.0
+digest: sha256:ec4ba593f15085174513afdc09141632f032b914183f9e954d76798bbb973624
+generated: "2023-06-29T09:13:17.395767709Z"

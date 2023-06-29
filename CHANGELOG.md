@@ -1,3 +1,16 @@
+# [0.149.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.148.0...v0.149.0) (2023-06-29)
+
+
+### Features
+
+* **ca-certportal:** extend default validity of certificates from 1 to 3 years ([1ef7961](https://gitlab.com/commonground/nlx/nlx/commit/1ef7961cfeb10b0ac8780fcefeeb407de6d0ff72)), closes [nlx#1772](https://gitlab.com/nlx/issues/1772)
+
+
+### Reverts
+
+* update node.js to v20.3.0 ([48bfc87](https://gitlab.com/commonground/nlx/nlx/commit/48bfc871367e67c05dd5da634aec919d42e4f2c5)), closes [nlx#1771](https://gitlab.com/nlx/issues/1771)
+* update node.js to v20.3.1 ([4d6a3fd](https://gitlab.com/commonground/nlx/nlx/commit/4d6a3fdd16f0745648a2c1dbf6df3c5fe0dbc6bd)), closes [nlx#1771](https://gitlab.com/nlx/issues/1771)
+
 # [0.148.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.147.1...v0.148.0) (2023-06-21)
 
 
