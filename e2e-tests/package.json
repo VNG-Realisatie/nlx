@@ -18,7 +18,7 @@
         "@typescript-eslint/eslint-plugin": "5.60.1",
         "@typescript-eslint/parser": "5.60.1",
         "cross-fetch": "3.1.6",
-        "dayjs": "1.11.8",
+        "dayjs": "1.11.9",
         "debug": "4.3.4",
         "eslint": "8.40.0",
         "eslint-config-prettier": "8.8.0",
