@@ -114,7 +114,7 @@ func NewInway(params *Params) (*Inway, error) {
 	logger.Info("loaded certificates for inway", zap.String("inway-organization-serial-number", organizationSerialNumber), zap.String("inway-organization-name", organizationName))
 
 	i := &Inway{
-		logger: logger.With(zap.String("inway-organization-serial-number", organizationName)),
+		logger: logger.With(zap.String("inway-organization-serial-number", organizationSerialNumber)),
 		organization: Organization{
 			SerialNumber: organizationSerialNumber,
 			Name:         organizationName,
