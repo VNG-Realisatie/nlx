@@ -10,12 +10,10 @@
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
     - export GIT_COMMIT_HASH=$(git rev-parse HEAD)
     - export SEMANTIC_RELEASE_NEXT_VERSION=$(cat ci_semantic_release_next_version.txt)
     - export COMPONENT_VERSION="${SEMANTIC_RELEASE_NEXT_VERSION}-acc-${CI_COMMIT_SHORT_SHA}"
     - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
-    - export REVIEW_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${COMPONENT_VERSION}" > ci_build_image_tag.txt
   variables:
@@ -34,7 +32,6 @@
       -t ${IMG_LATEST}
       -t ${IMG_REF_SLUG}
       -t ${IMG_COMPONENT_VERSION}
-      --cache-from ${REVIEW_REGISTRY}/nlxio/${IMAGE}:review-latest
       --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
       --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
     - docker push ${IMG_LATEST}

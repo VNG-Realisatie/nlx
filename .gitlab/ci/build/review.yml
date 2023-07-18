@@ -9,13 +9,12 @@
   before_script:
     - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
     - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
-    - docker login -u $REVIEW_REGISTRY_USERNAME -p $REVIEW_REGISTRY_PASSWORD $REVIEW_REGISTRY_HOST
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - export GIT_TAG_NAME=$(git describe --tags --abbrev=0)-review
     - export SEMANTIC_RELEASE_NEXT_VERSION=$(cat ci_semantic_release_next_version.txt)
     - export COMPONENT_VERSION="${SEMANTIC_RELEASE_NEXT_VERSION}-review-${CI_COMMIT_SHORT_SHA}"
-    - export IMAGE_REGISTRY="${REVIEW_REGISTRY_HOST}/${CI_PROJECT_PATH}"
-    - export IMAGE_PREFIX="${IMAGE_REGISTRY}/"
-    - echo -n "${IMAGE_REGISTRY}" > ci_build_image_registry.txt
+    - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
+    - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
   variables:
     DOCKER_BUILDKIT: 1
