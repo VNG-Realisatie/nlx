@@ -103,13 +103,13 @@ Traffic between organizations takes place via an external certificate. For the N
 For macOS & Linux:
 
 ```bash
-docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./init-organization-certs.sh
+docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:v1.6.4 ./init-organization-certs.sh
 ```
 
 For Windows:
 
 ```bash
-docker run --rm -it -v %cd%:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./init-organization-certs.sh
+docker run --rm -it -v %cd%:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:v1.6.4 ./init-organization-certs.sh
 ```
 
 See [OpenSSL questions](#openssl-questions) to know what to fill in the OpenSSL questions asked by the script.

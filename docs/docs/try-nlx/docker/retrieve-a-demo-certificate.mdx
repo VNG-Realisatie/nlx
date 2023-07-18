@@ -26,7 +26,7 @@ Generate the required internal and organization certificates by running the foll
   <TabItem value="mac-linux">
 
 ```bash
-docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./scripts/init-certs.sh
+docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:v1.6.4 ./scripts/init-certs.sh
 ```
 
   </TabItem>
@@ -34,7 +34,7 @@ docker run --rm -it -v $(pwd):/workdir -w /workdir --entrypoint /bin/bash cfssl/
   <TabItem value="windows">
 
 ```bash
-docker run --rm -it -v ${pwd}:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:1.6.1 ./scripts/init-certs.sh
+docker run --rm -it -v ${pwd}:/workdir -w /workdir --entrypoint /bin/bash cfssl/cfssl:v1.6.4 ./scripts/init-certs.sh
 ```
 
   </TabItem>
