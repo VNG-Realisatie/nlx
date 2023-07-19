@@ -22,24 +22,24 @@ dependencies:
   version: 0.1.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.149.1
+  version: 0.149.2
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.149.1
+  version: 0.149.2
 - name: nlx-inway
   repository: file://../../charts/nlx-inway
-  version: 0.149.1
+  version: 0.149.2
 - name: nlx-management
   repository: file://../../charts/nlx-management
-  version: 0.149.1
+  version: 0.149.2
 - name: nlx-txlog-api
   repository: file://../../charts/nlx-txlog-api
-  version: 0.149.1
+  version: 0.149.2
 - name: video-player-ui
   repository: file://../../charts/video-player-ui
-  version: 0.149.1
+  version: 0.149.2
 - name: websockets-chat-ui
   repository: file://../../charts/websockets-chat-ui
-  version: 0.149.1
-digest: sha256:3944cef2311a9be17dd1e122a4cc5b859639b7379771152afc04213890a82e74
-generated: "2023-06-29T10:37:32.7177644Z"
+  version: 0.149.2
+digest: sha256:db4b95965eefa9cdd79560630b7f049f41414dff65a4c7f7f6ec61f65e99958c
+generated: "2023-07-19T08:25:55.016269678Z"

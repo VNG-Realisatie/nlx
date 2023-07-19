@@ -1,3 +1,10 @@
+## [0.149.2](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.1...v0.149.2) (2023-07-19)
+
+
+### Bug Fixes
+
+* **inway:** log organization serialnumber instead of organization name ([3189a92](https://gitlab.com/commonground/nlx/nlx/commit/3189a925264e75b3834bdc87326aff6a948b1170)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.149.1](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.0...v0.149.1) (2023-06-29)
 
 # [0.149.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.148.0...v0.149.0) (2023-06-29)
