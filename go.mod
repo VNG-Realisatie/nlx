@@ -37,7 +37,7 @@ require (
 	golang.org/x/sync v0.3.0
 	golang.org/x/text v0.10.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230726155614-23370e0ffb3e
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230725213213-b022f6e96895
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230726155614-23370e0ffb3e
 	google.golang.org/grpc v1.56.2
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v3 v3.0.1
