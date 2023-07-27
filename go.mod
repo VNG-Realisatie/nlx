@@ -8,7 +8,7 @@ require (
 	github.com/cloudflare/cfssl v1.6.4
 	github.com/coreos/go-oidc/v3 v3.6.0
 	github.com/go-chi/chi/v5 v5.0.10
-	github.com/go-chi/render v1.0.2
+	github.com/go-chi/render v1.0.3
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-testfixtures/testfixtures/v3 v3.9.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
