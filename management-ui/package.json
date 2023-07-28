@@ -31,7 +31,7 @@
     "resetMocks": false
   },
   "devDependencies": {
-    "@commonground/design-system": "21.5.1",
+    "@commonground/design-system": "21.6.0",
     "@fontsource/source-sans-pro": "4.5.11",
     "@openapitools/openapi-generator-cli": "2.6.0",
     "@testing-library/jest-dom": "5.16.5",
