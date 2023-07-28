@@ -18,7 +18,7 @@ require (
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/sessions v1.2.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.1
 	github.com/jackc/pgtype v1.14.0
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/jmoiron/sqlx v1.3.5
@@ -30,12 +30,12 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tabbed/pqtype v0.1.1
 	go.uber.org/zap v1.24.0
-	golang.org/x/crypto v0.10.0
+	golang.org/x/crypto v0.11.0
 	golang.org/x/exp v0.0.0-20230725093048-515e97ebf090
-	golang.org/x/net v0.11.0
-	golang.org/x/oauth2 v0.9.0
+	golang.org/x/net v0.12.0
+	golang.org/x/oauth2 v0.10.0
 	golang.org/x/sync v0.3.0
-	golang.org/x/text v0.10.0
+	golang.org/x/text v0.11.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230726155614-23370e0ffb3e
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230726155614-23370e0ffb3e
 	google.golang.org/grpc v1.56.2
@@ -95,7 +95,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.15.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/sys v0.9.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230706204954-ccb25ca9f130 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
