@@ -2,7 +2,7 @@
 # Licensed under the EUPL
 
 # Use go 1.x based on the latest alpine image.
-FROM golang:1.20.6-alpine AS build
+FROM golang:1.20.7-alpine AS build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
