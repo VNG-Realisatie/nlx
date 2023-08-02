@@ -9,7 +9,7 @@
     "build": "parcel build"
   },
   "devDependencies": {
-    "@fontsource/source-sans-pro": "5.0.5",
+    "@fontsource/source-sans-pro": "5.0.6",
     "@parcel/transformer-sass": "2.9.3",
     "htmx.org": "1.9.4",
     "normalize.css": "8.0.1",
