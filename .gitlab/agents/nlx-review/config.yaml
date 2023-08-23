@@ -1,6 +1,0 @@
-# Copyright © VNG Realisatie 2022
-# Licensed under the EUPL
-
-ci_access:
-  projects:
-    - id: commonground/nlx/nlx/

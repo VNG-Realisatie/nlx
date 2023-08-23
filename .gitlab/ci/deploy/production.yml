@@ -8,9 +8,9 @@ Deploy production:
     name: production
   variables:
     K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
+    HELM_KUBECONTEXT: commonground/nlx/kubernetes-agents:nlx-prod
     CHART_DIRECTORY: ./helm/deploy/directory
   script:
-    - kubectl config use-context commonground/nlx/nlx:nlx-prod
     - helm dependency build ${CHART_DIRECTORY}
     - |
       helm upgrade nlx-directory ${CHART_DIRECTORY} \

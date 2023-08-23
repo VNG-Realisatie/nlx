@@ -8,11 +8,11 @@ Deploy acceptance:
     name: acceptance
   variables:
     K8S_NAMESPACE: nlx-acceptance
+    HELM_KUBECONTEXT: commonground/nlx/kubernetes-agents:nlx-prod
     HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns gemeente-riemer vergunningsoftware-bv"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
-    - kubectl config use-context commonground/nlx/nlx:nlx-prod
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)

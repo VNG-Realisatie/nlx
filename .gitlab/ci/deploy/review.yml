@@ -7,11 +7,12 @@ Deploy review:
   variables:
     REVIEW_BASE_DOMAIN: nlx.reviews
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
+    KUBE_CONTEXT: commonground/nlx/kubernetes-agents:nlx-review
+    HELM_KUBECONTEXT: commonground/nlx/kubernetes-agents:nlx-review
     HELM_CHARTS_TO_DEPLOY: "shared rvrd gemeente-stijns gemeente-riemer vergunningsoftware-bv"
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
-    - kubectl config use-context commonground/nlx/nlx:nlx-review
     - |
       export IMAGE_REGISTRY=$(cat ci_build_image_registry.txt)
       export IMAGE_TAG=$(cat ci_build_image_tag.txt)
@@ -26,8 +27,7 @@ Deploy review:
       stop_section helm_repo
     - |
       start_section namespace "Create namespace '${K8S_NAMESPACE}'"
-      kubectl version
-      kubectl create namespace "${K8S_NAMESPACE}" || true
+      kubectl --context "${KUBE_CONTEXT}" create namespace "${K8S_NAMESPACE}" || true
       stop_section namespace
     - |
       for CHART in ${HELM_CHARTS_TO_DEPLOY}; do
@@ -74,10 +74,11 @@ Remove review:
   image: registry.gitlab.com/commonground/core/review-app-deployer:latest
   variables:
     K8S_NAMESPACE: "nlx-${CI_ENVIRONMENT_SLUG}"
+    KUBE_CONTEXT: commonground/nlx/kubernetes-agents:nlx-review
+    HELM_KUBECONTEXT: commonground/nlx/kubernetes-agents:nlx-review
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
-    - kubectl config use-context commonground/nlx/nlx:nlx-review
     - |
       for RELEASE in $(helm list --all --short --namespace "${K8S_NAMESPACE}"); do
         start_section "uninstall_${RELEASE}" "Uninstall relasese ${RELEASE}"
@@ -86,7 +87,7 @@ Remove review:
       done
     - |
       start_section namespace "Delete namespace '${K8S_NAMESPACE}'"
-      kubectl delete namespace "${K8S_NAMESPACE}"
+      kubectl --context "${KUBE_CONTEXT}" delete namespace "${K8S_NAMESPACE}"
       stop_section namespace
   environment:
     name: $CI_COMMIT_REF_NAME

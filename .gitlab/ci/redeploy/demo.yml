@@ -8,12 +8,12 @@ Reset demo applications:
     name: demo
   variables:
     K8S_NAMESPACE: nlx-${CI_ENVIRONMENT_NAME}
+    HELM_KUBECONTEXT: commonground/nlx/kubernetes-agents:nlx-prod
     HELM_CHARTS_TO_REINSTALL: "rvrd gemeente-stijns vergunningsoftware-bv"
   extends: Deploy demo
   before_script:
     - source ./.gitlab/ci/functions.sh
   script:
-    - kubectl config use-context commonground/nlx/nlx:nlx-prod
     - |
       start_section helm_repo "Update Helm repositories"
       helm repo add stable "https://charts.helm.sh/stable"
