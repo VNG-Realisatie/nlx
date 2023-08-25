@@ -41,7 +41,7 @@ Trigger charts build:
     PROJECT_ID: 19568485 # commonground/charts
   script:
     - apk --no-cache add curl bash
-    - scripts/trigger-external-pipeline.sh "${PROJECT_ID}" "${CI_COMMIT_TAG:1}" "NLX_VERSION" "${CI_CHARTS_JOB_TOKEN}"
+    - scripts/trigger-external-pipeline.sh "${PROJECT_ID}" "${CI_COMMIT_TAG:1}" "CG_CHARTS_NLX_VERSION" "${CI_CHARTS_JOB_TOKEN}"
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:

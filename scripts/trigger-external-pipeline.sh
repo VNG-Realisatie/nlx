@@ -16,7 +16,7 @@ echo "Sending request to ${URL}"
 STATUS=$(curl \
   --write-out "%{http_code}" \
   --request POST \
-  --form "ref=master" \
+  --form "ref=main" \
   --form "variables[${VERSION_VAR_NAME}]=${VERSION}" \
   --form "token=${TOKEN}" \
   "${URL}"
