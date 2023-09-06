@@ -3,7 +3,7 @@ module go.nlx.io/nlx
 go 1.19
 
 require (
-	github.com/DATA-DOG/go-txdb v0.1.6
+	github.com/DATA-DOG/go-txdb v0.1.7
 	github.com/blang/semver/v4 v4.0.0
 	github.com/cloudflare/cfssl v1.6.4
 	github.com/coreos/go-oidc/v3 v3.6.0
