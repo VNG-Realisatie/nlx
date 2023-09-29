@@ -36,7 +36,7 @@
 
 Trigger charts build:
   stage: Build
-  image: alpine:3.18.3
+  image: alpine:3.18.4
   variables:
     PROJECT_ID: 19568485 # commonground/charts
   script:

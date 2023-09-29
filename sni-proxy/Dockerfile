@@ -1,7 +1,7 @@
 # Copyright © VNG Realisatie 2022
 # Licensed under the EUPL
 
-FROM alpine:3.18.3
+FROM alpine:3.18.4
 
 RUN apk add --no-cache sniproxy
 

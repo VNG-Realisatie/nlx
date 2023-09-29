@@ -48,7 +48,7 @@ RUN go build \
         -ldflags="-X 'go.nlx.io/nlx/common/version.BuildSourceHash=$GIT_COMMIT_HASH' -X 'go.nlx.io/nlx/common/version.BuildVersion=$GIT_TAG_NAME'" \
         -o dist/bin/nlx-management-ui-fsc ./
 
-FROM alpine:3.18.3
+FROM alpine:3.18.4
 
 COPY --from=go-build /go/src/go.nlx.io/nlx/management-ui-fsc/dist/bin/nlx-management-ui-fsc /usr/local/bin/nlx-management-ui-fsc
 COPY --from=node-build /go/src/go.nlx.io/nlx/management-ui-fsc/dist /app/public/
