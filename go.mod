@@ -42,7 +42,7 @@ require (
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.5.2
-	gorm.io/gorm v1.25.2
+	gorm.io/gorm v1.25.4
 	xojoc.pw/useragent v0.0.0-20200116211053-1ec61d55e8fe
 )
 
