@@ -19,7 +19,7 @@ dependencies:
     condition: parkeerrechten-viewer.enabled
   - name: nginx-video-player-ui-proxy
     repository: https://charts.commonground.nl
-    version: 0.1.0
+    version: 0.2.0
   - name: nginx-websockets-proxy
     repository: https://charts.commonground.nl
     version: 0.1.0
