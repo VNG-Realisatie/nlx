@@ -22,7 +22,7 @@ COPY directory-ui/ports/ui/assets /go/src/go.nlx.io/nlx/directory-ui
 RUN npm run build
 
 # Use go 1.x based on alpine image.
-FROM golang:1.20.7-alpine AS go-build
+FROM golang:1.21.1-alpine AS go-build
 
 # Install build tools.
 RUN apk add --update git gcc musl-dev
