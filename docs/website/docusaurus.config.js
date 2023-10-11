@@ -60,7 +60,4 @@ module.exports = {
       },
     ],
   ],
-  customFields: {
-    startUrl: 'understanding-the-basics/introduction',
-  },
 };

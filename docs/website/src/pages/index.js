@@ -7,20 +7,17 @@
 
 import React from 'react'
 import Link from '@docusaurus/Link'
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
-import useBaseUrl from '@docusaurus/useBaseUrl'
-import {Redirect} from 'react-router-dom'
+import Head from '@docusaurus/Head';
 
 function Home() {
-    const context = useDocusaurusContext()
-    const {siteConfig = {}} = context
-    const url = useBaseUrl(siteConfig.customFields.startUrl)
     return (<>
-            <Redirect to={url}/>
-            <p>
-                Wanneer je niet automatisch wordt doorgestuurd, volg dan deze <Link to={url}>link</Link>.
-            </p>
-        </>
+        <Head>
+          <meta http-equiv="refresh" content="0; url=https://docs.fsc.nlx.io" />
+        </Head>
+        <p>
+            Wanneer je niet automatisch wordt doorgestuurd, volg dan deze <Link to="https://docs.fsc.nlx.io">link</Link>.
+        </p>
+      </>
     )
 }
 
