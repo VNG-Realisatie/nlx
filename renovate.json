@@ -48,11 +48,6 @@
       "managers": ["helmv3"],
       "packageNames": ["dex"],
       "allowedVersions": "0.12.1"
-    },
-    {
-      "groupName": "Node v20.3.x errors. Issue #1780",
-      "matchPackageNames": ["node"],
-      "allowedVersions": "20.2.0"
     }
   ]
 }
