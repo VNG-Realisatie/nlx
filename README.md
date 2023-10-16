@@ -4,6 +4,12 @@ NLX is an open source inter-organizational system facilitating federated authent
 
 This repository contains all of the components required to act out the [NLX Product Vision](https://docs.nlx.io/understanding-the-basics/product-vision/).
 
+# WARNING
+
+***This project been deprecated.***
+
+New users should use [NLX based on the FSC Standard](https://gitlab.com/commonground/nlx/fsc-nlx).
+
 ## Developing on NLX
 
 Please find the latest documentation for using NLX on [docs.nlx.io](https://docs.nlx.io). This is a good place to start if you would like to develop an application or service that uses or provides API access over NLX.
