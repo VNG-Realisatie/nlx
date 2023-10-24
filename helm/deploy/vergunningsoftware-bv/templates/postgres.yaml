@@ -15,3 +15,7 @@ spec:
     size: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
   postgresql:
     version: {{ (required "PostgreSQL version is required" .Values.postgresql.version) | toString | toRawJson }}
+    parameters:
+      log_filename: 'postgresql-%A.log'
+      log_rotation_age: '7d'
+      log_truncate_on_rotation: 'true'
