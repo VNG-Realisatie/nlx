@@ -18,4 +18,4 @@ spec:
     parameters:
       log_filename: 'postgresql-%A.log'
       log_rotation_age: '7d'
-      log_truncate_on_rotation: 'true'
+      log_truncate_on_rotation: 'on'
