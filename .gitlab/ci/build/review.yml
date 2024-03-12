@@ -42,8 +42,7 @@
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   needs: ["Determine next version"]
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Build review apps-overview:
   extends: .build-review-base

@@ -54,8 +54,7 @@ Go tests (unit & integration):
           - go.mod
           - go.sum
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
   retry: 1
 
 Go linter:
@@ -101,8 +100,7 @@ Go linter:
           - go.mod
           - go.sum
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Go go.mod tidy test:
   stage: Tests
@@ -122,5 +120,4 @@ Go go.mod tidy test:
           - go.mod
           - go.sum
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners

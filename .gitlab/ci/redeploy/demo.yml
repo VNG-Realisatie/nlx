@@ -56,5 +56,4 @@ Reset demo applications:
       when: manual
       allow_failure: true
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners

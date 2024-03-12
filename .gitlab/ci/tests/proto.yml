@@ -33,8 +33,7 @@ Proto lint:
           - directory-api/api/**/*
           - outway/api/**/*
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Proto fmt:
   stage: Tests
@@ -68,8 +67,7 @@ Proto fmt:
           - directory-api/api/**/*
           - outway/api/**/*
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Proto breaking changes:
   stage: Tests
@@ -100,5 +98,4 @@ Proto breaking changes:
           - .gitlab/**/*
           - management-api/api/**/*
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners

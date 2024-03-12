@@ -39,8 +39,7 @@ Management-ui linter and tests:
           - management-ui/**/*
   needs: []
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 E2E type check:
   extends: .node-base
@@ -58,5 +57,4 @@ E2E type check:
           - e2e-tests/**/*
   needs: []
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners

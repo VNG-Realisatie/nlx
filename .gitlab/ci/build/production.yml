@@ -31,8 +31,7 @@
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Trigger charts build:
   stage: Build
@@ -45,8 +44,7 @@ Trigger charts build:
   rules:
     - if: '$CI_COMMIT_TAG && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Build production apps-overview:
   extends: .build-production-base
@@ -117,10 +115,6 @@ Build production management-ui:
     IMAGE: management-ui
     CONTEXT: .
     DOCKERFILE: management-ui/Dockerfile
-  tags:
-    # building this image on a shared runner slows down the pipeline considerably, use the faster commonground runner instead,
-    # this will also save ci/cd shared minutes
-    - cg
 
 Build production nlxctl:
   extends: .build-production-base

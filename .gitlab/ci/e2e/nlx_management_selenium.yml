@@ -55,5 +55,4 @@ NLX Management - E2E-tests - Selenium:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners

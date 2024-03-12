@@ -66,8 +66,7 @@ Deploy review:
       - ci_environment_url.txt
       - e2e_environment.sh
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
 
 Remove review:
   stage: Deploy
@@ -101,5 +100,4 @@ Remove review:
       # The combination `when: manual` and `allow_failure: true` allow this step to be manual without blocking
       # the pipeline. See https://docs.gitlab.com/ee/ci/yaml/README.html#rulesallow_failure
   tags:
-    - cg
-    - docker
+    - commonground-k8s-runners
