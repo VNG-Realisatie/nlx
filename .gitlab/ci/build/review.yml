@@ -3,41 +3,21 @@
 
 .build-review-base:
   stage: Build
-  image: docker:24.0.7-git
-  services:
-    - docker:24.0.7-dind
+  image: gcr.io/kaniko-project/executor:debug
   before_script:
-    - export DOCKER_CONFIG=/tmp/docker-config-$CI_JOB_ID
-    - mkdir -p $DOCKER_CONFIG && echo $DOCKER_AUTH_CONFIG > $DOCKER_CONFIG/config.json
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - export GIT_TAG_NAME=$(git describe --tags --abbrev=0)-review
     - export SEMANTIC_RELEASE_NEXT_VERSION=$(cat ci_semantic_release_next_version.txt)
     - export COMPONENT_VERSION="${SEMANTIC_RELEASE_NEXT_VERSION}-review-${CI_COMMIT_SHORT_SHA}"
-    - export IMAGE_PREFIX="${CI_REGISTRY_IMAGE}/"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
-  variables:
-    DOCKER_BUILDKIT: 1
-    BUILDKIT_INLINE_CACHE: 1
-    DOCKER_TLS_CERTDIR: "/certs"
   script:
-    - export IMG_COMMIT_HASH=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_SHORT_SHA}
-    - export IMG_REVIEW_LATEST=${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
-    - export IMG_REF_SLUG=${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
-    - "docker build ${CONTEXT}
-      -f ${DOCKERFILE}
-      --build-arg BUILDKIT_INLINE_CACHE=${BUILDKIT_INLINE_CACHE}
-      --build-arg GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+    - /kaniko/executor
+      --build-arg GIT_COMMIT_HASH=${CI_COMMIT_SHA}
       --build-arg GIT_TAG_NAME=${COMPONENT_VERSION}
-      -t ${IMG_COMMIT_HASH}
-      -t ${IMG_REVIEW_LATEST}
-      -t ${IMG_REF_SLUG}
-      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:review-latest
-      --cache-from ${IMAGE_PREFIX}nlxio/${IMAGE}:${CI_COMMIT_REF_SLUG}
-      --cache-from ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest"
-    - docker push ${IMG_COMMIT_HASH}
-    - docker push ${IMG_REVIEW_LATEST}
-    - docker push ${IMG_REF_SLUG}
+      --context "${CONTEXT}"
+      --dockerfile "${DOCKERFILE}"
+      --cache="true"
+      --cache-ttl="168h"
+      --destination ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${CI_COMMIT_SHORT_SHA}
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^review\/.*$/ && $CI_PROJECT_PATH == "commonground/nlx/nlx"'
   needs: ["Determine next version"]
