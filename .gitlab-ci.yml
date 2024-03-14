@@ -5,7 +5,6 @@ stages:
   - Version
   - Tests
   - Build
-  - Push
   - Deploy
   - Redeploy
   - Security
