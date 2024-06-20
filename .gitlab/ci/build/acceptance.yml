@@ -17,6 +17,7 @@
       --dockerfile "${DOCKERFILE}"
       --cache="true"
       --cache-ttl="168h"
+      --destination ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${COMPONENT_VERSION}
       --destination ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:${CI_COMMIT_SHORT_SHA}
       --destination ${CI_REGISTRY_IMAGE}/nlxio/${IMAGE}:acc-latest
   rules:
