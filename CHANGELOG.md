@@ -1,3 +1,10 @@
+## [0.149.6](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.5...v0.149.6) (2024-06-21)
+
+
+### Bug Fixes
+
+* **helm:** corrected log_truncate_on_rotation setting for Postgres ([0236ebb](https://gitlab.com/commonground/nlx/nlx/commit/0236ebbe0c4686bf8e9d2e2edcdb822b77568890)), closes [fsc-nlx#198](https://gitlab.com/fsc-nlx/issues/198)
+
 ## [0.149.5](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.4...v0.149.5) (2024-03-14)
 
 ## [0.149.4](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.3...v0.149.4) (2023-10-25)
