@@ -7,6 +7,10 @@ metadata:
 spec:
   teamId: {{ include "directory.fullname" . }}
   numberOfInstances: {{ .Values.postgresql.numberOfInstances }}
+  tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+    effect: NoSchedule
   users:
     admin:
       - superuser

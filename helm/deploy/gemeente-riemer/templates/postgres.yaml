@@ -7,6 +7,10 @@ metadata:
 spec:
   teamId: {{ include "gemeente-riemer.fullname" . }}
   numberOfInstances: 1
+  tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+    effect: NoSchedule
   users:
     admin:
       - superuser

@@ -11,6 +11,10 @@ spec:
     admin:
       - superuser
       - createdb
+  tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+    effect: NoSchedule
   volume:
     size: {{ required "PostgreSQL storage size is required" .Values.postgresql.storageSize }}
   postgresql:
