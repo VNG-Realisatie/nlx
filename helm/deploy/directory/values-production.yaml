@@ -4,7 +4,7 @@
 enableDemoRedirect: true
 
 postgresql:
-  numberOfInstances: 2
+  numberOfInstances: 1
 
 ################
 ## Sub-charts ##
