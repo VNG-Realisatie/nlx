@@ -3,7 +3,7 @@
 
 .build-review-base:
   stage: Build
-  image: gcr.io/kaniko-project/executor:debug
+  image: gcr.io/kaniko-project/executor:v1.23.2-debug@sha256:c3109d5926a997b100c4343944e06c6b30a6804b2f9abe0994d3de6ef92b028e
   before_script:
     - export SEMANTIC_RELEASE_NEXT_VERSION=$(cat ci_semantic_release_next_version.txt)
     - export COMPONENT_VERSION="${SEMANTIC_RELEASE_NEXT_VERSION}-review-${CI_COMMIT_SHORT_SHA}"
@@ -11,7 +11,7 @@
     - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
     - export DOCKER_CONFIG_DIRECTORY=/kaniko/.docker
     - mkdir -p $DOCKER_CONFIG_DIRECTORY
-    - echo "{\"auths\":{\"https://${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\", \"password\":\"${CI_REGISTRY_PASSWORD}\" },\"https://index.docker.io/v1/\":{\"username\":\"${DOCKERHUB_USERNAME}\", \"password\":\"${DOCKERHUB_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - echo "{\"auths\":{\"https://${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\", \"password\":\"${CI_REGISTRY_PASSWORD}\" },\"https://index.docker.io/v1/\":{\"username\":\"${DOCKERHUB_USERNAME}\", \"password\":\"${DOCKERHUB_PASSWORD}\"}}}" > $DOCKER_CONFIG_DIRECTORY/config.json
   script:
     - /kaniko/executor
       --build-arg GIT_COMMIT_HASH=${CI_COMMIT_SHA}
