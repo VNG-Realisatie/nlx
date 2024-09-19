@@ -45,7 +45,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 postgresql:
-  version: 12
+  version: 15
   storageSize: 8Gi
 
 ca:
