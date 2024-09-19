@@ -9,6 +9,9 @@
     - export COMPONENT_VERSION="${SEMANTIC_RELEASE_NEXT_VERSION}-review-${CI_COMMIT_SHORT_SHA}"
     - echo -n "${CI_REGISTRY_IMAGE}" > ci_build_image_registry.txt
     - echo -n "${CI_COMMIT_SHORT_SHA}" > ci_build_image_tag.txt
+    - export DOCKER_CONFIG_DIRECTORY=/kaniko/.docker
+    - mkdir -p $DOCKER_CONFIG_DIRECTORY
+    - echo "{\"auths\":{\"https://${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\", \"password\":\"${CI_REGISTRY_PASSWORD}\" },\"https://index.docker.io/v1/\":{\"username\":\"${DOCKERHUB_USERNAME}\", \"password\":\"${DOCKERHUB_PASSWORD}\"}}}" > /kaniko/.docker/config.json
   script:
     - /kaniko/executor
       --build-arg GIT_COMMIT_HASH=${CI_COMMIT_SHA}
