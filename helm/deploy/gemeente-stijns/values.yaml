@@ -231,7 +231,7 @@ ca:
         name: gemeente-stijns
 
 postgresql:
-  version: "11"
+  version: "15"
   storageSize: 8Gi
 
 transactionLog:
