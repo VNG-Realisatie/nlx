@@ -10,21 +10,21 @@ dependencies:
   version: 0.1.0
 - name: nlx-inway
   repository: file://../../charts/nlx-inway
-  version: 0.149.7
+  version: 0.150.0
 - name: nlx-management
   repository: file://../../charts/nlx-management
-  version: 0.149.7
+  version: 0.150.0
 - name: nlx-outway
   repository: file://../../charts/nlx-outway
-  version: 0.149.7
+  version: 0.150.0
 - name: nlx-txlog-api
   repository: file://../../charts/nlx-txlog-api
-  version: 0.149.7
+  version: 0.150.0
 - name: video-player-ui
   repository: file://../../charts/video-player-ui
-  version: 0.149.7
+  version: 0.150.0
 - name: websockets-chat-ui
   repository: file://../../charts/websockets-chat-ui
-  version: 0.149.7
-digest: sha256:5d74203cfb3a705841d1db4d02bbfece5c9442a1e643a2bcf1c644a343342d63
-generated: "2024-06-27T12:18:43.572021217Z"
+  version: 0.150.0
+digest: sha256:7889db7abbe023df87e26371c3436571741d240643f517873e075873e68bbb51
+generated: "2024-09-20T07:08:21.337055251Z"

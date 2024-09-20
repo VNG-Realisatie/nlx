@@ -1,3 +1,10 @@
+# [0.150.0](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.7...v0.150.0) (2024-09-20)
+
+
+### Features
+
+* **helm:** upgrade Directory PostgreSQL version from v11 to v15 ([d39d53f](https://gitlab.com/commonground/nlx/nlx/commit/d39d53f403ad6284b3ddede256bd1e8026986b16)), closes [nlx#1171](https://gitlab.com/nlx/issues/1171)
+
 ## [0.149.7](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.6...v0.149.7) (2024-06-27)
 
 ## [0.149.6](https://gitlab.com/commonground/nlx/nlx/compare/v0.149.5...v0.149.6) (2024-06-21)
